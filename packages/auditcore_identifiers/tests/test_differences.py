@@ -11,8 +11,9 @@ ROOT = Path(__file__).parents[1]
 
 
 def _tool() -> ModuleType:
-    spec = importlib.util.spec_from_file_location("difference_report",
-                                                  ROOT / "tools" / "difference_report.py")
+    spec = importlib.util.spec_from_file_location(
+        "difference_report", ROOT / "tools" / "difference_report.py"
+    )
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

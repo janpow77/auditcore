@@ -65,8 +65,7 @@ def plain(value: object) -> object:
     return value
 
 
-def _sync_call(client: LlmClient, fn: str, args: list[object],
-               kwargs: dict[str, object]) -> object:
+def _sync_call(client: LlmClient, fn: str, args: list[object], kwargs: dict[str, object]) -> object:
     if fn == "snapshot":
         return client.model_snapshot(refresh=True).to_dict()
     if fn == "stream":
@@ -77,8 +76,9 @@ def _sync_call(client: LlmClient, fn: str, args: list[object],
     return method(*args, **kwargs)
 
 
-async def _async_call(client: AsyncLlmClient, fn: str, args: list[object],
-                      kwargs: dict[str, object]) -> object:
+async def _async_call(
+    client: AsyncLlmClient, fn: str, args: list[object], kwargs: dict[str, object]
+) -> object:
     if fn == "snapshot":
         return (await client.model_snapshot(refresh=True)).to_dict()
     if fn == "stream":
@@ -89,8 +89,13 @@ async def _async_call(client: AsyncLlmClient, fn: str, args: list[object],
     return await method(*args, **kwargs)  # type: ignore[misc]
 
 
-def call_library(config: ClientConfig, gateway: Gateway, spec: dict[str, object],
-                 variant: str, **client_kwargs: object) -> object:
+def call_library(
+    config: ClientConfig,
+    gateway: Gateway,
+    spec: dict[str, object],
+    variant: str,
+    **client_kwargs: object,
+) -> object:
     """Execute the library twin of a case with the sync or async client."""
     fn = str(spec["fn"])
     args = [decode(a) for a in spec["args"]]  # type: ignore[attr-defined]

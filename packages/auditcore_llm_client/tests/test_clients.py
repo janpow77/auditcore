@@ -27,9 +27,14 @@ from auditcore_llm_client import (
 )
 
 ROUTER = ClientConfig(base_url="http://r.test", app_id="app", api_key=SecretValue(KEY))
-FLOW = ClientConfig(base_url="https://agent.test", app_id="app", mode=Mode.FLOW_AGENT,
-                    api_key=SecretValue(KEY), sensitivity=Sensitivity.CONFIDENTIAL,
-                    extra_headers={"X-Request-Source": "tests"})
+FLOW = ClientConfig(
+    base_url="https://agent.test",
+    app_id="app",
+    mode=Mode.FLOW_AGENT,
+    api_key=SecretValue(KEY),
+    sensitivity=Sensitivity.CONFIDENTIAL,
+    extra_headers={"X-Request-Source": "tests"},
+)
 
 
 def test_per_call_and_configured_timeouts_reach_httpx() -> None:
@@ -44,22 +49,31 @@ def test_per_call_and_configured_timeouts_reach_httpx() -> None:
 
 def test_timeout_is_structured() -> None:
     gateway = Gateway([{"raise": "timeout", "message": f"read {KEY}"}])
-    with LlmClient(ROUTER, transport=gateway.transport()) as client, \
-            pytest.raises(RouterTimeoutError) as info:
+    with (
+        LlmClient(ROUTER, transport=gateway.transport()) as client,
+        pytest.raises(RouterTimeoutError) as info,
+    ):
         client.embed(["a"])
     assert info.value.cause_type == "ReadTimeout" and KEY not in str(info.value)
 
 
 def test_flow_agent_headers_selector_and_telemetry() -> None:
-    headers = {"X-Flow-Agent-Request-Id": "r9", "X-Flow-Agent-Model": "m",
-               "X-Flow-Agent-Workers": "w1", "X-Llm-Spoke": "s", "X-Llm-Failover": "1"}
-    gateway = Gateway([{"json": {"choices": [{"message": {"content": "ok"}}]},
-                        "headers": headers}])
+    headers = {
+        "X-Flow-Agent-Request-Id": "r9",
+        "X-Flow-Agent-Model": "m",
+        "X-Flow-Agent-Workers": "w1",
+        "X-Llm-Spoke": "s",
+        "X-Llm-Failover": "1",
+    }
+    gateway = Gateway([{"json": {"choices": [{"message": {"content": "ok"}}]}, "headers": headers}])
     with LlmClient(FLOW, transport=gateway.transport()) as client:
         result = client.chat([], model="flow-agent-model:qwen3-32b", seed=3)
     assert gateway.requests[0]["headers"] == {
-        "authorization": f"Bearer {KEY}", "content-type": "application/json",
-        "x-flow-sensitivity": "confidential", "x-request-source": "tests"}
+        "authorization": f"Bearer {KEY}",
+        "content-type": "application/json",
+        "x-flow-sensitivity": "confidential",
+        "x-request-source": "tests",
+    }
     assert gateway.requests[0]["body"]["model"] == "flow-agent-model:qwen3-32b"  # type: ignore[index]
     telemetry = result.telemetry
     assert (telemetry.request_id, telemetry.model, telemetry.workers) == ("r9", "m", ("w1",))
@@ -68,10 +82,21 @@ def test_flow_agent_headers_selector_and_telemetry() -> None:
 
 def test_usage_hook_and_think_tags() -> None:
     usage: list[UsageRecord] = []
-    config = ClientConfig(base_url="http://r.test", app_id="a", profile=AUDIT_DESIGNER,
-                          usage_hook=usage.append)
-    gateway = Gateway([{"json": {"message": {"content": "<think>a</think> B"}, "eval_count": 2,
-                                 "prompt_eval_count": 1, "total_duration": 3_000_000}}])
+    config = ClientConfig(
+        base_url="http://r.test", app_id="a", profile=AUDIT_DESIGNER, usage_hook=usage.append
+    )
+    gateway = Gateway(
+        [
+            {
+                "json": {
+                    "message": {"content": "<think>a</think> B"},
+                    "eval_count": 2,
+                    "prompt_eval_count": 1,
+                    "total_duration": 3_000_000,
+                }
+            }
+        ]
+    )
     with LlmClient(config, transport=gateway.transport()) as client:
         assert client.generate("p").content == "B"
     assert usage == [UsageRecord("generate", "qwen3:14b", 1, 2, 3)]
@@ -79,12 +104,20 @@ def test_usage_hook_and_think_tags() -> None:
 
 
 def test_invalid_json_and_vectors_are_structured_errors() -> None:
-    gateway = Gateway([{"text": "{kaputt"}, {"json": {"data": [{"embedding": ["x"]}]}},
-                       {"json": {"scores": ["x"]}}])
+    gateway = Gateway(
+        [
+            {"text": "{kaputt"},
+            {"json": {"data": [{"embedding": ["x"]}]}},
+            {"json": {"scores": ["x"]}},
+        ]
+    )
     health = RouterHealth()
     with LlmClient(ROUTER, transport=gateway.transport(), health=health) as client:
-        for call in (lambda: client.chat([]), lambda: client.embed(["a"]),
-                     lambda: client.rerank("q", ["a"])):
+        for call in (
+            lambda: client.chat([]),
+            lambda: client.embed(["a"]),
+            lambda: client.rerank("q", ["a"]),
+        ):
             with pytest.raises(InvalidResponseError):
                 call()
     assert health.to_dict()["consecutive_failures"] == 3
@@ -92,8 +125,11 @@ def test_invalid_json_and_vectors_are_structured_errors() -> None:
 
 def test_errors_and_logs_never_contain_the_key(caplog: pytest.LogCaptureFixture) -> None:
     caplog.set_level(logging.DEBUG)
-    responses = [{"status": 403, "text": f"echo {KEY}"}, {"raise": "connect", "message": KEY},
-                 {"text": f"kein json {KEY}"}]
+    responses = [
+        {"status": 403, "text": f"echo {KEY}"},
+        {"raise": "connect", "message": KEY},
+        {"text": f"kein json {KEY}"},
+    ]
     gateway = Gateway(responses)
     health = RouterHealth()
     with LlmClient(ROUTER, transport=gateway.transport(), health=health) as client:

@@ -35,16 +35,20 @@ Prozess zusätzlich `[donut]`, für die PDF-Rasterung `[ocr-raster]`.
 from starlette.routing import Mount
 from auditcore_documents.pipeline import flowagent_donut
 from auditcore_documents.web import (
-    ExtractionEngines, ExtractionService, ExtractionSettings,
-    create_extraction_app, create_extraction_router, extraction_routes,
+    ExtractionEngines,
+    ExtractionService,
+    ExtractionSettings,
+    create_extraction_app,
+    create_extraction_router,
+    extraction_routes,
 )
 
 engines = ExtractionEngines(
-    tesseract=meine_tesseract_engine,                  # TesseractPort der Anwendung
+    tesseract=meine_tesseract_engine,  # TesseractPort der Anwendung
     donut=flowagent_donut(mein_post, einstellungen.plattform_url),  # optional
 )
 service = ExtractionService(engines, ExtractionSettings(max_upload_bytes=20 * 1024 * 1024))
-app.mount("/api/extraction", create_extraction_app(service))                 # Starlette
+app.mount("/api/extraction", create_extraction_app(service))  # Starlette
 fastapi_app.include_router(create_extraction_router(service, prefix="/api/extraction"))
 starlette_app.router.routes.append(Mount("/api/extraction", routes=extraction_routes(service)))
 ```

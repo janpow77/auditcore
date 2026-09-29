@@ -19,9 +19,15 @@ from auditcore_kanban.validation import Limits, normalize_due, validate_badge
 
 
 def test_templates_are_valid_and_unique() -> None:
-    assert [t.key for t in TEMPLATES][:7] == ["standard", "vorhabenpruefung", "sprint",
-                                              "einfach", "systempruefung", "teamplanung",
-                                              "jahresplanung"]
+    assert [t.key for t in TEMPLATES][:7] == [
+        "standard",
+        "vorhabenpruefung",
+        "sprint",
+        "einfach",
+        "systempruefung",
+        "teamplanung",
+        "jahresplanung",
+    ]
     for t in TEMPLATES:
         validate_columns(t.columns)
         assert t.to_json()["columns"]
@@ -29,8 +35,10 @@ def test_templates_are_valid_and_unique() -> None:
     assert "Prüfung" in labels and "Rückfrage / Freigabe" in labels
 
 
-@pytest.mark.parametrize(("part", "total", "expected"), [(0, 0, 0), (1, 3, 33), (1, 2, 50),
-                                                         (2, 3, 67), (1, 8, 13), (3, 3, 100)])
+@pytest.mark.parametrize(
+    ("part", "total", "expected"),
+    [(0, 0, 0), (1, 3, 33), (1, 2, 50), (2, 3, 67), (1, 8, 13), (3, 3, 100)],
+)
 def test_percent_rounds_half_up(part: int, total: int, expected: int) -> None:
     assert percent(part, total) == expected
 
@@ -38,8 +46,13 @@ def test_percent_rounds_half_up(part: int, total: int, expected: int) -> None:
 def test_board_stats(board: Board) -> None:
     stray = replace(board, cards=board.cards + (make_card("z", "weg", "V"),))
     stats = board_stats(stray)
-    assert stats == {"total": 4, "by_column": {"offen": 2, "in_arbeit": 1, "erledigt": 1},
-                     "done_column": "erledigt", "done": 1, "progress": 25}
+    assert stats == {
+        "total": 4,
+        "by_column": {"offen": 2, "in_arbeit": 1, "erledigt": 1},
+        "done_column": "erledigt",
+        "done": 1,
+        "progress": 25,
+    }
     assert checklist_progress(1, 2) == {"done": 1, "total": 2, "percent": 50}
 
 

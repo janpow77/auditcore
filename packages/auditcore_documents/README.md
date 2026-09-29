@@ -81,15 +81,20 @@ assert [z.status for z in zeilen] == ["changed", "removed", "added", "unchanged"
 assert zaehler["changed_count"] == 1
 
 # Gesetzessynopse: Befehle auf Absatzebene, nicht anwendbare bleiben offen
-absaetze = ad.base_paragraphs([
-    ad.CompareItem("p1", section="§ 3", text="Die Frist beträgt vier Wochen."),
-    ad.CompareItem("p2", section="§ 3", text="Die Anzeige ist schriftlich."),
-])
-fassung, offen, erkannt = ad.apply_commands(absaetze, [
-    "In § 3 Absatz 1 werden die Wörter „vier Wochen“ durch die Wörter „einen Monat“ ersetzt.",
-    "§ 3 Absatz 2 wird aufgehoben.",
-    "In § 3 Absatz 1 wird Satz 2 gestrichen.",
-])
+absaetze = ad.base_paragraphs(
+    [
+        ad.CompareItem("p1", section="§ 3", text="Die Frist beträgt vier Wochen."),
+        ad.CompareItem("p2", section="§ 3", text="Die Anzeige ist schriftlich."),
+    ]
+)
+fassung, offen, erkannt = ad.apply_commands(
+    absaetze,
+    [
+        "In § 3 Absatz 1 werden die Wörter „vier Wochen“ durch die Wörter „einen Monat“ ersetzt.",
+        "§ 3 Absatz 2 wird aufgehoben.",
+        "In § 3 Absatz 1 wird Satz 2 gestrichen.",
+    ],
+)
 assert fassung[0].new_text == "Die Frist beträgt einen Monat."
 assert fassung[1].repealed and erkannt == 2
 assert offen == ["In § 3 Absatz 1 wird Satz 2 gestrichen. [Befehlsart nicht unterstützt]"]
@@ -299,7 +304,7 @@ geprüft).
 ```python no-run
 from auditcore_documents import pipeline as pl
 
-donut = pl.HttpDonut(post, "http://100.102.132.11:8015")          # vision-service
+donut = pl.HttpDonut(post, "http://100.102.132.11:8015")  # vision-service
 # oder pl.flowagent_donut(post, "https://agent.flowaudit.de")      # FlowAgent (E7)
 # oder pl.LocalDonut(Path("/opt/models/donut-invoice-de-1.0.0"), expected_sha256)
 ocr = pl.OcrStage(donut=donut, tesseract=my_tesseract_port)

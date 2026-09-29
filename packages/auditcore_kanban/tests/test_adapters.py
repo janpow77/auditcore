@@ -11,8 +11,9 @@ def test_starlette_app(tmp_path) -> None:  # type: ignore[no-untyped-def]
     from auditcore_kanban.rest.asgi import create_app
 
     (tmp_path / "index.html").write_text("<p>ui</p>")
-    app = create_app(BoardService(InMemoryBoardStore()), lambda h: h.get("x-user"),
-                     ui_directory=tmp_path)
+    app = create_app(
+        BoardService(InMemoryBoardStore()), lambda h: h.get("x-user"), ui_directory=tmp_path
+    )
     client = testclient.TestClient(app)
     assert client.get("/boards").status_code == 401
     created = client.post("/boards", json={"id": "b1"}, headers={"X-User": "u1"})
@@ -32,8 +33,9 @@ def test_fastapi_router() -> None:
         id = 7
 
     app = fastapi.FastAPI()
-    app.include_router(create_router(BoardService(InMemoryBoardStore()), lambda: User()),
-                       prefix="/api/kanban")
+    app.include_router(
+        create_router(BoardService(InMemoryBoardStore()), lambda: User()), prefix="/api/kanban"
+    )
     client = testclient.TestClient(app)
     created = client.post("/api/kanban/boards", json={"id": "b1", "title": "Prüfung"})
     assert created.status_code == 201 and created.json()["board"]["owner_id"] == "7"

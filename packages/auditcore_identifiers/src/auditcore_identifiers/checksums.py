@@ -46,9 +46,7 @@ def mod_11_10_check_digit(digits: str) -> int:
     return 0 if check == 10 else check
 
 
-def prepare(
-    kind: IdentifierKind, value: object, separators: str = ""
-) -> str | CheckResult:
+def prepare(kind: IdentifierKind, value: object, separators: str = "") -> str | CheckResult:
     """Normalise the raw input or return the MISSING/INVALID_TYPE result.
 
     Integers are accepted and converted (tax identifiers often arrive as numbers);

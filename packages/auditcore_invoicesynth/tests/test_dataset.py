@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +30,32 @@ def test_same_seed_same_hash_different_seed_different_hash(
 
     other = build_dataset(replace(small_config, seed=8), tmp_path / "c", fonts)
     assert other["dataset_hash"] != manifest["dataset_hash"]
+
+
+def test_parallel_build_is_byte_identical(
+    small_config: SynthConfig, fonts: FontSet, tmp_path: Path
+) -> None:
+    sequential = build_dataset(small_config, tmp_path / "sequential", fonts, workers=1)
+    parallel = build_dataset(small_config, tmp_path / "parallel", fonts, workers=2)
+    assert parallel["dataset_hash"] == sequential["dataset_hash"]
+    assert (tmp_path / "parallel/manifest.json").read_bytes() == (
+        tmp_path / "sequential/manifest.json"
+    ).read_bytes()
+
+
+def test_automatic_worker_count_builds_same_dataset(
+    small_dataset: tuple[Path, dict[str, Any]],
+    small_config: SynthConfig,
+    fonts: FontSet,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(os, "cpu_count", lambda: 2)
+    if hasattr(os, "process_cpu_count"):
+        monkeypatch.setattr(os, "process_cpu_count", lambda: 2)
+    _, expected = small_dataset
+    automatic = build_dataset(small_config, tmp_path / "automatic", fonts, workers=None)
+    assert automatic["dataset_hash"] == expected["dataset_hash"]
 
 
 def test_donut_layout_and_manifest(small_dataset: tuple[Path, dict[str, Any]]) -> None:
@@ -93,6 +120,13 @@ def test_refuses_non_empty_output(
     (tmp_path / "x").write_text("x")
     with pytest.raises(DatasetError):
         build_dataset(small_config, tmp_path, fonts)
+
+
+def test_rejects_invalid_worker_count(
+    small_config: SynthConfig, fonts: FontSet, tmp_path: Path
+) -> None:
+    with pytest.raises(ValueError, match="workers"):
+        build_dataset(small_config, tmp_path / "invalid-workers", fonts, workers=0)
 
 
 def test_plan_summary_without_images() -> None:

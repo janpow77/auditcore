@@ -20,8 +20,11 @@ from auditcore_auth import (
     password_profile,
 )
 
-FAST_ARGON = PasswordProfile("fast-argon", HashScheme.ARGON2,
-                             argon2=Argon2Parameters(time_cost=1, memory_cost=1024, parallelism=1))
+FAST_ARGON = PasswordProfile(
+    "fast-argon",
+    HashScheme.ARGON2,
+    argon2=Argon2Parameters(time_cost=1, memory_cost=1024, parallelism=1),
+)
 
 
 def test_named_profiles() -> None:
@@ -51,8 +54,9 @@ def test_bcrypt_long_passwords_use_the_first_72_bytes_even_with_bcrypt_5() -> No
 
 
 def test_bcrypt_without_truncation_refuses_long_passwords() -> None:
-    strict = PasswordProfile("strict", HashScheme.BCRYPT, bcrypt_rounds=4,
-                             truncate_to_72_bytes=False)
+    strict = PasswordProfile(
+        "strict", HashScheme.BCRYPT, bcrypt_rounds=4, truncate_to_72_bytes=False
+    )
     with pytest.raises(PasswordPolicyError):
         PasswordHasher(strict).hash("ä" * 37)
     assert PasswordHasher(strict).hash("ä" * 36)
@@ -73,11 +77,21 @@ def test_passlib_profile_refuses_nul_bytes() -> None:
     assert not PasswordHasher(fast_passlib).verify("a\x00c", stored)
 
 
-@pytest.mark.parametrize("stored", [
-    None, "", "garbage", "$2b$12$short", "$2b$03$" + "a" * 53, "$2x$12$" + "a" * 53,
-    "$argon2id$v=19$m=65536,t=3,p=4$abc", "$argon2id$v=19$m=65536,t=3,p=4$$",
-    "$1$md5$crypt", "plaintext-password",
-])
+@pytest.mark.parametrize(
+    "stored",
+    [
+        None,
+        "",
+        "garbage",
+        "$2b$12$short",
+        "$2b$03$" + "a" * 53,
+        "$2x$12$" + "a" * 53,
+        "$argon2id$v=19$m=65536,t=3,p=4$abc",
+        "$argon2id$v=19$m=65536,t=3,p=4$$",
+        "$1$md5$crypt",
+        "plaintext-password",
+    ],
+)
 def test_malformed_or_unknown_hashes_are_false(stored: str | None) -> None:
     assert PasswordHasher(FAST_BCRYPT).verify("geheim", stored) is False
     assert PasswordHasher(FAST_BCRYPT).check("geheim", stored).valid is False
@@ -87,8 +101,11 @@ def test_truncated_bcrypt_hash_never_reaches_the_backend(monkeypatch: pytest.Mon
     """bcrypt 4.x panics (BaseException) on '$2b$12$short'; the syntax check prevents that."""
     seen: list[str] = []
     original = backends.bcrypt_verify
-    monkeypatch.setattr(backends, "bcrypt_verify",
-                        lambda secret, stored: seen.append(stored) or original(secret, stored))
+    monkeypatch.setattr(
+        backends,
+        "bcrypt_verify",
+        lambda secret, stored: seen.append(stored) or original(secret, stored),
+    )
     hasher = PasswordHasher(FAST_BCRYPT)
     assert hasher.verify("pw", "$2b$12$short") is False
     assert "$2b$12$short" not in seen
@@ -97,8 +114,11 @@ def test_truncated_bcrypt_hash_never_reaches_the_backend(monkeypatch: pytest.Mon
 def test_missing_account_costs_a_real_verification(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[str] = []
     original = backends.bcrypt_verify
-    monkeypatch.setattr(backends, "bcrypt_verify",
-                        lambda secret, stored: calls.append(stored) or original(secret, stored))
+    monkeypatch.setattr(
+        backends,
+        "bcrypt_verify",
+        lambda secret, stored: calls.append(stored) or original(secret, stored),
+    )
     hasher = PasswordHasher(FAST_BCRYPT)
     assert hasher.verify("geheim", None) is False
     assert hasher.verify("geheim", "kein-hash") is False
@@ -123,8 +143,11 @@ def test_rehash_signal() -> None:
 def test_argon2_parameter_change_signals_rehash() -> None:
     stored = PasswordHasher(FAST_ARGON).hash("pw")
     assert not PasswordHasher(FAST_ARGON).needs_rehash(stored)
-    tuned = PasswordProfile("tuned", HashScheme.ARGON2,
-                            argon2=Argon2Parameters(time_cost=2, memory_cost=1024, parallelism=1))
+    tuned = PasswordProfile(
+        "tuned",
+        HashScheme.ARGON2,
+        argon2=Argon2Parameters(time_cost=2, memory_cost=1024, parallelism=1),
+    )
     assert PasswordHasher(tuned).needs_rehash(stored)
     assert PasswordHasher(tuned).verify("pw", stored)
     assert PasswordHasher(tuned).needs_rehash("kaputt")
@@ -132,23 +155,36 @@ def test_argon2_parameter_change_signals_rehash() -> None:
 
 def test_argon2i_and_2y_bcrypt_are_recognised() -> None:
     assert identify_hash("$2y$10$" + "a" * 53).variant == "2y"  # type: ignore[union-attr]
-    stored = PasswordHasher(PasswordProfile(
-        "i", HashScheme.ARGON2, argon2=Argon2Parameters(1, 1024, 1, variant="i"))).hash("pw")
+    stored = PasswordHasher(
+        PasswordProfile("i", HashScheme.ARGON2, argon2=Argon2Parameters(1, 1024, 1, variant="i"))
+    ).hash("pw")
     assert stored.startswith("$argon2i$")
     assert PasswordHasher(FAST_BCRYPT).verify("pw", stored)
 
 
-@pytest.mark.parametrize("kwargs", [
-    {"bcrypt_rounds": 3}, {"bcrypt_rounds": 32}, {"bcrypt_ident": "2y"},
-])
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"bcrypt_rounds": 3},
+        {"bcrypt_rounds": 32},
+        {"bcrypt_ident": "2y"},
+    ],
+)
 def test_invalid_bcrypt_profiles(kwargs: dict[str, object]) -> None:
     with pytest.raises(ConfigurationError):
         PasswordProfile("bad", HashScheme.BCRYPT, **kwargs)  # type: ignore[arg-type]
 
 
-@pytest.mark.parametrize("kwargs", [
-    {"variant": "x"}, {"time_cost": 0}, {"memory_cost": 4}, {"hash_len": 8}, {"salt_len": 8},
-])
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"variant": "x"},
+        {"time_cost": 0},
+        {"memory_cost": 4},
+        {"hash_len": 8},
+        {"salt_len": 8},
+    ],
+)
 def test_invalid_argon2_parameters(kwargs: dict[str, object]) -> None:
     with pytest.raises(ConfigurationError):
         Argon2Parameters(**kwargs)  # type: ignore[arg-type]

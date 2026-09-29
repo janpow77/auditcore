@@ -50,8 +50,11 @@ def create_app(
             return JSONResponse(error, status_code=422)
         headers = {k.lower(): v for k, v in request.headers.items()}
         result = api.handle(
-            request.method, "/" + request.path_params["path"].strip("/"),
-            user_id=identity(headers), query=dict(request.query_params), body=body,
+            request.method,
+            "/" + request.path_params["path"].strip("/"),
+            user_id=identity(headers),
+            query=dict(request.query_params),
+            body=body,
             if_match=headers.get("if-match"),
         )
         if result.status == 204:

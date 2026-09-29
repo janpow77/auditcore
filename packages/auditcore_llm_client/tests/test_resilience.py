@@ -53,21 +53,29 @@ def test_policy_decisions() -> None:
 
 def test_default_is_one_attempt_like_legacy() -> None:
     gateway = Gateway([{"status": 503, "text": "x"}])
-    with LlmClient(_config(), transport=gateway.transport()) as client, \
-            pytest.raises(RouterHttpError):
+    with (
+        LlmClient(_config(), transport=gateway.transport()) as client,
+        pytest.raises(RouterHttpError),
+    ):
         client.health()
     assert len(gateway.requests) == 1
 
 
 def test_retries_with_backoff_and_retry_after() -> None:
-    gateway = Gateway([{"status": 503, "text": "x"},
-                       {"status": 429, "text": "x", "headers": {"Retry-After": "3"}},
-                       {"raise": "connect"}, OK])
+    gateway = Gateway(
+        [
+            {"status": 503, "text": "x"},
+            {"status": 429, "text": "x", "headers": {"Retry-After": "3"}},
+            {"raise": "connect"},
+            OK,
+        ]
+    )
     sleeps: list[float] = []
     health = RouterHealth()
     config = _config(retry=RetryPolicy(max_attempts=4))
-    with LlmClient(config, transport=gateway.transport(), sleep=sleeps.append,
-                   health=health) as client:
+    with LlmClient(
+        config, transport=gateway.transport(), sleep=sleeps.append, health=health
+    ) as client:
         assert client.health() == {"status": "ok"}
     assert sleeps == [0.5, 3.0, 2.0]
     assert health.to_dict()["consecutive_failures"] == 0

@@ -26,10 +26,10 @@ from auditcore_registry_sources.web import ScreeningReviewService
 from auditcore_registry_sources.web.http import create_routes
 
 service = ScreeningReviewService(
-    provider,                        # SnapshotProvider des Consumers
-    store,                           # ReviewStore des Consumers
+    provider,  # SnapshotProvider des Consumers
+    store,  # ReviewStore des Consumers
     four_eyes_outcomes=["confirmed"],  # Bestätigen immer mit Zweitprüfung
-    stale_after_days=7,              # ohne Angabe: Alter wird gezeigt, nicht bewertet
+    stale_after_days=7,  # ohne Angabe: Alter wird gezeigt, nicht bewertet
 )
 routes = [Mount("/api/screening", routes=create_routes(service, identify))]
 ```

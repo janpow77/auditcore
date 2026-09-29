@@ -38,25 +38,35 @@ def build_embed(config: ClientConfig, texts: Sequence[str], model: str | None) -
     timeout = config.timeouts.embed
     if config.mode is Mode.FLOW_AGENT:
         return PreparedRequest(
-            operation="embed", method="POST", path=f"{config.app_prefix}/v1/embeddings",
-            timeout=timeout, json_body={"input": _texts(texts)},
+            operation="embed",
+            method="POST",
+            path=f"{config.app_prefix}/v1/embeddings",
+            timeout=timeout,
+            json_body={"input": _texts(texts)},
         )
     body: JsonObject = {"model": model or config.model_defaults.embed, "input": _texts(texts)}
     openai = PreparedRequest(
-        operation="embed", method="POST", path="/v1/embeddings", timeout=timeout,
+        operation="embed",
+        method="POST",
+        path="/v1/embeddings",
+        timeout=timeout,
         json_body=body,
     )
     if config.profile.embed_route is EmbedRoute.OLLAMA_EMBED_WITH_FALLBACK:
         primary = PreparedRequest(
-            operation="embed", method="POST", path="/api/embed", timeout=timeout,
+            operation="embed",
+            method="POST",
+            path="/api/embed",
+            timeout=timeout,
             json_body=dict(body),
         )
         return primary.with_fallback(openai)
     return openai
 
 
-def build_rerank(config: ClientConfig, query: str, documents: Sequence[str],
-                 top_k: int | None, model: str | None) -> PreparedRequest:
+def build_rerank(
+    config: ClientConfig, query: str, documents: Sequence[str], top_k: int | None, model: str | None
+) -> PreparedRequest:
     """Reranking: ``passages`` on ``/v1/rerank``, ``documents`` on ``/api/reranker``."""
     timeout = config.timeouts.rerank
     passages: JsonObject = {"query": query, "passages": _texts(documents)}
@@ -64,8 +74,11 @@ def build_rerank(config: ClientConfig, query: str, documents: Sequence[str],
         passages["model"] = model or config.model_defaults.rerank
     put_optional(passages, "top_k", top_k)
     openai = PreparedRequest(
-        operation="rerank", method="POST", path=f"{config.app_prefix}/v1/rerank",
-        timeout=timeout, json_body=passages,
+        operation="rerank",
+        method="POST",
+        path=f"{config.app_prefix}/v1/rerank",
+        timeout=timeout,
+        json_body=passages,
     )
     if config.mode is Mode.FLOW_AGENT or (
         config.profile.rerank_route is not RerankRoute.RERANKER_WITH_FALLBACK
@@ -78,7 +91,11 @@ def build_rerank(config: ClientConfig, query: str, documents: Sequence[str],
     }
     put_optional(body, "top_k", top_k)
     primary = PreparedRequest(
-        operation="rerank", method="POST", path="/api/reranker", timeout=timeout, json_body=body,
+        operation="rerank",
+        method="POST",
+        path="/api/reranker",
+        timeout=timeout,
+        json_body=body,
     )
     return primary.with_fallback(openai)
 
@@ -91,13 +108,22 @@ def _ocr_form(config: ClientConfig, model: str, language: str) -> tuple[tuple[st
     return (("backend", backend),) + ((("lang", lang),) if lang else ())
 
 
-def build_ocr(config: ClientConfig, content: bytes, filename: str, content_type: str,
-              model: str, language: str) -> PreparedRequest:
+def build_ocr(
+    config: ClientConfig,
+    content: bytes,
+    filename: str,
+    content_type: str,
+    model: str,
+    language: str,
+) -> PreparedRequest:
     """Multipart OCR; the Flow-Agent forwards the vision-service dialect opaquely."""
     field = "image" if config.mode is Mode.FLOW_AGENT else "file"
     path = f"{config.app_prefix}/v1/ocr" if config.mode is Mode.FLOW_AGENT else "/api/ocr"
     return PreparedRequest(
-        operation="ocr", method="POST", path=path, timeout=config.timeouts.ocr,
+        operation="ocr",
+        method="POST",
+        path=path,
+        timeout=config.timeouts.ocr,
         form=_ocr_form(config, model, language),
         files=(FormFile(field, filename, content, content_type),),
         headers=HeaderMode.AUTH,
@@ -109,12 +135,20 @@ def build_health(config: ClientConfig, capability: str) -> PreparedRequest:
     timeout = config.timeouts.health
     if config.mode is Mode.FLOW_AGENT:
         return PreparedRequest(
-            operation="health", method="GET", path=f"{config.app_prefix}/ready",
-            timeout=timeout, params=(("capability", capability),), headers=HeaderMode.AUTH,
+            operation="health",
+            method="GET",
+            path=f"{config.app_prefix}/ready",
+            timeout=timeout,
+            params=(("capability", capability),),
+            headers=HeaderMode.AUTH,
         )
     headers = HeaderMode.JSON if config.profile.health_auth is HealthAuth.FULL else HeaderMode.NONE
     return PreparedRequest(
-        operation="health", method="GET", path="/health", timeout=timeout, headers=headers,
+        operation="health",
+        method="GET",
+        path="/health",
+        timeout=timeout,
+        headers=headers,
     )
 
 
@@ -126,6 +160,9 @@ def build_models(config: ClientConfig) -> PreparedRequest:
             endpoint="/api/tags",
         )
     return PreparedRequest(
-        operation="models", method="GET", path="/api/tags", timeout=config.timeouts.models,
+        operation="models",
+        method="GET",
+        path="/api/tags",
+        timeout=config.timeouts.models,
         headers=HeaderMode.AUTH,
     )

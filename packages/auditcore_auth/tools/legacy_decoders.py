@@ -39,8 +39,9 @@ def case_tokens(secret: str, wrong: str, now: int) -> dict[str, str]:
         "sub_int": sign({"sub": 7, "iat": now, "exp": now + 3600}),
         "iat_future": sign({"sub": "7", "iat": now + 600, "exp": now + 3600}),
         "nbf_future": sign({"sub": "7", "iat": now, "nbf": now + 600, "exp": now + 3600}),
-        "refresh_type": sign({"sub": "7", "role": "lkb", "type": "refresh", "iat": now,
-                              "exp": now + 3600}),
+        "refresh_type": sign(
+            {"sub": "7", "role": "lkb", "type": "refresh", "iat": now, "exp": now + 3600}
+        ),
     }
 
 
@@ -53,8 +54,11 @@ def run(decode: Decode, tokens: dict[str, str]) -> dict[str, Any]:
             results[name] = {"token": token, "outcome": "reject", "error": type(error).__name__}
             continue
         accepted = payload is not None
-        results[name] = {"token": token, "outcome": "accept" if accepted else "reject",
-                         "claims": payload}
+        results[name] = {
+            "token": token,
+            "outcome": "accept" if accepted else "reject",
+            "claims": payload,
+        }
     return results
 
 

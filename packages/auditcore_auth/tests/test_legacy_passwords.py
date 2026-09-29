@@ -60,8 +60,10 @@ def test_nul_passwords_follow_the_profile(app: str) -> None:
 def test_new_hashes_keep_the_legacy_format(app: str) -> None:
     profile = APP_PROFILES[app].password
     legacy = next(c["hash"]["result"] for c in cases(app) if c["password"] == "geheim123")
-    legacy_info, new_info = identify_hash(legacy), identify_hash(
-        PasswordHasher(profile).hash("geheim123"))
+    legacy_info, new_info = (
+        identify_hash(legacy),
+        identify_hash(PasswordHasher(profile).hash("geheim123")),
+    )
     assert legacy_info == new_info
     assert legacy[:7] == PasswordHasher(profile).hash("x")[:7]
     assert PasswordHasher(profile).needs_rehash(legacy) is False
@@ -69,8 +71,10 @@ def test_new_hashes_keep_the_legacy_format(app: str) -> None:
 
 def test_any_profile_verifies_every_app_format() -> None:
     """Switching an app to argon2id (or back) never locks out stored users."""
-    stored = {app: next(c["hash"]["result"] for c in cases(app) if c["password"] == "geheim123")
-              for app in APPS}
+    stored = {
+        app: next(c["hash"]["result"] for c in cases(app) if c["password"] == "geheim123")
+        for app in APPS
+    }
     for profile in {p.password for p in APP_PROFILES.values()}:
         hasher = PasswordHasher(profile)
         for value in {stored["regulierung"], stored["versteigerung"], stored["qaaudit"]}:

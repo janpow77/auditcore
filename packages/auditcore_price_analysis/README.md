@@ -49,9 +49,7 @@ tarif = Tariff.from_mapping(
     release="freigegeben",
     valid_from="2025-01-01",
 )
-ergebnis = calculate(
-    tarif, profil, consumption={"kw": 12, "kwh": 27000}, stichtag="2025-07-01"
-)
+ergebnis = calculate(tarif, profil, consumption={"kw": 12, "kwh": 27000}, stichtag="2025-07-01")
 
 # Fehlende optionale Bestandteile zählen nicht still als 0:
 # die Summe ist eine Untergrenze.

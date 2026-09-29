@@ -36,10 +36,14 @@ def test_passlib_accepts_library_hashes(app: str) -> None:
 def test_jose_accepts_library_tokens(app: str) -> None:
     profile = APP_PROFILES[app].token("access")
     now = datetime.now(UTC)
-    token = TokenIssuer(profile, KEY, clock=lambda: now).issue(
-        {"sub": "7", "role": "pruefer"} if "role" in profile.layout else {"sub": "7"},
-        lifetime=timedelta(minutes=5),
-    ).token
+    token = (
+        TokenIssuer(profile, KEY, clock=lambda: now)
+        .issue(
+            {"sub": "7", "role": "pruefer"} if "role" in profile.layout else {"sub": "7"},
+            lifetime=timedelta(minutes=5),
+        )
+        .token
+    )
     claims = jose_jwt.decode(token, KEY, algorithms=["HS256"])
     assert claims["sub"] == "7"
     assert claims["exp"] - int(now.timestamp()) == 300

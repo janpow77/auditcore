@@ -15,17 +15,37 @@ NOW = "2026-09-25T12:00:00+00:00"
 
 
 def make_card(cid: str, column: str, rank: str, **fields: Any) -> Card:
-    return Card(cid, column, rank, fields.pop("title", cid.upper()),
-                created_at=fields.pop("created_at", "2026-09-01"), **fields)
+    return Card(
+        cid,
+        column,
+        rank,
+        fields.pop("title", cid.upper()),
+        created_at=fields.pop("created_at", "2026-09-01"),
+        **fields,
+    )
 
 
 def make_board(**changes: Any) -> Board:
-    columns = (Column("offen", "Offen"), Column("in_arbeit", "In Arbeit", wip_limit=2),
-               Column("erledigt", "Erledigt"))
-    cards = (make_card("a", "offen", "V"), make_card("b", "offen", "k"),
-             make_card("c", "in_arbeit", "V"), make_card("d", "erledigt", "V"))
-    board = Board("b1", "Board", "u1", columns, cards,
-                  shares=(Share("u2", "edit", "u1"), Share("u3", "read", "u1")), version=1)
+    columns = (
+        Column("offen", "Offen"),
+        Column("in_arbeit", "In Arbeit", wip_limit=2),
+        Column("erledigt", "Erledigt"),
+    )
+    cards = (
+        make_card("a", "offen", "V"),
+        make_card("b", "offen", "k"),
+        make_card("c", "in_arbeit", "V"),
+        make_card("d", "erledigt", "V"),
+    )
+    board = Board(
+        "b1",
+        "Board",
+        "u1",
+        columns,
+        cards,
+        shares=(Share("u2", "edit", "u1"), Share("u3", "read", "u1")),
+        version=1,
+    )
     return replace(board, **changes)
 
 

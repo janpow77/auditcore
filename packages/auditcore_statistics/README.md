@@ -49,7 +49,7 @@ from auditcore_statistics.conformity import assess
 # Ausschlüsse werden gezählt, nicht still verworfen
 klein = benford_test([123, 187, 2450, 31, 4.2, 0, None], digits=1)
 assert (klein.analysed, klein.zero, klein.missing) == (5, 1, 1)
-assert klein.deviates_at_level is None      # ohne α keine Signifikanzaussage
+assert klein.deviates_at_level is None  # ohne α keine Signifikanzaussage
 
 # Synthetische, logarithmisch gleichverteilte Beträge
 rng = random.Random(7)

@@ -33,15 +33,19 @@ def test_create_defaults_to_first_column_and_slot(board: Board) -> None:
     assert order(before.board, "offen") == ["a", "n1", "b"]
 
 
-@pytest.mark.parametrize(("fields", "code"), [
-    ({}, "VALIDATION_ERROR"), ({"title": " "}, "VALIDATION_ERROR"),
-    ({"title": "x", "priority": "dringend"}, "VALIDATION_ERROR"),
-    ({"title": "x", "column_id": "nope"}, "UNKNOWN_COLUMN"),
-    ({"title": "x", "tags": "VP"}, "INVALID_REQUEST"),
-    ({"title": "x", "index": "1"}, "INVALID_REQUEST"),
-    ({"title": "x", "id": "a"}, "VALIDATION_ERROR"),
-    ({"title": "x", "before_id": "c"}, "INVALID_REQUEST"),
-])
+@pytest.mark.parametrize(
+    ("fields", "code"),
+    [
+        ({}, "VALIDATION_ERROR"),
+        ({"title": " "}, "VALIDATION_ERROR"),
+        ({"title": "x", "priority": "dringend"}, "VALIDATION_ERROR"),
+        ({"title": "x", "column_id": "nope"}, "UNKNOWN_COLUMN"),
+        ({"title": "x", "tags": "VP"}, "INVALID_REQUEST"),
+        ({"title": "x", "index": "1"}, "INVALID_REQUEST"),
+        ({"title": "x", "id": "a"}, "VALIDATION_ERROR"),
+        ({"title": "x", "before_id": "c"}, "INVALID_REQUEST"),
+    ],
+)
 def test_create_rejects(board: Board, fields: dict[str, object], code: str) -> None:
     with pytest.raises(KanbanError) as error:
         create_card(board, ctx(), fields)
@@ -58,11 +62,17 @@ def test_create_respects_wip_and_rights(board: Board) -> None:
         create_card(board, ctx("u9"), {"title": "x"})
 
 
-@pytest.mark.parametrize(("kwargs", "expected"), [
-    ({"index": 0}, ["d", "a", "b"]), ({"index": -4}, ["d", "a", "b"]),
-    ({"index": 99}, ["a", "b", "d"]), ({}, ["a", "b", "d"]),
-    ({"before_id": "b"}, ["a", "d", "b"]), ({"after_id": "a"}, ["a", "d", "b"]),
-])
+@pytest.mark.parametrize(
+    ("kwargs", "expected"),
+    [
+        ({"index": 0}, ["d", "a", "b"]),
+        ({"index": -4}, ["d", "a", "b"]),
+        ({"index": 99}, ["a", "b", "d"]),
+        ({}, ["a", "b", "d"]),
+        ({"before_id": "b"}, ["a", "d", "b"]),
+        ({"after_id": "a"}, ["a", "d", "b"]),
+    ],
+)
 def test_move_positions(board: Board, kwargs: dict[str, object], expected: list[str]) -> None:
     result = move_card(board, ctx("u2"), "d", "offen", **kwargs)  # type: ignore[arg-type]
     assert order(result.board, "offen") == expected
@@ -95,29 +105,37 @@ def test_move_rules(board: Board) -> None:
         move_card(locked, ctx(), "a", "erledigt")
     with pytest.raises(KanbanError, match="CARD_NOT_FOUND"):
         move_card(board, ctx(), "zz", "erledigt")
-    warn = replace(board, wip_mode="warn",
-                   cards=board.cards + (make_card("e", "in_arbeit", "k"),))
+    warn = replace(board, wip_mode="warn", cards=board.cards + (make_card("e", "in_arbeit", "k"),))
     assert move_card(warn, ctx(), "a", "in_arbeit").warnings == ("WIP_LIMIT_REACHED",)
 
 
 def test_update_fields_and_clear_semantics(board: Board) -> None:
     card = replace(board.cards[0], color="#fff", badge="VP-1", due="2026-10-01")
     staged = replace(board, cards=(card,) + board.cards[1:])
-    result = update_card(staged, ctx("u2"), "a", {
-        "title": "Neu", "color": "", "badge": "", "due": None, "priority": "hoch",
-        "checklist": [{"text": "x", "done": True}],
-        "links": [{"kind": "notebook-page", "target": "p1"}],
-        "attachments": [{"id": "f", "filename": "a.pdf", "size": 3}],
-        "extra": {"generated_prompt": "…"},
-    })
+    result = update_card(
+        staged,
+        ctx("u2"),
+        "a",
+        {
+            "title": "Neu",
+            "color": "",
+            "badge": "",
+            "due": None,
+            "priority": "hoch",
+            "checklist": [{"text": "x", "done": True}],
+            "links": [{"kind": "notebook-page", "target": "p1"}],
+            "attachments": [{"id": "f", "filename": "a.pdf", "size": 3}],
+            "extra": {"generated_prompt": "…"},
+        },
+    )
     updated = result.card
     assert updated is not None
     assert (updated.title, updated.color, updated.badge, updated.due) == ("Neu", None, None, None)
     assert updated.checklist[0].done and updated.links[0].kind == "notebook-page"
     assert updated.attachments[0].size == 3 and updated.extra == {"generated_prompt": "…"}
     assert result.changes[-1].data["fields"] == sorted(
-        ["title", "color", "badge", "due", "priority", "checklist", "links", "attachments",
-         "extra"])
+        ["title", "color", "badge", "due", "priority", "checklist", "links", "attachments", "extra"]
+    )
 
 
 def test_update_with_column_moves_to_end(board: Board) -> None:
@@ -127,11 +145,16 @@ def test_update_with_column_moves_to_end(board: Board) -> None:
     assert [c.kind for c in result.changes] == ["card.moved", "card.updated"]
 
 
-@pytest.mark.parametrize("fields", [
-    {"checklist": [{"text": "x", "done": "ja"}]}, {"attachments": [{"id": "f",
-                                                                   "filename": "a", "size": -1}]},
-    {"extra": {"x": object()}}, {"links": "x"}, {"due": "30.09.2026"},
-])
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"checklist": [{"text": "x", "done": "ja"}]},
+        {"attachments": [{"id": "f", "filename": "a", "size": -1}]},
+        {"extra": {"x": object()}},
+        {"links": "x"},
+        {"due": "30.09.2026"},
+    ],
+)
 def test_update_rejects_bad_types(board: Board, fields: dict[str, object]) -> None:
     with pytest.raises(KanbanError):
         update_card(board, ctx(), "a", fields)

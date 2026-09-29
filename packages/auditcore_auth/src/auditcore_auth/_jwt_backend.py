@@ -37,10 +37,15 @@ def _jwt() -> ModuleType:
         raise BackendUnavailableError("PyJWT", "jwt") from None
 
 
-def encode(payload: Mapping[str, object], key: Key, algorithm: str,
-           headers: Mapping[str, str] | None = None) -> str:
-    token: str = _jwt().encode(dict(payload), key, algorithm=algorithm,
-                               headers=dict(headers) if headers else None)
+def encode(
+    payload: Mapping[str, object],
+    key: Key,
+    algorithm: str,
+    headers: Mapping[str, str] | None = None,
+) -> str:
+    token: str = _jwt().encode(
+        dict(payload), key, algorithm=algorithm, headers=dict(headers) if headers else None
+    )
     return token
 
 
@@ -57,8 +62,9 @@ def unverified_algorithm(token: str) -> str:
     return algorithm
 
 
-def decode(token: str, key: Key, algorithms: Sequence[str],
-           required: Sequence[str]) -> dict[str, object]:
+def decode(
+    token: str, key: Key, algorithms: Sequence[str], required: Sequence[str]
+) -> dict[str, object]:
     module = _jwt()
     options = {
         "verify_signature": True,

@@ -70,6 +70,12 @@ def _parser() -> argparse.ArgumentParser:
     build_cmd = commands.add_parser("build", help="Datensatz schreiben")
     _common(build_cmd)
     build_cmd.add_argument("--out", required=True)
+    build_cmd.add_argument(
+        "--workers",
+        type=int,
+        default=0,
+        help="Renderprozesse; 0 = automatisch (bis zu 16), 1 = sequenziell",
+    )
     verify_cmd = commands.add_parser("verify", help="Datensatz gegen Manifest prüfen")
     verify_cmd.add_argument("dataset")
     eval_cmd = commands.add_parser("evaluate", help="Vorhersagen bewerten")
@@ -102,7 +108,14 @@ def _plan_or_build(args: argparse.Namespace) -> int:
     if args.command == "plan":
         _print(plan_summary(config, fonts.families))
         return 0
-    manifest = build_dataset(config, Path(args.out), fonts)
+    if args.workers < 0:
+        raise ValueError("--workers muss 0 oder größer sein")
+    manifest = build_dataset(
+        config,
+        Path(args.out),
+        fonts,
+        workers=None if args.workers == 0 else args.workers,
+    )
     _print({"dataset_hash": manifest["dataset_hash"], "splits": manifest["splits"]})
     return 0
 

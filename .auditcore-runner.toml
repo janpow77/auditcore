@@ -1,0 +1,53 @@
+# Repo-Prüfprofil; Entwicklungsumgebung vorher aktivieren.
+[pruefprofile.pr]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+max_befunde = 500
+autofix = false
+
+[pruefprofile.pr.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", ".", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 900
+prioritaet = 10
+
+[pruefprofile.pr.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "tests", "-n", "auto", "-m", "not gpu and not network", "--junitxml={ausgabe}"]
+zeitlimit_s = 900
+prioritaet = 11
+
+[pruefprofile.pr.werkzeug.mypy]
+befehl = ["python3", "-m", "mypy", "src", "--no-color-output", "--no-error-summary"]
+zeitlimit_s = 900
+prioritaet = 12
+
+[pruefprofile.pr.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 900
+prioritaet = 13
+
+# Zusätzlich zur Plattform: das separat ausgelieferte Runner-Paket.
+[pruefprofile.runner]
+werkzeuge = ["pytest"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.runner.werkzeug.pytest]
+befehl = ["env", "PYTHONPATH=packages/auditcore_runner/src", "python3", "-m", "pytest", "packages/auditcore_runner/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 1200
+
+# Python-Kompatibilität und fachliche Regression des parallelen Datensatzaufbaus.
+[pruefprofile.invoicesynth]
+werkzeuge = ["pytest", "mypy"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.invoicesynth.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_invoicesynth/tests", "-n", "2", "-m", "not gpu and not network", "--junitxml={ausgabe}"]
+zeitlimit_s = 1200
+
+[pruefprofile.invoicesynth.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_invoicesynth && exec python3 -m mypy src --python-version 3.11 --no-color-output --no-error-summary"]
+zeitlimit_s = 900

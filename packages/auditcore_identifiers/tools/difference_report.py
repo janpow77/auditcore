@@ -31,21 +31,30 @@ def _strict(kind: str, country: str | None = None) -> Strict:
 COMPARISONS: dict[tuple[str, str], tuple[str, Strict]] = {
     ("flowinvoice", "validate_iban"): ("flowinvoice validate_iban", _strict("iban")),
     ("flowinvoice", "validate_bic"): ("flowinvoice validate_bic", _strict("bic")),
-    ("flowinvoice", "validate_german_tax_id"):
-        ("flowinvoice validate_german_tax_id", _strict("tax_number")),
-    ("flowinvoice", "validate_german_vat_id"):
-        ("flowinvoice validate_german_vat_id", _strict("vat_id", "DE")),
-    ("flowinvoice", "validate_uk_vat_id"):
-        ("flowinvoice validate_uk_vat_id", _strict("vat_id", "GB")),
+    ("flowinvoice", "validate_german_tax_id"): (
+        "flowinvoice validate_german_tax_id",
+        _strict("tax_number"),
+    ),
+    ("flowinvoice", "validate_german_vat_id"): (
+        "flowinvoice validate_german_vat_id",
+        _strict("vat_id", "DE"),
+    ),
+    ("flowinvoice", "validate_uk_vat_id"): (
+        "flowinvoice validate_uk_vat_id",
+        _strict("vat_id", "GB"),
+    ),
     ("flowinvoice", "validate_eu_vat_id"): (
         "flowinvoice validate_eu_vat_id",
-        lambda i: check("vat_id", i[_VALUE], country=i["country_code"])),
+        lambda i: check("vat_id", i[_VALUE], country=i["country_code"]),
+    ),
     ("flowinvoice", "_validate_iban"): ("Pipeline IbanChecksumRule", _strict("iban")),
     ("flowinvoice", "VatIdFormatRule.evaluate"): ("Pipeline VatIdFormatRule", _strict("vat_id")),
     ("internal", "invoicesynth.iban_valid"): ("invoicesynth iban_valid", _strict("iban")),
     ("internal", "invoicesynth.vat_id_valid"): ("invoicesynth vat_id_valid", _strict("vat_id")),
-    ("internal", "documents.donut_vat_id_check"):
-        ("documents vat_id_check (Donut)", _strict("vat_id")),
+    ("internal", "documents.donut_vat_id_check"): (
+        "documents vat_id_check (Donut)",
+        _strict("vat_id"),
+    ),
     ("internal", "documents.donut_iban"): ("documents validate_iban (Donut)", _strict("iban")),
     ("internal", "is_valid_lei"): ("flowworkshop is_valid_lei", _strict("lei")),
     ("internal", "entity_matching.check_lei"): ("entity_matching check_lei", _strict("lei")),
@@ -87,8 +96,16 @@ def compute() -> list[dict[str, Any]]:
             if old == new.split(":")[0] or (old == "INVALID" and new.startswith("INVALID")):
                 continue
             key = (label, old, new)
-            row = rows.setdefault(key, {"comparison": label, "legacy": old, "strict": new,
-                                        "count": 0, "example": case["inputs"]})
+            row = rows.setdefault(
+                key,
+                {
+                    "comparison": label,
+                    "legacy": old,
+                    "strict": new,
+                    "count": 0,
+                    "example": case["inputs"],
+                },
+            )
             row["count"] += 1
     return sorted(rows.values(), key=lambda r: (r["comparison"], r["legacy"], r["strict"]))
 
@@ -110,15 +127,18 @@ def markdown(rows: list[dict[str, Any]]) -> str:
     ]
     for row in rows:
         example = json.dumps(row["example"], ensure_ascii=True)
-        lines.append(f"| {row['comparison']} | {row['legacy']} | {row['strict']} "
-                     f"| {row['count']} | `{example}` |")
+        lines.append(
+            f"| {row['comparison']} | {row['legacy']} | {row['strict']} "
+            f"| {row['count']} | `{example}` |"
+        )
     return "\n".join(lines) + "\n"
 
 
 def main() -> None:
     rows = compute()
     (ROOT / "tests" / "fixtures" / "differences.json").write_text(
-        json.dumps(rows, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        json.dumps(rows, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+    )
     (ROOT / "docs" / "differences.md").write_text(markdown(rows), encoding="utf-8")
 
 

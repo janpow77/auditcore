@@ -7,6 +7,7 @@ Registered without decorators (``add_api_route``) so the module stays fully
 typed. ``current_user`` is an ordinary FastAPI dependency of the consumer (for
 example ``get_current_user``); ``user_id_of`` turns its value into the user id.
 """
+
 from collections.abc import Callable
 
 from ..service import BoardService
@@ -39,14 +40,16 @@ def create_router(
             error = {"error": {"code": "INVALID_REQUEST", "message": "Ungültiges JSON"}}
             return JSONResponse(error, status_code=422)
         result = api.handle(
-            request.method, "/" + path.strip("/"), user_id=user_id_of(user),
-            query=dict(request.query_params), body=body,
+            request.method,
+            "/" + path.strip("/"),
+            user_id=user_id_of(user),
+            query=dict(request.query_params),
+            body=body,
             if_match=request.headers.get("if-match"),
         )
         if result.status == 204:
             return Response(status_code=204, headers=result.headers)
         return JSONResponse(result.body, status_code=result.status, headers=result.headers)
 
-    router.add_api_route("/{path:path}", endpoint, methods=list(METHODS),
-                         include_in_schema=False)
+    router.add_api_route("/{path:path}", endpoint, methods=list(METHODS), include_in_schema=False)
     return router

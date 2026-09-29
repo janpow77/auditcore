@@ -67,7 +67,10 @@ def js_data(package_dir: Path) -> dict[str, Any]:
     script = Path(__file__).resolve().parent / "js_api.mjs"
     completed = subprocess.run(
         ["node", str(script), str(package_dir)],
-        check=True, capture_output=True, text=True, cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
     )
     data: dict[str, Any] = json.loads(completed.stdout)
     return data

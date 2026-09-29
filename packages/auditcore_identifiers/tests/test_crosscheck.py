@@ -9,7 +9,8 @@ from typing import Any
 import auditcore_identifiers as ai
 
 DATA: dict[str, Any] = json.loads(
-    (Path(__file__).parent / "fixtures" / "stdnum_crosscheck.json").read_text("utf-8"))
+    (Path(__file__).parent / "fixtures" / "stdnum_crosscheck.json").read_text("utf-8")
+)
 #: stdnum also verifies national account check digits for these IBAN countries.
 NATIONAL_BBAN_CHECKS = {"BE", "ES", "FI", "FR", "IT", "ME", "MK", "NO", "PT", "SI", "SM"}
 

@@ -16,10 +16,14 @@ Versionen stehen deshalb im Manifest.
 from __future__ import annotations
 
 import json
+import os
+import sys
 from collections.abc import Callable, Iterator
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from datetime import timedelta
 from importlib import metadata
+from itertools import repeat
 from pathlib import Path
 from random import Random
 from types import ModuleType
@@ -142,31 +146,38 @@ def build_dataset(
     fonts: FontSet,
     *,
     progress: Callable[[int, int], None] | None = None,
+    workers: int | None = 1,
 ) -> dict[str, Any]:
-    """Datensatz schreiben und Manifest zurückgeben; das Zielverzeichnis muss leer sein."""
-    from auditcore_invoicesynth.render import _pil
-
+    """Datensatz schreiben; ``workers=None`` nutzt bis zu 16 Renderprozesse."""
     if output.exists() and any(output.iterdir()):
         raise DatasetError(f"Ausgabeverzeichnis ist nicht leer: {output}")
-    _, _, image_font = _pil()
+    if workers is None:
+        if sys.version_info >= (3, 13):
+            cpu_count = os.process_cpu_count()
+        else:
+            cpu_count = os.cpu_count()
+        workers = min(16, max(1, (cpu_count or 2) - 2))
+    if workers < 1:
+        raise ValueError("workers muss mindestens 1 sein")
     specs = plan_dataset(config, fonts.families)
     samples = prepare_samples(config, specs)
     output.mkdir(parents=True, exist_ok=True)
     rows: dict[str, list[str]] = {split: [] for split in SPLITS}
     images: dict[str, int] = dict.fromkeys(SPLITS, 0)
     used_families: set[str] = set()
-    for number, sample in enumerate(samples, 1):
+    rendered = _rendered_samples(samples, output, fonts, workers)
+    for number, (sample, lines) in enumerate(zip(samples, rendered, strict=True), 1):
         used_families.add(sample.spec.font_family)
-        for line in _write_sample(sample, output, fonts, image_font):
+        for line in lines:
             rows[sample.spec.split].append(line)
             images[sample.spec.split] += 1
         if progress is not None:
             progress(number, len(samples))
-    for split, lines in rows.items():
-        if lines:
+    for split, metadata_lines in rows.items():
+        if metadata_lines:
             (output / split).mkdir(exist_ok=True)
             (output / split / "metadata.jsonl").write_text(
-                "".join(line + "\n" for line in lines), encoding="utf-8"
+                "".join(line + "\n" for line in metadata_lines), encoding="utf-8"
             )
     manifest = _manifest(config, output, fonts, specs, used_families, images)
     (output / MANIFEST).write_text(
@@ -174,6 +185,31 @@ def build_dataset(
         encoding="utf-8",
     )
     return manifest
+
+
+def _rendered_samples(
+    samples: list[PreparedSample], output: Path, fonts: FontSet, workers: int
+) -> Iterator[tuple[str, ...]]:
+    if workers == 1:
+        for sample in samples:
+            yield _render_sample(sample, output, fonts)
+        return
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        yield from executor.map(
+            _render_sample,
+            samples,
+            repeat(output),
+            repeat(fonts),
+            chunksize=4,
+        )
+
+
+def _render_sample(sample: PreparedSample, output: Path, fonts: FontSet) -> tuple[str, ...]:
+    """In einem Worker rendern; das Tupel macht die Rückgabe pickelbar."""
+    from auditcore_invoicesynth.render import _pil
+
+    _, _, image_font = _pil()
+    return tuple(_write_sample(sample, output, fonts, image_font))
 
 
 def _write_sample(

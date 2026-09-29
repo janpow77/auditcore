@@ -11,6 +11,7 @@ Ergebnisse bleiben in der einbindenden Anwendung.
 
 ```python
 from auditcore_extrapolation.web import create_app, create_router
+
 app = create_app("/api/extrapolation")
 fastapi_app.include_router(create_router("/api/extrapolation"))
 ```

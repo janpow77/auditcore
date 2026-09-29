@@ -107,7 +107,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | Beschriftungen/Formate | Synonymlisten je Feld (DE, ≈ 10 % EN); `1.234,56`, `1234,56`, `1 234,56`, `1,234.56`; Währung vor/nach dem Betrag (`EUR`/`€`) oder ohne; `15.01.2026`, `15.1.26`, `15. Januar 2026` (AT: Jänner), ISO, englisch |
 | Schriften (`fonts`) | nur Katalog freier Familien (DejaVu, Liberation, Noto); **nicht eingebettet**: Systemschriften oder `fetch_font` mit SHA-256; optionale Prüfsummen-Pins; Holdout-Schrift standardmäßig `DejaVu Serif` |
 | Scanrauschen (`augment`) | Drehung ±3°, Perspektive, Unschärfe, JPEG, Salz-und-Pfeffer, Graustufe/Binarisierung, Stempel, Kugelschreiber, Lochung, Faltkante, 150–300 dpi; alles aus dem Einzelseed |
-| Ausgabe (`dataset`) | Donut-Format `split/metadata.jsonl` (`file_name`, `ground_truth` = `{"gt_parse", "meta"}`), `manifest.json` mit Versionen, Konfiguration, Schriften, SHA-256 je Datei und Datensatz-Hash |
+| Ausgabe (`dataset`) | Donut-Format `split/metadata.jsonl` (`file_name`, `ground_truth` = `{"gt_parse", "meta"}`), `manifest.json` mit Versionen, Konfiguration, Schriften, SHA-256 je Datei und Datensatz-Hash; `build` rendert automatisch mit bis zu 16 CPU-Prozessen (`--workers`) |
 | Ziel-JSON (`schema`) | `auditcore_invoice_v1`, nur Kopf-/Summenfelder (E8); Werte = das **Gedruckte**; Donut-Tokenfolge mit Task-Token `<s_auditcore_invoice_v1>` und Rücklesung |
 | Bewertung (`evaluation`) | Feldgenauigkeit, Falsch-/Fehlt-/Halluzinationsquote, Belegquote, Falschwert-Quote nach Plausibilität, Abnahmeschwellen E6 |
 
@@ -134,7 +134,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `SynthInvoice` | Datenklasse | Vollständiger synthetischer Beleg mit richtigen und gedruckten Werten. | `enrich` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `at_uid_check_digit` | Funktion | Prüfziffer der österreichischen UID (ATU + 8 Ziffern). | `identifiers` |
-| `build_dataset` | Funktion | Datensatz schreiben und Manifest zurückgeben; das Zielverzeichnis muss leer sein. | `dataset` |
+| `build_dataset` | Funktion | Datensatz schreiben; ``workers=None`` nutzt bis zu 16 Renderprozesse. | `dataset` |
 | `check_acceptance` | Funktion | Schwellen aus E6 prüfen (Feldgenauigkeit, Falschwert-Quote nach Plausibilität). | `evaluation` |
 | `dataset_hash` | Funktion | – | `dataset` |
 | `de_vat_check_digit` | Funktion | Prüfziffer der deutschen USt-IdNr. (ISO 7064, MOD 11,10). | `identifiers` |

@@ -117,8 +117,12 @@ def test_env_requires_a_url_and_has_no_default_key() -> None:
 
 
 def test_env_model_chain_and_keep_alive() -> None:
-    env = {"LLM_ROUTER_URL": "http://r.test", "OLLAMA_MODEL": "o", "VP_AI_LLM_KEEP_ALIVE": "3m",
-           "LLM_ROUTER_EMBEDDING_MODEL": "e"}
+    env = {
+        "LLM_ROUTER_URL": "http://r.test",
+        "OLLAMA_MODEL": "o",
+        "VP_AI_LLM_KEEP_ALIVE": "3m",
+        "LLM_ROUTER_EMBEDDING_MODEL": "e",
+    }
     config = config_from_env(AUDIT_DESIGNER, env)
     assert (config.model_defaults.llm, config.model_defaults.embed) == ("o", "e")
     assert config.keep_alive == "3m"
@@ -127,8 +131,12 @@ def test_env_model_chain_and_keep_alive() -> None:
 
 
 def test_flow_agent_url_switches_mode() -> None:
-    env = {"LLM_ROUTER_URL": "http://r.test", "FLOW_AGENT_URL": "https://agent.test/",
-           "FLOW_AGENT_APP_KEY": KEY, "FLOW_AGENT_QUALITY": "Fast"}
+    env = {
+        "LLM_ROUTER_URL": "http://r.test",
+        "FLOW_AGENT_URL": "https://agent.test/",
+        "FLOW_AGENT_APP_KEY": KEY,
+        "FLOW_AGENT_QUALITY": "Fast",
+    }
     config = config_from_env(FLOWINVOICE, env)
     assert config.mode is Mode.FLOW_AGENT and config.base_url == "https://agent.test"
     assert config.quality is Quality.FAST and config.app_prefix == "/api/v1/ai/apps/flowinvoice"

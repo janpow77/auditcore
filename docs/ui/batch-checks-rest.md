@@ -45,12 +45,15 @@ weil Lieferanten über alle Kunden fortlaufend nummerieren.
 
 ```python
 from auditcore_documents.web import (
-    BatchCheckService, BatchCheckSettings,
-    batch_check_routes, create_batch_check_app, create_batch_check_router,
+    BatchCheckService,
+    BatchCheckSettings,
+    batch_check_routes,
+    create_batch_check_app,
+    create_batch_check_router,
 )
 
 service = BatchCheckService(BatchCheckSettings(max_documents=5000))
-app.mount("/api/batch-checks", create_batch_check_app(service))                  # Starlette
+app.mount("/api/batch-checks", create_batch_check_app(service))  # Starlette
 fastapi_app.include_router(create_batch_check_router(service, prefix="/api/batch-checks"))
 ```
 

@@ -105,8 +105,11 @@ class FileSystemBoardStore:
                 raise
 
     def list(self) -> list[Board]:
-        return [loads(p.read_text(encoding="utf-8")) for p in sorted(self.root.glob("*.json"))
-                if not p.name.startswith(".")]
+        return [
+            loads(p.read_text(encoding="utf-8"))
+            for p in sorted(self.root.glob("*.json"))
+            if not p.name.startswith(".")
+        ]
 
     def delete(self, board_id: str) -> bool:
         path = self._path(board_id)

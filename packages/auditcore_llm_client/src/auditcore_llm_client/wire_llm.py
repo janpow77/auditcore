@@ -63,8 +63,9 @@ def _max_tokens(config: ClientConfig, sampling: Sampling) -> int | None:
     return config.profile.default_max_tokens
 
 
-def _openai_chat_body(config: ClientConfig, messages: list[JsonValue], sampling: Sampling,
-                      model: str) -> JsonObject:
+def _openai_chat_body(
+    config: ClientConfig, messages: list[JsonValue], sampling: Sampling, model: str
+) -> JsonObject:
     body: JsonObject = {"model": model, "messages": messages, "stream": False}
     put_optional(body, "temperature", _temperature(config, sampling))
     put_optional(body, "max_tokens", _max_tokens(config, sampling))
@@ -99,8 +100,9 @@ def _prompt_messages(system: str | None, prompt: str) -> list[JsonValue]:
     return messages
 
 
-def _ollama_chat(config: ClientConfig, prompt: str, system: str | None,
-                 sampling: Sampling) -> PreparedRequest:
+def _ollama_chat(
+    config: ClientConfig, prompt: str, system: str | None, sampling: Sampling
+) -> PreparedRequest:
     """audit_designer ``call_llm``: ``/api/chat`` with fixed options, 404 → OpenAI route."""
     profile = config.profile
     model = sampling.model or config.model_defaults.llm
@@ -134,8 +136,9 @@ def _ollama_chat(config: ClientConfig, prompt: str, system: str | None,
     )
 
 
-def _ollama_generate(config: ClientConfig, prompt: str, system: str | None,
-                     sampling: Sampling) -> PreparedRequest:
+def _ollama_generate(
+    config: ClientConfig, prompt: str, system: str | None, sampling: Sampling
+) -> PreparedRequest:
     """flowinvoice/audit-portal ``call_llm``: Ollama ``/api/generate``."""
     options: JsonObject = {}
     put_optional(options, "temperature", _temperature(config, sampling))
@@ -155,8 +158,11 @@ def _ollama_generate(config: ClientConfig, prompt: str, system: str | None,
     if sampling.json_mode:
         body["format"] = "json"
     return PreparedRequest(
-        operation="generate", method="POST", path="/api/generate",
-        timeout=config.timeouts.llm, json_body=body,
+        operation="generate",
+        method="POST",
+        path="/api/generate",
+        timeout=config.timeouts.llm,
+        json_body=body,
     )
 
 
@@ -165,8 +171,9 @@ def _context_window(options: Mapping[str, JsonValue]) -> int | None:
     return int(value) if isinstance(value, int | float) and value else None
 
 
-def _flow_agent_generate(config: ClientConfig, prompt: str, system: str | None,
-                         sampling: Sampling) -> PreparedRequest:
+def _flow_agent_generate(
+    config: ClientConfig, prompt: str, system: str | None, sampling: Sampling
+) -> PreparedRequest:
     """Provider-neutral ``/generate`` (``AiGenerateRequest``, extra fields forbidden).
 
     ``reasoning_effort`` is not part of the contract; the gateway sends ``think=false``.
@@ -185,13 +192,17 @@ def _flow_agent_generate(config: ClientConfig, prompt: str, system: str | None,
         body["response_format"] = "json"
     put_optional(body, "min_context_window", _context_window(sampling.options))
     return PreparedRequest(
-        operation="generate", method="POST", path=f"{config.app_prefix}/generate",
-        timeout=config.timeouts.llm, json_body=body,
+        operation="generate",
+        method="POST",
+        path=f"{config.app_prefix}/generate",
+        timeout=config.timeouts.llm,
+        json_body=body,
     )
 
 
-def build_generate(config: ClientConfig, prompt: str, system: str | None,
-                   sampling: Sampling) -> PreparedRequest:
+def build_generate(
+    config: ClientConfig, prompt: str, system: str | None, sampling: Sampling
+) -> PreparedRequest:
     """Single prompt with optional system prompt, in the dialect of mode and profile."""
     if config.mode is Mode.FLOW_AGENT:
         return _flow_agent_generate(config, prompt, system, sampling)
@@ -200,23 +211,33 @@ def build_generate(config: ClientConfig, prompt: str, system: str | None,
     return _ollama_generate(config, prompt, system, sampling)
 
 
-def build_stream_chat(config: ClientConfig, messages: Messages, sampling: Sampling,
-                      think: bool | None = None) -> PreparedRequest:
+def build_stream_chat(
+    config: ClientConfig, messages: Messages, sampling: Sampling, think: bool | None = None
+) -> PreparedRequest:
     """Streaming chat: Ollama NDJSON (ai-router, cockpit) or OpenAI SSE (Flow-Agent)."""
     timeouts = config.timeouts
     if config.mode is Mode.FLOW_AGENT:
-        body = _openai_chat_body(config, message_list(messages), sampling,
-                                 flow_agent_model(config, sampling.model))
+        body = _openai_chat_body(
+            config, message_list(messages), sampling, flow_agent_model(config, sampling.model)
+        )
         body["stream"] = True
         path = f"{config.app_prefix}/v1/chat/completions"
     else:
-        body = {"model": sampling.model or config.model_defaults.llm,
-                "messages": message_list(messages), "stream": True}
+        body = {
+            "model": sampling.model or config.model_defaults.llm,
+            "messages": message_list(messages),
+            "stream": True,
+        }
         if sampling.options:
             body["options"] = dict(sampling.options)
         put_optional(body, "think", think if think is not None else ollama_think(sampling, None))
         path = "/api/chat"
     return PreparedRequest(
-        operation="stream_chat", method="POST", path=path, timeout=timeouts.llm,
-        json_body=body, stream=True, connect_timeout=timeouts.stream_connect,
+        operation="stream_chat",
+        method="POST",
+        path=path,
+        timeout=timeouts.llm,
+        json_body=body,
+        stream=True,
+        connect_timeout=timeouts.stream_connect,
     )

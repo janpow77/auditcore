@@ -48,39 +48,67 @@ von einem `ReplayTransport` statt aus dem Netz:
 
 ```python
 from auditcore_harvest import (
-    AuthKind, Capabilities, HarvestEngine, HarvestRequest, ReplayTransport,
-    SnapshotSemantics, Source,
+    AuthKind,
+    Capabilities,
+    HarvestEngine,
+    HarvestRequest,
+    ReplayTransport,
+    SnapshotSemantics,
+    Source,
 )
 from auditcore_harvest.memory import (
-    ClockSleeper, FixedClock, ListSink, MemoryStateStore, StaticCredentials,
+    ClockSleeper,
+    FixedClock,
+    ListSink,
+    MemoryStateStore,
+    StaticCredentials,
 )
 from auditcore_harvest.reference import JsonApiAdapter
 
 URL = "https://api.example.invalid/v1/items"
-transport = ReplayTransport((
-    {"request": {"url": URL, "params": {"size": "2"}},
-     "response": {"status": 200,
-                  "body_json": {"items": [{"id": "E1"}, {"id": "E2"}], "next": "t2"}}},
-    {"request": {"url": URL, "params": {"size": "2", "cursor": "t2"}},
-     "response": {"status": 200, "body_json": {"items": [{"id": "E3"}], "next": None}}},
-))
-adapter = JsonApiAdapter(Source(
-    source_id="beispiel.register", title="Beispielregister (synthetisch)",
-    family="beispiel", adapter_version="1.0.0", profile_version="2026.09.1",
-    data_format="application/json", auth=AuthKind.NONE,
-    capabilities=Capabilities(
-        pagination=True, incremental=False, full_snapshot=True, deletions=False
-    ),
-    snapshot_semantics=SnapshotSemantics.FULL_SNAPSHOT_REPLACE,
-))
+transport = ReplayTransport(
+    (
+        {
+            "request": {"url": URL, "params": {"size": "2"}},
+            "response": {
+                "status": 200,
+                "body_json": {"items": [{"id": "E1"}, {"id": "E2"}], "next": "t2"},
+            },
+        },
+        {
+            "request": {"url": URL, "params": {"size": "2", "cursor": "t2"}},
+            "response": {"status": 200, "body_json": {"items": [{"id": "E3"}], "next": None}},
+        },
+    )
+)
+adapter = JsonApiAdapter(
+    Source(
+        source_id="beispiel.register",
+        title="Beispielregister (synthetisch)",
+        family="beispiel",
+        adapter_version="1.0.0",
+        profile_version="2026.09.1",
+        data_format="application/json",
+        auth=AuthKind.NONE,
+        capabilities=Capabilities(
+            pagination=True, incremental=False, full_snapshot=True, deletions=False
+        ),
+        snapshot_semantics=SnapshotSemantics.FULL_SNAPSHOT_REPLACE,
+    )
+)
 clock = FixedClock()
 engine = HarvestEngine(
-    transport=transport, credentials=StaticCredentials({}), state=MemoryStateStore(),
-    clock=clock, sleeper=ClockSleeper(clock),
+    transport=transport,
+    credentials=StaticCredentials({}),
+    state=MemoryStateStore(),
+    clock=clock,
+    sleeper=ClockSleeper(clock),
 )
 sink = ListSink()
 result = engine.run(
-    adapter, HarvestRequest("beispiel.register", run_id="lauf-1"), sink,
+    adapter,
+    HarvestRequest("beispiel.register", run_id="lauf-1"),
+    sink,
     config={"url": URL, "page_size": 2},
 )
 assert result.pages == 2 and result.records_delivered == 3

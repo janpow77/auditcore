@@ -8,6 +8,7 @@ Authentisierung und Mandantentrennung bleiben in der einbindenden Anwendung.
 
 ```python
 from auditcore_statistics.web import create_app, create_router
+
 app = create_app("/api/benford")
 fastapi_app.include_router(create_router("/api/benford"))
 ```

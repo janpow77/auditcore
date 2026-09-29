@@ -19,9 +19,20 @@ from datetime import timedelta
 from .errors import ConfigurationError
 
 HMAC_ALGORITHMS = frozenset({"HS256", "HS384", "HS512"})
-ASYMMETRIC_ALGORITHMS = frozenset({
-    "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512", "EdDSA",
-})
+ASYMMETRIC_ALGORITHMS = frozenset(
+    {
+        "RS256",
+        "RS384",
+        "RS512",
+        "PS256",
+        "PS384",
+        "PS512",
+        "ES256",
+        "ES384",
+        "ES512",
+        "EdDSA",
+    }
+)
 TIME_CLAIMS = frozenset({"exp", "iat", "nbf"})
 EXTRA_SLOT = "*"
 

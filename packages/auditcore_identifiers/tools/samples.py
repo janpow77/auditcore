@@ -14,29 +14,75 @@ import string
 SEED = 20260925
 #: SWIFT IBAN Registry: example IBAN per country (Release 101); see docs/test-vectors.md.
 IBAN_EXAMPLES = (
-    "DE89370400440532013000", "AT611904300234573201", "CH9300762011623852957",
-    "FR1420041010050500013M02606", "GB29NWBK60161331926819", "NL91ABNA0417164300",
-    "BE68539007547034", "IT60X0542811101000000123456", "ES9121000418450200051332",
-    "PL61109010140000071219812874", "LU280019400644750000", "IE29AIBK93115212345678",
-    "DK5000400440116243", "FI2112345600000785", "SE4550000000058398257466",
-    "NO9386011117947", "PT50000201231234567890154", "GR1601101250000000012300695",
-    "CZ6508000000192000145399", "SK3112000000198742637541", "HU42117730161111101800000000",
-    "SI56263300012039086", "HR1210010051863000160", "EE382200221020145685",
-    "LT121000011101001000", "LV80BANK0000435195001", "MT84MALT011000012345MTLCAST001S",
-    "CY17002001280000001200527600", "BG80BNBG96611020345678", "RO49AAAA1B31007593840000",
-    "LI21088100002324013AA", "IS140159260076545510730339", "MC5811222000010123456789030",
-    "SM86U0322509800000000270100", "GI75NWBK000000007099453", "SA0380000000608010167519",
+    "DE89370400440532013000",
+    "AT611904300234573201",
+    "CH9300762011623852957",
+    "FR1420041010050500013M02606",
+    "GB29NWBK60161331926819",
+    "NL91ABNA0417164300",
+    "BE68539007547034",
+    "IT60X0542811101000000123456",
+    "ES9121000418450200051332",
+    "PL61109010140000071219812874",
+    "LU280019400644750000",
+    "IE29AIBK93115212345678",
+    "DK5000400440116243",
+    "FI2112345600000785",
+    "SE4550000000058398257466",
+    "NO9386011117947",
+    "PT50000201231234567890154",
+    "GR1601101250000000012300695",
+    "CZ6508000000192000145399",
+    "SK3112000000198742637541",
+    "HU42117730161111101800000000",
+    "SI56263300012039086",
+    "HR1210010051863000160",
+    "EE382200221020145685",
+    "LT121000011101001000",
+    "LV80BANK0000435195001",
+    "MT84MALT011000012345MTLCAST001S",
+    "CY17002001280000001200527600",
+    "BG80BNBG96611020345678",
+    "RO49AAAA1B31007593840000",
+    "LI21088100002324013AA",
+    "IS140159260076545510730339",
+    "MC5811222000010123456789030",
+    "SM86U0322509800000000270100",
+    "GI75NWBK000000007099453",
+    "SA0380000000608010167519",
 )
 #: GLEIF LEI records, confirmed via api.gleif.org on 2026-09-25 (docs/test-vectors.md).
 LEI_EXAMPLES = (
-    "7LTWFZYICNSX8D621K86", "529900T8BM49AURSDO55",
-    "5493001KJTIIGC8Y1R12", "529900W18LQJJN6SJ336",
+    "7LTWFZYICNSX8D621K86",
+    "529900T8BM49AURSDO55",
+    "5493001KJTIIGC8Y1R12",
+    "529900W18LQJJN6SJ336",
 )
 BIC_EXAMPLES = (
-    "DEUTDEFF", "DEUTDEFF500", "COBADEFFXXX", "NWBKGB2L", "BNPAFRPP", "MARKDEF1100",
-    "SYNTDEH1XXX", "RZOOAT2L", "UBSWCHZH80A", "DEUTDE00", "1234DEFF", "DEUTXXFF",
-    "DEUTDEF", "DEUTDEFF5", "DEUTDEFF50", "DEUTDEFF5000", "DEUT DE FF", "deutdeff",
-    "DEUTDEFF-500", "DEÜTDEFF", "D3UTDEFF", "DEUTKXFF", "DEUTXKFF", "DEUTUKFF",
+    "DEUTDEFF",
+    "DEUTDEFF500",
+    "COBADEFFXXX",
+    "NWBKGB2L",
+    "BNPAFRPP",
+    "MARKDEF1100",
+    "SYNTDEH1XXX",
+    "RZOOAT2L",
+    "UBSWCHZH80A",
+    "DEUTDE00",
+    "1234DEFF",
+    "DEUTXXFF",
+    "DEUTDEF",
+    "DEUTDEFF5",
+    "DEUTDEFF50",
+    "DEUTDEFF5000",
+    "DEUT DE FF",
+    "deutdeff",
+    "DEUTDEFF-500",
+    "DEÜTDEFF",
+    "D3UTDEFF",
+    "DEUTKXFF",
+    "DEUTXKFF",
+    "DEUTUKFF",
 )
 _NON_ASCII = ("٣", "²", "Ä", "ß", " ", " ", "Ｄ", "@", ";", "-", "/", ".", "\n")
 
@@ -48,8 +94,11 @@ def mod97_digits(body: str) -> str:
 
 
 def _random_bban(rng: random.Random, structure: str) -> str:
-    kinds = {"n": string.digits, "a": string.ascii_uppercase,
-             "c": string.digits + string.ascii_uppercase}
+    kinds = {
+        "n": string.digits,
+        "a": string.ascii_uppercase,
+        "c": string.digits + string.ascii_uppercase,
+    }
     return "".join(
         "".join(rng.choice(kinds[kind]) for _ in range(int(length)))
         for length, kind in re.findall(r"(\d+)!([nac])", structure)
@@ -98,8 +147,9 @@ def iban_samples(structures: dict[str, str]) -> list[str | None]:
         samples.extend(mutations(rng, iban))
     for _ in range(150):
         length = rng.randrange(5, 36)
-        samples.append("".join(rng.choice(string.ascii_uppercase[:6] + string.digits)
-                               for _ in range(length)))
+        samples.append(
+            "".join(rng.choice(string.ascii_uppercase[:6] + string.digits) for _ in range(length))
+        )
     samples.extend(["DE89370400440532013@00", "DE8937040044053201300;", "-E89370400440532013000"])
     return list(dict.fromkeys(samples))
 
@@ -127,8 +177,9 @@ def bic_samples() -> list[str | None]:
     samples: list[str | None] = [None, "", " ", *BIC_EXAMPLES]
     for _ in range(80):
         length = rng.choice((7, 8, 9, 11, 12))
-        samples.append("".join(rng.choice(string.ascii_uppercase + string.digits)
-                               for _ in range(length)))
+        samples.append(
+            "".join(rng.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+        )
     return list(dict.fromkeys(samples))
 
 
@@ -153,24 +204,74 @@ def _vat_bodies(rng: random.Random) -> list[str]:
     bodies = []
     for _ in range(12):
         first = str(rng.randint(1, 9)) + _digits(rng, 7)
-        bodies += ["DE" + first + str(_mod_11_10(first)),
-                   "DE" + first + str((_mod_11_10(first) + 1) % 10)]
+        bodies += [
+            "DE" + first + str(_mod_11_10(first)),
+            "DE" + first + str((_mod_11_10(first) + 1) % 10),
+        ]
         seven = _digits(rng, 7)
-        bodies += ["ATU" + seven + str(_at_digit(seven)),
-                   "ATU" + seven + str((_at_digit(seven) + 3) % 10)]
+        bodies += [
+            "ATU" + seven + str(_at_digit(seven)),
+            "ATU" + seven + str((_at_digit(seven) + 3) % 10),
+        ]
     return bodies
 
 
 _VAT_PREFIXES = (
-    "AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", "FR", "HR", "HU", "IE",
-    "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK", "XI", "GB", "GR",
-    "US", "CH", "NO",
+    "AT",
+    "BE",
+    "BG",
+    "CY",
+    "CZ",
+    "DE",
+    "DK",
+    "EE",
+    "EL",
+    "ES",
+    "FI",
+    "FR",
+    "HR",
+    "HU",
+    "IE",
+    "IT",
+    "LT",
+    "LU",
+    "LV",
+    "MT",
+    "NL",
+    "PL",
+    "PT",
+    "RO",
+    "SE",
+    "SI",
+    "SK",
+    "XI",
+    "GB",
+    "GR",
+    "US",
+    "CH",
+    "NO",
 )
 _VAT_SHAPES = (
-    ("n7",), ("n8",), ("n9",), ("n10",), ("n11",), ("n12",), ("n13",), ("=U", "n8"),
-    ("n8", "a1"), ("a1", "n7", "a1"), ("n7", "a2"), ("a2", "n9"), ("n9", "=B", "n2"),
-    ("n10", "=01"), ("=GD", "n3"), ("=HA", "n3"), ("=0", "n9"), ("=1", "n8"),
-    ("n1", "=+", "n5", "a1"), ("a1", "n8"),
+    ("n7",),
+    ("n8",),
+    ("n9",),
+    ("n10",),
+    ("n11",),
+    ("n12",),
+    ("n13",),
+    ("=U", "n8"),
+    ("n8", "a1"),
+    ("a1", "n7", "a1"),
+    ("n7", "a2"),
+    ("a2", "n9"),
+    ("n9", "=B", "n2"),
+    ("n10", "=01"),
+    ("=GD", "n3"),
+    ("=HA", "n3"),
+    ("=0", "n9"),
+    ("=1", "n8"),
+    ("n1", "=+", "n5", "a1"),
+    ("a1", "n8"),
 )
 
 
@@ -190,10 +291,25 @@ def _shape(rng: random.Random, shape: tuple[str, ...]) -> str:
 def vat_samples() -> list[tuple[str | None, str | None]]:
     """(value, country) pairs; country is the optional restriction of the check."""
     rng = random.Random(SEED + 3)
-    values: list[str | None] = [None, "", " ", "DE", "de136695976", "DE 136 695 976",
-                                "DE136.695.976", "DE-136-695-976", "DE136695976\n",
-                                "DE١٣٦٦٩٥٩٧٦", "ＤＥ136695976", "DE13669597", "GB123456789",
-                                "GBGD001", "GBHA599", "ATU13585627", "NL004495445B01"]
+    values: list[str | None] = [
+        None,
+        "",
+        " ",
+        "DE",
+        "de136695976",
+        "DE 136 695 976",
+        "DE136.695.976",
+        "DE-136-695-976",
+        "DE136695976\n",
+        "DE١٣٦٦٩٥٩٧٦",
+        "ＤＥ136695976",
+        "DE13669597",
+        "GB123456789",
+        "GBGD001",
+        "GBHA599",
+        "ATU13585627",
+        "NL004495445B01",
+    ]
     values += _vat_bodies(rng)
     for prefix in _VAT_PREFIXES:
         for shape in _VAT_SHAPES:
@@ -208,11 +324,30 @@ def vat_samples() -> list[tuple[str | None, str | None]]:
 
 def tax_number_samples() -> list[str | None]:
     rng = random.Random(SEED + 4)
-    values: list[str | None] = [None, "", " ", "12/345/67890", "123/456/78901", "123/4567/8901",
-                                "12 345 67890", "1234567890", "12345678901", "2893081508152",
-                                "181/815/08155", "9181081508155", "5133081508159", "123456789",
-                                "12/345/6789", "12-345-67890", "12.345.67890", "1234567890123",
-                                "12/345/67890\n", "١٢/٣٤٥/٦٧٨٩٠", "12/345/6789A", "12  345 67890"]
+    values: list[str | None] = [
+        None,
+        "",
+        " ",
+        "12/345/67890",
+        "123/456/78901",
+        "123/4567/8901",
+        "12 345 67890",
+        "1234567890",
+        "12345678901",
+        "2893081508152",
+        "181/815/08155",
+        "9181081508155",
+        "5133081508159",
+        "123456789",
+        "12/345/6789",
+        "12-345-67890",
+        "12.345.67890",
+        "1234567890123",
+        "12/345/67890\n",
+        "١٢/٣٤٥/٦٧٨٩٠",
+        "12/345/6789A",
+        "12  345 67890",
+    ]
     for _ in range(60):
         digits = _digits(rng, rng.choice((9, 10, 11, 12, 13, 14)))
         values += [digits, f"{digits[:2]}/{digits[2:5]}/{digits[5:]}"]
@@ -221,8 +356,17 @@ def tax_number_samples() -> list[str | None]:
 
 def tax_id_samples() -> list[str | None]:
     rng = random.Random(SEED + 5)
-    values: list[str | None] = [None, "", "36574261809", "36 574 261 809", "36574261890",
-                                "36554266806", "06574261809", "3657426180", "365742618091"]
+    values: list[str | None] = [
+        None,
+        "",
+        "36574261809",
+        "36 574 261 809",
+        "36574261890",
+        "36554266806",
+        "06574261809",
+        "3657426180",
+        "365742618091",
+    ]
     while len(values) < 160:
         first = _digits(rng, 10)
         values += [first + str(_mod_11_10(first)), first + str((_mod_11_10(first) + 1) % 10)]

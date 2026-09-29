@@ -39,10 +39,15 @@ class ModelSnapshot:
     def to_dict(self) -> dict[str, object]:
         """cockpit shape (``models`` as list of dicts)."""
         return {
-            "ok": self.ok, "reachable": self.reachable, "state": self.state,
-            "message": self.message, "url": self.url,
-            "models": [m.to_dict() for m in self.models], "stale": self.stale,
-            "http_status": self.http_status, "retry_after": self.retry_after,
+            "ok": self.ok,
+            "reachable": self.reachable,
+            "state": self.state,
+            "message": self.message,
+            "url": self.url,
+            "models": [m.to_dict() for m in self.models],
+            "stale": self.stale,
+            "http_status": self.http_status,
+            "retry_after": self.retry_after,
             "cache_ttl": self.cache_ttl,
         }
 
@@ -55,8 +60,12 @@ def classify(error: LlmClientError) -> tuple[str, str, int | None, bool]:
     """(state, message, retry_after, reachable) of a failed model fetch."""
     code = error.status_code
     if error.kind is ErrorKind.HTTP_STATUS and code == 429:
-        return ("overloaded", "ai-router überlastet (HTTP 429) – Modellabruf gedrosselt",
-                _retry_after(error), True)
+        return (
+            "overloaded",
+            "ai-router überlastet (HTTP 429) – Modellabruf gedrosselt",
+            _retry_after(error),
+            True,
+        )
     if error.kind is ErrorKind.HTTP_STATUS and code in (401, 403):
         return "auth_error", f"ai-router: Zugriff verweigert (HTTP {code})", None, True
     if error.kind is ErrorKind.HTTP_STATUS:
@@ -99,9 +108,15 @@ class ModelCatalog:
         found = tuple(models)
         self._last_models = (self._clock(), found)
         snapshot = ModelSnapshot(
-            ok=bool(found), reachable=True, state="ok" if found else "empty",
+            ok=bool(found),
+            reachable=True,
+            state="ok" if found else "empty",
             message="Router bereit" if found else "ai-router erreichbar, meldet aber keine Modelle",
-            url=self.url, models=found, stale=False, http_status=200, retry_after=None,
+            url=self.url,
+            models=found,
+            stale=False,
+            http_status=200,
+            retry_after=None,
             cache_ttl=CACHE_TTL_S,
         )
         self._snapshot = (self._clock(), snapshot)
@@ -115,8 +130,15 @@ class ModelCatalog:
         if error.kind is ErrorKind.INVALID_RESPONSE:
             status = 200
         snapshot = ModelSnapshot(
-            ok=False, reachable=reachable, state=state, message=message, url=self.url,
-            models=models, stale=bool(models), http_status=status, retry_after=retry_after,
+            ok=False,
+            reachable=reachable,
+            state=state,
+            message=message,
+            url=self.url,
+            models=models,
+            stale=bool(models),
+            http_status=status,
+            retry_after=retry_after,
             cache_ttl=min(CACHE_TTL_S, max(ERROR_TTL_S, float(retry_after or 0))),
         )
         self._snapshot = (self._clock(), snapshot)

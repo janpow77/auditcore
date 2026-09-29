@@ -106,8 +106,9 @@ def test_expiry_and_leeway() -> None:
     assert verifier(at=NOW + timedelta(minutes=9, seconds=59)).verify(token)
     with pytest.raises(ExpiredTokenError):
         verifier(at=NOW + timedelta(minutes=10)).verify(token)
-    tolerant = TokenProfile("tolerant", lifetime=timedelta(minutes=10),
-                            leeway=timedelta(seconds=30))
+    tolerant = TokenProfile(
+        "tolerant", lifetime=timedelta(minutes=10), leeway=timedelta(seconds=30)
+    )
     assert verifier(tolerant, at=NOW + timedelta(minutes=10, seconds=29)).verify(token)
     with pytest.raises(ExpiredTokenError):
         verifier(tolerant, at=NOW + timedelta(minutes=10, seconds=30)).verify(token)
@@ -132,9 +133,15 @@ def test_required_claims(missing: str) -> None:
     assert caught.value.claim == missing
 
 
-@pytest.mark.parametrize(("claim", "value"), [
-    ("sub", 7), ("exp", "tomorrow"), ("iat", True), ("jti", 5),
-])
+@pytest.mark.parametrize(
+    ("claim", "value"),
+    [
+        ("sub", 7),
+        ("exp", "tomorrow"),
+        ("iat", True),
+        ("jti", 5),
+    ],
+)
 def test_claim_types(claim: str, value: object) -> None:
     with pytest.raises(InvalidClaimError):
         verifier().verify(forge({**base_claims(), claim: value}))
@@ -156,8 +163,12 @@ def test_token_types() -> None:
 
 
 def test_issuer_protects_reserved_and_fixed_claims() -> None:
-    fixed = TokenProfile("fixed", lifetime=timedelta(minutes=5),
-                         layout=("sub", "type", "*", "iat", "exp"), fixed_claims=(("type", "a"),))
+    fixed = TokenProfile(
+        "fixed",
+        lifetime=timedelta(minutes=5),
+        layout=("sub", "type", "*", "iat", "exp"),
+        fixed_claims=(("type", "a"),),
+    )
     for claims in ({"exp": 1}, {"iat": 1}, {"nbf": 1}, {"type": "refresh"}):
         with pytest.raises(ValueError):
             issuer(fixed).issue(claims, subject="7")
@@ -171,7 +182,11 @@ def test_issuer_protects_reserved_and_fixed_claims() -> None:
     with pytest.raises(ValueError, match="keine weiteren"):
         issuer(closed).issue({"role": "x"}, subject="7")
     assert list(verifier(fixed).verify(issuer(fixed).issue(subject="7").token).claims) == [
-        "sub", "type", "iat", "exp"]
+        "sub",
+        "type",
+        "iat",
+        "exp",
+    ]
 
 
 def test_naive_clock_is_refused() -> None:
@@ -187,21 +202,24 @@ def test_other_timezones_are_normalised() -> None:
     assert issuer(at=cest).issue(subject="7").token == issuer().issue(subject="7").token
 
 
-@pytest.mark.parametrize("kwargs", [
-    {"algorithm": "none", "accepted_algorithms": ("none",)},
-    {"algorithm": "HS256", "accepted_algorithms": ("HS256", "RS256")},
-    {"algorithm": "HS256", "accepted_algorithms": ("HS512",)},
-    {"algorithm": "XS1"},
-    {"layout": ("sub", "iat")},
-    {"required_claims": ("iat", "sub")},
-    {"layout": ("sub", "exp"), "required_claims": ("exp", "iat")},
-    {"layout": ("sub", "sub", "exp")},
-    {"fixed_claims": (("exp", "1"),)},
-    {"fixed_claims": (("type", "x"),)},
-    {"leeway": timedelta(seconds=-1)},
-    {"lifetime": timedelta(0)},
-    {"min_key_bytes": -1},
-])
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"algorithm": "none", "accepted_algorithms": ("none",)},
+        {"algorithm": "HS256", "accepted_algorithms": ("HS256", "RS256")},
+        {"algorithm": "HS256", "accepted_algorithms": ("HS512",)},
+        {"algorithm": "XS1"},
+        {"layout": ("sub", "iat")},
+        {"required_claims": ("iat", "sub")},
+        {"layout": ("sub", "exp"), "required_claims": ("exp", "iat")},
+        {"layout": ("sub", "sub", "exp")},
+        {"fixed_claims": (("exp", "1"),)},
+        {"fixed_claims": (("type", "x"),)},
+        {"leeway": timedelta(seconds=-1)},
+        {"lifetime": timedelta(0)},
+        {"min_key_bytes": -1},
+    ],
+)
 def test_unsafe_profiles_are_refused(kwargs: dict[str, object]) -> None:
     arguments: dict[str, object] = {"lifetime": timedelta(minutes=5), **kwargs}
     with pytest.raises(ConfigurationError):
@@ -229,11 +247,12 @@ def test_asymmetric_profile_and_key_confusion() -> None:
     from cryptography.hazmat.primitives.asymmetric import ec
 
     private = ec.generate_private_key(ec.SECP256R1())
-    private_pem = private.private_bytes(serialization.Encoding.PEM,
-                                        serialization.PrivateFormat.PKCS8,
-                                        serialization.NoEncryption())
-    public_pem = private.public_key().public_bytes(serialization.Encoding.PEM,
-                                                   serialization.PublicFormat.SubjectPublicKeyInfo)
+    private_pem = private.private_bytes(
+        serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()
+    )
+    public_pem = private.public_key().public_bytes(
+        serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo
+    )
     profile = TokenProfile("es", lifetime=timedelta(minutes=5), algorithm="ES256")
     token = TokenIssuer(profile, private_pem, clock=fixed_clock(NOW)).issue(subject="7").token
     assert TokenVerifier(profile, public_pem, clock=fixed_clock(NOW)).verify(token).subject == "7"

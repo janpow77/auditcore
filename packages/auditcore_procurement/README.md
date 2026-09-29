@@ -52,9 +52,17 @@ assert validate_record(datensatz) == []
 
 profil = load_profile("procurement.hvtg", "2026.09.3")
 bericht = run_prechecks(
-    profil, Decimal("50000"), None, None, "Liefer-/Dienstleistungen",
-    "Oeffentliche Ausschreibung", "BELOW_EU", [], mode="strict",
-    reference_date=date(2026, 3, 1), authority_type="sub_central",
+    profil,
+    Decimal("50000"),
+    None,
+    None,
+    "Liefer-/Dienstleistungen",
+    "Oeffentliche Ausschreibung",
+    "BELOW_EU",
+    [],
+    mode="strict",
+    reference_date=date(2026, 3, 1),
+    authority_type="sub_central",
 )
 schwelle = bericht["checks"][0]["eu_threshold"]
 assert schwelle["value"] == 216000 and schwelle["valid_from"] == "2026-01-01"

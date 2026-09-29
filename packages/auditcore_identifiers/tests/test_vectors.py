@@ -34,7 +34,8 @@ def test_ecbs_paper_format() -> None:
     """EBS204 / ISO 13616-1: paper form in groups of four with optional "IBAN" prefix."""
     assert ai.format_iban("DE89370400440532013000") == "DE89 3704 0044 0532 0130 00"
     assert ai.check_iban("IBAN DE89 3704 0044 0532 0130 00").normalized == (
-        "DE89370400440532013000")
+        "DE89370400440532013000"
+    )
     assert ai.check_iban("DE88370400440532013000").reason is ai.Reason.INVALID_CHECKSUM
 
 

@@ -121,14 +121,20 @@ def create_card(board: Board, ctx: Context, fields: Mapping[str, object]) -> Com
     siblings = board.cards_in(column_id)
     slot = _slot_from(fields, siblings)
     rank, moved = place(siblings, slot)
-    base = Card(card_id, column_id, rank, str(values["title"]),
-                created_at=ctx.now, updated_at=ctx.now)
+    base = Card(
+        card_id, column_id, rank, str(values["title"]), created_at=ctx.now, updated_at=ctx.now
+    )
     card = with_fields(base, values)
     cards = _apply_ranks(board.cards, moved) + (card,)
     new_board = bump(board, ctx, cards)
     changes = (Change("card.created", card.id, {"column_id": column_id, "rank": rank}),)
-    return CommandResult(new_board, changes + _rebalance_change(moved), card,
-                         capacity.warnings, _rebalanced(new_board, moved))
+    return CommandResult(
+        new_board,
+        changes + _rebalance_change(moved),
+        card,
+        capacity.warnings,
+        _rebalanced(new_board, moved),
+    )
 
 
 def _slot_from(fields: Mapping[str, object], siblings: tuple[Card, ...]) -> int:
@@ -173,8 +179,9 @@ def move_card(
     new_board = bump(board, ctx, cards)
     data: JsonObject = {"from": card.column_id, "to": column_id, "rank": rank, "index": slot}
     changes = (Change("card.moved", card_id, data),) + _rebalance_change(moved)
-    return CommandResult(new_board, changes, updated, decision.warnings,
-                         _rebalanced(new_board, moved))
+    return CommandResult(
+        new_board, changes, updated, decision.warnings, _rebalanced(new_board, moved)
+    )
 
 
 def update_card(

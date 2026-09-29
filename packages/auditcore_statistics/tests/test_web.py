@@ -30,8 +30,10 @@ def test_analyse_reports_distribution_exclusions_and_conformity() -> None:
 
 
 def test_json_numbers_are_analysed_exactly_as_sent() -> None:
-    payload = decode(b'{"test": "first_two", "profile": "nigrini.2012", '
-                     b'"short_values": "exclude", "values": [0.1, 1e-7, 0.000123, 5]}')
+    payload = decode(
+        b'{"test": "first_two", "profile": "nigrini.2012", '
+        b'"short_values": "exclude", "values": [0.1, 1e-7, 0.000123, 5]}'
+    )
     result = analyse(payload)
     assert result["distribution"]["excluded"]["short"] == 3
     rows = {r["digit"]: r["observed_count"] for r in result["distribution"]["rows"]}
@@ -59,8 +61,9 @@ def test_analyse_rejects_invalid_requests(change: dict[str, object], message: st
 def test_second_digit_requires_explicit_short_value_rule() -> None:
     with pytest.raises(ContractError, match="short_values"):
         analyse({"test": "second", "profile": "nigrini.2012", "values": VALUES})
-    padded = analyse({"test": "second", "profile": "nigrini.2012", "values": VALUES,
-                      "short_values": "pad"})
+    padded = analyse(
+        {"test": "second", "profile": "nigrini.2012", "values": VALUES, "short_values": "pad"}
+    )
     assert padded["conformity"]["analysed"] == 13
 
 

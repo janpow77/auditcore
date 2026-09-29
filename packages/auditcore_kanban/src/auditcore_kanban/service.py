@@ -118,8 +118,12 @@ class BoardService:
     # -- board commands -----------------------------------------------------
 
     def create_board(
-        self, actor: str, title: str = "Neues Board", icon: str = "📋",
-        template_key: str | None = None, board_id: str | None = None,
+        self,
+        actor: str,
+        title: str = "Neues Board",
+        icon: str = "📋",
+        template_key: str | None = None,
+        board_id: str | None = None,
     ) -> Outcome:
         chosen = None
         if template_key is not None:
@@ -135,26 +139,47 @@ class BoardService:
         events = self.events.record(new_id, result.board.version, actor, ctx.now, result.changes)
         return Outcome(result.board, result, events)
 
-    def update_board(self, board_id: str, actor: str, *, title: str | None = None,
-                     icon: str | None = None, pinned: bool | None = None,
-                     archived: bool | None = None, expected_version: int | None = None) -> Outcome:
-        return self.run(board_id, actor, lambda b, c: bc.update_board(
-            b, c, title=title, icon=icon, pinned=pinned, archived=archived), expected_version)
+    def update_board(
+        self,
+        board_id: str,
+        actor: str,
+        *,
+        title: str | None = None,
+        icon: str | None = None,
+        pinned: bool | None = None,
+        archived: bool | None = None,
+        expected_version: int | None = None,
+    ) -> Outcome:
+        return self.run(
+            board_id,
+            actor,
+            lambda b, c: bc.update_board(
+                b, c, title=title, icon=icon, pinned=pinned, archived=archived
+            ),
+            expected_version,
+        )
 
     def delete_board(self, board_id: str, actor: str) -> None:
         board = self._load(board_id)
         ctx = self.context(actor, board)
         authorize(board, actor, Action.DELETE_BOARD, ctx.inherited).raise_if_denied()
         self.store.delete(board.id)
-        self.events.record(board.id, board.version + 1, actor, ctx.now,
-                           (Change("board.deleted"),))
+        self.events.record(board.id, board.version + 1, actor, ctx.now, (Change("board.deleted"),))
 
-    def configure_columns(self, board_id: str, actor: str, columns: Sequence[Column],
-                          transitions: TransitionPolicy | None = None,
-                          expected_version: int | None = None) -> Outcome:
-        return self.run(board_id, actor,
-                        lambda b, c: bc.configure_columns(b, c, columns, transitions),
-                        expected_version)
+    def configure_columns(
+        self,
+        board_id: str,
+        actor: str,
+        columns: Sequence[Column],
+        transitions: TransitionPolicy | None = None,
+        expected_version: int | None = None,
+    ) -> Outcome:
+        return self.run(
+            board_id,
+            actor,
+            lambda b, c: bc.configure_columns(b, c, columns, transitions),
+            expected_version,
+        )
 
     def share(self, board_id: str, actor: str, user_id: str, permission: str) -> Outcome:
         """Owner check, permission, self-share, then user existence (original order)."""
@@ -172,29 +197,60 @@ class BoardService:
 
     # -- card commands ------------------------------------------------------
 
-    def create_card(self, board_id: str, actor: str, fields: Mapping[str, object],
-                    expected_version: int | None = None) -> Outcome:
-        return self.run(board_id, actor, lambda b, c: cc.create_card(b, c, fields),
-                        expected_version)
+    def create_card(
+        self,
+        board_id: str,
+        actor: str,
+        fields: Mapping[str, object],
+        expected_version: int | None = None,
+    ) -> Outcome:
+        return self.run(
+            board_id, actor, lambda b, c: cc.create_card(b, c, fields), expected_version
+        )
 
-    def update_card(self, board_id: str, actor: str, card_id: str,
-                    fields: Mapping[str, object], expected_version: int | None = None) -> Outcome:
-        return self.run(board_id, actor, lambda b, c: cc.update_card(b, c, card_id, fields),
-                        expected_version)
+    def update_card(
+        self,
+        board_id: str,
+        actor: str,
+        card_id: str,
+        fields: Mapping[str, object],
+        expected_version: int | None = None,
+    ) -> Outcome:
+        return self.run(
+            board_id, actor, lambda b, c: cc.update_card(b, c, card_id, fields), expected_version
+        )
 
-    def move_card(self, board_id: str, actor: str, card_id: str, column_id: str, *,
-                  before_id: str | None = None, after_id: str | None = None,
-                  index: int | None = None, expected_version: int | None = None) -> Outcome:
-        return self.run(board_id, actor, lambda b, c: cc.move_card(
-            b, c, card_id, column_id, before_id=before_id, after_id=after_id, index=index),
-            expected_version)
+    def move_card(
+        self,
+        board_id: str,
+        actor: str,
+        card_id: str,
+        column_id: str,
+        *,
+        before_id: str | None = None,
+        after_id: str | None = None,
+        index: int | None = None,
+        expected_version: int | None = None,
+    ) -> Outcome:
+        return self.run(
+            board_id,
+            actor,
+            lambda b, c: cc.move_card(
+                b, c, card_id, column_id, before_id=before_id, after_id=after_id, index=index
+            ),
+            expected_version,
+        )
 
-    def delete_card(self, board_id: str, actor: str, card_id: str,
-                    expected_version: int | None = None) -> Outcome:
-        return self.run(board_id, actor, lambda b, c: cc.delete_card(b, c, card_id),
-                        expected_version)
+    def delete_card(
+        self, board_id: str, actor: str, card_id: str, expected_version: int | None = None
+    ) -> Outcome:
+        return self.run(
+            board_id, actor, lambda b, c: cc.delete_card(b, c, card_id), expected_version
+        )
 
-    def toggle_done(self, board_id: str, actor: str, card_id: str,
-                    expected_version: int | None = None) -> Outcome:
-        return self.run(board_id, actor, lambda b, c: cc.toggle_done(b, c, card_id),
-                        expected_version)
+    def toggle_done(
+        self, board_id: str, actor: str, card_id: str, expected_version: int | None = None
+    ) -> Outcome:
+        return self.run(
+            board_id, actor, lambda b, c: cc.toggle_done(b, c, card_id), expected_version
+        )

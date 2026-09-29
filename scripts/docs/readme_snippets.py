@@ -50,9 +50,7 @@ def run(readme: Path) -> int:
             exec(compile(code, name, "exec"), namespace)  # noqa: S102 - eigener README-Code
             continue
         test = doctest.DocTestParser().get_doctest(code, dict(namespace), name, str(readme), 0)
-        runner = doctest.DocTestRunner(
-            optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE
-        )
+        runner = doctest.DocTestRunner(optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
         failures += runner.run(test, clear_globs=False).failed
         namespace.update(test.globs)
     return failures

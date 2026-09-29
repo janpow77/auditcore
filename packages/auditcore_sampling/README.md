@@ -59,8 +59,10 @@ from auditcore_sampling import (
 
 # Aufgezeichneter Referenzfall der Entscheidung „mus 30“
 plan = recommended_mus_size(
-    population_value=475_478.94, materiality=50_000.0,
-    expected_error_rate=0.005, confidence_level=0.95,
+    population_value=475_478.94,
+    materiality=50_000.0,
+    expected_error_rate=0.005,
+    confidence_level=0.95,
 )
 assert (plan.method, plan.sample_size) == ("portal.mus_poisson", 30)
 
@@ -70,17 +72,20 @@ start = draw_start(random.Random(42), plan.interval)
 auswahl = systematic_mus(
     betraege, sample_size=10, interval=plan.interval, start=start, variant="portal"
 )
-assert auswahl.positions == (3, 4, 9)          # jede Position einmal
+assert auswahl.positions == (3, 4, 9)  # jede Position einmal
 assert auswahl.excluded_negative == (1, 7, 13, 19, 25)
 
 assert stratified_allocation(30, {"A": 100, "B": 50, "C": 10}, "proportional") == {
-    "A": 19, "B": 10, "C": 2,
+    "A": 19,
+    "B": 10,
+    "C": 2,
 }
 
 # Kein stiller Ersatzwert für unbekannte Konfidenzniveaus
 try:
-    recommended_mus_size(population_value=1.0, materiality=1.0,
-                         expected_error_rate=0.0, confidence_level=0.93)
+    recommended_mus_size(
+        population_value=1.0, materiality=1.0, expected_error_rate=0.0, confidence_level=0.93
+    )
 except SamplingInputError:
     pass
 else:
@@ -136,8 +141,12 @@ Zwischengeschalteten Stelle) sind öffentliche Module mit eigenen Exporten:
 from auditcore_sampling.guidance import KOM_TABLES, mus_conservative_size
 
 # Leitfaden 6.3.5.7: BV 4.199.882.024 €, 90 %, erwartete Fehlerquote 0,2 %
-plan = mus_conservative_size(book_value=4_199_882_024, confidence_level=0.9,
-                             factor_profile=KOM_TABLES, anticipated_error_rate=0.002)
+plan = mus_conservative_size(
+    book_value=4_199_882_024,
+    confidence_level=0.9,
+    factor_profile=KOM_TABLES,
+    anticipated_error_rate=0.002,
+)
 assert plan.sample_size == 136 and round(plan.interval) == 30_881_485
 assert plan.status == "GUIDANCE_EGESIF_16_0014_01"
 ```

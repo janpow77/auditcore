@@ -48,11 +48,17 @@ def test_configured_secret_is_removed_before_truncation() -> None:
 
 
 def test_error_message_is_redacted_and_structured() -> None:
-    error = RouterHttpError(f"/x HTTP 403: {KEY}", status_code=403, endpoint="/x",
-                            retry_after=2.0, secrets=[KEY])
+    error = RouterHttpError(
+        f"/x HTTP 403: {KEY}", status_code=403, endpoint="/x", retry_after=2.0, secrets=[KEY]
+    )
     assert KEY not in str(error) and error.kind is ErrorKind.HTTP_STATUS
-    assert error.to_dict() == {"kind": "http_status", "message": "/x HTTP 403: <redacted>",
-                               "status_code": 403, "endpoint": "/x", "retry_after": 2.0}
+    assert error.to_dict() == {
+        "kind": "http_status",
+        "message": "/x HTTP 403: <redacted>",
+        "status_code": 403,
+        "endpoint": "/x",
+        "retry_after": 2.0,
+    }
     assert isinstance(RouterTimeoutError("t"), LlmClientError)
 
 

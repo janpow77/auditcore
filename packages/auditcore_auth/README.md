@@ -48,7 +48,11 @@ Ohne Extras (Profile, Formaterkennung, Konfigurationsprüfung):
 ```python
 from datetime import timedelta
 from auditcore_auth import (
-    ConfigurationError, HashScheme, TokenProfile, app_profile, constant_time_equals,
+    ConfigurationError,
+    HashScheme,
+    TokenProfile,
+    app_profile,
+    constant_time_equals,
     identify_hash,
 )
 
@@ -59,11 +63,12 @@ assert profile.token("access").rejected_types == ("refresh",)
 
 info = identify_hash("$2b$12$tykvNDpREeaFzESOYJImI.kzQ1zN4yEwmBO6UHdoYyoYK7TmEubSO")
 assert info.scheme is HashScheme.BCRYPT and info.bcrypt_rounds == 12
-assert identify_hash("$2b$12$short") is None      # nie an bcrypt weitergereicht
+assert identify_hash("$2b$12$short") is None  # nie an bcrypt weitergereicht
 
 try:
-    TokenProfile("unsicher", lifetime=timedelta(minutes=5), algorithm="none",
-                 accepted_algorithms=("none",))
+    TokenProfile(
+        "unsicher", lifetime=timedelta(minutes=5), algorithm="none", accepted_algorithms=("none",)
+    )
 except ConfigurationError:
     pass
 else:
@@ -77,13 +82,13 @@ Mit den Extras `[bcrypt,argon2,jwt]`:
 from auditcore_auth import ARGON2ID, PasswordHasher, TokenIssuer, TokenVerifier
 
 hasher = PasswordHasher(ARGON2ID)
-check = hasher.check(password, user.password_hash)      # jedes gespeicherte Format
-if check.valid and check.needs_rehash:                   # Rehash bei Login
+check = hasher.check(password, user.password_hash)  # jedes gespeicherte Format
+if check.valid and check.needs_rehash:  # Rehash bei Login
     user.password_hash = hasher.hash(password)
 
 access = profile.token("access")
 issued = TokenIssuer(access, secret).issue({"role": role}, subject=username)
-claims = TokenVerifier(access, secret).verify(issued.token)   # TokenError bei Ablehnung
+claims = TokenVerifier(access, secret).verify(issued.token)  # TokenError bei Ablehnung
 ```
 
 FastAPI (`[fastapi]`): `bearer_dependency(verifier)` aus

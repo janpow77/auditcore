@@ -14,11 +14,17 @@
    ```python
    from auditcore_common.profiles import load_packaged_profile
 
+
    def load_profile(profile_id: str, version: str) -> Profile:
        return load_packaged_profile(
-           "auditcore_x.profile_data", profile_id, version,
-           parse=profile_from_dict, identity=lambda p: (p.id, p.version),
-           error=ProfileError, require_text=True, invalid_name="invalid",
+           "auditcore_x.profile_data",
+           profile_id,
+           version,
+           parse=profile_from_dict,
+           identity=lambda p: (p.id, p.version),
+           error=ProfileError,
+           require_text=True,
+           invalid_name="invalid",
        )
    ```
 

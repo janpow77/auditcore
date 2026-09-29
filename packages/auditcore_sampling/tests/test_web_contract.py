@@ -138,18 +138,27 @@ def test_portal_variant_reports_excluded_values_and_flowstat_counts_hits() -> No
         {"id": "d", "value": None},
         {"id": "e", "value": 10.0},
     ]
-    portal = select({"method": "mus", "variant": "portal", "items": items, "sample_size": 4,
-                     "seed": 1})
+    portal = select(
+        {"method": "mus", "variant": "portal", "items": items, "sample_size": 4, "seed": 1}
+    )
     assert portal["strata"][0]["excluded_negative"] == ["b"]
     assert portal["strata"][0]["excluded_zero_or_missing"] == ["c", "d"]
-    flowstat = select({"method": "mus", "variant": "flowstat", "items": items, "sample_size": 4,
-                       "seed": 1})
+    flowstat = select(
+        {"method": "mus", "variant": "flowstat", "items": items, "sample_size": 4, "seed": 1}
+    )
     assert flowstat["rows"][0]["id"] == "a" and flowstat["rows"][0]["hits"] >= 3
 
 
 def test_stratified_selection_uses_allocation_per_stratum() -> None:
-    result = select({"method": "srs", "items": _items(60, strata=True), "sample_size": 12,
-                     "allocation": "proportional", "seed": 5})
+    result = select(
+        {
+            "method": "srs",
+            "items": _items(60, strata=True),
+            "sample_size": 12,
+            "allocation": "proportional",
+            "seed": 5,
+        }
+    )
     sizes = {s["stratum"]: s["sample_size"] for s in result["strata"]}
     assert sizes == {"B": 4, "A": 8} and result["selected"] == 12
     assert all(r["stratum"] == "A" for r in result["rows"] if r["order"] > 4)
@@ -157,8 +166,9 @@ def test_stratified_selection_uses_allocation_per_stratum() -> None:
         select({"method": "srs", "items": _items(10, strata=True), "sample_size": 2, "seed": 1})
     mixed = _items(4, strata=True) + [{"id": "x", "value": 1.0}]
     with pytest.raises(ContractError, match="jedes Element"):
-        select({"method": "srs", "items": mixed, "sample_size": 2, "seed": 1,
-                "allocation": "equal"})
+        select(
+            {"method": "srs", "items": mixed, "sample_size": 2, "seed": 1, "allocation": "equal"}
+        )
 
 
 @pytest.mark.parametrize(

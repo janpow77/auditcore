@@ -19,9 +19,7 @@ class BackendUnavailableError(AuthError, ImportError):
     """An optional backend (bcrypt, argon2-cffi, PyJWT, FastAPI) is not installed."""
 
     def __init__(self, backend: str, extra: str) -> None:
-        super().__init__(
-            f"{backend} ist nicht installiert; auditcore_auth[{extra}] installieren"
-        )
+        super().__init__(f"{backend} ist nicht installiert; auditcore_auth[{extra}] installieren")
         self.backend = backend
         self.extra = extra
 

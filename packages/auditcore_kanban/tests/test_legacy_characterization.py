@@ -56,7 +56,9 @@ def outcome(fn: Callable[[], object]) -> tuple[int, str | None]:
 def test_source_binding() -> None:
     assert DATA["source"]["commit"] == "2c726f3c1481775cd34aeaa83f87137d6ab12ffe"
     assert {f["git_blob"] for f in DATA["source"]["files"]} == {
-        "ccdb57dd3677b36fb4212c5347c2cfcd0096cabe", "b2ecd79398c77c13b450331642074840d535ca6c"}
+        "ccdb57dd3677b36fb4212c5347c2cfcd0096cabe",
+        "b2ecd79398c77c13b450331642074840d535ca6c",
+    }
     assert DATA["cases"] == len(DATA["observations"]) == 77
 
 
@@ -80,12 +82,15 @@ def test_task_payload_validation_matches(item: dict[str, Any]) -> None:
 def test_column_validation_matches(item: dict[str, Any]) -> None:
     columns = [Column(c["id"], c["label"]) for c in item["input"]]
     observed = item["observed"]
-    assert outcome(lambda: validate_columns(columns)) == (observed["status"],
-                                                          observed.get("detail"))
+    assert outcome(lambda: validate_columns(columns)) == (
+        observed["status"],
+        observed.get("detail"),
+    )
     if observed["status"] == 200:
         checked = validate_columns(columns)
-        assert [(c.id, c.label) for c in checked] == [(c["id"], c["label"])
-                                                      for c in observed["result"]]
+        assert [(c.id, c.label) for c in checked] == [
+            (c["id"], c["label"]) for c in observed["result"]
+        ]
 
 
 #: Deliberate change: an empty deadline on create clears instead of failing (B4).
@@ -118,8 +123,9 @@ def legacy_board() -> Board:
 
 
 def titles(board: Board) -> dict[str, list[str]]:
-    return {c.id: [x.title for x in board.cards_in(c.id)] for c in board.columns
-            if board.cards_in(c.id)}
+    return {
+        c.id: [x.title for x in board.cards_in(c.id)] for c in board.columns if board.cards_in(c.id)
+    }
 
 
 def observed_titles(name: str) -> dict[str, list[str]]:
@@ -136,8 +142,9 @@ SAME: dict[str, Callable[[Board], Board]] = {
     "move A to position 99": lambda b: move_card(b, CTX, "A", "offen", index=98).board,
     "move B to in_arbeit 1": lambda b: move_card(b, CTX, "B", "in_arbeit", index=0).board,
     "move B to in_arbeit 2": lambda b: move_card(b, CTX, "B", "in_arbeit", index=1).board,
-    "update status without position":
-        lambda b: update_card(b, CTX, "C", {"column_id": "in_arbeit"}).board,
+    "update status without position": lambda b: (
+        update_card(b, CTX, "C", {"column_id": "in_arbeit"}).board
+    ),
     "update status and position": lambda b: move_card(b, CTX, "C", "in_arbeit", index=0).board,
     "update clear deadline": lambda b: update_card(b, CTX, "C", {"due": ""}).board,
     "update badge empty": lambda b: update_card(b, CTX, "C", {"badge": ""}).board,
@@ -159,19 +166,23 @@ def test_update_position_tie_is_a_deliberate_change() -> None:
     assert titles(moved)["offen"] == ["C", "A", "B"]
 
 
-@pytest.mark.parametrize(("name", "code"), [
-    ("move A to unknown status", "UNKNOWN_COLUMN"),
-    ("update invalid priority", "VALIDATION_ERROR"),
-    ("create invalid status", "UNKNOWN_COLUMN"),
-])
+@pytest.mark.parametrize(
+    ("name", "code"),
+    [
+        ("move A to unknown status", "UNKNOWN_COLUMN"),
+        ("update invalid priority", "VALIDATION_ERROR"),
+        ("create invalid status", "UNKNOWN_COLUMN"),
+    ],
+)
 def test_rejections_match(name: str, code: str) -> None:
     assert CASES[name]["observed"]["response"]["status"] == 400
     board = legacy_board()
     run = {
         "move A to unknown status": lambda: move_card(board, CTX, "A", "gibt_es_nicht"),
         "update invalid priority": lambda: update_card(board, CTX, "C", {"priority": "dringend"}),
-        "create invalid status": lambda: create_card(board, CTX, {"title": "D",
-                                                                  "column_id": "nope"}),
+        "create invalid status": lambda: create_card(
+            board, CTX, {"title": "D", "column_id": "nope"}
+        ),
     }[name]
     with pytest.raises(KanbanError) as error:
         run()
@@ -195,18 +206,21 @@ def test_removed_columns_move_to_first_column_but_are_appended() -> None:
     board = Board("p", "Board", "1", version=1)
     for title, column in (("A", "offen"), ("B", "offen"), ("X", "in_arbeit"), ("Y", "in_arbeit")):
         board = create_card(board, ctx, {"title": title, "column_id": column}).board
-    removed = configure_columns(board, ctx, (Column("offen", "Offen"),
-                                             Column("erledigt", "Erledigt"))).board
+    removed = configure_columns(
+        board, ctx, (Column("offen", "Offen"), Column("erledigt", "Erledigt"))
+    ).board
     assert titles(removed)["offen"] == ["A", "B", "X", "Y"]
-    first_removed = configure_columns(board, ctx, (Column("in_arbeit", "In Arbeit"),
-                                                   Column("erledigt", "Erledigt"))).board
+    first_removed = configure_columns(
+        board, ctx, (Column("in_arbeit", "In Arbeit"), Column("erledigt", "Erledigt"))
+    ).board
     assert titles(first_removed)["in_arbeit"] == ["X", "Y", "A", "B"]
 
 
 def test_default_columns() -> None:
     observed = CASES["settings default columns"]["observed"]["result"]["columns"]
     assert [(c.id, c.label, c.color) for c in Board("p", "t", "1").columns] == [
-        (c["id"], c["label"], c["color"]) for c in observed]
+        (c["id"], c["label"], c["color"]) for c in observed
+    ]
 
 
 # -- access and sharing -------------------------------------------------------------------
@@ -233,9 +247,13 @@ def test_access_matches(item: dict[str, Any]) -> None:
         assert (observed["owner_only"], owner_only) == (404, 403)
 
 
-SHARE_CODES = {"owner shares read": "OK", "owner shares write": "INVALID_PERMISSION",
-               "owner shares self": "SELF_SHARE", "editor shares": "FORBIDDEN",
-               "upsert existing": "OK"}
+SHARE_CODES = {
+    "owner shares read": "OK",
+    "owner shares write": "INVALID_PERMISSION",
+    "owner shares self": "SELF_SHARE",
+    "editor shares": "FORBIDDEN",
+    "upsert existing": "OK",
+}
 
 
 @pytest.mark.parametrize("name", sorted(SHARE_CODES))
