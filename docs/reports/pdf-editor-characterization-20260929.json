@@ -1,0 +1,66 @@
+{
+  "source_repository": "janpow77/pdf-editor",
+  "source_commit": "ce34413129751dfd72fac6cefa55b02718bff27b",
+  "engine_version": "1.28.2",
+  "python": "3.14.4",
+  "scope": "Direct calls to unchanged source services, synthetic PDFs, isolated venv; not full suite, not a release gate.",
+  "scenarios": [
+    {
+      "scenario": "visible_text_and_hidden_copies",
+      "observations": {
+        "success": true,
+        "page_secret_removed": true,
+        "public_context_retained": true,
+        "title_secret_retained": true,
+        "attachment_secret_retained": true,
+        "comment_secret_retained": true
+      }
+    },
+    {
+      "scenario": "independent_poppler_text_extraction",
+      "observations": {
+        "secret_removed": true,
+        "context_retained": true
+      }
+    },
+    {
+      "scenario": "simple_search_case_sensitive",
+      "observations": {
+        "reported_redactions": 2,
+        "lowercase_retained": false,
+        "uppercase_removed": true
+      }
+    },
+    {
+      "scenario": "pattern_phrase_across_lines",
+      "observations": {
+        "findings": 0
+      }
+    },
+    {
+      "scenario": "scan_without_ocr",
+      "observations": {
+        "pattern_findings": 0,
+        "simple_search_success": true,
+        "simple_search_redactions": 0
+      }
+    },
+    {
+      "scenario": "comment_applies_existing_redaction",
+      "observations": {
+        "success": true,
+        "pending_secret_removed": true,
+        "reported_annotations_applied": 1
+      }
+    },
+    {
+      "scenario": "pattern_redaction_email",
+      "observations": {
+        "success": true,
+        "email_removed": true,
+        "public_context_retained": true,
+        "reported_redactions": 1
+      }
+    }
+  ]
+}

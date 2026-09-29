@@ -1,10 +1,15 @@
 # Repo-Prüfprofil; Entwicklungsumgebung vorher aktivieren.
 [pruefprofile.pr]
-werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+werkzeuge = ["doku", "ruff", "pytest", "mypy", "codegate"]
 ausloeser = ["lokal", "pr"]
 zeitlimit_s = 1800
 max_befunde = 500
 autofix = false
+
+[pruefprofile.pr.werkzeug.doku]
+befehl = ["python3", "scripts/docs/repository_doku_check.py", "."]
+zeitlimit_s = 60
+prioritaet = 9
 
 [pruefprofile.pr.werkzeug.ruff]
 befehl = ["python3", "-m", "ruff", "check", ".", "--output-format=json", "--exit-zero"]

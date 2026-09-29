@@ -1,0 +1,623 @@
+{
+  "scope": "ECOHESION_AND_ACCOUNT_REVIEW",
+  "checked_at": "2026-09-29T19:28:20.134718+00:00",
+  "source_repository": "janpow77/audit_designer",
+  "source_commit": "aa71ce1b296564fd386605b4d96f80f6cd7a61e8",
+  "live_url": "https://ecohesion.flowaudit.de",
+  "code_changes": false,
+  "production_mutations": false,
+  "runner_profile_ecohesion": "NOT_PRESENT",
+  "backend": {
+    "tests": 1806,
+    "ecohesion_tests": 1651,
+    "failures": 0,
+    "errors": 0,
+    "environment": "Python 3.12.14; fresh requirements; synthetic SQLite; mocked providers"
+  },
+  "frontend": {
+    "tests": 1316,
+    "passed": 1315,
+    "failed": 1,
+    "ecohesion_tests": 59,
+    "typecheck": "PASS",
+    "production_build": "PASS",
+    "runtime": "Node 24.18.0",
+    "failure": "AutoMLWizard.vue:58; capabilities.value?.ml.automl when ml is absent; reproduced in isolated test"
+  },
+  "public_pages": [
+    {
+      "path": "/",
+      "finalUrl": "https://ecohesion.flowaudit.de/",
+      "ms": 8837,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Develop audit practicetogether.",
+        "Connect information.",
+        "Research that connects.",
+        "Tools for your ideas.",
+        "Share experience. Improve methods.",
+        "Initiative, concept and development: Jan Riener"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n\nECOHESION · AUDIT INNOVATION NETWORK\n\nDevelop audit practice\ntogether.\n\nTry tools with example data, compare audit methods and reuse solutions together. An independent development workshop, not an approved official procedure.\n\nStart with an example\nExplore applications\nExplore the Action Plan\n01 / RESEARCH\n02 / EXPERIMENTS\n03 / EXCHANGE\n+\n+\nFROM IDEA TO APPLICATION\nResearch\nExperiment\nCollaborate\nConnect information.\n\nResearch funding, state aid and sanctions lists in one place. Trace sources and reuse your findings.\n\nExplore research\nDevelop together. Move forward together.\n\nGET STARTED\n\nResearch that connects.\n\nSearch public registers, explore connections and take your findings with you.\n\nFind recipients of de minimis aid\n\nEnter the company or organisation name.\n\nSearch\nFind recipients of de minimis aid\n\nSince 1 January 2026, Article 6(1) of Regulation (EU) 2023/2831 requires information on granted de minimis aid to be recorded in a central register at national or Union level. Search recipients by name in the European Commission’s eAidRegister.\n\nFunding on the map\n\nExplore funded projects in Germany and Austria on the map. Regional assignments use published location data. Explore their regional distribution and compare project counts and funding volumes.\n\nScreen sanctions lists\n\nThe European Commission publishes a consolidated list of persons and organisations subject to EU financial sanctions. Compare names with the imported lists and examine potential matches.\n\nAll research tools\n\nBUILD TOGETHER\n\nTools for your ideas.\n\nWorkspaces for the group: try your own approaches, evaluate them and make them useful to others.\n\n01\nCompare document versions\n\nUpload two files and see changes side by side.\n\n02\nControl strategies\n\nCalculate scenarios, compare effort and evaluate results.\n\n03\nNotebooks & data analysis\n\nRun calculations and develop your own analyses.\n\n04\nSynthetic audit cases\n\nGenerate realistic practice cases with known errors.\n\n05\nBuild checklists\n\nStructure, test and share audit procedures together.\n\n06\nPrepare data\n\nImport tables, map columns and prepare data for analysis.\n\n07\nExplore knowledge\n\nSearch the shared knowledge base and trace the sources.\n\nThese workspaces are available after sign-in.\n\nECOHESION WORKING GROUP\n\nShare experience. Improve methods.\n\nThe platform connects research and experiments with collaboration between audit authorities.\n\nCollaborate\n\nINITIATIVE AND CONTRIBUTIONS\n\nInitiative, concept and development: Jan Riener\n\nExperience in ERDF and ESF audit, audit strategy, statistics and computer-assisted data analysis. ECOHESION connects this professional practice with tools for collaborative experimentation.\n\nContact and operator details\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research",
+      "finalUrl": "https://ecohesion.flowaudit.de/research",
+      "ms": 2590,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Explore data.Discover connections.",
+        "Find recipients of de minimis aid",
+        "Funding on the map",
+        "Screen sanctions lists",
+        "All research tools",
+        "Test your control strategies."
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n\nECOHESION / RESEARCH & ANALYSIS\n\nExplore data.\nDiscover connections.\n\nTools for researching public funding, state aid and sanctions registers. Traceable sources and results you can work with.\n\n01\nFind recipients of de minimis aid\n\nSince 1 January 2026, Article 6(1) of Regulation (EU) 2023/2831 requires information on granted de minimis aid to be recorded in a central register at national or Union level. Search recipients by name in the European Commission’s eAidRegister.\n\nOpen application\n02\nFunding on the map\n\nExplore funded projects in Germany and Austria on the map. Regional assignments use published location data. Explore their regional distribution and compare project counts and funding volumes.\n\nOpen application\n03\nScreen sanctions lists\n\nThe European Commission publishes a consolidated list of persons and organisations subject to EU financial sanctions. Compare names with the imported lists and examine potential matches.\n\nOpen application\nAll research tools\nAll applications\nFunding & state aid\nAnalysis & maps\nScreening & reports\n12 applications\nFUNDING & STATE AID\nCompany dossiers\n\nA company may have several published aid awards. This application combines register entries found for a company name into one overview.\n\nOpen\nSCREENING & REPORTS\nMatch company records\n\nCompany names may differ across public registers. Search the compiled entity index for potential matches and review the evidence for each association.\n\nOpen\nSCREENING & REPORTS\nScreen sanctions lists\n\nThe European Commission publishes a consolidated list of persons and organisations subject to EU financial sanctions. Compare names with the imported lists and examine potential matches.\n\nOpen\nFUNDING & STATE AID\nFind beneficiaries in Germany and Austria\n\nArticle 49 of Regulation (EU) 2021/1060 provides for publication of funded operations. Search the collected beneficiary lists from Germany and Austria together by name and project. Explore the regional distribution of funding on the map.\n\nOpen\nSCREENING & REPORTS\nExplore funding overlaps\n\nBeneficiary lists and aid registers may contain the same recipient. Compare names across both datasets and inspect overlaps. A match alone does not establish unlawful double funding.\n\nOpen\nANALYSIS & MAPS\nFunding on the map\n\nExplore funded projects in Germany and Austria on the map. Regional assignments use published location data. Explore their regional distribution and compare project counts and funding volumes.\n\nOpen\nANALYSIS & MAPS\nAnalyse funding patterns\n\nPublished beneficiary lists contain recipients, projects and costs. Analyse the collected data by region, fund and beneficiary and compare distributions.\n\nOpen\nFUNDING & STATE AID\nDe minimis cumulation\n\nArticle 3(2) of Regulation (EU) 2023/2831 limits general de minimis aid to EUR 300,000 per single undertaking and Member State over three years. Sum register entries for the selected recipient identifier; linked undertakings require separate consideration.\n\nOpen\nFUNDING & STATE AID\nFind recipients of de minimis aid\n\nSince 1 January 2026, Article 6(1) of Regulation (EU) 2023/2831 requires information on granted de minimis aid to be recorded in a central register at national or Union level. Search recipients by name in the European Commission’s eAidRegister.\n\nOpen\nSCREENING & REPORTS\nCreate research reports\n\nPublished aid awards support initial ",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/action-plan-public",
+      "finalUrl": "https://ecohesion.flowaudit.de/action-plan-public",
+      "ms": 2380,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Detection Capacity Action Plan",
+        "Analysis",
+        "Tools & Data",
+        "Knowledge & Capacity",
+        "Audit Practice & Quality",
+        "More with an account"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n\nREFERENCE FRAMEWORK\n\nDetection Capacity Action Plan\n\nECOHESION ist nicht die offizielle Umsetzungsplattform der Europäischen Kommission. Der Action Plan dient als fachlicher Referenzrahmen.\n\nStart self-assessment\nReference verification pending. Measures, clusters and summaries are ECOHESION interpretations. Alignment of all 22 measures with the original Action Plan awaits professional confirmation. Using a tool is not evidence of implementation.\nAnalysis\n3\nA03\nAnalyse the main error areas and their root causes\n\nFindings Intelligence and root cause analysis.\n\nA04\nDisseminate anonymised results\n\nFindings hub and community knowledge.\n\nA05\nAdapt the audit strategy to specific risks\n\nControl Strategy Lab and audit strategy links.\n\nTools & Data\n3\nA06\nUse IT tools in day-to-day audit work\n\nResearch tools, Data Lab and tool registry.\n\nA07\nInterconnect databases\n\nData source catalogue, mapping and connectors.\n\nA08\nUse AI on large datasets\n\nJupyter, AI gateway, agents and prompts.\n\nKnowledge & Capacity\n5\nA01\nEvents and information for beneficiaries\n\nTraining and guidance references; not a core function of the platform.\n\nA09\nTraining plan\n\nTraining & Competence Hub.\n\nA10\nCooperation between funds\n\nTopics and cross-fund projects.\n\nA11\nDisseminate Commission interpretations\n\nGuidance & Interpretation Hub.\n\nA12\nUse experts and earlier findings\n\nExpert directory and findings search.\n\nAudit Practice & Quality\n11\nA02\nTemplates and checklists for beneficiaries\n\nTemplate and checklist hub.\n\nA13\nEarly system audits\n\nPreventive audit toolkit.\n\nA14\nShare checklists\n\nChecklist Studio.\n\nA15\nRecommendations for system improvement\n\nChecklist guidance, findings and projects.\n\nA16\nAdapt checklists to 2021–2027\n\nChecklist coverage matrix and versioning.\n\nA17\nDocument audit planning and sampling\n\nSampling Studio, run manifests and templates.\n\nA18\nQuality of outsourced audits\n\nGuidance and quality assurance templates.\n\nA19\nDocument findings and non-findings\n\nMethod templates and quality assurance patterns.\n\nA20\nUnique indexed audit file\n\nReference patterns only — no central obligation to hold real audit files.\n\nA21\nDocument working papers unambiguously\n\nTemplates and method guidance.\n\nA22\nQuality review\n\nReview profiles and quality assurance tools.\n\nMore with an account\n\nMembers of the working group additionally see which topics and projects relate to each measure, the community view and their own cockpit.\n\nSign in\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/self-assessment",
+      "finalUrl": "https://ecohesion.flowaudit.de/self-assessment",
+      "ms": 6714,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Action Plan self-assessment",
+        "A03 · Analyse the main error areas and their root causes",
+        "Assessment and next steps"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n\nSelf-assessment · independent development workshop\n\nAction Plan self-assessment\n\nAssess your current position and record concrete next steps.\n\nYour answers are not sent to the server. Loading the page may generate technical access data.\n\nPrepare synthetic example\n\nReference verification pending. The 22 measures are ECOHESION interpretations; original references and assessment criteria await professional review.\n\nStorage\nThis session only\nKeep on this device\n\nSession storage in this tab. Export to retain for a later session.\n\nOrganisation (optional)\nScope (optional)\n0 of 22 measures assessed\nView result\n Detailed assessment\n\nCompletion, not a performance score: explicitly unclear and inapplicable measures count as assessed. Other measures require applicability and implementation.\n\nChoose measure\nA03 · Analyse the main error areas and their root causes\nA04 · Disseminate anonymised results\nA05 · Adapt the audit strategy to specific risks\nA06 · Use IT tools in day-to-day audit work\nA07 · Interconnect databases\nA08 · Use AI on large datasets\nA01 · Events and information for beneficiaries\nA09 · Training plan\nA10 · Cooperation between funds\nA11 · Disseminate Commission interpretations\nA12 · Use experts and earlier findings\nA02 · Templates and checklists for beneficiaries\nA13 · Early system audits\nA14 · Share checklists\nA15 · Recommendations for system improvement\nA16 · Adapt checklists to 2021–2027\nA17 · Document audit planning and sampling\nA18 · Quality of outsourced audits\nA19 · Document findings and non-findings\nA20 · Unique indexed audit file\nA21 · Document working papers unambiguously\nA22 · Quality review\nA03 Analyse the main error areas and their root causes\nA04 Disseminate anonymised results\nA05 Adapt the audit strategy to specific risks\nA06 Use IT tools in day-to-day audit work\nA07 Interconnect databases\nA08 Use AI on large datasets\nA01 Events and information for beneficiaries\nA09 Training plan\nA10 Cooperation between funds\nA11 Disseminate Commission interpretations\nA12 Use experts and earlier findings\nA02 Templates and checklists for beneficiaries\nA13 Early system audits\nA14 Share checklists\nA15 Recommendations for system improvement\nA16 Adapt checklists to 2021–2027\nA17 Document audit planning and sampling\nA18 Quality of outsourced audits\nA19 Document findings and non-findings\nA20 Unique indexed audit file\nA21 Document working papers unambiguously\nA22 Quality review\nA03 · Analyse the main error areas and their root causes\nApplicability\nPlease select\nApplicable\nPartly applicable\nNot applicable\nTo be clarified\nImplementation\nPlease select\nTo be clarified\nNot started\nPlanned\nIn progress\nIn trial\nIntroduced\n\n“Introduced” describes use, not proven effectiveness. Implementation and trial are not a numerical scale.\n\nNote / explanation (optional)\nNext step\nResponsible role\nDue / review date\nBack\nNext\nClear this measure\nImport, export and reset\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/documents",
+      "finalUrl": "https://ecohesion.flowaudit.de/documents",
+      "ms": 3000,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Methodology"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\nMethodology\n\nWhere the results come from, by which method and with which limits.\n\nSource catalogue\n\nEvery source of the research service with content, retrieval path, update frequency, legal basis and access status — plus the status vocabulary that separates an unqueried source from a null finding.\n\nAs of: —\nDetection Capacity Action Plan\n\nThe reference framework of this platform: 22 measures in four clusters, how they are operationalised, and the confidentiality of the cockpit.\n\nAs of: —\nMigration of the research tools\n\nWhere the tools come from, what was migrated and what deliberately was not — including the redirects of the former addresses.\n\nAs of: —\nDevelopment stages\n\nWhat the platform does, what is planned and what is not.\n\nAs of: —\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/sign-in",
+      "finalUrl": "https://ecohesion.flowaudit.de/sign-in",
+      "ms": 2091,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Sign in to ECOHESION"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\nSign in to ECOHESION\n\nPublic research is open to everyone. The working group area needs an account.\n\nUSERNAME OR EMAIL\nPASSWORD\nONE-TIME CODE (IF TWO-FACTOR AUTHENTICATION IS ENABLED)\nSign in\n\nOpen research tools\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/impressum",
+      "finalUrl": "https://ecohesion.flowaudit.de/impressum",
+      "ms": 2319,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Legal notice",
+        "Provider and contact",
+        "Responsible for content"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Home\nLegal notice\nProvider and contact\nJan Riener\nAm Amalienbad 6\n76669 Bad Schönborn-Bad Langenbrücken\nDeutschland\n\nE-Mail: jan.riener@vwvg.de\n\nResponsible for content\n\nJan Riener, at the address above.\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/my-space",
+      "finalUrl": "https://ecohesion.flowaudit.de/sign-in?redirect=/my-space",
+      "ms": 3451,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Sign in to ECOHESION"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\nSign in to ECOHESION\n\nPublic research is open to everyone. The working group area needs an account.\n\nUSERNAME OR EMAIL\nPASSWORD\nONE-TIME CODE (IF TWO-FACTOR AUTHENTICATION IS ENABLED)\nSign in\n\nOpen research tools\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        },
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research",
+      "viewport": 360,
+      "overflow": false
+    }
+  ],
+  "public_tools": [
+    {
+      "path": "/research/state-aid-company-dossier",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/state-aid-company-dossier",
+      "ms": 19690,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Company dossiers",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nCompany dossiers\n\nA company may have several published aid awards. This application combines register entries found for a company name into one overview.\n\nInputs\nCOMPANY NAME *\nCOUNTRY\nAll available countries\nAustria\nBelgium\nBulgaria\nCroatia\nCyprus\nCzechia\nDenmark\nEstonia\nFinland\nFrance\nGermany\nGreece\nHungary\nIreland\nItaly\nLatvia\nLithuania\nLuxembourg\nMalta\nNetherlands\nNorway\nPoland\nPortugal\nRomania\nSlovakia\nSlovenia\nSpain\nSweden\nSwitzerland\nUnited Kingdom\nUnited States\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/company-search",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/company-search",
+      "ms": 1985,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Match company records",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nMatch company records\n\nCompany names may differ across public registers. Search the compiled entity index for potential matches and review the evidence for each association.\n\nInputs\nCOMPANY NAME *\nCOUNTRY\nAll available countries\nAustria\nBelgium\nBulgaria\nCroatia\nCyprus\nCzechia\nDenmark\nEstonia\nFinland\nFrance\nGermany\nGreece\nHungary\nIreland\nItaly\nLatvia\nLithuania\nLuxembourg\nMalta\nNetherlands\nNorway\nPoland\nPortugal\nRomania\nSlovakia\nSlovenia\nSpain\nSweden\nSwitzerland\nUnited Kingdom\nUnited States\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/sanctions-screening",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/sanctions-screening",
+      "ms": 6355,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Screen sanctions lists",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nScreen sanctions lists\n\nThe European Commission publishes a consolidated list of persons and organisations subject to EU financial sanctions. Compare names with the imported lists and examine potential matches.\n\nInputs\nNAME *\nMINIMUM SCORE (50–100)\n\nDefault: 70 out of 100. Lower values include more possible name variants; higher values narrow the results. Names and aliases are compared. A high score does not confirm identity.\n\nSELECT SANCTIONS LISTS\nEU\nUN\nUSA · OFAC SDN\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/beneficiary-register",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/beneficiary-register",
+      "ms": 10636,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Find beneficiaries in Germany and Austria",
+        "Inputs",
+        "Funding at a glance"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nFind beneficiaries in Germany and Austria\n\nArticle 49 of Regulation (EU) 2021/1060 provides for publication of funded operations. Search the collected beneficiary lists from Germany and Austria together by name and project. Explore the regional distribution of funding on the map.\n\nFind recipients\nMap\nAnalysis\nInputs\nSEARCH TERM\nSEARCH IN *\nNames, projects and other details\nRecipient name only\nProject\nLocation\nProject reference\nMINIMUM SIMILARITY (OPTIONAL)\n\nLeave blank for the automatic threshold: 80 for one search word, 70 for two and 60 for longer queries. A higher value narrows the results. The score measures text similarity, not identity probability.\n\nCOUNTRY\nAll countries\nDeutschland\nÖsterreich\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nFunding at a glance\nGermany\nAustria\n\nRegional overview of the collected records. Use the search above to find recipients and projects in Germany and Austria.\n\n+\n−\n Leaflet | © OpenStreetMap\nNumber of projects\n0 – 1,331\n1,331 – 2,631\n2,631 – 4,344\n4,344 – 6,928\n> 6,928\nMap coverage notes\nOpen full map and analysis →\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/double-funding-crosscheck",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/double-funding-crosscheck",
+      "ms": 1542,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Explore funding overlaps",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nExplore funding overlaps\n\nBeneficiary lists and aid registers may contain the same recipient. Compare names across both datasets and inspect overlaps. A match alone does not establish unlawful double funding.\n\nInputs\nCOMPANY OR BENEFICIARY NAME *\nMINIMUM SIMILARITY BETWEEN NAMES (0–100) *\n70 – Broad\n80 – Expanded\n85 – Default\n90 – Strict\n95 – Very strict\n100 – Maximum name similarity\n\n85 is the starting value: Names from the two registers are associated when they reach at least 85 out of 100 similarity points.\n\n70–80: more possible associations, allowing greater spelling differences. 90–100: stricter matching. Legal forms, capitalisation and word order may differ even at 100.\n\nSelect a value and run the search again. Records without an associated match remain visible separately. The score is not the probability that the companies are identical.\n\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/beneficiary-map",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/beneficiary-map",
+      "ms": 2667,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Funding on the map",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nFunding on the map\n\nExplore funded projects in Germany and Austria on the map. Regional assignments use published location data. Explore their regional distribution and compare project counts and funding volumes.\n\nFind recipients\nMap\nAnalysis\nInputs\nCOUNTRY\nDeutschland\nÖsterreich\nNUTS LEVEL\nNUTS-1 (federal state)\nNUTS-3 (district)\nMETRIC\nNumber of operations\nTotal project costs\nREGION\nFUND\nRun\nExport this result · JSON\nExport this result · GEOJSON\nExport this result · PDF\nRun, search criteria and expiry\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\n16 displayed results\n29/09/2026, 21:20 CEST\nResult notes (3)\nSelect region\nAll regions\nNordrhein-Westfalen\nSachsen\nThüringen\nRheinland-Pfalz\nBrandenburg\nSachsen-Anhalt\nBayern\nMecklenburg-Vorpommern\nBaden-Württemberg\nNiedersachsen\nHessen\nBerlin\nBremen\nSchleswig-Holstein\nHamburg\nSaarland\n+\n−\n Leaflet | © OpenStreetMap\nNumber of operations\n0 – 1,331\n1,331 – 2,631\n2,631 – 4,344\n4,344 – 6,928\n> 6,928\nRegional distribution as a table\nREGION\tNUMBER OF OPERATIONS\tPROJECTS\nNordrhein-Westfalen DEA\t20.126 Vorhaben\t20,126\nSachsen DED\t8.498 Vorhaben\t8,498\nThüringen DEG\t7.446 Vorhaben\t7,446\nRheinland-Pfalz DEB\t6.928 Vorhaben\t6,928\nBrandenburg DE4\t5.844 Vorhaben\t5,844\nSachsen-Anhalt DEE\t4.961 Vorhaben\t4,961\nBayern DE2\t4.344 Vorhaben\t4,344\nMecklenburg-Vorpommern DE8\t3.149 Vorhaben\t3,149\nBaden-Württemberg DE1\t2.848 Vorhaben\t2,848\nNiedersachsen DE9\t2.631 Vorhaben\t2,631\nHessen DE7\t1.854 Vorhaben\t1,854\nBerlin DE3\t1.632 Vorhaben\t1,632\nBremen DE5\t1.331 Vorhaben\t1,331\nSchleswig-Holstein DEF\t683 Vorhaben\t683\nHamburg DE6\t581 Vorhaben\t581\nSaarland DEC\t157 Vorhaben\t157\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/beneficiary-analytics",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/beneficiary-analytics",
+      "ms": 1552,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Analyse funding patterns",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nAnalyse funding patterns\n\nPublished beneficiary lists contain recipients, projects and costs. Analyse the collected data by region, fund and beneficiary and compare distributions.\n\nFind recipients\nMap\nAnalysis\nInputs\nANALYSIS\nLargest beneficiaries\nSeveral operations\nBeneficiaries across several states\nFederal state × fund\nTop locations\nSectors / intervention fields\nOperations per federal state\nOperations per district\nCOUNTRY\nAll countries\nDeutschland\nÖsterreich\nREGION\nFUND\nMINIMUM TOTAL PROJECT COSTS (EUR)\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/de-minimis-cumulation",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/de-minimis-cumulation",
+      "ms": 1709,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "De minimis cumulation",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nDe minimis cumulation\n\nArticle 3(2) of Regulation (EU) 2023/2831 limits general de minimis aid to EUR 300,000 per single undertaking and Member State over three years. Sum register entries for the selected recipient identifier; linked undertakings require separate consideration.\n\nInputs\n\nFind the recipient by name first →\n\nBENEFICIARY REFERENCE (B-000123456) *\nREFERENCE DATE (DEFAULT: TODAY)\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/de-minimis-register",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/de-minimis-register",
+      "ms": 1510,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Find recipients of de minimis aid",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nFind recipients of de minimis aid\n\nSince 1 January 2026, Article 6(1) of Regulation (EU) 2023/2831 requires information on granted de minimis aid to be recorded in a central register at national or Union level. Search recipients by name in the European Commission’s eAidRegister.\n\nInputs\nBENEFICIARY NAME\nCOUNTRY\nAustria\nBelgium\nBulgaria\nCroatia\nCyprus\nCzechia\nDenmark\nEstonia\nFinland\nFrance\nGermany\nGreece\nHungary\nIreland\nItaly\nLatvia\nLithuania\nLuxembourg\nMalta\nNetherlands\nPoland\nPortugal\nRomania\nSlovakia\nSlovenia\nSpain\nSweden\nDE MINIMIS TYPE\nAll\nGeneral de minimis aid\nAgricultural de minimis aid\nGRANTED FROM\nGRANTED UNTIL\nGRANTING AUTHORITY\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/state-aid-audit-report",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/state-aid-audit-report",
+      "ms": 1849,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Create research reports",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nCreate research reports\n\nPublished aid awards support initial company research. This application compiles the records found into a downloadable research report.\n\nInputs\nCOMPANY NAME *\nCOUNTRY\nAll available countries\nAustria\nBelgium\nBulgaria\nCroatia\nCyprus\nCzechia\nDenmark\nEstonia\nFinland\nFrance\nGermany\nGreece\nHungary\nIreland\nItaly\nLatvia\nLithuania\nLuxembourg\nMalta\nNetherlands\nNorway\nPoland\nPortugal\nRomania\nSlovakia\nSlovenia\nSpain\nSweden\nSwitzerland\nUnited Kingdom\nUnited States\nRun\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research/state-aid-register",
+      "finalUrl": "https://ecohesion.flowaudit.de/research/state-aid-register",
+      "ms": 1393,
+      "title": "ECOHESION Audit Innovation Network",
+      "headings": [
+        "Research state aid",
+        "Inputs"
+      ],
+      "bodyText": "ECOHESION\nAudit Innovation Network\nResearch & Analysis\nAction Plan\nMethodology\nDE\nEN\n☀\nLight\n◐\nSystem\n☾\nDark\n≡\nComfortable\n☰\nCompact\nSign in\n← Research & Analysis\nResearch state aid\n\nMember States publish individual aid awards in the Commission’s Transparency Award Module. Search imported records by recipient and review amounts, dates and purposes.\n\nInputs\nSEARCH TERM\nMINIMUM SIMILARITY (OPTIONAL)\n\nLeave blank for the automatic threshold: 80 for one search word, 70 for two and 60 for longer queries. A higher value narrows the results. The score measures text similarity, not identity probability.\n\nCOUNTRY\nAll available countries\nAustria\nBelgium\nBulgaria\nCroatia\nCyprus\nCzechia\nDenmark\nEstonia\nFinland\nFrance\nGermany\nGreece\nHungary\nIreland\nItaly\nLatvia\nLithuania\nLuxembourg\nMalta\nNetherlands\nNorway\nPoland\nPortugal\nRomania\nSlovakia\nSlovenia\nSpain\nSweden\nSwitzerland\nUnited Kingdom\nUnited States\nNUTS CODE\nGRANTED FROM\nGRANTED UNTIL\nMINIMUM AMOUNT (EUR)\nMAXIMUM AMOUNT (EUR)\nAID INSTRUMENT\nAID OBJECTIVE\nGRANTING AUTHORITY\nSA REFERENCE\nSOURCE KEY\nRun\nExport this result · CSV\nExport this result · XLSX\nExport this result · JSON\nExport this result · PDF\n\nResults are retained for one hour for export and bound to this browser. Export does not query sources again.\n\nSources and methodology\n\nIndependently operated experimental platform. Not an official platform of the European Commission or of any audit authority.\n\nPrivately operated Hetzner infrastructure outside government networks. Do not enter or upload confidential or protected official data. Processing and external services are described at each tool.\n\nLegal notice\n\nExplore together · develop together · reuse together",
+      "errors": [],
+      "failed": [
+        {
+          "url": "https://ecohesion.flowaudit.de/api/ecohesion/me/profile",
+          "status": 401
+        }
+      ],
+      "overflow": false
+    },
+    {
+      "path": "/research",
+      "viewport": 360,
+      "overflow": false
+    }
+  ],
+  "accessibility": {
+    "variants": 8,
+    "settled_violations": 0,
+    "incomplete_rule_checks": 10,
+    "initial_animation_findings": "Not confirmed after animations settled and reduced motion; excluded from defect count"
+  },
+  "reference_journeys": {
+    "authentication": "synthetic member override",
+    "database": "isolated SQLite in memory; no VP tables",
+    "checks": [
+      {
+        "test": "case-to-private-checklist-answer-to-docx",
+        "passed": true
+      },
+      {
+        "test": "checklist-reflow-320-to-1920",
+        "passed": true
+      },
+      {
+        "test": "editable-example-to-real-method-run-to-xlsx",
+        "passed": true,
+        "parameters": {
+          "projects": 120,
+          "comparison_share": 0.35
+        },
+        "ids": {
+          "profile_id": 1,
+          "population_id": 1,
+          "run_id": 1,
+          "data_mode": "synthetic",
+          "route": "/labs?tab=strategy"
+        }
+      },
+      {
+        "test": "methods-reflow-320-to-1920",
+        "passed": true
+      }
+    ]
+  },
+  "dependency_audit": {
+    "info": 0,
+    "low": 1,
+    "moderate": 44,
+    "high": 10,
+    "critical": 3,
+    "total": 58
+  },
+  "account": {
+    "version": "0.1.0",
+    "runner": "PASS after correct virtualenv PATH; initial environment run had missing imports/tools",
+    "runner_log": "ruff        ok           0 Befunde     0.0 s  \npytest      ok           0 Befunde     0.6 s  \nmypy        ok           0 Befunde     0.1 s  \ncodegate    ok           0 Befunde     2.6 s  \n\n0 Befunde, Bericht: auditcore-runner befunde\n",
+    "concurrency_probe": {
+      "revision_after_concurrent_edit": 2,
+      "submitted_revision": 1,
+      "final_revision": 3,
+      "stale_revision_accepted": true,
+      "temporary_password_set": true
+    },
+    "persistence": "MemoryRepository only; host transaction adapter required",
+    "project_roles": "Not represented in core; preserve ECOHESION project permissions"
+  },
+  "historical_function_matrix": [
+    {
+      "function": "F01 · Start, Katalog, Entdecken",
+      "routes": "/; /research; /discover",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Nutzen-/Urheberhinweise und 39 Einstiege geprüft; vollständiger Katalogvertrag und Vorführkarten fehlen."
+    },
+    {
+      "function": "F02 · Action Plan / Navigator",
+      "routes": "/action-plan-public; /action-plan",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Kontrast/Umbruch korrigiert, Sichtbarkeitsfilter getestet; authentisches Original samt 22 Fundstellen fehlt."
+    },
+    {
+      "function": "F03 · Standortbestimmung",
+      "routes": "/self-assessment",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** 48 Frontendtests enthalten Speicher-/Import-/Rundlauf- und Beratungsschutz. Fachliche Kriterien, Katalogmigration, Clusterergebnis und Ziel-Excel fehlen."
+    },
+    {
+      "function": "F04 · Organisations-Cockpit",
+      "routes": "/action-plan",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Revisionen, Einzelrechte, Konflikte und Widerruf getestet; mehrere institutionelle Geltungsbereiche und vollständige Cockpitansicht fehlen."
+    },
+    {
+      "function": "F05 · Themenraum",
+      "routes": "/topics",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** 0/1/10/30/100 Layoutfälle und Überlauf über Frontendtests; eigene Detailvorschau, volle Statusfilter und alle Organisations-/Personenwerte offen."
+    },
+    {
+      "function": "F06 · Sitzungen",
+      "routes": "/ag-meetings",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Grundfunktionen und Einstieg geprüft; geschützter Präsentationsmodus und vollständige Beschlussfolge fehlen."
+    },
+    {
+      "function": "F07 · Projekte / Experimente",
+      "routes": "/projects",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Bestehende Sichtbarkeit geprüft; verbindlicher Experiment-Steckbrief und verknüpfte Versuchsläufe/Reviews fehlen."
+    },
+    {
+      "function": "F08 · Begünstigtensuche",
+      "routes": "/research/beneficiary-register",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Namens-/Filter- und Laufvertrag getestet; tatsächliche vollständige Registerabdeckung DE/AT und alle Detailzustände nicht bestätigt."
+    },
+    {
+      "function": "F09 · Begünstigtenanalyse / Karte",
+      "routes": "/research/beneficiary-map; /research/beneficiary-analytics",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Kartenregion zugänglich beschriftet; synthetische Zuordnungen und Recherche geprüft. Kartenbasen im Browser blockiert; echte Vollständigkeit, automatische Aktualisierung und gesamte Summenabstimmung offen."
+    },
+    {
+      "function": "F10 · Sanktionen",
+      "routes": "/research/sanctions-screening",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Ähnlichkeits-/Gegenfall- und Quellenadaptertests bestanden; aktuelle vollständige Sanktionslisten und menschliche Identitätsklärung nicht abgenommen."
+    },
+    {
+      "function": "F11 · Beihilfen / Dossier / Bericht",
+      "routes": "/research/state-aid-register; /research/state-aid-audit-report",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Anbieter- und Exporttests bestanden; Dossierbezug, fehlende Quellen und alle Zielberichte nicht vollständig fachlich abgenommen."
+    },
+    {
+      "function": "F12 · De-minimis",
+      "routes": "/research/de-minimis-register; /research/de-minimis-cumulation",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Schaltjahrfenster, fehlende Beträge, unbekannte Regime und falsche Förderreserve korrigiert/getestet; allgemeine Rechts-/Regimefreigabe und Registerabdeckung offen."
+    },
+    {
+      "function": "F13 · Unternehmens-/Doppelförderungsabgleich",
+      "routes": "/research/company-search; /research/double-funding-crosscheck",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Kandidatenlogik und Quellenbezug getestet; kein automatischer Verstoß. Identität, Vorhaben- und Ausgabengleichheit bleiben fachlich zu klären."
+    },
+    {
+      "function": "F14 · Checklisten",
+      "routes": "/checklist-studio; /checklists/:id",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Ast-/Antworterhalt und Zusammenarbeit geprüft. Drei fachlich freigegebene Referenzvorlagen und vollständiger Vorlagenvergleich fehlen."
+    },
+    {
+      "function": "F15 · Berichte / Arbeitspapiere",
+      "routes": "Prüffall-/Checklistenablauf",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Synthetischer DOCX-Weg bereits im Referenzablauf erzeugt; Regression erneut bestanden. Ziel-Word, Redaktion und sämtliche Vorlagenausgaben nicht abgenommen."
+    },
+    {
+      "function": "F16 · Feststellungsanalyse",
+      "routes": "/findings",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Filterlabel korrigiert; Diensttests bestanden. Vollständiger Diagramm-Drilldown und Aussagegrenzen aller Fallgruppen offen."
+    },
+    {
+      "function": "F17 · Wissen / Dokumente / RAG",
+      "routes": "/knowledge; /documents",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Fremde VP-Canaries erreichen weder Suchergebnis noch Modellkontext. Modelle/Embeddings im Test ersetzt. AG-Originalbestand und echte Modell-/Quellenantworten nicht vollständig verifiziert."
+    },
+    {
+      "function": "F18 · Prompts / Agenten / Frameworks",
+      "routes": "/artifacts/:type",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Berechtigungen/Artefakte und Filterlabels geprüft; kontrollierter Fassungsvergleich mit Modell, Kosten-/Aktionserlaubnis und Referenzfällen fehlt."
+    },
+    {
+      "function": "F19 · Datenlabor",
+      "routes": "/data-lab",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Datenklassen, Mapping-/Analysedienste getestet; vollständige reversible Bedienfolge und Summenabstimmung aller Transformationen offen."
+    },
+    {
+      "function": "F20 · Stichprobe / Prüfstrategie",
+      "routes": "/labs",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Gemeinsame synthetische Population, geänderte Parameter, Streuung und XLSX im früheren Referenzweg; Regression bestanden. Alle Expertenmethoden fachlich freigeben."
+    },
+    {
+      "function": "F21 · Prüffälle / FNLC",
+      "routes": "/grant-cases",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** FNLC-Katalogkorrektur und Fallgrenzen getestet; kompletter Lösungs-/Metadaten-/Exportweg offen. Zusätzliches FNLC-Modell P2 ist nicht beauftragt."
+    },
+    {
+      "function": "F22 · Notebooks",
+      "routes": "/notebooks",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Echter isolierter Kernel mit Faktor 2/3 ausgeführt; Hostzugriff gesperrt. End-to-End-Kette mit Benutzer- und Workspace-Rechten sowie alle Profile nicht bestätigt."
+    },
+    {
+      "function": "F23 · Bereinigung",
+      "routes": "/sanitizer",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Falscher Lokalmodus und unzulässige Datenklassen serverseitig gesperrt, echte HTTP-Ablehnung geprüft. Endgeräteverarbeitung und vollständige Datei-/Metadatenredaktion fehlen."
+    },
+    {
+      "function": "F24 · Webseitenprüfung",
+      "routes": "/web-check",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Technische Begrenzungs-/Berichtstests bestanden; echter vollständig berechtigter Server-Prüflauf fehlt. Keine fremden Behördenserver geprüft."
+    },
+    {
+      "function": "F25 · Lernen / Experten / Suche",
+      "routes": "/learning-paths; /experts; /search",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** FNLC-Lerntext korrigiert und Dienste getestet; vollständige Lernweg-/Sichtbarkeitsabnahme über alle Vorschauen offen."
+    },
+    {
+      "function": "F26 · Mein Bereich / Einstellungen / Zugang",
+      "routes": "/my-space; /sign-in",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Cookie-Login/CSRF/Widerruf real geprüft, Reflow und fehlende Funktionsübersetzungen korrigiert. Jans reales Konto nicht geprüft; vollständiger persönlicher KI-Anbieterweg fehlt."
+    },
+    {
+      "function": "F27 · Dokumentenvergleich",
+      "routes": "/document-comparison; /dokumentenvergleich",
+      "historical_status": "**Teilabnahme, Gesamtfreigabe offen.** Bestehende Vergleichs- und Datengrenztests bestanden; Vergleichseinstieg im Browser geprüft. Sämtliche tatsächlichen Datei-/Darstellungs-/Exportvarianten nicht neu Ende-zu-Ende abgenommen."
+    }
+  ],
+  "limits": [
+    "No authenticated production write journeys",
+    "No fresh PostgreSQL migration/restore",
+    "No real external model/OCR/Office/notebook sandbox acceptance",
+    "No new expert or user acceptance; historical requirements statuses not automatically upgraded",
+    "Public research pages loaded; no complete live search/export run for every provider"
+  ]
+}

@@ -1,0 +1,848 @@
+{
+  "checked_at": "2026-09-29T19:28:20.134718+00:00",
+  "scope": "PACKAGE_PUBLICATION_AND_CANDIDATES",
+  "python_index": [
+    {
+      "name": "auditcore",
+      "version": "0.3.0",
+      "index_has_current_version": false,
+      "path": "pyproject.toml"
+    },
+    {
+      "name": "auditcore_account",
+      "version": "0.1.0",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_account/pyproject.toml"
+    },
+    {
+      "name": "auditcore_auth",
+      "version": "0.1.1",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_auth/pyproject.toml"
+    },
+    {
+      "name": "auditcore_bpmn",
+      "version": "0.1.2",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_bpmn/pyproject.toml"
+    },
+    {
+      "name": "auditcore_common",
+      "version": "0.2.0",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_common/pyproject.toml"
+    },
+    {
+      "name": "auditcore_dataprotection",
+      "version": "0.5.1",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_dataprotection/pyproject.toml"
+    },
+    {
+      "name": "auditcore_documents",
+      "version": "0.4.0",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_documents/pyproject.toml"
+    },
+    {
+      "name": "auditcore_dummygenerator",
+      "version": "0.1.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_dummygenerator/pyproject.toml"
+    },
+    {
+      "name": "auditcore_entity_matching",
+      "version": "0.2.4",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_entity_matching/pyproject.toml"
+    },
+    {
+      "name": "auditcore_extrapolation",
+      "version": "0.1.0",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_extrapolation/pyproject.toml"
+    },
+    {
+      "name": "auditcore_funding_sources",
+      "version": "0.1.5",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_funding_sources/pyproject.toml"
+    },
+    {
+      "name": "auditcore_geo",
+      "version": "0.3.1",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_geo/pyproject.toml"
+    },
+    {
+      "name": "auditcore_harvest",
+      "version": "0.1.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_harvest/pyproject.toml"
+    },
+    {
+      "name": "auditcore_identifiers",
+      "version": "0.2.0",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_identifiers/pyproject.toml"
+    },
+    {
+      "name": "auditcore_invoicegenerator",
+      "version": "0.2.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_invoicegenerator/pyproject.toml"
+    },
+    {
+      "name": "auditcore_invoicesynth",
+      "version": "0.2.0",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_invoicesynth/pyproject.toml"
+    },
+    {
+      "name": "auditcore_kanban",
+      "version": "0.1.2",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_kanban/pyproject.toml"
+    },
+    {
+      "name": "auditcore_legal_sources",
+      "version": "0.1.5",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_legal_sources/pyproject.toml"
+    },
+    {
+      "name": "auditcore_llm_client",
+      "version": "0.1.2",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_llm_client/pyproject.toml"
+    },
+    {
+      "name": "auditcore_market_indicators",
+      "version": "0.1.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_market_indicators/pyproject.toml"
+    },
+    {
+      "name": "auditcore_price_analysis",
+      "version": "0.1.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_price_analysis/pyproject.toml"
+    },
+    {
+      "name": "auditcore_price_sources",
+      "version": "0.1.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_price_sources/pyproject.toml"
+    },
+    {
+      "name": "auditcore_procurement",
+      "version": "0.2.4",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_procurement/pyproject.toml"
+    },
+    {
+      "name": "auditcore_property_sources",
+      "version": "0.1.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_property_sources/pyproject.toml"
+    },
+    {
+      "name": "auditcore_registry_sources",
+      "version": "0.2.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_registry_sources/pyproject.toml"
+    },
+    {
+      "name": "auditcore_reporting",
+      "version": "0.3.0",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_reporting/pyproject.toml"
+    },
+    {
+      "name": "auditcore_risk",
+      "version": "0.3.4",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_risk/pyproject.toml"
+    },
+    {
+      "name": "auditcore_runner",
+      "version": "0.1.0",
+      "index_has_current_version": false,
+      "path": "packages/auditcore_runner/pyproject.toml"
+    },
+    {
+      "name": "auditcore_sampling",
+      "version": "0.2.3",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_sampling/pyproject.toml"
+    },
+    {
+      "name": "auditcore_statistics",
+      "version": "0.3.4",
+      "index_has_current_version": true,
+      "path": "packages/auditcore_statistics/pyproject.toml"
+    }
+  ],
+  "wheel_source_comparison": [
+    {
+      "name": "auditcore_auth",
+      "published_version": "0.1.1",
+      "different_files": [
+        "auditcore_auth/_claims.py",
+        "auditcore_auth/_jwt_backend.py",
+        "auditcore_auth/compat.py",
+        "auditcore_auth/errors.py",
+        "auditcore_auth/passwords.py",
+        "auditcore_auth/token_profiles.py",
+        "auditcore_auth/tokens.py"
+      ],
+      "runtime_differences": [
+        "auditcore_auth/_claims.py",
+        "auditcore_auth/_jwt_backend.py",
+        "auditcore_auth/compat.py",
+        "auditcore_auth/errors.py",
+        "auditcore_auth/passwords.py",
+        "auditcore_auth/token_profiles.py",
+        "auditcore_auth/tokens.py"
+      ]
+    },
+    {
+      "name": "auditcore_bpmn",
+      "published_version": "0.1.2",
+      "different_files": [
+        "auditcore_bpmn/citations.py",
+        "auditcore_bpmn/extensions/legal_basis.py",
+        "auditcore_bpmn/legal.py",
+        "auditcore_bpmn/provenance.json"
+      ],
+      "runtime_differences": [
+        "auditcore_bpmn/citations.py",
+        "auditcore_bpmn/extensions/legal_basis.py",
+        "auditcore_bpmn/legal.py"
+      ]
+    },
+    {
+      "name": "auditcore_common",
+      "published_version": "0.2.0",
+      "different_files": [
+        "auditcore_common/provenance.json",
+        "auditcore_common/rest.py"
+      ],
+      "runtime_differences": [
+        "auditcore_common/rest.py"
+      ]
+    },
+    {
+      "name": "auditcore_dataprotection",
+      "published_version": "0.5.1",
+      "different_files": [
+        "auditcore_dataprotection/provenance.json"
+      ],
+      "runtime_differences": []
+    },
+    {
+      "name": "auditcore_documents",
+      "published_version": "0.4.0",
+      "different_files": [
+        "auditcore_documents/normalize.py",
+        "auditcore_documents/pipeline/stages/donut_merge.py",
+        "auditcore_documents/pipeline/stages/fraud_rule.py",
+        "auditcore_documents/pipeline/stages/rule_messages.py",
+        "auditcore_documents/pipeline/stages/validation_base.py",
+        "auditcore_documents/pipeline/stages/validation_rules.py",
+        "auditcore_documents/pipeline/watchdog/inventory_checks.py",
+        "auditcore_documents/provenance.json",
+        "auditcore_documents/web/__init__.py",
+        "auditcore_documents/web/batch_checks.py",
+        "auditcore_documents/web/batch_checks_asgi.py",
+        "auditcore_documents/web/batch_checks_fastapi.py",
+        "auditcore_documents/web/batch_export.py",
+        "auditcore_documents/web/batch_input.py",
+        "auditcore_documents/web/batch_result.py",
+        "auditcore_documents/web/batch_rules.py"
+      ],
+      "runtime_differences": [
+        "auditcore_documents/normalize.py",
+        "auditcore_documents/pipeline/stages/donut_merge.py",
+        "auditcore_documents/pipeline/stages/fraud_rule.py",
+        "auditcore_documents/pipeline/stages/rule_messages.py",
+        "auditcore_documents/pipeline/stages/validation_base.py",
+        "auditcore_documents/pipeline/stages/validation_rules.py",
+        "auditcore_documents/pipeline/watchdog/inventory_checks.py",
+        "auditcore_documents/web/__init__.py",
+        "auditcore_documents/web/batch_checks.py",
+        "auditcore_documents/web/batch_checks_asgi.py",
+        "auditcore_documents/web/batch_checks_fastapi.py",
+        "auditcore_documents/web/batch_export.py",
+        "auditcore_documents/web/batch_input.py",
+        "auditcore_documents/web/batch_result.py",
+        "auditcore_documents/web/batch_rules.py"
+      ]
+    },
+    {
+      "name": "auditcore_dummygenerator",
+      "published_version": "0.1.3",
+      "different_files": [
+        "auditcore_dummygenerator/provenance.json"
+      ],
+      "runtime_differences": []
+    },
+    {
+      "name": "auditcore_entity_matching",
+      "published_version": "0.2.4",
+      "different_files": [
+        "auditcore_entity_matching/matching.py",
+        "auditcore_entity_matching/normalize.py",
+        "auditcore_entity_matching/profile_data/flowworkshop.state_aid-2026.09.3.json",
+        "auditcore_entity_matching/profiles.py",
+        "auditcore_entity_matching/provenance.json"
+      ],
+      "runtime_differences": [
+        "auditcore_entity_matching/matching.py",
+        "auditcore_entity_matching/normalize.py",
+        "auditcore_entity_matching/profile_data/flowworkshop.state_aid-2026.09.3.json",
+        "auditcore_entity_matching/profiles.py"
+      ]
+    },
+    {
+      "name": "auditcore_extrapolation",
+      "published_version": "0.1.0",
+      "different_files": [
+        "auditcore_extrapolation/__init__.py",
+        "auditcore_extrapolation/attribute_variants.py",
+        "auditcore_extrapolation/attributes.py",
+        "auditcore_extrapolation/confidence.py",
+        "auditcore_extrapolation/design.py",
+        "auditcore_extrapolation/evaluation.py",
+        "auditcore_extrapolation/exclusion.py",
+        "auditcore_extrapolation/groups.py",
+        "auditcore_extrapolation/methods.py",
+        "auditcore_extrapolation/negative.py",
+        "auditcore_extrapolation/periods.py",
+        "auditcore_extrapolation/projection.py",
+        "auditcore_extrapolation/subsampling.py",
+        "auditcore_extrapolation/web/__init__.py",
+        "auditcore_extrapolation/web/_contract.py",
+        "auditcore_extrapolation/web/_design.py",
+        "auditcore_extrapolation/web/_http.py",
+        "auditcore_extrapolation/web/catalogue.py",
+        "auditcore_extrapolation/web/export.py",
+        "auditcore_extrapolation/web/requests.py",
+        "auditcore_extrapolation/web/starlette_app.py"
+      ],
+      "runtime_differences": [
+        "auditcore_extrapolation/__init__.py",
+        "auditcore_extrapolation/attribute_variants.py",
+        "auditcore_extrapolation/attributes.py",
+        "auditcore_extrapolation/confidence.py",
+        "auditcore_extrapolation/design.py",
+        "auditcore_extrapolation/evaluation.py",
+        "auditcore_extrapolation/exclusion.py",
+        "auditcore_extrapolation/groups.py",
+        "auditcore_extrapolation/methods.py",
+        "auditcore_extrapolation/negative.py",
+        "auditcore_extrapolation/periods.py",
+        "auditcore_extrapolation/projection.py",
+        "auditcore_extrapolation/subsampling.py",
+        "auditcore_extrapolation/web/__init__.py",
+        "auditcore_extrapolation/web/_contract.py",
+        "auditcore_extrapolation/web/_design.py",
+        "auditcore_extrapolation/web/_http.py",
+        "auditcore_extrapolation/web/catalogue.py",
+        "auditcore_extrapolation/web/export.py",
+        "auditcore_extrapolation/web/requests.py",
+        "auditcore_extrapolation/web/starlette_app.py"
+      ]
+    },
+    {
+      "name": "auditcore_funding_sources",
+      "published_version": "0.1.5",
+      "different_files": [
+        "auditcore_funding_sources/data/designer.deminimis.authority_levels-2026.09.1.json",
+        "auditcore_funding_sources/data/designer.deminimis.authority_levels-2026.09.2.json",
+        "auditcore_funding_sources/deminimis.py",
+        "auditcore_funding_sources/profiles.py",
+        "auditcore_funding_sources/provenance.json"
+      ],
+      "runtime_differences": [
+        "auditcore_funding_sources/data/designer.deminimis.authority_levels-2026.09.1.json",
+        "auditcore_funding_sources/data/designer.deminimis.authority_levels-2026.09.2.json",
+        "auditcore_funding_sources/deminimis.py",
+        "auditcore_funding_sources/profiles.py"
+      ]
+    },
+    {
+      "name": "auditcore_geo",
+      "published_version": "0.3.1",
+      "different_files": [
+        "auditcore_geo/provenance.json",
+        "auditcore_geo/web/_contract.py",
+        "auditcore_geo/web/_http.py",
+        "auditcore_geo/web/starlette_app.py"
+      ],
+      "runtime_differences": [
+        "auditcore_geo/web/_contract.py",
+        "auditcore_geo/web/_http.py",
+        "auditcore_geo/web/starlette_app.py"
+      ]
+    },
+    {
+      "name": "auditcore_harvest",
+      "published_version": "0.1.3",
+      "different_files": [
+        "auditcore_harvest/catalogs/sources.json"
+      ],
+      "runtime_differences": [
+        "auditcore_harvest/catalogs/sources.json"
+      ]
+    },
+    {
+      "name": "auditcore_identifiers",
+      "published_version": "0.2.0",
+      "different_files": [
+        "auditcore_identifiers/checksums.py",
+        "auditcore_identifiers/iban.py",
+        "auditcore_identifiers/legacy_flowinvoice.py",
+        "auditcore_identifiers/legacy_pipeline.py",
+        "auditcore_identifiers/lei.py",
+        "auditcore_identifiers/profiles.py",
+        "auditcore_identifiers/registry.py",
+        "auditcore_identifiers/tax_de.py",
+        "auditcore_identifiers/vat.py"
+      ],
+      "runtime_differences": [
+        "auditcore_identifiers/checksums.py",
+        "auditcore_identifiers/iban.py",
+        "auditcore_identifiers/legacy_flowinvoice.py",
+        "auditcore_identifiers/legacy_pipeline.py",
+        "auditcore_identifiers/lei.py",
+        "auditcore_identifiers/profiles.py",
+        "auditcore_identifiers/registry.py",
+        "auditcore_identifiers/tax_de.py",
+        "auditcore_identifiers/vat.py"
+      ]
+    },
+    {
+      "name": "auditcore_invoicegenerator",
+      "published_version": "0.2.3",
+      "different_files": [
+        "auditcore_invoicegenerator/provenance.json"
+      ],
+      "runtime_differences": []
+    },
+    {
+      "name": "auditcore_invoicesynth",
+      "published_version": "0.2.0",
+      "different_files": [
+        "auditcore_invoicesynth/cli.py",
+        "auditcore_invoicesynth/dataset.py",
+        "auditcore_invoicesynth/layout_model.py",
+        "auditcore_invoicesynth/layouts.py"
+      ],
+      "runtime_differences": [
+        "auditcore_invoicesynth/cli.py",
+        "auditcore_invoicesynth/dataset.py",
+        "auditcore_invoicesynth/layout_model.py",
+        "auditcore_invoicesynth/layouts.py"
+      ]
+    },
+    {
+      "name": "auditcore_kanban",
+      "published_version": "0.1.2",
+      "different_files": [
+        "auditcore_kanban/board_commands.py",
+        "auditcore_kanban/card_fields.py",
+        "auditcore_kanban/commands.py",
+        "auditcore_kanban/errors.py",
+        "auditcore_kanban/legacy.py",
+        "auditcore_kanban/rest/asgi.py",
+        "auditcore_kanban/rest/fastapi_router.py",
+        "auditcore_kanban/rest/handlers.py",
+        "auditcore_kanban/service.py",
+        "auditcore_kanban/storage.py",
+        "auditcore_kanban/templates.py"
+      ],
+      "runtime_differences": [
+        "auditcore_kanban/board_commands.py",
+        "auditcore_kanban/card_fields.py",
+        "auditcore_kanban/commands.py",
+        "auditcore_kanban/errors.py",
+        "auditcore_kanban/legacy.py",
+        "auditcore_kanban/rest/asgi.py",
+        "auditcore_kanban/rest/fastapi_router.py",
+        "auditcore_kanban/rest/handlers.py",
+        "auditcore_kanban/service.py",
+        "auditcore_kanban/storage.py",
+        "auditcore_kanban/templates.py"
+      ]
+    },
+    {
+      "name": "auditcore_legal_sources",
+      "published_version": "0.1.5",
+      "different_files": [
+        "auditcore_legal_sources/adapters.py",
+        "auditcore_legal_sources/catalog.json",
+        "auditcore_legal_sources/eurlex.py",
+        "auditcore_legal_sources/profiles/audit_designer.vp_ai-2026.09.1.json",
+        "auditcore_legal_sources/profiles/audit_designer.vp_ai-2026.09.2.json",
+        "auditcore_legal_sources/profiles/auditdatabase.esi-2026.09.1.json",
+        "auditcore_legal_sources/profiles/auditdatabase.esi-2026.09.2.json",
+        "auditcore_legal_sources/provenance.json"
+      ],
+      "runtime_differences": [
+        "auditcore_legal_sources/adapters.py",
+        "auditcore_legal_sources/catalog.json",
+        "auditcore_legal_sources/eurlex.py",
+        "auditcore_legal_sources/profiles/audit_designer.vp_ai-2026.09.1.json",
+        "auditcore_legal_sources/profiles/audit_designer.vp_ai-2026.09.2.json",
+        "auditcore_legal_sources/profiles/auditdatabase.esi-2026.09.1.json",
+        "auditcore_legal_sources/profiles/auditdatabase.esi-2026.09.2.json"
+      ]
+    },
+    {
+      "name": "auditcore_llm_client",
+      "published_version": "0.1.2",
+      "different_files": [
+        "auditcore_llm_client/async_client.py",
+        "auditcore_llm_client/catalog.py",
+        "auditcore_llm_client/engine.py",
+        "auditcore_llm_client/environment.py",
+        "auditcore_llm_client/operations.py",
+        "auditcore_llm_client/parsing_rerank.py",
+        "auditcore_llm_client/streaming.py",
+        "auditcore_llm_client/sync_client.py",
+        "auditcore_llm_client/transport.py",
+        "auditcore_llm_client/wire_llm.py",
+        "auditcore_llm_client/wire_services.py"
+      ],
+      "runtime_differences": [
+        "auditcore_llm_client/async_client.py",
+        "auditcore_llm_client/catalog.py",
+        "auditcore_llm_client/engine.py",
+        "auditcore_llm_client/environment.py",
+        "auditcore_llm_client/operations.py",
+        "auditcore_llm_client/parsing_rerank.py",
+        "auditcore_llm_client/streaming.py",
+        "auditcore_llm_client/sync_client.py",
+        "auditcore_llm_client/transport.py",
+        "auditcore_llm_client/wire_llm.py",
+        "auditcore_llm_client/wire_services.py"
+      ]
+    },
+    {
+      "name": "auditcore_market_indicators",
+      "published_version": "0.1.3",
+      "different_files": [],
+      "runtime_differences": []
+    },
+    {
+      "name": "auditcore_price_analysis",
+      "published_version": "0.1.3",
+      "different_files": [
+        "auditcore_price_analysis/_profile_model.py",
+        "auditcore_price_analysis/calculation.py",
+        "auditcore_price_analysis/profiles.py",
+        "auditcore_price_analysis/profiles/regulierung.hpp.nahwaerme-2026.09.3.json",
+        "auditcore_price_analysis/profiles/regulierung.hpp.wasser-2026.09.3.json",
+        "auditcore_price_analysis/provenance.json"
+      ],
+      "runtime_differences": [
+        "auditcore_price_analysis/_profile_model.py",
+        "auditcore_price_analysis/calculation.py",
+        "auditcore_price_analysis/profiles.py",
+        "auditcore_price_analysis/profiles/regulierung.hpp.nahwaerme-2026.09.3.json",
+        "auditcore_price_analysis/profiles/regulierung.hpp.wasser-2026.09.3.json"
+      ]
+    },
+    {
+      "name": "auditcore_price_sources",
+      "published_version": "0.1.3",
+      "different_files": [],
+      "runtime_differences": []
+    },
+    {
+      "name": "auditcore_procurement",
+      "published_version": "0.2.4",
+      "different_files": [
+        "auditcore_procurement/company_sources.py",
+        "auditcore_procurement/provenance.json"
+      ],
+      "runtime_differences": [
+        "auditcore_procurement/company_sources.py"
+      ]
+    },
+    {
+      "name": "auditcore_property_sources",
+      "published_version": "0.1.3",
+      "different_files": [
+        "auditcore_property_sources/provenance.json"
+      ],
+      "runtime_differences": []
+    },
+    {
+      "name": "auditcore_registry_sources",
+      "published_version": "0.2.3",
+      "different_files": [
+        "auditcore_registry_sources/provenance.json"
+      ],
+      "runtime_differences": []
+    },
+    {
+      "name": "auditcore_reporting",
+      "published_version": "0.3.0",
+      "different_files": [
+        "auditcore_reporting/_excel.py",
+        "auditcore_reporting/_ooxml.py",
+        "auditcore_reporting/formats_v2.py",
+        "auditcore_reporting/profile-registry.json",
+        "auditcore_reporting/profiles.py",
+        "auditcore_reporting/provenance.json",
+        "auditcore_reporting/templates/__init__.py",
+        "auditcore_reporting/templates/_docx_package.py",
+        "auditcore_reporting/templates/_docx_walk.py",
+        "auditcore_reporting/templates/_docx_xml.py",
+        "auditcore_reporting/templates/_wordml.py",
+        "auditcore_reporting/templates/blocks.py",
+        "auditcore_reporting/templates/builtin/pruefbericht-1.0.0.json",
+        "auditcore_reporting/templates/builtin/vermerk-1.0.0.json",
+        "auditcore_reporting/templates/checker.py",
+        "auditcore_reporting/templates/conditions.py",
+        "auditcore_reporting/templates/definition.py",
+        "auditcore_reporting/templates/design.py",
+        "auditcore_reporting/templates/docx_template.py",
+        "auditcore_reporting/templates/errors.py",
+        "auditcore_reporting/templates/model.py",
+        "auditcore_reporting/templates/placeholders.py",
+        "auditcore_reporting/templates/registry.py",
+        "auditcore_reporting/templates/render.py",
+        "auditcore_reporting/templates/render_docx.py",
+        "auditcore_reporting/templates/render_html.py",
+        "auditcore_reporting/templates/render_pdf.py",
+        "auditcore_reporting/templates/resolve.py",
+        "auditcore_reporting/templates/schema.py",
+        "auditcore_reporting/templates/values.py",
+        "auditcore_reporting/web/__init__.py",
+        "auditcore_reporting/web/_templates_http.py",
+        "auditcore_reporting/web/fastapi_router.py",
+        "auditcore_reporting/web/service.py",
+        "auditcore_reporting/web/starlette_app.py",
+        "auditcore_reporting/web/templates_service.py"
+      ],
+      "runtime_differences": [
+        "auditcore_reporting/_excel.py",
+        "auditcore_reporting/_ooxml.py",
+        "auditcore_reporting/formats_v2.py",
+        "auditcore_reporting/profile-registry.json",
+        "auditcore_reporting/profiles.py",
+        "auditcore_reporting/templates/__init__.py",
+        "auditcore_reporting/templates/_docx_package.py",
+        "auditcore_reporting/templates/_docx_walk.py",
+        "auditcore_reporting/templates/_docx_xml.py",
+        "auditcore_reporting/templates/_wordml.py",
+        "auditcore_reporting/templates/blocks.py",
+        "auditcore_reporting/templates/builtin/pruefbericht-1.0.0.json",
+        "auditcore_reporting/templates/builtin/vermerk-1.0.0.json",
+        "auditcore_reporting/templates/checker.py",
+        "auditcore_reporting/templates/conditions.py",
+        "auditcore_reporting/templates/definition.py",
+        "auditcore_reporting/templates/design.py",
+        "auditcore_reporting/templates/docx_template.py",
+        "auditcore_reporting/templates/errors.py",
+        "auditcore_reporting/templates/model.py",
+        "auditcore_reporting/templates/placeholders.py",
+        "auditcore_reporting/templates/registry.py",
+        "auditcore_reporting/templates/render.py",
+        "auditcore_reporting/templates/render_docx.py",
+        "auditcore_reporting/templates/render_html.py",
+        "auditcore_reporting/templates/render_pdf.py",
+        "auditcore_reporting/templates/resolve.py",
+        "auditcore_reporting/templates/schema.py",
+        "auditcore_reporting/templates/values.py",
+        "auditcore_reporting/web/__init__.py",
+        "auditcore_reporting/web/_templates_http.py",
+        "auditcore_reporting/web/fastapi_router.py",
+        "auditcore_reporting/web/service.py",
+        "auditcore_reporting/web/starlette_app.py",
+        "auditcore_reporting/web/templates_service.py"
+      ]
+    },
+    {
+      "name": "auditcore_risk",
+      "published_version": "0.3.4",
+      "different_files": [
+        "auditcore_risk/fraud_display.py",
+        "auditcore_risk/fraud_profiles/flowinvoice.fraud_signals-2026.09.3.json",
+        "auditcore_risk/fraud_signals.py",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_intermediate_body-2026.09.2.json",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_intermediate_body-fb2d18568d2e.json",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_wibank-2026.09.2.json",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_wibank-fb2d18568d2e.json",
+        "auditcore_risk/profiles.py",
+        "auditcore_risk/provenance.json",
+        "auditcore_risk/score_rules.py",
+        "auditcore_risk/web/__init__.py",
+        "auditcore_risk/web/field_catalog.json",
+        "auditcore_risk/web/http.py",
+        "auditcore_risk/web/signal_catalog.py",
+        "auditcore_risk/web/signals.py"
+      ],
+      "runtime_differences": [
+        "auditcore_risk/fraud_display.py",
+        "auditcore_risk/fraud_profiles/flowinvoice.fraud_signals-2026.09.3.json",
+        "auditcore_risk/fraud_signals.py",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_intermediate_body-2026.09.2.json",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_intermediate_body-fb2d18568d2e.json",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_wibank-2026.09.2.json",
+        "auditcore_risk/profile_data/flowinvoice.rbvk_wibank-fb2d18568d2e.json",
+        "auditcore_risk/profiles.py",
+        "auditcore_risk/score_rules.py",
+        "auditcore_risk/web/__init__.py",
+        "auditcore_risk/web/field_catalog.json",
+        "auditcore_risk/web/http.py",
+        "auditcore_risk/web/signal_catalog.py",
+        "auditcore_risk/web/signals.py"
+      ]
+    },
+    {
+      "name": "auditcore_sampling",
+      "published_version": "0.2.3",
+      "different_files": [
+        "auditcore_sampling/guidance/__init__.py",
+        "auditcore_sampling/guidance/equal_probability.py",
+        "auditcore_sampling/guidance/factors.py",
+        "auditcore_sampling/guidance/mus.py",
+        "auditcore_sampling/guidance/nonstatistical.py",
+        "auditcore_sampling/guidance/pilot.py",
+        "auditcore_sampling/guidance/plan.py",
+        "auditcore_sampling/guidance/sources.py",
+        "auditcore_sampling/intermediate_body.py",
+        "auditcore_sampling/provenance.json",
+        "auditcore_sampling/web/__init__.py",
+        "auditcore_sampling/web/_http.py",
+        "auditcore_sampling/web/_validate.py",
+        "auditcore_sampling/web/fastapi_router.py",
+        "auditcore_sampling/web/guidance_catalogue.py",
+        "auditcore_sampling/web/guidance_plan.py",
+        "auditcore_sampling/web/starlette_app.py"
+      ],
+      "runtime_differences": [
+        "auditcore_sampling/guidance/__init__.py",
+        "auditcore_sampling/guidance/equal_probability.py",
+        "auditcore_sampling/guidance/factors.py",
+        "auditcore_sampling/guidance/mus.py",
+        "auditcore_sampling/guidance/nonstatistical.py",
+        "auditcore_sampling/guidance/pilot.py",
+        "auditcore_sampling/guidance/plan.py",
+        "auditcore_sampling/guidance/sources.py",
+        "auditcore_sampling/intermediate_body.py",
+        "auditcore_sampling/web/__init__.py",
+        "auditcore_sampling/web/_http.py",
+        "auditcore_sampling/web/_validate.py",
+        "auditcore_sampling/web/fastapi_router.py",
+        "auditcore_sampling/web/guidance_catalogue.py",
+        "auditcore_sampling/web/guidance_plan.py",
+        "auditcore_sampling/web/starlette_app.py"
+      ]
+    },
+    {
+      "name": "auditcore_statistics",
+      "published_version": "0.3.4",
+      "different_files": [
+        "auditcore_statistics/__init__.py",
+        "auditcore_statistics/conformity.py",
+        "auditcore_statistics/provenance.json",
+        "auditcore_statistics/significance.py",
+        "auditcore_statistics/web/analysis.py"
+      ],
+      "runtime_differences": [
+        "auditcore_statistics/__init__.py",
+        "auditcore_statistics/conformity.py",
+        "auditcore_statistics/significance.py",
+        "auditcore_statistics/web/analysis.py"
+      ]
+    }
+  ],
+  "npm_published": {
+    "tag": "v0.5.0",
+    "publish": true,
+    "steps": [
+      {
+        "name": "@auditcore/bpmn-editor",
+        "version": "0.1.1",
+        "file": "auditcore-bpmn-editor-0.1.1.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/bpmn-flowaudit",
+        "version": "0.2.1",
+        "file": "auditcore-bpmn-flowaudit-0.2.1.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/common",
+        "version": "0.1.1",
+        "file": "auditcore-common-0.1.1.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/kanban-core",
+        "version": "0.2.1",
+        "file": "auditcore-kanban-core-0.2.1.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/ui-core",
+        "version": "0.3.0",
+        "file": "auditcore-ui-core-0.3.0.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/bpmn-react",
+        "version": "0.2.2",
+        "file": "auditcore-bpmn-react-0.2.2.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/bpmn-vue",
+        "version": "0.2.2",
+        "file": "auditcore-bpmn-vue-0.2.2.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/ui",
+        "version": "0.4.0",
+        "file": "auditcore-ui-0.4.0.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      },
+      {
+        "name": "@auditcore/ui-react",
+        "version": "1.2.0",
+        "file": "auditcore-ui-react-1.2.0.tgz",
+        "action": "published",
+        "dist_tag": "latest"
+      }
+    ]
+  },
+  "npm_registry_installation": "PASS; fresh registry install plus Vue/React/controller smoke",
+  "repositories_current": 77,
+  "previous_inventory_repositories": 71,
+  "previous_repositories_with_changed_heads": 19,
+  "new_repositories": [
+    "dsgvo",
+    "flowpic",
+    "flowpic-medic",
+    "flowpic-template",
+    "graphify",
+    "simex"
+  ],
+  "candidate_basis": "Existing reports from 2026-09-22, current manifests and heads; new repository READMEs/tree; no new full AST scan of all 77 repositories",
+  "flowaudit_knowledge_search": "No relevant library-plan results; existing repository plans reused"
+}

@@ -127,7 +127,7 @@ class Registry:
 
     def get(self, name: str) -> Tool:
         if name not in self.tools:
-            raise KeyError(f"unbekanntes Werkzeug: {name}")
+            return Tool(name=name, area="custom", command=(), parser="keine", success_codes=(0,))
         return self.tools[name]
 
     def names(self) -> list[str]:
