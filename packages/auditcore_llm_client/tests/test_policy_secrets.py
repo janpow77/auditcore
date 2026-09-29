@@ -35,28 +35,47 @@ from auditcore_llm_client import (
     resolve_secret,
 )
 
-FLOW = ClientConfig(base_url="https://agent.test", app_id="app", mode=Mode.FLOW_AGENT,
-                    api_key=SecretValue(KEY), sensitivity=Sensitivity.RESTRICTED,
-                    retry=RetryPolicy(max_attempts=3), breaker=BreakerPolicy(failure_threshold=1))
-EGRESS = {"status": 403, "json": {"detail": "Egress: Sensitivität restricted erlaubt nur lokale "
-                                            "Modelle; 1 nicht lokale(s) Modell(e) verworfen."}}
-INVALID = {"status": 400, "json": {"detail": "Ungültige Sensitivität. Erlaubt: public, internal, "
-                                             "confidential, restricted."}}
+FLOW = ClientConfig(
+    base_url="https://agent.test",
+    app_id="app",
+    mode=Mode.FLOW_AGENT,
+    api_key=SecretValue(KEY),
+    sensitivity=Sensitivity.RESTRICTED,
+    retry=RetryPolicy(max_attempts=3),
+    breaker=BreakerPolicy(failure_threshold=1),
+)
+EGRESS = {
+    "status": 403,
+    "json": {
+        "detail": "Egress: Sensitivität restricted erlaubt nur lokale "
+        "Modelle; 1 nicht lokale(s) Modell(e) verworfen."
+    },
+}
+INVALID = {
+    "status": 400,
+    "json": {
+        "detail": "Ungültige Sensitivität. Erlaubt: public, internal, confidential, restricted."
+    },
+}
 OK = {"json": {"choices": [{"message": {"content": "ok"}}]}}
 
 
-@pytest.mark.parametrize(("response", "error_type", "kind"), [
-    (EGRESS, EgressDeniedError, ErrorKind.EGRESS_DENIED),
-    (INVALID, SensitivityRejectedError, ErrorKind.SENSITIVITY_REJECTED),
-])
+@pytest.mark.parametrize(
+    ("response", "error_type", "kind"),
+    [
+        (EGRESS, EgressDeniedError, ErrorKind.EGRESS_DENIED),
+        (INVALID, SensitivityRejectedError, ErrorKind.SENSITIVITY_REJECTED),
+    ],
+)
 def test_policy_rejections_are_own_kinds_and_not_retried(
     response: dict[str, object], error_type: type, kind: ErrorKind
 ) -> None:
     gateway = Gateway([response, OK])
     health = RouterHealth()
     sleeps: list[float] = []
-    with LlmClient(FLOW, transport=gateway.transport(), health=health,
-                   sleep=sleeps.append) as client:
+    with LlmClient(
+        FLOW, transport=gateway.transport(), health=health, sleep=sleeps.append
+    ) as client:
         with pytest.raises(error_type) as info:
             client.chat([{"role": "user", "content": "x"}])
         assert info.value.kind is kind and info.value.status_code == response["status"]
@@ -70,12 +89,10 @@ def test_policy_rejections_are_own_kinds_and_not_retried(
 def test_other_403_and_router_mode_stay_http_errors() -> None:
     denied = {"status": 403, "json": {"detail": "Capability chat ist nicht freigegeben."}}
     gateway = Gateway([denied, EGRESS])
-    with LlmClient(FLOW, transport=gateway.transport()) as client, \
-            pytest.raises(RouterHttpError):
+    with LlmClient(FLOW, transport=gateway.transport()) as client, pytest.raises(RouterHttpError):
         client.chat([])
     router = ClientConfig(base_url="http://r.test", app_id="a")
-    with LlmClient(router, transport=gateway.transport()) as client, \
-            pytest.raises(RouterHttpError):
+    with LlmClient(router, transport=gateway.transport()) as client, pytest.raises(RouterHttpError):
         client.chat([])
 
 
@@ -104,8 +121,9 @@ def test_reasoning_effort_is_passed_through() -> None:
 
 
 def test_reasoning_effort_in_streams_and_flow_generate() -> None:
-    gateway = Gateway([{"lines": ["data: [DONE]"]}, {"lines": ['{"done": true}']},
-                       {"json": {"content": "x"}}])
+    gateway = Gateway(
+        [{"lines": ["data: [DONE]"]}, {"lines": ['{"done": true}']}, {"json": {"content": "x"}}]
+    )
     router = ClientConfig(base_url="http://r.test", app_id="a")
     with LlmClient(FLOW, transport=gateway.transport()) as client:
         list(client.stream_chat([], reasoning_effort="none"))
@@ -176,16 +194,24 @@ def test_error_header_is_primary_and_text_is_fallback(
 ) -> None:
     headers = {"X-Flow-Agent-Error": header} if header is not None else {}
     gateway = Gateway([{"status": status, "json": {"detail": detail}, "headers": headers}])
-    with LlmClient(FLOW, transport=gateway.transport(), sleep=lambda _: None) as client, \
-            pytest.raises(LlmClientError) as info:
+    with (
+        LlmClient(FLOW, transport=gateway.transport(), sleep=lambda _: None) as client,
+        pytest.raises(LlmClientError) as info,
+    ):
         client.chat([])
     assert type(info.value) is expected
 
 
 def test_error_header_is_ignored_in_router_mode() -> None:
-    gateway = Gateway([{"status": 403, "json": {"detail": "x"},
-                        "headers": {"X-Flow-Agent-Error": "egress-denied"}}])
+    gateway = Gateway(
+        [
+            {
+                "status": 403,
+                "json": {"detail": "x"},
+                "headers": {"X-Flow-Agent-Error": "egress-denied"},
+            }
+        ]
+    )
     router = ClientConfig(base_url="http://r.test", app_id="a")
-    with LlmClient(router, transport=gateway.transport()) as client, \
-            pytest.raises(RouterHttpError):
+    with LlmClient(router, transport=gateway.transport()) as client, pytest.raises(RouterHttpError):
         client.chat([])

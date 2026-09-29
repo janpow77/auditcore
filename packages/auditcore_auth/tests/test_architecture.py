@@ -66,9 +66,11 @@ def test_dynamic_imports_only_in_backend_adapters() -> None:
 def test_importing_the_package_loads_no_backend() -> None:
     import subprocess
 
-    code = ("import sys, auditcore_auth, auditcore_auth.fastapi_bearer; "
-            "assert not {'bcrypt', 'argon2', 'jwt', 'fastapi'} & set(sys.modules), "
-            "sorted(sys.modules)")
+    code = (
+        "import sys, auditcore_auth, auditcore_auth.fastapi_bearer; "
+        "assert not {'bcrypt', 'argon2', 'jwt', 'fastapi'} & set(sys.modules), "
+        "sorted(sys.modules)"
+    )
     subprocess.run([sys.executable, "-c", code], check=True)  # noqa: S603
 
 

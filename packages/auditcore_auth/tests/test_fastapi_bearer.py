@@ -35,8 +35,9 @@ def test_valid_bearer_token() -> None:
     assert response.status_code == 200 and response.json() == {"sub": "7"}
 
 
-@pytest.mark.parametrize("headers", [{}, {"Authorization": "Basic dXNlcjpwdw=="},
-                                     {"Authorization": "Bearer"}])
+@pytest.mark.parametrize(
+    "headers", [{}, {"Authorization": "Basic dXNlcjpwdw=="}, {"Authorization": "Bearer"}]
+)
 def test_missing_credentials(headers: dict[str, str]) -> None:
     response = client().get("/me", headers=headers)
     assert response.status_code == 401
@@ -45,22 +46,28 @@ def test_missing_credentials(headers: dict[str, str]) -> None:
 
 
 def test_invalid_token_does_not_disclose_the_reason() -> None:
-    expired = TokenIssuer(FAST_TOKEN, KEY, clock=fixed_clock(NOW - timedelta(hours=1))).issue(
-        subject="7").token
+    expired = (
+        TokenIssuer(FAST_TOKEN, KEY, clock=fixed_clock(NOW - timedelta(hours=1)))
+        .issue(subject="7")
+        .token
+    )
     for value in (expired, "abc", token() + "x"):
         response = client().get("/me", headers={"Authorization": f"Bearer {value}"})
         assert response.status_code == 401
         assert response.headers["www-authenticate"] == (
-            'Bearer realm="auditcore", error="invalid_token"')
+            'Bearer realm="auditcore", error="invalid_token"'
+        )
         assert response.json() == {"detail": "Anmeldung ungültig oder abgelaufen"}
 
 
 def test_expected_type() -> None:
     wrong = client(expected_type="access").get(
-        "/me", headers={"Authorization": f"Bearer {token(type='refresh')}"})
+        "/me", headers={"Authorization": f"Bearer {token(type='refresh')}"}
+    )
     assert wrong.status_code == 401
     right = client(expected_type="access").get(
-        "/me", headers={"Authorization": f"Bearer {token(type='access')}"})
+        "/me", headers={"Authorization": f"Bearer {token(type='access')}"}
+    )
     assert right.status_code == 200
 
 

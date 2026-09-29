@@ -23,8 +23,9 @@ from auditcore_llm_client import (
 )
 from auditcore_llm_client.streaming import NdjsonDecoder, SseDecoder, decoder_for
 
-FLOW = ClientConfig(base_url="https://agent.test", app_id="app", mode=Mode.FLOW_AGENT,
-                    api_key=SecretValue(KEY))
+FLOW = ClientConfig(
+    base_url="https://agent.test", app_id="app", mode=Mode.FLOW_AGENT, api_key=SecretValue(KEY)
+)
 SSE = [
     ": keep-alive",
     'data: {"choices": [{"delta": {"role": "assistant"}}]}',
@@ -45,8 +46,12 @@ def test_flow_agent_stream_uses_sse_and_selector() -> None:
     assert events[-1].kind is StreamEventKind.DONE and events[-1].completion_tokens == 2
     request = gateway.requests[0]
     assert request["url"] == "https://agent.test/api/v1/ai/apps/app/v1/chat/completions"
-    assert request["body"] == {"model": "flow-agent-high", "stream": True, "max_tokens": 5,
-                               "messages": [{"role": "user", "content": "Hi"}]}
+    assert request["body"] == {
+        "model": "flow-agent-high",
+        "stream": True,
+        "max_tokens": 5,
+        "messages": [{"role": "user", "content": "Hi"}],
+    }
     assert request["headers"]["authorization"] == f"Bearer {KEY}"  # type: ignore[index]
 
 
@@ -63,8 +68,10 @@ def test_async_stream_and_in_stream_error() -> None:
 
 def test_stream_http_error_raises_redacted() -> None:
     gateway = Gateway([{"status": 502, "text": f"bad {KEY}"}])
-    with LlmClient(FLOW, transport=gateway.transport()) as client, \
-            pytest.raises(RouterHttpError) as info:
+    with (
+        LlmClient(FLOW, transport=gateway.transport()) as client,
+        pytest.raises(RouterHttpError) as info,
+    ):
         list(client.stream_chat([]))
     assert info.value.status_code == 502 and KEY not in str(info.value)
 
@@ -128,6 +135,8 @@ def test_model_snapshot_is_cached_between_calls() -> None:
     with LlmClient(config, transport=gateway.transport()) as client:
         first = client.model_snapshot()
         assert client.model_snapshot() is first and len(gateway.requests) == 1
-    with LlmClient(FLOW, transport=gateway.transport()) as client, \
-            pytest.raises(UnsupportedOperationError):
+    with (
+        LlmClient(FLOW, transport=gateway.transport()) as client,
+        pytest.raises(UnsupportedOperationError),
+    ):
         client.list_models()

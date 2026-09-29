@@ -51,7 +51,10 @@ invoices = scenario.generate_batch(3, errors={2: "wrong_total", 3: "missing_vat_
 invoices.append(duplicate_invoice(invoices[0], new_id="DOC-DUPLICATE"))
 
 assert [i["metadata"]["injected_errors"] for i in invoices] == [
-    [], ["wrong_total"], ["missing_vat_id"], ["duplicate"]
+    [],
+    ["wrong_total"],
+    ["missing_vat_id"],
+    ["duplicate"],
 ]
 assert len(json.loads(to_json(invoices))) == 4
 ```

@@ -1420,10 +1420,7 @@ Beispiel:
 
 ```python
 SourceReference(
-    repository="flowaudit",
-    path="src/services/risk.py",
-    symbol="calculate_risk",
-    revision="abc123"
+    repository="flowaudit", path="src/services/risk.py", symbol="calculate_risk", revision="abc123"
 )
 ```
 
@@ -2325,20 +2322,19 @@ Wiederholen, bis fachlich relevante Abhängigkeiten hinreichend vollständig sin
 Mindestens:
 
 ```python
-class RepositoryProvider(Protocol):
-    ...
+class RepositoryProvider(Protocol): ...
 
-class InventoryProvider(Protocol):
-    ...
 
-class DependencyGraphProvider(Protocol):
-    ...
+class InventoryProvider(Protocol): ...
 
-class KnowledgeStore(Protocol):
-    ...
 
-class SemanticAnalysisProvider(Protocol):
-    ...
+class DependencyGraphProvider(Protocol): ...
+
+
+class KnowledgeStore(Protocol): ...
+
+
+class SemanticAnalysisProvider(Protocol): ...
 ```
 
 KIRA und Graphify nicht fest in den Domain Core koppeln.
@@ -3808,6 +3804,7 @@ Wenn ein sofortiger API-Wechsel nicht sinnvoll ist:
 
 ```python
 from auditcore.risk import calculate_risk as _calculate_risk
+
 
 def calculate_risk(*args, **kwargs):
     """Deprecated compatibility wrapper."""

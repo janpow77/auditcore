@@ -29,25 +29,46 @@ def _iban_text(value: object) -> str | CheckResult:
 
 def _iban_structure(value: object, text: str) -> CheckResult | None:
     if not is_ascii_alnum(text):
-        return invalid(_KIND, value, Reason.INVALID_CHARACTERS,
-                       "IBAN enthält unzulässige Zeichen (nur A–Z, 0–9)")
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_CHARACTERS,
+            "IBAN enthält unzulässige Zeichen (nur A–Z, 0–9)",
+        )
     if _HEAD.match(text) is None:
-        return invalid(_KIND, value, Reason.INVALID_FORMAT,
-                       "IBAN muss mit Ländercode und zwei Prüfziffern beginnen")
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_FORMAT,
+            "IBAN muss mit Ländercode und zwei Prüfziffern beginnen",
+        )
     country = text[:2]
     expected = IBAN_LENGTHS.get(country)
     if expected is None:
-        return invalid(_KIND, value, Reason.UNKNOWN_COUNTRY,
-                       f"Land {country} ist im IBAN-Register nicht verzeichnet", country=country)
+        return invalid(
+            _KIND,
+            value,
+            Reason.UNKNOWN_COUNTRY,
+            f"Land {country} ist im IBAN-Register nicht verzeichnet",
+            country=country,
+        )
     if len(text) != expected:
-        return invalid(_KIND, value, Reason.INVALID_LENGTH,
-                       f"IBAN für {country} muss {expected} Zeichen haben, nicht {len(text)}",
-                       country=country, details={"expected_length": expected,
-                                                 "length": len(text)})
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_LENGTH,
+            f"IBAN für {country} muss {expected} Zeichen haben, nicht {len(text)}",
+            country=country,
+            details={"expected_length": expected, "length": len(text)},
+        )
     if BBAN_PATTERNS[country].fullmatch(text[4:]) is None:
-        return invalid(_KIND, value, Reason.INVALID_FORMAT,
-                       f"Kontoteil (BBAN) entspricht nicht dem Aufbau für {country}",
-                       country=country)
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_FORMAT,
+            f"Kontoteil (BBAN) entspricht nicht dem Aufbau für {country}",
+            country=country,
+        )
     return None
 
 
@@ -65,11 +86,16 @@ def check_iban(value: object) -> CheckResult:
         return problem
     country = text[:2]
     if mod97(text[4:] + text[:4]) != 1:
-        return invalid(_KIND, value, Reason.INVALID_CHECKSUM, "IBAN-Prüfziffer ist falsch",
-                       country=country)
-    return valid(_KIND, value, text, country=country,
-                 details={"bban": text[4:], "check_digits": text[2:4],
-                          "registry": IBAN_REGISTRY_RELEASE})
+        return invalid(
+            _KIND, value, Reason.INVALID_CHECKSUM, "IBAN-Prüfziffer ist falsch", country=country
+        )
+    return valid(
+        _KIND,
+        value,
+        text,
+        country=country,
+        details={"bban": text[4:], "check_digits": text[2:4], "registry": IBAN_REGISTRY_RELEASE},
+    )
 
 
 def iban_check_digits(country: str, bban: str) -> str:
@@ -98,21 +124,43 @@ def check_bic(value: object) -> CheckResult:
     if isinstance(text, CheckResult):
         return text
     if not is_ascii_alnum(text):
-        return invalid(kind, value, Reason.INVALID_CHARACTERS,
-                       "BIC enthält unzulässige Zeichen (nur A–Z, 0–9)")
+        return invalid(
+            kind, value, Reason.INVALID_CHARACTERS, "BIC enthält unzulässige Zeichen (nur A–Z, 0–9)"
+        )
     if len(text) not in (8, 11):
-        return invalid(kind, value, Reason.INVALID_LENGTH,
-                       f"BIC muss 8 oder 11 Zeichen haben, nicht {len(text)}",
-                       details={"length": len(text)})
+        return invalid(
+            kind,
+            value,
+            Reason.INVALID_LENGTH,
+            f"BIC muss 8 oder 11 Zeichen haben, nicht {len(text)}",
+            details={"length": len(text)},
+        )
     match = _BIC.fullmatch(text)
     if match is None:
-        return invalid(kind, value, Reason.INVALID_FORMAT,
-                       "BIC-Aufbau ungültig (Stellen 5–6 müssen ein Ländercode sein)")
+        return invalid(
+            kind,
+            value,
+            Reason.INVALID_FORMAT,
+            "BIC-Aufbau ungültig (Stellen 5–6 müssen ein Ländercode sein)",
+        )
     country = match.group(1)
     if country not in COUNTRY_CODES:
-        return invalid(kind, value, Reason.UNKNOWN_COUNTRY,
-                       f"Ländercode {country} ist nicht nach ISO 3166 vergeben",
-                       country=country)
-    return valid(kind, value, text, country=country,
-                 details={"institution": text[:4], "location": text[6:8],
-                          "branch": text[8:] or "XXX", "test_bic": text[7] == "0"})
+        return invalid(
+            kind,
+            value,
+            Reason.UNKNOWN_COUNTRY,
+            f"Ländercode {country} ist nicht nach ISO 3166 vergeben",
+            country=country,
+        )
+    return valid(
+        kind,
+        value,
+        text,
+        country=country,
+        details={
+            "institution": text[:4],
+            "location": text[6:8],
+            "branch": text[8:] or "XXX",
+            "test_bic": text[7] == "0",
+        },
+    )

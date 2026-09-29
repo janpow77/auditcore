@@ -56,16 +56,29 @@ reference, url = workshop.detect_sa_reference("Beihilfe SA.12345 gewährt")
 assert reference == "SA.12345"
 
 awards = [  # Feldnamen wie im eAidRegister
-    {"referenceNumber": "A1", "beneficiaryReferenceNumber": "B-000123456",
-     "grantingDate": "2025-03-01", "amountEur": "120000", "deMinimisType": "GENERAL"},
-    {"referenceNumber": "A2", "beneficiaryReferenceNumber": "B-000123456",
-     "grantingDate": "2022-01-15", "amountEur": "50000", "deMinimisType": "GENERAL"},
-    {"referenceNumber": "A3", "beneficiaryReferenceNumber": "B-999",
-     "grantingDate": "2025-05-01", "amountEur": "10000", "deMinimisType": "GENERAL"},
+    {
+        "referenceNumber": "A1",
+        "beneficiaryReferenceNumber": "B-000123456",
+        "grantingDate": "2025-03-01",
+        "amountEur": "120000",
+        "deMinimisType": "GENERAL",
+    },
+    {
+        "referenceNumber": "A2",
+        "beneficiaryReferenceNumber": "B-000123456",
+        "grantingDate": "2022-01-15",
+        "amountEur": "50000",
+        "deMinimisType": "GENERAL",
+    },
+    {
+        "referenceNumber": "A3",
+        "beneficiaryReferenceNumber": "B-999",
+        "grantingDate": "2025-05-01",
+        "amountEur": "10000",
+        "deMinimisType": "GENERAL",
+    },
 ]
-result = calculate(
-    awards, reference_date=date(2026, 9, 1), undertaking_references=["B-000123456"]
-)
+result = calculate(awards, reference_date=date(2026, 9, 1), undertaking_references=["B-000123456"])
 assert result.decision is None  # die Beurteilung bleibt fachlich
 assert result.profile_status == "REVIEW_REQUIRED"
 ```
@@ -85,8 +98,12 @@ from auditcore_funding_sources import adapters
 
 registry = AdapterRegistry()
 adapters.register(registry)
-engine.run(registry.create("funding.de_minimis_eaid"),
-           HarvestRequest("funding.de_minimis_eaid", run_id="…"), sink, config={"country": "DE"})
+engine.run(
+    registry.create("funding.de_minimis_eaid"),
+    HarvestRequest("funding.de_minimis_eaid", run_id="…"),
+    sink,
+    config={"country": "DE"},
+)
 ```
 
 ## API-Überblick

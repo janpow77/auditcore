@@ -43,22 +43,46 @@ import legacy_cases as cases  # noqa: E402
 from wire_normalize import normalize_request, raise_for, response_for  # noqa: E402
 
 SOURCES = {
-    "audit_designer": ("janpow77/audit_designer", "audit_designer",
-                       "ccd65245182982af3ef885a7a6d43583f4f72cbb",
-                       "backend/app/utils/ai_router_client.py"),
-    "flowinvoice": ("janpow77/flowinvoice", "flowinvoice",
-                    "fb2d18568d2eaf64574d131ceae51a936b9aac02",
-                    "backend/app/clients/ai_router_client.py"),
-    "audit_portal": ("janpow77/audit-portal", "audit-portal",
-                     "d8eefa426826bdecb67036774f3128ae05e7d0d0",
-                     "backend/app/clients/ai_router_client.py"),
-    "cockpit": ("janpow77/cockpit", "cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
-                "src/cockpit/services/ai_router_client.py"),
+    "audit_designer": (
+        "janpow77/audit_designer",
+        "audit_designer",
+        "ccd65245182982af3ef885a7a6d43583f4f72cbb",
+        "backend/app/utils/ai_router_client.py",
+    ),
+    "flowinvoice": (
+        "janpow77/flowinvoice",
+        "flowinvoice",
+        "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+        "backend/app/clients/ai_router_client.py",
+    ),
+    "audit_portal": (
+        "janpow77/audit-portal",
+        "audit-portal",
+        "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+        "backend/app/clients/ai_router_client.py",
+    ),
+    "cockpit": (
+        "janpow77/cockpit",
+        "cockpit",
+        "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
+        "src/cockpit/services/ai_router_client.py",
+    ),
 }
 SECRETS = (cases.KEY,)
-ENV_NAMES = ("LLM_ROUTER_URL", "LLM_ROUTER_APP_ID", "LLM_ROUTER_API_KEY", "FLOW_AGENT_URL",
-             "FLOW_AGENT_APP_ID", "FLOW_AGENT_APP_KEY", "FLOW_AGENT_QUALITY", "RERANKER_MODEL",
-             "EMBEDDING_MODEL", "AI_ROUTER_URL", "AI_ROUTER_APP_ID", "AI_ROUTER_API_KEY")
+ENV_NAMES = (
+    "LLM_ROUTER_URL",
+    "LLM_ROUTER_APP_ID",
+    "LLM_ROUTER_API_KEY",
+    "FLOW_AGENT_URL",
+    "FLOW_AGENT_APP_ID",
+    "FLOW_AGENT_APP_KEY",
+    "FLOW_AGENT_QUALITY",
+    "RERANKER_MODEL",
+    "EMBEDDING_MODEL",
+    "AI_ROUTER_URL",
+    "AI_ROUTER_APP_ID",
+    "AI_ROUTER_API_KEY",
+)
 
 
 class Secret:
@@ -74,12 +98,25 @@ class Secret:
 def _source(projects: Path, app: str) -> tuple[str, dict[str, str]]:
     repository, folder, commit, path = SOURCES[app]
     repo = projects / folder
-    text = subprocess.run(["git", "-C", str(repo), "show", f"{commit}:{path}"], check=True,
-                          capture_output=True, text=True).stdout
-    blob = subprocess.run(["git", "-C", str(repo), "rev-parse", f"{commit}:{path}"], check=True,
-                          capture_output=True, text=True).stdout.strip()
-    return text, {"repository": repository, "commit": commit, "path": path, "git_blob": blob,
-                  "sha256": hashlib.sha256(text.encode()).hexdigest()}
+    text = subprocess.run(
+        ["git", "-C", str(repo), "show", f"{commit}:{path}"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    blob = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", f"{commit}:{path}"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    return text, {
+        "repository": repository,
+        "commit": commit,
+        "path": path,
+        "git_blob": blob,
+        "sha256": hashlib.sha256(text.encode()).hexdigest(),
+    }
 
 
 def _stub_modules(settings: object, usage: list[dict[str, object]]) -> None:
@@ -91,8 +128,9 @@ def _stub_modules(settings: object, usage: list[dict[str, object]]) -> None:
     core_config.settings = settings  # type: ignore[attr-defined]
     metrics = types.ModuleType("app.core.request_metrics")
     metrics.record_llm_usage = lambda **kw: usage.append(kw)  # type: ignore[attr-defined]
-    sys.modules.update({"app.config": config, "app.core.config": core_config,
-                        "app.core.request_metrics": metrics})
+    sys.modules.update(
+        {"app.config": config, "app.core.config": core_config, "app.core.request_metrics": metrics}
+    )
 
 
 def _load(text: str, name: str) -> types.ModuleType:
@@ -108,8 +146,9 @@ def _load(text: str, name: str) -> types.ModuleType:
 
 
 def _mock_httpx(module: types.ModuleType, transport: httpx.MockTransport) -> None:
-    fake = types.SimpleNamespace(**{k: getattr(httpx, k) for k in dir(httpx)
-                                    if not k.startswith("_")})
+    fake = types.SimpleNamespace(
+        **{k: getattr(httpx, k) for k in dir(httpx) if not k.startswith("_")}
+    )
     sync = httpx.Client(transport=transport)
     fake.post = sync.post
     fake.get = sync.get
@@ -152,8 +191,12 @@ def _leaks(text: str) -> bool:
 
 def _error(exc: BaseException) -> dict[str, object]:
     message = str(exc)
-    return {"type": type(exc).__name__, "status_code": getattr(exc, "status_code", None),
-            "message": message.replace(cases.KEY, "<key>"), "key_in_message": _leaks(message)}
+    return {
+        "type": type(exc).__name__,
+        "status_code": getattr(exc, "status_code", None),
+        "message": message.replace(cases.KEY, "<key>"),
+        "key_in_message": _leaks(message),
+    }
 
 
 async def _invoke(target: Callable[..., object], legacy: dict[str, object]) -> object:
@@ -173,9 +216,11 @@ def _health_record(module: types.ModuleType) -> dict[str, object] | None:
         return None
     record = health().to_dict()
     message = str(record.get("last_error_message") or "")
-    return {"consecutive_failures": record["consecutive_failures"],
-            "last_error_message": message.replace(cases.KEY, "<key>") or None,
-            "key_in_health": _leaks(message)}
+    return {
+        "consecutive_failures": record["consecutive_failures"],
+        "last_error_message": message.replace(cases.KEY, "<key>") or None,
+        "key_in_health": _leaks(message),
+    }
 
 
 def _resolve(module: types.ModuleType, fn: str, client_class: bool) -> Callable[..., object]:
@@ -184,8 +229,12 @@ def _resolve(module: types.ModuleType, fn: str, client_class: bool) -> Callable[
     return getattr(module, fn)  # type: ignore[no-any-return]
 
 
-def run_case(module: types.ModuleType, case: dict[str, object], client_class: bool,
-             usage: list[dict[str, object]]) -> dict[str, object]:
+def run_case(
+    module: types.ModuleType,
+    case: dict[str, object],
+    client_class: bool,
+    usage: list[dict[str, object]],
+) -> dict[str, object]:
     recorder = Recorder(case["responses"])  # type: ignore[arg-type]
     _mock_httpx(module, httpx.MockTransport(recorder))
     _reset(module)
@@ -211,9 +260,15 @@ def run_case(module: types.ModuleType, case: dict[str, object], client_class: bo
     finally:
         logging.getLogger().removeHandler(handler)
     logs = stream.getvalue()
-    return {**case, "requests": recorder.requests, **outcome, "health": _health_record(module),
-            "usage": list(usage), "key_in_logs": _leaks(logs),
-            "unused_responses": len(recorder.responses)}
+    return {
+        **case,
+        "requests": recorder.requests,
+        **outcome,
+        "health": _health_record(module),
+        "usage": list(usage),
+        "key_in_logs": _leaks(logs),
+        "unused_responses": len(recorder.responses),
+    }
 
 
 def _reset(module: types.ModuleType) -> None:
@@ -228,46 +283,98 @@ def _reset(module: types.ModuleType) -> None:
 
 
 def _settings_audit_designer() -> object:
-    return types.SimpleNamespace(LLM_ROUTER_URL=cases.ROUTER, LLM_ROUTER_APP_ID="audit_designer",
-                                 LLM_ROUTER_API_KEY=cases.KEY, VP_AI_EGPU_MODEL="qwen3.5:35b",
-                                 OLLAMA_MODEL="qwen3:14b", VP_AI_LLM_KEEP_ALIVE="10m")
+    return types.SimpleNamespace(
+        LLM_ROUTER_URL=cases.ROUTER,
+        LLM_ROUTER_APP_ID="audit_designer",
+        LLM_ROUTER_API_KEY=cases.KEY,
+        VP_AI_EGPU_MODEL="qwen3.5:35b",
+        OLLAMA_MODEL="qwen3:14b",
+        VP_AI_LLM_KEEP_ALIVE="10m",
+    )
 
 
 def _settings_flowinvoice(app_id: str, flow_agent: bool) -> object:
     return types.SimpleNamespace(
-        llm_router_url=cases.ROUTER, llm_router_app_id=app_id, llm_router_api_key=Secret(cases.KEY),
-        flow_agent_url=cases.AGENT if flow_agent else "", flow_agent_app_id=app_id,
-        flow_agent_app_key=Secret(cases.KEY), flow_agent_quality="balanced",
+        llm_router_url=cases.ROUTER,
+        llm_router_app_id=app_id,
+        llm_router_api_key=Secret(cases.KEY),
+        flow_agent_url=cases.AGENT if flow_agent else "",
+        flow_agent_app_id=app_id,
+        flow_agent_app_key=Secret(cases.KEY),
+        flow_agent_quality="balanced",
         ollama_default_model="qwen3:14b",
     )
 
 
 GROUPS: list[dict[str, object]] = [
-    {"group": "audit_designer", "app": "audit_designer", "profile": "audit_designer",
-     "settings": _settings_audit_designer, "cases": cases.AUDIT_DESIGNER_CASES,
-     "client_class": False,
-     "env": {"LLM_ROUTER_URL": cases.ROUTER, "LLM_ROUTER_APP_ID": "audit_designer",
-             "LLM_ROUTER_API_KEY": cases.KEY, "VP_AI_EGPU_MODEL": "qwen3.5:35b",
-             "OLLAMA_MODEL": "qwen3:14b", "VP_AI_LLM_KEEP_ALIVE": "10m"}},
-    {"group": "flowinvoice_router", "app": "flowinvoice", "profile": "flowinvoice",
-     "settings": lambda: _settings_flowinvoice("flowinvoice", False),
-     "cases": cases.FLOWINVOICE_CASES, "client_class": True,
-     "env": {"LLM_ROUTER_URL": cases.ROUTER, "LLM_ROUTER_APP_ID": "flowinvoice",
-             "LLM_ROUTER_API_KEY": cases.KEY, "OLLAMA_DEFAULT_MODEL": "qwen3:14b"}},
-    {"group": "flowinvoice_flow_agent", "app": "flowinvoice", "profile": "flowinvoice",
-     "settings": lambda: _settings_flowinvoice("flowinvoice", True),
-     "cases": cases.FLOW_AGENT_CASES, "client_class": True,
-     "env": {"FLOW_AGENT_URL": cases.AGENT, "FLOW_AGENT_APP_ID": "flowinvoice",
-             "FLOW_AGENT_APP_KEY": cases.KEY, "FLOW_AGENT_QUALITY": "balanced",
-             "OLLAMA_DEFAULT_MODEL": "qwen3:14b"}},
-    {"group": "audit_portal", "app": "audit_portal", "profile": "audit_portal",
-     "settings": lambda: _settings_flowinvoice("audit-portal", False),
-     "cases": cases.AUDIT_PORTAL_CASES, "client_class": True,
-     "env": {"LLM_ROUTER_URL": cases.ROUTER, "LLM_ROUTER_APP_ID": "audit-portal",
-             "LLM_ROUTER_API_KEY": cases.KEY, "OLLAMA_DEFAULT_MODEL": "qwen3:14b"}},
-    {"group": "cockpit", "app": "cockpit", "profile": "cockpit", "settings": lambda: None,
-     "cases": cases.COCKPIT_CASES, "client_class": False,
-     "env": {"AI_ROUTER_URL": cases.ROUTER, "AI_ROUTER_API_KEY": cases.KEY}},
+    {
+        "group": "audit_designer",
+        "app": "audit_designer",
+        "profile": "audit_designer",
+        "settings": _settings_audit_designer,
+        "cases": cases.AUDIT_DESIGNER_CASES,
+        "client_class": False,
+        "env": {
+            "LLM_ROUTER_URL": cases.ROUTER,
+            "LLM_ROUTER_APP_ID": "audit_designer",
+            "LLM_ROUTER_API_KEY": cases.KEY,
+            "VP_AI_EGPU_MODEL": "qwen3.5:35b",
+            "OLLAMA_MODEL": "qwen3:14b",
+            "VP_AI_LLM_KEEP_ALIVE": "10m",
+        },
+    },
+    {
+        "group": "flowinvoice_router",
+        "app": "flowinvoice",
+        "profile": "flowinvoice",
+        "settings": lambda: _settings_flowinvoice("flowinvoice", False),
+        "cases": cases.FLOWINVOICE_CASES,
+        "client_class": True,
+        "env": {
+            "LLM_ROUTER_URL": cases.ROUTER,
+            "LLM_ROUTER_APP_ID": "flowinvoice",
+            "LLM_ROUTER_API_KEY": cases.KEY,
+            "OLLAMA_DEFAULT_MODEL": "qwen3:14b",
+        },
+    },
+    {
+        "group": "flowinvoice_flow_agent",
+        "app": "flowinvoice",
+        "profile": "flowinvoice",
+        "settings": lambda: _settings_flowinvoice("flowinvoice", True),
+        "cases": cases.FLOW_AGENT_CASES,
+        "client_class": True,
+        "env": {
+            "FLOW_AGENT_URL": cases.AGENT,
+            "FLOW_AGENT_APP_ID": "flowinvoice",
+            "FLOW_AGENT_APP_KEY": cases.KEY,
+            "FLOW_AGENT_QUALITY": "balanced",
+            "OLLAMA_DEFAULT_MODEL": "qwen3:14b",
+        },
+    },
+    {
+        "group": "audit_portal",
+        "app": "audit_portal",
+        "profile": "audit_portal",
+        "settings": lambda: _settings_flowinvoice("audit-portal", False),
+        "cases": cases.AUDIT_PORTAL_CASES,
+        "client_class": True,
+        "env": {
+            "LLM_ROUTER_URL": cases.ROUTER,
+            "LLM_ROUTER_APP_ID": "audit-portal",
+            "LLM_ROUTER_API_KEY": cases.KEY,
+            "OLLAMA_DEFAULT_MODEL": "qwen3:14b",
+        },
+    },
+    {
+        "group": "cockpit",
+        "app": "cockpit",
+        "profile": "cockpit",
+        "settings": lambda: None,
+        "cases": cases.COCKPIT_CASES,
+        "client_class": False,
+        "env": {"AI_ROUTER_URL": cases.ROUTER, "AI_ROUTER_API_KEY": cases.KEY},
+    },
 ]
 
 
@@ -282,24 +389,36 @@ def capture_group(projects: Path, group: dict[str, object]) -> dict[str, object]
     _stub_modules(group["settings"](), usage)  # type: ignore[operator]
     text, source = _source(projects, str(group["app"]))
     module = _load(text, f"legacy_{group['group']}")
-    observed = [run_case(module, case, bool(group["client_class"]), usage)
-                for case in group["cases"]]  # type: ignore[attr-defined]
+    observed = [
+        run_case(module, case, bool(group["client_class"]), usage) for case in group["cases"]
+    ]  # type: ignore[attr-defined]
     for name in ENV_NAMES:
         os.environ.pop(name, None)
-    return {"group": group["group"], "profile": group["profile"], "source": source,
-            "env": group["env"], "cases": observed}
+    return {
+        "group": group["group"],
+        "profile": group["profile"],
+        "source": source,
+        "env": group["env"],
+        "cases": observed,
+    }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--projects", type=Path, default=Path.home() / "Projekte")
-    parser.add_argument("--output", type=Path,
-                        default=HERE.parent / "tests/fixtures/legacy_clients_observed.json")
+    parser.add_argument(
+        "--output", type=Path, default=HERE.parent / "tests/fixtures/legacy_clients_observed.json"
+    )
     args = parser.parse_args()
     groups = [capture_group(args.projects, group) for group in GROUPS]
-    document = {"schema": "auditcore_llm_client.legacy_observed/1", "key_placeholder": "<key>",
-                "tool": "tools/capture_legacy_clients.py", "httpx": httpx.__version__,
-                "python": sys.version.split()[0], "groups": groups}
+    document = {
+        "schema": "auditcore_llm_client.legacy_observed/1",
+        "key_placeholder": "<key>",
+        "tool": "tools/capture_legacy_clients.py",
+        "httpx": httpx.__version__,
+        "python": sys.version.split()[0],
+        "groups": groups,
+    }
     text = json.dumps(document, ensure_ascii=False, indent=1, sort_keys=True)
     args.output.write_text(text.replace(cases.KEY, "<key>") + "\n", encoding="utf-8")
     total = sum(len(g["cases"]) for g in groups)  # type: ignore[arg-type]

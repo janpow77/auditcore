@@ -46,8 +46,9 @@ def test_file_store_leaves_no_temp_files(board: Board, tmp_path: Path) -> None:
 
 def test_event_logs(tmp_path: Path) -> None:
     log = InMemoryEventLog()
-    first = log.record("b1", 2, "u1", "t", [Change("card.created", "c1", {"x": 1}),
-                                             Change("column.rebalanced")])
+    first = log.record(
+        "b1", 2, "u1", "t", [Change("card.created", "c1", {"x": 1}), Change("column.rebalanced")]
+    )
     log.record("b2", 1, "u1", "t", [Change("board.created")])
     assert [e.seq for e in first] == [1, 2]
     assert [e.seq for e in log.since("b1", 1)] == [2]
@@ -56,5 +57,6 @@ def test_event_logs(tmp_path: Path) -> None:
     persisted.record("b1", 2, "u1", "t", [Change("card.created", "c1", {"x": 1})])
     reopened = JsonLinesEventLog(path)
     assert [e.to_json() for e in reopened.since("b1")] == [
-        e.to_json() for e in persisted.since("b1")]
+        e.to_json() for e in persisted.since("b1")
+    ]
     assert reopened.record("b1", 3, "u2", "t", [Change("card.deleted", "c1")])[0].seq == 2

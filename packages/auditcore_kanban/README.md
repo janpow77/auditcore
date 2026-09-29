@@ -44,9 +44,7 @@ Prüfwerkzeuge.
 from auditcore_kanban import BoardService, InMemoryBoardStore, KanbanError
 
 service = BoardService(InMemoryBoardStore())
-board = service.create_board(
-    "u1", "Vorhabenprüfung 2026", template_key="vorhabenpruefung"
-).board
+board = service.create_board("u1", "Vorhabenprüfung 2026", template_key="vorhabenpruefung").board
 card = service.create_card(board.id, "u1", {"title": "Belegliste anfordern"}).result.card
 service.move_card(board.id, "u1", card.id, "pruefung", index=0)
 

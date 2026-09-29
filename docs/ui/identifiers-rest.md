@@ -23,9 +23,11 @@ die den Vertrag verletzen.
 from starlette.routing import Mount
 from auditcore_identifiers.web import Limits, create_app, create_router, routes
 
-app = create_app("/api/kennungen")                                   # eigenständig (Starlette)
-fastapi_app.include_router(create_router("/api/kennungen"))          # FastAPI
-starlette_app.router.routes.append(Mount("/api/kennungen", routes=routes(limits=Limits(max_items=5_000))))
+app = create_app("/api/kennungen")  # eigenständig (Starlette)
+fastapi_app.include_router(create_router("/api/kennungen"))  # FastAPI
+starlette_app.router.routes.append(
+    Mount("/api/kennungen", routes=routes(limits=Limits(max_items=5_000)))
+)
 ```
 
 `catalogue`, `check_one` und `check_batch` sind ohne Web-Framework

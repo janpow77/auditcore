@@ -25,7 +25,7 @@ settings = Settings(
     gpkg_sources={"schutzgebiete": Path("/srv/geo/schutzgebiete.gpkg")},  # nur Namen sichtbar
     max_points=20_000,
 )
-app = create_app("/api/geo", settings=settings)              # eigenständig (Starlette)
+app = create_app("/api/geo", settings=settings)  # eigenständig (Starlette)
 fastapi_app.include_router(create_router("/api/geo", settings=settings))  # FastAPI
 starlette_app.router.routes.append(Mount("/api/geo", routes=routes(settings=settings)))
 ```

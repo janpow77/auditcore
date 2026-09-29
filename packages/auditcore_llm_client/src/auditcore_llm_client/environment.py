@@ -71,8 +71,9 @@ def _quality(raw: str) -> Quality:
         return Quality.HIGH
 
 
-def _secret(environ: Mapping[str, str], name: str | None,
-            resolver: SecretRefResolver | None) -> SecretValue | None:
+def _secret(
+    environ: Mapping[str, str], name: str | None, resolver: SecretRefResolver | None
+) -> SecretValue | None:
     return resolve_secret(_read(environ, name), resolver)
 
 
@@ -132,4 +133,3 @@ def config_from_env(
         models=model_defaults_from_env(profile, source),
         keep_alive=_read(source, env.keep_alive) or None,
     )
-

@@ -28,13 +28,17 @@ from auditcore_dataprotection import Actor, load_profile
 from auditcore_dataprotection.web import DataProtectionApi, Principal, create_backend
 from auditcore_dataprotection.web.http import routes
 
-api = DataProtectionApi(create_backend(load_profile("auditcore.dsgvo", "2026.10.3"), storage, authorizer))
+api = DataProtectionApi(
+    create_backend(load_profile("auditcore.dsgvo", "2026.10.3"), storage, authorizer)
+)
 
-def identify(request) -> Principal | None:          # Sitzung des Consumers
+
+def identify(request) -> Principal | None:  # Sitzung des Consumers
     user = request.scope.get("user")
     if user is None:
         return None
     return Principal(user.tenant, Actor(user.id, frozenset({user.tenant}), frozenset(user.roles)))
+
 
 app_routes = [Mount("/api/dataprotection", routes=routes(api, identify))]
 ```

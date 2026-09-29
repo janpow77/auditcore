@@ -99,8 +99,9 @@ def _cards(tasks: Sequence[Mapping[str, object]], columns: tuple[Column, ...]) -
         status = _text(row, "status")
         groups.setdefault(status if status in ids else ids[0], []).append(row)
     for column_id, rows in groups.items():
-        rows.sort(key=lambda r: (_text(r, "status") not in ids, _position(r),
-                                _text(r, "created_at")))
+        rows.sort(
+            key=lambda r: (_text(r, "status") not in ids, _position(r), _text(r, "created_at"))
+        )
         for row, rank in zip(rows, spread_ranks(len(rows)), strict=True):
             cards.append(task_to_card(row, column_id, rank, _text(row, "status") in ids))
     return tuple(cards)
@@ -158,11 +159,20 @@ def export_workspace_tasks(board: Board) -> list[JsonObject]:
         for position, card in enumerate(board.cards_in(column.id), start=1):
             checklist: list[JsonValue] = [{"text": i.text, "done": i.done} for i in card.checklist]
             row: JsonObject = {
-                "id": card.id, "title": card.title, "description": card.description,
-                "status": column.id, "priority": card.priority, "position": position,
-                "tags": list(card.tags), "deadline": card.due, "card_color": card.color,
-                "card_image": card.image, "badge": card.badge, "checklist": checklist,
-                "created_at": card.created_at, "updated_at": card.updated_at,
+                "id": card.id,
+                "title": card.title,
+                "description": card.description,
+                "status": column.id,
+                "priority": card.priority,
+                "position": position,
+                "tags": list(card.tags),
+                "deadline": card.due,
+                "card_color": card.color,
+                "card_image": card.image,
+                "badge": card.badge,
+                "checklist": checklist,
+                "created_at": card.created_at,
+                "updated_at": card.updated_at,
             }
             for key in LEGACY_EXTRA_FIELDS:
                 if key in card.extra:

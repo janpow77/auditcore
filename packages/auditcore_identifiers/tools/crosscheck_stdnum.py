@@ -81,8 +81,7 @@ def main() -> None:
         "tax_id": _verdicts(samples.tax_id_samples(), idnr.is_valid),
         "tax_number": _verdicts(samples.tax_number_samples(), stnr.is_valid),
         "vat_valid_by_country": {
-            prefix: _search(prefix, rng, 8) for prefix in sorted(EU_VAT_FORMATS)
-            if prefix != "XI"
+            prefix: _search(prefix, rng, 8) for prefix in sorted(EU_VAT_FORMATS) if prefix != "XI"
         },
     }
     target = args.output / "stdnum_crosscheck.json"

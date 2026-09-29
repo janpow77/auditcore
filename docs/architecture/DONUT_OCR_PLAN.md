@@ -89,12 +89,13 @@ class DonutPort(Protocol):
     def available(self) -> bool: ...
     def parse(self, page_png: bytes) -> DonutResult: ...
 
+
 @dataclass(frozen=True)
 class DonutResult:
-    fields: dict[str, Any]          # Ziel-JSON gemäß Schema (siehe unten)
-    raw_sequence: str               # ungeparste Tokenfolge
+    fields: dict[str, Any]  # Ziel-JSON gemäß Schema (siehe unten)
+    raw_sequence: str  # ungeparste Tokenfolge
     field_confidence: dict[str, float]  # min. Token-Wahrscheinlichkeit je Feld
-    model_id: str                   # z. B. auditcore-donut-invoice-de@1.0.0
+    model_id: str  # z. B. auditcore-donut-invoice-de@1.0.0
     model_sha256: str
     duration_ms: int
     device: str

@@ -134,7 +134,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `SynthInvoice` | Datenklasse | Vollständiger synthetischer Beleg mit richtigen und gedruckten Werten. | `enrich` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `at_uid_check_digit` | Funktion | Prüfziffer der österreichischen UID (ATU + 8 Ziffern). | `identifiers` |
-| `build_dataset` | Funktion | Datensatz schreiben und Manifest zurückgeben; optional deterministisch parallel mit `workers`. | `dataset` |
+| `build_dataset` | Funktion | Datensatz schreiben; ``workers=None`` nutzt bis zu 16 Renderprozesse. | `dataset` |
 | `check_acceptance` | Funktion | Schwellen aus E6 prüfen (Feldgenauigkeit, Falschwert-Quote nach Plausibilität). | `evaluation` |
 | `dataset_hash` | Funktion | – | `dataset` |
 | `de_vat_check_digit` | Funktion | Prüfziffer der deutschen USt-IdNr. (ISO 7064, MOD 11,10). | `identifiers` |

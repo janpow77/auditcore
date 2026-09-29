@@ -63,8 +63,13 @@ class Resilience:
         if not policy.should_retry(error, attempt):
             return None
         delay = policy.delay(attempt, error.retry_after)
-        log.info("LLM-Aufruf %s: Versuch %d fehlgeschlagen (%s), neuer Versuch in %.2fs",
-                 error.endpoint, attempt, error.kind.value, delay)
+        log.info(
+            "LLM-Aufruf %s: Versuch %d fehlgeschlagen (%s), neuer Versuch in %.2fs",
+            error.endpoint,
+            attempt,
+            error.kind.value,
+            delay,
+        )
         return delay
 
     def succeeded(self) -> None:
@@ -91,9 +96,7 @@ class Resilience:
 
 def status_error(config: ClientConfig, received: ReceivedResponse) -> LlmClientError:
     """Error for an HTTP status >= 400 in the dialect of the configured mode."""
-    return error_for_status(
-        received, config.secrets, flow_agent=config.mode is Mode.FLOW_AGENT
-    )
+    return error_for_status(received, config.secrets, flow_agent=config.mode is Mode.FLOW_AGENT)
 
 
 def notify_usage(config: ClientConfig, operation: str, result: object) -> None:

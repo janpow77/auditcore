@@ -26,8 +26,7 @@ def test_create_board_with_template() -> None:
     result = create_board(ctx("u7"), "b9", "Aufträge", board_template=chosen)
     board = result.board
     assert board.owner_id == "u7" and board.version == 1
-    assert [c.id for c in board.columns] == ["eingang", "geplant", "laeuft", "rueckfrage",
-                                             "fertig"]
+    assert [c.id for c in board.columns] == ["eingang", "geplant", "laeuft", "rueckfrage", "fertig"]
     assert board.transitions.locked_columns == frozenset({"laeuft"})
     with pytest.raises(KanbanError):
         create_board(ctx(), "b9", "   ")
@@ -44,11 +43,14 @@ def test_update_board_rights(board: Board) -> None:
 
 
 def test_configure_moves_cards_of_removed_columns_to_first_column_end(board: Board) -> None:
-    policy = TransitionPolicy(allowed=frozenset({("offen", "in_arbeit"), ("offen", "erledigt")}),
-                              locked_columns=frozenset({"in_arbeit"}))
+    policy = TransitionPolicy(
+        allowed=frozenset({("offen", "in_arbeit"), ("offen", "erledigt")}),
+        locked_columns=frozenset({"in_arbeit"}),
+    )
     staged = replace(board, transitions=policy)
-    result = configure_columns(staged, ctx(), (Column(" offen ", " Offen "),
-                                               Column("erledigt", "Erledigt")))
+    result = configure_columns(
+        staged, ctx(), (Column(" offen ", " Offen "), Column("erledigt", "Erledigt"))
+    )
     assert [c.id for c in result.board.columns] == ["offen", "erledigt"]
     assert order(result.board, "offen") == ["a", "b", "c"]
     assert result.board.transitions.allowed == frozenset({("offen", "erledigt")})

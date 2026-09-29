@@ -50,8 +50,9 @@ def _from_results(data: JsonObject, count: int) -> tuple[list[float], list[Reran
     return scores, results
 
 
-def _from_scores(raw: list[JsonValue], documents: Sequence[str],
-                 path: str) -> tuple[list[float], list[RerankScore], bool]:
+def _from_scores(
+    raw: list[JsonValue], documents: Sequence[str], path: str
+) -> tuple[list[float], list[RerankScore], bool]:
     try:
         scores = [strict_number(s) for s in raw]
     except ValueError:
@@ -64,8 +65,9 @@ def _from_scores(raw: list[JsonValue], documents: Sequence[str],
     return scores, pairs, degraded
 
 
-def parse_rerank(received: ReceivedResponse, documents: Sequence[str], model: str,
-                 prefer_results: bool) -> RerankResult:
+def parse_rerank(
+    received: ReceivedResponse, documents: Sequence[str], model: str, prefer_results: bool
+) -> RerankResult:
     """Map either answer form onto input order; ``prefer_results`` = audit_designer rule."""
     data = as_object(received.json())
     use_results = "results" in data if prefer_results else data.get("scores") is None

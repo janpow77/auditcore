@@ -255,9 +255,11 @@ def inventory(root: Path, threshold: float, min_nodes: int) -> dict[str, object]
                 "packages": sorted({functions[i].package for i in members}),
                 "members": [_describe(functions[i]) for i in members],
                 "similarities": [
-                    {"left": functions[i].path + ":" + str(functions[i].line),
-                     "right": functions[j].path + ":" + str(functions[j].line),
-                     "ratio": r}
+                    {
+                        "left": functions[i].path + ":" + str(functions[i].line),
+                        "right": functions[j].path + ":" + str(functions[j].line),
+                        "ratio": r,
+                    }
                     for (i, j), r in sorted(ratios.items())
                     if i in members and j in members
                 ],

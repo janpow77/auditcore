@@ -16,15 +16,18 @@ stille Änderung von Schwellen. Unbestimmte Merkmale bleiben unbestimmt.
 ```python
 # eigenständig (Starlette, z. B. mit uvicorn)
 from auditcore_risk.web import create_app
+
 app = create_app("/risk", max_records=20_000, max_body_bytes=20 * 1024 * 1024)
 
 # in eine bestehende FastAPI-Anwendung
 from auditcore_risk.web import build_fastapi_router
+
 app.include_router(build_fastapi_router("/api/risk"))
 
 # in eine bestehende Starlette-Anwendung
 from starlette.routing import Mount
 from auditcore_risk.web import routes
+
 app.router.routes.append(Mount("/risk", routes=routes()))
 ```
 

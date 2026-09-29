@@ -41,14 +41,18 @@ XLSX. Für Berichte wählt sie die **Vorlage**, zeigt **Datenvertrag** und
 
 ```python
 from auditcore_reporting.web import create_app, create_router, routes
-app = create_app("/api/reporting")                               # eigenständig (Starlette)
-fastapi_app.include_router(create_router("/api/reporting"))       # FastAPI
+
+app = create_app("/api/reporting")  # eigenständig (Starlette)
+fastapi_app.include_router(create_router("/api/reporting"))  # FastAPI
 
 # Eigene Vorlagen und Gestaltung der Anwendung (sonst: mitgelieferte, neutral)
 from auditcore_reporting.templates import TemplateRegistry, define_template, design_from_dict
 from auditcore_reporting.web import TemplateCatalogue
-catalogue = TemplateCatalogue(TemplateRegistry([define_template(meine_definition)]),
-                              [design_from_dict({"id": "amt-v1", "header_text": "Musteramt"})])
+
+catalogue = TemplateCatalogue(
+    TemplateRegistry([define_template(meine_definition)]),
+    [design_from_dict({"id": "amt-v1", "header_text": "Musteramt"})],
+)
 app = create_app("/api/reporting", templates=catalogue)
 ```
 

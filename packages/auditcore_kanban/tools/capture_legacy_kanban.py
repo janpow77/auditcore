@@ -27,20 +27,32 @@ from typing import Any
 
 COMMIT = "2c726f3c1481775cd34aeaa83f87137d6ab12ffe"
 SOURCES = {
-    "workspace": ("backend/app/api/vpai_notebook/workspace.py",
-                  "ccdb57dd3677b36fb4212c5347c2cfcd0096cabe"),
-    "user_scoped": ("backend/app/modules/vp_ai/utils/user_scoped.py",
-                    "b2ecd79398c77c13b450331642074840d535ca6c"),
+    "workspace": (
+        "backend/app/api/vpai_notebook/workspace.py",
+        "ccdb57dd3677b36fb4212c5347c2cfcd0096cabe",
+    ),
+    "user_scoped": (
+        "backend/app/modules/vp_ai/utils/user_scoped.py",
+        "b2ecd79398c77c13b450331642074840d535ca6c",
+    ),
 }
 
 
 def git_source(repo: Path, path: str, blob: str) -> str:
-    actual = subprocess.run(["git", "-C", str(repo), "rev-parse", f"{COMMIT}:{path}"],
-                            capture_output=True, text=True, check=True).stdout.strip()
+    actual = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", f"{COMMIT}:{path}"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
     if actual != blob:
         raise SystemExit(f"blob mismatch for {path}: {actual} != {blob}")
-    return subprocess.run(["git", "-C", str(repo), "show", f"{COMMIT}:{path}"],
-                          capture_output=True, text=True, check=True).stdout
+    return subprocess.run(
+        ["git", "-C", str(repo), "show", f"{COMMIT}:{path}"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
 
 
 # -- fake ORM -------------------------------------------------------------------
@@ -113,26 +125,67 @@ def _model(name: str, fields: list[str], defaults: dict[str, Any] | None = None)
     return type(name, (Model,), namespace)
 
 
-VpaiPage = _model("VpaiPage", ["id", "notebook_id", "title", "page_type", "icon",
-                               "owner_user_id", "created_by_id", "is_pinned", "is_archived",
-                               "board_columns", "created_at", "updated_at"],
-                  {"is_pinned": False, "is_archived": False, "board_columns": None})
-VpaiWorkspaceTask = _model("VpaiWorkspaceTask", [
-    "id", "page_id", "title", "description", "status", "priority", "position", "tags",
-    "deadline", "card_color", "card_image", "badge", "checklist", "generated_prompt",
-    "prompt_generated_at", "created_at", "updated_at"], {"checklist": []})
-VpaiPageShare = _model("VpaiPageShare", ["id", "page_id", "shared_with_user_id",
-                                         "shared_by_user_id", "permission", "created_at"])
-VpaiNotebookShare = _model("VpaiNotebookShare", ["id", "notebook_id", "shared_with_user_id",
-                                                 "permission"])
+VpaiPage = _model(
+    "VpaiPage",
+    [
+        "id",
+        "notebook_id",
+        "title",
+        "page_type",
+        "icon",
+        "owner_user_id",
+        "created_by_id",
+        "is_pinned",
+        "is_archived",
+        "board_columns",
+        "created_at",
+        "updated_at",
+    ],
+    {"is_pinned": False, "is_archived": False, "board_columns": None},
+)
+VpaiWorkspaceTask = _model(
+    "VpaiWorkspaceTask",
+    [
+        "id",
+        "page_id",
+        "title",
+        "description",
+        "status",
+        "priority",
+        "position",
+        "tags",
+        "deadline",
+        "card_color",
+        "card_image",
+        "badge",
+        "checklist",
+        "generated_prompt",
+        "prompt_generated_at",
+        "created_at",
+        "updated_at",
+    ],
+    {"checklist": []},
+)
+VpaiPageShare = _model(
+    "VpaiPageShare",
+    ["id", "page_id", "shared_with_user_id", "shared_by_user_id", "permission", "created_at"],
+)
+VpaiNotebookShare = _model(
+    "VpaiNotebookShare", ["id", "notebook_id", "shared_with_user_id", "permission"]
+)
 VpaiNotebook = _model("VpaiNotebook", ["id", "name", "owner_user_id", "created_by_id"])
 VpaiFile = _model("VpaiFile", ["id", "task_id", "page_id"])
 User = _model("User", ["id", "username", "full_name", "is_active", "storage_quota_mb"])
 
 
 class Query:
-    def __init__(self, session: FakeSession, target: Any, preds: list[Pred] | None = None,
-                 orders: list[Order] | None = None) -> None:
+    def __init__(
+        self,
+        session: FakeSession,
+        target: Any,
+        preds: list[Pred] | None = None,
+        orders: list[Order] | None = None,
+    ) -> None:
         self.session, self.target = session, target
         self.preds, self.orders = preds or [], orders or []
 
@@ -219,7 +272,7 @@ class BaseModel:
 
 class APIRouter:
     def __getattr__(self, _name: str) -> Callable[..., Any]:
-        return lambda *a, **k: (lambda fn: fn)
+        return lambda *a, **k: lambda fn: fn
 
 
 def install_stubs(sources: dict[str, str]) -> types.ModuleType:
@@ -231,18 +284,34 @@ def install_stubs(sources: dict[str, str]) -> types.ModuleType:
 
     module("fastapi", APIRouter=APIRouter, Depends=lambda *_a: None, HTTPException=HTTPException)
     module("pydantic", BaseModel=BaseModel)
-    module("sqlalchemy", func=types.SimpleNamespace(max=lambda c: Agg("max", c),
-                                                    count=lambda c: Agg("count", c)))
+    module(
+        "sqlalchemy",
+        func=types.SimpleNamespace(max=lambda c: Agg("max", c), count=lambda c: Agg("count", c)),
+    )
     module("sqlalchemy.orm", Session=object, Query=object)
-    for name in ("app", "app.api", "app.core", "app.models", "app.modules", "app.modules.vp_ai",
-                 "app.modules.vp_ai.utils", "app.api.vpai_notebook"):
+    for name in (
+        "app",
+        "app.api",
+        "app.core",
+        "app.models",
+        "app.modules",
+        "app.modules.vp_ai",
+        "app.modules.vp_ai.utils",
+        "app.api.vpai_notebook",
+    ):
         module(name)
     module("app.api.auth", get_current_user=None)
     module("app.core.database", get_db=None)
     module("app.models.user", User=User)
-    module("app.models.vpai_notebook", VpaiPage=VpaiPage, VpaiWorkspaceTask=VpaiWorkspaceTask,
-           VpaiPageShare=VpaiPageShare, VpaiNotebookShare=VpaiNotebookShare,
-           VpaiNotebook=VpaiNotebook, VpaiFile=VpaiFile)
+    module(
+        "app.models.vpai_notebook",
+        VpaiPage=VpaiPage,
+        VpaiWorkspaceTask=VpaiWorkspaceTask,
+        VpaiPageShare=VpaiPageShare,
+        VpaiNotebookShare=VpaiNotebookShare,
+        VpaiNotebook=VpaiNotebook,
+        VpaiFile=VpaiFile,
+    )
     scoped = module("app.modules.vp_ai.utils.user_scoped")
     exec(compile(sources["user_scoped"], "user_scoped.py", "exec"), scoped.__dict__)  # noqa: S102
     workspace = module("app.api.vpai_notebook.workspace")
@@ -259,8 +328,11 @@ if __name__ == "__main__":
     ws = install_stubs(texts)
     cases = run_all(ws, FakeSession, asyncio.run, HTTPException)
     document = {
-        "source": {"repository": "janpow77/audit_designer", "commit": COMMIT,
-                   "files": [{"path": p, "git_blob": b} for p, b in SOURCES.values()]},
+        "source": {
+            "repository": "janpow77/audit_designer",
+            "commit": COMMIT,
+            "files": [{"path": p, "git_blob": b} for p, b in SOURCES.values()],
+        },
         "tool": "tools/capture_legacy_kanban.py",
         "cases": len(cases),
         "observations": cases,

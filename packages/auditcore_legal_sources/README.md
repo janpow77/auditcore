@@ -55,8 +55,13 @@ payload = {
     "numFound": 2,
     "cursor": "AoE1",
     "documents": [
-        {"id": 290001, "titel": "Umsetzung des EFRE in der Förderperiode 2021-2027",
-         "dokumentnummer": "20/1234", "datum": "2026-03-05", "drucksachetyp": "Antwort"},
+        {
+            "id": 290001,
+            "titel": "Umsetzung des EFRE in der Förderperiode 2021-2027",
+            "dokumentnummer": "20/1234",
+            "datum": "2026-03-05",
+            "drucksachetyp": "Antwort",
+        },
         {"id": 290002, "titel": ""},
     ],
 }

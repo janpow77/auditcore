@@ -18,15 +18,27 @@ def check_lei(value: object) -> CheckResult:
     if isinstance(text, CheckResult):
         return text
     if not is_ascii_alnum(text):
-        return invalid(_KIND, value, Reason.INVALID_CHARACTERS,
-                       "LEI enthält unzulässige Zeichen (nur A–Z, 0–9)")
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_CHARACTERS,
+            "LEI enthält unzulässige Zeichen (nur A–Z, 0–9)",
+        )
     if len(text) != 20:
-        return invalid(_KIND, value, Reason.INVALID_LENGTH,
-                       f"LEI muss 20 Zeichen haben, nicht {len(text)}",
-                       details={"length": len(text)})
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_LENGTH,
+            f"LEI muss 20 Zeichen haben, nicht {len(text)}",
+            details={"length": len(text)},
+        )
     if _FORMAT.fullmatch(text) is None:
-        return invalid(_KIND, value, Reason.INVALID_FORMAT,
-                       "Die letzten beiden LEI-Stellen müssen Ziffern sein")
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_FORMAT,
+            "Die letzten beiden LEI-Stellen müssen Ziffern sein",
+        )
     if mod97(text) != 1:
         return invalid(_KIND, value, Reason.INVALID_CHECKSUM, "LEI-Prüfziffer ist falsch")
     return valid(_KIND, value, text, details={"lou_prefix": text[:4]})

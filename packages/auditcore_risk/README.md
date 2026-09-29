@@ -52,10 +52,20 @@ from auditcore_risk import evaluate, load_profile
 
 profil = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
 belege = [
-    {"projektbetrag": 40_000.0, "vergabe": None, "rechnungssteller": "Alpha GmbH",
-     "rechnungsnummer": "R-1", "rechnungsdatum": "2026-03-01"},
-    {"projektbetrag": 1_234.5, "vergabe": "V-7", "rechnungssteller": "Beta KG",
-     "rechnungsnummer": "R-2", "rechnungsdatum": "2026-03-02"},
+    {
+        "projektbetrag": 40_000.0,
+        "vergabe": None,
+        "rechnungssteller": "Alpha GmbH",
+        "rechnungsnummer": "R-1",
+        "rechnungsdatum": "2026-03-01",
+    },
+    {
+        "projektbetrag": 1_234.5,
+        "vergabe": "V-7",
+        "rechnungssteller": "Beta KG",
+        "rechnungsnummer": "R-2",
+        "rechnungsdatum": "2026-03-02",
+    },
 ]
 ergebnis = evaluate(belege, profil)
 
@@ -213,7 +223,7 @@ Datei aktuell.
 ### Web-Schnittstelle (Extras `web`, `fastapi`)
 
 ```python no-run
-from auditcore_risk.web import create_app          # Starlette, Pfade unter /risk
+from auditcore_risk.web import create_app  # Starlette, Pfade unter /risk
 from auditcore_risk.web import build_fastapi_router  # app.include_router(...)
 ```
 

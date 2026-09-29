@@ -57,7 +57,9 @@ class LlmClient:
     ) -> None:
         self.config = config
         self._http = httpx.Client(
-            base_url=config.base_url, transport=transport, limits=POOL_LIMITS,
+            base_url=config.base_url,
+            transport=transport,
+            limits=POOL_LIMITS,
             timeout=config.timeouts.llm,
         )
         self._resilience = Resilience(config, health)
@@ -116,44 +118,87 @@ class LlmClient:
 
     # -- public API ------------------------------------------------------
 
-    def generate(self, prompt: str, *, system: str | None = None, model: str | None = None,
-                 temperature: float | None = None, max_tokens: int | None = None,
-                 json_mode: bool = False, seed: int | None = None,
-                 options: Mapping[str, JsonValue] | None = None,
-                 reasoning_effort: str | None = None,
-                 timeout: float | None = None) -> LlmResult:
+    def generate(
+        self,
+        prompt: str,
+        *,
+        system: str | None = None,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        json_mode: bool = False,
+        seed: int | None = None,
+        options: Mapping[str, JsonValue] | None = None,
+        reasoning_effort: str | None = None,
+        timeout: float | None = None,
+    ) -> LlmResult:
         """Single prompt with optional system prompt."""
-        params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              json_mode=json_mode, seed=seed, options=options,
-                              reasoning_effort=reasoning_effort)
+        params = ops.sampling(
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            json_mode=json_mode,
+            seed=seed,
+            options=options,
+            reasoning_effort=reasoning_effort,
+        )
         return self._run(ops.generate_op(self.config, prompt, system, params, timeout))
 
-    def chat(self, messages: Messages, *, model: str | None = None,
-             temperature: float | None = None, max_tokens: int | None = None,
-             json_mode: bool = False, seed: int | None = None,
-             reasoning_effort: str | None = None, timeout: float | None = None) -> LlmResult:
+    def chat(
+        self,
+        messages: Messages,
+        *,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        json_mode: bool = False,
+        seed: int | None = None,
+        reasoning_effort: str | None = None,
+        timeout: float | None = None,
+    ) -> LlmResult:
         """OpenAI-compatible chat completion."""
-        params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              json_mode=json_mode, seed=seed,
-                              reasoning_effort=reasoning_effort)
+        params = ops.sampling(
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            json_mode=json_mode,
+            seed=seed,
+            reasoning_effort=reasoning_effort,
+        )
         return self._run(ops.chat_op(self.config, messages, params, timeout))
 
-    def embed(self, texts: Sequence[str], *, model: str | None = None,
-              timeout: float | None = None) -> EmbedResult:
+    def embed(
+        self, texts: Sequence[str], *, model: str | None = None, timeout: float | None = None
+    ) -> EmbedResult:
         """Embedding vectors in input order."""
         return self._run(ops.embed_op(self.config, texts, model, timeout))
 
-    def rerank(self, query: str, documents: Sequence[str], *, top_k: int | None = None,
-               model: str | None = None, timeout: float | None = None) -> RerankResult:
+    def rerank(
+        self,
+        query: str,
+        documents: Sequence[str],
+        *,
+        top_k: int | None = None,
+        model: str | None = None,
+        timeout: float | None = None,
+    ) -> RerankResult:
         """Scores in document order."""
         return self._run(ops.rerank_op(self.config, query, documents, top_k, model, timeout))
 
-    def ocr(self, content: bytes, *, filename: str = "upload.bin",
-            content_type: str = "application/octet-stream", model: str = "auto",
-            language: str = "auto", timeout: float | None = None) -> OcrResult:
+    def ocr(
+        self,
+        content: bytes,
+        *,
+        filename: str = "upload.bin",
+        content_type: str = "application/octet-stream",
+        model: str = "auto",
+        language: str = "auto",
+        timeout: float | None = None,
+    ) -> OcrResult:
         """OCR of a PDF or image."""
-        return self._run(ops.ocr_op(self.config, content, filename, content_type, model,
-                                    language, timeout))
+        return self._run(
+            ops.ocr_op(self.config, content, filename, content_type, model, language, timeout)
+        )
 
     def health(self, *, capability: str = "chat") -> JsonObject:
         """ai-router ``/health`` or Flow-Agent readiness of ``capability``."""
@@ -174,14 +219,25 @@ class LlmClient:
             except LlmClientError as error:
                 return self._catalog.failed(error)
 
-    def stream_chat(self, messages: Messages, *, model: str | None = None,
-                    options: Mapping[str, JsonValue] | None = None, think: bool | None = None,
-                    temperature: float | None = None,
-                    max_tokens: int | None = None,
-                    reasoning_effort: str | None = None) -> Iterator[StreamEvent]:
+    def stream_chat(
+        self,
+        messages: Messages,
+        *,
+        model: str | None = None,
+        options: Mapping[str, JsonValue] | None = None,
+        think: bool | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        reasoning_effort: str | None = None,
+    ) -> Iterator[StreamEvent]:
         """Streamed chat; HTTP and transport errors raise, in-stream errors are events."""
-        params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              options=options, reasoning_effort=reasoning_effort)
+        params = ops.sampling(
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            options=options,
+            reasoning_effort=reasoning_effort,
+        )
         request = build_stream_chat(self.config, messages, params, think)
         try:
             yield from self._stream(request)
@@ -193,8 +249,7 @@ class LlmClient:
     def _stream(self, request: PreparedRequest) -> Iterator[StreamEvent]:
         self._resilience.before(request)
         try:
-            response = self._http.send(build_request(self._http, self.config, request),
-                                       stream=True)
+            response = self._http.send(build_request(self._http, self.config, request), stream=True)
         except httpx.HTTPError as exc:
             raise transport_error(exc, request.path) from None
         try:

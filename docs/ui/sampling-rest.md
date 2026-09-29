@@ -11,8 +11,8 @@ Authentisierung, Mandantentrennung, CORS und Protokollierung bleiben in der einb
 ```python
 from auditcore_sampling.web import create_app, create_router, routes
 
-app = create_app("/api/sampling")                      # eigenständige ASGI-App
-starlette_app.routes.extend(routes("/api/sampling"))   # in bestehende Starlette-App
+app = create_app("/api/sampling")  # eigenständige ASGI-App
+starlette_app.routes.extend(routes("/api/sampling"))  # in bestehende Starlette-App
 fastapi_app.include_router(create_router("/api/sampling"))
 ```
 

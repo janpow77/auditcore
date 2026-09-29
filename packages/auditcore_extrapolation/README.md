@@ -58,7 +58,12 @@ wertproportionaler Auswahl), aus synthetischen Einheiten nachgebaut:
 from decimal import Decimal
 
 from auditcore_extrapolation import (
-    KOM_TABLES, ResidualInputs, SampleUnit, Stratum, assess, residual_error_rate,
+    KOM_TABLES,
+    ResidualInputs,
+    SampleUnit,
+    Stratum,
+    assess,
+    residual_error_rate,
 )
 
 # 4 Einheiten der Vollerhebung (Fehler 80.028 €), 4 Einheiten der Stichprobe
@@ -74,8 +79,8 @@ schicht = Stratum("Programm", 22_031_228.0, stichprobe, vollerhebung, population
 
 ergebnis = assess("nonstatistical.pps", [schicht])
 ter = ergebnis.total_error_rate
-assert round(ter.total_error) == 145_439          # Leitfaden: 145.439 €
-assert ter.upper_limit is None                    # nicht-statistisch: keine Obergrenze
+assert round(ter.total_error) == 145_439  # Leitfaden: 145.439 €
+assert ter.upper_limit is None  # nicht-statistisch: keine Obergrenze
 assert ter.conclusion == "not_material"
 
 # Dieselbe Stichprobe statistisch (MUS-Standardansatz, 90 %)
@@ -91,7 +96,10 @@ assert abs(rer.rate_after_correction - Decimal("0.02")) < Decimal("1e-20")
 Anomale Fehler werden nur mit Begründung aus der Hochrechnung genommen:
 
 ```pycon
->>> assess("nonstatistical.pps", [Stratum("P", 1000.0, (SampleUnit("x", 100.0, anomalous_error=5.0),), population_size=5)])
+>>> assess(
+...     "nonstatistical.pps",
+...     [Stratum("P", 1000.0, (SampleUnit("x", 100.0, anomalous_error=5.0),), population_size=5)],
+... )
 Traceback (most recent call last):
 ...
 auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomaler Fehler wird nur mit Begründung aus der Hochrechnung ausgenommen (Leitfaden, Anhang 6: nachweislich nicht repräsentativ).

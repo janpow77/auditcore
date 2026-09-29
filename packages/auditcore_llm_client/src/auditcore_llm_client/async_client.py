@@ -73,7 +73,9 @@ class AsyncLlmClient:
         if entry is not None and entry[0] is loop and not entry[1].is_closed:
             return entry[1]
         client = httpx.AsyncClient(
-            base_url=self.config.base_url, transport=self._transport, limits=POOL_LIMITS,
+            base_url=self.config.base_url,
+            transport=self._transport,
+            limits=POOL_LIMITS,
             timeout=self.config.timeouts.llm,
         )
         self._clients[id(loop)] = (loop, client)
@@ -134,46 +136,87 @@ class AsyncLlmClient:
 
     # -- public API ------------------------------------------------------
 
-    async def generate(self, prompt: str, *, system: str | None = None,
-                       model: str | None = None, temperature: float | None = None,
-                       max_tokens: int | None = None, json_mode: bool = False,
-                       seed: int | None = None, options: Mapping[str, JsonValue] | None = None,
-                       reasoning_effort: str | None = None,
-                       timeout: float | None = None) -> LlmResult:
+    async def generate(
+        self,
+        prompt: str,
+        *,
+        system: str | None = None,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        json_mode: bool = False,
+        seed: int | None = None,
+        options: Mapping[str, JsonValue] | None = None,
+        reasoning_effort: str | None = None,
+        timeout: float | None = None,
+    ) -> LlmResult:
         """Single prompt with optional system prompt."""
-        params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              json_mode=json_mode, seed=seed, options=options,
-                              reasoning_effort=reasoning_effort)
+        params = ops.sampling(
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            json_mode=json_mode,
+            seed=seed,
+            options=options,
+            reasoning_effort=reasoning_effort,
+        )
         return await self._run(ops.generate_op(self.config, prompt, system, params, timeout))
 
-    async def chat(self, messages: Messages, *, model: str | None = None,
-                   temperature: float | None = None, max_tokens: int | None = None,
-                   json_mode: bool = False, seed: int | None = None,
-                   reasoning_effort: str | None = None, timeout: float | None = None) -> LlmResult:
+    async def chat(
+        self,
+        messages: Messages,
+        *,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        json_mode: bool = False,
+        seed: int | None = None,
+        reasoning_effort: str | None = None,
+        timeout: float | None = None,
+    ) -> LlmResult:
         """OpenAI-compatible chat completion."""
-        params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              json_mode=json_mode, seed=seed,
-                              reasoning_effort=reasoning_effort)
+        params = ops.sampling(
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            json_mode=json_mode,
+            seed=seed,
+            reasoning_effort=reasoning_effort,
+        )
         return await self._run(ops.chat_op(self.config, messages, params, timeout))
 
-    async def embed(self, texts: Sequence[str], *, model: str | None = None,
-                    timeout: float | None = None) -> EmbedResult:
+    async def embed(
+        self, texts: Sequence[str], *, model: str | None = None, timeout: float | None = None
+    ) -> EmbedResult:
         """Embedding vectors in input order."""
         return await self._run(ops.embed_op(self.config, texts, model, timeout))
 
-    async def rerank(self, query: str, documents: Sequence[str], *, top_k: int | None = None,
-                     model: str | None = None, timeout: float | None = None) -> RerankResult:
+    async def rerank(
+        self,
+        query: str,
+        documents: Sequence[str],
+        *,
+        top_k: int | None = None,
+        model: str | None = None,
+        timeout: float | None = None,
+    ) -> RerankResult:
         """Scores in document order."""
-        return await self._run(
-            ops.rerank_op(self.config, query, documents, top_k, model, timeout)
-        )
+        return await self._run(ops.rerank_op(self.config, query, documents, top_k, model, timeout))
 
-    async def ocr(self, content: bytes, *, filename: str = "upload.bin",
-                  content_type: str = "application/octet-stream", model: str = "auto",
-                  language: str = "auto", timeout: float | None = None) -> OcrResult:
+    async def ocr(
+        self,
+        content: bytes,
+        *,
+        filename: str = "upload.bin",
+        content_type: str = "application/octet-stream",
+        model: str = "auto",
+        language: str = "auto",
+        timeout: float | None = None,
+    ) -> OcrResult:
         """OCR of a PDF or image."""
-        return await self._run(ops.ocr_op(self.config, content, filename, content_type, model,
-                                          language, timeout))
+        return await self._run(
+            ops.ocr_op(self.config, content, filename, content_type, model, language, timeout)
+        )
 
     async def health(self, *, capability: str = "chat") -> JsonObject:
         """ai-router ``/health`` or Flow-Agent readiness of ``capability``."""
@@ -195,14 +238,25 @@ class AsyncLlmClient:
             except LlmClientError as error:
                 return self._catalog.failed(error)
 
-    async def stream_chat(self, messages: Messages, *, model: str | None = None,
-                          options: Mapping[str, JsonValue] | None = None,
-                          think: bool | None = None, temperature: float | None = None,
-                          max_tokens: int | None = None,
-                          reasoning_effort: str | None = None) -> AsyncIterator[StreamEvent]:
+    async def stream_chat(
+        self,
+        messages: Messages,
+        *,
+        model: str | None = None,
+        options: Mapping[str, JsonValue] | None = None,
+        think: bool | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        reasoning_effort: str | None = None,
+    ) -> AsyncIterator[StreamEvent]:
         """Streamed chat; HTTP and transport errors raise, in-stream errors are events."""
-        params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              options=options, reasoning_effort=reasoning_effort)
+        params = ops.sampling(
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            options=options,
+            reasoning_effort=reasoning_effort,
+        )
         request = build_stream_chat(self.config, messages, params, think)
         try:
             async for event in self._stream(request):

@@ -85,16 +85,21 @@ def _compare_usage(case: dict[str, object], usage: list[UsageRecord]) -> None:
     if not expected:
         return
     assert [
-        {"prompt_tokens": u.prompt_tokens, "completion_tokens": u.completion_tokens,
-         "gpu_time_ms": u.latency_ms, "model_name": u.model}
+        {
+            "prompt_tokens": u.prompt_tokens,
+            "completion_tokens": u.completion_tokens,
+            "gpu_time_ms": u.latency_ms,
+            "model_name": u.model,
+        }
         for u in usage
     ] == expected
 
 
 @pytest.mark.parametrize("variant", ["sync", "async"])
 @pytest.mark.parametrize(("group", "case"), CASES, ids=[_ids(c) for c in CASES])
-def test_case_matches_legacy(group: dict[str, object], case: dict[str, object],
-                             variant: str) -> None:
+def test_case_matches_legacy(
+    group: dict[str, object], case: dict[str, object], variant: str
+) -> None:
     gateway = Gateway(case["responses"])  # type: ignore[arg-type]
     usage: list[UsageRecord] = []
     health = RouterHealth()
@@ -134,13 +139,19 @@ def test_every_group_is_bound_to_a_pinned_source() -> None:
 def test_legacy_key_leaks_are_recorded() -> None:
     """The observation behind the security finding: legacy clients leak the key."""
     leaking = sorted(
-        str(c["id"]) for _, c in CASES
+        str(c["id"])
+        for _, c in CASES
         if (c.get("error") or {}).get("key_in_message")  # type: ignore[union-attr]
-        or c.get("key_in_result") or c.get("key_in_logs")
+        or c.get("key_in_result")
+        or c.get("key_in_logs")
         or (c.get("health") or {}).get("key_in_health")  # type: ignore[union-attr]
     )
     assert leaking == [
-        "ad-generate-key-echo", "ad-generate-unreachable", "ad-safe-llm-key-echo",
-        "ck-stream-http-500", "ck-stream-unreachable", "fi-embed-unreachable",
+        "ad-generate-key-echo",
+        "ad-generate-unreachable",
+        "ad-safe-llm-key-echo",
+        "ck-stream-http-500",
+        "ck-stream-unreachable",
+        "fi-embed-unreachable",
         "fi-safe-llm-key-echo",
     ]

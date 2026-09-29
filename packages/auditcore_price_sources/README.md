@@ -44,25 +44,48 @@ Credential-Provider und wird weder abgeglichen noch aufgezeichnet:
 ```python
 from auditcore_harvest import AdapterRegistry, HarvestEngine, HarvestRequest, ReplayTransport
 from auditcore_harvest.memory import (
-    ClockSleeper, FixedClock, ListSink, MemoryStateStore, StaticCredentials,
+    ClockSleeper,
+    FixedClock,
+    ListSink,
+    MemoryStateStore,
+    StaticCredentials,
 )
 
 import auditcore_price_sources as ps
 
 BASE = "https://example.invalid/api"
-answer = {"response": {"total": "2", "data": [
-    {"period": "2026-09-01", "product": "EPCBRENT", "value": "71.25", "units": "$/BBL"},
-    {"period": "2026-08-31", "product": "EPCBRENT", "value": None, "units": "$/BBL"},
-]}}
-params = {  # Anfrage, die der Adapter stellt (30-Tage-Fenster zur Engine-Uhr)
-    "frequency": "daily", "data[0]": "value", "facets[product][]": "EPCBRENT",
-    "start": "2026-08-02", "end": "2026-09-01", "sort[0][column]": "period",
-    "sort[0][direction]": "desc", "offset": "0", "length": "5000",
+answer = {
+    "response": {
+        "total": "2",
+        "data": [
+            {"period": "2026-09-01", "product": "EPCBRENT", "value": "71.25", "units": "$/BBL"},
+            {"period": "2026-08-31", "product": "EPCBRENT", "value": None, "units": "$/BBL"},
+        ],
+    }
 }
-transport = ReplayTransport(({
-    "request": {"method": "GET", "url": f"{BASE}/petroleum/pri/spt/data/", "params": params},
-    "response": {"status": 200, "body_json": answer},
-},))
+params = {  # Anfrage, die der Adapter stellt (30-Tage-Fenster zur Engine-Uhr)
+    "frequency": "daily",
+    "data[0]": "value",
+    "facets[product][]": "EPCBRENT",
+    "start": "2026-08-02",
+    "end": "2026-09-01",
+    "sort[0][column]": "period",
+    "sort[0][direction]": "desc",
+    "offset": "0",
+    "length": "5000",
+}
+transport = ReplayTransport(
+    (
+        {
+            "request": {
+                "method": "GET",
+                "url": f"{BASE}/petroleum/pri/spt/data/",
+                "params": params,
+            },
+            "response": {"status": 200, "body_json": answer},
+        },
+    )
+)
 
 registry = AdapterRegistry()
 ps.register(registry)
@@ -70,12 +93,16 @@ clock = FixedClock()  # 01.09.2026 08:00 UTC
 engine = HarvestEngine(
     transport=transport,
     credentials=StaticCredentials({("price.eia_brent", "api_key"): "schlüssel"}),
-    state=MemoryStateStore(), clock=clock, sleeper=ClockSleeper(clock),
+    state=MemoryStateStore(),
+    clock=clock,
+    sleeper=ClockSleeper(clock),
 )
 sink = ListSink()
 result = engine.run(
     registry.create("price.eia_brent"),
-    HarvestRequest("price.eia_brent", run_id="lauf-1"), sink, config={"url": BASE},
+    HarvestRequest("price.eia_brent", run_id="lauf-1"),
+    sink,
+    config={"url": BASE},
 )
 assert ps.legacy_status(result) == "erfolg"
 values = {r.record_id: r.normalized for r in sink.records.values()}

@@ -119,9 +119,7 @@ def configure_columns(
     return CommandResult(bump(staged, ctx, cards), (Change("board.configured", None, data),))
 
 
-def share_board(
-    board: Board, ctx: Context, user_id: str, permission: str
-) -> CommandResult:
+def share_board(board: Board, ctx: Context, user_id: str, permission: str) -> CommandResult:
     """Grant or update (upsert) a share; the owner is the only one who may share."""
     check_share(board, ctx.actor, user_id, permission).raise_if_denied()
     existing = board.share_for(user_id)

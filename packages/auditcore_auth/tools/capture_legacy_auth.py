@@ -62,19 +62,31 @@ class Secret:
 
 
 SETTINGS: dict[str, dict[str, Any]] = {
-    "audit_designer": {"SECRET_KEY": SECRET, "ALGORITHM": "HS256",
-                       "ACCESS_TOKEN_EXPIRE_MINUTES": 720},
-    "flownavigator": {"secret_key": SECRET, "algorithm": "HS256",
-                      "access_token_expire_minutes": 1440},
+    "audit_designer": {
+        "SECRET_KEY": SECRET,
+        "ALGORITHM": "HS256",
+        "ACCESS_TOKEN_EXPIRE_MINUTES": 720,
+    },
+    "flownavigator": {
+        "secret_key": SECRET,
+        "algorithm": "HS256",
+        "access_token_expire_minutes": 1440,
+    },
     "flowsearch": {"SECRET_KEY": SECRET, "ALGORITHM": "HS256", "ACCESS_TOKEN_EXPIRE_MINUTES": 30},
     "qaaudit": {"jwt_secret": SECRET, "jwt_algorithm": "HS256", "jwt_ttl_hours": 24},
     "versteigerung": {"jwt_secret": SECRET, "jwt_alg": "HS256", "access_ttl_min": 30},
-    "regulierung": {"secret_key": Secret(SECRET), "jwt_algorithm": "HS256",
-                    "jwt_expire_hours_lkb": 8, "jwt_expire_hours_admin": 24},
-    "flowinvoice": {"secret_key": Secret(SECRET), "jwt_algorithm": "HS256",
-                    "jwt_expire_hours": 24},
-    "audit-portal": {"secret_key": Secret(SECRET), "jwt_algorithm": "HS256",
-                     "jwt_expire_hours": 24},
+    "regulierung": {
+        "secret_key": Secret(SECRET),
+        "jwt_algorithm": "HS256",
+        "jwt_expire_hours_lkb": 8,
+        "jwt_expire_hours_admin": 24,
+    },
+    "flowinvoice": {"secret_key": Secret(SECRET), "jwt_algorithm": "HS256", "jwt_expire_hours": 24},
+    "audit-portal": {
+        "secret_key": Secret(SECRET),
+        "jwt_algorithm": "HS256",
+        "jwt_expire_hours": 24,
+    },
     "flowlib": {},
 }
 
@@ -82,17 +94,32 @@ SETTINGS: dict[str, dict[str, Any]] = {
 def git_show(root: Path, app: str, path: str) -> str:
     source = SOURCES[app]
     checkout = root / str(source["checkout"])
-    return subprocess.run(["git", "-C", str(checkout), "show", f"{source['commit']}:{path}"],
-                          check=True, capture_output=True, text=True).stdout
+    return subprocess.run(
+        ["git", "-C", str(checkout), "show", f"{source['commit']}:{path}"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
 
 
 def install_stubs(app: str) -> None:
     for name in [n for n in sys.modules if n == "app" or n.startswith("app.")]:
         del sys.modules[name]
     settings = types.SimpleNamespace(**SETTINGS[app])
-    modules = {name: types.ModuleType(name) for name in (
-        "app", "app.core", "app.core.config", "app.config", "app.core.database",
-        "app.models", "app.models.user", "app.services", "app.services.betrieb")}
+    modules = {
+        name: types.ModuleType(name)
+        for name in (
+            "app",
+            "app.core",
+            "app.core.config",
+            "app.config",
+            "app.core.database",
+            "app.models",
+            "app.models.user",
+            "app.services",
+            "app.services.betrieb",
+        )
+    }
     for module in (modules["app.core.config"], modules["app.config"]):
         module.settings = settings  # type: ignore[attr-defined]
         module.get_settings = lambda: settings  # type: ignore[attr-defined]
@@ -105,8 +132,9 @@ def freeze(namespace: dict[str, Any]) -> None:
     if namespace.get("datetime") is datetime:
         namespace["datetime"] = FrozenDatetime
     if isinstance(namespace.get("dt"), types.ModuleType):
-        namespace["dt"] = types.SimpleNamespace(datetime=FrozenDatetime, UTC=UTC,
-                                                timedelta=timedelta, timezone=timezone)
+        namespace["dt"] = types.SimpleNamespace(
+            datetime=FrozenDatetime, UTC=UTC, timedelta=timedelta, timezone=timezone
+        )
 
 
 def load_security(root: Path, app: str) -> dict[str, Any]:
@@ -123,8 +151,13 @@ def load_function(root: Path, app: str, path: str, name: str) -> Callable[..., A
     node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == name)
     from jose import jwt  # the call sites use python-jose
 
-    namespace: dict[str, Any] = {"datetime": FrozenDatetime, "UTC": UTC, "timedelta": timedelta,
-                                 "jwt": jwt, "get_settings": sys.modules["app.config"].get_settings}
+    namespace: dict[str, Any] = {
+        "datetime": FrozenDatetime,
+        "UTC": UTC,
+        "timedelta": timedelta,
+        "jwt": jwt,
+        "get_settings": sys.modules["app.config"].get_settings,
+    }
     exec(compile(ast.Module(body=[node], type_ignores=[]), f"{app}:{path}", "exec"), namespace)
     return namespace[name]  # type: ignore[no-any-return]
 
@@ -136,8 +169,9 @@ def outcome(call: Callable[[], Any]) -> dict[str, Any]:
         return {"error": type(error).__name__}
 
 
-def password_cases(hash_: Callable[[str], str], verify: Callable[[str, str], bool]
-                   ) -> dict[str, Any]:
+def password_cases(
+    hash_: Callable[[str], str], verify: Callable[[str, str], bool]
+) -> dict[str, Any]:
     cases = []
     for password in PASSWORDS:
         created = outcome(lambda p=password: hash_(p))
@@ -149,8 +183,9 @@ def password_cases(hash_: Callable[[str], str], verify: Callable[[str, str], boo
             case["verify_wrong"] = outcome(lambda h=stored: verify("falsch", h))
             case["verify_prefix72"] = outcome(lambda p=prefix, h=stored: verify(p, h))
         cases.append(case)
-    malformed = [{"hash": bad, "verify": outcome(lambda b=bad: verify("geheim123", b))}
-                 for bad in MALFORMED]
+    malformed = [
+        {"hash": bad, "verify": outcome(lambda b=bad: verify("geheim123", b))} for bad in MALFORMED
+    ]
     return {"cases": cases, "malformed": malformed}
 
 
@@ -200,11 +235,19 @@ def main() -> None:
         "frozen_instant": FROZEN.isoformat(),
         "secret": SECRET,
         "wrong_secret": WRONG_SECRET,
-        "libraries": {name: version(name) for name in (
-            "passlib", "python-jose", "bcrypt", "PyJWT", "argon2-cffi")},
-        "sources": {app: {**meta, "blobs": {path: blob_sha(git_show(args.repos_root, app, path))
-                                            for path in meta["files"]}}  # type: ignore[attr-defined]
-                    for app, meta in SOURCES.items()},
+        "libraries": {
+            name: version(name)
+            for name in ("passlib", "python-jose", "bcrypt", "PyJWT", "argon2-cffi")
+        },
+        "sources": {
+            app: {
+                **meta,
+                "blobs": {
+                    path: blob_sha(git_show(args.repos_root, app, path)) for path in meta["files"]
+                },
+            }  # type: ignore[attr-defined]
+            for app, meta in SOURCES.items()
+        },
         "reference_only": REFERENCE_ONLY,
         "apps": {app: capture_app(args.repos_root, app) for app in SOURCES},
     }

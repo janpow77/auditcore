@@ -208,7 +208,7 @@ den deutschen Begriffen der Bibliothek.
 ```python
 from auditcore_geo.web import Settings, create_app, create_router
 
-app = create_app("/api/geo")                       # Starlette ([web])
+app = create_app("/api/geo")  # Starlette ([web])
 router = create_router("/api/geo", settings=Settings(max_points=20_000))  # FastAPI
 ```
 

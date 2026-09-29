@@ -45,7 +45,12 @@ Der Kern läuft ohne httpx und ohne Netzwerk:
 
 ```python
 from auditcore_llm_client import (
-    FLOWINVOICE, ConfigurationError, Mode, config_from_env, redact, strip_think_tags,
+    FLOWINVOICE,
+    ConfigurationError,
+    Mode,
+    config_from_env,
+    redact,
+    strip_think_tags,
     validate_base_url,
 )
 
@@ -54,14 +59,14 @@ env = {
     "FLOW_AGENT_APP_ID": "flowinvoice",
     "FLOW_AGENT_APP_KEY": "geheim-123",
 }
-config = config_from_env(FLOWINVOICE, env)   # gesetzte FLOW_AGENT_URL → Flow-Agent-Modus
+config = config_from_env(FLOWINVOICE, env)  # gesetzte FLOW_AGENT_URL → Flow-Agent-Modus
 assert config.mode is Mode.FLOW_AGENT
-assert "geheim-123" not in repr(config)      # Schlüssel erscheint nie im repr
+assert "geheim-123" not in repr(config)  # Schlüssel erscheint nie im repr
 
 try:
     validate_base_url("http://gpu-host:11434")
 except ConfigurationError as error:
-    assert "Ollama" in str(error)            # direkter GPU-Weg wird abgelehnt
+    assert "Ollama" in str(error)  # direkter GPU-Weg wird abgelehnt
 
 assert strip_think_tags("<think>abwägen</think>Beleg ist vollständig.") == "Beleg ist vollständig."
 ```
@@ -76,8 +81,8 @@ Mit dem Extra `[http]` und einem erreichbaren Gateway (nicht im Test ausgeführt
 ```python no-run
 from auditcore_llm_client import FLOWINVOICE, LlmClient, RouterHealth, config_from_env
 
-config = config_from_env(FLOWINVOICE)          # liest FLOW_AGENT_URL bzw. LLM_ROUTER_URL …
-health = RouterHealth.shared()                 # optional: /api/health-Status der App
+config = config_from_env(FLOWINVOICE)  # liest FLOW_AGENT_URL bzw. LLM_ROUTER_URL …
+health = RouterHealth.shared()  # optional: /api/health-Status der App
 with LlmClient(config, health=health) as client:
     antwort = client.generate("Prüfe den Beleg.", system="Du bist Prüfer.")
     vektoren = client.embed(["Text 1", "Text 2"]).embeddings
@@ -154,7 +159,8 @@ Standard-URL.
 Plane (`POST /api/v1/secrets/use`, auditiert) aufgelöst:
 
 ```python
-from flow_agent_client.secret_refs import SecretResolver   # nicht Teil dieser Bibliothek
+from flow_agent_client.secret_refs import SecretResolver  # nicht Teil dieser Bibliothek
+
 config = config_from_env(FLOWINVOICE, secret_resolver=SecretResolver.from_env().resolve)
 ```
 
@@ -168,8 +174,12 @@ Standard wie bisher: ein Versuch, kein Breaker. Opt-in:
 ```python
 import dataclasses
 from auditcore_llm_client import BreakerPolicy, RetryPolicy
-config = dataclasses.replace(config, retry=RetryPolicy(max_attempts=3),
-                             breaker=BreakerPolicy(failure_threshold=3, reset_timeout=180))
+
+config = dataclasses.replace(
+    config,
+    retry=RetryPolicy(max_attempts=3),
+    breaker=BreakerPolicy(failure_threshold=3, reset_timeout=180),
+)
 ```
 
 Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …

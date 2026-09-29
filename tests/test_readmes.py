@@ -55,8 +55,11 @@ def test_readme_follows_template(package_dir: Path) -> None:
         )
         return
     assert not problems, "\n".join(
-        [f"{package_dir.name}/README.md entspricht nicht der Vorlage "
-         "(docs/bibliotheken/readme-vorlage.md):", *problems]
+        [
+            f"{package_dir.name}/README.md entspricht nicht der Vorlage "
+            "(docs/bibliotheken/readme-vorlage.md):",
+            *problems,
+        ]
     )
 
 
@@ -67,9 +70,17 @@ def test_python_quick_start_runs(package_dir: Path) -> None:
     sources = [str(p) for p in sorted(ROOT.glob("packages/*/src"))]
     env = {**os.environ, "PYTHONPATH": os.pathsep.join(sources)}
     completed = subprocess.run(
-        [sys.executable, str(ROOT / "scripts/docs/readme_snippets.py"),
-         str(package_dir / "README.md")],
-        cwd=package_dir, env=env, capture_output=True, text=True, timeout=300, check=False,
+        [
+            sys.executable,
+            str(ROOT / "scripts/docs/readme_snippets.py"),
+            str(package_dir / "README.md"),
+        ],
+        cwd=package_dir,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=300,
+        check=False,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
 

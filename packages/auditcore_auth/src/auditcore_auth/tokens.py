@@ -74,8 +74,14 @@ def _check_key(profile: TokenProfile, key: Key) -> None:
 class TokenIssuer:
     """Sign tokens; the payload order follows ``profile.layout``."""
 
-    def __init__(self, profile: TokenProfile, key: Key, *, clock: Clock = system_clock,
-                 key_id: str | None = None) -> None:
+    def __init__(
+        self,
+        profile: TokenProfile,
+        key: Key,
+        *,
+        clock: Clock = system_clock,
+        key_id: str | None = None,
+    ) -> None:
         _check_key(profile, key)
         self._profile = profile
         self._key = key
@@ -86,8 +92,13 @@ class TokenIssuer:
     def profile(self) -> TokenProfile:
         return self._profile
 
-    def issue(self, claims: Mapping[str, object] | None = None, *, subject: str | None = None,
-              lifetime: timedelta | None = None) -> IssuedToken:
+    def issue(
+        self,
+        claims: Mapping[str, object] | None = None,
+        *,
+        subject: str | None = None,
+        lifetime: timedelta | None = None,
+    ) -> IssuedToken:
         """Sign ``claims`` (plus ``sub``) with ``exp``/``iat`` from the clock.
 
         ``exp``, ``iat``, ``nbf`` and the profile's fixed claims cannot be
@@ -124,13 +135,15 @@ class TokenVerifier:
         algorithm = backend.unverified_algorithm(token)
         if algorithm not in profile.allowed_algorithms:
             raise DisallowedAlgorithmError(f"Algorithmus {algorithm!r} nicht zugelassen")
-        claims = backend.decode(token, self._key, profile.allowed_algorithms,
-                                profile.required_claims)
+        claims = backend.decode(
+            token, self._key, profile.allowed_algorithms, profile.required_claims
+        )
         check_claims(claims, profile, require_aware(self._clock()), expected_type)
         return VerifiedToken(MappingProxyType(claims), algorithm)
 
-    def verify_or_none(self, token: str | None, *,
-                       expected_type: str | None = None) -> VerifiedToken | None:
+    def verify_or_none(
+        self, token: str | None, *, expected_type: str | None = None
+    ) -> VerifiedToken | None:
         """Like :meth:`verify` but ``None`` for any rejected token (legacy ``decode_token``)."""
         if token is None:
             return None

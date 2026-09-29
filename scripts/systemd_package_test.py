@@ -32,6 +32,8 @@ FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends qemu-system-x86 e2fsprogs \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=guest / /guest/
+# Docker markers must not make systemd inside QEMU ignore the kernel command line.
+RUN rm -f /guest/.dockerenv /guest/run/.containerenv /guest/run/systemd/container
 RUN cp /guest/boot/vmlinuz-* /kernel && cp /guest/boot/initrd.img-* /initrd \
     && truncate -s 3G /disk.raw && mkfs.ext4 -q -F -d /guest /disk.raw \
     && chmod 0644 /kernel /initrd /disk.raw && rm -rf /guest

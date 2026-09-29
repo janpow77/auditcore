@@ -21,36 +21,38 @@ _KIND = IdentifierKind.VAT_ID
 _UK = r"[0-9]{9}|[0-9]{12}|GD[0-4][0-9]{2}|HA[5-9][0-9]{2}"
 
 #: Number part (without the prefix) per VAT prefix, EU member states and XI.
-EU_VAT_FORMATS: Mapping[str, str] = MappingProxyType({
-    "AT": r"U[0-9]{8}",
-    "BE": r"[01][0-9]{9}",
-    "BG": r"[0-9]{9,10}",
-    "CY": r"[0-9]{8}[A-Z]",
-    "CZ": r"[0-9]{8,10}",
-    "DE": r"[1-9][0-9]{8}",
-    "DK": r"[0-9]{8}",
-    "EE": r"[0-9]{9}",
-    "EL": r"[0-9]{9}",
-    "ES": r"[A-Z0-9][0-9]{7}[A-Z0-9]",
-    "FI": r"[0-9]{8}",
-    "FR": r"[A-HJ-NP-Z0-9]{2}[0-9]{9}",
-    "HR": r"[0-9]{11}",
-    "HU": r"[0-9]{8}",
-    "IE": r"[0-9]{7}[A-W][A-I]?|[0-9][A-Z+*][0-9]{5}[A-W]",
-    "IT": r"[0-9]{11}",
-    "LT": r"[0-9]{9}|[0-9]{12}",
-    "LU": r"[0-9]{8}",
-    "LV": r"[0-9]{11}",
-    "MT": r"[0-9]{8}",
-    "NL": r"[0-9]{9}B[0-9]{2}",
-    "PL": r"[0-9]{10}",
-    "PT": r"[0-9]{9}",
-    "RO": r"[1-9][0-9]{1,9}",
-    "SE": r"[0-9]{10}01",
-    "SI": r"[1-9][0-9]{7}",
-    "SK": r"[1-9][0-9]{9}",
-    "XI": _UK,
-})
+EU_VAT_FORMATS: Mapping[str, str] = MappingProxyType(
+    {
+        "AT": r"U[0-9]{8}",
+        "BE": r"[01][0-9]{9}",
+        "BG": r"[0-9]{9,10}",
+        "CY": r"[0-9]{8}[A-Z]",
+        "CZ": r"[0-9]{8,10}",
+        "DE": r"[1-9][0-9]{8}",
+        "DK": r"[0-9]{8}",
+        "EE": r"[0-9]{9}",
+        "EL": r"[0-9]{9}",
+        "ES": r"[A-Z0-9][0-9]{7}[A-Z0-9]",
+        "FI": r"[0-9]{8}",
+        "FR": r"[A-HJ-NP-Z0-9]{2}[0-9]{9}",
+        "HR": r"[0-9]{11}",
+        "HU": r"[0-9]{8}",
+        "IE": r"[0-9]{7}[A-W][A-I]?|[0-9][A-Z+*][0-9]{5}[A-W]",
+        "IT": r"[0-9]{11}",
+        "LT": r"[0-9]{9}|[0-9]{12}",
+        "LU": r"[0-9]{8}",
+        "LV": r"[0-9]{11}",
+        "MT": r"[0-9]{8}",
+        "NL": r"[0-9]{9}B[0-9]{2}",
+        "PL": r"[0-9]{10}",
+        "PT": r"[0-9]{9}",
+        "RO": r"[1-9][0-9]{1,9}",
+        "SE": r"[0-9]{10}01",
+        "SI": r"[1-9][0-9]{7}",
+        "SK": r"[1-9][0-9]{9}",
+        "XI": _UK,
+    }
+)
 #: Non-EU VAT formats the strict profile knows.
 OTHER_VAT_FORMATS: Mapping[str, str] = MappingProxyType({"GB": _UK})
 
@@ -82,9 +84,7 @@ def _at_ok(number: str) -> bool:
     return at_uid_check_digit(number[1:8]) == int(number[8])
 
 
-_CHECK_DIGITS: Mapping[str, Callable[[str], bool]] = MappingProxyType(
-    {"DE": _de_ok, "AT": _at_ok}
-)
+_CHECK_DIGITS: Mapping[str, Callable[[str], bool]] = MappingProxyType({"DE": _de_ok, "AT": _at_ok})
 
 
 def normalize_vat_id(value: str) -> str:
@@ -100,22 +100,33 @@ def _split(value: object, text: str, country: str | None) -> tuple[str, str] | C
     has_prefix = head.isalpha() and (head in _PATTERNS or head in COUNTRY_CODES or head == "EL")
     if country is None:
         if not has_prefix:
-            return invalid(_KIND, value, Reason.INVALID_FORMAT,
-                           "USt-IdNr. ohne Länderpräfix (z. B. DE)")
+            return invalid(
+                _KIND, value, Reason.INVALID_FORMAT, "USt-IdNr. ohne Länderpräfix (z. B. DE)"
+            )
         return head, text[2:]
     wanted = "EL" if country.upper() == "GR" else country.upper()
     if not has_prefix:
         return wanted, text
     if head != wanted:
-        return invalid(_KIND, value, Reason.COUNTRY_MISMATCH,
-                       f"USt-IdNr. beginnt mit {head}, erwartet wurde {wanted}", country=head)
+        return invalid(
+            _KIND,
+            value,
+            Reason.COUNTRY_MISMATCH,
+            f"USt-IdNr. beginnt mit {head}, erwartet wurde {wanted}",
+            country=head,
+        )
     return head, text[2:]
 
 
 def _unknown(value: object, prefix: str) -> CheckResult:
     hint = " (Griechenland verwendet EL)" if prefix == "GR" else ""
-    return invalid(_KIND, value, Reason.UNKNOWN_COUNTRY,
-                   f"Für {prefix} ist kein USt-IdNr.-Format bekannt{hint}", country=prefix)
+    return invalid(
+        _KIND,
+        value,
+        Reason.UNKNOWN_COUNTRY,
+        f"Für {prefix} ist kein USt-IdNr.-Format bekannt{hint}",
+        country=prefix,
+    )
 
 
 def check_vat_id(value: object, country: str | None = None) -> CheckResult:
@@ -128,8 +139,9 @@ def check_vat_id(value: object, country: str | None = None) -> CheckResult:
     if isinstance(text, CheckResult):
         return text
     if not is_ascii_alnum(text.replace("+", "").replace("*", "")):
-        return invalid(_KIND, value, Reason.INVALID_CHARACTERS,
-                       "USt-IdNr. enthält unzulässige Zeichen")
+        return invalid(
+            _KIND, value, Reason.INVALID_CHARACTERS, "USt-IdNr. enthält unzulässige Zeichen"
+        )
     split = _split(value, text, country)
     if isinstance(split, CheckResult):
         return split
@@ -138,12 +150,29 @@ def check_vat_id(value: object, country: str | None = None) -> CheckResult:
     if pattern is None:
         return _unknown(value, prefix)
     if pattern.fullmatch(number) is None:
-        return invalid(_KIND, value, Reason.INVALID_FORMAT,
-                       f"USt-IdNr. entspricht nicht dem Format für {prefix}", country=prefix)
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_FORMAT,
+            f"USt-IdNr. entspricht nicht dem Format für {prefix}",
+            country=prefix,
+        )
     checker = _CHECK_DIGITS.get(prefix)
     if checker is not None and not checker(number):
-        return invalid(_KIND, value, Reason.INVALID_CHECKSUM,
-                       "Prüfziffer der USt-IdNr. ist falsch", country=prefix)
-    return valid(_KIND, value, prefix + number, country=prefix,
-                 details={"eu": prefix in EU_VAT_FORMATS,
-                          "checksum": "verified" if checker else "not_checked"})
+        return invalid(
+            _KIND,
+            value,
+            Reason.INVALID_CHECKSUM,
+            "Prüfziffer der USt-IdNr. ist falsch",
+            country=prefix,
+        )
+    return valid(
+        _KIND,
+        value,
+        prefix + number,
+        country=prefix,
+        details={
+            "eu": prefix in EU_VAT_FORMATS,
+            "checksum": "verified" if checker else "not_checked",
+        },
+    )

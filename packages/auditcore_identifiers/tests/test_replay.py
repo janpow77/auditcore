@@ -29,7 +29,8 @@ def _validators(profile: str) -> dict[str, Callable[[dict[str, Any]], CheckResul
         "validate_german_vat_id": lambda i: fi.validate_german_vat_id(i["value"], profile),
         "validate_uk_vat_id": lambda i: fi.validate_uk_vat_id(i["value"], profile),
         "validate_eu_vat_id": lambda i: fi.validate_eu_vat_id(
-            i["value"], i["country_code"], profile),
+            i["value"], i["country_code"], profile
+        ),
     }
 
 
@@ -69,10 +70,13 @@ def _app_cases(name: str) -> list[dict[str, Any]]:
     return [c for c in _load(name) if c["function"] != "_normalize_vat_id"]
 
 
-@pytest.mark.parametrize("fixture,profile,pipeline", [
-    ("flowinvoice_observed.json", "flowinvoice.legacy", "flowinvoice.pipeline.legacy"),
-    ("audit_portal_observed.json", "audit_portal.legacy", "audit_portal.pipeline.legacy"),
-])
+@pytest.mark.parametrize(
+    "fixture,profile,pipeline",
+    [
+        ("flowinvoice_observed.json", "flowinvoice.legacy", "flowinvoice.pipeline.legacy"),
+        ("audit_portal_observed.json", "audit_portal.legacy", "audit_portal.pipeline.legacy"),
+    ],
+)
 def test_application_originals_are_reproduced(fixture: str, profile: str, pipeline: str) -> None:
     validators = _validators(profile)
     checked = 0
@@ -121,16 +125,21 @@ def _internal_message(case: dict[str, Any], result: CheckResult) -> None:
 
 def test_internal_copies_are_reproduced() -> None:
     checks: dict[str, Callable[[dict[str, Any]], None]] = {
-        "invoicesynth.iban_valid":
-            lambda c: _internal_bool(c, lp.invoicesynth_iban_valid(c["inputs"]["value"])),
-        "invoicesynth.vat_id_valid":
-            lambda c: _internal_bool(c, lp.invoicesynth_vat_id_valid(c["inputs"]["value"])),
-        "documents.validate_iban":
-            lambda c: assert_pipeline_iban(c, lp.pipeline_validate_iban(c["inputs"]["value"])),
-        "documents.donut_iban":
-            lambda c: assert_pipeline_iban(c, lp.donut_validate_iban(c["inputs"]["value"])),
-        "documents.donut_vat_id_check":
-            lambda c: _internal_message(c, lp.donut_vat_id_check(c["inputs"]["value"])),
+        "invoicesynth.iban_valid": lambda c: _internal_bool(
+            c, lp.invoicesynth_iban_valid(c["inputs"]["value"])
+        ),
+        "invoicesynth.vat_id_valid": lambda c: _internal_bool(
+            c, lp.invoicesynth_vat_id_valid(c["inputs"]["value"])
+        ),
+        "documents.validate_iban": lambda c: assert_pipeline_iban(
+            c, lp.pipeline_validate_iban(c["inputs"]["value"])
+        ),
+        "documents.donut_iban": lambda c: assert_pipeline_iban(
+            c, lp.donut_validate_iban(c["inputs"]["value"])
+        ),
+        "documents.donut_vat_id_check": lambda c: _internal_message(
+            c, lp.donut_vat_id_check(c["inputs"]["value"])
+        ),
         "is_valid_lei": lambda c: _flowworkshop_lei(c),
         "extract_lei_from_text": lambda c: _flowworkshop_extract(c),
     }

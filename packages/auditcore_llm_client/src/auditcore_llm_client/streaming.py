@@ -82,7 +82,7 @@ class SseDecoder:
         line = line.strip()
         if self.finished or not line.startswith("data:"):
             return []
-        data = line[len("data:"):].strip()
+        data = line[len("data:") :].strip()
         if data == "[DONE]":
             return [self._done()]
         obj = _load(data)

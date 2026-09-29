@@ -26,7 +26,15 @@ INVOICESYNTH = "invoicesynth.legacy"
 FLOWWORKSHOP = "flowworkshop.legacy"
 
 PIPELINE_IBAN_LENGTHS: Mapping[str, int] = {
-    "DE": 22, "AT": 20, "CH": 21, "FR": 27, "IT": 27, "ES": 24, "NL": 18, "BE": 16, "GB": 22,
+    "DE": 22,
+    "AT": 20,
+    "CH": 21,
+    "FR": 27,
+    "IT": 27,
+    "ES": 24,
+    "NL": 18,
+    "BE": 16,
+    "GB": 22,
 }
 PIPELINE_VAT_PATTERNS: Mapping[str, str] = {
     "DE": r"^DE\d{9}$",
@@ -44,8 +52,7 @@ _LEI = re.compile(r"^[A-Z0-9]{18}\d{2}$")
 def _type_error(kind: IdentifierKind, value: object, profile: str) -> CheckResult | None:
     if not value or isinstance(value, str):
         return None
-    return invalid(kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette",
-                   profile=profile)
+    return invalid(kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette", profile=profile)
 
 
 def _pipeline_iban_numeric(rearranged: str) -> str:
@@ -58,25 +65,44 @@ def pipeline_validate_iban(value: object, profile: str = PIPELINE) -> CheckResul
     if value is None:
         return invalid(kind, value, Reason.MISSING, "No IBAN found", profile=profile)
     if not isinstance(value, str):
-        return invalid(kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette",
-                       profile=profile)
+        return invalid(
+            kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette", profile=profile
+        )
     iban = value.replace(" ", "").upper()
     if len(iban) < 15 or len(iban) > 34:
-        return invalid(kind, value, Reason.INVALID_LENGTH, f"Invalid IBAN length: {len(iban)}",
-                       profile=profile)
+        return invalid(
+            kind, value, Reason.INVALID_LENGTH, f"Invalid IBAN length: {len(iban)}", profile=profile
+        )
     country = iban[:2]
     expected = PIPELINE_IBAN_LENGTHS.get(country)
     if expected is not None and len(iban) != expected:
-        return invalid(kind, value, Reason.INVALID_LENGTH,
-                       f"Invalid IBAN length for {country}: expected {expected}, got {len(iban)}",
-                       country=country, profile=profile)
+        return invalid(
+            kind,
+            value,
+            Reason.INVALID_LENGTH,
+            f"Invalid IBAN length for {country}: expected {expected}, got {len(iban)}",
+            country=country,
+            profile=profile,
+        )
     try:
         if int(_pipeline_iban_numeric(iban[4:] + iban[:4])) % 97 != 1:
-            return invalid(kind, value, Reason.INVALID_CHECKSUM, "IBAN checksum invalid",
-                           country=country, profile=profile)
+            return invalid(
+                kind,
+                value,
+                Reason.INVALID_CHECKSUM,
+                "IBAN checksum invalid",
+                country=country,
+                profile=profile,
+            )
     except ValueError:
-        return invalid(kind, value, Reason.INVALID_CHARACTERS, "IBAN contains invalid characters",
-                       country=country, profile=profile)
+        return invalid(
+            kind,
+            value,
+            Reason.INVALID_CHARACTERS,
+            "IBAN contains invalid characters",
+            country=country,
+            profile=profile,
+        )
     return valid(kind, value, iban, country=country, profile=profile)
 
 
@@ -91,21 +117,45 @@ def pipeline_vat_id_format(value: object, profile: str = PIPELINE) -> CheckResul
     if problem is not None:
         return problem
     if not value or not isinstance(value, str):
-        return invalid(kind, value, Reason.MISSING, "No VAT ID found, skipping validation",
-                       profile=profile, details={"outcome": "PASS", "severity": "INFO"})
+        return invalid(
+            kind,
+            value,
+            Reason.MISSING,
+            "No VAT ID found, skipping validation",
+            profile=profile,
+            details={"outcome": "PASS", "severity": "INFO"},
+        )
     country = value[:2].upper()
     pattern = PIPELINE_VAT_PATTERNS.get(country)
     if not pattern:
-        return invalid(kind, value, Reason.UNKNOWN_COUNTRY, f"Unknown VAT ID country: {country}",
-                       country=country, profile=profile,
-                       details={"outcome": "REVIEW", "severity": "INFO"})
+        return invalid(
+            kind,
+            value,
+            Reason.UNKNOWN_COUNTRY,
+            f"Unknown VAT ID country: {country}",
+            country=country,
+            profile=profile,
+            details={"outcome": "REVIEW", "severity": "INFO"},
+        )
     if re.match(pattern, value):
-        return valid(kind, value, value, country=country, profile=profile,
-                     message=f"VAT ID format valid: {value}",
-                     details={"outcome": "PASS", "severity": "WARN"})
-    return invalid(kind, value, Reason.INVALID_FORMAT,
-                   f"VAT ID format invalid for country {country}", country=country,
-                   profile=profile, details={"outcome": "FAIL", "severity": "WARN"})
+        return valid(
+            kind,
+            value,
+            value,
+            country=country,
+            profile=profile,
+            message=f"VAT ID format valid: {value}",
+            details={"outcome": "PASS", "severity": "WARN"},
+        )
+    return invalid(
+        kind,
+        value,
+        Reason.INVALID_FORMAT,
+        f"VAT ID format invalid for country {country}",
+        country=country,
+        profile=profile,
+        details={"outcome": "FAIL", "severity": "WARN"},
+    )
 
 
 def donut_compact(raw: str) -> str:
@@ -161,13 +211,17 @@ def invoicesynth_iban_valid(value: object) -> CheckResult:
     """``iban_valid``: length 15–34 (DE 22, AT 20), alphanumeric, MOD 97."""
     kind = IdentifierKind.IBAN
     if not isinstance(value, str):
-        return invalid(kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette",
-                       profile=INVOICESYNTH)
+        return invalid(
+            kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette", profile=INVOICESYNTH
+        )
     text = value.replace(" ", "").upper()
     expected = {"DE": 22, "AT": 20}.get(text[:2])
     ok = (
-        15 <= len(text) <= 34 and text.isalnum() and text[:2].isalpha()
-        and (expected is None or len(text) == expected) and text[2:4].isdigit()
+        15 <= len(text) <= 34
+        and text.isalnum()
+        and text[:2].isalpha()
+        and (expected is None or len(text) == expected)
+        and text[2:4].isdigit()
         and _base36_mod97(text[4:] + text[:4]) == 1
     )
     if ok:
@@ -191,13 +245,13 @@ def invoicesynth_vat_id_valid(value: object) -> CheckResult:
     """``vat_id_valid``: only DE and ATU with check digit; every other country is invalid."""
     kind = IdentifierKind.VAT_ID
     if not isinstance(value, str):
-        return invalid(kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette",
-                       profile=INVOICESYNTH)
+        return invalid(
+            kind, value, Reason.INVALID_TYPE, "Wert ist keine Zeichenkette", profile=INVOICESYNTH
+        )
     text = value.replace(" ", "").upper()
     if _invoicesynth_vat_ok(text):
         return valid(kind, value, text, country=text[:2], profile=INVOICESYNTH)
-    return invalid(kind, value, Reason.INVALID_FORMAT, "USt-IdNr. ungültig",
-                   profile=INVOICESYNTH)
+    return invalid(kind, value, Reason.INVALID_FORMAT, "USt-IdNr. ungültig", profile=INVOICESYNTH)
 
 
 def flowworkshop_is_valid_lei(value: object) -> CheckResult:

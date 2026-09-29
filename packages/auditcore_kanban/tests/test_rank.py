@@ -17,10 +17,19 @@ def test_alphabet_is_ascii_sorted_base62() -> None:
     assert len(DIGITS) == 62 and list(DIGITS) == sorted(DIGITS)
 
 
-@pytest.mark.parametrize(("a", "b", "expected"), [
-    (None, None, "V"), (None, "V", "F"), ("V", None, "k"), ("A", "B", "AV"),
-    ("V", "V1", "V0V"), ("z", None, "zV"), (None, "01", "00V"), ("y1", "z", "yV"),
-])
+@pytest.mark.parametrize(
+    ("a", "b", "expected"),
+    [
+        (None, None, "V"),
+        (None, "V", "F"),
+        ("V", None, "k"),
+        ("A", "B", "AV"),
+        ("V", "V1", "V0V"),
+        ("z", None, "zV"),
+        (None, "01", "00V"),
+        ("y1", "z", "yV"),
+    ],
+)
 def test_known_midpoints(a: str | None, b: str | None, expected: str) -> None:
     key = rank_between(a, b)
     assert key == expected

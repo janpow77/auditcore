@@ -67,6 +67,8 @@ FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y --no-install-recommends qemu-system-x86 e2fsprogs \\
  && rm -rf /var/lib/apt/lists/*
 COPY --from=guest / /guest/
+# Docker markers must not make systemd inside QEMU ignore the kernel command line.
+RUN rm -f /guest/.dockerenv /guest/run/.containerenv /guest/run/systemd/container
 RUN echo '127.0.0.1 localhost' > /guest/etc/hosts \
  && echo '::1 localhost' >> /guest/etc/hosts \
  && cp /guest/boot/vmlinuz-* /kernel && cp /guest/boot/initrd.img-* /initrd \\

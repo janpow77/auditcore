@@ -54,7 +54,9 @@ def transport_error(exc: httpx.HTTPError, path: str) -> LlmClientError:
     """Map an httpx exception without copying its text (it may contain the URL)."""
     name = type(exc).__name__
     if isinstance(exc, httpx.TimeoutException):
-        return RouterTimeoutError(f"{path}: Zeitüberschreitung ({name})", endpoint=path,
-                                  cause_type=name)
-    return RouterUnavailableError(f"{path}: Gateway nicht erreichbar ({name})", endpoint=path,
-                                  cause_type=name)
+        return RouterTimeoutError(
+            f"{path}: Zeitüberschreitung ({name})", endpoint=path, cause_type=name
+        )
+    return RouterUnavailableError(
+        f"{path}: Gateway nicht erreichbar ({name})", endpoint=path, cause_type=name
+    )

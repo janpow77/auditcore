@@ -6,9 +6,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import TypeAlias
 
-JsonValue: TypeAlias = (
-    str | int | float | bool | None | list["JsonValue"] | dict[str, "JsonValue"]
-)
+JsonValue: TypeAlias = str | int | float | bool | None | list["JsonValue"] | dict[str, "JsonValue"]
 JsonObject: TypeAlias = dict[str, JsonValue]
 
 #: HTTP status per error code; the REST contract (docs/kanban/rest-api.md) uses this table.

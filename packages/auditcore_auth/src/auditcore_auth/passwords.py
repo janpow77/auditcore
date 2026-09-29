@@ -54,8 +54,9 @@ class PasswordHasher:
         secret = password.encode("utf-8")
         if len(secret) > BCRYPT_MAX_BYTES and not profile.truncate_to_72_bytes:
             raise PasswordPolicyError("bcrypt verarbeitet höchstens 72 Byte")
-        return backends.bcrypt_hash(secret[:BCRYPT_MAX_BYTES], profile.bcrypt_rounds,
-                                    profile.bcrypt_ident)
+        return backends.bcrypt_hash(
+            secret[:BCRYPT_MAX_BYTES], profile.bcrypt_rounds, profile.bcrypt_ident
+        )
 
     def verify(self, password: str, stored: str | None) -> bool:
         """Verify ``password`` against a stored hash of any supported format.

@@ -40,12 +40,14 @@ def sampling(
     reasoning_effort: str | None = None,
 ) -> Sampling:
     """Collect sampling arguments of a public call."""
-    return Sampling(model, temperature, max_tokens, json_mode, seed, dict(options or {}),
-                    reasoning_effort)
+    return Sampling(
+        model, temperature, max_tokens, json_mode, seed, dict(options or {}), reasoning_effort
+    )
 
 
-def generate_op(config: ClientConfig, prompt: str, system: str | None, params: Sampling,
-                timeout: float | None) -> Operation[LlmResult]:
+def generate_op(
+    config: ClientConfig, prompt: str, system: str | None, params: Sampling, timeout: float | None
+) -> Operation[LlmResult]:
     """Single prompt."""
     request = with_timeout(build_generate(config, prompt, system, params), timeout)
     model = params.model or config.model_defaults.llm
@@ -57,8 +59,9 @@ def generate_op(config: ClientConfig, prompt: str, system: str | None, params: S
     return Operation(request, parse)
 
 
-def chat_op(config: ClientConfig, messages: Messages, params: Sampling,
-            timeout: float | None) -> Operation[LlmResult]:
+def chat_op(
+    config: ClientConfig, messages: Messages, params: Sampling, timeout: float | None
+) -> Operation[LlmResult]:
     """Chat completion."""
     request = with_timeout(build_chat(config, messages, params), timeout)
     body = request.json_body or {}
@@ -71,8 +74,9 @@ def chat_op(config: ClientConfig, messages: Messages, params: Sampling,
     return Operation(request, parse)
 
 
-def embed_op(config: ClientConfig, texts: Sequence[str], model: str | None,
-             timeout: float | None) -> Operation[EmbedResult]:
+def embed_op(
+    config: ClientConfig, texts: Sequence[str], model: str | None, timeout: float | None
+) -> Operation[EmbedResult]:
     """Embeddings; an empty input needs no request."""
     items = list(texts)
     eff_model = model or config.model_defaults.embed
@@ -82,8 +86,14 @@ def embed_op(config: ClientConfig, texts: Sequence[str], model: str | None,
     return Operation(request, lambda received: parse_embed(received, len(items), eff_model))
 
 
-def rerank_op(config: ClientConfig, query: str, documents: Sequence[str], top_k: int | None,
-              model: str | None, timeout: float | None) -> Operation[RerankResult]:
+def rerank_op(
+    config: ClientConfig,
+    query: str,
+    documents: Sequence[str],
+    top_k: int | None,
+    model: str | None,
+    timeout: float | None,
+) -> Operation[RerankResult]:
     """Reranking; an empty document list needs no request."""
     docs = list(documents)
     eff_model = model or config.model_defaults.rerank
@@ -99,8 +109,15 @@ def rerank_op(config: ClientConfig, query: str, documents: Sequence[str], top_k:
     )
 
 
-def ocr_op(config: ClientConfig, content: bytes, filename: str, content_type: str,
-           model: str, language: str, timeout: float | None) -> Operation[OcrResult]:
+def ocr_op(
+    config: ClientConfig,
+    content: bytes,
+    filename: str,
+    content_type: str,
+    model: str,
+    language: str,
+    timeout: float | None,
+) -> Operation[OcrResult]:
     """Multipart OCR."""
     request = with_timeout(
         build_ocr(config, content, filename, content_type, model, language), timeout

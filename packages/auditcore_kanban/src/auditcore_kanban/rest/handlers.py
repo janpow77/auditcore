@@ -75,9 +75,16 @@ def board_body(board: Board, role: str) -> JsonObject:
 
 def summary(board: Board, role: str) -> JsonObject:
     return {
-        "id": board.id, "title": board.title, "icon": board.icon, "owner_id": board.owner_id,
-        "pinned": board.pinned, "archived": board.archived, "version": board.version,
-        "updated_at": board.updated_at, "role": role, "stats": board_stats(board),
+        "id": board.id,
+        "title": board.title,
+        "icon": board.icon,
+        "owner_id": board.owner_id,
+        "pinned": board.pinned,
+        "archived": board.archived,
+        "version": board.version,
+        "updated_at": board.updated_at,
+        "role": role,
+        "stats": board_stats(board),
     }
 
 
@@ -127,7 +134,8 @@ def get_board(service: BoardService, request: ApiRequest) -> Result:
 def patch_board(service: BoardService, request: ApiRequest) -> Result:
     body = _body(request)
     outcome = service.update_board(
-        request.params["board_id"], request.user_id,
+        request.params["board_id"],
+        request.user_id,
         title=as_optional_str("title", body.get("title")),
         icon=as_optional_str("icon", body.get("icon")),
         pinned=_optional_bool(body, "pinned"),
@@ -147,7 +155,8 @@ def put_columns(service: BoardService, request: ApiRequest) -> Result:
     body = _body(request)
     transitions = body.get("transitions")
     outcome = service.configure_columns(
-        request.params["board_id"], request.user_id,
+        request.params["board_id"],
+        request.user_id,
         columns_from_json(body.get("columns")),
         None if transitions is None else policy_from_json(transitions),
         expected_version(request),
@@ -168,8 +177,12 @@ def card_filter(query: Mapping[str, str]) -> CardFilter:
     if not due <= set(DUE_STATES):
         raise KanbanError("INVALID_REQUEST", f"due erlaubt: {', '.join(DUE_STATES)}")
     return CardFilter(
-        query=query.get("q", ""), priorities=_set(query, "priority"), tags=_set(query, "tag"),
-        assignees=_set(query, "assignee"), columns=_set(query, "column"), due_states=due,
+        query=query.get("q", ""),
+        priorities=_set(query, "priority"),
+        tags=_set(query, "tag"),
+        assignees=_set(query, "assignee"),
+        columns=_set(query, "column"),
+        due_states=due,
     )
 
 
@@ -195,16 +208,18 @@ def create_card(service: BoardService, request: ApiRequest) -> Result:
 
 def patch_card(service: BoardService, request: ApiRequest) -> Result:
     p = request.params
-    return mutation(service.update_card(
-        p["board_id"], request.user_id, p["card_id"], _body(request), expected_version(request)
-    ))
+    return mutation(
+        service.update_card(
+            p["board_id"], request.user_id, p["card_id"], _body(request), expected_version(request)
+        )
+    )
 
 
 def delete_card(service: BoardService, request: ApiRequest) -> Result:
     p = request.params
-    return mutation(service.delete_card(
-        p["board_id"], request.user_id, p["card_id"], expected_version(request)
-    ))
+    return mutation(
+        service.delete_card(p["board_id"], request.user_id, p["card_id"], expected_version(request))
+    )
 
 
 def _index(body: Mapping[str, object]) -> int | None:
@@ -216,19 +231,25 @@ def _index(body: Mapping[str, object]) -> int | None:
 
 def move_card(service: BoardService, request: ApiRequest) -> Result:
     body, p = _body(request), request.params
-    return mutation(service.move_card(
-        p["board_id"], request.user_id, p["card_id"], as_str("column_id", body.get("column_id")),
-        before_id=as_optional_str("before_id", body.get("before_id")),
-        after_id=as_optional_str("after_id", body.get("after_id")),
-        index=_index(body), expected_version=expected_version(request),
-    ))
+    return mutation(
+        service.move_card(
+            p["board_id"],
+            request.user_id,
+            p["card_id"],
+            as_str("column_id", body.get("column_id")),
+            before_id=as_optional_str("before_id", body.get("before_id")),
+            after_id=as_optional_str("after_id", body.get("after_id")),
+            index=_index(body),
+            expected_version=expected_version(request),
+        )
+    )
 
 
 def toggle_done(service: BoardService, request: ApiRequest) -> Result:
     p = request.params
-    return mutation(service.toggle_done(
-        p["board_id"], request.user_id, p["card_id"], expected_version(request)
-    ))
+    return mutation(
+        service.toggle_done(p["board_id"], request.user_id, p["card_id"], expected_version(request))
+    )
 
 
 # -- shares and events ---------------------------------------------------------

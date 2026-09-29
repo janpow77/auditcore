@@ -96,8 +96,11 @@ def _checklist(name: str, value: object, limits: Limits) -> tuple[ChecklistItem,
 
 def _links(name: str, value: object, _limits: Limits) -> tuple[CardLink, ...]:
     return tuple(
-        CardLink(as_str(name, i.get("kind")), as_str(name, i.get("target")),
-                 as_str(name, i.get("title", "")))
+        CardLink(
+            as_str(name, i.get("kind")),
+            as_str(name, i.get("target")),
+            as_str(name, i.get("title", "")),
+        )
         for i in as_objects(name, value)
     )
 
