@@ -1,0 +1,83 @@
+{
+  "date": "2026-09-29",
+  "package": "auditcore_account",
+  "version": "0.1.0",
+  "runner_pr": {
+    "schema": "auditcore-runner/ergebnis/1",
+    "profil": "pr",
+    "pfad": "/home/janpow/Projekte/auditcore",
+    "inhalt": "27a99b7a41301379c9c55c3aff570f21",
+    "werkzeuge": [
+      {
+        "werkzeug": "ruff",
+        "status": "ok",
+        "sekunden": 0.0,
+        "befunde": 0,
+        "meldung": "",
+        "aus_cache": false
+      },
+      {
+        "werkzeug": "pytest",
+        "status": "ok",
+        "sekunden": 4.5,
+        "befunde": 0,
+        "meldung": "",
+        "aus_cache": false
+      },
+      {
+        "werkzeug": "mypy",
+        "status": "ok",
+        "sekunden": 0.1,
+        "befunde": 0,
+        "meldung": "",
+        "aus_cache": false
+      },
+      {
+        "werkzeug": "codegate",
+        "status": "ok",
+        "sekunden": 3.3,
+        "befunde": 0,
+        "meldung": "",
+        "aus_cache": false
+      }
+    ],
+    "befunde": []
+  },
+  "runner_account": {
+    "command": "auditcore-runner lokal account --host --ohne-cache",
+    "tools": [
+      "ruff",
+      "pytest",
+      "mypy",
+      "codegate"
+    ],
+    "findings": 0
+  },
+  "frontend": {
+    "lint": "PASS",
+    "all_workspace_typechecks": "PASS",
+    "all_workspace_tests": "PASS (bestehende übersprungene Tests bleiben übersprungen)",
+    "all_workspace_builds": "PASS",
+    "ui_parity_gate": "PASS",
+    "readme_snippets": "14 typgeprüft, 3 ausgeführt",
+    "browser_tests": 5,
+    "browser_passed": 5,
+    "camera": "simuliertes Chromium-Gerät"
+  },
+  "distribution": {
+    "wheel_build": "PASS",
+    "sdist_build": "PASS",
+    "isolated_wheel_install": "PASS",
+    "installed_smoke": "PASS",
+    "pip_check": "PASS",
+    "ci_lock_check": "PASS"
+  },
+  "not_executed": [
+    "Veröffentlichung",
+    "APT-Lebenszyklus",
+    "Migration der Anwendungsrepos",
+    "Produktiver Datenbank-/Session-/Versandanschluss",
+    "Reale Webcam-Hardware"
+  ],
+  "gui": "docs/ui/entwuerfe/konto-bibliothek-v0.1.pdf"
+}

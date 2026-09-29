@@ -7,7 +7,7 @@ export default defineConfig({
   outputDir: '../test-results',
   reporter: 'list',
   use: { baseURL: 'http://127.0.0.1:5191', trace: 'retain-on-failure' },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], launchOptions: { args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] } } }],
   webServer: {
     command: 'npx vite preview --config demo/vite.config.ts --host 127.0.0.1 --port 5191 --strictPort',
     cwd: '..',

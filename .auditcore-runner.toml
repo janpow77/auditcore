@@ -51,3 +51,26 @@ zeitlimit_s = 1200
 [pruefprofile.invoicesynth.werkzeug.mypy]
 befehl = ["sh", "-c", "cd packages/auditcore_invoicesynth && exec python3 -m mypy src --python-version 3.11 --no-color-output --no-error-summary"]
 zeitlimit_s = 900
+
+# Gemeinsame Konten-/Mandantenbibliothek, einschließlich Sicherheitsregression.
+[pruefprofile.account]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.account.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_account", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.account.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_account/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.account.werkzeug.mypy]
+befehl = ["python3", "-m", "mypy", "--strict", "packages/auditcore_account/src", "--no-color-output", "--no-error-summary"]
+zeitlimit_s = 120
+
+[pruefprofile.account.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_account", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300

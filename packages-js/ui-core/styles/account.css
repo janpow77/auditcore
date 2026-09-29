@@ -1,0 +1,37 @@
+/* Gemeinsame Oberfläche für Vue, React und Custom Element. */
+.fa-account { --account-border: var(--fa-color-border, #dbe3e8); --account-ink: var(--fa-color-text, #182f3b); color: var(--account-ink); font-family: var(--fa-font-sans, system-ui, sans-serif); max-width: 1200px; margin: auto; padding: clamp(16px, 3vw, 36px); background: var(--fa-color-bg, #f5f8fa); border-radius: 20px; }
+.fa-account *, .fa-account *::before, .fa-account *::after { box-sizing: border-box; }
+.fa-account__header { margin-bottom: 28px; }
+.fa-account h2 { font-size: clamp(24px, 3vw, 32px); margin: 8px 0; letter-spacing: -.035em; }
+.fa-account h3 { font-size: 24px; margin: 0 0 8px; }
+.fa-account__eyebrow { text-transform: uppercase; letter-spacing: .15em; font-size: 11px; font-weight: 750; color: var(--fa-color-accent, #126875); }
+.fa-account__layout { display: grid; grid-template-columns: minmax(180px, 230px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.fa-account__list { list-style: none; margin: 0; padding: 0; }
+.fa-account__group { display: block; margin: 22px 12px 8px; font-weight: 650; color: var(--fa-color-text-muted, #526775); }
+.fa-account button { font: inherit; cursor: pointer; border: 1px solid var(--account-border); border-radius: 8px; background: var(--fa-color-surface, #fff); color: inherit; padding: 10px 14px; min-height: 44px; }
+.fa-account button:disabled { cursor: default; opacity: .55; }
+.fa-account button:focus-visible, .fa-account input:focus-visible, .fa-account textarea:focus-visible, .fa-account select:focus-visible { outline: 3px solid var(--fa-color-accent, #126875); outline-offset: 3px; }
+.fa-account button.fa-account__item { width: 100%; text-align: left; border-color: transparent; background: transparent; margin: 2px 0; }
+.fa-account button.fa-account__item--selected { color: var(--fa-color-accent, #126875); background: var(--fa-color-surface, #fff); border-color: var(--account-border); font-weight: 650; }
+.fa-account__card { min-width: 0; padding: clamp(18px, 3vw, 32px); border: 1px solid var(--account-border); border-radius: 16px; background: var(--fa-color-surface, #fff); box-shadow: 0 8px 30px #12334406; margin: 0; }
+.fa-account__muted, .fa-account__field small { color: var(--fa-color-text-muted, #526775); line-height: 1.6; }
+.fa-account__failure { color: var(--fa-color-danger, #a51d2d); padding: 14px; border: 1px solid currentColor; border-radius: 8px; }
+.fa-account__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; padding: 22px 0; margin: 0; border: 0; }
+.fa-account__field { display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 550; min-width: 0; }
+.fa-account__field input, .fa-account__field select, .fa-account__field textarea { width: 100%; min-width: 0; border: 1px solid var(--account-border); border-radius: 8px; padding: 11px 12px; font: inherit; color: inherit; background: var(--fa-color-surface, #fff); min-height: 44px; }
+.fa-account__field input[type=color] { padding: 4px; }
+.fa-account__field input[readonly] { background: var(--fa-color-bg, #f5f8fa); }
+.fa-account__wide { grid-column: 1 / -1; }
+.fa-account__actions { display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--account-border); padding-top: 22px; flex-wrap: wrap; }
+.fa-account button.fa-account__primary { background: var(--fa-color-accent, #126875); color: var(--fa-color-accent-contrast, #fff); border-color: transparent; }
+.fa-account__preview, .fa-account__welcome { padding: 24px; margin-bottom: 22px; border-radius: 12px; overflow-wrap: anywhere; }
+.fa-account__welcome { background: var(--fa-color-bg, #f5f8fa); white-space: pre-wrap; }
+.fa-account__image { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.fa-account__image img, .fa-account__avatar { border-radius: 24px; object-fit: contain; border: 1px solid var(--account-border); }
+.fa-account__avatar { width: 96px; height: 96px; display: grid; place-content: center; font-size: 40px; background: var(--fa-color-bg, #f5f8fa); }
+.fa-account__camera { width: 100%; }
+.fa-account__camera video { display: block; max-width: 100%; width: 320px; margin-bottom: 12px; border-radius: 12px; }
+@media (max-width: 720px) { .fa-account__layout { grid-template-columns: 1fr; } .fa-account__fields { grid-template-columns: 1fr; } .fa-account__actions button { flex: 1; } }
+.fa-account__crop { display: grid; width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.fa-account__crop button { grid-column: 1 / -1; }
+.fa-account__field select[multiple] { min-height: 150px; }

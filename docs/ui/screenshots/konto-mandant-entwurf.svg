@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1220" viewBox="0 0 1440 1220" role="img" aria-labelledby="title desc">
+  <title id="title">Auditcore – Entwurf für Konto und Administration</title>
+  <desc id="desc">Zwei statische Designskizzen mit synthetischen Daten: persönliche Profilseite und Mitgliederverwaltung. Gemeinsame Navigation, Farben, Profilkarten und Aktionsleisten für Vue und React. Keine funktionsfähige Anwendung.</desc>
+  <defs>
+    <style>
+      text { font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; fill: #1b2230; }
+      .muted { fill: #5b6474; } .blue { fill: #1f5f8b; } .white { fill: white; }
+      .tiny { font-size: 12px; } .small { font-size: 14px; } .body { font-size: 16px; }
+      .label { font-size: 13px; font-weight: 600; } .section { font-size: 18px; font-weight: 600; }
+      .heading { font-size: 27px; font-weight: 650; } .caps { font-size: 11px; letter-spacing: 1.4px; font-weight: 650; }
+      .input { fill: #fff; stroke: #d6d9d2; } .line { stroke: #e4e6e1; }
+    </style>
+    <clipPath id="avatar"><circle cx="398" cy="277" r="34"/></clipPath>
+  </defs>
+  <rect width="1440" height="1220" fill="#eceee9"/>
+  <text x="54" y="45" class="caps muted">AUDITCORE / GEMEINSAMER FRONTEND-STANDARD</text>
+  <text x="54" y="84" font-size="30" font-weight="650">Ein Konto. Eine Gestaltung. Klare Zuständigkeiten.</text>
+  <text x="54" y="111" class="body muted">Designentwurf · Vue und React · Synthetische Beispieldaten · 29. September 2026</text>
+
+  <rect x="48" y="139" width="1344" height="490" rx="14" fill="#f4f5f2" stroke="#d6d9d2"/>
+  <path d="M62 139H1378Q1392 139 1392 153V195H48V153Q48 139 62 139" fill="#fff"/>
+  <text x="73" y="174" class="section blue">auditcore</text>
+  <text x="244" y="172" class="small muted">Arbeitsbereich</text>
+  <rect x="359" y="151" width="253" height="31" rx="6" fill="#f4f5f2"/>
+  <text x="372" y="172" class="small">Prüfbehörde Beispiel</text>
+  <text x="589" y="172" class="small muted">⌄</text>
+  <text x="1190" y="172" class="small muted">Mein Konto</text>
+  <circle cx="1351" cy="167" r="17" fill="#e3eef6"/>
+  <text x="1341" y="172" class="tiny blue">AB</text>
+  <line x1="48" y1="195" x2="1392" y2="195" class="line"/>
+
+  <text x="77" y="237" class="caps muted">EINSTELLUNGEN</text>
+  <text x="78" y="276" class="small" font-weight="600">Mein Konto</text>
+  <rect x="65" y="291" width="229" height="38" rx="7" fill="#e3eef6"/>
+  <rect x="65" y="299" width="3" height="22" rx="1" fill="#1f5f8b"/>
+  <text x="91" y="315" class="small blue" font-weight="600">Profil</text>
+  <text x="91" y="354" class="small muted">Kontakt</text>
+  <text x="91" y="394" class="small muted">Zugang und Sicherheit</text>
+  <line x1="78" y1="423" x2="276" y2="423" class="line"/>
+  <text x="78" y="453" class="small muted">Mandant</text>
+  <text x="78" y="492" class="small muted">Administration</text>
+  <text x="78" y="600" class="tiny muted">Persönliche Angaben</text>
+  <line x1="311" y1="195" x2="311" y2="629" class="line"/>
+
+  <text x="345" y="237" class="heading">Mein Konto</text>
+  <rect x="345" y="254" width="1009" height="80" rx="10" fill="#fff" stroke="#d6d9d2"/>
+  <circle cx="398" cy="277" r="34" fill="#e3eef6" transform="translate(0 17)"/>
+  <text x="379" y="302" font-size="23" class="blue" font-weight="600">AB</text>
+  <text x="450" y="284" class="section">Dr. Alex Beispiel</text>
+  <text x="450" y="308" class="small muted">Prüfer · Referat A · Prüfbehörde Beispiel</text>
+  <rect x="1195" y="277" width="137" height="33" rx="6" class="input"/>
+  <text x="1215" y="299" class="small">Foto ändern</text>
+
+  <rect x="345" y="350" width="659" height="204" rx="10" fill="#fff" stroke="#d6d9d2"/>
+  <text x="366" y="380" class="section">Persönliche Angaben</text>
+  <text x="366" y="408" class="label muted">Vorname</text>
+  <text x="684" y="408" class="label muted">Nachname</text>
+  <rect x="366" y="418" width="296" height="37" rx="6" class="input"/>
+  <rect x="684" y="418" width="297" height="37" rx="6" class="input"/>
+  <text x="379" y="442" class="body">Alex</text>
+  <text x="697" y="442" class="body">Beispiel</text>
+  <text x="366" y="480" class="label muted">Anzeigename</text>
+  <rect x="366" y="490" width="615" height="38" rx="6" class="input"/>
+  <text x="379" y="515" class="body">Dr. Alex Beispiel</text>
+
+  <rect x="1020" y="350" width="334" height="204" rx="10" fill="#fff" stroke="#d6d9d2"/>
+  <text x="1041" y="380" class="section">Im aktiven Mandanten</text>
+  <text x="1041" y="409" class="tiny muted">Funktion / Dienststellung</text>
+  <text x="1041" y="433" class="body">Prüfer</text>
+  <text x="1041" y="462" class="tiny muted">Organisationseinheit</text>
+  <text x="1041" y="486" class="body">Referat A</text>
+  <text x="1041" y="530" class="tiny muted">Wird durch die Verwaltung gepflegt</text>
+  <text x="348" y="594" class="small muted">Ungespeicherte Änderungen</text>
+  <rect x="916" y="570" width="203" height="38" rx="7" class="input"/>
+  <text x="934" y="595" class="small">Änderungen verwerfen</text>
+  <rect x="1130" y="570" width="224" height="38" rx="7" fill="#1f5f8b"/>
+  <text x="1150" y="595" class="small white" font-weight="600">Änderungen speichern</text>
+
+  <text x="54" y="674" class="caps muted">DIESELBE GESTALTUNG FÜR DIE ADMINISTRATION</text>
+  <rect x="48" y="694" width="1344" height="466" rx="14" fill="#f4f5f2" stroke="#d6d9d2"/>
+  <path d="M62 694H1378Q1392 694 1392 708V750H48V708Q48 694 62 694" fill="#fff"/>
+  <text x="73" y="729" class="section blue">auditcore</text>
+  <text x="244" y="727" class="small muted">Administration</text>
+  <rect x="379" y="706" width="265" height="31" rx="6" fill="#e3eef6"/>
+  <text x="393" y="727" class="small blue">Mandant: Prüfbehörde Beispiel</text>
+  <text x="1199" y="727" class="small muted">Mein Konto</text>
+  <circle cx="1351" cy="722" r="17" fill="#e3eef6"/>
+  <text x="1341" y="727" class="tiny blue">AB</text>
+  <line x1="48" y1="750" x2="1392" y2="750" class="line"/>
+  <text x="77" y="790" class="caps muted">MANDANT VERWALTEN</text>
+  <text x="91" y="832" class="small muted">Organisationsprofil</text>
+  <rect x="65" y="850" width="229" height="38" rx="7" fill="#e3eef6"/>
+  <rect x="65" y="858" width="3" height="22" rx="1" fill="#1f5f8b"/>
+  <text x="91" y="875" class="small blue" font-weight="600">Mitglieder</text>
+  <text x="91" y="915" class="small muted">Rollen und Rechte</text>
+  <text x="91" y="955" class="small muted">Änderungsprotokoll</text>
+  <line x1="311" y1="750" x2="311" y2="1160" class="line"/>
+  <text x="345" y="795" class="heading">Mitglieder</text>
+  <text x="345" y="821" class="small muted">Zugänge und Zuständigkeiten für diesen Mandanten verwalten.</text>
+  <rect x="1150" y="777" width="204" height="38" rx="7" fill="#1f5f8b"/>
+  <text x="1168" y="802" class="small white" font-weight="600">+ Mitglied hinzufügen</text>
+
+  <rect x="345" y="846" width="1009" height="256" rx="10" fill="#fff" stroke="#d6d9d2"/>
+  <rect x="363" y="862" width="330" height="35" rx="6" class="input"/>
+  <text x="376" y="885" class="small muted">Nach Name oder E-Mail suchen …</text>
+  <rect x="708" y="862" width="147" height="35" rx="6" class="input"/>
+  <text x="722" y="885" class="small">Alle Status</text>
+  <text x="830" y="885" class="small muted">⌄</text>
+  <text x="1245" y="885" class="tiny muted">3 Mitglieder</text>
+  <line x1="345" y1="913" x2="1354" y2="913" class="line"/>
+  <rect x="346" y="914" width="1007" height="34" fill="#fbfbf9"/>
+  <text x="365" y="936" class="label muted">Name</text>
+  <text x="735" y="936" class="label muted">Funktion</text>
+  <text x="929" y="936" class="label muted">Rolle</text>
+  <text x="1190" y="936" class="label muted">Status</text>
+
+  <circle cx="381" cy="974" r="16" fill="#e3eef6"/>
+  <text x="371" y="979" class="tiny blue">AB</text>
+  <text x="411" y="979" class="small" font-weight="600">Alex Beispiel</text>
+  <text x="735" y="979" class="small muted">Prüfer</text>
+  <text x="929" y="979" class="small">Mitglied</text>
+  <rect x="1188" y="960" width="61" height="25" rx="12" fill="#e3f4ea"/>
+  <text x="1203" y="977" class="tiny" style="fill:#1d7a46">Aktiv</text>
+  <text x="1321" y="979" class="body muted">⋯</text>
+  <line x1="364" y1="997" x2="1335" y2="997" class="line"/>
+
+  <circle cx="381" cy="1024" r="16" fill="#eceee9"/>
+  <text x="371" y="1029" class="tiny muted">MM</text>
+  <text x="411" y="1029" class="small" font-weight="600">Mika Muster</text>
+  <text x="735" y="1029" class="small muted">Referatsleitung</text>
+  <text x="929" y="1029" class="small">Mandantenadministrator</text>
+  <rect x="1188" y="1010" width="61" height="25" rx="12" fill="#e3f4ea"/>
+  <text x="1203" y="1027" class="tiny" style="fill:#1d7a46">Aktiv</text>
+  <text x="1321" y="1029" class="body muted">⋯</text>
+  <line x1="364" y1="1047" x2="1335" y2="1047" class="line"/>
+
+  <circle cx="381" cy="1074" r="16" fill="#eceee9"/>
+  <text x="371" y="1079" class="tiny muted">SB</text>
+  <text x="411" y="1079" class="small" font-weight="600">Sam Beispiel</text>
+  <text x="735" y="1079" class="small muted">Sachbearbeitung</text>
+  <text x="929" y="1079" class="small">Mitglied</text>
+  <rect x="1188" y="1060" width="88" height="25" rx="12" fill="#fdf1dc"/>
+  <text x="1200" y="1077" class="tiny" style="fill:#805018">Eingeladen</text>
+  <text x="1321" y="1079" class="body muted">⋯</text>
+  <text x="348" y="1136" class="tiny muted">Rollen gelten ausschließlich für den hier ausgewählten Mandanten.</text>
+  <text x="54" y="1194" class="small muted">Statische Ansichtsskizze · Weitere Felder und Zustände sind in der Spezifikation beschrieben.</text>
+</svg>
