@@ -81,13 +81,25 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1163):
+Exporte der Einstiegspunkte aus `package.json#exports` (1188):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@auditcore/ui-core` | `ACCEPTED_EXTENSIONS` | Konstante | – | `documents/form` |
 | `@auditcore/ui-core` | `ANSWER_VALUES` | Konstante | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `ATTRIBUTE_FIELDS` | Konstante | – | `attributes/view` |
+| `@auditcore/ui-core` | `AccountCallbacks` | Schnittstelle | – | `account/controller` |
+| `@auditcore/ui-core` | `AccountController` | Typ | – | `account/controller` |
+| `@auditcore/ui-core` | `AccountData` | Schnittstelle | – | `account/controller` |
+| `@auditcore/ui-core` | `AccountDocument` | Schnittstelle | – | `account/types` |
+| `@auditcore/ui-core` | `AccountField` | Schnittstelle | – | `account/types` |
+| `@auditcore/ui-core` | `AccountImage` | Schnittstelle | – | `account/types` |
+| `@auditcore/ui-core` | `AccountItem` | Schnittstelle | Frameworkunabhängiger Formularvertrag; Feldrechte kommen vom Server. | `account/types` |
+| `@auditcore/ui-core` | `AccountMessageKey` | Typ | – | `account/messages` |
+| `@auditcore/ui-core` | `AccountPort` | Schnittstelle | – | `account/types` |
+| `@auditcore/ui-core` | `AccountRow` | Schnittstelle | Zeile der Liste, wie Vue und React sie darstellen. | `account/view` |
+| `@auditcore/ui-core` | `AccountSource` | Schnittstelle | – | `account/controller` |
+| `@auditcore/ui-core` | `AccountTransport` | Schnittstelle | Der injizierte Transport ergänzt Session, CSRF und Fehlerabbildung der Anwendung. | `account/port` |
 | `@auditcore/ui-core` | `Activity` | Typ | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `ActivityGroup` | Schnittstelle | – | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `ActorView` | Schnittstelle | – | `screening/types` |
@@ -383,6 +395,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `HitView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@auditcore/ui-core` | `IDLE` | Konstante | – | `store` |
+| `@auditcore/ui-core` | `INITIAL_ACCOUNT` | Konstante | – | `account/controller` |
 | `@auditcore/ui-core` | `INITIAL_ATTRIBUTES` | Konstante | – | `attributes/controller` |
 | `@auditcore/ui-core` | `INITIAL_BATCHCHECKS` | Konstante | – | `batchchecks/controller` |
 | `@auditcore/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
@@ -750,6 +763,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `WorkbookPreview` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `WorkbookRequest` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `acceptsHit` | Funktion | – | `screening/view` |
+| `@auditcore/ui-core` | `accountImageUrl` | Funktion | – | `account/presentation` |
+| `@auditcore/ui-core` | `accountIsEmpty` | Funktion | Hinweis „keine Einträge“ nur nach abgeschlossener, fehlerfreier Anfrage. | `account/view` |
+| `@auditcore/ui-core` | `accountMessages` | Konstante | – | `account/messages` |
+| `@auditcore/ui-core` | `accountPreviewStyle` | Funktion | Keine beliebigen CSS-Werte aus editierbaren Feldern einsetzen. | `account/presentation` |
+| `@auditcore/ui-core` | `accountRows` | Funktion | – | `account/view` |
+| `@auditcore/ui-core` | `accountSelection` | Funktion | – | `account/view` |
+| `@auditcore/ui-core` | `accountWelcomePreview` | Funktion | – | `account/presentation` |
 | `@auditcore/ui-core` | `activeMetrics` | Funktion | Vorgegebene Kennzahlen ohne die abgewählten; `null`, wenn keine übrig bleibt. | `benford/model` |
 | `@auditcore/ui-core` | `activityKey` | Funktion | Schlüssel einer Tätigkeit für die Zuordnung der Hinweise (Kennung, sonst Name wie in der Bibliothek). | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `addScenario` | Funktion | – | `dataprotection/dsfaView` |
@@ -844,6 +864,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `confidenceChoices` | Funktion | Konfidenzniveaus, die die gewählte Methode mit Tabellenwerten erlaubt. | `extrapolation/model` |
 | `@auditcore/ui-core` | `confidenceText` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `coverIssues` | Funktion | Hinweise zum Deckblatt (Verantwortlicher, DSB). | `dataprotection/registerView` |
+| `@auditcore/ui-core` | `createAccountCamera` | Funktion | Opt-in Kamera, keine Aufnahme ohne Benutzeraktion, Tracks immer schließen. | `account/camera` |
+| `@auditcore/ui-core` | `createAccountController` | Funktion | – | `account/controller` |
+| `@auditcore/ui-core` | `createAccountMemoryPort` | Funktion | Nur synthetische Demo/Testdaten; keine Autorisierungs- oder Persistenzschicht. | `account/port` |
+| `@auditcore/ui-core` | `createAccountRestPort` | Funktion | – | `account/port` |
 | `@auditcore/ui-core` | `createAttributesController` | Funktion | – | `attributes/controller` |
 | `@auditcore/ui-core` | `createAttributesRestPort` | Funktion | Port auf `auditcore_extrapolation.web` (`GET /profiles`, `POST /attributes`). | `attributes/port` |
 | `@auditcore/ui-core` | `createBatchchecksController` | Funktion | – | `batchchecks/controller` |
@@ -888,6 +912,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `createSynopsisRestClient` | Funktion | – | `synopsis/port` |
 | `@auditcore/ui-core` | `createTableImportController` | Funktion | – | `tabular/tableImport` |
 | `@auditcore/ui-core` | `createVvtController` | Funktion | – | `dataprotection/vvt` |
+| `@auditcore/ui-core` | `cropAccountImage` | Funktion | Quadratischer Zuschnitt: Position 0..1 und Zoom 1..4, Metadaten übernimmt der Server nicht. | `account/camera` |
 | `@auditcore/ui-core` | `currentVersion` | Funktion | Angezeigte Fassung: offener Entwurf vor Freigabe (dort wird gearbeitet). | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `dataprotectionError` | Funktion | – | `dataprotection/requests` |
 | `@auditcore/ui-core` | `dataprotectionLabel` | Funktion | – | `dataprotection/requests` |

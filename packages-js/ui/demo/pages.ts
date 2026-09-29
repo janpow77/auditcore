@@ -9,6 +9,7 @@ export interface DemoPage {
 }
 
 export const DEMO_PAGES: readonly DemoPage[] = [
+  { id: 'konto', title: 'Konto und Mandant', group: 'Komponenten', load: () => import('./pages/account/AccountPage.vue') },
   { id: 'basis', title: 'Basiskomponenten', group: 'Grundlagen', load: () => import('./pages/base/BasePage.vue') },
   { id: 'tabelle', title: 'Tabelle', group: 'Grundlagen', load: () => import('./pages/base/TablePage.vue') },
   { id: 'risiko-merkmale', title: 'Risiko-Merkmale', group: 'Komponenten', load: () => import('./pages/risk/RiskFlagsPage.vue') },

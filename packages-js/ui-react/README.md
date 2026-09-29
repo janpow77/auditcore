@@ -124,10 +124,12 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (276):
+Exporte der Einstiegspunkte aus `package.json#exports` (281):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
+| `@auditcore/ui-react` | `AccountItem` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `AccountPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `AttributesPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `AttributesResult` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `Badge` | Funktion | – | `base/Badge` |
@@ -183,6 +185,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (276):
 | `@auditcore/ui-react` | `ExtrapolationInputs` | Schnittstelle | – | `extrapolation/useExtrapolation` |
 | `@auditcore/ui-react` | `ExtrapolationPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `FetchLike` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui-react` | `FlowauditAccountWorkspace` | Funktion | – | `account/FlowauditAccountWorkspace` |
+| `@auditcore/ui-react` | `FlowauditAccountWorkspaceProps` | Schnittstelle | – | `account/FlowauditAccountWorkspace` |
 | `@auditcore/ui-react` | `FlowauditAttributeSampling` | Funktion | Merkmalsstichprobe für Systemprüfungen als native React-Komponente (Vertrag wie `<flowaudit-attribute-sampling>`; Leitfaden 7.9, Discovery und Stop-or-go 7.9.6). | `attributes/FlowauditAttributeSampling` |
 | `@auditcore/ui-react` | `FlowauditAttributeSamplingProps` | Schnittstelle | – | `attributes/FlowauditAttributeSampling` |
 | `@auditcore/ui-react` | `FlowauditBatchChecks` | Funktion | Bestandsprüfung als native React-Komponente (Vertrag wie `<flowaudit-batch-checks>`): Bestand als CSV oder JSON einlesen, Spalten zuordnen, Prüflauf mit Befunden je Regel und betro … | `batchchecks/FlowauditBatchChecks` |
@@ -343,6 +347,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (276):
 | `@auditcore/ui-react` | `ariaSort` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui-react` | `columnCells` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui-react` | `compareValues` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui-react` | `createAccountMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createAttributesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createBatchchecksMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createBatchchecksRestPort` | Re-Export | – | `@auditcore/ui-core` |

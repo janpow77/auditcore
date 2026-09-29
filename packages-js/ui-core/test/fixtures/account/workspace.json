@@ -1,0 +1,740 @@
+{
+  "items": [
+    {
+      "id": "profile",
+      "label": "Persönliche Angaben",
+      "group": "Mein Konto"
+    },
+    {
+      "id": "contact",
+      "label": "Funktion und Kontakt",
+      "group": "Mein Konto"
+    },
+    {
+      "id": "security",
+      "label": "Passwort ändern",
+      "group": "Mein Konto"
+    },
+    {
+      "id": "tenant",
+      "label": "Stammdaten",
+      "group": "Mandant"
+    },
+    {
+      "id": "branding",
+      "label": "Corporate Design",
+      "group": "Mandant"
+    },
+    {
+      "id": "welcome",
+      "label": "Begrüßung",
+      "group": "Mandant"
+    },
+    {
+      "id": "rechnungslegung.programm",
+      "label": "Operationelles Programm",
+      "group": "Fachdaten"
+    },
+    {
+      "id": "new-tenant",
+      "label": "Mandant anlegen",
+      "group": "Administration"
+    },
+    {
+      "id": "new-account",
+      "label": "Nutzer anlegen",
+      "group": "Administration"
+    },
+    {
+      "id": "new-member",
+      "label": "Mitglied zuordnen",
+      "group": "Administration"
+    },
+    {
+      "id": "new-role",
+      "label": "Rolle anlegen",
+      "group": "Administration"
+    }
+  ],
+  "documents": [
+    {
+      "id": "profile",
+      "title": "Persönliche Angaben",
+      "description": "",
+      "kind": "profile",
+      "revision": 2,
+      "fields": [
+        {
+          "id": "image_id",
+          "label": "Profilbild",
+          "type": "image",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "display_name",
+          "label": "Anzeigename",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "salutation",
+          "label": "Anrede",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "title",
+          "label": "Titel",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "given_name",
+          "label": "Vorname",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "family_name",
+          "label": "Nachname",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        }
+      ],
+      "values": {
+        "display_name": "Alex Beispiel",
+        "given_name": "Alex",
+        "family_name": "Beispiel",
+        "title": "Dr.",
+        "image_id": ""
+      },
+      "editable": true,
+      "submitLabel": "Änderungen speichern"
+    },
+    {
+      "id": "contact",
+      "title": "Funktion und Kontakt",
+      "description": "",
+      "kind": "profile",
+      "revision": 2,
+      "fields": [
+        {
+          "id": "function",
+          "label": "Funktion / Dienststellung",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "department",
+          "label": "Organisationseinheit",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "staff_code",
+          "label": "Bearbeiterkürzel",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "unit_code",
+          "label": "Stellenkürzel",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "email",
+          "label": "Dienstliche E-Mail",
+          "type": "email",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "phone",
+          "label": "Telefon",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "mobile",
+          "label": "Mobiltelefon",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        }
+      ],
+      "values": {
+        "function": "Prüfleitung",
+        "department": "Finanzprüfung",
+        "email": "alex@example.invalid",
+        "phone": "+49 30 000000"
+      },
+      "editable": true,
+      "submitLabel": "Änderungen speichern"
+    },
+    {
+      "id": "security",
+      "title": "Passwort ändern",
+      "description": "Nach dem Wechsel werden bisherige Sitzungen ungültig.",
+      "kind": "security",
+      "revision": 2,
+      "fields": [
+        {
+          "id": "current",
+          "label": "Aktuelles Passwort",
+          "type": "password",
+          "required": true,
+          "readonly": false,
+          "autocomplete": "current-password"
+        },
+        {
+          "id": "new",
+          "label": "Neues Passwort",
+          "type": "password",
+          "required": true,
+          "readonly": false,
+          "autocomplete": "new-password"
+        },
+        {
+          "id": "confirmation",
+          "label": "Neues Passwort wiederholen",
+          "type": "password",
+          "required": true,
+          "readonly": false,
+          "autocomplete": "new-password"
+        }
+      ],
+      "values": {},
+      "editable": true,
+      "submitLabel": "Änderungen speichern"
+    },
+    {
+      "id": "tenant",
+      "title": "Mandantenstammdaten",
+      "description": "",
+      "kind": "profile",
+      "revision": 2,
+      "fields": [
+        {
+          "id": "image_id",
+          "label": "Mandantenbild",
+          "type": "image",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "official_name",
+          "label": "Offizieller Name",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "display_name",
+          "label": "Anzeigename",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "short_name",
+          "label": "Kurzname",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "department",
+          "label": "Organisationseinheit",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "street",
+          "label": "Straße",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "house_number",
+          "label": "Hausnummer",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "address_extra",
+          "label": "Adresszusatz",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "postal_code",
+          "label": "Postleitzahl",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "city",
+          "label": "Ort",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "country",
+          "label": "Land",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "email",
+          "label": "E-Mail",
+          "type": "email",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "phone",
+          "label": "Telefon",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "website",
+          "label": "Website",
+          "type": "url",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "contact_name",
+          "label": "Ansprechperson",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "contact_function",
+          "label": "Funktion der Ansprechperson",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        }
+      ],
+      "values": {
+        "official_name": "Beispielorganisation",
+        "display_name": "Beispielorganisation",
+        "city": "Berlin",
+        "country": "Deutschland",
+        "email": "kontakt@example.invalid",
+        "image_id": ""
+      },
+      "editable": true,
+      "submitLabel": "Änderungen speichern"
+    },
+    {
+      "id": "branding",
+      "title": "Corporate Design",
+      "description": "",
+      "kind": "branding",
+      "revision": 0,
+      "fields": [
+        {
+          "id": "primary",
+          "label": "Primärfarbe",
+          "type": "color",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "accent",
+          "label": "Akzentfarbe",
+          "type": "color",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "text_on_primary",
+          "label": "Text auf Markenfarbe",
+          "type": "color",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "heading_font",
+          "label": "Überschriftenschrift",
+          "type": "select",
+          "required": true,
+          "readonly": false,
+          "options": [
+            {
+              "value": "system",
+              "label": "Systemschrift"
+            },
+            {
+              "value": "sans",
+              "label": "Sans Serif"
+            },
+            {
+              "value": "serif",
+              "label": "Serif"
+            }
+          ]
+        },
+        {
+          "id": "body_font",
+          "label": "Textschrift",
+          "type": "select",
+          "required": true,
+          "readonly": false,
+          "options": [
+            {
+              "value": "system",
+              "label": "Systemschrift"
+            },
+            {
+              "value": "sans",
+              "label": "Sans Serif"
+            },
+            {
+              "value": "serif",
+              "label": "Serif"
+            }
+          ]
+        },
+        {
+          "id": "logo_light",
+          "label": "Logo auf hellem Hintergrund",
+          "type": "image",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "logo_dark",
+          "label": "Logo auf dunklem Hintergrund",
+          "type": "image",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "logo_document",
+          "label": "Dokumentlogo",
+          "type": "image",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "document_header",
+          "label": "Dokumentkopf",
+          "type": "textarea",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "document_footer",
+          "label": "Dokumentfuß",
+          "type": "textarea",
+          "required": false,
+          "readonly": false
+        }
+      ],
+      "values": {
+        "primary": "#1f5f8b",
+        "accent": "#174a6d",
+        "text_on_primary": "#ffffff",
+        "heading_font": "system",
+        "body_font": "system",
+        "logo_light": "",
+        "logo_dark": "",
+        "logo_document": "",
+        "document_header": "",
+        "document_footer": ""
+      },
+      "editable": true,
+      "submitLabel": "Änderungen speichern"
+    },
+    {
+      "id": "welcome",
+      "title": "Begrüßung",
+      "description": "",
+      "kind": "welcome",
+      "revision": 0,
+      "fields": [
+        {
+          "id": "heading",
+          "label": "Überschrift",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "body",
+          "label": "Begrüßungstext",
+          "type": "textarea",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "in_invitation",
+          "label": "In Einladungen verwenden",
+          "type": "select",
+          "required": true,
+          "readonly": false,
+          "options": [
+            {
+              "value": "true",
+              "label": "Ja"
+            },
+            {
+              "value": "false",
+              "label": "Nein"
+            }
+          ]
+        },
+        {
+          "id": "on_first_visit",
+          "label": "Beim ersten Besuch anzeigen",
+          "type": "select",
+          "required": true,
+          "readonly": false,
+          "options": [
+            {
+              "value": "true",
+              "label": "Ja"
+            },
+            {
+              "value": "false",
+              "label": "Nein"
+            }
+          ]
+        }
+      ],
+      "values": {
+        "heading": "Willkommen",
+        "body": "Guten Tag {{display_name}},\n\nwillkommen bei {{tenant_name}}.",
+        "in_invitation": "true",
+        "on_first_visit": "true"
+      },
+      "editable": true,
+      "submitLabel": "Änderungen speichern"
+    },
+    {
+      "id": "rechnungslegung.programm",
+      "title": "Operationelles Programm",
+      "description": "",
+      "kind": "extension",
+      "revision": 0,
+      "fields": [
+        {
+          "id": "cci",
+          "label": "CCI",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "name",
+          "label": "Programmbezeichnung",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        },
+        {
+          "id": "fund",
+          "label": "Fonds",
+          "type": "text",
+          "required": false,
+          "readonly": false
+        }
+      ],
+      "values": {},
+      "editable": true,
+      "submitLabel": "Änderungen speichern"
+    },
+    {
+      "id": "new-tenant",
+      "title": "Mandant anlegen",
+      "description": "",
+      "kind": "admin",
+      "revision": 0,
+      "fields": [
+        {
+          "id": "slug",
+          "label": "Kennung",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "official_name",
+          "label": "Offizieller Name",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "display_name",
+          "label": "Anzeigename",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        }
+      ],
+      "values": {},
+      "editable": true,
+      "submitLabel": "Mandant anlegen"
+    },
+    {
+      "id": "new-account",
+      "title": "Nutzer anlegen",
+      "description": "",
+      "kind": "admin",
+      "revision": 0,
+      "fields": [
+        {
+          "id": "login",
+          "label": "Anmeldekennung",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "display_name",
+          "label": "Anzeigename",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        }
+      ],
+      "values": {},
+      "editable": true,
+      "submitLabel": "Nutzer anlegen"
+    },
+    {
+      "id": "new-member",
+      "title": "Mitglied zuordnen",
+      "description": "",
+      "kind": "admin",
+      "revision": 0,
+      "fields": [
+        {
+          "id": "login",
+          "label": "Anmeldekennung des Kontos",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "role_id",
+          "label": "Rolle",
+          "type": "select",
+          "required": true,
+          "readonly": false,
+          "options": [
+            {
+              "value": "2b2ce22db9ad450eb559cd74940e9c03:member",
+              "label": "Mitglied"
+            },
+            {
+              "value": "2b2ce22db9ad450eb559cd74940e9c03:admin",
+              "label": "Mandantenadministrator"
+            }
+          ]
+        }
+      ],
+      "values": {},
+      "editable": true,
+      "submitLabel": "Mitglied zuordnen"
+    },
+    {
+      "id": "new-role",
+      "title": "Rolle anlegen",
+      "description": "Nur eigene, registrierte Berechtigungen sind delegierbar.",
+      "kind": "admin",
+      "revision": 0,
+      "fields": [
+        {
+          "id": "name",
+          "label": "Rollenname",
+          "type": "text",
+          "required": true,
+          "readonly": false
+        },
+        {
+          "id": "permissions",
+          "label": "Berechtigungen",
+          "type": "multiselect",
+          "required": true,
+          "readonly": false,
+          "options": [
+            {
+              "value": "audit.read",
+              "label": "audit.read"
+            },
+            {
+              "value": "branding.update",
+              "label": "branding.update"
+            },
+            {
+              "value": "membership.invite",
+              "label": "membership.invite"
+            },
+            {
+              "value": "membership.read",
+              "label": "membership.read"
+            },
+            {
+              "value": "membership.update",
+              "label": "membership.update"
+            },
+            {
+              "value": "role.assign",
+              "label": "role.assign"
+            },
+            {
+              "value": "role.create",
+              "label": "role.create"
+            },
+            {
+              "value": "role.read",
+              "label": "role.read"
+            },
+            {
+              "value": "tenant.read",
+              "label": "tenant.read"
+            },
+            {
+              "value": "tenant.update",
+              "label": "tenant.update"
+            },
+            {
+              "value": "welcome.update",
+              "label": "welcome.update"
+            }
+          ]
+        }
+      ],
+      "values": {},
+      "editable": true,
+      "submitLabel": "Rolle anlegen"
+    }
+  ]
+}

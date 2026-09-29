@@ -1,5 +1,11 @@
 # Changelog @auditcore/ui-react
 
+## 1.2.0 – 2026-09-29
+
+Native Konten-/Mandantenoberfläche mit gemeinsamer Vue-Paritätsprüfung.
+Noch nicht veröffentlicht.
+
+
 ## Unreleased
 
 - Neu `FlowauditRunnerConsole` (native React-Fassung der Runner-Konsole, gleiches DOM wie `RunnerConsole`).

@@ -131,12 +131,17 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (884):
+Exporte der Einstiegspunkte aus `package.json#exports` (894):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@auditcore/ui` | `ACCEPTED_EXTENSIONS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ANSWER_VALUES` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AccountController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AccountData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AccountItem` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AccountPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AccountWorkspace` | Vue-Komponente | – | `account/AccountWorkspace.vue` |
 | `@auditcore/ui` | `Activity` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ActivityGroup` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ActorView` | Re-Export | – | `@auditcore/ui-core` |
@@ -368,6 +373,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (884):
 | `@auditcore/ui` | `HitFilter` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `HitView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ICONS` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_ACCOUNT` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_ATTRIBUTES` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_BATCHCHECKS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_BENFORD` | Re-Export | – | `@auditcore/ui-core` |
@@ -656,6 +662,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (884):
 | `@auditcore/ui` | `WorkbookPreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `WorkbookRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `acceptsHit` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `accountMessages` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `accountWorkspaceElement` | Konstante | `<flowaudit-account-workspace>`: Eigenschaften `port`, `locale`; Ereignisse `item-select`, `error`. | `account/element` |
 | `@auditcore/ui` | `activeMetrics` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `activityKey` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `addScenario` | Re-Export | – | `@auditcore/ui-core` |
@@ -718,6 +726,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (884):
 | `@auditcore/ui` | `conclusionTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `confidenceText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `coverIssues` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createAccountController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createAccountMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAttributesController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAttributesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
@@ -1024,6 +1034,7 @@ Web Components:
 
 | Element | Vue-Komponente | Definiert in |
 |---|---|---|
+| `<flowaudit-account-workspace>` | `AccountWorkspace` | `account/element.ts` |
 | `<flowaudit-attribute-sampling>` | `AttributeSampling` | `attributes/element.ts` |
 | `<flowaudit-batch-checks>` | `BatchChecks` | `batchchecks/element.ts` |
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
@@ -1048,6 +1059,18 @@ Web Components:
 | `<flowaudit-vvt>` | `FaVvt` | `dataprotection/element.ts` |
 
 ### Props und Ereignisse der Vue-Komponenten
+
+#### `AccountWorkspace`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `AccountPort \| null` | nein | `null` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `item-select` | `[item: AccountItem]` | – |
+| `error` | `[message: string]` | – |
 
 #### `AttributeSampling`
 

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_account",
+  "version": "0.1.0",
+  "contract": "auditcore_account/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [],
+  "references": [
+    "docs/ui/konto-mandant-best-practice.md",
+    "docs/ui/konto-mandant-admin-design.md",
+    "audit_designer",
+    "regulierung",
+    "Rechnungslegung"
+  ],
+  "characterization": {
+    "kind": "synthetic_contract_regression",
+    "legacy_parity": "NOT_ASSERTED",
+    "tests": "packages/auditcore_account/tests"
+  },
+  "license": "MIT",
+  "publication": "NOT_EXECUTED"
+}

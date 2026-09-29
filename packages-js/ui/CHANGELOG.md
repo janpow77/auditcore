@@ -1,5 +1,11 @@
 # Changelog @auditcore/ui
 
+## 0.4.0 – 2026-09-29
+
+Konten-/Mandantenoberfläche einschließlich Bild-Upload, Webcam und Corporate Design.
+Noch nicht veröffentlicht.
+
+
 ## Unreleased
 
 - Neu `RunnerConsole` / `<flowaudit-runner-console>` (Attribut `api`) mit Bereichen Status, Einstellungen, Werkzeuge, Prioritäten; eigenständiges Bündel für `auditcore_runner` per `npm run build:runner` (`runner-bundle/`).

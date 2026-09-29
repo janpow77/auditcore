@@ -1,6 +1,6 @@
 {
   "name": "@auditcore/ui-core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Framework-freier Kern der FlowAudit-Oberflächen: Texte, REST-Verträge, View-Modelle, Zustandsautomaten und Stile für Vue und React",
   "license": "MIT",
   "repository": {

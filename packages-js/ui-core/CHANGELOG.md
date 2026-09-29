@@ -1,5 +1,11 @@
 # Changelog @auditcore/ui-core
 
+## 0.3.0 – 2026-09-29
+
+Gemeinsamer Kontenformularvertrag, Controller, REST-Port, Styles und Bildlogik.
+Noch nicht veröffentlicht.
+
+
 ## Unreleased
 
 - Runner-Konsole: Klassen hinzufügen und umbenennen (`runnerKlasseHinzu`, `runnerKlasseUmbenennen`, Prüfung `RUNNER_KLASSEN_NAME`), Art `cpu`/`gpu` je Klasse (Grafikspeicher und Kartenauswahl nur bei `gpu`), `auth_art` im Status.

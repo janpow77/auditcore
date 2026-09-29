@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "auditcore_account"
+version = "0.1.0"
+description = "Einheitliche Konten, Mandanten, Corporate Design und administrative Zugangsabläufe"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["auditcore_auth==0.1.1"]
+[project.optional-dependencies]
+images = ["Pillow>=12.1"]
+passwords = ["argon2-cffi>=21.1"]
+dev = ["pytest>=8", "pytest-xdist>=3.6", "pytest-timeout>=2.3", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "Pillow>=12.1", "argon2-cffi>=21.1"]
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.package-data]
+auditcore_account = ["py.typed", "provenance.json"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --durations=25"
+timeout = 120
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C901"]
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+[tool.mypy]
+strict = true
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]
