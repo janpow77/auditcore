@@ -17,6 +17,9 @@
       },
       "coverage_percent": 86.44
     },
+    "auditcore_account": {
+      "coverage_percent": 100.0
+    },
     "auditcore_auth": {
       "metrics": {
         "any_usages": 0,
