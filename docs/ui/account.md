@@ -1,6 +1,6 @@
 # Konto, Mandant und Administration
 
-Implementiert als `auditcore_account==0.1.0` mit `AccountWorkspace` (Vue),
+Implementiert als `auditcore_account==0.1.1` mit `AccountWorkspace` (Vue),
 `FlowauditAccountWorkspace` (React) und `<flowaudit-account-workspace>` (Custom Element).
 Der Generator `ui:neu` wurde für das Grundgerüst verwendet. Formularzustand,
 Portvertrag, Kamera-/Zuschnittlogik und CSS liegen gemeinsam in `@auditcore/ui-core`.

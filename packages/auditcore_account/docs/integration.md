@@ -24,7 +24,7 @@ Paketen `@auditcore/ui` und `@auditcore/ui-react`; beide verwenden `@auditcore/u
 ## Installation und Einstieg
 
 ```bash
-pip install 'auditcore_account[images,passwords]==0.1.0'
+pip install 'auditcore_account[images,passwords]==0.1.1'
 ```
 
 Im Monorepo zuerst `auditcore_auth` und dann dieses Paket installieren. Der

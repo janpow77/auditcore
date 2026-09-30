@@ -8,7 +8,7 @@ from auditcore_auth import PasswordHasher
 from .errors import require
 from .models import Actor
 from .permissions import authenticated, platform
-from .runtime import Runtime
+from .runtime import Runtime, revision
 
 
 class CredentialsService:
@@ -69,7 +69,14 @@ class CredentialsService:
             self.runtime.event(state, actor, "password.change", account.id)
             return Actor(account.id, account.session_revision)
 
-    def provision(self, actor: Actor, target: str, password: str, lifetime: timedelta) -> None:
+    def provision(
+        self,
+        actor: Actor,
+        target: str,
+        password: str,
+        lifetime: timedelta,
+        expected_revision: int | None = None,
+    ) -> None:
         """Plattform-Fallback; einmalige Übergabe, keine Rückgabe des Passworts."""
         self.validate_password(password)
         require(lifetime.total_seconds() > 0, "invalid", "Gültigkeitsdauer erforderlich.")
@@ -78,6 +85,8 @@ class CredentialsService:
             account = state.accounts.get(target)
             require(account is not None, "not_found", "Konto nicht verfügbar.")
             assert account is not None
+            if expected_revision is not None:
+                revision(account.revision, expected_revision)
             require(
                 account.active and not account.external, "forbidden", "Kein lokales aktives Konto."
             )

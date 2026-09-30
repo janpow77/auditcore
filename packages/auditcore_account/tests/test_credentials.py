@@ -80,3 +80,44 @@ def test_wrong_current_password_does_not_mutate(app):
     with pytest.raises(AccountError):
         app.credentials.change(actor, "wrong", SECRET + "!")
     assert app.credentials.login(app.user.login, SECRET) == actor
+
+
+def test_access_provision_rejects_revision_race(app, monkeypatch):
+    key = "access/" + app.user.id
+    form = app.workspace.read(app.actor, key)
+    expected = form["revision"]
+    provision = app.credentials.provision
+
+    def concurrent_provision(actor, target, password, lifetime, expected_revision=None):
+        provision(actor, target, SECRET, lifetime, expected_revision=expected)
+        provision(
+            actor,
+            target,
+            password,
+            lifetime,
+            expected_revision=expected_revision,
+        )
+
+    monkeypatch.setattr(app.credentials, "provision", concurrent_provision)
+    with pytest.raises(AccountError, match="inzwischen geändert"):
+        app.workspace.save(
+            app.actor, key, expected, {"action": "provision", "password": SECRET + "!"}
+        )
+
+    assert app.credentials.login(app.user.login, SECRET)
+    with pytest.raises(AccountError):
+        app.credentials.login(app.user.login, SECRET + "!")
+
+
+def test_access_invitation_rejects_stale_account_revision(app):
+    key = "access/" + app.user.id
+    expected = app.workspace.read(app.actor, key)["revision"]
+    app.credentials.provision(app.actor, app.user.id, SECRET, timedelta(hours=1))
+    with pytest.raises(AccountError, match="inzwischen geändert"):
+        app.workspace.access.save(
+            app.actor,
+            key,
+            expected,
+            {"action": "invite", "tenant": app.tenant.id},
+        )
+    assert app.repo.snapshot().grants == {}

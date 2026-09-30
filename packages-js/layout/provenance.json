@@ -1,0 +1,31 @@
+{
+  "classification": "NEW",
+  "sources": [
+    {
+      "repository": "audit_designer",
+      "path": "frontend/src/views/LoginView.vue",
+      "use": "Characterization input: login layout, fish animation, light/dark style, export action locations"
+    },
+    {
+      "repository": "Rechnungslegung",
+      "path": "app/frontend/src/components/layout/AppKopf.vue",
+      "use": "Characterization input: app header, logo, account profile image, responsive navigation"
+    },
+    {
+      "repository": "flow-agent",
+      "path": "apps/dashboard/src/components/ThemeSwitch.vue",
+      "use": "Characterization input: accessible single-button light/dark switch"
+    },
+    {
+      "repository": "flow-agent",
+      "path": "apps/dashboard/src/composables/useSeitenwechsel.ts",
+      "use": "Characterization input: reduced-motion-aware page transitions"
+    },
+    {
+      "repository": "regulierung",
+      "path": "frontend/src/pages/Login.tsx",
+      "use": "Characterization input: existing branded jumping-fish login treatment"
+    }
+  ],
+  "classification_note": "New shared package with original fish SVG and new component API; source applications remain unchanged."
+}

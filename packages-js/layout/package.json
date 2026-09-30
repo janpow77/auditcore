@@ -1,0 +1,32 @@
+{
+  "name": "@auditcore/layout",
+  "version": "0.1.0",
+  "description": "Wiederverwendbare Seitenlayouts, Anmeldung und Exportaktionen für FlowAudit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/layout"
+  },
+  "type": "module",
+  "sideEffects": ["**/*.css"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./elements": { "types": "./dist/elements.d.ts", "import": "./dist/elements.js" },
+    "./style.css": "./dist/layout.css",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "LICENSE", "README.md", "CHANGELOG.md", "provenance.json"],
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": { "@auditcore/ui": "0.4.0" },
+  "peerDependencies": { "vue": "^3.5.0" },
+  "devDependencies": { "@vitejs/plugin-vue": "^6.0.9", "vite": "^8.3.1", "vite-plugin-dts": "^5.1.1", "vue": "^3.5.43", "vue-tsc": "^3.3.11", "vitest": "^4.1.11", "happy-dom": "^20.14.5", "@vue/test-utils": "^2.5.1" },
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" }
+}

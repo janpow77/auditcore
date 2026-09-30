@@ -10,6 +10,7 @@ from .errors import require
 from .models import Actor, Grant, IssuedGrant
 from .permissions import platform
 from .repository import State
+from .runtime import revision
 from .welcome import DEFAULT_WELCOME, render_welcome
 
 
@@ -27,6 +28,7 @@ class InvitationService:
         *,
         purpose: Literal["invite", "reset"] = "invite",
         message: str = "",
+        expected_revision: int | None = None,
     ) -> IssuedGrant:
         """Globale Kennwörter dürfen nur Plattformadmins zurücksetzen, nie Mandantenadmins."""
         require(lifetime.total_seconds() > 0, "invalid", "Gültigkeitsdauer erforderlich.")
@@ -39,6 +41,8 @@ class InvitationService:
                 account is not None and tenant is not None, "not_found", "Einladung nicht möglich."
             )
             assert account is not None and tenant is not None
+            if expected_revision is not None:
+                revision(account.revision, expected_revision)
             require(
                 account.active and not account.external, "forbidden", "Kein lokales aktives Konto."
             )

@@ -10,19 +10,19 @@ werden in einem späteren Schritt migriert. PDF-Bearbeitung gehört nicht dazu.
 
 ## Installation
 
-Version 0.1.0 ist im Arbeitsstand angelegt, noch nicht veröffentlicht.
+Version 0.1.1 ist im Arbeitsstand angelegt, noch nicht veröffentlicht.
 Lokal nach `auditcore_auth` installieren: `pip install -e packages/auditcore_account`.
 Nach Veröffentlichung über den Paketindex:
 
 ```bash
-python -m pip install 'auditcore_account==0.1.0' \
+python -m pip install 'auditcore_account==0.1.1' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
 Hashgebundene Direkt-URL nach Veröffentlichung (Release und SHA-256 aus dem Index):
 
 ```text
-auditcore_account @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_account-0.1.0-py3-none-any.whl#sha256=<sha256>
+auditcore_account @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_account-0.1.1-py3-none-any.whl#sha256=<sha256>
 ```
 
 Das vorgesehene APT-Paket heißt `python3-auditcore-account`; APT-Lebenszyklus und

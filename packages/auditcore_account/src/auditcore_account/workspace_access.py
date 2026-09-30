@@ -8,7 +8,6 @@ from .forms import Document, Option, choices, document, field
 from .invitations import InvitationService
 from .models import Actor, IssuedGrant
 from .permissions import platform
-from .runtime import revision
 
 
 class AccessForms:
@@ -58,13 +57,16 @@ class AccessForms:
     def save(
         self, actor: Actor, key: str, expected: int, values: dict[str, str]
     ) -> IssuedGrant | None:
-        current = self.read(actor, key)
-        revision(current["revision"], expected)
-        require(current["editable"], "forbidden", "Zugang nicht bearbeitbar.")
         target = key.removeprefix("access/")
         action = values.get("action")
         if action == "provision":
-            self.credentials.provision(actor, target, values.get("password", ""), self.lifetime)
+            self.credentials.provision(
+                actor,
+                target,
+                values.get("password", ""),
+                self.lifetime,
+                expected_revision=expected,
+            )
             return None
         require(action in {"invite", "reset"}, "invalid", "Vorgang erforderlich.")
         return self.invitations.issue(
@@ -74,4 +76,5 @@ class AccessForms:
             self.lifetime,
             purpose="reset" if action == "reset" else "invite",
             message=values.get("message", ""),
+            expected_revision=expected,
         )
