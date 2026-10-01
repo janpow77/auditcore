@@ -32,7 +32,7 @@ erzeugt; jede Paket-README folgt der
 [README-Vorlage](docs/bibliotheken/readme-vorlage.md).
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
-40 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
+41 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
 **Querschnitt**
 
@@ -50,6 +50,7 @@ erzeugt; jede Paket-README folgt der
 |---|---|---|---|---|
 | [`auditcore_account`](packages/auditcore_account) | 0.1.1 | Gemeinsame Konten, Mandanten, Corporate Design und administrative Zugangsabläufe mit einem Formularvertrag für Vue und React. | `auditcore_auth==0.1.1`; Extras: `images`, `passwords` | neu |
 | [`auditcore_bpmn`](packages/auditcore_bpmn) | 0.1.2 | BPMN 2.0 mit der FlowAudit-Erweiterung (Schema 1.1) sicher lesen, prüfen, vergleichen, neutralisieren und berichten – für Prozessdiagramme von Verwaltungs- und Kontrollsystemen aller Fonds mit geteilter Mittelverwaltung. | keine; Extras: `xml`, `excel`, `pdf`, `legal` | spezifiziert |
+| [`auditcore_checklists`](packages/auditcore_checklists) | 0.1.0 | Checklisten-Kern: hierarchische Prüfbäume, Antwort- und Auswertungsvertrag sowie portabler Paketaustausch für strukturierte Prüfungsabläufe. | `auditcore_common==0.2.0` | neu |
 | [`auditcore_dataprotection`](packages/auditcore_dataprotection) | 0.5.1 | Frameworkunabhängige Bibliothek, mit der Anwendungen eigene Verzeichnisse von Verarbeitungstätigkeiten (VVT) und Datenschutz-Folgenabschätzungen (DSFA) anlegen, berechnen, versionieren, freigeben und ausgeben. | `auditcore_common==0.2.0`; Extras: `excel`, `pdf`, `web`, `fastapi` | spezifiziert |
 | [`auditcore_documents`](packages/auditcore_documents) | 0.4.0 | Dokumentvergleich (Checklisten und Fließtext aus DOCX/PDF), Gesetzessynopse für Artikelgesetze und ein frameworkunabhängiger Kern der Dokumentpipeline mit OCR-Ports. | `auditcore_common==0.2.0`, `auditcore_identifiers==0.2.0`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | spezifiziert |
 | [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | 0.1.3 | Frameworkunabhängiger Generator für synthetische Testdaten: einzelne Felder (Namen, Adressen, Kennungen, Beträge, Datumswerte) und ganze Zeilen mit festem Seed und Bezugsdatum. | keine; Extras: `parallel` | spezifiziert |

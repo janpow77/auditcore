@@ -103,3 +103,26 @@ zeitlimit_s = 120
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_pdf", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
 
+# Checklisten-Kern: Prüfbäume, Antwortführung und Paketaustausch.
+[pruefprofile.checklists]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.checklists.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_checklists", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.checklists.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_checklists/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.checklists.werkzeug.mypy]
+befehl = ["python3", "-m", "mypy", "--strict", "packages/auditcore_checklists/src", "--no-color-output", "--no-error-summary"]
+zeitlimit_s = 120
+
+[pruefprofile.checklists.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_checklists", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300
+

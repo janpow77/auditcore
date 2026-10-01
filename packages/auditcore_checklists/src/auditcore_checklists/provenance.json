@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_checklists",
+  "version": "0.1.0",
+  "contract": "auditcore_checklists/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [
+    "audit_designer/backend/app/schemas/node.py",
+    "audit_designer/backend/app/services/tree_service.py",
+    "audit_designer/backend/app/services/checklist_package_service.py"
+  ],
+  "references": [
+    "docs/reports/PACKAGE_REVIEW_20260929.md",
+    "docs/reports/BIBLIOTHEKEN_FORTSCHRITT_20260930.md"
+  ],
+  "characterization": {
+    "kind": "synthetic_contract_regression",
+    "legacy_parity": "AUDIT_DESIGNER_CHECKLIST_PACKAGE_V1",
+    "tests": "packages/auditcore_checklists/tests"
+  },
+  "license": "MIT",
+  "publication": "NOT_EXECUTED"
+}
