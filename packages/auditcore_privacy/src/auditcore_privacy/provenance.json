@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_privacy",
+  "version": "0.1.0",
+  "contract": "auditcore_privacy/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [
+    "audit_designer/backend/app/modules/ecohesion/sanitizer/pseudonyms.py",
+    "flowinvoice/backend/app/verwk/services/pseudonymization.py",
+    "riskanalysis/backend/app/services/pseudonymization.py"
+  ],
+  "references": [
+    "docs/reports/PACKAGE_REVIEW_20260929.md",
+    "docs/reports/BIBLIOTHEKEN_FORTSCHRITT_20260930.md",
+    "docs/reports/ECOHESION_REVIEW_20260929.md"
+  ],
+  "characterization": {
+    "kind": "synthetic_contract_regression",
+    "legacy_parity": "SUPERSEDED_WITH_COLLISION_AND_SCOPE_SAFETY",
+    "tests": "packages/auditcore_privacy/tests"
+  },
+  "license": "MIT",
+  "publication": "NOT_EXECUTED"
+}

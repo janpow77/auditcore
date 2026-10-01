@@ -126,3 +126,27 @@ zeitlimit_s = 120
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_checklists", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
 
+# Deterministische, kollisionsfreie Pseudonymisierung und Maskierung.
+[pruefprofile.privacy]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.privacy.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_privacy", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.privacy.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_privacy/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.privacy.werkzeug.mypy]
+befehl = ["python3", "-m", "mypy", "--strict", "packages/auditcore_privacy/src", "--no-color-output", "--no-error-summary"]
+zeitlimit_s = 120
+
+[pruefprofile.privacy.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_privacy", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300
+
+
