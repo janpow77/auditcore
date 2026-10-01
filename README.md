@@ -23,6 +23,18 @@ Die vorhandene Funktion `auditcore.reporting.get_number_format` wurde mit
 34 Characterization-Fällen aus Flowlib übernommen; Herkunft und MIT-Lizenz
 stehen unter `docs/provenance` und `LICENSES`.
 
+## Fachliche Anwendungsbereiche (Wann brauche ich welches Paket?)
+
+Die 42 Bibliotheken des Repositories sind modular aufgebaut und decken die zentralen Phasen von Prüfungs-, Kontroll- und Revisionsverfahren ab. Sie lassen sich nach fachlichem Einsatzzweck kombinieren:
+
+| Phase / Anwendungsbereich | Typische Prüfungsaufgabe | Maßgebliche Bibliotheken |
+|---|---|---|
+| **1. Recherche, Vergabe & Compliance** | Vorabprüfung von Vergaben, Schwellenwerten, Sanktionen, De-minimis-Beihilfen und Unternehmensidentitäten. | [`auditcore_procurement`](packages/auditcore_procurement), [`auditcore_funding_sources`](packages/auditcore_funding_sources), [`auditcore_registry_sources`](packages/auditcore_registry_sources), [`auditcore_legal_sources`](packages/auditcore_legal_sources), [`auditcore_price_sources`](packages/auditcore_price_sources), [`auditcore_property_sources`](packages/auditcore_property_sources), [`auditcore_entity_matching`](packages/auditcore_entity_matching), [`auditcore_risk`](packages/auditcore_risk), [`auditcore_geo`](packages/auditcore_geo) |
+| **2. Checklisten & Verfahrensprüfung** | Abbildung hierarchischer Prüfpfade, Vor-Ort-Fragebögen, Abgleich von Richtlinien und Modellierung von Kontrollsystemen. | [`auditcore_checklists`](packages/auditcore_checklists), [`auditcore_documents`](packages/auditcore_documents), [`auditcore_bpmn`](packages/auditcore_bpmn), [`@auditcore/bpmn-editor`](packages-js/bpmn-editor), [`@auditcore/bpmn-vue`](packages-js/bpmn-vue), [`@auditcore/bpmn-react`](packages-js/bpmn-react) |
+| **3. Stichproben & Prüfstatistik** | Ziehung von Stichproben (MUS/Zufall), statistische Anomalieprüfung (Benford) und Fehlerhochrechnung (TER/RER) nach EU-Leitfaden. | [`auditcore_sampling`](packages/auditcore_sampling), [`auditcore_statistics`](packages/auditcore_statistics), [`auditcore_extrapolation`](packages/auditcore_extrapolation), [`auditcore_market_indicators`](packages/auditcore_market_indicators), [`auditcore_price_analysis`](packages/auditcore_price_analysis) |
+| **4. Datenschutz, Schwärzung & Testdaten** | Revisionssichere PDF-Schwärzung vor Akteneinsicht, Scoped-Pseudonymisierung, VVT/DSFA und geschützte synthetische Testdaten. | [`auditcore_pdf`](packages/auditcore_pdf), [`auditcore_privacy`](packages/auditcore_privacy), [`auditcore_dataprotection`](packages/auditcore_dataprotection), [`auditcore_dummygenerator`](packages/auditcore_dummygenerator), [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator), [`auditcore_invoicesynth`](packages/auditcore_invoicesynth) |
+| **5. Berichtswesen, Plattform & UI** | Revisionssichere Word-/Excel-/PDF-Berichte, Prüfungs-Kanban, gemeinsame Mandanten-/Kontoverwaltung und UI-Kerne. | [`auditcore_reporting`](packages/auditcore_reporting), [`auditcore_kanban`](packages/auditcore_kanban), [`@auditcore/kanban-core`](packages-js/kanban-core), [`auditcore_account`](packages/auditcore_account), [`auditcore_auth`](packages/auditcore_auth), [`auditcore_identifiers`](packages/auditcore_identifiers), [`auditcore_harvest`](packages/auditcore_harvest), [`auditcore_llm_client`](packages/auditcore_llm_client), [`@auditcore/ui`](packages-js/ui), [`@auditcore/layout`](packages-js/layout) |
+
 ## Pakete
 
 Alle Bibliotheken des Repositorys – Python-Pakete unter `packages/` und

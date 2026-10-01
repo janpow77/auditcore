@@ -143,7 +143,32 @@ def _page(title: str, links: list[str]) -> str:
     )
 
 
-def write_index(projects: dict[str, list[Distribution]], output: Path) -> None:
+def _write_landing(
+    projects: dict[str, list[Distribution]], output: Path, root: Path | None = None
+) -> None:
+    repo_root = root or Path(__file__).resolve().parents[1]
+    landing_script = repo_root / "scripts/build_landing_page.py"
+    if landing_script.is_file():
+        try:
+            import importlib.util
+
+            spec = importlib.util.spec_from_file_location("build_landing_page", landing_script)
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+                pkgs = mod.collect_catalog(repo_root)
+                html_text = mod.render_landing_page(pkgs)
+                (output / "index.html").write_text(html_text, encoding="utf-8")
+                return
+        except Exception:
+            pass
+    fallback = [f'<a href="simple/{name}/">{name}</a>' for name in projects]
+    (output / "index.html").write_text(_page("auditcore – Startseite", fallback), encoding="utf-8")
+
+
+def write_index(
+    projects: dict[str, list[Distribution]], output: Path, root: Path | None = None
+) -> None:
     simple = output / "simple"
     simple.mkdir(parents=True, exist_ok=True)
     root_links = [f'<a href="{name}/">{html.escape(name)}</a>' for name in projects]
@@ -167,6 +192,7 @@ def write_index(projects: dict[str, list[Distribution]], output: Path) -> None:
             _page(f"Links für {name}", links), encoding="utf-8"
         )
     (output / ".nojekyll").write_text("", encoding="utf-8")
+    _write_landing(projects, output, root=root)
 
 
 def main() -> int:

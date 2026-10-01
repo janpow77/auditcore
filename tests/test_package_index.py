@@ -60,6 +60,7 @@ def test_index_links_release_assets_with_hash_and_requires_python(tmp_path: Path
     assert page.count('data-requires-python="&gt;=3.11"') == 2
     assert ".deb" not in page and "sbom" not in page
     assert (tmp_path / "site/.nojekyll").exists()
+    assert (tmp_path / "site/index.html").exists()
 
 
 def test_same_file_in_two_releases_is_listed_once_newest_wins(tmp_path: Path) -> None:
