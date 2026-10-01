@@ -70,6 +70,9 @@ updates:
       npm-runtime:
         dependency-type: production
         update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directories:
