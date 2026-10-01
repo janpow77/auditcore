@@ -35,6 +35,44 @@ Die 42 Bibliotheken des Repositories sind modular aufgebaut und decken die zentr
 | **4. Datenschutz, Schwärzung & Testdaten** | Revisionssichere PDF-Schwärzung vor Akteneinsicht, Scoped-Pseudonymisierung, VVT/DSFA und geschützte synthetische Testdaten. | [`auditcore_pdf`](packages/auditcore_pdf), [`auditcore_privacy`](packages/auditcore_privacy), [`auditcore_dataprotection`](packages/auditcore_dataprotection), [`auditcore_dummygenerator`](packages/auditcore_dummygenerator), [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator), [`auditcore_invoicesynth`](packages/auditcore_invoicesynth) |
 | **5. Berichtswesen, Plattform & UI** | Revisionssichere Word-/Excel-/PDF-Berichte, Prüfungs-Kanban, gemeinsame Mandanten-/Kontoverwaltung und UI-Kerne. | [`auditcore_reporting`](packages/auditcore_reporting), [`auditcore_kanban`](packages/auditcore_kanban), [`@auditcore/kanban-core`](packages-js/kanban-core), [`auditcore_account`](packages/auditcore_account), [`auditcore_auth`](packages/auditcore_auth), [`auditcore_identifiers`](packages/auditcore_identifiers), [`auditcore_harvest`](packages/auditcore_harvest), [`auditcore_llm_client`](packages/auditcore_llm_client), [`@auditcore/ui`](packages-js/ui), [`@auditcore/layout`](packages-js/layout) |
 
+## auditcore-runner und technische Vorgaben des Frameworks
+
+Alle Bibliotheken im Repository unterliegen den verbindlichen Qualitäts- und Architekturstandards des auditcore-Frameworks. Sie werden vor jedem Commit und in der CI automatisiert durch den **`auditcore-runner`** geprüft.
+
+### 1. auditcore-runner: Lokale Prüfbank und CI-Parität
+
+Der `auditcore-runner` (`packages/auditcore_runner`) ist das verbindliche Prüfwerkzeug für Entwickler, CI-Pipelines und KI-Coding-Agents:
+
+- **Identische Laufzeitbedingungen:** Lokale Prüfläufe laufen im selben Image und mit denselben Werkzeugversionen wie die CI.
+- **Zentrale Befehle:**
+  - `auditcore-runner lokal --pfad . <profil> --host --ohne-cache`: Führt das definierte Prüfprofil (z. B. `pdf`, `checklists`, `privacy`, `pr`) aus.
+  - `auditcore-runner befunde`: Gibt den einheitlichen, maschinenlesbaren Befundbericht aus.
+  - `auditcore-runner runner install`: Installiert ephemere GitHub-Actions-Runner auf eigenen Servern (isoliert über Docker und systemd).
+- **Git-Inhalts-Cache:** Werkzeuge prüfen nur Dateien, deren Git-Inhalt sich seit dem letzten Lauf geändert hat.
+- **Autofix-Vorlauf:** Sichere Formatierer und Regelfixe laufen vor der Modell- und Entwicklerarbeit.
+
+### 2. Clean Domain Architecture (Framework-Freiheit)
+
+Um maximale Portabilität und langfristige Wartbarkeit zu garantieren, sind alle Fachpakete (`packages/auditcore_*`) reine Domänenkerne:
+
+- **Keine relationale Datenbankbindung:** Kein SQLAlchemy, kein SQLModel, keine Datenbanktreiber im Domänenkern.
+- **Keine Webframework-Kopplung:** Weder FastAPI noch Starlette dürfen im Fachkern importiert werden. Web- und REST-Adapter liegen in optionalen Extras oder Verbraucheranwendungen.
+- **Hierarchische Abhängigkeiten:** Abhängigkeiten fließen ausschließlich von den Fachpaketen zu Basispaketen wie `auditcore_common`, niemals zyklisch (`tests/test_architecture.py` erzwingt dies).
+- **Deterministische Datenverträge:** Strukturierte JSON-Schemas, kanonische Serialisierung und reproduzierbare SHA-256-Strukturprüfsummen.
+
+### 3. Strikte Quality Gates (Qualitäts-Ratchet)
+
+Die Code-Qualität wird durch das Qualitäts-Gate (`auditcore-codegate`) mit einer `baseline.json` überwacht. Metriken dürfen sich niemals verschlechtern:
+
+- **McCabe-Zyklomatische Komplexität:** Maximal **10** je Funktion.
+- **Funktionslänge:** Maximal **60 Zeilen** je Funktion.
+- **Modullänge:** Maximal **400 Zeilen** je Modul.
+- **Strict Typing:** Striktes mypy (`--strict`) ohne `typing.Any`.
+- **AST-Duplikatsinventur:** `duplicate_functions = 0` (Wiederholte Logik muss in `auditcore_common` konsolidiert werden).
+- **Sprach- und Rechtschreibstandard:** Fachliches Deutsch mit echten Umlauten (ä, ö, ü, ß; keine ASCII-Ersatzschreibweisen in Texten und Docstrings).
+- **Lückenlose Provenienz:** Jedes Paket führt eine maschinenlesbare `provenance.json` mit Herkunftsnachweis, Lizenz und Charakterisierung.
+- **Verbindliche Dokumentationsstandards:** Alle Paket-READMEs folgen der Vorlage `docs/bibliotheken/readme-vorlage.md` und enthalten lauffähige Schnellstart-Codeblöcke, die von `tests/test_readmes.py` bei jedem Lauf ausgeführt werden.
+
 ## Pakete
 
 Alle Bibliotheken des Repositorys – Python-Pakete unter `packages/` und

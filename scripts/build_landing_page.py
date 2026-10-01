@@ -217,6 +217,24 @@ h1 span { color: var(--accent); }
 .pkg-cmd code {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 0.5rem;
 }
+.framework-section {
+  max-width: 1200px; margin: 0 auto 3rem; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;
+}
+.fw-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem;
+  padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;
+}
+.fw-card h3 {
+  font-size: 1.15rem; color: var(--accent); display: flex; align-items: center; gap: 0.5rem;
+}
+.fw-card p { font-size: 0.9rem; color: var(--text); }
+.fw-card ul { padding-left: 1.25rem; color: var(--text-muted); font-size: 0.85rem; }
+.fw-card li { margin-bottom: 0.35rem; }
+.fw-card code {
+  font-size: 0.8rem; background: var(--surface-subtle); padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem; font-family: monospace;
+}
 footer {
   max-width: 1200px; margin: 4rem auto 0; padding-top: 2rem; border-top: 1px solid var(--border);
   text-align: center; color: var(--text-muted); font-size: 0.85rem;
@@ -312,6 +330,48 @@ def _render_package_card(pkg: Package) -> str:
     )
 
 
+def _render_framework_section() -> str:
+    """Rendert die Übersicht zu auditcore-runner und Framework-Vorgaben."""
+    return (
+        '<div class="framework-section">\n'
+        '  <div class="fw-card">\n'
+        '    <h3>⚡ auditcore-runner (CI &amp; Prüfbank)</h3>\n'
+        '    <p>Deterministische Prüfbank für Entwickler, CI und KI-Coding-Agents.</p>\n'
+        '    <ul>\n'
+        '      <li>Gleiche Prüfbedingungen lokal wie in CI (im identischen Container-Image)</li>\n'
+        '      <li>Befehle: <code>auditcore-runner lokal</code>, '
+        '<code>auditcore-runner befunde</code></li>\n'
+        '      <li>Git-Inhalts-Cache: unveränderter Code wird nicht wiederholt geprüft</li>\n'
+        '      <li>Ephemere self-hosted GitHub-Runner auf eigener Hardware (Docker/systemd)</li>\n'
+        '    </ul>\n'
+        '  </div>\n'
+        '  <div class="fw-card">\n'
+        '    <h3>🏛️ Clean Domain Architecture</h3>\n'
+        '    <p>Reine, framework-unabhängige Fachkerne für maximale Portabilität.</p>\n'
+        '    <ul>\n'
+        '      <li>Keine Datenbankbindung (kein SQLAlchemy im Domänenkern)</li>\n'
+        '      <li>Keine Web-Kopplung (kein FastAPI/Starlette in Fachbibliotheken)</li>\n'
+        '      <li>Hierarchische Abhängigkeiten (<code>test_architecture.py</code>)</li>\n'
+        '      <li>Reproduzierbare Berechnungen (z. B. SHA-256-Strukturprüfsummen)</li>\n'
+        '    </ul>\n'
+        '  </div>\n'
+        '  <div class="fw-card">\n'
+        '    <h3>📐 Strikte Quality Gates &amp; Standards</h3>\n'
+        '    <p>Automatisch überwachtes Ratchet (Metriken dürfen sich nie verschlechtern).</p>\n'
+        '    <ul>\n'
+        '      <li><strong>McCabe-Komplexität ≤ 10</strong>, Funktionen ≤ 60 Zeilen, '
+        'Module ≤ 400 Zeilen</li>\n'
+        '      <li><strong>Strict Typing:</strong> zero <code>typing.Any</code>, mypy strict</li>\n'
+        '      <li><strong>AST-Duplikatsinventur:</strong> '
+        '<code>duplicate_functions = 0</code></li>\n'
+        '      <li>Echte deutsche Umlaute (ä, ö, ü, ß; keine Ersatzschreibweisen)</li>\n'
+        '      <li>Lückenlose <code>provenance.json</code> und READMEs mit Schnellstart</li>\n'
+        '    </ul>\n'
+        '  </div>\n'
+        '</div>'
+    )
+
+
 def render_landing_page(packages: list[Package]) -> str:
     """Rendert die vollständige HTML-Landingpage."""
     cards_html = "\n".join(_render_package_card(p) for p in packages)
@@ -323,6 +383,7 @@ def render_landing_page(packages: list[Package]) -> str:
         f"</div>"
         for k, v in CLUSTERS.items()
     )
+    framework_html = _render_framework_section()
 
     n_pkg = len(packages)
     ph_text = "🔍 Suche nach Name oder Fachbegriff (z. B. 'Schwärzung', 'Stichprobe', 'BPMN')..."
@@ -352,6 +413,8 @@ def render_landing_page(packages: list[Package]) -> str:
         f"  <main>\n"
         f'    <h2 class="section-title">🚀 5 Phasen im Prüfungs- und Kontrollverfahren</h2>\n'
         f'    <div class="workflows">\n{workflows_html}\n    </div>\n\n'
+        f'    <h2 class="section-title">🛡️ auditcore-runner &amp; Technische Vorgaben</h2>\n'
+        f'    {framework_html}\n\n'
         f'    <h2 class="section-title" id="catalog">📦 Bibliotheks-Katalog ({n_pkg} Pakete)</h2>\n'
         f'    <div class="filter-bar">\n'
         f'      <input type="text" id="search" class="search-input" '
