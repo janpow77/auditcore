@@ -30,7 +30,7 @@
     "@types/node": "^26.6.2",
     "@vue/language-core": "^3.3.11",
     "eslint": "^9.39.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-vue": "^10.11.1",
     "globals": "^17.12.0",
     "happy-dom": "^20.14.5",
