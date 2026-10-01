@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_pdf",
+  "version": "0.1.0",
+  "contract": "auditcore_pdf/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [
+    "audit_designer/pdf-editor-app",
+    "janpow77/pdf-editor@ce34413129751dfd72fac6cefa55b02718bff27b"
+  ],
+  "references": [
+    "docs/reports/pdf-editor-characterization-20260929.json",
+    "docs/reports/PACKAGE_REVIEW_20260929.md",
+    "docs/reports/BIBLIOTHEKEN_FORTSCHRITT_20260930.md"
+  ],
+  "characterization": {
+    "kind": "synthetic_contract_regression",
+    "legacy_parity": "SUPERSEDED_WITH_REDACTION_FIXES",
+    "tests": "packages/auditcore_pdf/tests"
+  },
+  "license": "MIT",
+  "publication": "NOT_EXECUTED"
+}

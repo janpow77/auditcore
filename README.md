@@ -32,7 +32,7 @@ erzeugt; jede Paket-README folgt der
 [README-Vorlage](docs/bibliotheken/readme-vorlage.md).
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
-39 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
+40 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
 **Querschnitt**
 
@@ -60,6 +60,7 @@ erzeugt; jede Paket-README folgt der
 | [`auditcore_invoicesynth`](packages/auditcore_invoicesynth) | 0.2.0 | Synthetische Trainings- und Testdaten für eine Donut-basierte Erkennung deutscher und österreichischer Rechnungen: Rechnungsbilder, Ziel-JSON, Manifest mit Datensatz-Hash und Bewertung. | `auditcore_common==0.2.0`, `auditcore_invoicegenerator==0.2.3`; Extras: `render`, `train` | neu |
 | [`auditcore_kanban`](packages/auditcore_kanban) | 0.1.2 | Framework-freies Kanban-Domänenmodell mit Rang-Schlüsseln, Übergangsregeln, WIP-Limits, Rechten, Ereignisprotokoll und einem REST-Vertrag für die Anwendungen der FlowAudit-Familie. | keine; Extras: `ui`, `fastapi` | neu, gegen charakterisierte Verträge |
 | [`auditcore_market_indicators`](packages/auditcore_market_indicators) | 0.1.3 | Technische Marktindikatoren (Renditen, SMA/EMA, RSI, ATR, ADX, MACD, Volatilität, Z-Score, Breakout) auf einfachen Zahlenfolgen, mit ausdrücklich gewählten, quellengebundenen Profilen. | `auditcore_common==0.2.0`; Extras: `polars` | neu, gegen charakterisierte Verträge |
+| [`auditcore_pdf`](packages/auditcore_pdf) | 0.1.0 | Vollständige PDF-Verarbeitung, Seitenoperationen, visuelle Anzeige und nachprüfbare Schwärzung für Prüf- und Kontrollprozesse. | `auditcore_common==0.2.0`; Extras: `pymupdf`, `pillow` | neu |
 | [`auditcore_price_analysis`](packages/auditcore_price_analysis) | 0.1.3 | Exakte Jahreskostenberechnung für regulierte Tarife (Nahwärme, Wasser mit Staffeln), deterministische Tarifauswahl und Vergleichsregeln (Abweichung, Ampel, Gruppenstatistik) auf versionierten, quellengebundenen Profilen. | `auditcore_common==0.2.0` | spezifiziert |
 | [`auditcore_procurement`](packages/auditcore_procurement) | 0.2.4 | Vergabebekanntmachungen (TED, HAD) als kanonischer Datensatz mit verhaltensgleicher TED-Normalisierung und Dateiimport sowie deterministische, versionierte Vergabe-Vorprüfungen mit EU-Schwellenwerten je Geltungszeitraum. | `auditcore_common==0.2.0`; Extras: `html`, `sources` | spezifiziert |
 | [`auditcore_reporting`](packages/auditcore_reporting) | 0.3.0 | Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahlenformat) mit benannten Formatprofilen, optionalem, abgesichertem XLSX-Export und versionierten Berichtsvorlagen (DOCX, PDF, HTML). | `auditcore_common==0.2.0`; Extras: `excel`, `docx`, `pdf`, `web`, `fastapi` | spezifiziert |

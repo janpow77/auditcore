@@ -59,7 +59,23 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 python_version = "3.11"
 strict = true
 
+[[tool.mypy.overrides]]
+module = [
+    "fitz",
+    "fitz.*",
+    "pymupdf",
+    "pymupdf.*",
+]
+ignore_missing_imports = true
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["auditcore_pdf.*"]
+disallow_untyped_calls = false
+
+
 [tool.auditcore-bibquality]
 strict = false
 exclude = []
 regression-command = ["pytest", "tests/test_reporting.py", "tests/test_core.py", "-q"]
+

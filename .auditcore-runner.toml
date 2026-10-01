@@ -79,3 +79,27 @@ zeitlimit_s = 120
 [pruefprofile.account.werkzeug.codegate]
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_account", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
+
+# Vollständige PDF-Verarbeitung, Seitenoperationen und Schwärzung.
+[pruefprofile.pdf]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.pdf.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_pdf", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.pdf.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_pdf/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.pdf.werkzeug.mypy]
+befehl = ["python3", "-m", "mypy", "--strict", "packages/auditcore_pdf/src", "--no-color-output", "--no-error-summary"]
+zeitlimit_s = 120
+
+[pruefprofile.pdf.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_pdf", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300
+
