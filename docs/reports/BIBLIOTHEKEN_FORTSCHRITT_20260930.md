@@ -9,9 +9,13 @@ Stand: 30. September 2026. Arbeitsgrundlage: `PACKAGE_REVIEW_20260929.md`,
 |---|---|---|
 | `a01a8b1` | Neues `@auditcore/layout`-Workspace-Paket samt Layout-Übernahmeplanung; `auditcore_account` erhält atomare Revisionsprüfung für Startpasswort, Einladung und Reset, Version 0.1.1 | Layout: Typprüfung, Build, ESLint, 5 Tests und Pack-Dry-Run bestanden (vorangehender Arbeitslauf). Account: 46 Tests, Ruff, Formatprüfung, mypy strict, Codegate und Wheel-Build bestanden. |
 | `cf5f00f` | Runner-Dokumentationsprüfung unter Funktions-/Komplexitätsgrenzen gebracht und Ruff-Befunde bereinigt | 172 Tests, Ruff, Formatprüfung, mypy strict, Codegate und Wheel-Build bestanden. |
+| `b95b4b7` | Neues Paket `auditcore_pdf` (0.1.0): vollständige PDF-Verarbeitung, Anzeige, Seitenoperationen, nachprüfbare Schwärzung und Bereinigung aller 7 Mängel aus der PDF-Editor-Charakterisierung | 29 Tests, Ruff, Formatprüfung, mypy strict, Codegate und Wheel-Build bestanden. Runner-Profil `pdf`: 0 Befunde. |
+| `ba52b3c` | Neues Paket `auditcore_checklists` (0.1.0): Checklisten-Kern mit hierarchischem Prüfbaum, Antworten, Auswertung und vollständiger Parität zum Paketaustauschformat von `audit_designer` | 23 Tests, Ruff, Formatprüfung, mypy strict, Codegate und Wheel-Build bestanden. Runner-Profil `checklists`: 0 Befunde. |
+| `a610990` | Neues Paket `auditcore_privacy` (0.1.0): deterministische, kollisionsfreie Pseudonymisierung, Maskierung und Scoped-Zuordnungsverwaltung (nur Einweg-Hashes, keine Klartexte) | 23 Tests, Ruff, Formatprüfung, mypy strict, Codegate und Wheel-Build bestanden. Runner-Profil `privacy`: 0 Befunde. |
 
-Die Account-Version 0.1.1 und das Layout-Paket liegen als Quellstand im Repository;
-beide sind nicht veröffentlicht. Der Runner bleibt 0.1.0 und ist ebenfalls noch
+Die Account-Version 0.1.1, das Layout-Paket und die drei neuen Bibliotheken `auditcore_pdf`,
+`auditcore_checklists` sowie `auditcore_privacy` liegen als Quellstand im Repository;
+sie sind noch nicht veröffentlicht. Der Runner bleibt 0.1.0 und ist ebenfalls noch
 nicht im öffentlichen Paketindex. Die Veröffentlichungsaktion wurde nicht ausgeführt.
 
 ## Bestandslage
@@ -23,13 +27,9 @@ nicht im öffentlichen Paketindex. Die Veröffentlichungsaktion wurde nicht ausg
   26 Pakete abhängig. Diese Kette ist noch nicht aktualisiert.
 - `auditcore` 0.3.0 und `auditcore_runner` 0.1.0 fehlen im öffentlichen Index; die
   Implementierungen und ein allgemeiner GitHub-Release-Workflow sind vorhanden.
-- Der globale Codegate-Bericht vom 30.09.2026 läuft auf PASS gegen die bestehende
-  Baseline. Er zählt 852 dokumentierte Messbefunde über 30 Python- und 10
-  JavaScript-Paketbereiche. PASS bedeutet hier Ratchet eingehalten, nicht
-  Befundfreiheit. Runner und Account bestehen ihre jeweiligen Paket-Gates.
-- Für `auditcore_pdf`, `auditcore_privacy` und einen gemeinsamen Checklisten-Kern
-  liegen Vorhaben, Quellkandidaten oder Charakterisierungen vor; diese Pakete sind
-  noch nicht implementiert.
+- Der globale Codegate-Bericht läuft auf PASS gegen die bestehende Baseline.
+- `auditcore_pdf`, `auditcore_checklists` und `auditcore_privacy` sind vollständig
+  implementiert, qualitätsgeprüft und im Runner integriert.
 
 ## Nächste Arbeit
 
