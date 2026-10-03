@@ -287,9 +287,7 @@ def flowagent_job(
         "run_id": run_id,
         "target": {"spoke": topology.host, "capabilities": ["train:donut", "gpu"]},
         "fallback": None,
-        "fallback_note": (
-            "Rückfall auf die Arbeitsstation nur ausdrücklich (Profil donut_train_8gb)"
-        ),
+        "fallback_note": "Rückfall auf Arbeitsstation nur ausdrücklich (Profil donut_train_8gb)",
         "status": "READY" if topology.mode != "unavailable" else "WAITING_FOR_COMPUTE",
         "topology": {"mode": topology.mode, "gpus": list(topology.gpus), "reason": topology.reason},
         "image": image,
