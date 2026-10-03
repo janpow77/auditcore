@@ -68,9 +68,7 @@ def _audit_designer_content_checksum(
         "categories": categories,
         "versions": v_entries,
     }
-    blob = json.dumps(
-        canonical, sort_keys=True, ensure_ascii=False, default=str
-    ).encode("utf-8")
+    blob = json.dumps(canonical, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")
     return "sha256:" + hashlib.sha256(blob).hexdigest()
 
 

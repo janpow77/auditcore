@@ -256,6 +256,19 @@ def _job_runs(
     return runs
 
 
+def _base_model_block(
+    config: TrainConfig, base_model_dir: str, base_model_sha256: str | None
+) -> dict[str, object]:
+    """Basismodell-Angaben des FlowAgent-Jobs (offline, per Prüfsumme gebunden)."""
+    return {
+        "id": config.base_model,
+        "revision": config.base_model_revision,
+        "dir": base_model_dir,
+        "sha256": base_model_sha256,
+        "offline": True,
+    }
+
+
 def flowagent_job(
     config: TrainConfig,
     topology: Topology,
@@ -303,13 +316,7 @@ def flowagent_job(
             "uri": dataset_uri,
             "verify": "auditcore-invoicesynth verify",
         },
-        "base_model": {
-            "id": config.base_model,
-            "revision": config.base_model_revision,
-            "dir": base_model_dir,
-            "sha256": base_model_sha256,
-            "offline": True,
-        },
+        "base_model": _base_model_block(config, base_model_dir, base_model_sha256),
         "runs": runs,
         "exit_codes": EXIT_CODES,
         "checkpoint_mirror": mirror,

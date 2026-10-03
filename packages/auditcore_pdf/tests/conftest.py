@@ -13,16 +13,20 @@ def sample_pdf() -> bytes:
     for i in range(1, 4):
         page = doc.new_page(width=595, height=842)
         page.insert_text(fitz.Point(72, 100), f"Seite {i} Inhalt.\nDies ist ein Prüfbericht.")
-    doc.set_toc([
-        [1, "Abschnitt 1", 1],
-        [1, "Abschnitt 2", 2],
-        [1, "Abschnitt 3", 3],
-    ])
-    doc.set_metadata({
-        "title": "Prüfbericht 2026",
-        "author": "Prüfbehörde Hessen",
-        "subject": "Systemprüfung",
-    })
+    doc.set_toc(
+        [
+            [1, "Abschnitt 1", 1],
+            [1, "Abschnitt 2", 2],
+            [1, "Abschnitt 3", 3],
+        ]
+    )
+    doc.set_metadata(
+        {
+            "title": "Prüfbericht 2026",
+            "author": "Prüfbehörde Hessen",
+            "subject": "Systemprüfung",
+        }
+    )
     pdf_bytes = doc.tobytes()
     doc.close()
     return bytes(pdf_bytes)
@@ -51,10 +55,12 @@ def sensitive_pdf() -> bytes:
     annot.set_info(content="Kommentar mit STRENG_GEHEIM Notiz.", title="Prüfer")
 
     # Metadaten mit Geheimnis
-    doc.set_metadata({
-        "title": "Bericht mit STRENG_GEHEIM im Titel",
-        "author": "Max Mustermann",
-    })
+    doc.set_metadata(
+        {
+            "title": "Bericht mit STRENG_GEHEIM im Titel",
+            "author": "Max Mustermann",
+        }
+    )
 
     # Anhang mit Geheimnis
     doc.embfile_add(
