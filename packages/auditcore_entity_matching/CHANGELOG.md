@@ -2,6 +2,9 @@
 
 ## 0.2.5 – 2026-10-03
 
+- Unicode-Grenze von I2/I3 präzisiert und feste Regressionen für `ℬ`, `𝔅`
+  und `ᴮ` ergänzt: NFKD nach der Kleinschreibung kann Großbuchstaben
+  erzeugen (`ℬ → B → b`). Bestehende Profil-Ergebnisse bleiben erhalten.
 - Neue Profilversion `flowworkshop.state_aid` 2026.09.3 mit dem Verfahren
   `casefold_then_translate`: Kleinschreibung und NFC vor der Zeichentabelle,
   dadurch idempotent (`SOCIÉTÉ → societe`, vorher `société`). 2026.09.1 und
