@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Neues Paket `auditcore_compute` 0.1.0: deterministische Rechenkerne mit
+  optionaler Numba-Kompilierung (`@accelerate`, `to_buffer`, Rückfall auf
+  dieselbe Python-Funktion mit Meldung, `fastmath` verboten), Zinsen auf
+  Rückforderungen mit stückweisen Sätzen, Quoten in ganzen Cent,
+  Plausibilitätsprüfungen und kompensierte Statistik. Erste Bibliothek mit
+  einer Drittpaket-Laufzeitabhängigkeit (NumPy): `verify_domain_packages.py`
+  installiert deklarierte Drittpakete aus `packaging/library-runtime.json`
+  vor den hashgebundenen Wheels und im APT-Test aus einem abgeleiteten Image.
 - `auditcore_extrapolation` und UI: verbleibende Leitfaden-Verfahren – Ausschluss
   nach verhältnismäßiger Kontrolle (7.10), negative Stichprobeneinheiten (4.6),
   Discovery- und Stop-or-go-Stichprobe (7.9.6), Programme über mehrere

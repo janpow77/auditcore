@@ -106,6 +106,8 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     # Neuimplementierung nach KOM-Leitfaden EGESIF_16-0014-01 und CPRE_23-0013-01 Annex 3:
     # kein Quellrepository, keine Bindung.
     "auditcore_extrapolation": frozenset(),
+    # Neuimplementierung nach dem Lastenheft Rechenkern (2026-10-03): keine Bindung.
+    "auditcore_compute": frozenset(),
     # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
     "auditcore_invoicesynth": frozenset(),
     # Neuimplementierung; Ausgangspunkt ci/runner im selben Repository.
