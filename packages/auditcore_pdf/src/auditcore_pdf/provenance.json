@@ -5,8 +5,14 @@
   "contract": "auditcore_pdf/1",
   "classification": "NEW_IMPLEMENTATION",
   "sources": [
-    "audit_designer/pdf-editor-app",
-    "janpow77/pdf-editor@ce34413129751dfd72fac6cefa55b02718bff27b"
+    {
+      "repository": "janpow77/audit_designer",
+      "path": "pdf-editor-app"
+    },
+    {
+      "repository": "janpow77/pdf-editor",
+      "commit": "ce34413129751dfd72fac6cefa55b02718bff27b"
+    }
   ],
   "references": [
     "docs/reports/pdf-editor-characterization-20260929.json",
@@ -19,5 +25,15 @@
     "tests": "packages/auditcore_pdf/tests"
   },
   "license": "MIT",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung anderer Repositories. PyMuPDF (AGPL-3.0 oder kommerziell) wird nicht mitgeliefert, sondern nur als optionales Extra [pymupdf] installiert; das Paket selbst bleibt MIT."
+    }
+  },
   "publication": "NOT_EXECUTED"
 }

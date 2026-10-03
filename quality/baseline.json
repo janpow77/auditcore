@@ -44,6 +44,9 @@
       },
       "coverage_percent": 98.14
     },
+    "auditcore_checklists": {
+      "coverage_percent": 100.0
+    },
     "auditcore_common": {
       "metrics": {
         "any_usages": 0,
@@ -186,7 +189,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 89.68
+      "coverage_percent": 89.7
     },
     "auditcore_kanban": {
       "metrics": {
@@ -236,6 +239,9 @@
       },
       "coverage_percent": 99.02
     },
+    "auditcore_pdf": {
+      "coverage_percent": 100.0
+    },
     "auditcore_price_analysis": {
       "metrics": {
         "any_usages": 42,
@@ -259,6 +265,9 @@
         "non_english_identifiers": 1
       },
       "coverage_percent": 93.31
+    },
+    "auditcore_privacy": {
+      "coverage_percent": 100.0
     },
     "auditcore_procurement": {
       "metrics": {
@@ -321,7 +330,7 @@
       "coverage_percent": 97.99
     },
     "auditcore_runner": {
-      "coverage_percent": 85.01
+      "coverage_percent": 85.61
     },
     "auditcore_sampling": {
       "metrics": {

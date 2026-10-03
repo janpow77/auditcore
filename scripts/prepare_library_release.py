@@ -112,6 +112,13 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     "auditcore_runner": frozenset(
         {("janpow77/auditcore", "7b71f1c13cda06bd375e50ad8f909618ec09986c")}
     ),
+    # Neuimplementierungen (2026-09-30); Quellen eigener Repositories nur als Pfade erfasst.
+    "auditcore_checklists": frozenset(),
+    "auditcore_privacy": frozenset(),
+    # Ausgangspunkt pdf-editor; PyMuPDF bleibt optionales Extra.
+    "auditcore_pdf": frozenset(
+        {("janpow77/pdf-editor", "ce34413129751dfd72fac6cefa55b02718bff27b")}
+    ),
     "auditcore_kanban": frozenset(
         {
             ("janpow77/audit_designer", "2c726f3c1481775cd34aeaa83f87137d6ab12ffe"),

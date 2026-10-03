@@ -285,6 +285,8 @@ pygments==2.21.0
     #   rich
 pyjwt==2.15.0
     # via -r requirements/ci.in
+pymupdf==1.28.2
+    # via -r requirements/ci.in
 pyparsing==3.3.3
     # via pip-requirements-parser
 pypdf==6.19.0

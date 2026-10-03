@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Prüfung des Dokumentations-Reifegrads und der Qualitätskriterien (README, ARCHITEKTUR, CLAUDE/AGENTS).
+"""Prüfung des Dokumentations-Reifegrads und der Qualitätskriterien.
+
+Geprüft werden README, ARCHITEKTUR sowie CLAUDE/AGENTS.
 
 Bewertet ein Repository nach dem 5-Stufen-Reifegradmodell:
   Level 1 (Initial / Ad-hoc)           : < 40 %
@@ -26,13 +28,23 @@ from pathlib import Path
 _CMD_PAT = re.compile(
     r"\b(npm (run|ci|install)|pnpm|yarn|pytest|uv (run|pip|tool|sync)|pip install|"
     r"docker compose|docker build|make\s+\w|cargo (build|run|test|clippy)|uvicorn|"
-    r"python\s+-m|python\s+\S+\.py|vite|go (build|test|run)|alembic|ruff|eslint|vitest|auditcore-runner)\b",
+    r"python\s+-m|python\s+\S+\.py|vite|go (build|test|run)|alembic|ruff|eslint|vitest|"
+    r"auditcore-runner)\b",
     re.I,
 )
-_CMD_HEAD = re.compile(r"^#+.*(command|setup|befehl|install|build|run|test|usage|entwickl)", re.I | re.M)
-_ARCH_HEAD = re.compile(r"^#+.*(struktur|architekt|architecture|module|aufbau|komponenten|verzeichnis)", re.I | re.M)
-_STACK_HEAD = re.compile(r"^#+.*(stack|tech|technolog|voraussetzung|umgebung|anforderung|runtime|sprache|framework)", re.I | re.M)
-_POINTER = re.compile(r"(ARCHITEKTUR\.md|ARCHITECTURE\.md|@[\w./~-]+\.(md|json|toml)|\]\([^)]+\.md\)|docs/)", re.I)
+_CMD_HEAD = re.compile(
+    r"^#+.*(command|setup|befehl|install|build|run|test|usage|entwickl)", re.I | re.M
+)
+_ARCH_HEAD = re.compile(
+    r"^#+.*(struktur|architekt|architecture|module|aufbau|komponenten|verzeichnis)", re.I | re.M
+)
+_STACK_HEAD = re.compile(
+    r"^#+.*(stack|tech|technolog|voraussetzung|umgebung|anforderung|runtime|sprache|framework)",
+    re.I | re.M,
+)
+_POINTER = re.compile(
+    r"(ARCHITEKTUR\.md|ARCHITECTURE\.md|@[\w./~-]+\.(md|json|toml)|\]\([^)]+\.md\)|docs/)", re.I
+)
 
 
 def eval_claude(p: Path) -> dict:
@@ -43,7 +55,13 @@ def eval_claude(p: Path) -> dict:
             target = cand
             break
     if not target:
-        return {"exists": False, "file": None, "score": 0, "lines": 0, "flags": ["Datei fehlt (CLAUDE.md oder AGENTS.md)"]}
+        return {
+            "exists": False,
+            "file": None,
+            "score": 0,
+            "lines": 0,
+            "flags": ["Datei fehlt (CLAUDE.md oder AGENTS.md)"],
+        }
 
     raw_text = target.read_text(encoding="utf-8", errors="replace")
     text = raw_text
@@ -81,7 +99,9 @@ def eval_claude(p: Path) -> dict:
         flags.append("Keine Architektur-Sektion gefunden (-20)")
 
     # 4. Tech-Stack (15 P.)
-    if _STACK_HEAD.search(text) or re.search(r"\b(Python|Rust|TypeScript|FastAPI|Vue|React|Node|Go|C\+\+)\b", text):
+    if _STACK_HEAD.search(text) or re.search(
+        r"\b(Python|Rust|TypeScript|FastAPI|Vue|React|Node|Go|C\+\+)\b", text
+    ):
         score += 15
     else:
         flags.append("Kein Tech-Stack / keine Runtimes genannt (-15)")
@@ -109,7 +129,13 @@ def eval_arch(p: Path) -> dict:
             target = cand
             break
     if not target:
-        return {"exists": False, "file": None, "score": 0, "words": 0, "flags": ["Datei fehlt (ARCHITEKTUR.md oder ARCHITECTURE.md)"]}
+        return {
+            "exists": False,
+            "file": None,
+            "score": 0,
+            "words": 0,
+            "flags": ["Datei fehlt (ARCHITEKTUR.md oder ARCHITECTURE.md)"],
+        }
 
     text = target.read_text(encoding="utf-8", errors="replace")
     words = len(text.split())
@@ -117,25 +143,41 @@ def eval_arch(p: Path) -> dict:
     flags = []
 
     # 1. Systemübersicht / Diagramm / Topologie (25 P.)
-    if re.search(r"(```|┌|\|.*---|Topologie|Übersicht|Overview|Diagram|flowchart|graph\s+(TD|LR))", text, re.I):
+    if re.search(
+        r"(```|┌|\|.*---|Topologie|Übersicht|Overview|Diagram|flowchart|graph\s+(TD|LR))",
+        text,
+        re.I,
+    ):
         score += 25
     else:
         flags.append("Keine Systemübersicht oder Topologie/Diagramm (-25)")
 
     # 2. Modulkarte / Verzeichnisse (25 P.)
-    if re.search(r"(Modul|Verzeichnis|Paket|Component|Knoten|Community|Module|Package|Directory|Pipeline)", text, re.I):
+    if re.search(
+        r"(Modul|Verzeichnis|Paket|Component|Knoten|Community|Module|Package|Directory|Pipeline)",
+        text,
+        re.I,
+    ):
         score += 25
     else:
         flags.append("Keine Modulkarte / Verzeichnisübersicht (-25)")
 
     # 3. Zentrale Bausteine / Hotspots (25 P.)
-    if re.search(r"(Zentral|Hotspot|God\s*_?Node|Schnittstelle|Betweenness|Interface|Store|Router|Kernkomponente|Baustein|Entry\s*point)", text, re.I):
+    if re.search(
+        r"(Zentral|Hotspot|God\s*_?Node|Schnittstelle|Betweenness|Interface|Store|Router|Kernkomponente|Baustein|Entry\s*point)",
+        text,
+        re.I,
+    ):
         score += 25
     else:
         flags.append("Keine zentralen Bausteine oder Hotspots beschrieben (-25)")
 
     # 4. Datenfluss & Leitplanken (25 P.)
-    if re.search(r"(Datenfluss|Fluss|Regel|Leitfaden|Änderung|Zyklen|Clean|Prinzip|Workflow|Data\s*flow|Pipeline|Calling|Constraint)", text, re.I):
+    if re.search(
+        r"(Datenfluss|Fluss|Regel|Leitfaden|Änderung|Zyklen|Clean|Prinzip|Workflow|Data\s*flow|Pipeline|Calling|Constraint)",
+        text,
+        re.I,
+    ):
         score += 25
     else:
         flags.append("Kein Datenfluss oder Architektur-Leitplanken (-25)")
@@ -152,7 +194,13 @@ def eval_arch(p: Path) -> dict:
 def eval_readme(p: Path) -> dict:
     target = p / "README.md"
     if not target.is_file():
-        return {"exists": False, "file": None, "score": 0, "words": 0, "flags": ["Datei fehlt (README.md)"]}
+        return {
+            "exists": False,
+            "file": None,
+            "score": 0,
+            "words": 0,
+            "flags": ["Datei fehlt (README.md)"],
+        }
 
     text = target.read_text(encoding="utf-8", errors="replace")
     words = len(text.split())
@@ -166,7 +214,9 @@ def eval_readme(p: Path) -> dict:
         flags.append("Zweck unvollständig oder zu kurz (< 30 Wörter, -20)")
 
     # 2. Schnellstart / Installation (20 P.)
-    if re.search(r"(Installation|Schnellstart|Quickstart|Setup|Get Started|Installieren)", text, re.I) or _CMD_PAT.search(text):
+    if re.search(
+        r"(Installation|Schnellstart|Quickstart|Setup|Get Started|Installieren)", text, re.I
+    ) or _CMD_PAT.search(text):
         score += 20
     else:
         flags.append("Kein Schnellstart oder Setup-Befehl (-20)")
@@ -178,13 +228,21 @@ def eval_readme(p: Path) -> dict:
         flags.append("Keine Funktions- oder Architekturübersicht (-20)")
 
     # 4. Tech-Stack / Voraussetzungen (20 P.)
-    if re.search(r"(Tech-Stack|Stack|Technologie|Voraussetzung|Anforderung|Prerequisite|Runtime|Python|Rust|Node)", text, re.I):
+    if re.search(
+        r"(Tech-Stack|Stack|Technologie|Voraussetzung|Anforderung|Prerequisite|Runtime|Python|Rust|Node)",
+        text,
+        re.I,
+    ):
         score += 20
     else:
         flags.append("Kein Tech-Stack oder Voraussetzungen (-20)")
 
     # 5. Doku-Links (20 P.)
-    if re.search(r"(ARCHITEKTUR\.md|ARCHITECTURE\.md|CLAUDE\.md|AGENTS\.md|docs/|\[.+\]\(.+\.md\))", text, re.I):
+    if re.search(
+        r"(ARCHITEKTUR\.md|ARCHITECTURE\.md|CLAUDE\.md|AGENTS\.md|docs/|\[.+\]\(.+\.md\))",
+        text,
+        re.I,
+    ):
         score += 20
     else:
         flags.append("Keine Verlinkung auf ARCHITEKTUR.md oder Detaildoku (-20)")
@@ -228,10 +286,14 @@ def check_repository(repo_path: Path) -> dict:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Prüfung des Dokumentations-Reifegrads eines Repositories.")
+    parser = argparse.ArgumentParser(
+        description="Prüfung des Dokumentations-Reifegrads eines Repositories."
+    )
     parser.add_argument("path", nargs="?", default=".", help="Pfad zum Repository (Standard: .)")
     parser.add_argument("--json", action="store_true", help="Ergebnis als JSON ausgeben")
-    parser.add_argument("--min-level", type=int, default=4, help="Mindest-Reifegrad (1-5, Standard: 4)")
+    parser.add_argument(
+        "--min-level", type=int, default=4, help="Mindest-Reifegrad (1-5, Standard: 4)"
+    )
     args = parser.parse_args(argv)
 
     repo_path = Path(args.path).resolve()
@@ -246,19 +308,29 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print(f"=== Dokumentations-Reifegrad: {res['repository']} ===")
         print(f"Gesamt-Score: {res['total_score']}%  ->  {res['maturity_label']}\n")
-        print(f"  • {res['readme']['file'] or 'README.md':<18}: {res['readme']['score']}/100 P. ({res['readme']['words']} Wörter)")
-        for flag in res['readme']['flags']:
+        part = res["readme"]
+        name = part["file"] or "README.md"
+        print(f"  • {name:<18}: {part['score']}/100 P. ({part['words']} Wörter)")
+        for flag in res["readme"]["flags"]:
             print(f"      - {flag}")
-        print(f"  • {res['arch']['file'] or 'ARCHITEKTUR.md':<18}: {res['arch']['score']}/100 P. ({res['arch']['words']} Wörter)")
-        for flag in res['arch']['flags']:
+        part = res["arch"]
+        name = part["file"] or "ARCHITEKTUR.md"
+        print(f"  • {name:<18}: {part['score']}/100 P. ({part['words']} Wörter)")
+        for flag in res["arch"]["flags"]:
             print(f"      - {flag}")
-        print(f"  • {res['claude']['file'] or 'CLAUDE.md':<18}: {res['claude']['score']}/100 P. ({res['claude']['lines']} Zeilen)")
-        for flag in res['claude']['flags']:
+        part = res["claude"]
+        name = part["file"] or "CLAUDE.md"
+        print(f"  • {name:<18}: {part['score']}/100 P. ({part['lines']} Zeilen)")
+        for flag in res["claude"]["flags"]:
             print(f"      - {flag}")
 
     if res["maturity_level"] < args.min_level:
         if not args.json:
-            print(f"\nFEHLER: Reifegrad {res['maturity_level']} liegt unter dem geforderten Mindestlevel {args.min_level}.", file=sys.stderr)
+            print(
+                f"\nFEHLER: Reifegrad {res['maturity_level']} liegt unter dem "
+                f"geforderten Mindestlevel {args.min_level}.",
+                file=sys.stderr,
+            )
         return 1
 
     return 0
