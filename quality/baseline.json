@@ -44,6 +44,9 @@
       },
       "coverage_percent": 98.14
     },
+    "auditcore_checklists": {
+      "coverage_percent": 100.0
+    },
     "auditcore_common": {
       "metrics": {
         "any_usages": 0,
@@ -236,6 +239,9 @@
       },
       "coverage_percent": 99.02
     },
+    "auditcore_pdf": {
+      "coverage_percent": 100.0
+    },
     "auditcore_price_analysis": {
       "metrics": {
         "any_usages": 42,
@@ -259,6 +265,9 @@
         "non_english_identifiers": 1
       },
       "coverage_percent": 93.31
+    },
+    "auditcore_privacy": {
+      "coverage_percent": 100.0
     },
     "auditcore_procurement": {
       "metrics": {

@@ -313,9 +313,8 @@ class ChecklistTree:
     def _reindex_parent_children(
         self, nodes_dict: dict[str, ChecklistNode], parent_id: str
     ) -> None:
-        parent = nodes_dict.get(parent_id)
-        if not parent:
-            return
+        # delete_node und move_node stellen sicher, dass der Elternknoten existiert.
+        parent = nodes_dict[parent_id]
         if parent.node_type == NodeType.DECISION:
             counters: dict[str | None, int] = {}
             for cid in parent.children:

@@ -74,3 +74,34 @@ def test_redact_standard_patterns(sensitive_pdf: bytes) -> None:
     assert "pruefer@flowaudit.de" not in p1_text
     assert "DE02120300000123456789" not in p1_text
     assert "Kontakt:" in p1_text
+
+
+def test_redact_whole_word_reports_failed_verification(sensitive_pdf: bytes) -> None:
+    """Ganzwortsuche lässt Wortbestandteile stehen; die Nachprüfung meldet das Restrisiko."""
+    redacted_pdf, report = redact_document(sensitive_pdf, terms=["wort"], whole_word=True)
+    # "WORT_GROSS", "wort_klein" und "Kennwort" sind keine eigenständigen Wörter "wort"
+    assert report.findings_count == 0
+    assert report.pages_redacted == []
+    assert report.verified is False
+    assert report.verification_error is not None
+    assert "Fundstelle für verbotenen Begriff 'wort'" in report.verification_error
+    assert "Kennwort" in extract_page_text(redacted_pdf, 1)
+
+
+def test_redact_whole_word_matches_standalone_word(sensitive_pdf: bytes) -> None:
+    redacted_pdf, report = redact_document(
+        sensitive_pdf, terms=["Kennwort"], whole_word=True, verify=False
+    )
+    assert report.findings_count == 1
+    assert report.findings[0].source == "text"
+    assert "Kennwort" not in extract_page_text(redacted_pdf, 1)
+
+
+def test_redact_ignores_empty_terms_and_whitespace_only_matches(sensitive_pdf: bytes) -> None:
+    """Leere Begriffe und Treffer nur im Wortzwischenraum führen zu keiner Schwärzung."""
+    redacted_pdf, report = redact_document(
+        sensitive_pdf, terms=[""], patterns=[r"\s+"], verify=False
+    )
+    assert report.findings_count == 0
+    assert report.findings == []
+    assert "STRENG_GEHEIM" in extract_page_text(redacted_pdf, 1)

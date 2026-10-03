@@ -344,11 +344,9 @@ def import_package(
         current_version=str(proj_raw.get("current_version", "1.0")),
     )
 
+    # validate_package hat eine nichtleere Versionsliste bereits erzwungen.
     versions = normalized.get("versions")
-    if not isinstance(versions, Sequence) or not versions:
-        raise PackageFormatError("Keine Versionen im Paket vorhanden.")
-
-    latest_version = versions[-1]
+    latest_version = versions[-1] if isinstance(versions, Sequence) and versions else {}
     tree_raw = latest_version.get("tree_data") if isinstance(latest_version, Mapping) else {}
     tree = ChecklistTree.from_dict(tree_raw if isinstance(tree_raw, Mapping) else {})
 
