@@ -23,3 +23,18 @@ als Ergänzung zu `auditcore_sampling` und `auditcore_extrapolation`.
   (Grundgesamtheit, Häufigkeits- und Zuverlässigkeitsgewichte) und
   Standardabweichung.
 - `tools/benchmark.py` für 500.000 synthetische Buchungszeilen.
+
+Nachtrag vor der Veröffentlichung (vektorisierte Umwandlung, Ergebnisse unverändert):
+
+- `to_cents_buffer` rechnet float- und Ganzzahl-Arrays bzw. -Serien
+  vektorisiert und bitgleich zu `to_cents` je Wert (Hypothesis-Abgleich über
+  ganze Wertebereiche, Grenzfälle 2,675, 1,005, 0,125, negative Beträge, bis
+  10 Mrd. €). Nur Werte nahe einem halben Cent und Beträge ab 10¹¹ € gehen über
+  `Decimal(str(x))`; Fehler (fehlender Wert, nicht endlich, Überlauf) wie bisher.
+  500.000 Werte: 14 ms statt 525 ms.
+- `factorize` faktorisiert bool-, Ganzzahl- und float-Arrays bzw. -Serien
+  vektorisiert (gleiche Codes und Schlüssel in Erstauftritts-Reihenfolge);
+  Texte bleiben im Elementpfad.
+- `validation.first_occurrence_codes(codes, count)` nummeriert Gruppencodes
+  nach ihrem ersten Auftreten um (für Verbraucher, die fehlende Schlüssel als
+  eigene Gruppe führen).

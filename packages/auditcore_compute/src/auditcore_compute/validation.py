@@ -15,6 +15,7 @@ from ._duplicates import (
     Reconciliation,
     double_funding,
     factorize,
+    first_occurrence_codes,
     reconcile,
 )
 from ._outliers import (
@@ -37,6 +38,7 @@ __all__ = [
     "double_funding",
     "exceeds_threshold",
     "factorize",
+    "first_occurrence_codes",
     "iqr_outliers",
     "mad_outliers",
     "reconcile",

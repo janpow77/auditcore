@@ -36,6 +36,30 @@ sonst ab.
 | d) Kernel als reines Python (Rückfall) | 962.6 | 178.0 | 0.1 | 0.01 |
 | Erstaufruf JIT aus dem Cache | 175 (beide zusammen) | – | – | – |
 
+## Umwandlung in Cent und Faktorisierung (500.000 Werte)
+
+Gleicher Lauf, Seed 20261003: Beträge mit zwei Nachkommastellen, davon 1 %
+mit einem zusätzlichen halben Cent (diese gehen über `Decimal`); Schlüssel als
+ganze Zahlen mit etwa 250.000 verschiedenen Werten. Das Skript prüft vorher,
+dass beide Wege dasselbe Ergebnis liefern. Die Umwandlung braucht kein Numba;
+die Zeiten mit `NUMBA_NUM_THREADS=1` sind gleich.
+
+| Umwandlung | Zeit [ms] |
+|---|---:|
+| `to_cents` je Wert (`Decimal`) | 525.5 |
+| `to_cents_buffer` vektorisiert (float64-Array) | 13.9 |
+| `factorize` über eine Liste (Elementpfad) | 134.0 |
+| `factorize` vektorisiert (int64-Array) | 97.2 |
+
+- `to_cents_buffer` ist für float64-Arrays und -Serien etwa 38-mal schneller
+  als die Umwandlung je Wert und bitgleich zu `to_cents`: Kandidat ist
+  `rint(x·100)`; Werte, deren Hundertfaches näher als eine großzügige
+  Fehlerschranke (6400·ulp(x) + 4·ulp(x·100)) an einem halben Cent liegt, und
+  Beträge ab 10¹¹ € rechnet die Funktion über `Decimal(str(x))` nach.
+- `factorize` gewinnt vektorisiert nur das 1,4-Fache, weil `np.unique`
+  sortiert. Texte bleiben deshalb im Elementpfad (ein Sortieren von
+  Zeichenketten war in der Messung langsamer als das Hashen).
+
 ## Bewertung
 
 - Die Anforderung „Faktor ≥ 15 gegenüber reinem CPython“ ist auf diesem

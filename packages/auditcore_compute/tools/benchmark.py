@@ -20,12 +20,12 @@ from dataclasses import dataclass
 import numpy as np
 import numpy.typing as npt
 
-from auditcore_compute import engine_info, use_python
+from auditcore_compute import engine_info, to_cents, to_cents_buffer, use_python
 from auditcore_compute._duplicates import reconcile_kernel
 from auditcore_compute._outliers import threshold_kernel
 from auditcore_compute._quotas import quota_kernel, share_kernel
 from auditcore_compute.finance import check_quota, share_cents
-from auditcore_compute.validation import exceeds_threshold, reconcile
+from auditcore_compute.validation import exceeds_threshold, factorize, reconcile
 
 Ints = npt.NDArray[np.int64]
 RATES = ((2, 5), (1, 2), (3, 5), (3, 4), (17, 20))  # 40 %, 50 %, 60 %, 75 %, 85 %
@@ -225,6 +225,29 @@ def report(results: dict[str, tuple[float, float]], rows: int) -> str:
     return "\n".join(lines)
 
 
+def measure_conversion(count: int, seed: int, repeat: int) -> str:
+    """Cent conversion and key factorisation: element-wise reference vs vectorised path."""
+    generator = np.random.default_rng(seed)
+    amounts = generator.integers(1, 50_000_000, size=count) / 100.0  # two decimals
+    amounts[generator.random(count) < 0.01] += 0.005  # 1 % half cents (Decimal fallback)
+    keys = generator.integers(0, count // 2, size=count)  # e.g. numeric receipt IDs
+    values, labels = amounts.tolist(), keys.tolist()
+    if to_cents_buffer(amounts).tolist() != [to_cents(v) for v in values]:
+        raise SystemExit("to_cents_buffer weicht von to_cents ab")
+    vectorised, element = factorize(keys), factorize(labels)
+    if vectorised[0].tolist() != element[0].tolist() or vectorised[1] != element[1]:
+        raise SystemExit("factorize weicht vom Elementpfad ab")
+    rows = [
+        ("to_cents je Wert (Decimal)", best_of(lambda: [to_cents(v) for v in values], 1)),
+        ("to_cents_buffer vektorisiert", best_of(lambda: to_cents_buffer(amounts), repeat)),
+        ("factorize Liste (Elementpfad)", best_of(lambda: factorize(labels), repeat)),
+        ("factorize vektorisiert (int64-Array)", best_of(lambda: factorize(keys), repeat)),
+    ]
+    lines = ["| Umwandlung | Zeit [ms] |", "|---|---:|"]
+    lines += [f"| {name} | {seconds * 1000:.1f} |" for name, seconds in rows]
+    return "\n".join(lines)
+
+
 def environment() -> str:
     """Interpreter, library versions and engine path of the run."""
     info = engine_info(share_kernel)
@@ -247,6 +270,8 @@ def main() -> None:
     results = measure(rows, args.repeat)
     print(environment())
     print(report(results, args.rows))
+    print()
+    print(measure_conversion(args.rows, args.seed, args.repeat))
 
 
 if __name__ == "__main__":

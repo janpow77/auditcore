@@ -70,7 +70,9 @@ Rechnern, Thread-Zahlen und zwischen kompiliertem und Python-Pfad.
    intern `_compensated_sum`).
 4. **Geld nur in ganzen Cent (`int64`).** Beträge kommen über `to_cents` bzw.
    `to_cents_buffer` (aus `Decimal`, `str`, `int` als Euro, `float` über
-   `Decimal(str(x))`, Rundung `ROUND_HALF_UP`). Quoten sind exakte Brüche
+   `Decimal(str(x))`, Rundung `ROUND_HALF_UP`; float64-Arrays und -Serien
+   wandelt `to_cents_buffer` vektorisiert und bitgleich dazu um, nur Werte nahe
+   einem halben Cent über `Decimal`). Quoten sind exakte Brüche
    (`finance.rate`), Zinssätze ganze Basispunkte. Kein `float64` für Geld.
 5. **Wertebereiche prüfen, bevor der Kernel läuft.** `int64` läuft in Numba
    still über. Die öffentliche Funktion begrenzt deshalb die Eingaben

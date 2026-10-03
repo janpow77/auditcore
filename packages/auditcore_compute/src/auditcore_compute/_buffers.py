@@ -24,6 +24,10 @@ S = TypeVar("S", np.int64, np.float64, np.bool_)
 Nulls = Literal["raise", "mask"]
 _EPOCH_ORDINAL = dt.date(1970, 1, 1).toordinal()
 _CENT = Decimal("0.01")
+#: Above this magnitude (euros) the float fast path defers to ``Decimal`` (x·100 < 2**53).
+_FAST_FLOAT_LIMIT = 1e11
+#: Largest whole-euro integer whose cent value fits into int64.
+_INT_EURO_LIMIT = (2**63 - 1) // 100
 
 
 @dataclass(frozen=True)
@@ -191,8 +195,77 @@ def to_cents(value: Decimal | str | int | float) -> int:
     return int(number.quantize(_CENT, rounding=ROUND_HALF_UP).scaleb(2))
 
 
+def numeric_array(values: object, kinds: str) -> npt.NDArray[np.generic] | None:
+    """1-D ndarray (or a series' ``to_numpy()``) whose dtype kind is in ``kinds``, else None.
+
+    Only fixed-width types of at most eight bytes qualify, so that ``tolist()``
+    yields exactly the Python ``int``/``float``/``bool``/``str`` values the
+    element-wise paths would see.
+    """
+    if isinstance(values, np.ndarray):
+        raw = values
+    elif _is_series(values):
+        raw = np.asarray(values.to_numpy())  # type: ignore[attr-defined]
+    else:
+        return None
+    fits = raw.dtype.kind == "U" or raw.dtype.itemsize <= 8
+    if raw.ndim != 1 or raw.dtype.kind not in kinds or not fits:
+        return None
+    return raw
+
+
+def _unsure_cents(array: npt.NDArray[np.float64]) -> npt.NDArray[np.bool_]:
+    """Values whose cent rounding the float candidate cannot decide safely.
+
+    ``to_cents`` rounds the shortest decimal representation ``d`` of ``x``
+    (``|x − d| ≤ ulp(x)/2``); ``x·100`` adds a rounding of ``ulp(x·100)/2``.
+    Outside a band far wider than both errors around the half cent, rounding
+    ``x·100`` to the nearest integer equals ``ROUND_HALF_UP`` of ``d·100``.
+    """
+    magnitude = np.abs(array * 100.0)
+    fraction = magnitude - np.floor(magnitude)
+    margin = 6400.0 * np.spacing(np.abs(array)) + 4.0 * np.spacing(magnitude)
+    unsure: npt.NDArray[np.bool_] = (np.abs(fraction - 0.5) <= margin) | (
+        np.abs(array) >= _FAST_FLOAT_LIMIT
+    )
+    return unsure
+
+
+def _float_cents(array: npt.NDArray[np.float64]) -> npt.NDArray[np.int64]:
+    finite = np.isfinite(array)
+    if not bool(finite.all()):
+        index = int(np.flatnonzero(~finite)[0])
+        if math.isnan(float(array[index])):
+            raise ValueError(f"Fehlender Betrag an Position {index}.")
+        to_cents(float(array[index]))  # raises the error of the scalar path
+    unsure = _unsure_cents(array)
+    cents = np.rint(np.where(unsure, 0.0, array * 100.0)).astype(np.int64)
+    if bool(unsure.any()):
+        exact = [to_cents(v) for v in array[unsure].tolist()]
+        cents[unsure] = np.array(exact, dtype=np.int64)
+    return cents
+
+
+def _array_cents(raw: npt.NDArray[np.generic]) -> npt.NDArray[np.int64] | None:
+    if raw.dtype.kind == "f":
+        return _float_cents(raw.astype(np.float64))
+    if raw.size and (int(raw.min()) < -_INT_EURO_LIMIT or int(raw.max()) > _INT_EURO_LIMIT):
+        return None  # element-wise path raises OverflowError like before
+    return np.ascontiguousarray(raw.astype(np.int64) * 100)
+
+
 def to_cents_buffer(values: object) -> npt.NDArray[np.int64]:
-    """Euro amounts (sequence or series) as an int64 cent buffer; missing values raise."""
+    """Euro amounts (sequence or series) as an int64 cent buffer; missing values raise.
+
+    Float and integer arrays/series take a vectorised path that is bit-identical
+    to ``to_cents`` per element: only values near a half cent (or above
+    10¹¹ €) go through ``Decimal(str(x))``.
+    """
+    raw = numeric_array(values, "fiu")
+    if raw is not None:
+        fast = _array_cents(raw)
+        if fast is not None:
+            return fast
     items = series_items(values)
     if not isinstance(items, Iterable) or isinstance(items, (str, bytes)):
         raise TypeError("Erwartet wird eine Folge von Beträgen.")

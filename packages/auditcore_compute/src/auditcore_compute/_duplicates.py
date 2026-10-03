@@ -9,7 +9,7 @@ from typing import Literal
 import numpy as np
 import numpy.typing as npt
 
-from ._buffers import MaskedBuffer, cents_input, series_items, to_buffer
+from ._buffers import MaskedBuffer, cents_input, numeric_array, series_items, to_buffer
 from ._engine import accelerate, prange
 
 #: Status codes of ``reconcile``.
@@ -90,12 +90,46 @@ def reconcile(
     return Reconciliation(difference, status)
 
 
+def first_occurrence_codes(codes: npt.NDArray[np.int64], count: int) -> npt.NDArray[np.int64]:
+    """Relabel codes ``0 … count−1`` so that they number groups by first occurrence."""
+    first = np.full(count, codes.shape[0], dtype=np.int64)
+    np.minimum.at(first, codes, np.arange(codes.shape[0], dtype=np.int64))
+    rank = np.empty(count, dtype=np.int64)
+    rank[np.argsort(first, kind="stable")] = np.arange(count, dtype=np.int64)
+    relabelled: npt.NDArray[np.int64] = rank[codes]
+    return relabelled
+
+
+def _factorize_array(
+    array: npt.NDArray[np.generic],
+) -> tuple[npt.NDArray[np.int64], tuple[Hashable, ...]]:
+    """Vectorised ``factorize`` of a bool, integer or float array (same codes and keys).
+
+    Text keys stay in the dict loop: sorting strings is slower than hashing them.
+    """
+    if array.dtype.kind == "f":
+        nan = np.isnan(array)
+        if bool(nan.any()):
+            raise ValueError(f"Fehlender Schlüssel an Position {int(np.flatnonzero(nan)[0])}.")
+    # Stable sort: ``first`` holds the first position of every distinct value.
+    _, first, inverse = np.unique(array, return_index=True, return_inverse=True)
+    order = np.argsort(first, kind="stable")
+    rank = np.empty(order.shape[0], dtype=np.int64)
+    rank[order] = np.arange(order.shape[0], dtype=np.int64)
+    codes = np.ascontiguousarray(rank[inverse.reshape(-1)])
+    keys: list[Hashable] = array[first[order]].tolist()
+    return codes, tuple(keys)
+
+
 def factorize(values: object) -> tuple[npt.NDArray[np.int64], tuple[Hashable, ...]]:
     """Integer codes in order of first occurrence and the distinct values.
 
     Accepts lists, ndarrays and pandas/polars series of hashable keys
     (receipt numbers, project IDs). Missing keys raise ``ValueError``.
     """
+    array = numeric_array(values, "biuf")
+    if array is not None:
+        return _factorize_array(array)
     raw = series_items(values)
     if not isinstance(raw, Iterable) or isinstance(raw, (str, bytes)):
         raise TypeError("Erwartet wird eine Folge von Schlüsseln.")

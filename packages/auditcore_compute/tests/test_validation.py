@@ -19,10 +19,14 @@ from auditcore_compute.validation import (
     double_funding,
     exceeds_threshold,
     factorize,
+    first_occurrence_codes,
     iqr_outliers,
     mad_outliers,
     reconcile,
 )
+
+pd = pytest.importorskip("pandas")
+pl = pytest.importorskip("polars")
 
 cents = st.integers(min_value=-(10**12), max_value=10**12)
 maybe_cents = st.none() | cents
@@ -167,3 +171,47 @@ def test_factorize() -> None:
         factorize([math.nan])
     with pytest.raises(TypeError):
         factorize("abc")
+
+
+def _reference_factorize(items: list[object]) -> tuple[list[int], tuple[object, ...]]:
+    seen: dict[object, int] = {}
+    return [seen.setdefault(item, len(seen)) for item in items], tuple(seen)
+
+
+key_lists: st.SearchStrategy[list[object]] = st.one_of(
+    st.lists(st.integers(-5, 5), max_size=40),
+    st.lists(st.floats(min_value=-3, max_value=3).map(lambda v: round(v, 1)), max_size=40),
+    st.lists(st.sampled_from([0.0, -0.0, 1.5]), max_size=20),
+    st.lists(st.booleans(), max_size=20),
+    st.lists(st.sampled_from(["b", "a", "ä", ""]), max_size=40),
+)
+
+
+@given(key_lists)
+def test_vectorised_factorize_matches_first_occurrence(items: list[object]) -> None:
+    expected_codes, expected_keys = _reference_factorize(items)
+    containers = [np.array(items), pd.Series(items)]
+    if items:
+        containers.append(pl.Series(items))
+    for container in containers:
+        codes, uniques = factorize(container)
+        assert codes.dtype == np.int64 and codes.tolist() == expected_codes
+        assert uniques == expected_keys
+        assert [type(u) for u in uniques] == [type(k) for k in expected_keys]
+
+
+def test_vectorised_factorize_edges() -> None:
+    codes, uniques = factorize(np.array([-0.0, 0.0, 2.0]))
+    assert codes.tolist() == [0, 0, 1] and str(uniques[0]) == "-0.0"
+    with pytest.raises(ValueError, match="Position 2"):
+        factorize(np.array([1.0, 2.0, math.nan]))
+    assert factorize(np.array([], dtype=np.int64))[0].shape == (0,)
+    stamps = np.array(["2024-01-01", "2024-01-01"], dtype="datetime64[D]")
+    assert factorize(stamps)[0].tolist() == [0, 0]  # element-wise path
+
+
+@given(st.lists(st.integers(0, 6), max_size=50))
+def test_first_occurrence_codes(raw: list[int]) -> None:
+    codes = np.array(raw, dtype=np.int64)
+    relabelled = first_occurrence_codes(codes, 7)
+    assert relabelled.tolist() == _reference_factorize(list(raw))[0]
