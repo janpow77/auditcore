@@ -92,22 +92,43 @@ def _junit_case(case: ElementTree.Element, tool: str = "pytest") -> Finding | No
     )
 
 
+def _junit_root(text: str) -> ElementTree.Element:
+    if len(text) > MAX_XML_BYTES or "<!DOCTYPE" in text or "<!ENTITY" in text:
+        raise ValueError("JUnit-XML abgelehnt (zu groß oder mit DOCTYPE/ENTITY)")
+    try:
+        # Without DOCTYPE/ENTITY declarations there is nothing to expand or resolve.
+        return ElementTree.fromstring(text)  # noqa: S314  # nosec B314
+    except ElementTree.ParseError as error:
+        raise ValueError(f"JUnit-XML unlesbar: {error}") from error
+
+
 def junit_report(tool: str) -> Parser:
     """JUnit XML (pytest, vitest, Playwright): failed and erroring test cases."""
 
     def parse(text: str) -> list[Finding]:
         if not text.strip():
             return []
-        if len(text) > MAX_XML_BYTES or "<!DOCTYPE" in text or "<!ENTITY" in text:
-            raise ValueError("JUnit-XML abgelehnt (zu groß oder mit DOCTYPE/ENTITY)")
-        # Without DOCTYPE/ENTITY declarations there is nothing to expand or resolve.
-        root = ElementTree.fromstring(text)  # noqa: S314  # nosec B314
+        root = _junit_root(text)
         return [f for f in (_junit_case(case, tool) for case in root.iter("testcase")) if f is not None]
 
     return parse
 
 
 junit = junit_report("pytest")
+
+
+def junit_nothing_checked(text: str) -> str | None:
+    """Why a JUnit report proves nothing: no report, no test case, or every test case skipped."""
+    if not text.strip():
+        return "kein JUnit-Bericht"
+    cases = list(_junit_root(text).iter("testcase"))
+    if not cases:
+        return "keine Testfälle im Bericht"
+    skipped = [case.find("skipped") for case in cases]
+    if any(element is None for element in skipped):
+        return None
+    reasons = [(e.get("message") or e.text or "").strip() for e in skipped if e is not None]
+    return "; ".join(dict.fromkeys(r for r in reasons if r)) or f"alle {len(cases)} Testfälle übersprungen"
 
 
 def actionlint(text: str) -> list[Finding]:
@@ -199,6 +220,16 @@ PARSERS: dict[str, Parser] = {
     "eslint-json": eslint,
     "codegate-json": codegate,
     "sarif": sarif,
+}
+
+# Parsers whose report shows whether anything was checked at all. Others (ruff,
+# mypy, linters) report only findings, so "no finding" cannot be told apart from
+# "nothing checked"; there an empty result stays legitimate.
+NOTHING_CHECKED: dict[str, Callable[[str], str | None]] = {
+    "junit-xml": junit_nothing_checked,
+    "vitest-junit": junit_nothing_checked,
+    "playwright-junit": junit_nothing_checked,
+    "axe-junit": junit_nothing_checked,
 }
 
 PARSERS.update(

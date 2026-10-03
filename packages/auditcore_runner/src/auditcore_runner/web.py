@@ -24,7 +24,7 @@ from .hardware import HostFacts, detect
 from .profile import Profile
 from .validation import validate
 from .werkzeuge import einstellungen
-from .werkzeuge.ausfuehren import Runner
+from .werkzeuge.ausfuehren import Runner, last_result_path
 from .werkzeuge.katalog import Registry
 from .werkzeuge.modell import DEFAULT_PROFILES, ToolSetting
 
@@ -153,6 +153,15 @@ class App:
         return {"gespeichert": True}
 
 
+def last_result() -> dict[str, object]:
+    """Last ``lokal`` run including ``gesamt`` (gruen/rot) and ``probleme``; empty before the first run."""
+    path = last_result_path()
+    if not path.exists():
+        return {"gesamt": "unbekannt", "probleme": [], "werkzeuge": [], "befunde": []}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data if isinstance(data, dict) else {"gesamt": "unbekannt"}
+
+
 def _setting_json(setting: ToolSetting) -> dict[str, object]:
     return {"aktiv": setting.enabled, "zeitlimit_s": setting.timeout_seconds, "prioritaet": setting.priority}
 
@@ -204,6 +213,7 @@ class Handler(BaseHTTPRequestHandler):
             "/api/status": lambda: self._json(HTTPStatus.OK, {**app.status(), "nur_lesen": read_only}),
             "/api/profil": lambda: self._json(HTTPStatus.OK, {**app.profile_view(), "nur_lesen": read_only}),
             "/api/werkzeuge": lambda: self._json(HTTPStatus.OK, app.tools()),
+            "/api/ergebnis": lambda: self._json(HTTPStatus.OK, last_result()),
             "/metrics": lambda: self._send(
                 HTTPStatus.OK, status.prometheus(app.status()).encode(), "text/plain; version=0.0.4"
             ),
