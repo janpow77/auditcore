@@ -31,6 +31,10 @@ Framework und seinen technischen Nachweis, danach die Fachbibliotheken.
 - **Plattformwerkzeuge:** Inventur und Konsolidierung, Refactoring mit Characterization-Tests,
   Debian-/APT-Paketierung.
 
+<img src="docs/kanban/screenshots/kanban-board.png" alt="Kanban-Board aus der Komponenten-Demo von @auditcore/ui" width="800">
+
+*Beispiel aus den Oberflächenpaketen: Kanban-Board der Komponenten-Demo (`@auditcore/ui`, Regeln aus `auditcore_kanban`).*
+
 ## Schnellstart
 
 **Python-Bibliothek in einer Anwendung nutzen** (Python 3.11 oder neuer):
