@@ -22,7 +22,7 @@ from pathlib import Path
 from ..profile import state_dir
 from .befunde import Finding, deduplicate, relative_to
 from .katalog import Registry
-from .modell import CheckProfile, Tool
+from .modell import CUSTOM_AREA, EXIT_CODE_PARSER, REPO_FILE, CheckProfile, Tool
 from .parser import PARSERS
 
 CONFIG_FILES = (
@@ -190,6 +190,8 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         return ToolResult(
             tool.name, "fehlt", seconds, message=f"{argv[0]} im Image bzw. auf dem Rechner nicht gefunden"
         )
+    if tool.parser == EXIT_CODE_PARSER:
+        return ToolResult(tool.name, "ok", seconds, _exit_code_findings(tool, result))
     if result.returncode not in tool.success_codes:
         return ToolResult(tool.name, "fehler", seconds, message=result.stderr.strip()[-400:])
     raw = output.read_text(encoding="utf-8") if output and output.exists() else result.stdout
@@ -199,6 +201,15 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         return ToolResult(tool.name, "unlesbar", seconds, message=str(error)[:300])
     local = relative_to(_named(tool, findings), (str(runner.root), "/work"))
     return ToolResult(tool.name, "ok", seconds, [_scan_root_relative(f, runner.root) for f in local])
+
+
+def _exit_code_findings(tool: Tool, result: subprocess.CompletedProcess[str]) -> list[Finding]:
+    """Generic tools without report: a failing exit code is one finding with the tail of the output."""
+    if result.returncode in tool.success_codes:
+        return []
+    output = (result.stderr.strip() or result.stdout.strip())[-400:]
+    message = f"{' '.join(tool.command)} endete mit Exitcode {result.returncode}" + (f": {output}" if output else "")
+    return [Finding(tool=tool.name, rule="exitcode", path=REPO_FILE, line=0, message=message)]
 
 
 def _named(tool: Tool, findings: list[Finding]) -> list[Finding]:
@@ -246,7 +257,12 @@ def _write_cache(key: str, result: ToolResult) -> None:
 
 
 def run_tool(runner: Runner, tool: Tool, timeout: int, content: str, use_cache: bool = True) -> ToolResult:
-    """One tool, from cache when its inputs are unchanged."""
+    """One tool, from cache when its inputs are unchanged.
+
+    Generic repository tools are never cached: their commands may depend on
+    state outside Git (``.env``, running containers), which the key does not cover.
+    """
+    use_cache = use_cache and tool.area != CUSTOM_AREA
     key = cache_key(tool, runner.version(tool), runner, content)
     cached = _read_cache(key) if use_cache else None
     if cached is not None:
@@ -287,6 +303,13 @@ def applies(tool: Tool, files: list[str]) -> bool:
 
 
 def _check(runner: Runner, tool: Tool, timeout: int, content: str, files: list[str], use_cache: bool) -> ToolResult:
+    if tool.area == CUSTOM_AREA and not tool.command:
+        return ToolResult(
+            tool.name,
+            "unbekannt",
+            0.0,
+            message=f"nicht im Katalog; eigenes Werkzeug braucht befehl in {REPO_FILE}",
+        )
     if not applies(tool, files):
         return ToolResult(tool.name, "entfaellt", 0.0, message="keine passenden Dateien")
     return run_tool(runner, tool, timeout, content, use_cache)
@@ -296,7 +319,9 @@ def run_profile(runner: Runner, registry: Registry, profile: CheckProfile, use_c
     """Run all enabled checking tools of a profile; returns the result document."""
     content = content_key(runner.root)
     files = _git(runner.root, "ls-files", "--cached", "--others", "--exclude-standard").splitlines()
-    tools = [t for t in (profile.configured_tool(registry.get(n)) for n in profile.ordered_tools()) if t.command]
+    configured = (profile.configured_tool(registry.get(n)) for n in profile.ordered_tools())
+    # Catalog tools without command only fix (prek); unknown tools without command are reported.
+    tools = [t for t in configured if t.command or t.area == CUSTOM_AREA]
     results = [
         _check(runner, tool, profile.setting(tool.name).timeout_seconds, content, files, use_cache) for tool in tools
     ]

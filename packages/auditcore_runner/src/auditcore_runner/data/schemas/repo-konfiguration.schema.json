@@ -51,7 +51,7 @@
               "befehl": {
                 "type": "array", "minItems": 1,
                 "items": { "type": "string", "minLength": 1 },
-                "description": "Ersetzt den Katalogbefehl für dieses Repository; {ausgabe} bleibt als Platzhalter verfügbar"
+                "description": "Ersetzt den Katalogbefehl für dieses Repository; {ausgabe} bleibt als Platzhalter verfügbar. Bei Werkzeugen ohne Katalogeintrag: ohne {ausgabe} zählt der Exitcode, mit {ausgabe} ein JUnit-Bericht"
               },
               "autofix_befehl": {
                 "type": "array", "minItems": 1,

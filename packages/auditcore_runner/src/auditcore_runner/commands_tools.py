@@ -48,6 +48,11 @@ def cmd_local(args: argparse.Namespace) -> int:
         )
     findings = bericht.findings_from_documents([document])
     print(f"\n{len(findings)} Befunde, Bericht: auditcore-runner befunde")
+    tools = document["werkzeuge"] if isinstance(document["werkzeuge"], list) else []
+    unknown = [str(t["werkzeug"]) for t in tools if t["status"] == "unbekannt"]
+    if unknown:
+        print(f"unbekannte Werkzeuge im Prüfprofil: {', '.join(unknown)}", file=sys.stderr)
+        return 2
     return 1 if findings else 0
 
 

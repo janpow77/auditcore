@@ -152,6 +152,27 @@ ausgeführt. Damit lassen sich Ziele und Optionen je Repository ändern, ohne de
 globalen Katalog oder das Runner-Image anzupassen. Bei Parsern mit Ausgabedatei
 muss `befehl` den Platzhalter `{ausgabe}` weiterhin enthalten.
 
+Ein Werkzeug, das nicht im Katalog steht, darf ein Profil mit eigenem `befehl`
+deklarieren (Bereich `eigen`):
+
+```toml
+[pruefprofile.pr]
+werkzeuge = ["ruff", "compose"]
+
+[pruefprofile.pr.werkzeug.compose]
+befehl = ["docker", "compose", "config", "--quiet"]
+```
+
+Ohne `{ausgabe}` entscheidet der Exitcode: 0 ergibt keinen Befund, jeder andere
+Exitcode einen Befund `exitcode` mit dem Ende der Ausgabe. Enthält `befehl` den
+Platzhalter `{ausgabe}`, muss das Programm dort einen JUnit-Bericht
+(`<name>.xml`) schreiben; Exitcode 0 und 1 gelten dann als gelaufen. Eigene
+Werkzeuge werden nicht zwischengespeichert, weil ihr Ergebnis von Zuständen
+außerhalb von Git abhängen kann (`.env`, laufende Container). Im Runner-Image
+laufen sie ohne Netz; Befehle, die den Docker-Daemon oder Netz brauchen, gehören
+in einen Lauf mit `--host`. Ein unbekanntes Werkzeug ohne `befehl` erscheint mit
+Status `unbekannt`, und `lokal` endet mit Exitcode 2.
+
 Je Rechner schaltet die Oberfläche bzw. `~/.config/auditcore-runner/werkzeuge.json`
 (`auditcore-runner/werkzeuge/1`) Werkzeuge je Profil an/aus, setzt Zeitlimit und
 Priorität; das gilt vor der Repo-Datei.
