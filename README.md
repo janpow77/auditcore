@@ -166,7 +166,7 @@ Die Tabelle wird aus `pyproject.toml`, `package.json`, dem Abschnitt „Zweck“
 Paket-README und `provenance.json` erzeugt.
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
-42 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
+43 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
 **Querschnitt**
 
@@ -174,6 +174,7 @@ Paket-README und `provenance.json` erzeugt.
 |---|---|---|---|---|
 | [`auditcore_auth`](packages/auditcore_auth) | 0.1.1 | Passwort-Hashing mit benannten Profilen (bcrypt, argon2id) und JWT-Ausstellung/-Prüfung über PyJWT, mit Kompatibilitätsprofilen, unter denen bisherige Hashes und Token der Anwendungen gültig bleiben. | keine; Extras: `bcrypt`, `argon2`, `jwt`, `fastapi` | neu, gegen charakterisierte Verträge |
 | [`auditcore_common`](packages/auditcore_common) | 0.2.0 | Gemeinsame Hilfsfunktionen der auditcore-Fachpakete und Anwendungen (JSON, Hashing, Profile, sicheres XML, HTML-Links, Numerik, Zahleneingabe, Dateinamen, Event-Loop), zusammengeführt nur mit Gleichheitsbeweis gegen jede Paketkopie. | keine; Extras: `xml` | konsolidiert (Gleichheitsnachweis) |
+| [`auditcore_flow_agent`](packages/auditcore_flow_agent) | 0.1.0 | Dauerhafte Auftragswarteschlange, kapazitätsabhängige Rechnerwahl und überwachte Prozessausführung als eigenständig installierbare Bibliothek für Flow-Agent. | `auditcore_common==0.2.0` | neu, gegen charakterisierte Verträge |
 | [`auditcore_harvest`](packages/auditcore_harvest) | 0.1.3 | Gemeinsamer, frameworkunabhängiger Kern für Datenharvester: Quellenvertrag, Abruf mit Pagination, Zeitgrenzen, Rate-Limits und begrenzten Wiederholungen, Dubletten, idempotente Übergabe an eine Senke und Checkpoints. | `auditcore_common==0.2.0`; Extras: `xml` | neu, gegen charakterisierte Verträge |
 | [`auditcore_identifiers`](packages/auditcore_identifiers) | 0.2.0 | Prüfen und Normalisieren von Kennungen – IBAN, BIC, USt-IdNr. (alle EU-Staaten), Steuer-ID, Steuernummer, LEI und Handelsregisternummer – mit einheitlichem Ergebnisobjekt und benannten Profilen. | `auditcore_common==0.2.0`; Extras: `web`, `fastapi` | neu, gegen charakterisierte Verträge |
 | [`auditcore_llm_client`](packages/auditcore_llm_client) | 0.1.2 | Client für den ai-router und das Flow-Agent-Inferenz-Gateway: Chat, Streaming, Embeddings, Rerank, OCR und Health, mit Schwärzung, Wiederholungen und Circuit-Breaker. | keine; Extras: `http` | neu, gegen charakterisierte Verträge |

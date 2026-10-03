@@ -29,7 +29,7 @@ from specification import specified  # noqa: E402
 
 BLOCK = "paketkatalog"
 COMMAND = "python scripts/docs/catalog.py --write"
-CROSS_CUTTING = {"common", "auth", "identifiers", "llm_client", "harvest"}
+CROSS_CUTTING = {"common", "auth", "identifiers", "llm_client", "harvest", "flow_agent"}
 CATEGORIES = (
     "Querschnitt",
     "Fachbibliotheken",

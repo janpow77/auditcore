@@ -119,6 +119,9 @@
       },
       "coverage_percent": 95.67
     },
+    "auditcore_flow_agent": {
+      "coverage_percent": 100.0
+    },
     "auditcore_funding_sources": {
       "metrics": {
         "any_usages": 66,

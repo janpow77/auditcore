@@ -1,0 +1,4 @@
+auditcore_flow_agent – auditcore Monorepo.
+Neue Implementierung einer wiederverwendbaren Auftrags- und Ressourcenverwaltung.
+Lizenz: MIT gemäß LICENSE. Es wurde kein Quelltext aus HTCondor, GPUStack,
+Celery oder RQ übernommen. Diese Projekte dienen ausschließlich als Referenzen.
