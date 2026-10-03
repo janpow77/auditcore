@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import contextlib
 import re
-
-from pymupdf import Document
+from typing import TYPE_CHECKING
 
 from auditcore_pdf.models import SanitizationPolicy
+
+if TYPE_CHECKING:
+    from pymupdf import Document
 
 PDF_ANNOT_REDACT = 12
 

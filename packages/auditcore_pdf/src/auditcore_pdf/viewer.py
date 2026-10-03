@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-from pymupdf import Matrix
-
-from auditcore_pdf.engine import open_pdf
+from auditcore_pdf.engine import make_matrix, open_pdf
 from auditcore_pdf.models import DocumentInfo, PageInfo
 
 
@@ -73,7 +71,7 @@ def render_page(
             )
         page = doc[page_number - 1]
         zoom = dpi / 72.0
-        mat = Matrix(zoom, zoom)
+        mat = make_matrix(zoom, zoom)
         pix = page.get_pixmap(matrix=mat, alpha=False)
         return bytes(pix.tobytes(image_format))
     finally:
