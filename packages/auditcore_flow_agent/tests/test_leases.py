@@ -94,3 +94,18 @@ def test_drain_returns_work_to_queue_and_uses_other_node(queue, clock):
     assert queue.confirm_stopped(lease.token)
     clock.now += 1
     assert queue.claim().node_id == "fallback"
+
+
+def test_dead_worker_does_not_exhaust_scope_limit_on_healthy_worker(queue, clock):
+    for name in ("a", "b", "c"):
+        queue.enqueue(
+            JobSpec(name, "x", "embed", resources=ResourceRequest(gpu_count=1), lease_s=2)
+        )
+    first, second = queue.claim(), queue.claim()
+    assert first.node_id == second.node_id == "fast"
+    clock.now += 3
+    healthy = queue.claim()
+    assert healthy is not None and healthy.node_id == "fallback"
+    assert healthy.job.job_id == "c"
+    assert len(queue.pending_stops()) == 2
+    assert len(queue.allocations()) == 3

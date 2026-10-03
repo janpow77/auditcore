@@ -134,7 +134,9 @@ Für bessere Auslastung: Modellidentität im Auftrag angeben, geladene Modelle
 melden, Batches begrenzen und den tatsächlichen Chunk-Fortschritt zurückmelden.
 
 `SchedulerPolicy` begrenzt parallel aktive Aufträge je Bereich standardmäßig
-auf zwei. Wartende Aufträge gewinnen alle 60 Sekunden einen Prioritätspunkt.
+auf zwei. Aufträge mit ausstehender Stop-Bestätigung behalten ihre Ressourcen,
+verbrauchen aber keinen aktiven Bereichsplatz auf gesunden Ausweichrechnern.
+Wartende Aufträge gewinnen alle 60 Sekunden einen Prioritätspunkt.
 Dies reduziert Verhungern; Laufzeiten und Prioritäten müssen zur Anwendung passen.
 
 ## Fehler, Fristen und Wiederaufnahme

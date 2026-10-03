@@ -128,7 +128,10 @@ def claim(conn: sqlite3.Connection, now: float, policy: SchedulerPolicy) -> Leas
     available, allocations = nodes(conn), occupied(conn)
     for job in waiting(conn, now, policy):
         count = conn.execute(
-            "SELECT COUNT(*) FROM leases WHERE scope=?", (job.spec.scope,)
+            "SELECT COUNT(*) FROM leases l JOIN jobs j "
+            "ON j.scope=l.scope AND j.job_id=l.job_id "
+            "WHERE l.scope=? AND j.state='running'",
+            (job.spec.scope,),
         ).fetchone()[0]
         if count >= policy.max_active_per_scope:
             continue
