@@ -11,6 +11,7 @@ import numpy.typing as npt
 
 from ._buffers import MaskedBuffer, cents_input, numeric_array, series_items, to_buffer
 from ._engine import accelerate, prange
+from ._vectorized import reconcile as numpy_reconcile
 
 #: Status codes of ``reconcile``.
 MATCH = 0
@@ -27,7 +28,7 @@ class Reconciliation:
     status: npt.NDArray[np.int8]
 
 
-@accelerate(parallel=True)
+@accelerate(parallel=True, fallback=numpy_reconcile, min_parallel_size=100_000)
 def reconcile_kernel(
     expected: npt.NDArray[np.int64],
     actual: npt.NDArray[np.int64],

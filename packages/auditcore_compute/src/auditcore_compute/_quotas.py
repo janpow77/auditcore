@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import Decimal
 from fractions import Fraction
+from functools import lru_cache
 
 import numpy as np
 import numpy.typing as npt
@@ -19,6 +20,8 @@ import numpy.typing as npt
 from ._buffers import cents_input
 from ._engine import accelerate, jitable, prange
 from ._intmath import MAX_DENOMINATOR, div_round, mul_div_round
+from ._vectorized import quota as numpy_quota
+from ._vectorized import share as numpy_share
 
 RateInput = Fraction | Decimal | str | int | float
 
@@ -50,6 +53,12 @@ def percent(value: Decimal | str | int) -> Fraction:
     return rate(Fraction(Decimal(str(value))) / 100)
 
 
+@lru_cache(maxsize=1024, typed=True)
+def _cached_rate(value: RateInput) -> Fraction:
+    """Reuse validated rates; typed keys keep bool and numeric types distinct."""
+    return rate(value)
+
+
 def _rate_buffers(
     rates: RateInput | Sequence[RateInput], size: int
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.int64]]:
@@ -59,14 +68,14 @@ def _rate_buffers(
             np.full(size, single.numerator, dtype=np.int64),
             np.full(size, single.denominator, dtype=np.int64),
         )
-    exact = [rate(r) for r in rates]
+    exact = [_cached_rate(r) for r in rates]
     if len(exact) != size:
         raise ValueError("Je Betrag ist genau eine Quote anzugeben.")
     numerators = np.array([r.numerator for r in exact], dtype=np.int64)
     return numerators, np.array([r.denominator for r in exact], dtype=np.int64)
 
 
-@accelerate(parallel=True)
+@accelerate(parallel=True, fallback=numpy_share, min_parallel_size=100_000)
 def share_kernel(
     amounts: npt.NDArray[np.int64],
     numerators: npt.NDArray[np.int64],
@@ -119,7 +128,7 @@ class QuotaCheck:
     status: npt.NDArray[np.int8]
 
 
-@accelerate(parallel=True)
+@accelerate(parallel=True, fallback=numpy_quota, min_parallel_size=100_000)
 def quota_kernel(
     parts: npt.NDArray[np.int64],
     totals: npt.NDArray[np.int64],

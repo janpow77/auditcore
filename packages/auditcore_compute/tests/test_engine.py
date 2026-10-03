@@ -233,4 +233,4 @@ def test_package_kernels_run_compiled(monkeypatch: pytest.MonkeyPatch) -> None:
     report = {info.name: info for info in engine_report()}
     for name in ("share_kernel", "sum_kernel"):
         assert report[name].mode == "jit" and report[name].compiled, report[name]
-    assert report["share_kernel"].parallel and not report["sum_kernel"].parallel
+    assert not report["share_kernel"].parallel and not report["sum_kernel"].parallel

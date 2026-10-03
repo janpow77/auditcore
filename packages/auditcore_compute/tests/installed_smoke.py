@@ -34,7 +34,7 @@ def main() -> None:
     with use_python():
         assert deterministic_sum([1e16, 1.0, -1e16]) == total == 1.0
     modes = {info.name: info.mode for info in engine_report()}
-    assert set(modes.values()) <= {"jit", "python"}
+    assert set(modes.values()) <= {"jit", "numpy", "python"}
     print("PASS: installed auditcore_compute", sorted(set(modes.values())))
 
 

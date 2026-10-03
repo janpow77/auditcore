@@ -10,6 +10,8 @@ import numpy.typing as npt
 
 from ._buffers import cents_input, to_buffer
 from ._engine import accelerate, jitable, prange
+from ._vectorized import band as numpy_band
+from ._vectorized import threshold as numpy_threshold
 
 #: Iglewicz/Hoaglin constant: 0.6745 ≈ Φ⁻¹(0.75), makes the MAD comparable to σ.
 MAD_CONSTANT = 0.6745
@@ -26,7 +28,7 @@ class OutlierResult:
     upper: float
 
 
-@accelerate(parallel=True)
+@accelerate(parallel=True, fallback=numpy_threshold, min_jit_size=250_000)
 def threshold_kernel(
     amounts: npt.NDArray[np.int64], threshold: int, absolute: bool, out: npt.NDArray[np.bool_]
 ) -> None:
@@ -56,7 +58,7 @@ def quantile_sorted(ordered: npt.NDArray[np.float64], probability: float) -> flo
     return float(ordered[lower] + (position - lower) * (ordered[upper] - ordered[lower]))
 
 
-@accelerate(parallel=True)
+@accelerate(parallel=True, fallback=numpy_band, min_parallel_size=100_000)
 def band_kernel(
     values: npt.NDArray[np.float64], lower: float, upper: float, out: npt.NDArray[np.bool_]
 ) -> None:

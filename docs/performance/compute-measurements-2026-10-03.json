@@ -1,0 +1,377 @@
+{
+  "baseline_commit": "f1950dcabe49f013e7340901b27fbb55be4094d7",
+  "date": "2026-10-03",
+  "numba_threads": 8,
+  "scope": "Lokale synthetische Vergleichsmessung; OCR nur simulierte Wartezeit; keine Produktivmessung.",
+  "runs": {
+    "before": {
+      "python": "3.12.3",
+      "numpy": "2.5.3",
+      "seed": 20261003,
+      "note": "Batch-Service inkl. Eingabe/Ergebnis; ohne HTTP/DB. OCR-Gateway simuliert.",
+      "share_5000": {
+        "median_ms": 0.07497999467886984,
+        "sha256": "88468669039658aae8efdf7aaa85ec44f69e3a0e015f2b8756f96c175e09e2bc"
+      },
+      "share_500000": {
+        "median_ms": 1.8996140133822337,
+        "sha256": "eb3008e4e97f9891ea9715ff7d9033e72c5de875a788572725ac4e1f4ad003ae"
+      },
+      "variable_rates_500000": {
+        "median_ms": 1547.9124789999332,
+        "sha256": "87c5e2d5254c5d6f16812bbeb53e06f587fab24fe19200a1af0bb11bb0ed7bf7"
+      },
+      "documents_5000": {
+        "median_ms": 402.22497799550183,
+        "sha256": "8765b8af487936f33e6fb10e91370e14a75c3aff54f54a98ca250e2f9e7080ca"
+      },
+      "ocr_20_pages": {
+        "median_ms": 204.99791199108586,
+        "sha256": "0ed255499bae0edfcfcf284a87f94c74f7241a18890a5598e70dbdf52c21b72f"
+      }
+    },
+    "after": {
+      "python": "3.12.3",
+      "numpy": "2.5.3",
+      "seed": 20261003,
+      "note": "Batch-Service inkl. Eingabe/Ergebnis; ohne HTTP/DB. OCR-Gateway simuliert.",
+      "share_5000": {
+        "median_ms": 0.06695800402667373,
+        "sha256": "88468669039658aae8efdf7aaa85ec44f69e3a0e015f2b8756f96c175e09e2bc"
+      },
+      "share_500000": {
+        "median_ms": 2.2756139951525256,
+        "sha256": "eb3008e4e97f9891ea9715ff7d9033e72c5de875a788572725ac4e1f4ad003ae"
+      },
+      "variable_rates_500000": {
+        "median_ms": 101.22238298936281,
+        "sha256": "87c5e2d5254c5d6f16812bbeb53e06f587fab24fe19200a1af0bb11bb0ed7bf7"
+      },
+      "documents_5000": {
+        "median_ms": 306.71637201157864,
+        "sha256": "8765b8af487936f33e6fb10e91370e14a75c3aff54f54a98ca250e2f9e7080ca"
+      },
+      "ocr_20_pages": {
+        "median_ms": 51.894792006351054,
+        "sha256": "0ed255499bae0edfcfcf284a87f94c74f7241a18890a5598e70dbdf52c21b72f"
+      }
+    }
+  },
+  "kernel_probe": [
+    {
+      "size": 100,
+      "threads": 1,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 1.1355,
+        "parallel": 2.436,
+        "numpy": 5.2841
+      },
+      "threshold": {
+        "serial": 0.7424,
+        "parallel": 2.1667,
+        "numpy": 0.6687
+      }
+    },
+    {
+      "size": 100,
+      "threads": 2,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 1.0956,
+        "parallel": 2.8079,
+        "numpy": 5.2928
+      },
+      "threshold": {
+        "serial": 0.7361,
+        "parallel": 4.1795,
+        "numpy": 0.6948
+      }
+    },
+    {
+      "size": 100,
+      "threads": 8,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 1.1063,
+        "parallel": 6.8241,
+        "numpy": 5.2464
+      },
+      "threshold": {
+        "serial": 0.732,
+        "parallel": 7.4871,
+        "numpy": 0.6739
+      }
+    },
+    {
+      "size": 1000,
+      "threads": 1,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 3.9731,
+        "parallel": 5.3293,
+        "numpy": 12.0603
+      },
+      "threshold": {
+        "serial": 0.9442,
+        "parallel": 2.3753,
+        "numpy": 0.907
+      }
+    },
+    {
+      "size": 1000,
+      "threads": 2,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 3.9827,
+        "parallel": 9.243,
+        "numpy": 12.0784
+      },
+      "threshold": {
+        "serial": 0.9704,
+        "parallel": 4.4881,
+        "numpy": 0.9024
+      }
+    },
+    {
+      "size": 1000,
+      "threads": 8,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 3.9895,
+        "parallel": 14.4139,
+        "numpy": 12.0728
+      },
+      "threshold": {
+        "serial": 0.945,
+        "parallel": 7.0411,
+        "numpy": 0.9119
+      }
+    },
+    {
+      "size": 5000,
+      "threads": 1,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 17.0694,
+        "parallel": 17.9707,
+        "numpy": 39.39
+      },
+      "threshold": {
+        "serial": 2.0478,
+        "parallel": 3.4715,
+        "numpy": 1.6478
+      }
+    },
+    {
+      "size": 5000,
+      "threads": 2,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 17.0078,
+        "parallel": 26.1259,
+        "numpy": 39.9351
+      },
+      "threshold": {
+        "serial": 2.0224,
+        "parallel": 5.0607,
+        "numpy": 1.6271
+      }
+    },
+    {
+      "size": 5000,
+      "threads": 8,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 16.8893,
+        "parallel": 26.4876,
+        "numpy": 39.4213
+      },
+      "threshold": {
+        "serial": 2.034,
+        "parallel": 10.3999,
+        "numpy": 1.6363
+      }
+    },
+    {
+      "size": 10000,
+      "threads": 1,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 34.0538,
+        "parallel": 33.756,
+        "numpy": 73.8712
+      },
+      "threshold": {
+        "serial": 3.2592,
+        "parallel": 4.687,
+        "numpy": 2.537
+      }
+    },
+    {
+      "size": 10000,
+      "threads": 2,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 34.0571,
+        "parallel": 41.7654,
+        "numpy": 74.4065
+      },
+      "threshold": {
+        "serial": 3.2707,
+        "parallel": 7.9178,
+        "numpy": 2.5217
+      }
+    },
+    {
+      "size": 10000,
+      "threads": 8,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 34.0907,
+        "parallel": 32.7084,
+        "numpy": 74.3619
+      },
+      "threshold": {
+        "serial": 3.2628,
+        "parallel": 12.733,
+        "numpy": 2.5215
+      }
+    },
+    {
+      "size": 50000,
+      "threads": 1,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 167.2678,
+        "parallel": 159.3558,
+        "numpy": 872.403
+      },
+      "threshold": {
+        "serial": 13.2478,
+        "parallel": 14.7621,
+        "numpy": 9.6033
+      }
+    },
+    {
+      "size": 50000,
+      "threads": 2,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 172.2763,
+        "parallel": 113.6089,
+        "numpy": 867.0863
+      },
+      "threshold": {
+        "serial": 13.2811,
+        "parallel": 19.0891,
+        "numpy": 9.7026
+      }
+    },
+    {
+      "size": 50000,
+      "threads": 8,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 169.6131,
+        "parallel": 64.7979,
+        "numpy": 868.0461
+      },
+      "threshold": {
+        "serial": 13.277,
+        "parallel": 24.3599,
+        "numpy": 9.6663
+      }
+    },
+    {
+      "size": 100000,
+      "threads": 1,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 343.3712,
+        "parallel": 340.7034,
+        "numpy": 1892.391
+      },
+      "threshold": {
+        "serial": 25.8174,
+        "parallel": 27.1988,
+        "numpy": 18.3703
+      }
+    },
+    {
+      "size": 100000,
+      "threads": 2,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 344.929,
+        "parallel": 333.4433,
+        "numpy": 1889.8549
+      },
+      "threshold": {
+        "serial": 25.8538,
+        "parallel": 30.6948,
+        "numpy": 18.4582
+      }
+    },
+    {
+      "size": 100000,
+      "threads": 8,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 344.0833,
+        "parallel": 107.0541,
+        "numpy": 1902.6524
+      },
+      "threshold": {
+        "serial": 26.0027,
+        "parallel": 28.2279,
+        "numpy": 19.4017
+      }
+    },
+    {
+      "size": 500000,
+      "threads": 1,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 1716.9419,
+        "parallel": 1717.6169,
+        "numpy": 12873.0949
+      },
+      "threshold": {
+        "serial": 145.1279,
+        "parallel": 150.9428,
+        "numpy": 141.4521
+      }
+    },
+    {
+      "size": 500000,
+      "threads": 2,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 1719.504,
+        "parallel": 897.2966,
+        "numpy": 12575.5662
+      },
+      "threshold": {
+        "serial": 145.3409,
+        "parallel": 105.4828,
+        "numpy": 127.7793
+      }
+    },
+    {
+      "size": 500000,
+      "threads": 8,
+      "unit": "microseconds per kernel call",
+      "share": {
+        "serial": 1709.9941,
+        "parallel": 659.5169,
+        "numpy": 12644.1923
+      },
+      "threshold": {
+        "serial": 145.2622,
+        "parallel": 49.9136,
+        "numpy": 110.0118
+      }
+    }
+  ]
+}

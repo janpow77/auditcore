@@ -6,6 +6,8 @@ import math
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 
+from .cache import current
+
 #: Platzhalter, die als „kein Wert“ gelten (Pflichtfeldprüfung).
 EMPTY_MARKERS = frozenset({"nan", "null", "undefined", "none", "n/a", "invalid date", "-"})
 #: Platzhalter, die bei der Betragsumwandlung als „kein Betrag“ gelten.
@@ -85,7 +87,14 @@ def normalize_supplier_name(name: object) -> str:
     """Normalisiert Lieferantennamen für Vergleiche."""
     if not name:
         return ""
-    text = str(name).strip().lower()
+    raw = str(name)
+    cache = current()
+    if cache is not None and raw in cache.suppliers:
+        return cache.suppliers[raw]
+    text = raw.strip().lower()
     for suffix in LEGAL_FORM_SUFFIXES:
         text = text.replace(suffix, "")
-    return text.strip()
+    result = text.strip()
+    if cache is not None:
+        cache.suppliers[raw] = result
+    return result
