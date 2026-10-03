@@ -1,5 +1,5 @@
 {
-  "donut_root": "/home/janpow/donut",
+  "donut_root": "~/donut",
   "stufen": [
     {
       "id": "pilot",

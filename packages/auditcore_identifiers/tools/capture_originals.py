@@ -4,7 +4,7 @@ The original functions are read from pinned Git blobs (hash verified), only the
 needed top-level definitions or methods are compiled and executed with the
 standard library. No application is imported, no database or network is used.
 
-    python tools/capture_originals.py --repos /home/janpow/Projekte \
+    python tools/capture_originals.py --repos $HOME/Projekte \
         --auditcore /path/to/auditcore-checkout tests/fixtures
 """
 

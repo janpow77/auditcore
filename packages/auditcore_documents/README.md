@@ -304,7 +304,7 @@ geprüft).
 ```python no-run
 from auditcore_documents import pipeline as pl
 
-donut = pl.HttpDonut(post, "http://100.102.132.11:8015")  # vision-service
+donut = pl.HttpDonut(post, "http://<vision-host>:8015")  # vision-service
 # oder pl.flowagent_donut(post, "https://agent.flowaudit.de")      # FlowAgent (E7)
 # oder pl.LocalDonut(Path("/opt/models/donut-invoice-de-1.0.0"), expected_sha256)
 ocr = pl.OcrStage(donut=donut, tesseract=my_tesseract_port)

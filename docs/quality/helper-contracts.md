@@ -23,7 +23,7 @@ und das Code-Gate (Ratchet gegen eine Baseline).
 | Verträge | `auditcore-helpers contracts` | Führt die Vertragsfälle gegen die Funktionen aus, die die App im Manifest `.auditcore/helpers.json` nennt |
 | Ratchet | `auditcore-helpers check` | Alle drei Schritte, Vergleich mit `.auditcore/helpers-baseline.json` |
 | Action | [`.github/actions/helper-contracts`](../../.github/actions/helper-contracts/action.yml) | Einbindung in die App-Workflows (per SHA) |
-| Nachtlauf | [`scripts/helpers_nightly.sh`](../../scripts/helpers_nightly.sh) + `scripts/systemd/` | Lauf über alle App-Repositorys unter `~/Projekte` auf der NUC |
+| Nachtlauf | [`scripts/helpers_nightly.sh`](../../scripts/helpers_nightly.sh) + `scripts/systemd/` | Lauf über alle App-Repositorys unter `~/Projekte` auf der Arbeitsstation |
 
 ### Vertragsfälle (`parse-number` 1.1.0, übrige 1.0.0; verbindlich: `parse-number`, `empty-value`, `format-date`, `format-filesize`, übrige vorläufig)
 
@@ -191,7 +191,7 @@ Die Einbindung erfolgt mit der jeweiligen App-Migration, nicht zentral.
    ersetzen und die Bindungen auf die Bibliotheksfunktion (oder ihren
    Wrapper) umstellen; die Baseline sinkt dabei.
 
-## Nächtlicher Lauf auf der NUC
+## Nächtlicher Lauf auf der Arbeitsstation
 
 `scripts/helpers_nightly.sh` exportiert den auditcore-Stand aus `origin/main`
 (der Checkout bleibt unberührt), installiert ihn in

@@ -5,7 +5,7 @@
   "runner_pr": {
     "schema": "auditcore-runner/ergebnis/1",
     "profil": "pr",
-    "pfad": "/home/janpow/Projekte/auditcore",
+    "pfad": "$HOME/Projekte/auditcore",
     "inhalt": "27a99b7a41301379c9c55c3aff570f21",
     "werkzeuge": [
       {

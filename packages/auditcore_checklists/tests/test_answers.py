@@ -88,3 +88,30 @@ def test_answers_serialization_roundtrip() -> None:
     assert ans.befund_typ == FindingType.FINANCIAL
     assert ans.finding_severity == FindingSeverity.SIGNIFICANT
     assert ans.finding_text == "Rückforderung von 15.000 EUR empfohlen."
+
+
+def test_answers_property_and_clear_unknown_node() -> None:
+    state = ExecutionState().record_answer(node_id="q1", value="JA")
+    assert set(state.answers) == {"q1"}
+
+    # Unbekannter Knoten: der Stand bleibt unverändert und wird nicht kopiert
+    assert state.clear_answer("q_unbekannt") is state
+    assert set(state.answers) == {"q1"}
+
+
+def test_from_dict_ignores_invalid_entries_and_applies_defaults() -> None:
+    restored = ExecutionState.from_dict(
+        {
+            "q1": {"node_id": "q1", "value": ["a", "b"], "doc_refs": "kein-Array"},
+            "q2": "keine Zuordnung",
+        }
+    )
+    assert set(restored.answers) == {"q1"}
+    ans = restored.get_answer("q1")
+    assert ans is not None
+    assert ans.value == ["a", "b"]
+    assert ans.doc_refs == ()
+    assert ans.befund_typ == FindingType.NONE
+    assert ans.finding_severity is None
+    assert ans.remark_user is None
+    assert ans.answered_at is None

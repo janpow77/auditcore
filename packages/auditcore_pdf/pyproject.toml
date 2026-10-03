@@ -51,8 +51,11 @@ max-complexity = 10
 strict = true
 
 [[tool.mypy.overrides]]
+# PyMuPDF ist nur teilweise annotiert (no-untyped-call bei jedem Aufruf). Wie ohne
+# installiertes Extra gilt die Engine als untypisiert; geprüft wird der eigene Code.
 module = ["fitz.*", "pymupdf.*", "PIL.*"]
 ignore_missing_imports = true
+follow_imports = "skip"
 
 [tool.auditcore-bibquality]
 strict = true

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Nächtlicher Lauf von auditcore-helpers über alle App-Repositorys der NUC.
+# Nächtlicher Lauf von auditcore-helpers über alle App-Repositorys der Arbeitsstation.
 #
 # Nur lesend: Die App-Repositorys werden weder verändert noch umgeschaltet
 # (kein Schreiben der Baseline, Python läuft mit -B, keine .pyc-Dateien). Der

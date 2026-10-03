@@ -191,7 +191,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
   `auditcore_invoicesynth.train` bzw. `auditcore-invoicesynth-train` mit den
   Profilen `donut_train_janpow_ai` und `donut_train_8gb`, Rechenortwahl aus
   GPU-Telemetrie (DDP, zwei parallele Läufe oder „nicht verfügbar“ – kein
-  stiller Rückfall auf den NUC), atomare Checkpoints mit Prüfsummen,
+  stiller Rückfall auf die Arbeitsstation), atomare Checkpoints mit Prüfsummen,
   deterministische Wiederaufnahme, systemd-Vorlage und FlowAgent-Job:
   [docs/training.md](docs/training.md).
 

@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import contextlib
 import re
-
-from pymupdf import Document
+from typing import TYPE_CHECKING
 
 from auditcore_pdf.engine import open_pdf
 from auditcore_pdf.models import VerificationResult
+
+if TYPE_CHECKING:
+    from pymupdf import Document
 
 
 def _check_text_for_leaks(
@@ -134,9 +136,7 @@ def verify_redaction(
     if not terms and not pats:
         return VerificationResult(clean=True, violations=[], details={"checked_pages": 0})
 
-    compiled_pats = [
-        re.compile(p, 0 if case_sensitive else re.IGNORECASE) for p in pats
-    ]
+    compiled_pats = [re.compile(p, 0 if case_sensitive else re.IGNORECASE) for p in pats]
     violations: list[str] = []
     doc = open_pdf(pdf_bytes)
 

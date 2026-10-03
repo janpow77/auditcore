@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import pytest
+
 from auditcore_checklists import (
     FORMAT_VERSION,
     PACKAGE_FORMAT,
     CategoryDefinition,
     ChecklistTree,
+    PackageFormatError,
     ProjectMetadata,
     export_package,
     import_package,
@@ -127,3 +130,106 @@ def test_import_package_roundtrip(
     assert "cat_1" in categories
     assert categories["cat_1"].name == "Verfahrensart"
     assert len(categories["cat_1"].items) == 3
+
+
+def test_export_without_discussions_with_history(
+    sample_project: ProjectMetadata,
+    populated_tree: tuple[ChecklistTree, dict[str, str]],
+) -> None:
+    tree, node_map = populated_tree
+    qid = node_map["question_general"]
+    raw = tree.to_dict()
+    nodes = raw["nodes"]
+    assert isinstance(nodes, dict)
+    q_raw = nodes[qid]
+    assert isinstance(q_raw, dict)
+    internal = q_raw["internal"]
+    assert isinstance(internal, dict)
+    internal["team_notes"] = [
+        {
+            "id": "n1",
+            "user_id": 7,
+            "username": "pruefer_1",
+            "message": "Bitte Vergabevermerk nachfordern.",
+            "timestamp": "2026-10-01T09:00:00+00:00",
+        }
+    ]
+    tree_with_notes = ChecklistTree.from_dict(raw)
+    assert len(tree_with_notes.get_node(qid).internal.team_notes) == 1
+
+    pkg = export_package(
+        project=sample_project,
+        tree=tree_with_notes,
+        include_discussions=False,
+        include_history=True,
+    )
+
+    # Ohne Kategorien bleibt das Kategorienobjekt leer
+    assert pkg["categories"] == {}
+    assert pkg["options"] == {"history": True, "discussions": False}
+    versions = pkg["versions"]
+    assert isinstance(versions, list)
+    v0 = versions[0]
+    assert isinstance(v0, dict)
+    assert v0["history"] == []
+
+    # Diskussionsbeiträge werden entfernt, der Quellbaum bleibt unverändert
+    _, imported, _ = import_package(pkg)
+    assert imported.get_node(qid).internal.team_notes == ()
+    assert len(tree_with_notes.get_node(qid).internal.team_notes) == 1
+
+
+def test_normalize_rejects_invalid_payloads() -> None:
+    with pytest.raises(PackageFormatError, match="kein gültiges JSON-Objekt"):
+        normalize_package_payload(["kein", "Objekt"])
+    with pytest.raises(PackageFormatError, match="Unbekanntes Checklisten-Format"):
+        normalize_package_payload({"titel": "Irgendwas"})
+    with pytest.raises(PackageFormatError, match="neuer als unterstützt"):
+        normalize_package_payload(
+            {
+                "format": PACKAGE_FORMAT,
+                "format_version": FORMAT_VERSION + 1,
+                "project": {"name": "Zukunft"},
+                "versions": [],
+            }
+        )
+
+
+def test_normalize_native_uses_fallback_name() -> None:
+    normalized = normalize_package_payload(
+        {
+            "project": {"description": "Ohne Namen"},
+            "versions": [{"tree_data": {"root_id": "r", "nodes": {}}}, "ungültig"],
+        },
+        fallback_name="Ersatzname",
+    )
+    project = normalized["project"]
+    assert isinstance(project, dict)
+    assert project["name"] == "Ersatzname"
+    # Ungültige Versionseinträge werden verworfen
+    versions = normalized["versions"]
+    assert isinstance(versions, list)
+    assert len(versions) == 1
+
+
+def test_validate_package_reports_all_defects() -> None:
+    assert validate_package("kein Paket") == ["Paket ist kein gültiges Wörterbuch-Objekt."]
+
+    errors = validate_package(
+        {
+            "format": PACKAGE_FORMAT,
+            "format_version": FORMAT_VERSION + 1,
+            "project": {"name": "  "},
+            "versions": [{"notes": "ohne Baum"}, "keine Zuordnung"],
+        }
+    )
+    assert f"Format-Version {FORMAT_VERSION + 1} wird nicht unterstützt." in errors
+    assert "Paket enthält keine gültigen Projektdaten mit Namen." in errors
+    assert "Version 0 enthält kein 'tree_data'." in errors
+    assert "Version 1 enthält kein 'tree_data'." in errors
+
+
+def test_import_package_rejects_invalid_package() -> None:
+    with pytest.raises(PackageFormatError, match="Paketvalidierung fehlgeschlagen") as exc:
+        import_package({"format": PACKAGE_FORMAT, "project": {}, "versions": []})
+    assert exc.value.code == "INVALID_PACKAGE"

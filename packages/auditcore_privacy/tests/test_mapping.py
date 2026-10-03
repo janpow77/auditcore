@@ -80,3 +80,44 @@ def test_import_validation(store: MappingStore) -> None:
     """Fehlerhafte Importdaten werden abgelehnt."""
     with pytest.raises(ScopeError):
         store.import_scope({"scope_key": "", "salt": ""})
+
+
+def test_get_or_create_scope_reuses_engine_and_salt(store: MappingStore, sample_salt: str) -> None:
+    """Ein bestehender Scope wird wiederverwendet, ein später abweichender Salt ändert nichts."""
+    engine = store.get_or_create_scope("scope-reuse", salt=sample_salt)
+    pseudo = engine.get_or_create(EntityType.PERSON, "Petra Wagner")
+
+    again = store.get_or_create_scope("scope-reuse", salt="anderer-salt")
+
+    assert again is engine
+    assert again.salt == sample_salt
+    assert again.get_or_create(EntityType.PERSON, "Petra Wagner") == pseudo
+
+
+def test_scope_without_salt_gets_random_salt(store: MappingStore) -> None:
+    """Ohne vorgegebenen Salt erhalten getrennte Scopes je einen eigenen Zufalls-Salt."""
+    engine_a = store.get_or_create_scope("scope-ohne-salt-a")
+    engine_b = store.get_or_create_scope("scope-ohne-salt-b")
+
+    assert len(engine_a.salt) == 32
+    assert engine_a.salt != engine_b.salt
+
+
+def test_import_from_mapping_export_object(store: MappingStore, sample_salt: str) -> None:
+    """Ein MappingExport-Objekt lässt sich direkt und ohne Neuzuordnung importieren."""
+    engine = store.get_or_create_scope("export-objekt", salt=sample_salt)
+    person = engine.get_or_create(EntityType.PERSON, "Jürgen Becker")
+    address = engine.get_or_create(EntityType.ADDRESS, "Lindenallee 7, Gießen")
+
+    exported = store.export_scope("export-objekt")
+    target = MappingStore()
+    imported = target.import_scope(exported)
+
+    assert target.get_scope("export-objekt") is imported
+    assert imported.salt == sample_salt
+    assert imported.get_or_create(EntityType.PERSON, "Jürgen Becker") == person
+    assert imported.get_or_create(EntityType.ADDRESS, "Lindenallee 7, Gießen") == address
+    assert imported.get_or_create(EntityType.ADDRESS, "Bahnhofstraße 2, Wetzlar") == (
+        "[Anschrift 2]"
+    )
+    assert len(imported.new_mappings) == 1

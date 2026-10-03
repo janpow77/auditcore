@@ -1,12 +1,128 @@
 # auditcore
 
-**Plattformbibliothek zur Herstellung und Pflege eigenständiger Fachbibliotheken.**
-Das Repository verwaltet mehrere separat installierbare Python-Pakete. Anwendungen
-bleiben in ihren eigenen Repositories und beziehen benötigte Pakete über pip oder APT.
-Grundlage: [Lastenheft](AUDITCORE_LASTENHEFT.md) mit der später ausdrücklich vereinbarten
-[Mehrpaket-Architektur](docs/architecture/ADR-001-multi-package-monorepo.md).
-Der [Umsetzungsplan](docs/architecture/IMPLEMENTATION_PLAN.md) verlangt zuerst das
-fertige Framework und seinen technischen Nachweis, danach die Fachbibliotheken.
+[![quality](https://github.com/janpow77/auditcore/actions/workflows/quality.yml/badge.svg)](https://github.com/janpow77/auditcore/actions/workflows/quality.yml)
+[![domain-packages](https://github.com/janpow77/auditcore/actions/workflows/domain-packages.yml/badge.svg)](https://github.com/janpow77/auditcore/actions/workflows/domain-packages.yml)
+[![js-packages](https://github.com/janpow77/auditcore/actions/workflows/js-packages.yml/badge.svg)](https://github.com/janpow77/auditcore/actions/workflows/js-packages.yml)
+[![code-quality-gate](https://github.com/janpow77/auditcore/actions/workflows/code-quality-gate.yml/badge.svg)](https://github.com/janpow77/auditcore/actions/workflows/code-quality-gate.yml)
+![Python](https://img.shields.io/badge/python-%E2%89%A53.11-blue)
+[![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-green)](LICENSE)
+
+**Plattformbibliothek zur Herstellung und Pflege eigenständiger Fachbibliotheken für Prüf-,
+Kontroll- und Revisionsverfahren.** Das Repository verwaltet 42 separat installierbare
+Python- und npm-Pakete; Anwendungen bleiben in ihren eigenen Repositories und beziehen
+benötigte Pakete über pip, APT oder npm.
+
+Grundlage ist das [Lastenheft](AUDITCORE_LASTENHEFT.md) mit der später ausdrücklich
+vereinbarten [Mehrpaket-Architektur](docs/architecture/ADR-001-multi-package-monorepo.md).
+Der [Umsetzungsplan](docs/architecture/IMPLEMENTATION_PLAN.md) verlangt zuerst das fertige
+Framework und seinen technischen Nachweis, danach die Fachbibliotheken.
+
+## Auf einen Blick
+
+- **Fachbibliotheken für den Prüfprozess:** Vergabe- und Registerprüfung, Checklisten und BPMN,
+  Stichproben und Fehlerhochrechnung (TER/RER), Schwärzung und Pseudonymisierung, Berichte.
+- **Eigenständig installierbar:** Jedes Paket hat eigenes `pyproject.toml` bzw. `package.json`,
+  eigene Tests und Herkunftsnachweise; kein Fachpaket benötigt die Plattform zur Laufzeit.
+- **Frameworkfreie Domänenkerne:** keine Webframeworks, Datenbanken oder HTTP-Clients im
+  Fachkern; Web-Adapter liegen in optionalen Extras.
+- **Quality Gates mit Ratchet:** `auditcore-codegate` vergleicht Komplexität, Längen, Typisierung
+  und Duplikate mit `quality/baseline.json`; kein Wert darf steigen.
+- **Einheitliche Prüfbank:** `auditcore-runner` führt dieselben Prüfprofile lokal und in der CI aus.
+- **Plattformwerkzeuge:** Inventur und Konsolidierung, Refactoring mit Characterization-Tests,
+  Debian-/APT-Paketierung.
+
+<img src="docs/kanban/screenshots/kanban-board.png" alt="Kanban-Board aus der Komponenten-Demo von @auditcore/ui" width="800">
+
+*Beispiel aus den Oberflächenpaketen: Kanban-Board der Komponenten-Demo (`@auditcore/ui`, Regeln aus `auditcore_kanban`).*
+
+## Schnellstart
+
+**Python-Bibliothek in einer Anwendung nutzen** (Python 3.11 oder neuer):
+
+```bash
+python -m pip install auditcore-geo \
+  --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+Hashgebundene Requirements und APT: [package-feed.md](docs/deployment/package-feed.md),
+[library-installation.md](docs/deployment/library-installation.md).
+
+**Vue, React oder Web Components** (Standardweg npm-Registry; Veröffentlichung nach jedem
+Release durch den Workflow `npm-publish`):
+
+```bash
+npm install @auditcore/ui vue                     # Vue und Web Components
+npm install @auditcore/ui-react react react-dom   # React, ohne Vue
+```
+
+Lauffähige Beispiele: [`examples/vue-minimal`](examples/vue-minimal),
+[`examples/react-minimal`](examples/react-minimal),
+[`examples/webcomponent-minimal`](examples/webcomponent-minimal).
+
+**Am Repository entwickeln:**
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -e ".[dev]"
+pytest
+ruff check .
+mypy src
+```
+
+<details>
+<summary><b>Installation ohne Registry-Zugang, npm-Entwicklung, Voraussetzungen</b></summary>
+
+Ohne Registry-Zugang (Intranet, offline) liegen dieselben npm-Pakete als Tarballs im
+Release; `npm-packages.json` nennt je Paket alle nötigen Tarball-URLs. Details,
+Integritätsprüfung, `vendor/`-Ablage und REST-Gegenstellen:
+[frontend-installation.md](docs/deployment/frontend-installation.md); Einrichtung der
+Registry-Veröffentlichung: [npm-veroeffentlichung.md](docs/deployment/npm-veroeffentlichung.md).
+
+```bash
+BASE=https://github.com/janpow77/auditcore/releases/download/v<release>
+curl -fsSLO "$BASE/npm-packages.json"
+echo '@auditcore:registry=https://npm-registry.invalid/' >> .npmrc   # nie aus einer Registry
+npm install $(node -e 'const m=require("./npm-packages.json");const p=m.packages.find(x=>x.name===process.argv[1]);console.log(Object.entries(p.package_json_dependencies).map(([n,u])=>n+"@"+u).join(" "))' @auditcore/ui) vue
+# React: @auditcore/ui-react statt @auditcore/ui, dazu react react-dom (kein Vue)
+```
+
+npm-Pakete am Repository entwickeln (Node 20.19 oder neuer, npm-Workspaces unter `packages-js/`):
+
+```bash
+npm ci
+npm run lint && npm run typecheck && npm test && npm run build
+node scripts/js/verify-examples.mjs   # Beispiele aus frisch gepackten Tarballs bauen
+```
+
+Der Core benötigt nur die Standardbibliothek. Extras: `quality`, `analysis`, `deploy`, `all`.
+GitHub-Zugriff nutzt eine bereits angemeldete `gh`-CLI. Debian-Builds benötigen `dpkg-deb`;
+isolierte Pakettests benötigen Docker auf **dem Buildsystem**, nicht auf dem Zielserver.
+
+</details>
+
+## Architektur
+
+```mermaid
+flowchart LR
+    subgraph repo["Repository auditcore"]
+        direction TB
+        core["src/auditcore<br/>Fachkern + Plattformwerkzeuge"]
+        py["packages/auditcore_*<br/>32 Python-Pakete"]
+        common["auditcore_common<br/>Basispaket"]
+        js["packages-js/@auditcore/*<br/>10 npm-Pakete"]
+        py --> common
+    end
+    runner["auditcore-runner<br/>Prüfprofile lokal und CI"]
+    feed["Paketindex (PEP 503),<br/>Release-Assets, APT"]
+    npm["npm-Registry /<br/>Release-Tarballs"]
+    apps["Anwendungen<br/>(eigene Repositories)"]
+    runner -. prüft .-> repo
+    py --> feed
+    js --> npm
+    feed --> apps
+    npm --> apps
+```
 
 | Bereich | Aufgabe |
 |---|---|
@@ -16,16 +132,16 @@ fertige Framework und seinen technischen Nachweis, danach die Fachbibliotheken.
 | `auditcore.tools.apprefactor` | Characterization, Migration, Wrapper, Verifikation |
 | `auditcore.tools.deployer` | Build, Debian, Pakettests, signierte APT-Metadaten |
 
-Der Fachkern importiert keine Tools, Webframeworks, HTTP-Clients oder Datenbanken.
-Neue Fachbibliotheken erhalten eigene Distributionen unter `packages/` und
-keine automatische Laufzeitabhängigkeit von der Plattform oder anderen Fachpaketen.
-Die vorhandene Funktion `auditcore.reporting.get_number_format` wurde mit
-34 Characterization-Fällen aus Flowlib übernommen; Herkunft und MIT-Lizenz
-stehen unter `docs/provenance` und `LICENSES`.
+Der Fachkern importiert keine Tools, Webframeworks, HTTP-Clients oder Datenbanken. Neue
+Fachbibliotheken erhalten eigene Distributionen unter `packages/` und keine automatische
+Laufzeitabhängigkeit von der Plattform oder anderen Fachpaketen. Die vorhandene Funktion
+`auditcore.reporting.get_number_format` wurde mit 34 Characterization-Fällen aus Flowlib
+übernommen; Herkunft und MIT-Lizenz stehen unter [`docs/provenance`](docs/provenance) und
+[`LICENSES`](LICENSES). Verzeichnisstruktur und Modulkarte: [ARCHITEKTUR.md](ARCHITEKTUR.md).
 
-## Fachliche Anwendungsbereiche (Wann brauche ich welches Paket?)
+## Fachliche Anwendungsbereiche
 
-Die 42 Bibliotheken des Repositories sind modular aufgebaut und decken die zentralen Phasen von Prüfungs-, Kontroll- und Revisionsverfahren ab. Sie lassen sich nach fachlichem Einsatzzweck kombinieren:
+Welche Pakete für welche Phase von Prüfungs-, Kontroll- und Revisionsverfahren gedacht sind:
 
 | Phase / Anwendungsbereich | Typische Prüfungsaufgabe | Maßgebliche Bibliotheken |
 |---|---|---|
@@ -35,51 +151,19 @@ Die 42 Bibliotheken des Repositories sind modular aufgebaut und decken die zentr
 | **4. Datenschutz, Schwärzung & Testdaten** | Revisionssichere PDF-Schwärzung vor Akteneinsicht, Scoped-Pseudonymisierung, VVT/DSFA und geschützte synthetische Testdaten. | [`auditcore_pdf`](packages/auditcore_pdf), [`auditcore_privacy`](packages/auditcore_privacy), [`auditcore_dataprotection`](packages/auditcore_dataprotection), [`auditcore_dummygenerator`](packages/auditcore_dummygenerator), [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator), [`auditcore_invoicesynth`](packages/auditcore_invoicesynth) |
 | **5. Berichtswesen, Plattform & UI** | Revisionssichere Word-/Excel-/PDF-Berichte, Prüfungs-Kanban, gemeinsame Mandanten-/Kontoverwaltung und UI-Kerne. | [`auditcore_reporting`](packages/auditcore_reporting), [`auditcore_kanban`](packages/auditcore_kanban), [`@auditcore/kanban-core`](packages-js/kanban-core), [`auditcore_account`](packages/auditcore_account), [`auditcore_auth`](packages/auditcore_auth), [`auditcore_identifiers`](packages/auditcore_identifiers), [`auditcore_harvest`](packages/auditcore_harvest), [`auditcore_llm_client`](packages/auditcore_llm_client), [`@auditcore/ui`](packages-js/ui), [`@auditcore/layout`](packages-js/layout) |
 
-## auditcore-runner und technische Vorgaben des Frameworks
-
-Alle Bibliotheken im Repository unterliegen den verbindlichen Qualitäts- und Architekturstandards des auditcore-Frameworks. Sie werden vor jedem Commit und in der CI automatisiert durch den **`auditcore-runner`** geprüft.
-
-### 1. auditcore-runner: Lokale Prüfbank und CI-Parität
-
-Der `auditcore-runner` (`packages/auditcore_runner`) ist das verbindliche Prüfwerkzeug für Entwickler, CI-Pipelines und KI-Coding-Agents:
-
-- **Identische Laufzeitbedingungen:** Lokale Prüfläufe laufen im selben Image und mit denselben Werkzeugversionen wie die CI.
-- **Zentrale Befehle:**
-  - `auditcore-runner lokal --pfad . <profil> --host --ohne-cache`: Führt das definierte Prüfprofil (z. B. `pdf`, `checklists`, `privacy`, `pr`) aus.
-  - `auditcore-runner befunde`: Gibt den einheitlichen, maschinenlesbaren Befundbericht aus.
-  - `auditcore-runner runner install`: Installiert ephemere GitHub-Actions-Runner auf eigenen Servern (isoliert über Docker und systemd).
-- **Git-Inhalts-Cache:** Werkzeuge prüfen nur Dateien, deren Git-Inhalt sich seit dem letzten Lauf geändert hat.
-- **Autofix-Vorlauf:** Sichere Formatierer und Regelfixe laufen vor der Modell- und Entwicklerarbeit.
-
-### 2. Clean Domain Architecture (Framework-Freiheit)
-
-Um maximale Portabilität und langfristige Wartbarkeit zu garantieren, sind alle Fachpakete (`packages/auditcore_*`) reine Domänenkerne:
-
-- **Keine relationale Datenbankbindung:** Kein SQLAlchemy, kein SQLModel, keine Datenbanktreiber im Domänenkern.
-- **Keine Webframework-Kopplung:** Weder FastAPI noch Starlette dürfen im Fachkern importiert werden. Web- und REST-Adapter liegen in optionalen Extras oder Verbraucheranwendungen.
-- **Hierarchische Abhängigkeiten:** Abhängigkeiten fließen ausschließlich von den Fachpaketen zu Basispaketen wie `auditcore_common`, niemals zyklisch (`tests/test_architecture.py` erzwingt dies).
-- **Deterministische Datenverträge:** Strukturierte JSON-Schemas, kanonische Serialisierung und reproduzierbare SHA-256-Strukturprüfsummen.
-
-### 3. Strikte Quality Gates (Qualitäts-Ratchet)
-
-Die Code-Qualität wird durch das Qualitäts-Gate (`auditcore-codegate`) mit einer `baseline.json` überwacht. Metriken dürfen sich niemals verschlechtern:
-
-- **McCabe-Zyklomatische Komplexität:** Maximal **10** je Funktion.
-- **Funktionslänge:** Maximal **60 Zeilen** je Funktion.
-- **Modullänge:** Maximal **400 Zeilen** je Modul.
-- **Strict Typing:** Striktes mypy (`--strict`) ohne `typing.Any`.
-- **AST-Duplikatsinventur:** `duplicate_functions = 0` (Wiederholte Logik muss in `auditcore_common` konsolidiert werden).
-- **Sprach- und Rechtschreibstandard:** Fachliches Deutsch mit echten Umlauten (ä, ö, ü, ß; keine ASCII-Ersatzschreibweisen in Texten und Docstrings).
-- **Lückenlose Provenienz:** Jedes Paket führt eine maschinenlesbare `provenance.json` mit Herkunftsnachweis, Lizenz und Charakterisierung.
-- **Verbindliche Dokumentationsstandards:** Alle Paket-READMEs folgen der Vorlage `docs/bibliotheken/readme-vorlage.md` und enthalten lauffähige Schnellstart-Codeblöcke, die von `tests/test_readmes.py` bei jedem Lauf ausgeführt werden.
-
 ## Pakete
 
-Alle Bibliotheken des Repositorys – Python-Pakete unter `packages/` und
-npm-Pakete unter `packages-js/`. Die Tabelle wird aus `pyproject.toml`,
-`package.json`, dem Abschnitt „Zweck“ der Paket-README und `provenance.json`
-erzeugt; jede Paket-README folgt der
-[README-Vorlage](docs/bibliotheken/readme-vorlage.md).
+Alle Python-Pakete liegen unter `packages/`, die npm-Pakete unter `packages-js/`. Jedes wird
+aus eigenem `pyproject.toml` bzw. `package.json` gebaut und hat eigene Tests,
+Anwendbarkeitskontexte und Herkunftsnachweise; jede Paket-README folgt der
+[README-Vorlage](docs/bibliotheken/readme-vorlage.md). Synthetische Testrechnungen sind keine
+Zusage eines Systems zur verbindlichen Rechnungsstellung.
+
+<details>
+<summary><b>Paketkatalog: Version, Zweck, Abhängigkeiten, Status (42 Pakete)</b></summary>
+
+Die Tabelle wird aus `pyproject.toml`, `package.json`, dem Abschnitt „Zweck“ der
+Paket-README und `provenance.json` erzeugt.
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
 43 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
@@ -148,91 +232,92 @@ erzeugt; jede Paket-README folgt der
 | [`@auditcore/ui-react`](packages-js/ui-react) | 1.2.0 | Native React-Komponenten (React 18/19) der FlowAudit-Oberflächen von Tabelle bis Kanban – ohne Vue, auf den Kernen `@auditcore/ui-core` und `@auditcore/kanban-core`. | `@auditcore/common@0.1.1`, `@auditcore/ui-core@0.3.0`, `@auditcore/kanban-core@0.2.1`, `react@^18.3.0 || ^19.0.0` (peer), `react-dom@^18.3.0 || ^19.0.0` (peer) | neu |
 <!-- paketkatalog:end -->
 
-Kein Fachpaket benötigt die Plattformbibliothek zur Laufzeit. Alle Pakete
-werden aus eigenen `pyproject.toml` bzw. `package.json` gebaut und haben eigene
-Tests, Anwendbarkeitskontexte und Herkunftsnachweise. Anwendungen bleiben
-getrennte Repositories. Synthetische Testrechnungen sind keine Zusage eines
-Systems zur verbindlichen Rechnungsstellung.
+</details>
 
-Veröffentlichte Previews (zuletzt
-[v0.4.1](https://github.com/janpow77/auditcore/releases/tag/v0.4.1)) enthalten
-Wheels, Source-Distributionen und signierte Debian-Pakete; der Paketindex
-`https://janpow77.github.io/auditcore/simple/` verlinkt alle Versionen mit
-SHA-256. Ab dem nächsten Release kommen die npm-Pakete als Tarballs hinzu.
-[Vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md).
+Veröffentlichte Previews stehen auf der
+[Releases-Seite](https://github.com/janpow77/auditcore/releases): je nach Release Wheels,
+Source-Distributionen, signierte Debian-Pakete und – seit
+[v0.5.0](https://github.com/janpow77/auditcore/releases/tag/v0.5.0) – npm-Tarballs mit
+`npm-packages.json`. Der Paketindex `https://janpow77.github.io/auditcore/simple/` verlinkt
+alle Versionen mit SHA-256. Weiteres: [vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md),
+[Paketgrenzen und weitere Kandidaten](docs/architecture/DOMAIN_PACKAGE_PLAN.md),
+technischer Frameworknachweis im [Phasenbericht](docs/reports/FRAMEWORK_PHASES_1_2.md).
 
-[Paketgrenzen und weitere Kandidaten](docs/architecture/DOMAIN_PACKAGE_PLAN.md).
-Der technische Frameworknachweis ist im
-[Phasenbericht](docs/reports/FRAMEWORK_PHASES_1_2.md) dokumentiert.
+## Qualitäts- und Architekturvorgaben
 
-## Installation
-
-### Bibliotheken in einer Anwendung nutzen
-
-**Python** (Paketindex, hashgebundene Requirements oder APT, Details in
-[package-feed.md](docs/deployment/package-feed.md) und
-[library-installation.md](docs/deployment/library-installation.md)):
+Alle Bibliotheken unterliegen verbindlichen Qualitäts- und Architekturstandards und werden vor
+jedem Commit und in der CI durch den `auditcore-runner` geprüft. Die Prüfprofile (`pr`, `pdf`,
+`checklists`, `privacy` u. a.) stehen in `.auditcore-runner.toml`.
 
 ```bash
-python -m pip install auditcore-geo \
-  --index-url https://janpow77.github.io/auditcore/simple/
+auditcore-runner lokal --pfad . pr --host --ohne-cache   # Prüfprofil ausführen
+auditcore-runner befunde                                 # einheitlicher Befundbericht
+auditcore-codegate check                                 # Pflicht-Gate Code-Qualität (Ratchet)
 ```
 
-**Vue, React oder Web Components** (Details, Integritätsprüfung, `vendor/`-Ablage
-und REST-Gegenstellen in
-[frontend-installation.md](docs/deployment/frontend-installation.md)).
-Standardweg ist die npm-Registry (Veröffentlichung nach jedem Release durch
-den Workflow `npm-publish`, Einrichtung in
-[npm-veroeffentlichung.md](docs/deployment/npm-veroeffentlichung.md)):
+<details>
+<summary><b>auditcore-runner: lokale Prüfbank und CI-Parität</b></summary>
 
-```bash
-npm install @auditcore/ui vue                     # Vue und Web Components
-npm install @auditcore/ui-react react react-dom   # React, ohne Vue
-```
+Der `auditcore-runner` ([`packages/auditcore_runner`](packages/auditcore_runner)) ist das
+verbindliche Prüfwerkzeug für Entwickler, CI-Pipelines und KI-Coding-Agents:
 
-Ohne Registry-Zugang (Intranet, offline) liegen dieselben Pakete als signierte
-Tarballs im Release; `npm-packages.json` nennt je Paket alle nötigen
-Tarball-URLs:
+- **Identische Laufzeitbedingungen:** Lokale Prüfläufe laufen im selben Image und mit denselben
+  Werkzeugversionen wie die CI.
+- **Zentrale Befehle:**
+  - `auditcore-runner lokal --pfad . <profil> --host --ohne-cache`: führt das definierte
+    Prüfprofil (z. B. `pdf`, `checklists`, `privacy`, `pr`) aus.
+  - `auditcore-runner befunde`: gibt den einheitlichen, maschinenlesbaren Befundbericht aus.
+  - `auditcore-runner runner install`: installiert ephemere GitHub-Actions-Runner auf eigenen
+    Servern (isoliert über Docker und systemd), siehe
+    [self-hosted-runner.md](docs/deployment/self-hosted-runner.md).
+- **Git-Inhalts-Cache:** Werkzeuge prüfen nur Dateien, deren Git-Inhalt sich seit dem letzten
+  Lauf geändert hat.
+- **Autofix-Vorlauf:** Sichere Formatierer und Regelfixe laufen vor der Modell- und
+  Entwicklerarbeit.
 
-```bash
-BASE=https://github.com/janpow77/auditcore/releases/download/v<release>
-curl -fsSLO "$BASE/npm-packages.json"
-echo '@auditcore:registry=https://npm-registry.invalid/' >> .npmrc   # nie aus einer Registry
-npm install $(node -e 'const m=require("./npm-packages.json");const p=m.packages.find(x=>x.name===process.argv[1]);console.log(Object.entries(p.package_json_dependencies).map(([n,u])=>n+"@"+u).join(" "))' @auditcore/ui) vue
-# React: @auditcore/ui-react statt @auditcore/ui, dazu react react-dom (kein Vue)
-```
+</details>
 
-Lauffähige Beispiele: [`examples/vue-minimal`](examples/vue-minimal),
-[`examples/react-minimal`](examples/react-minimal),
-[`examples/webcomponent-minimal`](examples/webcomponent-minimal).
+<details>
+<summary><b>Clean Domain Architecture (Framework-Freiheit)</b></summary>
 
-### Entwicklung am Repository
+Alle Fachpakete (`packages/auditcore_*`) sind reine Domänenkerne:
 
-Python 3.11 oder neuer:
+- **Keine relationale Datenbankbindung:** Kein SQLAlchemy, kein SQLModel, keine
+  Datenbanktreiber im Domänenkern.
+- **Keine Webframework-Kopplung:** Weder FastAPI noch Starlette dürfen im Fachkern importiert
+  werden. Web- und REST-Adapter liegen in optionalen Extras oder Verbraucheranwendungen.
+- **Hierarchische Abhängigkeiten:** Abhängigkeiten fließen ausschließlich von den Fachpaketen zu
+  Basispaketen wie `auditcore_common`, niemals zyklisch; die
+  [Mehrpaket-Verwaltung](docs/workspace.md) meldet Laufzeitzyklen.
+- **Deterministische Datenverträge:** Strukturierte JSON-Schemas, kanonische Serialisierung und
+  reproduzierbare SHA-256-Strukturprüfsummen.
 
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -e ".[dev]"
-pytest
-ruff check .
-mypy src
-```
+</details>
 
-Der Core benötigt nur die Standardbibliothek. Extras: `quality`, `analysis`,
-`deploy`, `all`. GitHub-Zugriff nutzt eine bereits angemeldete `gh`-CLI.
-Debian-Builds benötigen `dpkg-deb`; isolierte Pakettests benötigen Docker auf
-**dem Buildsystem**, nicht auf dem Zielserver.
+<details>
+<summary><b>Qualitäts-Ratchet und Quality Gates</b></summary>
 
-npm-Pakete (Node 20.19 oder neuer, npm-Workspaces unter `packages-js/`):
+Das Qualitäts-Gate `auditcore-codegate check` misst je Paket und vergleicht per Ratchet mit
+`quality/baseline.json`. Kein Wert darf steigen; Verbesserungen werden im selben PR mit
+`--update-baseline` festgeschrieben. CI-Job, pre-commit-Hook und Release-Blocker:
+[Code-Qualitätsmaßstäbe](docs/quality/code-quality.md).
 
-```bash
-npm ci
-npm run lint && npm run typecheck && npm test && npm run build
-node scripts/js/verify-examples.mjs   # Beispiele aus frisch gepackten Tarballs bauen
-```
+- **McCabe-Zyklomatische Komplexität:** maximal **10** je Funktion.
+- **Funktionslänge:** maximal **60 Zeilen** je Funktion.
+- **Modullänge:** maximal **400 Zeilen** je Modul.
+- **Strict Typing:** striktes mypy (`--strict`) ohne `typing.Any`.
+- **Englische Bezeichner;** bei `packages-js/` zusätzlich Dateigrößen und `eslint-disable`.
+- **AST-Duplikatsinventur:** `duplicate_functions = 0` (wiederholte Logik muss in
+  `auditcore_common` konsolidiert werden).
+- **Sprach- und Rechtschreibstandard:** fachliches Deutsch mit echten Umlauten (ä, ö, ü, ß;
+  keine ASCII-Ersatzschreibweisen in Texten und Docstrings).
+- **Lückenlose Provenienz:** Jedes Paket führt eine maschinenlesbare `provenance.json` mit
+  Herkunftsnachweis, Lizenz und Charakterisierung.
+- **Dokumentationsstandard:** Alle Paket-READMEs folgen der Vorlage
+  [`docs/bibliotheken/readme-vorlage.md`](docs/bibliotheken/readme-vorlage.md) und enthalten
+  lauffähige Schnellstart-Codeblöcke, die `tests/test_readmes.py` bei jedem Lauf ausführt.
 
-## Quality Gates
+Technische Quality Gates der Plattform:
 
 ```bash
 auditcore-quality src/auditcore --strict --context contexts/core.json --format json --output core.json
@@ -244,52 +329,51 @@ auditcore-quality src/auditcore --api-snapshot api.json
 auditcore-quality src/auditcore --compare-api api.json
 ```
 
-`auditcore-bibquality` ist ein Alias. `--no-external-tools` markiert Ruff,
-Mypy, Bandit und pip-audit als NOT_EXECUTED. Konfiguration steht unter
-`[tool.auditcore-bibquality]` in `pyproject.toml`; Ignore-Kommentare werden
-sichtbar protokolliert. Core und Tool-Komponenten haben getrennte Prüfumfänge.
-[Status- und Exitcode-Semantik](docs/quality-semantics.md).
+`auditcore-bibquality` ist ein Alias. `--no-external-tools` markiert Ruff, Mypy, Bandit und
+pip-audit als NOT_EXECUTED. Konfiguration steht unter `[tool.auditcore-bibquality]` in
+`pyproject.toml`; Ignore-Kommentare werden sichtbar protokolliert. Core und Tool-Komponenten
+haben getrennte Prüfumfänge. [Status- und Exitcode-Semantik](docs/quality-semantics.md).
 
-**Pflicht-Gate Code-Qualität:** `auditcore-codegate check` misst je Paket
-Komplexität (McCabe ≤ 10), Modul- und Funktionslängen, `Any`, `mypy --strict`
-und englische Bezeichner (bei `packages-js/` auch Dateigrößen und
-`eslint-disable`) und vergleicht per Ratchet mit `quality/baseline.json`.
-Kein Wert darf steigen, Verbesserungen werden im selben PR mit
-`--update-baseline` festgeschrieben. CI-Job, pre-commit-Hook und
-Release-Blocker: [Code-Qualitätsmaßstäbe](docs/quality/code-quality.md).
+</details>
 
-## Framework und Anwendbarkeit
+## Plattformwerkzeuge
 
-`GitFrameworkPolicyProvider` liest
-`janpow77/verwaltung-app-framework` am dokumentierten Git-Commit. Matrix,
-Prüfkatalog, Standardsregister und Security-Dokumente bleiben externe Quelle.
-Die lokale Adapterdatei enthält technische Auslöser und Quellhashes, keinen
+Die Plattformdistribution `auditcore` installiert unter anderem die Befehle `auditcore-quality`,
+`auditcore-codegate`, `auditcore-consolidate`, `auditcore-refactor` und `auditcore-deploy`.
+
+<details>
+<summary><b>Framework und Anwendbarkeit</b></summary>
+
+`GitFrameworkPolicyProvider` liest `janpow77/verwaltung-app-framework` am dokumentierten
+Git-Commit. Matrix, Prüfkatalog, Standardsregister und Security-Dokumente bleiben externe
+Quelle. Die lokale Adapterdatei enthält technische Auslöser und Quellhashes, keinen
 unabhängigen Anforderungskatalog. Bei Drift bleibt die Bewertung REVIEW_REQUIRED.
 
-`auditcore-context.json` beschreibt die gesamte Plattformdistribution. `contexts/*.json` trennt Core
-und ausführbare Werkzeuge; `--context contexts/consolidator.json` wählt den
-Artefaktkontext. Unbestimmter Schutzbedarf und KI-Einsatz bleiben UNKNOWN.
-MUSS verlangt Klärung; BEDINGT prüft den konkreten Auslöser; SOLL bleibt eine
-Empfehlung. Profile sind nur abgeleitete Gruppierungen. Eine genehmigte Abweichung
-benötigt einen vollständigen zuständigen menschlichen Entscheidungsnachweis.
-Der Provider selbst stellt diesen niemals aus. Cache: `.auditcore/framework-cache.json`;
-offline oder bei unterschiedlichem Remote-Commit immer POLICY_SOURCE_STALE.
+`auditcore-context.json` beschreibt die gesamte Plattformdistribution. `contexts/*.json` trennt
+Core und ausführbare Werkzeuge; `--context contexts/consolidator.json` wählt den
+Artefaktkontext. Unbestimmter Schutzbedarf und KI-Einsatz bleiben UNKNOWN. MUSS verlangt
+Klärung; BEDINGT prüft den konkreten Auslöser; SOLL bleibt eine Empfehlung. Profile sind nur
+abgeleitete Gruppierungen. Eine genehmigte Abweichung benötigt einen vollständigen zuständigen
+menschlichen Entscheidungsnachweis. Der Provider selbst stellt diesen niemals aus. Cache:
+`.auditcore/framework-cache.json`; offline oder bei unterschiedlichem Remote-Commit immer
+POLICY_SOURCE_STALE.
 
 Nachweise werden je Projekt aus `.auditcore/policy-evidence.json` und
-`.auditcore/policy-decisions.json` geladen, jeweils nach Requirement-ID. Technische
-Nachweise brauchen `status: VERIFIED`, prüfbare `references` und den aktuellen
-Framework-`source_commit` sowie übereinstimmende `artifact`,
-`artifact_source_digest` und `context_digest`. `evidence_binding()` berechnet nur
-die Bindung und erteilt keine Freigabe. Geänderte Quellen/Kontexte und Belege
-anderer Pakete werden abgelehnt. `versioned_artifact_types` unterscheidet etwa
-Regelwerke, Prompts und Agenten für die konkrete Testanwendbarkeit.
-Abweichungen benötigen zusätzlich die menschlichen
-Entscheidungsfelder aus dem Policy-Modell. Unbelegte Selbsterklärungen sind keine
-Freigabe. Für den Handoff muss `auditcore-deployment-evidence.json` alle
-Betriebsprüfungen mit `status`, `reference`, `reason` und den aktuellen
-`source_digest` enthalten. Handoff und Paketplan kontrollieren diesen erneut.
+`.auditcore/policy-decisions.json` geladen, jeweils nach Requirement-ID. Technische Nachweise
+brauchen `status: VERIFIED`, prüfbare `references` und den aktuellen Framework-`source_commit`
+sowie übereinstimmende `artifact`, `artifact_source_digest` und `context_digest`.
+`evidence_binding()` berechnet nur die Bindung und erteilt keine Freigabe. Geänderte
+Quellen/Kontexte und Belege anderer Pakete werden abgelehnt. `versioned_artifact_types`
+unterscheidet etwa Regelwerke, Prompts und Agenten für die konkrete Testanwendbarkeit.
+Abweichungen benötigen zusätzlich die menschlichen Entscheidungsfelder aus dem Policy-Modell.
+Unbelegte Selbsterklärungen sind keine Freigabe. Für den Handoff muss
+`auditcore-deployment-evidence.json` alle Betriebsprüfungen mit `status`, `reference`, `reason`
+und den aktuellen `source_digest` enthalten. Handoff und Paketplan kontrollieren diesen erneut.
 
-## Inventur und Konsolidierung
+</details>
+
+<details>
+<summary><b>Inventur und Konsolidierung (<code>auditcore-consolidate</code>)</b></summary>
 
 ```bash
 auditcore-consolidate inventory --global
@@ -302,26 +386,28 @@ auditcore-consolidate packages inventory .
 auditcore-consolidate packages status .
 ```
 
-GLOBAL inventarisiert den authentifizierten Account einschließlich privater,
-archivierter, Fork- und Organisations-Repositories. Die strukturelle Analyse
-liest Python per AST und Dependency-Manifeste als Daten. Sie importiert keinen
-fremden Code. Unveränderte Commitstände werden wiederverwendet. Das lokale
-Inventar liegt atomar und mit Dateimodus 0600 unter `.auditcore/inventory`.
-Leere/ausgeschlossene Repositories und Parsefehler erhalten explizite Gründe.
+GLOBAL inventarisiert den authentifizierten Account einschließlich privater, archivierter,
+Fork- und Organisations-Repositories. Die strukturelle Analyse liest Python per AST und
+Dependency-Manifeste als Daten. Sie importiert keinen fremden Code. Unveränderte Commitstände
+werden wiederverwendet. Das lokale Inventar liegt atomar und mit Dateimodus 0600 unter
+`.auditcore/inventory`. Leere/ausgeschlossene Repositories und Parsefehler erhalten explizite
+Gründe.
 
-REPO ist für lokale UI/API-Arbeiten, REPO_AUDITCORE für Fachlogik und GLOBAL
-für die Gesamtlandschaft gedacht. Die konservative automatische Moduswahl nutzt
-bei Unklarheit REPO_AUDITCORE. Der Consolidator erzeugt Pläne und verändert keine
-Anwendungsimplementierungen. AST-Gleichheit ersetzt keine fachliche Freigabe.
-Abweichende Regeln oder Sicherheitsgrenzen erzeugen Entscheidungsbedarf.
+REPO ist für lokale UI/API-Arbeiten, REPO_AUDITCORE für Fachlogik und GLOBAL für die
+Gesamtlandschaft gedacht. Die konservative automatische Moduswahl nutzt bei Unklarheit
+REPO_AUDITCORE. Der Consolidator erzeugt Pläne und verändert keine
+Anwendungsimplementierungen. AST-Gleichheit ersetzt keine fachliche Freigabe. Abweichende
+Regeln oder Sicherheitsgrenzen erzeugen Entscheidungsbedarf.
 
-Die [Mehrpaket-Verwaltung](docs/workspace.md) liest `auditcore-workspace.toml`
-und die einzelnen `pyproject.toml`-Dateien, ohne deren Code oder Build-Backends
-auszuführen. Sourcehash, API, Abhängigkeiten, Herkunft, bekannte Consumer und
-Anwendbarkeitskontext werden pro Distribution persistent erfasst. CURRENT heißt
-aktueller Inventarstand, nicht Policy- oder Releasefreigabe.
+Die [Mehrpaket-Verwaltung](docs/workspace.md) liest `auditcore-workspace.toml` und die einzelnen
+`pyproject.toml`-Dateien, ohne deren Code oder Build-Backends auszuführen. Sourcehash, API,
+Abhängigkeiten, Herkunft, bekannte Consumer und Anwendbarkeitskontext werden pro Distribution
+persistent erfasst. CURRENT heißt aktueller Inventarstand, nicht Policy- oder Releasefreigabe.
 
-## KIRA und Graphify
+</details>
+
+<details>
+<summary><b>KIRA und Graphify</b></summary>
 
 ```bash
 export KIRA_MEMORY_URL='https://your-approved-endpoint/api/memory'
@@ -331,18 +417,20 @@ auditcore-consolidate kira search "Dokumentenparser"
 auditcore-consolidate graphify /path/to/repository
 ```
 
-KIRA nutzt den bestehenden Memory-API-Vertrag `/entries` und `/search`, prüft
-vor Indexierung auf Secrets/Datenschutzhinweise und speichert Source-SHAs.
-Ein leerer Suchindex bedeutet NOT_FOUND_IN_CURRENT_INDEX. Kein KIRA ersetzt
-GitHub als Codequelle. Fehlende URL/Key: NOT_CONFIGURED. HTTP ist ausschließlich
-für Loopback-Endpunkte zulässig; Credentials werden nicht über Redirects versendet.
+KIRA nutzt den bestehenden Memory-API-Vertrag `/entries` und `/search`, prüft vor Indexierung
+auf Secrets/Datenschutzhinweise und speichert Source-SHAs. Ein leerer Suchindex bedeutet
+NOT_FOUND_IN_CURRENT_INDEX. Kein KIRA ersetzt GitHub als Codequelle. Fehlende URL/Key:
+NOT_CONFIGURED. HTTP ist ausschließlich für Loopback-Endpunkte zulässig; Credentials werden
+nicht über Redirects versendet.
 
-Graphify läuft code-only ohne externes LLM. Fehlt es oder schlägt es fehl,
-werden NOT_EXECUTED und die lokalen AST-Abhängigkeiten getrennt ausgegeben.
-Die Infrastrukturprovider sind über Protocols austauschbar und werden mit Fakes
-ohne externe Systeme getestet.
+Graphify läuft code-only ohne externes LLM. Fehlt es oder schlägt es fehl, werden NOT_EXECUTED
+und die lokalen AST-Abhängigkeiten getrennt ausgegeben. Die Infrastrukturprovider sind über
+Protocols austauschbar und werden mit Fakes ohne externe Systeme getestet.
 
-## AppRefactor, Regression und Optimierung
+</details>
+
+<details>
+<summary><b>AppRefactor, Regression und Optimierung (<code>auditcore-refactor</code>)</b></summary>
 
 ```bash
 auditcore-refactor inspect /path/to/application
@@ -357,22 +445,24 @@ auditcore-refactor optimize /path/to/application --safe
 Ein Plan enthält konkrete Dateien, Imports, Wrapper, Quellhashes, Goldencases,
 Policy-Abhängigkeiten und Prüfkommandos. `characterize()` zeichnet tatsächliche
 Legacy-Ergebnisse vor Änderungen auf; `compare()` prüft Werte und Exceptiontypen.
-Klassenmethoden einschließlich Konstruktorargumenten und reine Importmigrationen
-werden durch explizite `characterization_checks` unterstützt. Frische Belege nach
-einer Änderung müssen aus tatsächlich erneut ausgeführten Prüfungen stammen.
-`apply()` kontrolliert Quellstand, Sicherheitsgrenzen und Policy vor/nach der
-Migration. Fehlgeschlagene Prüfungen stellen Originaldateien wieder her.
-Compatibility Wrapper erhalten Signaturen; die Legacy-Bereinigung bleibt ein
-separater, nachweisabhängiger Schritt. Sichere Importoptimierung läuft erst nach
+Klassenmethoden einschließlich Konstruktorargumenten und reine Importmigrationen werden durch
+explizite `characterization_checks` unterstützt. Frische Belege nach einer Änderung müssen aus
+tatsächlich erneut ausgeführten Prüfungen stammen. `apply()` kontrolliert Quellstand,
+Sicherheitsgrenzen und Policy vor/nach der Migration. Fehlgeschlagene Prüfungen stellen
+Originaldateien wieder her. Compatibility Wrapper erhalten Signaturen; die Legacy-Bereinigung
+bleibt ein separater, nachweisabhängiger Schritt. Sichere Importoptimierung läuft erst nach
 Baseline-Verifikation und führt danach die gleiche Prüfsuite aus.
 
-Die Konfiguration `auditcore-verification.json` ordnet folgenden Kategorien
-Argumentlisten zu: `shared_library`, `application_unit`, `regression`, `integration`,
-`framework`, `ruff`, `typing`, `security`, `dependencies`, `quality`. Fehlende
-Kommandos sind NOT_EXECUTED. Befehle werden ohne Shell ausgeführt. Das Projekt
-ist für die fachliche Vollständigkeit seiner konkreten Tests verantwortlich.
+Die Konfiguration `auditcore-verification.json` ordnet folgenden Kategorien Argumentlisten zu:
+`shared_library`, `application_unit`, `regression`, `integration`, `framework`, `ruff`,
+`typing`, `security`, `dependencies`, `quality`. Fehlende Kommandos sind NOT_EXECUTED. Befehle
+werden ohne Shell ausgeführt. Das Projekt ist für die fachliche Vollständigkeit seiner konkreten
+Tests verantwortlich.
 
-## Debian, APT und Release
+</details>
+
+<details>
+<summary><b>Debian, APT und Release (<code>auditcore-deploy</code>)</b></summary>
 
 Für Bibliotheken ohne Anwendungsdienst stehen eigenständige installierte Befehle bereit:
 
@@ -385,10 +475,10 @@ auditcore-deploy pip-index dist/auditcore_fixture-1.0.0-py3-none-any.whl --outpu
 ```
 
 `auditcore_fixture` ist ein technischer Beispielname, keine veröffentlichte Fachbibliothek.
-Bibliotheksbuilds benötigen keinen erfundenen Anwendungs-Handoff. Sie bekommen
-eigene Build-/Install-/Lizenzstatus; ein lokaler Testbau ist keine Veröffentlichung.
-Details: [pip-/APT-Paketierung](docs/deployment/library-installation.md).
-Die folgenden Befehle betreffen dagegen vollständige Anwendungen:
+Bibliotheksbuilds benötigen keinen erfundenen Anwendungs-Handoff. Sie bekommen eigene
+Build-/Install-/Lizenzstatus; ein lokaler Testbau ist keine Veröffentlichung. Details:
+[pip-/APT-Paketierung](docs/deployment/library-installation.md). Die folgenden Befehle
+betreffen dagegen vollständige Anwendungen:
 
 ```bash
 auditcore-deploy inspect /path/to/application
@@ -400,36 +490,55 @@ auditcore-deploy test-upgrade dist/old.deb dist/new.deb
 auditcore-deploy apt-repo build dist --signing-key YOUR_KEY_ID
 ```
 
-`auditcore-deploy.json` wird durch `ApplicationDeploymentProfile` beschrieben.
-Es benennt Version, Quellcommit/-digest, Entry Point, Runtime-Strategie,
-Frontend-Build, Debian-Abhängigkeiten, Servicekonto, Konfiguration, Health-URL
-und reproduzierbaren Buildzeitpunkt. Ausgeliefert werden vorgebaute Assets und
-entweder Debian-Laufzeitabhängigkeiten oder gehashte Offline-Wheels. `postinst`
-führt keine PyPI/npm-Downloads aus. Konfiguration: `/etc/<app>`; persistente
-Daten: `/var/lib/<app>`; Programm: `/opt/<app>`; Betrieb über systemd/journald.
-`apt remove` und auch `purge` löschen fachliche Daten nicht automatisch.
+`auditcore-deploy.json` wird durch `ApplicationDeploymentProfile` beschrieben. Es benennt
+Version, Quellcommit/-digest, Entry Point, Runtime-Strategie, Frontend-Build,
+Debian-Abhängigkeiten, Servicekonto, Konfiguration, Health-URL und reproduzierbaren
+Buildzeitpunkt. Ausgeliefert werden vorgebaute Assets und entweder
+Debian-Laufzeitabhängigkeiten oder gehashte Offline-Wheels. `postinst` führt keine
+PyPI/npm-Downloads aus. Konfiguration: `/etc/<app>`; persistente Daten: `/var/lib/<app>`;
+Programm: `/opt/<app>`; Betrieb über systemd/journald. `apt remove` und auch `purge` löschen
+fachliche Daten nicht automatisch.
 
 Ein Anwendungsbuild benötigt einen aktuellen READY_FOR_DEPLOYMENT-Handoff und die
-Deployment-Policy-Nachweise. DEB_BUILT bedeutet noch keine Paketfreigabe.
-Installations-, Upgrade-, Remove-, systemd- und Health-Ergebnisse sind getrennt.
-Eine normale Docker-Umgebung kann systemd durch schreibgeschützte cgroups
-blockieren; diese Grenze darf nicht als bestandener Diensttest ausgegeben werden.
-Die [isolierte QEMU-Prüfung](docs/deployment/systemd-validation.md) hat den
-tatsächlichen systemd-Lifecycle für technische Testpakete nachgewiesen.
-APT-Publikation benötigt geprüfte Signaturen und einen expliziten Zielpfad.
+Deployment-Policy-Nachweise. DEB_BUILT bedeutet noch keine Paketfreigabe. Installations-,
+Upgrade-, Remove-, systemd- und Health-Ergebnisse sind getrennt. Eine normale
+Docker-Umgebung kann systemd durch schreibgeschützte cgroups blockieren; diese Grenze darf
+nicht als bestandener Diensttest ausgegeben werden. Die
+[isolierte QEMU-Prüfung](docs/deployment/systemd-validation.md) hat den tatsächlichen
+systemd-Lifecycle für technische Testpakete nachgewiesen. APT-Publikation benötigt geprüfte
+Signaturen und einen expliziten Zielpfad.
 
-Wheel/sdist: `python -m build`. SBOMs stammen aus tatsächlichen Wheel-/Paketdateien,
-werden gegen CycloneDX 1.6 validiert und über Digests gebunden. Debian-Systempakete
-sind deklarierte Dependencies; deren vollständige Betriebssystemauflösung ist
-zusätzlich im Installationsumfeld zu erfassen. Keine Zertifizierungsbehauptung.
+Wheel/sdist: `python -m build`. SBOMs stammen aus tatsächlichen Wheel-/Paketdateien, werden
+gegen CycloneDX 1.6 validiert und über Digests gebunden. Debian-Systempakete sind deklarierte
+Dependencies; deren vollständige Betriebssystemauflösung ist zusätzlich im
+Installationsumfeld zu erfassen. Keine Zertifizierungsbehauptung.
 
-## Prompts, Policies und Beiträge
+</details>
 
-Versionierte Prompts unter `consolidator/prompts` werden mittels
-`importlib.resources` geladen und mit Hash/Version referenziert. Sie steuern
-Analyse, nicht Freigaben. JSON-Policies unter `consolidator/policies` bestimmen
-Konsolidierung, Architekturgrenzen, Human Decisions und verpflichtende Tests.
+<details>
+<summary><b>Prompts und Policies</b></summary>
+
+Versionierte Prompts unter `consolidator/prompts` werden mittels `importlib.resources` geladen
+und mit Hash/Version referenziert. Sie steuern Analyse, nicht Freigaben. JSON-Policies unter
+`consolidator/policies` bestimmen Konsolidierung, Architekturgrenzen, Human Decisions und
+verpflichtende Tests.
+
+</details>
+
+## Dokumentation
+
+- [docs/README.md](docs/README.md) – Übersicht über alle Dokumente unter `docs/`
+- [ARCHITEKTUR.md](ARCHITEKTUR.md) – Monorepo-Topologie und Verzeichnisstruktur
+- [Paketübersicht](docs/bibliotheken/uebersicht.md) und [README-Vorlage](docs/bibliotheken/readme-vorlage.md)
+- [Bereitstellung](docs/deployment/) – Paketindex, APT, npm, self-hosted Runner
+- [Platform Build Report](docs/reports/PLATFORM_BUILD_REPORT.md) – tatsächlicher Umsetzungs- und Prüfstand
+- [CHANGELOG.md](CHANGELOG.md) – Versionshistorie
+
+## Mitwirkung
+
 [CONTRIBUTING.md](CONTRIBUTING.md) beschreibt Änderungen und Prüfungen.
 
-Tatsächlicher Umsetzungs- und Prüfstand:
-[Platform Build Report](docs/reports/PLATFORM_BUILD_REPORT.md).
+## Lizenz
+
+[MIT](LICENSE). Übernommene Fremdbestandteile mit ihren Lizenzen stehen unter
+[`LICENSES/`](LICENSES).

@@ -6,7 +6,7 @@ Rekonstruiert aus der Git-Historie (Pull Requests #46, #48, #79).
 
 `train.cli --plan --image` schreibt das Job-Image (am besten per Digest) in den FlowAgent-Job.
 
-Etappe E3 (janpow-ai): neues Modul `train.guard` (`ProgressFile` –
+Etappe E3 (GPU-Rechner): neues Modul `train.guard` (`ProgressFile` –
 `progress.json` atomar, Herzschlag in Lade-/Checkpoint-Phasen;
 `StopRequest` – SIGTERM/SIGINT → Checkpoint und Exit 0, harte Frist 90 s;
 `NonFiniteLoss`, `OutOfMemory`, `TooManyBadSamples` mit Exit-Codes 3/4/6).

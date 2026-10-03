@@ -264,7 +264,7 @@
   `@auditcore/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
   Attrappen-Ports. Vertrag: `docs/ui/extraction-rest.md`.
 
-- Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
+- Donut-Nachtraining E3 auf dem GPU-Rechner (`auditcore_invoicesynth.train`):
   Job-Image `ghcr.io/janpow77/auditcore-donut-train:cu128` (Workflow
   `donut-train-image`, Basis per Digest, torch 2.11.0+cu128, gepinnte
   Laufzeit, Lizenzhinweise unter `/licenses`); Hängeschutz mit atomarer

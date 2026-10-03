@@ -231,10 +231,10 @@ def test_parallel_job_carries_per_run_overrides_and_mounts() -> None:
         config,
         choose_topology(config, gpus),
         dataset_hash="h" * 64,
-        dataset_uri="/home/janpow/donut/datasets/pilot",
+        dataset_uri="/srv/donut/datasets/pilot",
         run_id="r1",
         base_model_sha256="s" * 64,
-        host_mounts={"base_model": "/home/janpow/donut/base/donut-base", "runs": "/runs"},
+        host_mounts={"base_model": "/srv/donut/base/donut-base", "runs": "/runs"},
     )
     assert job["topology"]["mode"] == "parallel" and len(job["runs"]) == 2
     first, second = (run["command"] for run in job["runs"])
@@ -245,8 +245,8 @@ def test_parallel_job_carries_per_run_overrides_and_mounts() -> None:
     assert job["runs"][1]["run_dir"].endswith("/r1-1")
     assert job["runs"][0]["config_sha256"] != job["runs"][1]["config_sha256"]
     assert [m["host"] for m in job["container"]["mounts"]] == [
-        "/home/janpow/donut/datasets/pilot",
-        "/home/janpow/donut/base/donut-base",
+        "/srv/donut/datasets/pilot",
+        "/srv/donut/base/donut-base",
         "/runs",
     ]
     assert override_args(PROFILES["donut_train_janpow_ai"]) == []

@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
-from pymupdf import Document, Page, Rect
-
-from auditcore_pdf.engine import open_pdf
+from auditcore_pdf.engine import make_rect, open_pdf
 from auditcore_pdf.models import (
     STANDARD_PATTERNS,
     RedactionBox,
@@ -21,6 +20,9 @@ from auditcore_pdf.sanitize import (
     sanitize_metadata,
 )
 from auditcore_pdf.verification import verify_redaction
+
+if TYPE_CHECKING:
+    from pymupdf import Document, Page, Rect
 
 PDF_ANNOT_REDACT = 12
 
@@ -149,7 +151,7 @@ def _apply_page_redactions(
     """Wendet die Schwärzungen auf die betroffenen Seiten an."""
     by_page: dict[int, list[Rect]] = {}
     for f in findings:
-        r = Rect(*f.rect)
+        r = make_rect(*f.rect)
         by_page.setdefault(f.page_number, []).append(r)
 
     pages_redacted: list[int] = []
@@ -284,4 +286,3 @@ def redact_document(
         return out_bytes, report
     finally:
         doc.close()
-

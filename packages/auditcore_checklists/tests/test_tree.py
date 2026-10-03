@@ -9,6 +9,7 @@ from auditcore_checklists import (
     ChecklistTree,
     CycleDetectedError,
     InvalidBranchError,
+    NodeNotFoundError,
     NodeType,
     TreeStructureError,
 )
@@ -191,3 +192,127 @@ def test_roundtrip_serialization(populated_tree: tuple[ChecklistTree, dict[str, 
         assert restored_node.branch == node.branch
         assert restored_node.content.title == node.content.title
         assert restored_node.children == node.children
+
+
+def test_get_node_unknown_raises(empty_tree: ChecklistTree) -> None:
+    with pytest.raises(NodeNotFoundError) as exc:
+        empty_tree.get_node("unbekannt")
+    assert exc.value.node_id == "unbekannt"
+
+
+def test_from_dict_rejects_invalid_data() -> None:
+    with pytest.raises(TreeStructureError, match="kein gültiges 'nodes'-Objekt"):
+        ChecklistTree.from_dict({"root_id": "r", "nodes": ["r"]})
+    with pytest.raises(TreeStructureError, match="Wurzelknoten 'r' ist nicht"):
+        ChecklistTree.from_dict({"root_id": "r", "nodes": {"x": {"node_type": "HEADING"}}})
+
+
+def test_from_dict_applies_defaults_for_sparse_nodes() -> None:
+    tree = ChecklistTree.from_dict({"root_id": "r", "nodes": {"r": {}, "kaputt": "kein Knoten"}})
+    root = tree.get_root()
+    assert set(tree.nodes) == {"r"}
+    assert root.node_type == NodeType.HEADING
+    assert root.content.title == "Unbenannt"
+    assert root.internal.status == "pending"
+    assert root.internal.team_notes == ()
+
+
+def test_from_dict_parses_team_notes() -> None:
+    tree = ChecklistTree.from_dict(
+        {
+            "root_id": "r",
+            "nodes": {
+                "r": {
+                    "node_type": "HEADING",
+                    "content": {"title": "Wurzel"},
+                    "internal": {
+                        "status": "resolved",
+                        "team_notes": [
+                            {
+                                "id": "n2",
+                                "username": "pruefer_2",
+                                "message": "Erledigt.",
+                                "timestamp": "2026-10-02T10:00:00+00:00",
+                                "user_id": ["ungültig"],
+                                "parent_note_id": "n1",
+                            },
+                            "keine Notiz",
+                        ],
+                    },
+                }
+            },
+        }
+    )
+    notes = tree.get_root().internal.team_notes
+    assert len(notes) == 1
+    assert notes[0].parent_note_id == "n1"
+    assert notes[0].user_id is None
+    assert tree.get_root().internal.status == "resolved"
+
+
+def test_canonical_data_excludes_internal(
+    populated_tree: tuple[ChecklistTree, dict[str, str]],
+) -> None:
+    tree, node_map = populated_tree
+    canonical = tree.canonical_data()
+    assert canonical["root_id"] == tree.root_id
+    nodes = canonical["nodes"]
+    assert isinstance(nodes, dict)
+    assert set(nodes) == set(tree.nodes)
+    decision = nodes[node_map["decision"]]
+    assert isinstance(decision, dict)
+    assert "internal" not in decision
+    assert decision["node_type"] == "DECISION"
+    assert decision["children"] == [node_map["question_ja"], node_map["question_nein"]]
+
+    # Zeitstempel ändern sich, die kanonische Struktur nicht
+    updated, _ = tree.update_node(node_map["heading"], status="resolved")
+    assert updated.canonical_data() == canonical
+
+
+def test_move_root_and_into_leaf_forbidden(
+    populated_tree: tuple[ChecklistTree, dict[str, str]],
+) -> None:
+    tree, node_map = populated_tree
+    with pytest.raises(TreeStructureError, match="Wurzelknoten kann nicht verschoben"):
+        tree.move_node(node_map["root"], node_map["heading"])
+    with pytest.raises(TreeStructureError, match="keine Unterknoten aufnehmen"):
+        tree.move_node(node_map["decision"], node_map["question_general"])
+
+
+def test_move_node_with_sort_order_into_decision_branch(
+    populated_tree: tuple[ChecklistTree, dict[str, str]],
+) -> None:
+    tree, node_map = populated_tree
+    decision_id = node_map["decision"]
+    q1_id = node_map["question_general"]
+
+    moved = tree.move_node(q1_id, decision_id, new_branch="JA", new_sort_order=0)
+
+    decision = moved.get_node(decision_id)
+    assert decision.children[0] == q1_id
+    assert moved.get_node(q1_id).branch == "JA"
+    # Sortierung wird je Zweig getrennt neu vergeben
+    ja_children = moved.get_children(decision_id, branch="JA")
+    assert [c.id for c in ja_children] == [q1_id, node_map["question_ja"]]
+    assert [c.sort_order for c in ja_children] == [0, 1]
+    assert moved.get_node(node_map["question_nein"]).sort_order == 0
+
+
+def test_delete_node_in_decision_reindexes_branch(
+    populated_tree: tuple[ChecklistTree, dict[str, str]],
+) -> None:
+    tree, node_map = populated_tree
+    decision_id = node_map["decision"]
+    tree, extra = tree.add_node(
+        node_type=NodeType.QUESTION,
+        parent_id=decision_id,
+        branch="JA",
+        title="Wurde die Bekanntmachungsfrist eingehalten?",
+    )
+    assert extra.sort_order == 1
+
+    after = tree.delete_node(node_map["question_ja"])
+
+    assert after.get_node(extra.id).sort_order == 0
+    assert after.get_node(node_map["question_nein"]).sort_order == 0

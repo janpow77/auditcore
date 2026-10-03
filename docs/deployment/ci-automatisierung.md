@@ -1,7 +1,7 @@
 # CI-Automatisierung: was ohne Menschen läuft
 
 Prüfungen und Routinekorrekturen laufen in auditcore weitgehend automatisch in
-GitHub Actions (überwiegend auf den NUC-Runnern, siehe
+GitHub Actions (überwiegend auf den eigenen Runnern, siehe
 [self-hosted-runner.md](self-hosted-runner.md)). Diese Seite beschreibt, was
 automatisch passiert, wo weiterhin ein Mensch oder Claude gebraucht wird und wie
 man einzelne Teile abschaltet.
@@ -35,7 +35,7 @@ Nicht gestartete Workflows gelten als nicht betroffen. `autofix` und
 - Wird ein fehlgeschlagener Lauf von Hand neu gestartet, muss `ci-ok` ebenfalls
   neu gestartet werden („Re-run“ im Lauf von `ci-ok`).
 - `ci-ok` läuft bewusst auf `ubuntu-latest` (öffentliches Repository, kostenlos),
-  damit der Warte-Job keinen NUC-Runner belegt. Zeitlimit: 110 Minuten.
+  damit der Warte-Job keinen eigenen Runner belegt. Zeitlimit: 110 Minuten.
 
 ## Auto-Merge
 

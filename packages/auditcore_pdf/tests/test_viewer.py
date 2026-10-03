@@ -67,3 +67,9 @@ def test_scanned_pdf_detection(scanned_pdf: bytes) -> None:
     assert info.pages[0].has_text is False
     assert info.pages[0].image_count >= 1
     assert 1 in info.scanned_page_numbers
+
+
+@pytest.mark.parametrize("invalid_page", [0, 4])
+def test_render_page_rejects_invalid_page_number(sample_pdf: bytes, invalid_page: int) -> None:
+    with pytest.raises(IndexError, match=rf"Ungültige Seitennummer {invalid_page}\."):
+        render_page(sample_pdf, invalid_page)
