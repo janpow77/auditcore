@@ -303,3 +303,89 @@ def test_codemod_requires_clean_tree_and_verification_config(tmp_path: Path) -> 
     (repo / "auditcore-verification.json").write_text("{}\n", encoding="utf-8")
     with pytest.raises(codemods.CodemodError, match="nicht sauber"):
         codemods.run("libcst", "package.Rename", repo)
+
+
+SKIPPED_ONLY = (
+    '<testsuites><testsuite tests="0" skipped="1"><testcase name="docker-backend-offline">'
+    '<skipped message="Kein lokaler Backend-Container"/></testcase></testsuite></testsuites>'
+)
+
+
+@pytest.mark.parametrize(
+    ("report", "expected"),
+    [
+        ("", "kein JUnit-Bericht"),
+        ("<testsuite/>", "keine Testfälle im Bericht"),
+        (SKIPPED_ONLY, "Kein lokaler Backend-Container"),
+        ('<testsuite><testcase name="a"><skipped/></testcase></testsuite>', "alle 1 Testfälle übersprungen"),
+        ('<testsuite><testcase name="a"><skipped/></testcase><testcase name="b"/></testsuite>', None),
+        ('<testsuite><testcase name="a"><failure message="rot"/></testcase></testsuite>', None),
+    ],
+)
+def test_junit_nothing_checked(report: str, expected: str | None) -> None:
+    assert parser.junit_nothing_checked(report) == expected
+
+
+def _skip_only_profile(tmp_path: Path, extra: str = "") -> CheckProfile:
+    _git_repo(tmp_path)
+    script = tmp_path / "leer.py"
+    script.write_text(
+        f"import pathlib, sys\npathlib.Path(sys.argv[1]).write_text({SKIPPED_ONLY!r})\n", encoding="utf-8"
+    )
+    command = json.dumps([sys.executable, str(script), "{ausgabe}"])
+    (tmp_path / ".auditcore-runner.toml").write_text(
+        f'[pruefprofile.pr]\nwerkzeuge = ["pytest"]\n[pruefprofile.pr.werkzeug.pytest]\nbefehl = {command}\n{extra}',
+        encoding="utf-8",
+    )
+    return load_repo_profiles(tmp_path)["pr"]
+
+
+def test_skipped_only_junit_is_red(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    document = run_profile(Runner(tmp_path), Registry(), _skip_only_profile(tmp_path))
+    (result,) = _rows(document, "werkzeuge")
+    assert result["status"] == "nichts_geprueft" and result["befunde"] == 1
+    assert result["meldung"] == "nichts geprüft – Kein lokaler Backend-Container"
+    assert document["gesamt"] == "rot"
+    assert document["probleme"] == ["pytest: nichts geprüft – Kein lokaler Backend-Container"]
+    (finding,) = _rows(document, "befunde")
+    assert finding["regel"] == "nichts_geprueft" and finding["werkzeug"] == "pytest"
+    assert main(["lokal", "pr", "--host", "--pfad", str(tmp_path)]) == 1
+    assert "pytest: nichts geprüft – Kein lokaler Backend-Container" in capsys.readouterr().err
+    baseline = tmp_path / "baseline.json"
+    assert main(["befunde", "--baseline-setzen", str(baseline)]) == 0
+    assert main(["befunde", "--baseline", str(baseline)]) == 1
+    assert "Kein lokaler Backend-Container" in capsys.readouterr().out
+
+
+def test_empty_junit_allowed_by_profile_switch(tmp_path: Path) -> None:
+    profile = _skip_only_profile(tmp_path, "leer_erlaubt = true\n")
+    document = run_profile(Runner(tmp_path), Registry(), profile)
+    assert _rows(document, "werkzeuge")[0]["status"] == "ok"
+    assert document["gesamt"] == "gruen" and document["befunde"] == []
+    assert main(["lokal", "pr", "--host", "--pfad", str(tmp_path)]) == 0
+
+
+def test_stale_report_is_removed_before_the_run(tmp_path: Path) -> None:
+    _git_repo(tmp_path)
+    work = tmp_path / ".auditcore-runner"
+    work.mkdir()
+    (work / "pytest.xml").write_text('<testsuite><testcase name="alt"/></testsuite>', encoding="utf-8")
+    tool = Tool("pytest", "python", (sys.executable, "-c", "pass"), "junit-xml", output_file="pytest.xml")
+    document = run_profile(Runner(tmp_path), Registry({"pytest": tool}), CheckProfile("t", ("pytest",)))
+    assert _rows(document, "werkzeuge")[0]["meldung"] == "nichts geprüft – kein JUnit-Bericht"
+
+
+def test_missing_tool_turns_the_overall_result_red(tmp_path: Path) -> None:
+    registry = Registry({"weg": Tool("weg", "python", ("gibt-es-nicht-xyz",), "ruff-json")})
+    document = run_profile(Runner(tmp_path), registry, CheckProfile("t", ("weg",)), use_cache=False)
+    assert document["gesamt"] == "rot" and document["befunde"] == []
+
+
+def test_web_serves_last_result() -> None:
+    from auditcore_runner import web
+    from auditcore_runner.werkzeuge.ausfuehren import last_result_path
+
+    assert web.last_result()["gesamt"] == "unbekannt"
+    last_result_path().parent.mkdir(parents=True, exist_ok=True)
+    last_result_path().write_text(json.dumps({"gesamt": "rot", "probleme": ["pytest: x"]}), encoding="utf-8")
+    assert web.last_result()["probleme"] == ["pytest: x"]

@@ -256,6 +256,7 @@ autofix = true
 [pruefprofile.pr.werkzeug.playwright]
 zeitlimit_s = 900
 prioritaet = 90
+leer_erlaubt = true
 befehl = ["playwright", "test", "e2e", "--reporter=junit"]
 autofix_befehl = ["prettier", "--write", "e2e"]
 
@@ -282,6 +283,9 @@ def test_repo_file_schema_matches_loader(tmp_path: Path) -> None:
     configured = profile.configured_tool(Registry().get("playwright"))
     assert configured.command == ("playwright", "test", "e2e", "--reporter=junit")
     assert configured.fix_command == ("prettier", "--write", "e2e")
+    assert configured.allow_empty and not profile.configured_tool(Registry().get("pytest")).allow_empty
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"pruefprofile": {"pr": {"werkzeug": {"pytest": {"leer_erlaubt": "ja"}}}}}, schema)
     assert len(load_codemods(tmp_path)) == 2
 
 

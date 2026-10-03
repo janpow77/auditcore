@@ -171,7 +171,33 @@ Werkzeuge werden nicht zwischengespeichert, weil ihr Ergebnis von Zuständen
 außerhalb von Git abhängen kann (`.env`, laufende Container). Im Runner-Image
 laufen sie ohne Netz; Befehle, die den Docker-Daemon oder Netz brauchen, gehören
 in einen Lauf mit `--host`. Ein unbekanntes Werkzeug ohne `befehl` erscheint mit
-Status `unbekannt`, und `lokal` endet mit Exitcode 2.
+Status `unbekannt`, und `lokal` endet mit Exitcode 2. Auch Katalogwerkzeuge mit
+überschriebenem `befehl` werden nicht zwischengespeichert.
+
+### Nichts geprüft ist rot
+
+Ein Werkzeug, das nichts geprüft hat, meldet nie „ok“. Bei JUnit-Berichten
+(pytest, vitest, Playwright, axe und eigene Werkzeuge mit `{ausgabe}`) gilt als
+nichts geprüft: kein Bericht, kein Testfall oder nur übersprungene Testfälle.
+Das Werkzeug erhält dann den Status `nichts_geprueft` und einen Befund
+`nichts_geprueft` mit der Skip-Meldung („nichts geprüft – Kein lokaler
+Backend-Container“). Eine Baseline blendet diesen Befund nicht aus. Werkzeuge,
+die nur Befunde ausgeben (ruff, mypy, Linter), können „nichts geprüft“ nicht von
+„nichts gefunden“ unterscheiden; dort bleiben 0 Befunde ein gültiges Ergebnis.
+
+Das Ergebnisdokument trägt `gesamt` (`gruen`/`rot`) und `probleme` (je Werkzeug
+eine Zeile). Rot ist es bei jedem Befund und bei den Status `nichts_geprueft`,
+`fehlt`, `fehler`, `zeitlimit`, `unlesbar` und `unbekannt`; `entfaellt` (keine
+passenden Dateien) bleibt grün. `lokal` und `befunde` enden bei Rot mit
+Exitcode 1 (bei `unbekannt` mit 2) und nennen die Probleme auf stderr. Die
+Oberfläche liefert das letzte Ergebnis unter `GET /api/ergebnis`.
+
+Wer einen leeren Lauf bewusst zulassen will, setzt je Werkzeug:
+
+```toml
+[pruefprofile.pr.werkzeug.pytest]
+leer_erlaubt = true   # Standard: false
+```
 
 Je Rechner schaltet die Oberfläche bzw. `~/.config/auditcore-runner/werkzeuge.json`
 (`auditcore-runner/werkzeuge/1`) Werkzeuge je Profil an/aus, setzt Zeitlimit und
