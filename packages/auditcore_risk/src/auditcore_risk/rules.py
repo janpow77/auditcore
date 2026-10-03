@@ -119,6 +119,8 @@ def name_similarity(p: JsonObject, table: Table, ctx: Context) -> Outcome:
 # --------------------------------------------------------------------------- registry
 
 _AMOUNT = frozenset({"parse", "missing_value"})
+# Rechnung in ganzen Cent statt Gleitkomma der Quelle (balance_mismatch, top_share).
+_ARITHMETIC = frozenset({"arithmetic"})
 # Fehlender Betrag → unbestimmt mit dieser Begründung (verlangt missing_value null).
 _MISSING_AMOUNT = frozenset({"missing_amount_reason"})
 
@@ -192,7 +194,9 @@ KINDS: dict[str, Kind] = {
     "date_before": _record(date_before, "field", "before_field"),
     "duplicate_key": _record(duplicate_key, "fields"),
     "nonzero_without_text": _amount_record(nonzero_without_text, "amount_field", "text_field"),
-    "balance_mismatch": _amount_record(balance_mismatch, "minuend", "subtrahends", "tolerance"),
+    "balance_mismatch": _amount_record(
+        balance_mismatch, "minuend", "subtrahends", "tolerance", optional=_ARITHMETIC
+    ),
     "amount_with_marker": _amount_record(
         amount_with_marker,
         "amount_field",
@@ -202,7 +206,7 @@ KINDS: dict[str, Kind] = {
         "lowercase",
     ),
     "top_share": Kind(
-        "dataset", frozenset({"group_field", "amount_field", "share_ge"}), frozenset(), top_share
+        "dataset", frozenset({"group_field", "amount_field", "share_ge"}), _ARITHMETIC, top_share
     ),
 }
 

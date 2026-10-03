@@ -240,7 +240,14 @@ def main() -> int:
             "cd /tmp",
             "apt-get -o APT::Update::Error-Mode=any update",
             "apt-get install -y --no-install-recommends "
-            "python3-reportlab python3-openpyxl python3-defusedxml",
+            + shlex.join(
+                [
+                    "python3-reportlab",
+                    "python3-openpyxl",
+                    "python3-defusedxml",
+                    *builds.get("apt_runtime_packages", []),
+                ]
+            ),
             "dpkg --compare-versions \"$(dpkg-query -W -f='${Version}' python3-reportlab)\" "
             "ge 3.6.12-1+deb12u1",
             "dpkg-query -W python3-reportlab python3-openpyxl python3-defusedxml",

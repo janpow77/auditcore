@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_risk",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "sources": [
     {
       "repository": "janpow77/riskanalysis",
@@ -37,7 +37,7 @@
         "PROCUREMENT_THRESHOLDS",
         "_red_flags"
       ],
-      "profile": "audit_designer.flowstat_belegliste 1254591156d3"
+      "profile": "audit_designer.flowstat_belegliste 1254591156d3 (abgeleitet: 2026.10.1, BL_RF07/BL_RF10 in ganzen Cent)"
     },
     {
       "repository": "janpow77/audit-portal",
@@ -126,6 +126,7 @@
     }
   ],
   "dependencies": {
+    "auditcore_compute": "0.1.0 (Cent-Umrechnung, Soll-/Ist-Abgleich und Faktorisierung; Profil audit_designer.flowstat_belegliste 2026.10.1 und Spaltenpfad)",
     "auditcore_entity_matching": "0.2.0 (Profil riskanalysis.payee für RF09)",
     "auditcore_procurement": "0.2.0, Extra procurement (jahresbezogene EU-Schwellen, Profil procurement.hvtg 2026.09.3 in riskanalysis.year_bound 2026.09.4 und 2026.09.5 sowie flowinvoice.risk_checker 2026.09.3; 2026.09.2 in den abgelösten Fassungen)"
   },

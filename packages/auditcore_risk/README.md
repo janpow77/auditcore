@@ -82,6 +82,29 @@ assert ergebnis.profile["status"] == "LEGACY_CHARACTERIZED"
 Betrag 40.000,00 über 25.000,00; Vergabekennung fehlt; Kostenart vergaberelevant.
 ```
 
+Große Tabellen spaltenweise auswerten (ab 0.4.0, ohne `to_dict("records")`):
+gleiche Merkmale, Zähler, Datensatzbefunde und Übersicht wie `evaluate`, als
+NumPy-Arrays; Begründungen je Treffer liefert weiterhin `evaluate`.
+
+```python
+from auditcore_risk import load_profile
+from auditcore_risk.columns import evaluate_columns
+
+profil = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")  # ganze Cent
+spalten = {
+    "projektbetrag": [100.00, 25_000.00],
+    "kuerzungsbetrag": [0.00, 0.00],
+    "anerkannter_betrag": [99.99, 24_000.00],
+}
+ergebnis = evaluate_columns(spalten, profil)  # DataFrame: frame.evaluate_frame_columns
+# BL_RF07 rechnet in ganzen Cent: 1 Cent Differenz liegt in der Toleranz 0,01
+assert ergebnis.record_flags("BL_RF07_ACCEPTED_MISMATCH") == [False, True]
+assert [dict(s) for s in ergebnis.summary][-1] == {
+    "code": "BL_RF07_ACCEPTED_MISMATCH",
+    "count": 1,
+}
+```
+
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
@@ -128,6 +151,9 @@ Betrag 40.000,00 über 25.000,00; Vergabekennung fehlt; Kostenart vergaberelevan
 | `auditcore_risk.assessment` | Profile-local legacy aggregation of one record: message texts, points and weights. |
 | `auditcore_risk.assessment_schema` | Checks of a profile's own legacy aggregation block (``assessment``). |
 | `auditcore_risk.base` | Shared building blocks of the rule kinds (records, context, outcomes, helpers). |
+| `auditcore_risk.column_kinds` | Vectorised rule kinds over columns (same decisions as the record-wise kinds). |
+| `auditcore_risk.column_values` | Columns of the vectorised evaluation: input check, NumPy views, record values. |
+| `auditcore_risk.columns` | Column-wise evaluation of one profile without building records. |
 | `auditcore_risk.engine` | Evaluate one explicitly selected profile over records. |
 | `auditcore_risk.errors` | Error contract of the risk library; ``code`` is stable and machine readable. |
 | `auditcore_risk.field_rules` | Field rule kinds: comparisons, missing values, dates and duplicate keys per record. |
@@ -164,7 +190,8 @@ Module und Regelarten:
 | `invoice_rules` | Regelarten je Rechnung (`amount_or_statistic`, `share_above`, `all_missing`, `round_amount_terms`, `date_outside_range`, `text_patterns`, `names_differ`, `identifier_equal`, `split_window`) | – |
 | `fraud` | Signalscore, TED-Auftragnehmerprofil, Dubletten | – |
 | `score_rules` | Kriterien für Punkte-Scores (`truthy_all`, `text_in_set`, `number_range`, `set_overlap`) mit Bewertung `points_stages` | – |
-| `frame` | pandas-Adapter: `compute_red_flags`, `red_flag_summary`, `evaluate_frame`, `annotate` | Extra `pandas` |
+| `frame` | pandas-Adapter: `compute_red_flags`, `red_flag_summary`, `evaluate_frame`, `evaluate_frame_columns`, `annotate` | Extra `pandas` |
+| `columns` | Spaltenpfad `evaluate_columns` → `ColumnEvaluation` (Merkmale als Arrays, Übersicht, Datensatzbefunde); vektorisierte Regelarten in `column_kinds` (`round_multiple`, `near_threshold` mit festen Schwellen, `missing_value`, `date_before` für `datetime64`, `duplicate_key`, `nonzero_without_text`, `balance_mismatch`, `missing_procurement`, `amount_with_marker`, `top_share`), alle übrigen über die Regelart je Datensatz | `auditcore_compute`, NumPy (`import auditcore_risk` lädt beides nicht) |
 | Namensabgleich (RF09) | Normalisierung über `auditcore_entity_matching` (Profil `riskanalysis.payee`) | Extra `fuzzy` (rapidfuzz) |
 | `web` | REST-Schnittstelle: `create_app` (Starlette), `routes`, `build_fastapi_router`; framework-freie Handler und Profilbeschreibung mit Eingabefeldern (`field_catalog.json`) | Extra `web` (starlette), für den Router Extra `fastapi` |
 | Jahresbezogene Schwellen | EU-Schwellen je Geltungszeitraum aus `auditcore_procurement` 0.2.0 (`procurement.hvtg 2026.09.3`: 2014–2027; abgelöste Profilfassungen: 2026.09.2), nicht dupliziert | Extra `procurement` |
@@ -175,6 +202,7 @@ Module und Regelarten:
 |---|---|---|---|
 | `riskanalysis.legacy` | `b5c523bf7eaa` | `LEGACY_CHARACTERIZED` | riskanalysis `red_flags.py` (RF01, RF02, RF08–RF15), exakt reproduziert |
 | `audit_designer.flowstat_belegliste` | `1254591156d3` | `LEGACY_CHARACTERIZED` | Flowstat `_red_flags` (BL_RF01–BL_RF10) in audit_designer und audit-portal |
+| `audit_designer.flowstat_belegliste` | `2026.10.1` | `APPROVED` (empfohlen) | Entscheidung 03.10.2026: BL_RF07 und BL_RF10 in ganzen Cent (RK-C12), übrige Regeln wie 1254591156d3 |
 | `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | abgelöst durch 2026.09.2 |
 | `riskanalysis.year_bound` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 |
 | `riskanalysis.year_bound` | `2026.09.3` | `APPROVED` | abgelöst durch 2026.09.4 (EU-Schwellen nur 2024–2027) |
@@ -281,12 +309,19 @@ Details und alle Entscheidungen: [docs/behavior-changes.md](docs/behavior-change
 - RK-C08 bis RK-C11: deterministische Reihenfolge von Warnungen,
   Fehlervertrag statt Absturz bei TED und Dubletten, Merkmalsaufbereitung der
   VerwK-Punkte-Scores bleibt in der Anwendung.
+- RK-C12 (ab 0.4.0, fachlich freigegeben): Profilversion
+  `audit_designer.flowstat_belegliste` 2026.10.1 rechnet BL_RF07 und BL_RF10
+  in ganzen Cent (`ROUND_HALF_UP`); in 41 der
+  1.668 Belege der 112 Flowstat-Frames entfällt ein BL_RF07-Treffer mit genau
+  1 Cent Differenz, ein Beleg mit unendlichem Betrag ist unbestimmt;
+  BL_RF10-Entscheidungen unverändert. Liste: `tests/fixtures/flowstat_cent_deviations.json`.
 
 ## Abhängigkeiten
 
 Python ≥ 3.11, `auditcore_common==0.2.0` (gemeinsame Hilfsfunktionen, nur
-Standardbibliothek) und `auditcore_entity_matching==0.2.4` (Normalisierung für
-RF09). Optional: `auditcore_entity_matching[fuzzy]==0.2.4` über `[fuzzy]`,
+Standardbibliothek), `auditcore_compute==0.1.0` (Cent-Umrechnung, Soll-/Ist-Abgleich
+und Faktorisierung) mit `numpy>=1.24` (Spaltenpfad) und
+`auditcore_entity_matching==0.2.4` (Normalisierung für RF09). Optional: `auditcore_entity_matching[fuzzy]==0.2.4` über `[fuzzy]`,
 `pandas>=2.1` über `[pandas]`, `auditcore_procurement==0.2.4` über
 `[procurement]`, `starlette>=0.26.1` über `[web]`, `fastapi>=0.92` über
 `[fastapi]`. Die Benford-Prüfung aus flowinvoice liegt in

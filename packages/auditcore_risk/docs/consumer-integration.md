@@ -50,19 +50,26 @@ Produktionsdatenbank).
 * Stelle: `backend/app/modules/flowstat/services/belegliste_analysis_service.py:_red_flags`
   (Aufrufer `analyze_belegliste` → `api/data_sources.py`,
   `vorhaben_context_service.py`, `node_handlers/template_handlers.py`).
-* Umstellung (Vorschlag):
+* Umstellung (Vorschlag, ab 0.4.0 spaltenweise ohne `to_dict("records")`):
 
   ```python
-  from auditcore_risk import evaluate, load_profile
+  from auditcore_risk import load_profile
+  from auditcore_risk.frame import evaluate_frame_columns
 
-  _PROFIL = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+  # 2026.10.1: BL_RF07/BL_RF10 in ganzen Cent (RK-C12); 1254591156d3 = Legacy-Gleitkomma
+  _PROFIL = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")
 
 
   def _red_flags(data: pd.DataFrame) -> list[dict[str, Any]]:
-      records = data.to_dict("records")
-      return [dict(s) for s in evaluate(records, _PROFIL, columns=list(data.columns)).summary]
+      return [dict(s) for s in evaluate_frame_columns(data, _PROFIL).summary]
   ```
-* Nachweis: Replay aller 112 Originalfälle im Paket (RK-L02). Eine lokale
+
+  Gleiche Übersicht wie `evaluate(data.to_dict("records"), …)`; gemessen
+  (`tools/benchmark_columns.py`, 500.000 synthetische Belege) 0,9 s statt
+  21,9 s. Mit 2026.10.1 entfallen gegenüber dem bisherigen Verhalten BL_RF07-Treffer
+  mit genau 1 Cent Differenz (in den 112 Frames 41); wer das alte Verhalten braucht,
+  lädt weiterhin 1254591156d3.
+* Nachweis: Replay aller 112 Originalfälle im Paket (RK-L02, RK-C12). Eine lokale
   Ausführung der Designer-/Portal-Testsuite ist **NOT_EXECUTED** (umfangreiche
   Anwendungsabhängigkeiten); Status: geplant.
 

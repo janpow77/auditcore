@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import math
 from datetime import date
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from auditcore_common.optional import require_module
 
@@ -20,6 +20,9 @@ from .errors import DependencyError, InputError, ProfileError
 from .profiles import RiskProfile
 from .summary import red_flag_entry
 from .values import is_missing, strict_amount
+
+if TYPE_CHECKING:
+    from .columns import ColumnEvaluation
 
 
 def _pandas() -> Any:
@@ -41,6 +44,27 @@ def evaluate_frame(
         raise InputError("Spaltennamen müssen eindeutig sein.")
     records = frame.to_dict("records")
     return evaluate(records, profile, columns=columns, reference_date=reference_date)
+
+
+def evaluate_frame_columns(
+    frame: object, profile: RiskProfile, *, reference_date: date | None = None
+) -> ColumnEvaluation:
+    """Column-wise evaluation of a DataFrame without ``to_dict("records")``.
+
+    Same flags, counts, dataset findings and overview as
+    :func:`evaluate_frame`, as arrays (:class:`~auditcore_risk.columns.ColumnEvaluation`);
+    no per-hit reasons.
+    """
+    from .columns import evaluate_columns
+
+    pd = _pandas()
+    if not isinstance(frame, pd.DataFrame):
+        raise InputError("Ein pandas.DataFrame ist erforderlich.")
+    columns = [str(c) for c in frame.columns]
+    if len(set(columns)) != len(columns):
+        raise InputError("Spaltennamen müssen eindeutig sein.")
+    series = {name: frame.iloc[:, i] for i, name in enumerate(columns)}
+    return evaluate_columns(series, profile, reference_date=reference_date)
 
 
 def annotate(frame: Any, evaluation: Evaluation, profile: RiskProfile) -> Any:
@@ -107,4 +131,10 @@ def red_flag_summary(frame: Any, profile: RiskProfile) -> list[dict[str, Any]]:
     return out
 
 
-__all__ = ["annotate", "compute_red_flags", "evaluate_frame", "red_flag_summary"]
+__all__ = [
+    "annotate",
+    "compute_red_flags",
+    "evaluate_frame",
+    "evaluate_frame_columns",
+    "red_flag_summary",
+]

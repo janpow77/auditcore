@@ -1,5 +1,10 @@
 # Changelog – auditcore_identifiers
 
+## 0.2.1 – 2026-10-03
+
+Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
+exakt gebundenen internen Abhängigkeiten.
+
 ## 0.2.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 - Neue Laufzeitabhängigkeit `auditcore_common==0.2.0` (selbst nur

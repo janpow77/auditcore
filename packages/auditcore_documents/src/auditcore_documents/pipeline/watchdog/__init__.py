@@ -27,6 +27,7 @@ from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, date, datetime
 from decimal import Decimal
 
+from .cache import prepared_run
 from .document_checks import (
     check_cross_field_plausibility,
     check_dates,
@@ -110,6 +111,7 @@ class ExtractionQualityWatchdog:
         self.concentration_threshold = concentration_threshold
         self.clock = clock or (lambda: datetime.now(UTC))
 
+    @prepared_run
     def validate(
         self,
         documents: Sequence[Mapping[str, object]],

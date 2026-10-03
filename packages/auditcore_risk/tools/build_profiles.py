@@ -1921,6 +1921,44 @@ def missing_net_profile(ra4: dict[str, Any], clone: Any) -> dict[str, Any]:
     return ra5
 
 
+CENT_DECISION = {
+    "decided_on": "2026-10-03",
+    "quote": "RF07 und RF10 rechnen künftig in ganzen Cent",
+    "decisions": ["RK-C12"],
+    "effect": "BL_RF07 (anerkannter Betrag ≠ Projektbetrag − Kürzung, Toleranz 1 Cent) und "
+    "BL_RF10 (Anteil des größten Rechnungsstellers) in ganzen Cent (ROUND_HALF_UP); nicht "
+    "endliche Beträge oder über 10 Mrd. € je Zeile: BL_RF07 unbestimmt, BL_RF10 ohne Anteil; "
+    "übrige Regeln unverändert.",
+}
+
+
+def cent_profile(flowstat: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    """User decision of 03.10.2026: BL_RF07/BL_RF10 in whole cents (new version).
+
+    The legacy profile ``1254591156d3`` stays bit-identical (float arithmetic of
+    the source); this version only adds ``arithmetic: "cents"`` to both rules.
+    """
+    cents: dict[str, Any] = json.loads(json.dumps(flowstat))
+    cents.update({"version": "2026.10.1", "status": "APPROVED"})
+    cents["legal_status"] = flowstat["legal_status"] + (
+        " BL_RF07 und BL_RF10 in ganzen Cent (Nutzerentscheidung vom 03.10.2026)."
+    )
+    cents["source"]["derived_from"] = {"profile": flowstat["id"], "version": flowstat["version"]}
+    cents["source"]["decision"] = CENT_DECISION
+    cents["source"]["characterization"] = (
+        "tests/fixtures/flowstat_observed.json mit den Abweichungen in "
+        "tests/fixtures/flowstat_cent_deviations.json"
+    )
+    for rule in cents["rules"]:
+        if rule["code"] in ("BL_RF07_ACCEPTED_MISMATCH", "BL_RF10_VENDOR_CONCENTRATION"):
+            rule["params"]["arithmetic"] = "cents"
+            rule["note"] = (
+                "In ganzen Cent (ROUND_HALF_UP über auditcore_compute.to_cents); nicht endliche "
+                "Beträge oder über 10 Mrd. € je Zeile sind nicht entscheidbar (RK-C12)."
+            )
+    return f"{cents['id']}-{cents['version']}.json", cents
+
+
 def main() -> None:
     DATA.mkdir(parents=True, exist_ok=True)
     built_risk = build()
@@ -1928,6 +1966,8 @@ def main() -> None:
     decided_risk, decided_fraud = decided_profiles(
         {d["id"]: d for _, d in [*built_risk, *built_fraud] if d["version"] != "2026.09.1"}
     )
+    flowstat = next(d for _, d in built_risk if d["id"] == "audit_designer.flowstat_belegliste")
+    decided_risk.append(cent_profile(flowstat))
     for name, document in [*built_risk, *decided_risk]:
         (DATA / name).write_text(
             json.dumps(document, ensure_ascii=False, indent=1, sort_keys=True) + "\n"

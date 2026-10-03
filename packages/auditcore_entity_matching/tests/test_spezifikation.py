@@ -35,7 +35,8 @@ RESOLVING = [p for p in PROFILES if p.resolution is not None]
 ORDER = {"low": 0, "medium": 1, "high": 2, "exact": 3}
 
 ALPHABET = string.ascii_letters + string.digits + " .,-&'/()" + "äöüÄÖÜßéÉøØłæœçñ" + "\u0308"
-NAMES = st.text(alphabet=ALPHABET, max_size=40) | st.text(max_size=20)
+LATIN_NAMES = st.text(alphabet=ALPHABET, max_size=40)
+NAMES = LATIN_NAMES | st.text(max_size=20)
 ALNUM = string.ascii_uppercase + string.digits
 LEI_PREFIX = st.text(alphabet=ALNUM, min_size=18, max_size=18)
 SCORE = st.floats(min_value=0, max_value=100, allow_nan=False)
@@ -53,9 +54,9 @@ def test_i1_normalize_is_deterministic_text(name: str, profile, drop: bool) -> N
 
 
 @EXAMPLES
-@given(NAMES, st.sampled_from(IDEMPOTENT))
+@given(LATIN_NAMES, st.sampled_from(IDEMPOTENT))
 def test_i2_normalize_is_idempotent(name: str, profile) -> None:
-    """I2: normalising a comparison form again does not change it (not translate_then_casefold)."""
+    """I2: Latin comparison forms are fixed points (except translate_then_casefold)."""
     once = normalize(name, profile)
     assert normalize(once, profile) == once
 
@@ -81,10 +82,33 @@ def test_i2_state_aid_2026_09_3_is_idempotent(name: str, drop: bool) -> None:
 @EXAMPLES
 @given(NAMES, st.sampled_from(NORMALIZING))
 def test_i3_comparison_form_has_single_spaces_and_no_upper_case(name: str, profile) -> None:
-    """I3: no leading, trailing or repeated whitespace; nothing left to lower-case."""
+    """I3: arbitrary Unicode has no leading, trailing or repeated whitespace."""
     result = normalize(name, profile)
     assert result == " ".join(result.split())
+
+
+@EXAMPLES
+@given(LATIN_NAMES, st.sampled_from(NORMALIZING))
+def test_i3_latin_comparison_form_has_no_upper_case(name: str, profile) -> None:
+    """I3: the documented Latin input alphabet leaves nothing to lower-case."""
+    result = normalize(name, profile)
     assert result == result.lower()
+
+
+@pytest.mark.parametrize("name", ["ℬ", "𝔅", "ᴮ"])
+@pytest.mark.parametrize(
+    "profile",
+    [
+        p
+        for p in NORMALIZING
+        if p.normalization.algorithm in {"casefold_fold_nfkd", "casefold_nfc_fold_nfkd"}
+    ],
+    ids=lambda p: f"{p.id}-{p.version}",
+)
+def test_i2_i3_nfkd_compatibility_letters_keep_legacy_case(name: str, profile) -> None:
+    """NFKD after casefold can introduce capitals; profile-bound results stay unchanged."""
+    assert normalize(name, profile) == "B"
+    assert normalize(normalize(name, profile), profile) == "b"
 
 
 @EXAMPLES
