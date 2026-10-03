@@ -12,6 +12,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess  # nosec B404
 import sys
 import tempfile
@@ -180,6 +181,45 @@ def tool_command(module: str) -> list[str]:
     return list(_tool_command(module))
 
 
+def _describe_failure(module: str, process: subprocess.CompletedProcess[str]) -> str:
+    """Name exit code or terminating signal, then the tool's own output."""
+    code = process.returncode
+    if code < 0:
+        try:
+            reason = f"terminated by signal {signal.Signals(-code).name}"
+        except ValueError:
+            reason = f"terminated by signal {-code}"
+    else:
+        reason = f"exit code {code}"
+    output = (process.stderr or process.stdout or "").strip()[:500]
+    return f"{module} failed ({reason}): {output or 'no output'}"
+
+
+def run_measuring_tool(
+    module: str,
+    command: list[str],
+    accepted: tuple[int, ...],
+    *,
+    env: dict[str, str] | None = None,
+    cwd: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run a measuring tool; repeat exactly once if a signal ended it.
+
+    A signal (negative return code) means the process was terminated from
+    outside, e.g. under memory pressure on a shared runner, and says nothing
+    about the measured code. Every other unexpected exit code fails at once.
+    """
+    for attempt in range(2):
+        process = subprocess.run(  # nosec B603
+            command, capture_output=True, text=True, check=False, env=env, cwd=cwd
+        )
+        if process.returncode >= 0 or attempt:
+            break
+    if process.returncode not in accepted:
+        raise ToolError(_describe_failure(module, process))
+    return process
+
+
 def tool_version(module: str) -> str:
     """Return the version string of a measuring tool."""
     process = subprocess.run(  # nosec B603
@@ -210,11 +250,7 @@ def complexity_findings(sources: Iterable[Path], root: Path) -> list[Finding]:
         "json",
         *targets,
     ]
-    process = subprocess.run(  # nosec B603
-        command, capture_output=True, text=True, check=False
-    )
-    if process.returncode != 0:
-        raise ToolError(f"ruff failed: {process.stderr.strip()[:500]}")
+    process = run_measuring_tool("ruff", command, (0,))
     findings = []
     for row in json.loads(process.stdout or "[]"):
         path = Path(row["filename"]).resolve().relative_to(root).as_posix()
@@ -252,11 +288,7 @@ def mypy_findings(source: Path, root: Path, search_path: list[Path]) -> list[Fin
             cache,
             *(str(module) for module in modules),
         ]
-        process = subprocess.run(  # nosec B603
-            command, capture_output=True, text=True, check=False, env=environment, cwd=root
-        )
-    if process.returncode not in (0, 1):
-        raise ToolError(f"mypy failed: {(process.stderr or process.stdout).strip()[:500]}")
+        process = run_measuring_tool("mypy", command, (0, 1), env=environment, cwd=root)
     findings = []
     for line in process.stdout.splitlines():
         match = _MYPY_ERROR.match(line)
