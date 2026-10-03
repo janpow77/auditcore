@@ -300,7 +300,9 @@ def _render_package_card(pkg: Package) -> str:
         install_cmd = f"npm i {pkg.name}"
         doc_url = f"https://github.com/janpow77/auditcore/tree/main/{pkg.path}"
     else:
-        install_cmd = f"pip install {pkg.name} --index-url https://janpow77.github.io/auditcore/simple/"
+        install_cmd = (
+            f"pip install {pkg.name} --index-url https://janpow77.github.io/auditcore/simple/"
+        )
         doc_url = f"simple/{norm_name}/"
 
     search_blob = f"{pkg.name} {pkg.purpose} {pkg.dependencies} {cluster_title}".lower()
@@ -335,40 +337,40 @@ def _render_framework_section() -> str:
     return (
         '<div class="framework-section">\n'
         '  <div class="fw-card">\n'
-        '    <h3>⚡ auditcore-runner (CI &amp; Prüfbank)</h3>\n'
-        '    <p>Deterministische Prüfbank für Entwickler, CI und KI-Coding-Agents.</p>\n'
-        '    <ul>\n'
-        '      <li>Gleiche Prüfbedingungen lokal wie in CI (im identischen Container-Image)</li>\n'
-        '      <li>Befehle: <code>auditcore-runner lokal</code>, '
-        '<code>auditcore-runner befunde</code></li>\n'
-        '      <li>Git-Inhalts-Cache: unveränderter Code wird nicht wiederholt geprüft</li>\n'
-        '      <li>Ephemere self-hosted GitHub-Runner auf eigener Hardware (Docker/systemd)</li>\n'
-        '    </ul>\n'
-        '  </div>\n'
+        "    <h3>⚡ auditcore-runner (CI &amp; Prüfbank)</h3>\n"
+        "    <p>Deterministische Prüfbank für Entwickler, CI und KI-Coding-Agents.</p>\n"
+        "    <ul>\n"
+        "      <li>Gleiche Prüfbedingungen lokal wie in CI (im identischen Container-Image)</li>\n"
+        "      <li>Befehle: <code>auditcore-runner lokal</code>, "
+        "<code>auditcore-runner befunde</code></li>\n"
+        "      <li>Git-Inhalts-Cache: unveränderter Code wird nicht wiederholt geprüft</li>\n"
+        "      <li>Ephemere self-hosted GitHub-Runner auf eigener Hardware (Docker/systemd)</li>\n"
+        "    </ul>\n"
+        "  </div>\n"
         '  <div class="fw-card">\n'
-        '    <h3>🏛️ Clean Domain Architecture</h3>\n'
-        '    <p>Reine, framework-unabhängige Fachkerne für maximale Portabilität.</p>\n'
-        '    <ul>\n'
-        '      <li>Keine Datenbankbindung (kein SQLAlchemy im Domänenkern)</li>\n'
-        '      <li>Keine Web-Kopplung (kein FastAPI/Starlette in Fachbibliotheken)</li>\n'
-        '      <li>Hierarchische Abhängigkeiten (<code>test_architecture.py</code>)</li>\n'
-        '      <li>Reproduzierbare Berechnungen (z. B. SHA-256-Strukturprüfsummen)</li>\n'
-        '    </ul>\n'
-        '  </div>\n'
+        "    <h3>🏛️ Clean Domain Architecture</h3>\n"
+        "    <p>Reine, framework-unabhängige Fachkerne für maximale Portabilität.</p>\n"
+        "    <ul>\n"
+        "      <li>Keine Datenbankbindung (kein SQLAlchemy im Domänenkern)</li>\n"
+        "      <li>Keine Web-Kopplung (kein FastAPI/Starlette in Fachbibliotheken)</li>\n"
+        "      <li>Hierarchische Abhängigkeiten (<code>test_architecture.py</code>)</li>\n"
+        "      <li>Reproduzierbare Berechnungen (z. B. SHA-256-Strukturprüfsummen)</li>\n"
+        "    </ul>\n"
+        "  </div>\n"
         '  <div class="fw-card">\n'
-        '    <h3>📐 Strikte Quality Gates &amp; Standards</h3>\n'
-        '    <p>Automatisch überwachtes Ratchet (Metriken dürfen sich nie verschlechtern).</p>\n'
-        '    <ul>\n'
-        '      <li><strong>McCabe-Komplexität ≤ 10</strong>, Funktionen ≤ 60 Zeilen, '
-        'Module ≤ 400 Zeilen</li>\n'
-        '      <li><strong>Strict Typing:</strong> zero <code>typing.Any</code>, mypy strict</li>\n'
-        '      <li><strong>AST-Duplikatsinventur:</strong> '
-        '<code>duplicate_functions = 0</code></li>\n'
-        '      <li>Echte deutsche Umlaute (ä, ö, ü, ß; keine Ersatzschreibweisen)</li>\n'
-        '      <li>Lückenlose <code>provenance.json</code> und READMEs mit Schnellstart</li>\n'
-        '    </ul>\n'
-        '  </div>\n'
-        '</div>'
+        "    <h3>📐 Strikte Quality Gates &amp; Standards</h3>\n"
+        "    <p>Automatisch überwachtes Ratchet (Metriken dürfen sich nie verschlechtern).</p>\n"
+        "    <ul>\n"
+        "      <li><strong>McCabe-Komplexität ≤ 10</strong>, Funktionen ≤ 60 Zeilen, "
+        "Module ≤ 400 Zeilen</li>\n"
+        "      <li><strong>Strict Typing:</strong> zero <code>typing.Any</code>, mypy strict</li>\n"
+        "      <li><strong>AST-Duplikatsinventur:</strong> "
+        "<code>duplicate_functions = 0</code></li>\n"
+        "      <li>Echte deutsche Umlaute (ä, ö, ü, ß; keine Ersatzschreibweisen)</li>\n"
+        "      <li>Lückenlose <code>provenance.json</code> und READMEs mit Schnellstart</li>\n"
+        "    </ul>\n"
+        "  </div>\n"
+        "</div>"
     )
 
 
@@ -414,28 +416,28 @@ def render_landing_page(packages: list[Package]) -> str:
         f'    <h2 class="section-title">🚀 5 Phasen im Prüfungs- und Kontrollverfahren</h2>\n'
         f'    <div class="workflows">\n{workflows_html}\n    </div>\n\n'
         f'    <h2 class="section-title">🛡️ auditcore-runner &amp; Technische Vorgaben</h2>\n'
-        f'    {framework_html}\n\n'
+        f"    {framework_html}\n\n"
         f'    <h2 class="section-title" id="catalog">📦 Bibliotheks-Katalog ({n_pkg} Pakete)</h2>\n'
         f'    <div class="filter-bar">\n'
         f'      <input type="text" id="search" class="search-input" '
         f'placeholder="{ph_text}" oninput="filterPackages()">\n'
         f'      <div class="chips">\n'
         f'        <button class="chip active" data-filter="all" '
-        f'onclick="setFilter(this, \'all\')">Alle ({n_pkg})</button>\n'
+        f"onclick=\"setFilter(this, 'all')\">Alle ({n_pkg})</button>\n"
         f'        <button class="chip" data-filter="recherche" '
-        f'onclick="setFilter(this, \'recherche\')">🔍 1. Recherche & Vergabe</button>\n'
+        f"onclick=\"setFilter(this, 'recherche')\">🔍 1. Recherche & Vergabe</button>\n"
         f'        <button class="chip" data-filter="checklisten" '
-        f'onclick="setFilter(this, \'checklisten\')">📋 2. Checklisten & Verfahren</button>\n'
+        f"onclick=\"setFilter(this, 'checklisten')\">📋 2. Checklisten & Verfahren</button>\n"
         f'        <button class="chip" data-filter="stichproben" '
-        f'onclick="setFilter(this, \'stichproben\')">📊 3. Stichproben & Statistik</button>\n'
+        f"onclick=\"setFilter(this, 'stichproben')\">📊 3. Stichproben & Statistik</button>\n"
         f'        <button class="chip" data-filter="datenschutz" '
-        f'onclick="setFilter(this, \'datenschutz\')">🔒 4. Datenschutz & PDF</button>\n'
+        f"onclick=\"setFilter(this, 'datenschutz')\">🔒 4. Datenschutz & PDF</button>\n"
         f'        <button class="chip" data-filter="reporting" '
-        f'onclick="setFilter(this, \'reporting\')">📑 5. Berichtswesen & UI</button>\n'
+        f"onclick=\"setFilter(this, 'reporting')\">📑 5. Berichtswesen & UI</button>\n"
         f'        <button class="chip" data-filter="python" '
-        f'onclick="setFilter(this, \'python\')">🐍 Python (pip)</button>\n'
+        f"onclick=\"setFilter(this, 'python')\">🐍 Python (pip)</button>\n"
         f'        <button class="chip" data-filter="npm" '
-        f'onclick="setFilter(this, \'npm\')">📦 TypeScript (npm)</button>\n'
+        f"onclick=\"setFilter(this, 'npm')\">📦 TypeScript (npm)</button>\n"
         f"      </div>\n"
         f"    </div>\n\n"
         f'    <div class="grid">\n{cards_html}\n    </div>\n'
