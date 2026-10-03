@@ -1,6 +1,6 @@
 # Changelog auditcore_sampling
 
-## Unreleased
+## 0.2.4 – 2026-10-03
 
 Keine Verhaltensänderung der bestehenden Methoden (`sizes`, `selection`,
 `legacy`, REST-Vertrag `/profiles`, `/size`, `/allocation`, `/selection`);

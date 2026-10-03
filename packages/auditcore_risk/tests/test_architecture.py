@@ -1,6 +1,9 @@
 """F-09/T-38: runtime modules use the standard library, their own package and
 ``auditcore_entity_matching`` at top level; pandas, rapidfuzz and
-auditcore_procurement are imported lazily inside functions only."""
+auditcore_procurement are imported lazily inside functions only. NumPy and
+auditcore_compute are imported at top level only by the column path
+(``columns``, ``column_kinds``, ``column_values``), which ``import
+auditcore_risk`` does not load; the record path imports ``to_cents`` lazily."""
 
 from __future__ import annotations
 
@@ -30,7 +33,15 @@ ALLOWED = {
     "auditcore_risk",
     "auditcore_common",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
 }
-LAZY = {"pandas", "rapidfuzz", "auditcore_procurement", "auditcore_entity_matching"}
+LAZY = {
+    "pandas",
+    "rapidfuzz",
+    "auditcore_procurement",
+    "auditcore_entity_matching",
+    "auditcore_compute",
+}
+COLUMN_MODULES = {"columns.py", "column_kinds.py", "column_values.py"}
+COLUMN_IMPORTS = {"numpy", "auditcore_compute"}
 
 
 def test_runtime_imports_and_calls() -> None:
@@ -50,10 +61,11 @@ def test_runtime_imports_and_calls() -> None:
                     else [node.module or ""]
                 )
                 roots = {n.split(".")[0] for n in names}
+                top = ALLOWED | (COLUMN_IMPORTS if path.name in COLUMN_MODULES else set())
                 if id(node) in nested:
-                    assert roots <= LAZY | ALLOWED, (path.name, roots)
+                    assert roots <= LAZY | top, (path.name, roots)
                 else:
-                    assert roots <= ALLOWED, (path.name, roots)
+                    assert roots <= top, (path.name, roots)
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 assert node.func.id not in {"open", "eval", "exec", "__import__", "print"}
 
@@ -61,7 +73,9 @@ def test_runtime_imports_and_calls() -> None:
 def test_import_loads_no_optional_dependency() -> None:
     code = (
         "import sys, auditcore_risk; "
-        "loaded = {'pandas', 'rapidfuzz', 'numpy', 'auditcore_procurement'} & set(sys.modules); "
+        "import auditcore_risk.frame; "
+        "loaded = {'pandas', 'rapidfuzz', 'numpy', 'auditcore_procurement', 'auditcore_compute'} "
+        "& set(sys.modules); "
         "assert not loaded, loaded"
     )
     subprocess.run([sys.executable, "-c", code], check=True)

@@ -24,6 +24,7 @@ from pathlib import Path
 from auditcore_documents.pipeline.context import OcrMetrics, PipelineContext, RunStatus
 from auditcore_documents.pipeline.donut import DonutPort
 from auditcore_documents.pipeline.stages.base import PipelineStage, StageError
+from auditcore_documents.pipeline.stages.ocr_parallel import recognize_pages
 from auditcore_documents.pipeline.stages.ocr_results import (
     DONUT_LABELS,
     DONUT_REQUIRED_CONFIDENCE,
@@ -209,13 +210,8 @@ class OcrStage(PipelineStage):
         """Seitenweise Gateway-Erkennung; Seitenfehler werden gesammelt, nicht abgebrochen."""
         page_texts: list[dict[str, object]] = []
         page_errors: list[str] = []
-        for page_no, png in page_images:
-            page_result, page_error = await router(
-                png,
-                filename=f"{path.stem or 'seite'}-{page_no}.png",
-                model="auto",
-                language=self.routing.languages,
-            )
+        results = await recognize_pages(router, page_images, path.stem, self.routing)
+        for (page_no, _), (page_result, page_error) in zip(page_images, results, strict=True):
             if page_error or page_result is None:
                 page_errors.append(f"S.{page_no}: {page_error}")
                 continue

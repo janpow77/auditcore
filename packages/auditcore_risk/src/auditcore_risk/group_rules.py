@@ -8,15 +8,19 @@ from __future__ import annotations
 
 import math
 from collections.abc import Hashable, Mapping, Sequence
-from typing import Any
+from typing import Any, cast
 
 from .base import (
+    CENT_UNDECIDABLE,
     MISSING_KEY,
     Context,
+    DatasetOutcome,
     JsonObject,
     Outcome,
     Table,
+    amount_cents,
     correct_sum,
+    in_cents,
     present_amounts,
     relevance,
 )
@@ -259,21 +263,53 @@ def leave_one_out_rate(p: JsonObject, table: Table, ctx: Context) -> Outcome:
 # --------------------------------------------------------------------------- top share
 
 
+def _first_unconvertible(numbers: Sequence[float | None]) -> int | None:
+    for index, value in enumerate(numbers):
+        if value is not None and amount_cents(value) is None:
+            return index
+    return None
+
+
+def top_share_outcome(p: JsonObject, total: int, top: int, leader: object) -> DatasetOutcome:
+    """Dataset finding of ``top_share`` from cent sums (shared with the vectorised path)."""
+    share = top / total
+    return {
+        "triggered": bool(share >= float(p["share_ge"])),
+        "value": share,
+        "reason": (
+            f"Anteil des größten {p['group_field']} an der Summe {p['amount_field']}: "
+            f"{share:.4f} (Schwelle ≥ {p['share_ge']}; Summen in ganzen Cent)."
+        ),
+        "evidence": {
+            "group": None if leader is MISSING_KEY else leader,
+            "group_sum": top / 100,
+            "total": total / 100,
+            "group_sum_cents": top,
+            "total_cents": total,
+        },
+    }
+
+
+def top_share_undecided(row: int | None) -> DatasetOutcome:
+    """Finding without a share: unconvertible amount in ``row`` or no positive total."""
+    if row is not None:
+        reason = f"Betrag in Zeile {row}: {CENT_UNDECIDABLE}"
+        return {"triggered": False, "value": None, "reason": reason}
+    return {"triggered": False, "value": None, "reason": "Gesamtsumme nicht positiv."}
+
+
 def _nanmax(values: Sequence[float]) -> float:
     present = [v for v in values if not math.isnan(v)]
     return max(present) if present else math.nan
 
 
-def top_share(p: JsonObject, table: Table, ctx: Context) -> Outcome:
-    """Dataset finding: share of the largest group in the total amount."""
+def _top_share_float(p: JsonObject, table: Table) -> DatasetOutcome:
+    """Legacy: share from correctly rounded float sums (RK-C06), as in 0.3.4."""
     name, group_f = p["amount_field"], p["group_field"]
     numbers = [coerce_number(table.value(i, name), name) for i in range(len(table))]
-    present = [v for v in numbers if v is not None]
-    total = correct_sum(present)
-    out = Outcome.constant(len(table), None)
+    total = correct_sum([v for v in numbers if v is not None])
     if not total > 0:
-        out.dataset = {"triggered": False, "value": None, "reason": "Gesamtsumme nicht positiv."}
-        return out
+        return {"triggered": False, "value": None, "reason": "Gesamtsumme nicht positiv."}
     sums: dict[Hashable, list[float]] = {}
     for i, v in enumerate(numbers):
         raw = table.value(i, group_f)
@@ -284,10 +320,9 @@ def top_share(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     by_group = {k: correct_sum(v) for k, v in sums.items()}
     top = _nanmax(list(by_group.values()))
     share = top / total
-    triggered = share >= float(p["share_ge"])
     leader = next((k for k, v in by_group.items() if v == top), None)
-    out.dataset = {
-        "triggered": bool(triggered),
+    return {
+        "triggered": bool(share >= float(p["share_ge"])),
         "value": share,
         "reason": (
             f"Anteil des größten {group_f} an der Summe {name}: {share:.4f} "
@@ -299,4 +334,34 @@ def top_share(p: JsonObject, table: Table, ctx: Context) -> Outcome:
             "total": total,
         },
     }
+
+
+def _top_share_cents(p: JsonObject, table: Table) -> DatasetOutcome:
+    name, group_f = p["amount_field"], p["group_field"]
+    numbers = [coerce_number(table.value(i, name), name) for i in range(len(table))]
+    bad = _first_unconvertible(numbers)
+    cents = [0 if v is None or bad is not None else cast(int, amount_cents(v)) for v in numbers]
+    total = sum(cents)
+    if bad is not None or not total > 0:
+        return top_share_undecided(bad)
+    sums: dict[Hashable, int] = {}
+    for i, value in enumerate(cents):
+        raw = table.value(i, group_f)
+        key = MISSING_KEY if is_missing(raw) else hashable(raw, group_f)
+        sums[key] = sums.get(key, 0) + value
+    top = max(sums.values())
+    leader = next(k for k, v in sums.items() if v == top)
+    return top_share_outcome(p, total, top, leader)
+
+
+def top_share(p: JsonObject, table: Table, ctx: Context) -> Outcome:
+    """Dataset finding: share of the largest group in the total amount.
+
+    With ``arithmetic: "cents"`` the amounts are rounded to whole cents
+    (``ROUND_HALF_UP``) before summing; an amount that is not finite or above
+    10 Mrd. € leaves the share undetermined. Without it the correctly rounded
+    float sums of 0.3.4 apply (legacy profiles).
+    """
+    out = Outcome.constant(len(table), None)
+    out.dataset = _top_share_cents(p, table) if in_cents(p) else _top_share_float(p, table)
     return out

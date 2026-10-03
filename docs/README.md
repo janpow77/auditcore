@@ -9,9 +9,9 @@ Zentrale Dokumentationsübersicht für das Monorepo `auditcore`. Dieser Leitfade
 - [**`AUDITCORE_LASTENHEFT.md`**](../AUDITCORE_LASTENHEFT.md) (Verweis auf [`docs/auditcore_lastenheft.md`](auditcore_lastenheft.md)):
   Das verbindliche Lastenheft mit den 5 Phasen des EU-Prüfprozesses, Migrationsregeln und CI-Kriterien.
 - [**`ARCHITEKTUR.md`**](../ARCHITEKTUR.md):
-  Monorepo-Topologie, Verzeichnisstruktur, Modulkarte der 28 Fachbibliotheken und Clean-Domain-Leitplanken.
+  Monorepo-Topologie, Verzeichnisstruktur, Modulkarte der 32 Python-Pakete unter `packages/` (22 Fachbibliotheken, 5 Querschnittspakete, 5 Quellen-Adapter) und Clean-Domain-Leitplanken.
 - [**`README.md`**](../README.md):
-  Einführung, Anwendungsphasen, Framework-Spezifikationen und vollständiger Paketkatalog.
+  Einführung, Installationswege, Anwendungsphasen und der aus den Paketdateien generierte Paketkatalog (42 Pakete: 32 Python, 10 npm; aufklappbar, Stand prüft `python3 scripts/docs/catalog.py --check`). Die ausführlichere Paketübersicht steht in [`docs/bibliotheken/uebersicht.md`](bibliotheken/uebersicht.md).
 - [**`CHANGELOG.md`**](../CHANGELOG.md):
   Vollständige Versionshistorie sämtlicher Releases nach Keep-a-Changelog-Standard.
 

@@ -30,7 +30,7 @@ Das Repository ist als striktes Clean-Domain-Monorepo aufgebaut: Es trennt Platt
 
 | Verzeichnis / Datei | Typ | Zweck & Inhalt |
 | :--- | :--- | :--- |
-| [`packages/`](packages/) | Domänenpakete | 28 eigenständige Python-Bibliotheken (reine Fachdomänen ohne Web- oder ORM-Abhängigkeiten). |
+| [`packages/`](packages/) | Domänenpakete | 32 eigenständige Python-Bibliotheken (reine Fachdomänen ohne Web- oder ORM-Abhängigkeiten). |
 | [`packages-js/`](packages-js/) | UI-Pakete | 10 modulare TypeScript-, Vue- und React-Pakete (z. B. `@auditcore/bpmn-vue`, `@auditcore/ui-core`). |
 | [`src/auditcore/`](src/auditcore/) | Plattform-Kern | Plattform-Engine, CLI-Werkzeuge (`codegate`, `consolidator`, `apprefactor`, `policy`, `deployer`). |
 | [`contracts/`](contracts/) | Schnittstellen | Formale JSON-Schemas, API-Verträge und gemeinsame Validierungsfälle (`common-cases/`). |
@@ -60,7 +60,7 @@ Das Repository ist als striktes Clean-Domain-Monorepo aufgebaut: Es trennt Platt
 
 ## 3. Modulkarte der Fachbibliotheken (`packages/`)
 
-Die 28 Python-Pakete decken fünf Kernbereiche des Prüfwesens ab:
+Die 32 Python-Pakete decken fünf Kernbereiche des Prüfwesens ab:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

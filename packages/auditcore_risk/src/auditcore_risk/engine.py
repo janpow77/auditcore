@@ -12,7 +12,7 @@ from datetime import date
 from types import MappingProxyType
 
 from .assessment import points_for, record_assessment, render_messages
-from .base import Context, Outcome, Table
+from .base import Context, DatasetOutcome, Outcome, Table
 from .errors import InputError, ProfileError
 from .profiles import RiskProfile, Rule
 from .results import LIBRARY, DatasetFinding, Evaluation, FlagHit, RecordResult
@@ -52,7 +52,8 @@ def _columns(
     return found
 
 
-def _run(rule: Rule, table: Table, ctx: Context) -> tuple[Outcome | None, str | None]:
+def run_rule(rule: Rule, table: Table, ctx: Context) -> tuple[Outcome | None, str | None]:
+    """Outcome of one rule, or ``None`` and the reason when its columns are missing."""
     missing = [c for c in rule.requires if not table.has(c)]
     if missing:
         if rule.when_missing_columns == "error":
@@ -67,11 +68,10 @@ def _run(rule: Rule, table: Table, ctx: Context) -> tuple[Outcome | None, str | 
     return KINDS[rule.kind].run(rule.params, table, ctx), None
 
 
-def _dataset_finding(rule: Rule, outcome: Outcome) -> DatasetFinding | None:
+def dataset_finding(rule: Rule, d: DatasetOutcome | None) -> DatasetFinding | None:
     """Finding of a dataset-wide rule (``None`` for record rules)."""
-    if rule.scope != "dataset" or outcome.dataset is None:
+    if rule.scope != "dataset" or d is None:
         return None
-    d = outcome.dataset
     return DatasetFinding(
         code=rule.code,
         label=rule.label,
@@ -91,12 +91,12 @@ def _run_rules(
     skipped: dict[str, str] = {}
     dataset: list[DatasetFinding] = []
     for rule in profile.rules:
-        outcome, reason = _run(rule, table, ctx)
+        outcome, reason = run_rule(rule, table, ctx)
         if outcome is None:
             skipped[rule.code] = str(reason)
             continue
         outcomes[rule.code] = outcome
-        finding = _dataset_finding(rule, outcome)
+        finding = dataset_finding(rule, outcome.dataset)
         if finding is not None:
             dataset.append(finding)
     return outcomes, skipped, dataset

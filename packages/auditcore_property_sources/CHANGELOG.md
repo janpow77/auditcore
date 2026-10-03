@@ -2,7 +2,7 @@
 
 Aus der Git-Historie rekonstruiert (`git log -- packages/auditcore_property_sources`).
 
-## Unreleased
+## 0.1.4 – 2026-10-03
 
 Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation
 `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle,

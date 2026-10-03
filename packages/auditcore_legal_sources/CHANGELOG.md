@@ -1,6 +1,6 @@
 # Changelog – auditcore_legal_sources
 
-## Unreleased
+## 0.1.6 – 2026-10-03
 
 - **Fehlerbehebung LS-S1:** `eurlex.update_query` weist ein `datetime` ab
   (`ConfigurationError` „Das Startdatum muss ein Datum ohne Uhrzeit sein.“),

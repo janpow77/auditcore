@@ -1,6 +1,6 @@
 # Changelog – auditcore_bpmn
 
-## Unreleased
+## 0.1.3 – 2026-10-03
 
 - Zitaterkennung (Befunde B1/B2 der Spezifikation behoben): gebeugte
   Normnamen („Artikel 1 der Delegierten Verordnung (EU) Nr. 480/2014“) werden

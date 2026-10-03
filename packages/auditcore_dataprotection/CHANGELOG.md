@@ -1,6 +1,6 @@
 # Changelog auditcore_dataprotection
 
-## Unreleased
+## 0.5.2 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
 Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom

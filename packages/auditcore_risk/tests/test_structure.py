@@ -135,6 +135,8 @@ def test_registry_keeps_kinds_and_their_checks() -> None:
         "missing_procurement": frozenset({"missing_amount_reason"}),
         "leave_one_out_rate": frozenset({"propagation"}),
         "split_window": frozenset({"procurement_eu"}),
+        "balance_mismatch": frozenset({"arithmetic"}),
+        "top_share": frozenset({"arithmetic"}),
     }
 
 

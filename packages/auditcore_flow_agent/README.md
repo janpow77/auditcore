@@ -219,7 +219,7 @@ Freigabe einer möglicherweise noch arbeitenden GPU allein wegen Lease-Ablauf.
 
 ## Abhängigkeiten
 
-Python `>=3.11`, `auditcore_common==0.2.0` und Python-Standardbibliothek.
+Python `>=3.11`, `auditcore_common==0.2.1` und Python-Standardbibliothek.
 Kein Webframework, Message-Broker, CUDA, PyTorch oder Plattformimport erforderlich.
 
 ## Sicherheit und Datenschutz
