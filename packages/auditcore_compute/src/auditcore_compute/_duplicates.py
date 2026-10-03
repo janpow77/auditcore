@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Hashable, Iterable
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, NoReturn
 
 import numpy as np
 import numpy.typing as npt
@@ -133,14 +133,29 @@ def factorize(values: object) -> tuple[npt.NDArray[np.int64], tuple[Hashable, ..
     raw = series_items(values)
     if not isinstance(raw, Iterable) or isinstance(raw, (str, bytes)):
         raise TypeError("Erwartet wird eine Folge von Schlüsseln.")
-    items = list(raw)
-    seen: dict[Hashable, int] = {}
-    codes = np.empty(len(items), dtype=np.int64)
+    items: list[Hashable] = list(raw)
+    try:
+        uniques = tuple(dict.fromkeys(items))  # first occurrence order, first key object kept
+    except TypeError:
+        uniques = (None,)  # an unhashable key: report the first invalid position below
+    if any(_is_missing_key(key) for key in uniques):
+        raise_first_invalid(items)
+    index = {key: code for code, key in enumerate(uniques)}
+    codes = np.fromiter(map(index.__getitem__, items), dtype=np.int64, count=len(items))
+    return codes, uniques
+
+
+def _is_missing_key(item: object) -> bool:
+    return item is None or (isinstance(item, float) and item != item)
+
+
+def raise_first_invalid(items: list[Hashable]) -> NoReturn:
+    """Raise for the first missing (``ValueError``) or unhashable (``TypeError``) key."""
     for index, item in enumerate(items):
-        if item is None or (isinstance(item, float) and item != item):
+        if _is_missing_key(item):
             raise ValueError(f"Fehlender Schlüssel an Position {index}.")
-        codes[index] = seen.setdefault(item, len(seen))
-    return codes, tuple(seen)
+        hash(item)
+    raise TypeError("Die Schlüssel lassen sich nicht faktorisieren.")
 
 
 @dataclass(frozen=True)

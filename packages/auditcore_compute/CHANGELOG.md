@@ -31,10 +31,11 @@ Nachtrag vor der Veröffentlichung (vektorisierte Umwandlung, Ergebnisse unverä
   ganze Wertebereiche, Grenzfälle 2,675, 1,005, 0,125, negative Beträge, bis
   10 Mrd. €). Nur Werte nahe einem halben Cent und Beträge ab 10¹¹ € gehen über
   `Decimal(str(x))`; Fehler (fehlender Wert, nicht endlich, Überlauf) wie bisher.
-  500.000 Werte: 14 ms statt 525 ms.
+  500.000 Werte: 15 ms statt 538 ms.
 - `factorize` faktorisiert bool-, Ganzzahl- und float-Arrays bzw. -Serien
   vektorisiert (gleiche Codes und Schlüssel in Erstauftritts-Reihenfolge);
-  Texte bleiben im Elementpfad.
+  Texte und andere Objekte über `dict.fromkeys` ohne Python-Schleife je
+  Element (gleiche Gleichheit wie `dict`, Fehler an derselben Position).
 - `validation.first_occurrence_codes(codes, count)` nummeriert Gruppencodes
   nach ihrem ersten Auftreten um (für Verbraucher, die fehlende Schlüssel als
   eigene Gruppe führen).

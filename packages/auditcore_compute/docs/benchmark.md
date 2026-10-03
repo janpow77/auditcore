@@ -46,19 +46,20 @@ die Zeiten mit `NUMBA_NUM_THREADS=1` sind gleich.
 
 | Umwandlung | Zeit [ms] |
 |---|---:|
-| `to_cents` je Wert (`Decimal`) | 525.5 |
-| `to_cents_buffer` vektorisiert (float64-Array) | 13.9 |
-| `factorize` über eine Liste (Elementpfad) | 134.0 |
-| `factorize` vektorisiert (int64-Array) | 97.2 |
+| `to_cents` je Wert (`Decimal`) | 538.0 |
+| `to_cents_buffer` vektorisiert (float64-Array) | 14.7 |
+| `factorize` über eine Liste (Elementpfad) | 146.2 |
+| `factorize` vektorisiert (int64-Array) | 98.8 |
 
-- `to_cents_buffer` ist für float64-Arrays und -Serien etwa 38-mal schneller
+- `to_cents_buffer` ist für float64-Arrays und -Serien etwa 36-mal schneller
   als die Umwandlung je Wert und bitgleich zu `to_cents`: Kandidat ist
   `rint(x·100)`; Werte, deren Hundertfaches näher als eine großzügige
   Fehlerschranke (6400·ulp(x) + 4·ulp(x·100)) an einem halben Cent liegt, und
   Beträge ab 10¹¹ € rechnet die Funktion über `Decimal(str(x))` nach.
-- `factorize` gewinnt vektorisiert nur das 1,4-Fache, weil `np.unique`
+- `factorize` gewinnt vektorisiert nur das 1,5-Fache, weil `np.unique`
   sortiert. Texte bleiben deshalb im Elementpfad (ein Sortieren von
-  Zeichenketten war in der Messung langsamer als das Hashen).
+  Zeichenketten war in der Messung langsamer als das Hashen); dieser läuft
+  über `dict.fromkeys` und `map` ohne Python-Schleife je Element.
 
 ## Bewertung
 

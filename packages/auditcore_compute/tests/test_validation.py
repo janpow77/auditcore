@@ -11,6 +11,7 @@ from conftest import bits, both_paths
 from hypothesis import given
 from hypothesis import strategies as st
 
+from auditcore_compute._duplicates import raise_first_invalid
 from auditcore_compute.validation import (
     DEVIATION,
     MATCH,
@@ -198,6 +199,20 @@ def test_vectorised_factorize_matches_first_occurrence(items: list[object]) -> N
         assert codes.dtype == np.int64 and codes.tolist() == expected_codes
         assert uniques == expected_keys
         assert [type(u) for u in uniques] == [type(k) for k in expected_keys]
+
+
+def test_factorize_reports_the_first_invalid_key() -> None:
+    with pytest.raises(TypeError):
+        factorize(["a", ["unhashable"], None])
+    with pytest.raises(ValueError, match="Position 1"):
+        factorize(["a", None, ["unhashable"]])
+    with pytest.raises(ValueError, match="Position 2"):
+        factorize(np.array(["a", "b", None], dtype=object))
+    with pytest.raises(TypeError, match="faktorisieren"):
+        raise_first_invalid(["a", "b"])
+    codes, uniques = factorize([1, 1.0, True, "1"])  # dict equality: 1 == 1.0 == True
+    assert codes.tolist() == [0, 0, 0, 1] and uniques == (1, "1")
+    assert type(uniques[0]) is int
 
 
 def test_vectorised_factorize_edges() -> None:
