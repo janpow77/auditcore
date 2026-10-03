@@ -1,6 +1,6 @@
 # Changelog auditcore_funding_sources
 
-## Unreleased
+## 0.1.6 – 2026-10-03
 
 Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation
 `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle,

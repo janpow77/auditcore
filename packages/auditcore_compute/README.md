@@ -2,7 +2,9 @@
 
 ## Zweck
 
-Deterministische Rechenkerne für Prüfdaten: optionale Numba-Kompilierung mit bitgleichem Python-Rückfall, centgenaue Quoten und Zinsen, Plausibilitätsprüfungen und kompensierte Statistik.
+Deterministische Rechenkerne für Prüfdaten: optionale Numba-Kompilierung, NumPy-Rückfall für elementweise Prüfungen, centgenaue Quoten und Zinsen, Plausibilitätsprüfungen und kompensierte Statistik.
+
+Der ursprüngliche Python-Pfad bleibt als unabhängige Vergleichsausführung verfügbar.
 
 Für Anwendungen der FlowAudit-Familie und auditcore-Pakete, die große
 Buchungs- oder Belegtabellen prüfen (Kürzungs- und Kofinanzierungsquoten,
@@ -37,7 +39,7 @@ auditcore_compute @ https://github.com/janpow77/auditcore/releases/download/v<re
 
 Debian/Ubuntu über die signierte APT-Quelle des Releases
 ([Einrichtung](../../docs/deployment/package-feed.md)); das Paket hängt von
-`python3-numpy` ab, Numba ist in Debian nicht vorgesehen (Python-Pfad):
+`python3-numpy` ab, Numba ist in Debian nicht vorgesehen (NumPy-/Python-Pfad):
 
 ```bash
 sudo apt-get install python3-auditcore-compute
@@ -73,7 +75,7 @@ check = reconcile([100, 200], [100, 201], tolerance_cents=1)
 assert check.status.tolist() == [0, 1]  # 0 = gleich, 1 = innerhalb der Toleranz
 dip = double_funding(["RE-7", "RE-7", "RE-8"], [500, 500, 500], ["V-1", "V-2", "V-1"])
 assert dip.flagged.tolist() == [True, True, False]
-assert {info.mode for info in engine_report()} <= {"jit", "python"}
+assert {info.mode for info in engine_report()} <= {"jit", "numpy", "python"}
 ```
 
 Fehlende Werte werden nie still zu 0:
@@ -99,7 +101,7 @@ Eigene Kernel mit `@accelerate` und `to_buffer`: [docs/anleitung.md](docs/anleit
 | `Kernel` | Klasse | A function compiled on first use, with the original kept as ``py_func``. | `_engine` |
 | `MaskedBuffer` | Datenklasse | Values with an explicit missing-value mask (masked positions hold 0). | `_buffers` |
 | `accelerate` | Funktion | Compile a kernel with Numba when available, else run it as Python. | `_engine` |
-| `engine_info` | Funktion | Execution path (``"jit"`` or ``"python"``) and reason of an accelerated kernel. | `_engine` |
+| `engine_info` | Funktion | Execution path (``"jit"``, ``"numpy"`` or ``"python"``) of an accelerated kernel. | `_engine` |
 | `engine_report` | Funktion | Execution paths of all kernels defined so far (for provenance records). | `_engine` |
 | `from_cents` | Funktion | Integer cents back to a Decimal euro amount with two places. | `_buffers` |
 | `jitable` | Funktion | Mark a helper callable from kernels; it stays a plain Python function. | `_engine` |
@@ -123,11 +125,32 @@ Eigene Kernel mit `@accelerate` und `to_buffer`: [docs/anleitung.md](docs/anleit
 
 Keine benannten Profile. Laufzeitschalter:
 
-- `AUDITCORE_COMPUTE_DISABLE_JIT=1` erzwingt den Python-Pfad (vor dem Import
-  setzen); `engine_info`/`engine_report` nennen den Grund.
+- `AUDITCORE_COMPUTE_DISABLE_JIT=1` schaltet Numba aus (vor dem Import
+  setzen). Elementweise Quoten-, Abgleich- und Schwellenprüfungen verwenden
+  dann NumPy, andere Kerne ihre Python-Referenz. `use_python()` erzwingt
+  innerhalb seines Blocks weiterhin die ursprüngliche Python-Ausführung.
+  `engine_info`/`engine_report` unterscheiden `jit`, `numpy` und `python`.
 - `NUMBA_CACHE_DIR` legt das Cache-Verzeichnis fest; ist keines beschreibbar,
   wird ohne Cache kompiliert. `NUMBA_NUM_THREADS` begrenzt die Threads der
   elementweisen Kernel (Ergebnisse bleiben gleich).
+- Kleine Quoten-/Abgleichläufe verwenden serielles JIT, größere paralleles
+  JIT. Einfache Schwellenmasken verwenden unter 250.000 Werten direkt NumPy,
+  ohne einen Compiler zu initialisieren. Diese technischen Grenzen sind
+  Startwerte aus lokalen Messungen; sie ersetzen keine Lastmessung der App.
+  `accelerate` erlaubt mit `min_parallel_size` und `min_jit_size` eigene
+  Grenzen anhand der Größe des ersten positionalen Array-Arguments;
+  `min_jit_size` erfordert einen signaturgleichen NumPy-`fallback`.
+  Serielle und parallele Kompilierungen erhalten unterschiedliche Cache-Schlüssel.
+- Wiederholte Quoten werden in einem typgetrennten Cache mit höchstens
+  1.024 Einträgen aufbereitet. Dokument- oder Mandantendaten werden dort nicht gehalten.
+  Für mehrere Betragsspalten lässt sich auch die vollständige Aufbereitung
+  wiederverwenden: `PreparedRates(["0.4", "0.5"])` aus
+  `auditcore_compute.finance` wird direkt an `share_cents`, `cofinancing`
+  oder `apply_reduction` übergeben. Das Objekt hält einen schreibgeschützten
+  Schnappschuss; jede Betragsspalte muss dieselbe Zeilenzahl haben.
+- Die Anwendung budgetiert Worker, Numba- und gegebenenfalls BLAS-Threads
+  gemeinsam. JIT-Aufwärmen erfolgt bei Prozessen mit `fork` im Kindprozess.
+  Weitere Entscheidungen und Messgrenzen: [Performance-Review](../../docs/performance/compute-review-2026-10-03.md).
 - Zinsmethoden: `act/360`, `act/365`, `act/act-isda`, `30e/360`,
   `30e/360-isda`. Zinssätze, Schwellen, Toleranzen und Ausreißerfaktoren sind
   immer Eingaben des Aufrufers.

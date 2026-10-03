@@ -16,6 +16,7 @@ STDLIB = {
     "asyncio",
     "collections",
     "contextlib",
+    "contextvars",
     "copy",
     "csv",
     "dataclasses",

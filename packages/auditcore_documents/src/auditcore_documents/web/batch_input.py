@@ -23,6 +23,7 @@ from auditcore_documents.pipeline.watchdog import (
     ERROR_RATE_BLOCK_THRESHOLD,
     SUPPLIER_CONCENTRATION_THRESHOLD,
 )
+from auditcore_documents.pipeline.watchdog.cache import current
 
 
 class BatchCheckError(ContractError):
@@ -216,8 +217,14 @@ def _cell(value: object, name: str, row: int) -> object:
     if len(value) > MAX_TEXT:
         raise BatchCheckError(f"Beleg {row}: '{name}' ist länger als {MAX_TEXT} Zeichen.")
     if name in _NUMERIC and value.strip():
+        cache = current()
+        if cache is not None and value in cache.numeric_text:
+            return cache.numeric_text[value]
         parsed = parse_number(value, "auto", max_fraction_digits=None)
-        return str(parsed) if parsed is not None else value
+        result = str(parsed) if parsed is not None else value
+        if cache is not None:
+            cache.numeric_text[value] = result
+        return result
     return value
 
 

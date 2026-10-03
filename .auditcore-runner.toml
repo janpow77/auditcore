@@ -173,3 +173,26 @@ zeitlimit_s = 300
 [pruefprofile.compute.werkzeug.codegate]
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_compute", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
+
+# Dokumentauswertung einschließlich OCR-Parallelität und Watchdog-Verträgen.
+[pruefprofile.documents]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.documents.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_documents", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.documents.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_documents/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 600
+
+[pruefprofile.documents.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_documents && exec python3 -m mypy src --no-color-output --no-error-summary"]
+zeitlimit_s = 300
+
+[pruefprofile.documents.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_documents", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300

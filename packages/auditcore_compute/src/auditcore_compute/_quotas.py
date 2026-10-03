@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import Decimal
 from fractions import Fraction
+from functools import lru_cache
 
 import numpy as np
 import numpy.typing as npt
@@ -19,6 +20,8 @@ import numpy.typing as npt
 from ._buffers import cents_input
 from ._engine import accelerate, jitable, prange
 from ._intmath import MAX_DENOMINATOR, div_round, mul_div_round
+from ._vectorized import quota as numpy_quota
+from ._vectorized import share as numpy_share
 
 RateInput = Fraction | Decimal | str | int | float
 
@@ -50,23 +53,60 @@ def percent(value: Decimal | str | int) -> Fraction:
     return rate(Fraction(Decimal(str(value))) / 100)
 
 
+@lru_cache(maxsize=1024, typed=True)
+def _cached_rate(value: RateInput) -> Fraction:
+    """Reuse validated rates; typed keys keep bool and numeric types distinct."""
+    return rate(value)
+
+
+@dataclass(frozen=True, eq=False)
+class PreparedRates:
+    """Validated, read-only rates reusable for multiple equally sized amount columns.
+
+    Construct once from the original rates, then pass this object to
+    ``share_cents``, ``cofinancing`` or ``apply_reduction``. Input mutations
+    after construction cannot change the prepared values.
+    """
+
+    _numerators: npt.NDArray[np.int64]
+    _denominators: npt.NDArray[np.int64]
+
+    def __init__(self, rates: Sequence[RateInput]) -> None:
+        if isinstance(rates, str | bytes):
+            raise TypeError("PreparedRates erwartet eine Folge einzelner Quoten.")
+        exact = [_cached_rate(value) for value in rates]
+        numerators = np.array([value.numerator for value in exact], dtype=np.int64)
+        denominators = np.array([value.denominator for value in exact], dtype=np.int64)
+        numerators.setflags(write=False)
+        denominators.setflags(write=False)
+        object.__setattr__(self, "_numerators", numerators)
+        object.__setattr__(self, "_denominators", denominators)
+
+    def __len__(self) -> int:
+        return int(self._numerators.size)
+
+
 def _rate_buffers(
-    rates: RateInput | Sequence[RateInput], size: int
+    rates: RateInput | Sequence[RateInput] | PreparedRates, size: int
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.int64]]:
+    if isinstance(rates, PreparedRates):
+        if len(rates) != size:
+            raise ValueError("Je Betrag ist genau eine Quote anzugeben.")
+        return rates._numerators, rates._denominators
     if isinstance(rates, (Fraction, Decimal, str, int, float)):
         single = rate(rates)
         return (
             np.full(size, single.numerator, dtype=np.int64),
             np.full(size, single.denominator, dtype=np.int64),
         )
-    exact = [rate(r) for r in rates]
+    exact = [_cached_rate(r) for r in rates]
     if len(exact) != size:
         raise ValueError("Je Betrag ist genau eine Quote anzugeben.")
     numerators = np.array([r.numerator for r in exact], dtype=np.int64)
     return numerators, np.array([r.denominator for r in exact], dtype=np.int64)
 
 
-@accelerate(parallel=True)
+@accelerate(parallel=True, fallback=numpy_share, min_parallel_size=100_000)
 def share_kernel(
     amounts: npt.NDArray[np.int64],
     numerators: npt.NDArray[np.int64],
@@ -79,10 +119,17 @@ def share_kernel(
 
 
 def share_cents(
-    amounts_cents: object, rates: RateInput | Sequence[RateInput]
+    amounts_cents: object, rates: RateInput | Sequence[RateInput] | PreparedRates
 ) -> npt.NDArray[np.int64]:
     """Share of each amount (one rate for all rows or one per row), in cents."""
     amounts = cents_input(amounts_cents, "Betrag")
+    return _share(amounts, rates)
+
+
+def _share(
+    amounts: npt.NDArray[np.int64], rates: RateInput | Sequence[RateInput] | PreparedRates
+) -> npt.NDArray[np.int64]:
+    """Calculate shares after the public boundary has validated the amount column."""
     numerators, denominators = _rate_buffers(rates, amounts.shape[0])
     out = np.zeros(amounts.shape, dtype=np.int64)
     share_kernel(amounts, numerators, denominators, out)
@@ -98,15 +145,17 @@ class Split:
 
 
 def apply_reduction(
-    amounts_cents: object, reduction_rate: RateInput | Sequence[RateInput]
+    amounts_cents: object, reduction_rate: RateInput | Sequence[RateInput] | PreparedRates
 ) -> Split:
     """Reduction amount (``share``) and remaining eligible amount (``rest``) per row."""
     amounts = cents_input(amounts_cents, "Betrag")
-    share = share_cents(amounts, reduction_rate)
+    share = _share(amounts, reduction_rate)
     return Split(share, amounts - share)
 
 
-def cofinancing(eligible_cents: object, funding_rate: RateInput | Sequence[RateInput]) -> Split:
+def cofinancing(
+    eligible_cents: object, funding_rate: RateInput | Sequence[RateInput] | PreparedRates
+) -> Split:
     """Funding (``share``) and own contribution (``rest``) of the eligible costs."""
     return apply_reduction(eligible_cents, funding_rate)
 
@@ -119,7 +168,7 @@ class QuotaCheck:
     status: npt.NDArray[np.int8]
 
 
-@accelerate(parallel=True)
+@accelerate(parallel=True, fallback=numpy_quota, min_parallel_size=100_000)
 def quota_kernel(
     parts: npt.NDArray[np.int64],
     totals: npt.NDArray[np.int64],

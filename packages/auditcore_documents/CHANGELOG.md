@@ -1,6 +1,18 @@
 # Changelog – auditcore_documents
 
-## Unreleased
+## 0.5.0 – 2026-10-03
+
+- `LimitedRouterOcr` begrenzt Gateway-Anfragen mehrerer Dokumente im selben
+  Eventloop mit einem gemeinsam genutzten Budget; wartende Abbrüche und
+  Eventloop-Wechsel sind ausdrücklich behandelt.
+- Bestandsprüfungen verwenden vorbereitete Zahltexte, Lieferantennamen und
+  formale Befunde innerhalb eines Prüflaufs wieder; keine Wiederverwendung
+  von Dokumentdaten zwischen unabhängigen Läufen.
+- Gateway-OCR kann mit `OcrRouting.max_concurrent_pages` begrenzt parallel
+  arbeiten (Standard 1). Reihenfolge und Teilfehler bleiben erhalten;
+  Abbrüche und Transportausnahmen beenden alle begonnenen Seitenanfragen.
+  Rasterung und lokale OCR bleiben seriell. Die Anwendung budgetiert
+  gleichzeitige Anfragen zusätzlich über Dokumente und Worker hinweg.
 
 - Neu: Bestandsprüfung über viele Belege als REST-Vertrag
   `documents_batch_checks/1` (`auditcore_documents.web`): `BatchCheckService`,

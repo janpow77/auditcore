@@ -1,5 +1,10 @@
 # Changelog auditcore_market_indicators
 
+## 0.1.4 – 2026-10-03
+
+Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
+exakt gebundenen internen Abhängigkeiten.
+
 Rekonstruiert aus der Git-Historie (Pull Requests #14, #23, #59).
 
 ## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2 – Hilfsfunktionen aus auditcore_common

@@ -45,6 +45,15 @@ class OcrRouting:
     mode: str = "auto"
     gateway_url: str = ""
     languages: str = "deu+eng"
+    max_concurrent_pages: int = 1
+
+    def __post_init__(self) -> None:
+        if isinstance(self.max_concurrent_pages, bool) or not isinstance(
+            self.max_concurrent_pages, int
+        ):
+            raise TypeError("max_concurrent_pages muss eine ganze Zahl sein.")
+        if not 1 <= self.max_concurrent_pages <= MAX_OCR_PAGES:
+            raise ValueError(f"max_concurrent_pages muss zwischen 1 und {MAX_OCR_PAGES} liegen.")
 
 
 @dataclass

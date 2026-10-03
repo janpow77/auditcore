@@ -2,7 +2,7 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #13, #16, #38, #54, #73).
 
-## Unreleased
+## 0.3.2 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
 Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom

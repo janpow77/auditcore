@@ -19,6 +19,7 @@ ALLOWED = {
     "datetime",
     "decimal",
     "fractions",
+    "functools",
     "hashlib",
     "importlib",
     "logging",

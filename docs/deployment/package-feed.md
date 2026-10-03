@@ -1,6 +1,50 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Preview v0.4.2](https://github.com/janpow77/auditcore/releases/tag/v0.4.2)**
+**Aktuell: [Pre-release v0.6.0](https://github.com/janpow77/auditcore/releases/tag/v0.6.0)**
+mit 33 Python-Bibliotheken, 10 npm-Paketen und 222 Release-Dateien mit signierten Prüfsummen.
+Compute 0.1.0 ergänzt centgenaue NumPy-/Numba-Rechenkerne und wiederverwendbare
+Quoten. Documents 0.5.0 vermeidet wiederholte Aufbereitung innerhalb eines
+Prüflaufs und begrenzt parallele OCR-Aufrufe. Risk 0.4.0 wertet vorbereitete
+Spalten direkt aus; vorhandene fachliche Profile bleiben unverändert.
+[Recherche und Messungen](../performance/compute-review-2026-10-03.md).
+
+Die Versionen und Prüfsummen stehen im
+[Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.6.0/preview-manifest.json)
+und in den signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.6.0/SHA256SUMS).
+Der bestehende Signaturschlüssel bleibt unverändert:
+`E427F95CC37CBFD0876314CA0D1580A6CAE37327`.
+
+Compute und Risk benötigen NumPy. Bei Verwendung der auf auditcore begrenzten
+Paketquelle wird diese externe Laufzeitabhängigkeit vorher aus der normalen
+Paketquelle installiert. Numba bleibt optional:
+
+```bash
+python -m pip install 'numpy>=1.24'
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.6.0/requirements-auditcore_risk.txt
+```
+
+Alternativ, nach Installation von NumPy:
+
+```bash
+python -m pip install auditcore-risk==0.4.0 --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+Die MIT-Provenienz von Checklists, PDF und Privacy ist für den Release geprüft.
+PyMuPDF wird nicht mitgeliefert; bei Verwendung des optionalen Extras gelten
+weiterhin [AGPL oder die kommerzielle Lizenz von Artifex](https://pymupdf.readthedocs.io/en/latest/about.html#license-and-copyright).
+
+Am 03.10.2026 wurden alle 222 Dateien anonym heruntergeladen und geprüft.
+pip-Installation aller 33 Pakete über die Hash-Locks und den Paketindex,
+APT-Installation und Entfernung, die zehn npm-Tarballs sowie die PDF-/Excel-Ausgabe
+sind erfolgreich geprüft. Alle zehn Registry-Integritäten stimmen mit den
+signierten npm-Tarballs überein; `@auditcore/layout` 0.1.0 wurde neu veröffentlicht.
+[Öffentlicher Prüfnachweis](../reports/domain-public-installation-v0.6.0.json).
+Der Bibliotheksrelease stellt produktive Anwendungen nicht automatisch um.
+
+## Historischer Stand v0.4.2
+
+**[Preview v0.4.2](https://github.com/janpow77/auditcore/releases/tag/v0.4.2)**
 mit 27 Python-Distributionen und 9 npm-Paketen (185 Assets). Neu sind
 `auditcore_extrapolation` 0.1.0 (Hochrechnung, TER und RER) und
 `auditcore_common` 0.2.0 (Modul `rest`), dazu REST-Verträge in documents 0.4.0,
@@ -131,6 +175,11 @@ für automatisiertes Signieren angelegt: Zugriffsschutz und gesicherte lokale
 Aufbewahrung dieses Verzeichnisses gehören zum Maintainerbetrieb. Nur der
 exportierte öffentliche Key gehört zu den Release-Assets. Kein Upload ganzer
 `.auditcore`-Verzeichnisse oder Verifikationsprotokolle.
+
+Bei der Vorbereitung in einem Git-Worktree zeigt `--signing-workspace` auf
+den Hauptcheckout mit diesem bestehenden dedizierten Schlüssel. Dadurch
+bleibt die Signaturidentität erhalten, ohne den privaten Schlüssel in den
+Worktree zu kopieren oder dort einen neuen Schlüssel zu erzeugen.
 
 Die [Preview v0.1.0](https://github.com/janpow77/auditcore/releases/tag/v0.1.0)
 ist mit 27 Assets veröffentlicht. Der Downloadpfad lautet

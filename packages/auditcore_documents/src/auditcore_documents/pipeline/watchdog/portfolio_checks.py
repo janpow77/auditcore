@@ -142,6 +142,19 @@ def _duplicate_finding(key: str, indices: list[int]) -> WatchdogFinding:
 
 
 def formal_issues(doc: Mapping[str, object]) -> list[str]:
+    """Reuse this document's formal checks during a single evaluation."""
+    from .cache import current
+
+    cache = current()
+    if cache is None:
+        return _formal_issues(doc)
+    key = id(doc)
+    if key not in cache.formal:
+        cache.formal[key] = (doc, _formal_issues(doc))
+    return cache.formal[key][1]
+
+
+def _formal_issues(doc: Mapping[str, object]) -> list[str]:
     """B-12: Mängel eines Belegs (Pflichtfelder, Datum, Rechnungsnummer, NaN)."""
     issues = [
         f"Pflichtfeld '{field_key}' fehlt"

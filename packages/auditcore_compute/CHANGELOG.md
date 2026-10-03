@@ -1,5 +1,20 @@
 # Changelog auditcore_compute
 
+## Unreleased – Laufzeitoptimierung
+
+- `PreparedRates` hält fertig aufbereitete Quoten für mehrere Betragsspalten;
+  die erneute Umwandlung entfällt. Kürzungsberechnungen validieren Beträge
+  nur einmal am öffentlichen Eintrittspunkt.
+- Wiederkehrende Quoten werden typgetrennt und mit begrenztem Speicherbedarf
+  aufbereitet. Elementweise Prüfungen erhalten einen NumPy-Rückfallpfad;
+  `use_python()` behält die bisherige Referenzausführung.
+- Rechenkernabhängige Auswahl zwischen NumPy, serieller und paralleler
+  Kompilierung. Einfache kleine Schwellenmasken benötigen kein JIT.
+  `engine_info` und `engine_report` können zusätzlich `numpy` melden.
+- Der Kompilierungscache trennt serielle und parallele Varianten zusätzlich
+  zum Paketfingerabdruck. Ergebnis-, Grenzwert- und Cachetests ergänzt.
+- Recherche und Vergleichsmessungen: `docs/performance/compute-review-2026-10-03.md`.
+
 ## 0.1.0 – 2026-10-03 – erste Fassung (noch nicht veröffentlicht)
 
 Neuimplementierung nach dem Lastenheft „hardwarenah kompilierter Rechenkern“,
