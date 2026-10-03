@@ -81,7 +81,11 @@ def test_heartbeat_refreshes_only_during_busy_phases(tmp_path: Path) -> None:
     progress.update(zustand="laeuft")
     with progress.busy("checkpoint"):
         assert _progress(tmp_path)["phase"] == "checkpoint"
-        time.sleep(0.2)
+        # Auf zwei Herzschläge warten statt eine feste Zeit zu schlafen: unter Last
+        # (pytest -n auto) kann der Takt-Thread später zum Zug kommen.
+        deadline = time.monotonic() + 10
+        while int(_progress(tmp_path)["aktualisiert"]) < 3 and time.monotonic() < deadline:
+            time.sleep(0.01)
     beats = int(_progress(tmp_path)["aktualisiert"])
     assert beats >= 4 and _progress(tmp_path)["phase"] == "start"
     time.sleep(0.1)

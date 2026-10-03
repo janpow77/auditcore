@@ -1,4 +1,4 @@
-"""Repository documentation gates behave consistently in installed runner wheels."""
+"""Werkzeug doku_reifegrad: Bewertung von README, ARCHITEKTUR und CLAUDE/AGENTS."""
 
 from __future__ import annotations
 
@@ -7,81 +7,157 @@ from pathlib import Path
 
 import pytest
 
-from auditcore_runner.werkzeuge import doku_reifegrad as docs
+from auditcore_runner.werkzeuge import doku_reifegrad as doku
 
-AGENT = "# Entwicklung\npytest\n# Architektur\nPython\nARCHITEKTUR.md\n"
-ARCH = "# Übersicht\nModule, zentrale Schnittstellen und Datenfluss.\n"
-README = (
-    "# Beispiel\nDieses Repository enthält eine kleine Bibliothek zur Verarbeitung von Tabellen. "
-    "Die Anwendung kann die vorhandenen Funktionen für ihre Auswertungen verwenden. "
-    "Die Ergebnisse werden als strukturierte Daten zurückgegeben.\n"
-    "## Installation\npytest\n## Funktionen\n## Voraussetzungen\nPython\nARCHITEKTUR.md\n"
-)
+README_VOLL = """# Beispielprojekt
+
+Dieses Projekt prüft Belege und erzeugt Berichte für die Prüfbehörde. Es bündelt
+Erfassung, Bewertung und Ausgabe in einer Anwendung und ist für den Einsatz in der
+Verwaltung gedacht.
+
+## Installation
+
+Schnellstart mit `pip install beispiel`.
+
+## Funktionen
+
+Module für Erfassung und Bericht.
+
+## Voraussetzungen
+
+Python 3.11.
+
+Weitere Details in [ARCHITEKTUR.md](ARCHITEKTUR.md).
+"""
+
+ARCH_VOLL = """# Architektur
+
+## Übersicht
+
+```
+eingang -> kern -> ausgabe
+```
+
+## Module
+
+Das Paket `kern` ist der zentrale Baustein; der Datenfluss läuft von links nach rechts.
+"""
+
+CLAUDE_VOLL = """# Hinweise für Agenten
+
+## Befehle
+
+pytest -q
+
+## Architektur
+
+Siehe ARCHITEKTUR.md.
+
+## Tech-Stack
+
+Python und FastAPI.
+"""
 
 
-def complete(path: Path) -> None:
-    (path / "AGENTS.md").write_text(AGENT)
-    (path / "ARCHITEKTUR.md").write_text(ARCH)
-    (path / "README.md").write_text(README)
+def _repo(tmp_path: Path, files: dict[str, str]) -> Path:
+    for name, text in files.items():
+        (tmp_path / name).write_text(text, encoding="utf-8")
+    return tmp_path
 
 
-def test_empty_repository_reports_all_missing_files(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    report = docs.check_repository(tmp_path)
-    assert report["total_score"] == 0 and report["maturity_level"] == 1
-    for part in ["claude", "arch", "readme"]:
-        assert not report[part]["exists"] and report[part]["flags"]
-    assert docs.main([str(tmp_path)]) == 1
-    assert "Mindestlevel" in capsys.readouterr().err
+def test_vollstaendiges_repository_erreicht_level_5(tmp_path: Path) -> None:
+    repo = _repo(
+        tmp_path,
+        {"README.md": README_VOLL, "ARCHITEKTUR.md": ARCH_VOLL, "CLAUDE.md": CLAUDE_VOLL},
+    )
+    report = doku.check_repository(repo)
+    assert report["total_score"] == 100.0
+    assert report["maturity_level"] == 5
+    assert report["readme"]["flags"] == []
+    assert report["arch"]["flags"] == []
+    assert report["claude"] == {
+        "exists": True,
+        "file": "CLAUDE.md",
+        "score": 100,
+        "lines": CLAUDE_VOLL.count("\n") + 1,
+        "flags": [],
+    }
 
 
-def test_complete_repository_and_json_cli(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    complete(tmp_path)
-    assert docs.main([str(tmp_path), "--json"]) == 0
-    report = json.loads(capsys.readouterr().out)
-    assert report["maturity_level"] == 5 and report["total_score"] == 100
-    assert report["claude"]["file"] == "AGENTS.md"
-    assert docs.main([str(tmp_path)]) == 0
-    assert "Level 5" in capsys.readouterr().out
+def test_leeres_repository_meldet_fehlende_dateien(tmp_path: Path) -> None:
+    report = doku.check_repository(tmp_path)
+    assert report["total_score"] == 0.0
+    assert report["maturity_level"] == 1
+    assert report["claude"]["flags"] == ["Datei fehlt (CLAUDE.md oder AGENTS.md)"]
+    assert report["arch"]["flags"] == ["Datei fehlt (ARCHITEKTUR.md oder ARCHITECTURE.md)"]
+    assert report["readme"]["flags"] == ["Datei fehlt (README.md)"]
 
 
-def test_short_unhelpful_files_fail_with_concrete_flags(tmp_path: Path) -> None:
-    for filename in ["CLAUDE.md", "ARCHITECTURE.md", "README.md"]:
-        (tmp_path / filename).write_text("x")
-    report = docs.check_repository(tmp_path)
-    assert len(report["readme"]["flags"]) == 5
-    assert len(report["arch"]["flags"]) == 4
-    assert len(report["claude"]["flags"]) == 4
+def test_duerftige_dateien_sammeln_alle_abzuege(tmp_path: Path) -> None:
+    repo = _repo(
+        tmp_path,
+        {
+            "README.md": "kurz\n",
+            "ARCHITECTURE.md": "nichts\n",
+            "AGENTS.md": "x\n" * 450,
+        },
+    )
+    report = doku.check_repository(repo)
+    assert report["readme"]["score"] == 0 and len(report["readme"]["flags"]) == 5
     assert report["arch"]["file"] == "ARCHITECTURE.md"
+    assert report["arch"]["score"] == 0 and len(report["arch"]["flags"]) == 4
+    claude = report["claude"]
+    assert claude["file"] == "AGENTS.md" and claude["score"] == 0
+    assert any("> 400 Zeilen" in flag for flag in claude["flags"])
+    assert len(claude["flags"]) == 5
 
 
-def test_agent_includes_and_file_precedence(tmp_path: Path) -> None:
-    (tmp_path / "AGENTS.md").write_text("x")
-    (tmp_path / "rules.md").write_text(AGENT)
-    (tmp_path / "CLAUDE.md").write_text("@rules.md\n@missing.md\n@param ignored\n@return ignored\n")
-    result = docs.eval_claude(tmp_path)
-    assert result["file"] == "CLAUDE.md" and result["score"] == 100
-    assert result["lines"] == 5
+def test_mittellange_agentendatei_kostet_zehn_punkte() -> None:
+    score, flags = doku._score_agent_text("pytest\n", 300)
+    assert score == 40
+    assert flags[0] == "300 Zeilen (empfohlen <= 200 Zeilen, -10)"
 
 
-@pytest.mark.parametrize("lines,score", [(250, 90), (450, 80)])
-def test_oversized_agent_instructions_are_penalized(tmp_path: Path, lines: int, score: int) -> None:
-    (tmp_path / "AGENTS.md").write_text(AGENT + "\n" * lines)
-    result = docs.eval_claude(tmp_path)
-    assert result["score"] == score and result["flags"]
+def test_eingebundene_dateien_zaehlen_mit(tmp_path: Path) -> None:
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "stack.md").write_text("## Tech-Stack\n\nRust\n", encoding="utf-8")
+    raw = "@docs/stack.md\n@param ignorieren\n@fehlt.md\n"
+    text = doku._agent_text(tmp_path, raw)
+    assert "Rust" in text
+    assert text.count("\n") > raw.count("\n")
 
 
-@pytest.mark.parametrize("missing,level", [("docs", 4), ("arch", 3), ("readme", 2)])
-def test_intermediate_maturity_levels(tmp_path: Path, missing: str, level: int) -> None:
-    complete(tmp_path)
-    if missing == "docs":
-        (tmp_path / "README.md").write_text(README.replace("ARCHITEKTUR.md", ""))
-    elif missing == "arch":
-        (tmp_path / "README.md").write_text("# Beispiel\nInstallation Python\n")
-    else:
-        (tmp_path / "README.md").unlink()
-    assert docs.check_repository(tmp_path)["maturity_level"] == level
+@pytest.mark.parametrize(
+    ("score", "level"),
+    [(100, 5), (90, 4), (75, 3), (50, 2), (10, 1)],
+)
+def test_stufengrenzen(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, score: int, level: int) -> None:
+    def teil(_path: Path) -> dict[str, object]:
+        return {"exists": True, "file": "x", "score": score, "flags": [], "words": 0, "lines": 0}
+
+    for name in ("eval_claude", "eval_arch", "eval_readme"):
+        monkeypatch.setattr(doku, name, teil)
+    assert doku.check_repository(tmp_path)["maturity_level"] == level
 
 
-def test_invalid_path_is_cli_error(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
-    assert docs.main([str(tmp_path / "missing")]) == 2
-    assert "kein Verzeichnis" in capsys.readouterr().err
+def test_main_textausgabe_und_mindestlevel(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repo = _repo(tmp_path, {"README.md": "kurz\n", "CLAUDE.md": "x\n"})
+    assert doku.main([str(repo), "--min-level", "1"]) == 0
+    out = capsys.readouterr().out
+    assert "Gesamt-Score" in out and "README.md" in out and "ARCHITEKTUR.md" in out
+    assert "Zweck unvollständig" in out
+
+    assert doku.main([str(repo)]) == 1
+    assert "FEHLER: Reifegrad 1 liegt unter dem geforderten Mindestlevel 4." in capsys.readouterr().err
+
+
+def test_main_json_ohne_fehlertext(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    assert doku.main([str(tmp_path), "--json"]) == 1
+    captured = capsys.readouterr()
+    assert json.loads(captured.out)["maturity_level"] == 1
+    assert captured.err == ""
+
+
+def test_main_lehnt_fehlendes_verzeichnis_ab(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    assert doku.main([str(tmp_path / "fehlt")]) == 2
+    assert "ist kein Verzeichnis" in capsys.readouterr().err
