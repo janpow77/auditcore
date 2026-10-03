@@ -152,6 +152,53 @@ ausgeführt. Damit lassen sich Ziele und Optionen je Repository ändern, ohne de
 globalen Katalog oder das Runner-Image anzupassen. Bei Parsern mit Ausgabedatei
 muss `befehl` den Platzhalter `{ausgabe}` weiterhin enthalten.
 
+Ein Werkzeug, das nicht im Katalog steht, darf ein Profil mit eigenem `befehl`
+deklarieren (Bereich `eigen`):
+
+```toml
+[pruefprofile.pr]
+werkzeuge = ["ruff", "compose"]
+
+[pruefprofile.pr.werkzeug.compose]
+befehl = ["docker", "compose", "config", "--quiet"]
+```
+
+Ohne `{ausgabe}` entscheidet der Exitcode: 0 ergibt keinen Befund, jeder andere
+Exitcode einen Befund `exitcode` mit dem Ende der Ausgabe. Enthält `befehl` den
+Platzhalter `{ausgabe}`, muss das Programm dort einen JUnit-Bericht
+(`<name>.xml`) schreiben; Exitcode 0 und 1 gelten dann als gelaufen. Eigene
+Werkzeuge werden nicht zwischengespeichert, weil ihr Ergebnis von Zuständen
+außerhalb von Git abhängen kann (`.env`, laufende Container). Im Runner-Image
+laufen sie ohne Netz; Befehle, die den Docker-Daemon oder Netz brauchen, gehören
+in einen Lauf mit `--host`. Ein unbekanntes Werkzeug ohne `befehl` erscheint mit
+Status `unbekannt`, und `lokal` endet mit Exitcode 2. Auch Katalogwerkzeuge mit
+überschriebenem `befehl` werden nicht zwischengespeichert.
+
+### Nichts geprüft ist rot
+
+Ein Werkzeug, das nichts geprüft hat, meldet nie „ok“. Bei JUnit-Berichten
+(pytest, vitest, Playwright, axe und eigene Werkzeuge mit `{ausgabe}`) gilt als
+nichts geprüft: kein Bericht, kein Testfall oder nur übersprungene Testfälle.
+Das Werkzeug erhält dann den Status `nichts_geprueft` und einen Befund
+`nichts_geprueft` mit der Skip-Meldung („nichts geprüft – Kein lokaler
+Backend-Container“). Eine Baseline blendet diesen Befund nicht aus. Werkzeuge,
+die nur Befunde ausgeben (ruff, mypy, Linter), können „nichts geprüft“ nicht von
+„nichts gefunden“ unterscheiden; dort bleiben 0 Befunde ein gültiges Ergebnis.
+
+Das Ergebnisdokument trägt `gesamt` (`gruen`/`rot`) und `probleme` (je Werkzeug
+eine Zeile). Rot ist es bei jedem Befund und bei den Status `nichts_geprueft`,
+`fehlt`, `fehler`, `zeitlimit`, `unlesbar` und `unbekannt`; `entfaellt` (keine
+passenden Dateien) bleibt grün. `lokal` und `befunde` enden bei Rot mit
+Exitcode 1 (bei `unbekannt` mit 2) und nennen die Probleme auf stderr. Die
+Oberfläche liefert das letzte Ergebnis unter `GET /api/ergebnis`.
+
+Wer einen leeren Lauf bewusst zulassen will, setzt je Werkzeug:
+
+```toml
+[pruefprofile.pr.werkzeug.pytest]
+leer_erlaubt = true   # Standard: false
+```
+
 Je Rechner schaltet die Oberfläche bzw. `~/.config/auditcore-runner/werkzeuge.json`
 (`auditcore-runner/werkzeuge/1`) Werkzeuge je Profil an/aus, setzt Zeitlimit und
 Priorität; das gilt vor der Repo-Datei.
