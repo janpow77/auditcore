@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Code-Qualitäts-Gate: Fällt ruff oder mypy aus, nennt die Meldung Exit-Code
+  oder beendendes Signal und die Ausgabe des Werkzeugs (bisher bei leerem
+  stderr nur „ruff failed:“). Wird das Werkzeug von außen durch ein Signal
+  beendet, etwa unter Speicherdruck auf einem geteilten Runner, wiederholt das
+  Gate den Aufruf genau einmal; jeder andere Exit-Code schlägt sofort fehl.
+
 - `auditcore_risk` 0.4.0: neue Profilversion `audit_designer.flowstat_belegliste`
   2026.10.1 rechnet BL_RF07 und BL_RF10 in ganzen Cent (RK-C12, fachlich
   freigegeben; Legacy-Profil 1254591156d3 unverändert; 41 BL_RF07-Treffer mit genau 1 Cent Differenz entfallen
