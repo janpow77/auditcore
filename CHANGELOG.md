@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Pre-release v0.7.0 (03.10.2026): neues Paket `auditcore_flow_agent` 0.1.0
+  (Auftragswarteschlange, Ressourcenvergabe, Prozesswächter); alle übrigen
+  Bibliotheken unverändert. Öffentlicher Nachweis in
+  `docs/reports/domain-public-installation-v0.7.0.json`.
+
 - Code-Qualitäts-Gate: Fällt ruff oder mypy aus, nennt die Meldung Exit-Code
   oder beendendes Signal und die Ausgabe des Werkzeugs (bisher bei leerem
   stderr nur „ruff failed:“). Wird das Werkzeug von außen durch ein Signal

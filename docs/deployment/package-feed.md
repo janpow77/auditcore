@@ -1,6 +1,38 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Pre-release v0.6.0](https://github.com/janpow77/auditcore/releases/tag/v0.6.0)**
+**Aktuell: [Pre-release v0.7.0](https://github.com/janpow77/auditcore/releases/tag/v0.7.0)**
+mit 34 Python-Bibliotheken, 10 npm-Paketen und 228 Release-Dateien mit signierten Prüfsummen.
+Neu ist `auditcore_flow_agent` 0.1.0: dauerhafte Auftragswarteschlange,
+atomare Ressourcenvergabe mit Kapazitätsprüfung und überwachte Prozessausführung.
+Die übrigen 33 Python-Bibliotheken und alle npm-Pakete sind gegenüber v0.6.0
+unverändert; ihre Wheels und npm-Tarballs sind bytegleich, die SDists
+inhaltsgleich (nur die Archivzeitstempel des Neubaus weichen ab, der Paketindex
+verlinkt die neueren Dateien).
+
+Die Versionen und Prüfsummen stehen im
+[Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.7.0/preview-manifest.json)
+und in den signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.7.0/SHA256SUMS).
+Der bestehende Signaturschlüssel bleibt unverändert:
+`E427F95CC37CBFD0876314CA0D1580A6CAE37327`.
+
+```bash
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.7.0/requirements-auditcore_flow_agent.txt
+# oder über den Paketindex
+python -m pip install auditcore-flow-agent==0.1.0 --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+Am 03.10.2026 wurden alle 228 Dateien anonym heruntergeladen und geprüft:
+Prüfsummen und Signaturen, pip-Installation aller 34 Pakete über die Hash-Locks
+und den Paketindex mit Funktionsprüfung, APT-Installation und Entfernung, die
+zehn npm-Tarballs sowie die PDF-/Excel-Ausgabe. Alle zehn npm-Versionen waren
+bereits mit identischer Integrität veröffentlicht und wurden übersprungen.
+[Öffentlicher Prüfnachweis](../reports/domain-public-installation-v0.7.0.json).
+Der Bibliotheksrelease stellt produktive Anwendungen nicht automatisch um.
+
+## Historischer Stand v0.6.0
+
+**[Pre-release v0.6.0](https://github.com/janpow77/auditcore/releases/tag/v0.6.0)**
 mit 33 Python-Bibliotheken, 10 npm-Paketen und 222 Release-Dateien mit signierten Prüfsummen.
 Compute 0.1.0 ergänzt centgenaue NumPy-/Numba-Rechenkerne und wiederverwendbare
 Quoten. Documents 0.5.0 vermeidet wiederholte Aufbereitung innerhalb eines
