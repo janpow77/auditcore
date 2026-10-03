@@ -54,7 +54,7 @@ Marker: `slow`, `gpu` (torch/Donut; `-m gpu`), `network`. Zeitlimit je Test 120 
 - **Keine erfundenen** Geschäftsregeln, Schwellenwerte oder Testergebnisse; Tests
   nutzen synthetische Daten.
 - **Workflows:** zizmor und actionlint prüfen im `code-quality-gate` (ab Schwere medium
-  fail closed); eigene Runner (NUC, janpow-ai) sehen nie Fork-Code oder Dependabot-Läufe
+  fail closed); eigene Runner (Arbeitsstation, GPU-Rechner) sehen nie Fork-Code oder Dependabot-Läufe
   (`tests/test_workflow_runner_guard.py`). Actions nur per Commit-SHA pinnen.
 - **Deutsch** in Doku, Meldungen und Commits; Bezeichner im Code englisch.
 

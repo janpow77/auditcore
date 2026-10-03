@@ -2,7 +2,7 @@
 # Veraltet: Nachfolger ist das Paket auditcore_runner (`auditcore-runner runner install`,
 # siehe docs/deployment/self-hosted-runner.md). Dieses Skript bleibt, damit bestehende
 # Installationen unverändert weiterlaufen.
-# Installiert oder aktualisiert die NUC-Runner (idempotent, ohne sudo).
+# Installiert oder aktualisiert die eigenen Runner (idempotent, ohne sudo).
 #   ci/runner/install.sh [ANZAHL]      Standard: 10 Instanzen
 #   ci/runner/install.sh --uninstall   Runner stoppen und entfernen
 set -euo pipefail

@@ -1,13 +1,16 @@
 """Betrieb: VRAM-Startprüfung, systemd-Vorlage und FlowAgent-Jobbeschreibung.
 
 Der FlowAgent ist der einzige GPU-Weg (Grundsatz vom 28.08.2026, Plan 2c-bis):
-Der Job wird an den Spoke ``janpow-ai`` mit der Fähigkeit ``train:donut``
-adressiert. Ist janpow-ai offline, bleibt der Job wartend – ein Rückfall auf die
-NUC ist eine ausdrückliche Wahl (Profil ``donut_train_8gb``), kein Automatismus.
+Der Job wird an den Spoke des GPU-Rechners (``AUDITCORE_DONUT_SPOKE``) mit der
+Fähigkeit ``train:donut`` adressiert. Ist der GPU-Rechner offline, bleibt der Job
+wartend – ein Rückfall auf die Arbeitsstation ist eine ausdrückliche Wahl (Profil
+``donut_train_8gb``), kein Automatismus. Das Ziel des Checkpoint-Spiegels kommt
+aus ``AUDITCORE_DONUT_MIRROR`` (ohne Angabe: kein Spiegel).
 """
 
 from __future__ import annotations
 
+import os
 import shlex
 import subprocess  # nosec B404 - nur fest verdrahteter nvidia-smi-Aufruf ohne Shell
 import time
@@ -17,6 +20,7 @@ from typing import Any
 from auditcore_invoicesynth.train.profiles import PROFILES, GpuInfo, Topology, TrainConfig
 
 TRAIN_IMAGE = "ghcr.io/janpow77/auditcore-donut-train:cu128"
+DEFAULT_MIRROR = os.environ.get("AUDITCORE_DONUT_MIRROR") or None
 NVIDIA_SMI = [
     "nvidia-smi",
     "--query-gpu=index,name,memory.total,memory.free",
@@ -168,7 +172,7 @@ def render_systemd_unit(
 
     ``Restart=on-failure`` nimmt nach Absturz/Neustart am neuesten gültigen
     Checkpoint wieder auf (gleiche Lauf-ID/Konfiguration im Laufverzeichnis).
-    ``pause_units`` (z. B. xtts auf der NUC, Entscheidung E7) werden vorher gestoppt.
+    ``pause_units`` (z. B. xtts auf der Arbeitsstation, Entscheidung E7) werden vorher gestoppt.
     """
     command = train_command(config, dataset=dataset, run_dir=run_dir, base_model_dir=base_model_dir)
     command[0] = python
@@ -263,7 +267,7 @@ def flowagent_job(
     base_model_dir: str = "/srv/auditcore/donut/base/donut-base",
     base_model_sha256: str | None = None,
     host_mounts: dict[str, str] | None = None,
-    mirror: str | None = "nuc:/home/janpow/donut/checkpoints-mirror",
+    mirror: str | None = DEFAULT_MIRROR,
     image: str = TRAIN_IMAGE,
 ) -> dict[str, Any]:
     """FlowAgent-Job (``agent.flowaudit.de``); ``host_mounts``: dataset/base_model/runs."""
@@ -283,7 +287,9 @@ def flowagent_job(
         "run_id": run_id,
         "target": {"spoke": topology.host, "capabilities": ["train:donut", "gpu"]},
         "fallback": None,
-        "fallback_note": "Rückfall auf die NUC nur ausdrücklich (Profil donut_train_8gb)",
+        "fallback_note": (
+            "Rückfall auf die Arbeitsstation nur ausdrücklich (Profil donut_train_8gb)"
+        ),
         "status": "READY" if topology.mode != "unavailable" else "WAITING_FOR_COMPUTE",
         "topology": {"mode": topology.mode, "gpus": list(topology.gpus), "reason": topology.reason},
         "image": image,

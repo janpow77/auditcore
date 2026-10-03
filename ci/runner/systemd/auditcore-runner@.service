@@ -1,5 +1,5 @@
 [Unit]
-Description=auditcore GitHub-Actions-Runner auf der NUC (Instanz %i)
+Description=auditcore GitHub-Actions-Runner auf dem eigenen Runner-Host (Instanz %i)
 Documentation=https://github.com/janpow77/auditcore/blob/main/docs/deployment/self-hosted-runner.md
 After=network-online.target
 

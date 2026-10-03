@@ -1,6 +1,6 @@
 # Donut-Training: Verlauf der Ergebnisse
 
-Stand 2026-09-27 · erzeugt mit `tools/donut_verlauf.py` aus den Läufen auf janpow-ai (Kennzahlen: `docs/donut-verlauf/kennzahlen.json`). Hintergrund, Datensätze und Aufrufe: [training.md](training.md).
+Stand 2026-09-27 · erzeugt mit `tools/donut_verlauf.py` aus den Läufen auf dem GPU-Rechner (Kennzahlen: `docs/donut-verlauf/kennzahlen.json`). Hintergrund, Datensätze und Aufrufe: [training.md](training.md).
 
 ## Vergleichbarkeit
 

@@ -31,13 +31,14 @@ from auditcore_invoicesynth.train import (
 )
 from auditcore_invoicesynth.train.cli import run_id_for
 from auditcore_invoicesynth.train.loop import epoch_order, step_batches
+from auditcore_invoicesynth.train.profiles import DEFAULT_SPOKE
 
 MOCK = replace(PROFILES["cpu_smoke"], max_steps=12, checkpoint_every_steps=4)
 GIB = 1024
 
 
 def gpu(
-    index: int, name: str, total_gib: float, free_gib: float, host: str = "janpow-ai"
+    index: int, name: str, total_gib: float, free_gib: float, host: str = "gpu-host"
 ) -> GpuInfo:
     return GpuInfo(index, name, int(total_gib * GIB), int(free_gib * GIB), host)
 
@@ -73,13 +74,17 @@ def test_topology_ddp_parallel_single_and_offline() -> None:
     assert mixed.runs[0]["config_sha256"] != mixed.runs[1]["config_sha256"]
     one = choose_topology(config, [gpu(0, "RTX 5070 Ti", 16, 15.5), gpu(1, "GTX", 8, 7)])
     assert one.mode == "single" and one.gpus == (0,)
-    nuc = choose_topology(PROFILES["donut_train_8gb"], [gpu(0, "RTX 5060 Laptop", 8, 6.1, "nuc")])
-    assert nuc.mode == "unavailable"  # xtts belegt ≈ 1,9 GiB → erst pausieren (E7)
+    fallback = choose_topology(
+        PROFILES["donut_train_8gb"], [gpu(0, "RTX 5060 Laptop", 8, 6.1, "workstation")]
+    )
+    assert fallback.mode == "unavailable"  # xtts belegt ≈ 1,9 GiB → erst pausieren (E7)
 
 
 def test_vram_check_and_nvidia_smi_parsing() -> None:
-    parsed = parse_nvidia_smi("0, NVIDIA GeForce RTX 5060 Laptop GPU, 8151, 6200\n", host="nuc")
-    assert parsed == [GpuInfo(0, "NVIDIA GeForce RTX 5060 Laptop GPU", 8151, 6200, "nuc")]
+    parsed = parse_nvidia_smi(
+        "0, NVIDIA GeForce RTX 5060 Laptop GPU, 8151, 6200\n", host="workstation"
+    )
+    assert parsed == [GpuInfo(0, "NVIDIA GeForce RTX 5060 Laptop GPU", 8151, 6200, "workstation")]
     with pytest.raises(InsufficientVram, match="xtts"):
         check_free_vram(PROFILES["donut_train_8gb"], probe=lambda: parsed)
     ok = [GpuInfo(0, "x", 8151, 7000)]
@@ -97,7 +102,7 @@ def test_flowagent_job_and_systemd_unit() -> None:
         run_id="r1",
     )
     assert waiting["status"] == "WAITING_FOR_COMPUTE" and waiting["fallback"] is None
-    assert waiting["target"] == {"spoke": "janpow-ai", "capabilities": ["train:donut", "gpu"]}
+    assert waiting["target"] == {"spoke": DEFAULT_SPOKE, "capabilities": ["train:donut", "gpu"]}
     ddp = choose_topology(config, [gpu(0, "A", 16, 16), gpu(1, "A", 16, 16)])
     job = flowagent_job(config, ddp, dataset_hash="h" * 64, dataset_uri="/data/ds", run_id="r1")
     assert job["status"] == "READY" and job["runs"][0]["command"][:2] == [

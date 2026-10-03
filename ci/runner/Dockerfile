@@ -1,4 +1,4 @@
-# Ephemerer GitHub-Actions-Runner für die NUC.
+# Ephemerer GitHub-Actions-Runner für den eigenen Runner-Host.
 # Basis: offizielles Runner-Image (MIT), per Digest fest gepinnt.
 FROM ghcr.io/actions/actions-runner@sha256:e5496277be5d09bc968b3d64911b74e219ac4a3f2edce956a3ecf9271bea1ef4
 

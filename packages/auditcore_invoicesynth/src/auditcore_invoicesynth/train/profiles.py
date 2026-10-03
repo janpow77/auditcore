@@ -1,20 +1,24 @@
 """Trainingsprofile und Wahl des Rechenorts (Plan 2c und 2c-bis, Entscheidung E7).
 
-* ``donut_train_janpow_ai`` – Hauptort janpow-ai (zwei GPUs über den FlowAgent):
+* ``donut_train_janpow_ai`` – Hauptort GPU-Rechner (zwei GPUs über den FlowAgent):
   gleiche Kartenklasse mit ≥ 16 GiB → DDP (``torchrun --nproc_per_node=2``),
   ungleiche Karten → zwei unabhängige Läufe (Bildgröße 1280×960 und 1536×1152),
   Auswahl später per Bewertung.
-* ``donut_train_8gb`` – ausdrücklicher Rückfall NUC (RTX 5060 Laptop, 8 GiB):
+* ``donut_train_8gb`` – ausdrücklicher Rückfall Arbeitsstation (RTX 5060 Laptop, 8 GiB):
   Batch 1, Akkumulation 16, Gradient Checkpointing, optional 8-bit-AdamW; Start
   nur mit ≥ 6,5 GiB freiem VRAM (xtts vorher pausieren, E7).
 * ``cpu_smoke`` – winziges Modell für den CPU-Rauchtest, kein echtes Training.
 
-Ist janpow-ai nicht erreichbar, meldet ``choose_topology`` den Rechenort als
-``unavailable``; es gibt kein stilles Ausweichen auf die NUC.
+Ist der GPU-Rechner nicht erreichbar, meldet ``choose_topology`` den Rechenort als
+``unavailable``; es gibt kein stilles Ausweichen auf die Arbeitsstation.
+
+Der Spoke-Name des GPU-Rechners kommt aus der Telemetrie oder, ohne Telemetrie,
+aus ``AUDITCORE_DONUT_SPOKE`` (Vorgabe ``gpu-host``).
 """
 
 from __future__ import annotations
 
+import os
 from dataclasses import asdict, dataclass, replace
 from typing import Any
 
@@ -121,6 +125,9 @@ PROFILES: dict[str, TrainConfig] = {
 }
 
 
+DEFAULT_SPOKE = os.environ.get("AUDITCORE_DONUT_SPOKE") or "gpu-host"
+
+
 @dataclass(frozen=True)
 class GpuInfo:
     """Telemetrie einer Karte (FlowAgent-Spoke oder ``nvidia-smi``)."""
@@ -129,7 +136,7 @@ class GpuInfo:
     name: str
     memory_total_mib: int
     memory_free_mib: int
-    host: str = "janpow-ai"
+    host: str = DEFAULT_SPOKE
 
 
 @dataclass(frozen=True)
@@ -145,7 +152,7 @@ def choose_topology(config: TrainConfig, gpus: list[GpuInfo]) -> Topology:
     """Rechenaufteilung aus der Telemetrie; nie stiller Rückfall auf einen anderen Rechner."""
     config.validate()
     usable = [g for g in gpus if g.memory_free_mib / 1024 >= config.min_free_vram_gib]
-    host = gpus[0].host if gpus else "janpow-ai"
+    host = gpus[0].host if gpus else DEFAULT_SPOKE
     if not usable:
         return Topology(
             "unavailable",
@@ -153,7 +160,7 @@ def choose_topology(config: TrainConfig, gpus: list[GpuInfo]) -> Topology:
             (),
             (),
             "Rechenort nicht verfügbar (offline oder zu wenig freier VRAM); Rückfall auf die "
-            "NUC nur ausdrücklich mit Profil donut_train_8gb",
+            "Arbeitsstation nur ausdrücklich mit Profil donut_train_8gb",
         )
     base = {"profile": config.profile, "config_sha256": config.config_hash}
     if len(usable) == 1 or config.distributed == "single":

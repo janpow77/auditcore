@@ -2,8 +2,8 @@
 
 Stand 26.09.2026. Plan: `docs/architecture/DONUT_OCR_PLAN.md` 2c/2c-bis/2d,
 Entscheidungen E1–E9 („Donut alle Empfehlungen“). Werkzeug, Job-Image,
-Pilot- und Volldatensatz, Startmodell und FlowAgent-Job für janpow-ai sind
-vorbereitet (Abschnitt [Stand E3 auf janpow-ai](#stand-e3-auf-janpow-ai)).
+Pilot- und Volldatensatz, Startmodell und FlowAgent-Job für den GPU-Rechner sind
+vorbereitet (Abschnitt [Stand E3 auf dem GPU-Rechner](#stand-e3-auf-dem-gpu-rechner)).
 Das Training selbst startet ausschließlich über den FlowAgent.
 
 ## Bausteine (`auditcore_invoicesynth.train`)
@@ -11,7 +11,7 @@ Das Training selbst startet ausschließlich über den FlowAgent.
 | Baustein | Inhalt |
 |---|---|
 | `profiles` | `donut_train_janpow_ai` (Batch 4 je GPU, Akkumulation 2, AdamW, bf16, ≥ 14 GiB frei je Karte), `donut_train_8gb` (Batch 1, Akkumulation 16, 8-bit-AdamW, Gradient Checkpointing, ≥ 6,5 GiB frei), `cpu_smoke`; Startmodell `naver-clova-ix/donut-base@a959cf33…`; `config_hash` |
-| `choose_topology` | aus GPU-Telemetrie: gleiche Kartenklasse ≥ 16 GiB → DDP (`torchrun --nproc_per_node=2`), ungleiche Karten → zwei Läufe (1280×960 / 1536×1152, Seed+1), eine Karte → single, keine → `unavailable` (kein stiller NUC-Rückfall) |
+| `choose_topology` | aus GPU-Telemetrie: gleiche Kartenklasse ≥ 16 GiB → DDP (`torchrun --nproc_per_node=2`), ungleiche Karten → zwei Läufe (1280×960 / 1536×1152, Seed+1), eine Karte → single, keine → `unavailable` (kein stiller Rückfall auf die Arbeitsstation) |
 | `checkpoint` | atomar (`checkpoint-N.tmp` → fsync → `CHECKSUMS.sha256` → rename), alle 200 Schritte **oder** 15 Minuten, `save_total_limit=3`; beim Start neuester gültiger Checkpoint, Unvollständiges/Beschädigtes nach `rejected/` (mit Grund), Lauf-ID/Datensatz-/Konfigurations-Hash müssen passen |
 | `loop` | deterministische Datenreihenfolge je Epoche (`Random(f"{seed}:{epoch}")`), Mikrobatches je Rang, JSON-Zeilen-Protokoll (Schritt, Epoche, Loss, VRAM-Spitze, Temperatur); Protokollzeilen nach dem letzten Checkpoint wandern beim Wiederaufnehmen nach `rejected/` |
 | `torch_backend` (Extra `train`) | `VisionEncoderDecoderModel` nur aus lokalem Verzeichnis (`local_files_only`, optional SHA-256), Task-Token/Feld-Tags aus `schema.special_tokens()`, bf16-Autocast (CUDA), Gradient Checkpointing, AdamW/8-bit-AdamW, Cosinus-Scheduler mit Warm-up, DDP bei `WORLD_SIZE>1` (nur Rang 0 schreibt), Zustand: safetensors, Tokenizer, Prozessor, Optimierer, Scheduler, RNG |
@@ -28,12 +28,12 @@ auditcore-invoicesynth-train --profile donut_train_janpow_ai --dataset ds/ \
 # Training; setzt automatisch am neuesten gültigen Checkpoint fort
 torchrun --nproc_per_node=2 -m auditcore_invoicesynth.train.cli \
   --profile donut_train_janpow_ai --dataset ds/ --run-dir runs/r1 --base-model-dir base/donut-base
-# NUC-Rückfall nur ausdrücklich
-auditcore-invoicesynth-train --profile donut_train_8gb --dataset ds/ --run-dir runs/r1-nuc \
+# Rückfall auf die Arbeitsstation nur ausdrücklich
+auditcore-invoicesynth-train --profile donut_train_8gb --dataset ds/ --run-dir runs/r1-fallback \
   --base-model-dir base/donut-base
-# systemd --user-Dienst (xtts wird für den NUC-Rückfall pausiert, E7)
+# systemd --user-Dienst (xtts wird für den Rückfall auf die Arbeitsstation pausiert, E7)
 auditcore-invoicesynth-train --profile donut_train_8gb --systemd-unit --dataset ds/ \
-  --run-dir runs/r1-nuc --base-model-dir base/donut-base \
+  --run-dir runs/r1-fallback --base-model-dir base/donut-base \
   > ~/.config/systemd/user/auditcore-donut-train.service
 ```
 
@@ -60,7 +60,7 @@ gebaut vom Workflow `.github/workflows/donut-train-image.yml` aus
 - kein ENTRYPOINT: der Job gibt `python -m auditcore_invoicesynth.train.cli …`
   vor; `HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1`, `HOME=/tmp`.
 
-## Nachweise dieser Runde (CPU, NUC, ohne GPU)
+## Nachweise dieser Runde (CPU, Arbeitsstation, ohne GPU)
 
 | Prüfung | Ergebnis |
 |---|---|
@@ -72,23 +72,27 @@ gebaut vom Workflow `.github/workflows/donut-train-image.yml` aus
 
 Getestet mit torch 2.14.0+cpu, transformers 5.17.0.
 
-## Stand E3 auf janpow-ai
+## Stand E3 auf dem GPU-Rechner
 
-Verzeichnisse auf janpow-ai (Host → Container):
+Verzeichnisse auf dem GPU-Rechner (Host → Container):
 
 | Host | Container | Inhalt |
 |---|---|---|
-| `/home/janpow/donut/datasets/pilot-192e329e531ba160` | `/data/192e329e…` (ro) | Pilot 2 000 Belege (1 600/150/150/100) |
-| `/home/janpow/donut/datasets/full-34581be2880d00f4` | `/data/34581be2…005d` (ro) | Vollsatz 20 000/1 000/1 000/500 (22 487 Trainingsbilder, 8,1 GB) |
-| `/home/janpow/donut/base/donut-base` | `/srv/auditcore/donut/base/donut-base` (ro) | Startmodell, Revision a959cf33…, `SOURCE.json`, `SHA256SUMS` |
-| `/home/janpow/donut/base/donut-cord-v2` | `/srv/auditcore/donut/base/donut-cord-v2` (ro) | nur Vergleich (Revision 8003d433…) |
-| `/home/janpow/donut/runs` | `/srv/auditcore/donut/runs` (rw) | Läufe `<lauf-id>-0` (GPU 0) und `<lauf-id>-1` (GPU 1) |
-| `/home/janpow/donut/eval` | `/srv/auditcore/donut/eval` (rw) | Bewertungsberichte |
-| NUC `/home/janpow/donut/checkpoints-mirror/<lauf-id>/` | – | Checkpoint-Spiegel (rsync durch den FlowAgent) |
+| `$HOME/donut/datasets/pilot-192e329e531ba160` | `/data/192e329e…` (ro) | Pilot 2 000 Belege (1 600/150/150/100) |
+| `$HOME/donut/datasets/full-34581be2880d00f4` | `/data/34581be2…005d` (ro) | Vollsatz 20 000/1 000/1 000/500 (22 487 Trainingsbilder, 8,1 GB) |
+| `$HOME/donut/base/donut-base` | `/srv/auditcore/donut/base/donut-base` (ro) | Startmodell, Revision a959cf33…, `SOURCE.json`, `SHA256SUMS` |
+| `$HOME/donut/base/donut-cord-v2` | `/srv/auditcore/donut/base/donut-cord-v2` (ro) | nur Vergleich (Revision 8003d433…) |
+| `$HOME/donut/runs` | `/srv/auditcore/donut/runs` (rw) | Läufe `<lauf-id>-0` (GPU 0) und `<lauf-id>-1` (GPU 1) |
+| `$HOME/donut/eval` | `/srv/auditcore/donut/eval` (rw) | Bewertungsberichte |
+| Arbeitsstation `$HOME/donut/checkpoints-mirror/<lauf-id>/` | – | Checkpoint-Spiegel (rsync durch den FlowAgent) |
+
+Ohne Telemetrie adressiert die Planung den Spoke aus `AUDITCORE_DONUT_SPOKE`
+(Vorgabe `gpu-host`); das Spiegelziel kommt aus `AUDITCORE_DONUT_MIRROR`
+(z. B. `<spiegel-host>:donut/checkpoints-mirror`, ohne Angabe kein Spiegel).
 
 | Schritt | Stand |
 |---|---|
-| janpow-ai als Spoke, Telemetrie beider GPUs | RTX 5070 Ti (GPU 0) und RTX 5060 Ti (GPU 1), je 16 GB, Treiber 595.84 → `choose_topology`: **parallel** (zwei Läufe) |
+| GPU-Rechner als Spoke, Telemetrie beider GPUs | RTX 5070 Ti (GPU 0) und RTX 5060 Ti (GPU 1), je 16 GB, Treiber 595.84 → `choose_topology`: **parallel** (zwei Läufe) |
 | Job-Image | `ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466` (Pilot-Stand `0.1.2+g54007a1606fc`, öffentlich, anonym ziehbar); spätere Builds verschieben nur den Tag `cu128`, der Job nennt den Digest (`--image`) |
 | Startmodell | `pytorch_model.bin` SHA-256 `749f6e487d0cdbd7362d8b6a909174b93506d8631da0d15a6108bb6512ad5f48` (gleich dem Git-LFS-Objekt auf Hugging Face; `donut-base@a959cf33` hat keine safetensors-Datei) |
 | Pilot-Datensatz | Hash `192e329e531ba16028c314f36007737637fdaaf59e0eb66095fb84a4056174f3`; zweimal unabhängig gebaut, gleicher Hash; `verify` ok |
@@ -96,7 +100,7 @@ Verzeichnisse auf janpow-ai (Host → Container):
 | FlowAgent-Jobs | `~/donut/job-pilot.json` (Lauf-ID `6cb8d70e0befc10e`, 3 Epochen, 675 Schritte je Lauf) und `~/donut/job-voll.json` (Lauf-ID `2835be42bd3c1e1a`, 6 Epochen, 16 866 Schritte je Lauf); Topologie jeweils `parallel`; Varianten `*-gpus-live.json` mit der Live-Telemetrie |
 | Bewertung | `~/donut/tools/pilot-bewerten.sh [job.json]` (CPU; beide Läufe gegen T1/T2, Donut-CORD einmal; `LIMIT`/`MAXLEN`/`THREADS` optional) |
 | FlowAgent-Seite (`train:donut`, GPU-Freigabe, Spiegel) | Session `flow-agent-f1`; Auftragsdateien `~/.config/flow-agent/gpu-auftraege/{donut-pilot,donut-voll}.json` |
-| Morgenprüfung | `/home/janpow/donut/tools/morgen-pruefung.sh` (nur lesend: Zustand, Loss-Verlauf, Tempo, Restzeit, Stillstand, verworfene Checkpoints, GPUs, Dienste) |
+| Morgenprüfung | `$HOME/donut/tools/morgen-pruefung.sh` (nur lesend: Zustand, Loss-Verlauf, Tempo, Restzeit, Stillstand, verworfene Checkpoints, GPUs, Dienste) |
 
 Datensatz erzeugen (CPU, reproduzierbar; Umgebung aus den Release-Rädern v0.4.1,
 Pillow 12.0.0, Schriften gepinnt):
@@ -117,16 +121,16 @@ Job planen (echte Telemetrie, nur lesend; im Image, ohne GPU):
 
 ```bash
 nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader,nounits \
-  | python3 -c 'import json,sys; print(json.dumps([dict(index=int(i), name=n.strip(), memory_total_mib=int(t), memory_free_mib=int(f), host="janpow-ai") for i,n,t,f in (l.split(",") for l in sys.stdin)]))' \
+  | python3 -c 'import json,sys; print(json.dumps([dict(index=int(i), name=n.strip(), memory_total_mib=int(t), memory_free_mib=int(f), host="gpu-host") for i,n,t,f in (l.split(",") for l in sys.stdin)]))' \
   > ~/donut/gpus-live.json   # frei = gesamt − 512 MiB → gpus-nach-freigabe.json
-docker run --rm --user 1000:1000 -v /home/janpow/donut:/home/janpow/donut \
+docker run --rm --user 1000:1000 -v $HOME/donut:$HOME/donut \
   ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 \
   python -m auditcore_invoicesynth.train.cli --profile donut_train_janpow_ai \
-  --dataset /home/janpow/donut/datasets/pilot-192e329e531ba160 --epochs 3 \
-  --base-model-dir /home/janpow/donut/base/donut-base --run-dir /home/janpow/donut/runs \
+  --dataset $HOME/donut/datasets/pilot-192e329e531ba160 --epochs 3 \
+  --base-model-dir $HOME/donut/base/donut-base --run-dir $HOME/donut/runs \
   --base-model-sha256 749f6e487d0cdbd7362d8b6a909174b93506d8631da0d15a6108bb6512ad5f48 \
   --image ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 \\
-  --plan --gpus-json /home/janpow/donut/gpus-nach-freigabe.json > ~/donut/job-pilot.json
+  --plan --gpus-json $HOME/donut/gpus-nach-freigabe.json > ~/donut/job-pilot.json
 ```
 
 Die Telemetrie zeigt belegte Karten (Ollama/Whisper); der Plan wird deshalb mit
@@ -138,9 +142,9 @@ Ein Lauf im Container (so startet ihn der FlowAgent, je Karte ein Container):
 
 ```bash
 docker run --rm --gpus device=1 --user 1000:1000 --ipc=host --stop-timeout 120 \
-  -v /home/janpow/donut/datasets/pilot-192e329e531ba160:/data/<hash>:ro \
-  -v /home/janpow/donut/base/donut-base:/srv/auditcore/donut/base/donut-base:ro \
-  -v /home/janpow/donut/runs:/srv/auditcore/donut/runs \
+  -v $HOME/donut/datasets/pilot-192e329e531ba160:/data/<hash>:ro \
+  -v $HOME/donut/base/donut-base:/srv/auditcore/donut/base/donut-base:ro \
+  -v $HOME/donut/runs:/srv/auditcore/donut/runs \
   ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 <runs[1].command aus dem Job>
 ```
 
@@ -149,13 +153,13 @@ den FlowAgent, auf der CPU langsam, aber zulässig):
 
 ```bash
 docker run --rm --gpus device=0 --user 1000:1000 \
-  -v /home/janpow/donut:/home/janpow/donut \
+  -v $HOME/donut:$HOME/donut \
   ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 \
   python -m auditcore_invoicesynth.train.evaluate \
-  --dataset /home/janpow/donut/datasets/pilot-192e329e531ba160 \
-  --run-dir /home/janpow/donut/runs/<lauf-id>-0 \
-  --cord-model-dir /home/janpow/donut/base/donut-cord-v2 \
-  --out /home/janpow/donut/eval/pilot-<lauf-id>-0.json
+  --dataset $HOME/donut/datasets/pilot-192e329e531ba160 \
+  --run-dir $HOME/donut/runs/<lauf-id>-0 \
+  --cord-model-dir $HOME/donut/base/donut-cord-v2 \
+  --out $HOME/donut/eval/pilot-<lauf-id>-0.json
 ```
 
 Ausgabe: Kurzfassung je Modell und Satz (Belegquote, Feldgenauigkeit, Abnahme E6,
@@ -163,7 +167,7 @@ Sekunden je Seite); vollständiger Bericht und Vorhersagen (`*.jsonl`) neben
 `--out`. Donut-CORD wird nur auf Gesamt-, Netto- und Steuerbetrag abgebildet
 (CORD kennt Rechnungsnummer, Datum, IBAN und USt-IdNr. nicht).
 
-Rauchtest im Image auf janpow-ai (CPU, 26.09.2026): echtes `donut-base`,
+Rauchtest im Image auf dem GPU-Rechner (CPU, 26.09.2026): echtes `donut-base`,
 je ein Schritt bei 1280×960 und 1536×1152 (Loss ≈ 12,6 bzw. 12,1, ≈ 15 s),
 Checkpoint geschrieben, `progress.json` `fertig`; `train.evaluate` mit
 Kandidat und Donut-CORD läuft durch (CPU ≈ 3,5 s je Seite bei 128 Token).
@@ -204,7 +208,7 @@ des Startzeitpunkts. Ein Einschalten nach 08:00 Uhr holt den Start wegen
 2. Am Samstag: GPU-Dienste kontrolliert über den FlowAgent freigeben und auf
    beiden Karten unabhängige Läufe mit sechs Epochen starten. GPU 0 nutzt
    1280×960, Batch 4 × Akkumulation 2, Seed 42; GPU 1 nutzt 1536×1152,
-   Batch 2 × Akkumulation 4, Seed 43. Checkpoints werden weiter auf die NUC
+   Batch 2 × Akkumulation 4, Seed 43. Checkpoints werden weiter auf die Arbeitsstation
    gespiegelt und nach Stromausfall fortgesetzt.
 3. Nach beiden Läufen: Kandidaten auf unverändertem T1/T2 bewerten, Bericht
    und Diagramme neu erzeugen und als Branch/PR ablegen.
