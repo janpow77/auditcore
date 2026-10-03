@@ -502,7 +502,7 @@ Riskanalysis, Regulierung, Auditdatabase und OSINT.
   `FileParserService`, `GitService`, `GapAnalyzer` und Pluginmanifesten:
   Kandidaten für Consolidator-/AppRefactor-Adapter. API, DB und LLM-Ausführung
   bleiben getrennt; kein unkontrollierter Universalagent.
-- `system-migrate:InventoryRunner`, Cockpit, NUC-Admin, Spoke-Agent und Flow-Agent
+- `system-migrate:InventoryRunner`, Cockpit, Host-Admin, Spoke-Agent und Flow-Agent
   liefern Betriebs-/Inventur-/Deployment-Integrationen. Bestehende
   Authentifizierung, Hostrechte, Secretgrenzen und Audit-Trails erhalten.
 - AI-/LLM-Router, Reranker-, Whisper-, Vision- und eGPU-Dienste bleiben eigene

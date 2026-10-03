@@ -163,7 +163,7 @@ def _bewertung(pfad: Path) -> dict:
 
 def sammeln() -> dict:
     cfg = _json(STUFEN)
-    root = Path(cfg["donut_root"])
+    root = Path(cfg["donut_root"]).expanduser()
     stufen = list(cfg["stufen"])
     auftraege = Path(cfg.get("auftraege_ordner", "~/.config/flow-agent/gpu-auftraege")).expanduser()
     for name in cfg.get("gpu_auftraege", []):
@@ -331,7 +331,7 @@ def bericht(daten: dict) -> str:
     zeilen = [
         "# Donut-Training: Verlauf der Ergebnisse",
         "",
-        f"Stand {daten['erzeugt'][:10]} · erzeugt mit `tools/donut_verlauf.py` aus den Läufen auf janpow-ai "
+        f"Stand {daten['erzeugt'][:10]} · erzeugt mit `tools/donut_verlauf.py` aus den Läufen auf dem GPU-Rechner "
         "(Kennzahlen: `docs/donut-verlauf/kennzahlen.json`). Hintergrund, Datensätze und Aufrufe: "
         "[training.md](training.md).",
         "",

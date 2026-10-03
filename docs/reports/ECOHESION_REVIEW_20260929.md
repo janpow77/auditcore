@@ -107,7 +107,7 @@ mehrere Datenbankintegrationstests und die FlowStat-Modultests ausdrücklich aus
    ausdrücklich negativ; Nachprüfungen vom 13.09. belegen Verbesserungen, heben sie
    aber nicht automatisch auf. Authentische Action-Plan-Grundlage, Kriterien und
    Referenzchecklisten, Betreiberunterlagen, Word-/Excel-Sichtprüfung sowie die
-   vorgesehenen Nutzertests bleiben gesondert nachzuweisen. Der alte NUC-Kandidat
+   vorgesehenen Nutzertests bleiben gesondert nachzuweisen. Der alte Kandidat auf der Arbeitsstation
    `ecohesion-releases/20260912-17312d79` trägt selbst eine Abnahmesperre.
 
 ## Welche auditcore-Bibliotheken eingesetzt werden sollten

@@ -79,6 +79,8 @@ def test_is_valid_iban_cases() -> None:
     assert not is_valid_iban("DE99 0000 0000 1234 5678 90")
     # Falsche Länge
     assert not is_valid_iban("DE79 1234")
+    # Formal plausibel, aber für das Länderkennzeichen DE (22 Stellen) zu kurz
+    assert not is_valid_iban("DE79 0000 0000 1234 5678 9")
     # Ungültige Zeichen
     assert not is_valid_iban("DE79 0000 0000 XXXX 5678 90!")
 

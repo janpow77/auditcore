@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import pymupdf as fitz
-
-from auditcore_pdf.engine import open_pdf
+from auditcore_pdf.engine import new_pdf, open_pdf
 
 
 def reorder_pages(pdf_bytes: bytes, page_order: list[int]) -> bytes:
@@ -17,9 +15,7 @@ def reorder_pages(pdf_bytes: bytes, page_order: list[int]) -> bytes:
         zero_based: list[int] = []
         for p in page_order:
             if p < 1 or p > count:
-                raise IndexError(
-                    f"Ungültige Seitennummer {p}. Dokument hat {count} Seiten."
-                )
+                raise IndexError(f"Ungültige Seitennummer {p}. Dokument hat {count} Seiten.")
             zero_based.append(p - 1)
         doc.select(zero_based)
         out: bytes = doc.tobytes(garbage=3, deflate=True)
@@ -35,9 +31,7 @@ def rotate_pages(pdf_bytes: bytes, rotations: dict[int, int]) -> bytes:
         count = doc.page_count
         for page_num, angle in rotations.items():
             if page_num < 1 or page_num > count:
-                raise IndexError(
-                    f"Ungültige Seitennummer {page_num}. Dokument hat {count} Seiten."
-                )
+                raise IndexError(f"Ungültige Seitennummer {page_num}. Dokument hat {count} Seiten.")
             page = doc[page_num - 1]
             page.set_rotation((page.rotation + angle) % 360)
         out: bytes = doc.tobytes(garbage=3, deflate=True)
@@ -76,9 +70,7 @@ def extract_pages(pdf_bytes: bytes, pages_to_extract: list[int]) -> bytes:
         zero_based: list[int] = []
         for p in pages_to_extract:
             if p < 1 or p > count:
-                raise IndexError(
-                    f"Ungültige Seitennummer {p}. Dokument hat {count} Seiten."
-                )
+                raise IndexError(f"Ungültige Seitennummer {p}. Dokument hat {count} Seiten.")
             zero_based.append(p - 1)
         doc.select(zero_based)
         out: bytes = doc.tobytes(garbage=3, deflate=True)
@@ -91,7 +83,7 @@ def merge_documents(documents: list[bytes]) -> bytes:
     """Führt mehrere PDF-Dokumente nahtlos zu einer gemeinsamen PDF zusammen."""
     if not documents:
         raise ValueError("Dokumentenliste darf nicht leer sein.")
-    merged = fitz.open()
+    merged = new_pdf()
     try:
         for doc_bytes in documents:
             sub_doc = open_pdf(doc_bytes)
@@ -115,7 +107,7 @@ def split_document(pdf_bytes: bytes, chunk_size: int = 1) -> list[bytes]:
         chunks: list[bytes] = []
         for start in range(0, count, chunk_size):
             end = min(start + chunk_size, count)
-            chunk_doc = fitz.open()
+            chunk_doc = new_pdf()
             try:
                 chunk_doc.insert_pdf(doc, from_page=start, to_page=end - 1)
                 chunks.append(bytes(chunk_doc.tobytes(garbage=3, deflate=True)))

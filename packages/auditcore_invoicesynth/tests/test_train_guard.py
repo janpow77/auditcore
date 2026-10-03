@@ -81,7 +81,11 @@ def test_heartbeat_refreshes_only_during_busy_phases(tmp_path: Path) -> None:
     progress.update(zustand="laeuft")
     with progress.busy("checkpoint"):
         assert _progress(tmp_path)["phase"] == "checkpoint"
-        time.sleep(0.2)
+        # Auf zwei Herzschläge warten statt eine feste Zeit zu schlafen: unter Last
+        # (pytest -n auto) kann der Takt-Thread später zum Zug kommen.
+        deadline = time.monotonic() + 10
+        while int(_progress(tmp_path)["aktualisiert"]) < 3 and time.monotonic() < deadline:
+            time.sleep(0.01)
     beats = int(_progress(tmp_path)["aktualisiert"])
     assert beats >= 4 and _progress(tmp_path)["phase"] == "start"
     time.sleep(0.1)
@@ -231,10 +235,10 @@ def test_parallel_job_carries_per_run_overrides_and_mounts() -> None:
         config,
         choose_topology(config, gpus),
         dataset_hash="h" * 64,
-        dataset_uri="/home/janpow/donut/datasets/pilot",
+        dataset_uri="/srv/donut/datasets/pilot",
         run_id="r1",
         base_model_sha256="s" * 64,
-        host_mounts={"base_model": "/home/janpow/donut/base/donut-base", "runs": "/runs"},
+        host_mounts={"base_model": "/srv/donut/base/donut-base", "runs": "/runs"},
     )
     assert job["topology"]["mode"] == "parallel" and len(job["runs"]) == 2
     first, second = (run["command"] for run in job["runs"])
@@ -245,8 +249,8 @@ def test_parallel_job_carries_per_run_overrides_and_mounts() -> None:
     assert job["runs"][1]["run_dir"].endswith("/r1-1")
     assert job["runs"][0]["config_sha256"] != job["runs"][1]["config_sha256"]
     assert [m["host"] for m in job["container"]["mounts"]] == [
-        "/home/janpow/donut/datasets/pilot",
-        "/home/janpow/donut/base/donut-base",
+        "/srv/donut/datasets/pilot",
+        "/srv/donut/base/donut-base",
         "/runs",
     ]
     assert override_args(PROFILES["donut_train_janpow_ai"]) == []

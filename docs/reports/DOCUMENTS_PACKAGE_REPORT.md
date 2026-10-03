@@ -236,7 +236,7 @@ Fremdcode; keine neue Quellbindung (`EXPECTED_SOURCES` unverändert).
 | Gates lokal | ruff, mypy --strict, bandit (-ll) PASS; B615 an drei `from_pretrained`-Aufrufen als geprüfte Fehlmeldung markiert (nur lokales, per SHA-256 geprüftes Verzeichnis, `local_files_only=True`) |
 | pip/APT lokal | `verify_domain_packages.py packages/auditcore_documents --apt`: PASS (Build, Hash-Install, Rauchtest inkl. `donut_smoke`, Selektivinstallation, zwei Debian-Revisionen, signierte APT-Quelle, Lifecycle) |
 | LocalDonut | manuell gegen ein winziges, im CPU-Rauchtest trainiertes Modell (torch 2.14.0+cpu, transformers 5.17.0): Laden mit Prüfsumme, Inferenz, Hash-Abweichung → `DONUT_MODEL_HASH_MISMATCH` |
-| Offen | echtes Modell (E3/E4 auf janpow-ai), vision-service-Anbindung des neuen Modells und flowinvoice-Schattenbetrieb (E6), Release |
+| Offen | echtes Modell (E3/E4 auf dem GPU-Rechner), vision-service-Anbindung des neuen Modells und flowinvoice-Schattenbetrieb (E6), Release |
 
 ## 0.3.0: REST-Anbindung der Synopse-Oberfläche (25.09.2026, nicht veröffentlicht)
 

@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   ci-ok:
-    # Leichter Warte-Job: bewusst auf GitHub-Runnern, damit er keinen NUC-Platz belegt.
+    # Leichter Warte-Job: bewusst auf GitHub-Runnern, damit er keinen Platz auf den eigenen Runnern belegt.
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:

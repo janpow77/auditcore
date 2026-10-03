@@ -2348,7 +2348,7 @@
     {
       "code": "AC-LINT-001",
       "evidence": [
-        "ruff check /home/janpow/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
+        "ruff check $HOME/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
       ],
       "line": 0,
       "message": "ruff exit=0",
@@ -2358,7 +2358,7 @@
     {
       "code": "AC-TYPE-001",
       "evidence": [
-        "mypy /home/janpow/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
+        "mypy $HOME/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
       ],
       "line": 0,
       "message": "mypy exit=0",
@@ -2368,7 +2368,7 @@
     {
       "code": "AC-SEC-002",
       "evidence": [
-        "bandit -q -ll -r /home/janpow/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
+        "bandit -q -ll -r $HOME/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
       ],
       "line": 0,
       "message": "bandit exit=0",

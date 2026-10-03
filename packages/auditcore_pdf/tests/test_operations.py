@@ -62,3 +62,32 @@ def test_split_document(sample_pdf: bytes) -> None:
     assert len(chunks) == 2
     assert get_document_info(chunks[0]).page_count == 2
     assert get_document_info(chunks[1]).page_count == 1
+
+
+@pytest.mark.parametrize("invalid_page", [0, 4, -1])
+def test_page_operations_reject_invalid_page_numbers(sample_pdf: bytes, invalid_page: int) -> None:
+    """Seitennummern außerhalb 1..Seitenzahl werden mit Hinweis auf die Seitenzahl abgewiesen."""
+    expected = rf"Ungültige Seitennummer {invalid_page}\. Dokument hat 3 Seiten"
+    with pytest.raises(IndexError, match=expected):
+        reorder_pages(sample_pdf, [1, invalid_page])
+    with pytest.raises(IndexError, match=expected):
+        rotate_pages(sample_pdf, {invalid_page: 90})
+    with pytest.raises(IndexError, match=expected):
+        extract_pages(sample_pdf, [invalid_page])
+
+
+def test_page_operations_reject_empty_inputs(sample_pdf: bytes) -> None:
+    with pytest.raises(ValueError, match="Seitenreihenfolge darf nicht leer sein"):
+        reorder_pages(sample_pdf, [])
+    with pytest.raises(ValueError, match="zu extrahierenden Seiten darf nicht leer sein"):
+        extract_pages(sample_pdf, [])
+    with pytest.raises(ValueError, match="Dokumentenliste darf nicht leer sein"):
+        merge_documents([])
+
+
+@pytest.mark.parametrize("chunk_size", [0, -2])
+def test_split_document_rejects_invalid_chunk_size(sample_pdf: bytes, chunk_size: int) -> None:
+    with pytest.raises(
+        ValueError, match=f"chunk_size muss mindestens 1 sein, erhalten: {chunk_size}"
+    ):
+        split_document(sample_pdf, chunk_size=chunk_size)
