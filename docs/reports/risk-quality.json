@@ -498,7 +498,7 @@
     {
       "code": "AC-LINT-001",
       "evidence": [
-        "ruff check /home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
+        "ruff check $HOME/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
       ],
       "line": 0,
       "message": "ruff exit=0",
@@ -508,7 +508,7 @@
     {
       "code": "AC-TYPE-001",
       "evidence": [
-        "mypy /home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
+        "mypy $HOME/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
       ],
       "line": 0,
       "message": "mypy exit=0",
@@ -518,7 +518,7 @@
     {
       "code": "AC-SEC-002",
       "evidence": [
-        "bandit -q -ll -r /home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
+        "bandit -q -ll -r $HOME/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
       ],
       "line": 0,
       "message": "bandit exit=0",
@@ -558,7 +558,7 @@
   ],
   "generated_at": "2026-09-23T12:26:44.255353+00:00",
   "ignored": [],
-  "path": "/home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk",
+  "path": "$HOME/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk",
   "policy": {
     "applicability_context": {
       "ai_usage": "none",

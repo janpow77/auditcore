@@ -120,7 +120,7 @@ sudo regulierung-admin bootstrap-intranet \
 ```
 
 Der Befehl erkennt eine private Serveradresse und gibt die Login-URL aus. Eine
-Adresse kann mit `--listen-address 192.168.1.50` fest vorgegeben werden.
+Adresse kann mit `--listen-address 192.0.2.50` fest vorgegeben werden.
 
 Für den isolierten Upgrade-Nachweis:
 

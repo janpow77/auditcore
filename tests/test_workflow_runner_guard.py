@@ -4,7 +4,7 @@ The rules (``fork``, ``dependabot``, ``secrets``, ``runner-var``) live in
 ``auditcore_runner.workflows.workflow_findings``; general workflow security is
 checked by zizmor and actionlint in ``code-quality-gate``. What remains here is
 auditcore-specific: the runner variable ``AUDITCORE_RUNNER`` and the expectation
-that every job that can land on the own runners (NUC, janpow-ai) is clean.
+that every job that can land on the own runners (workstation, GPU host) is clean.
 """
 
 from __future__ import annotations

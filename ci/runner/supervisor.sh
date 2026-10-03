@@ -35,7 +35,7 @@ wait_for_prerequisites() {
 }
 
 request_jit_config() {
-  local name="nuc-$HOST-$INSTANCE-$(date +%s)"
+  local name="auditcore-$HOST-$INSTANCE-$(date +%s)"
   local labels_json
   labels_json="$(jq -cn --arg l "$LABELS" '$l | split(",")')"
   jq -n --arg name "$name" --argjson labels "$labels_json" \

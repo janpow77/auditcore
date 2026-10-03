@@ -19,7 +19,7 @@ Stand: 24. September 2026. Etappe E1 der Donut-Umsetzung
 | pytest | 61 passed (Kennungen, Formate, Schema/Tokenfolge, Anreicherung, Plan/Holdout, alle Vorlagen, Scanrauschen, Datensatz-Hash, Manipulationserkennung, Schriften, Bewertung, CLI, Architektur, Provenienz) |
 | ruff, mypy --strict (src + tests), bandit -ll | PASS |
 | auditcore-quality strict (Framework `verwaltung-app-framework@4f9e81b`) | Syntax, Lint, Typen, bandit, Tests PASS; AC-DEP-001 FAIL nur wegen `ecdsa` in der Plattform-Entwicklungsumgebung (nicht Teil des Pakets; `pip-audit` in sauberer Umgebung mit Paket + Pillow ohne Befund); Policy/Supply-Chain REVIEW_REQUIRED (Release-Nachweise folgen mit dem Release) |
-| Pilot 2 000 Belege (Seed 42, Standardkonfiguration) | zwei unabhängige, parallel laufende Erzeugungen: identischer Datensatz-Hash `192e329e531ba16028c314f36007737637fdaaf59e0eb66095fb84a4056174f3`; 2 223 Bilder (train 1 795, validation 165, test_synthetic 163, test_layout_holdout 100), 713 MB, ≈ 16,5 min je Lauf auf der NUC (CPU); `verify` PASS |
+| Pilot 2 000 Belege (Seed 42, Standardkonfiguration) | zwei unabhängige, parallel laufende Erzeugungen: identischer Datensatz-Hash `192e329e531ba16028c314f36007737637fdaaf59e0eb66095fb84a4056174f3`; 2 223 Bilder (train 1 795, validation 165, test_synthetic 163, test_layout_holdout 100), 713 MB, ≈ 16,5 min je Lauf auf der Arbeitsstation (CPU); `verify` PASS |
 | Sichtprüfung | 16 Zufallsbelege: Überlappung langer Beschriftungen mit Werten gefunden und behoben (`_pair`), danach 32 weitere Zufallsbelege ohne Befund (Plan verlangt 50: **teilweise**, 48 insgesamt gesichtet) |
 | pip/APT (lokal) | `verify_domain_packages.py` für dummygenerator, invoicegenerator, invoicesynth mit `--apt`: PASS (Build, Hash-Install, Rauchtest, Selektivinstallation, zwei Debian-Revisionen, signierte APT-Quelle, Install/Upgrade/Remove) |
 
@@ -43,7 +43,7 @@ sowie die Testbelege von `auditcore_documents` 0.2.0
 
 ## Etappe E3: Nachtraining vorbereitet (kein Training ausgeführt)
 
-janpow-ai ist offline; ausgeführt wurden nur Werkzeug-, Wiederaufnahme- und
+der GPU-Rechner ist offline; ausgeführt wurden nur Werkzeug-, Wiederaufnahme- und
 CPU-Rauchtests. Einzelheiten und Voraussetzungen: `packages/auditcore_invoicesynth/docs/training.md`.
 
 | Prüfung | Ergebnis |

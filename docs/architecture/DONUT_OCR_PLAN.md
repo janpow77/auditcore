@@ -27,7 +27,7 @@ Repository und nicht in ein Wheel.
 | Baustein | Befund |
 |---|---|
 | `vision-service` (`~/Projekte/vision-service`, Image `ghcr.io/janpow77/vision-service:latest`) | FastAPI; `POST /v1/vision/parse` (multipart `image`, `model=donut-cord-v2`) liefert `raw`, `fields`, `json`, `duration_ms`, `device`; `POST /v1/ocr` (Tesseract, EasyOCR/Chandra optional); `GET /health`, `GET /v1/models`. Modell `naver-clova-ix/donut-base-finetuned-cord-v2`, im Build vorgeladen. |
-| Betrieb auf der NUC | Container veröffentlicht **nur** `100.102.132.11:8015 → 8005` (Tailscale), nicht `localhost:8005`. `/health` meldet `device=cpu`, `gpu_available=false`: CPU-Torch 2.3.1 im Image, keine GPU-Freigabe im Container. |
+| Betrieb auf der Arbeitsstation | Container veröffentlicht **nur** `<vision-host>:8015 → 8005` (Tailscale), nicht `localhost:8005`. `/health` meldet `device=cpu`, `gpu_available=false`: CPU-Torch 2.3.1 im Image, keine GPU-Freigabe im Container. |
 | Feldabbildung im Service | `DonutBackend._extract_fields` sucht CORD-Tags per Regex (`<s_total…>`, `<s_date>`, `<s_num>` …). CORD kennt keine Rechnungsnummer, kein Datum, keine USt-IdNr., keine IBAN – die Treffer sind zufällig. |
 | GPU | NVIDIA RTX 5060 Laptop, 8151 MiB; zur Zeit belegt ein fremder Prozess (xtts) rund 1,9 GiB. Blackwell (sm_120) benötigt Torch-Builds mit CUDA ≥ 12.8; die Pins des vision-service (`torch==2.3.1`, `transformers<4.50`) laufen dort nicht auf der GPU. |
 | `auditcore_documents` 0.1.0 | Pipeline mit `OcrStage` und Ports `RouterOcr`, `ChandraPort`, `TesseractPort`, `Rasterizer`; `OcrBackend` = `auto/chandra/tesseract/none`. Felder entstehen in `PostprocessStage` per Regex: `invoice_number`, `date`, `total`, `net_amount`, `vat_amount`, `iban`, `vat_id`. Profile `LEGACY_PIPELINE` (bitgenau) und `CORRECTED_PIPELINE` = `RECOMMENDED_PIPELINE`. Extras: `ocr-raster`, `pdf-text`, `mime` u. a. |
@@ -63,7 +63,7 @@ synthetisch markiert (wie im vorhandenen Renderer). Entscheidung E5.
 auditcore_invoicegenerator ──► auditcore_invoicesynth ──► Datensatz (Bild + Ziel-JSON + Manifest)
    (Rechnungsdaten)           (Layouts, Augmentierung,           │
                                Labels, Evaluation)               ▼
-                                                     Nachtraining (NUC, RTX 5060, Checkpoints)
+                                                     Nachtraining (Arbeitsstation, RTX 5060, Checkpoints)
                                                                  │
                                                   Modellartefakt + Modellkarte + SHA-256
                                                     (Release-Asset / HF privat)
@@ -234,19 +234,19 @@ liefern (Abschlusskriterium E2). Umfang: Pilot 2 000; Vollsatz 20 000 Training,
 Laufzeit-Schätzung (in E3 zu messen): 0,6–1,2 s je Beispiel → Vollsatz
 (≈ 120 000 Beispielschritte) ≈ 20–40 GPU-Stunden, verteilt auf mehrere Nächte.
 
-### 2c-bis. Rechenorte: janpow-ai (zwei GPUs) über den FlowAgent
+### 2c-bis. Rechenorte: GPU-Rechner (zwei GPUs) über den FlowAgent
 
 Nutzerwunsch vom 24.09.2026: „Donut soll auch meine beiden gpus aus janpow ai
 nutzen können.“ Es gilt der Grundsatz vom 28.08.2026 **„FlowAgent ist der
 einzige GPU-Weg“** (so bereits für Whisper large-v3 auf der RTX 5070 Ti von
-janpow-ai umgesetzt). Donut greift deshalb nie direkt per SSH/HTTP auf GPUs
+GPU-Rechner umgesetzt). Donut greift deshalb nie direkt per SSH/HTTP auf GPUs
 zu, sondern über die Flow-Agent Control Plane (`agent.flowaudit.de`, Spokes
 mit Fähigkeiten und Telemetrie).
 
 | Rechenort | GPU(s) | Rolle für Donut | Zugang |
 |---|---|---|---|
-| **janpow-ai** (Tailscale 100.114.73.106) | 2 GPUs, u. a. RTX 5070 Ti 16 GB (zweite GPU beim ersten Kontakt per Telemetrie erfassen) | **Haupt-Trainingsort** und bevorzugter Inferenzort | FlowAgent-Spoke(s), Fähigkeiten `train:donut`, `ocr`/`vision` |
-| NUC (100.102.132.11) | RTX 5060 Laptop 8 GB (+ optional eGPU) | Pilot-/Rückfall-Training (Profil 8 GB aus 2c), Inferenz-Rückfall | FlowAgent-Spoke `nuc-vision` (Tailscale-Adresse, nicht Docker-Name) |
+| **GPU-Rechner** (Tailscale) | 2 GPUs, u. a. RTX 5070 Ti 16 GB (zweite GPU beim ersten Kontakt per Telemetrie erfassen) | **Haupt-Trainingsort** und bevorzugter Inferenzort | FlowAgent-Spoke(s), Fähigkeiten `train:donut`, `ocr`/`vision` |
+| Arbeitsstation | RTX 5060 Laptop 8 GB (+ optional eGPU) | Pilot-/Rückfall-Training (Profil 8 GB aus 2c), Inferenz-Rückfall | FlowAgent-Spoke `<vision-spoke>` (Tailscale-Adresse, nicht Docker-Name) |
 | EVO-X2 | AMD, kein CUDA | nicht für Donut-Training (Torch/CUDA-Pfad) | – |
 
 **Training auf zwei GPUs:**
@@ -260,27 +260,27 @@ mit Fähigkeiten und Telemetrie).
   Bildgröße 1280×960 und 1536×1152 oder zwei Seeds – und Auswahl per
   Evaluation (2d). Entscheidung automatisch aus der Spoke-Telemetrie.
 - Profil `donut_train_janpow_ai` mit eigenem VRAM-Budget je Karte; der
-  8-GB-Pfad aus 2c bleibt als Profil `donut_train_8gb` für die NUC erhalten.
+  8-GB-Pfad aus 2c bleibt als Profil `donut_train_8gb` für die Arbeitsstation erhalten.
 - Wiederaufnahme wie 2c (atomare Checkpoints mit Prüfsummen). Checkpoints
-  liegen auf janpow-ai lokal und werden nach jedem Checkpoint zusätzlich auf
-  die NUC gespiegelt (rsync über Tailscale), damit ein Lauf bei Ausfall von
-  janpow-ai auf der NUC weiterlaufen kann (mit 8-GB-Profil, gleiche Lauf-ID).
+  liegen auf dem GPU-Rechner lokal und werden nach jedem Checkpoint zusätzlich auf
+  die Arbeitsstation gespiegelt (rsync über Tailscale), damit ein Lauf bei Ausfall des
+  GPU-Rechners auf der Arbeitsstation weiterlaufen kann (mit 8-GB-Profil, gleiche Lauf-ID).
 - Auftrag über den FlowAgent als Job (Container-Image mit Torch ≥ 2.7/CUDA
   12.8, Datensatz per Hash, Konfiguration, Ziel-Checkpoint-Pfad); der FlowAgent
-  meldet Fortschritt (Schritt, Loss, VRAM, Temperatur) zurück. Ist janpow-ai
+  meldet Fortschritt (Schritt, Loss, VRAM, Temperatur) zurück. Ist der GPU-Rechner
   offline (Stand 24.09.2026: seit 24 Tagen offline), startet kein Lauf dort;
-  die Planung zeigt den Rechenort „nicht verfügbar“ statt still auf die NUC
-  auszuweichen – der Rückfall auf die NUC ist eine ausdrückliche Wahl.
+  die Planung zeigt den Rechenort „nicht verfügbar“ statt still auf die Arbeitsstation
+  auszuweichen – der Rückfall auf die Arbeitsstation ist eine ausdrückliche Wahl.
 
 **Inferenz:** Das nachtrainierte Modell wird als Fähigkeit `ocr`/`vision`
-(Modellname `auditcore-donut-invoice-v1`) auf den GPU-Spokes von janpow-ai
-bereitgestellt; der vision-service der NUC bleibt Rückfall. flowinvoice ruft
+(Modellname `auditcore-donut-invoice-v1`) auf den GPU-Spokes des GPU-Rechners
+bereitgestellt; der vision-service der Arbeitsstation bleibt Rückfall. flowinvoice ruft
 wie heute nur die Plattform auf (`/api/v1/ai/apps/flowinvoice/v1/ocr`); die
 Plattform wählt den Spoke. Spokes melden ausschließlich über Tailscale
 erreichbare Adressen (Lehre aus dem OCR-Ausfall vom 24.09.2026: Docker-
-Containernamen sind von Hetzner aus nicht auflösbar).
+Containernamen sind vom Produktivserver aus nicht auflösbar).
 
-**Voraussetzungen vor E3:** janpow-ai einschalten und als FlowAgent-Spoke
+**Voraussetzungen vor E3:** GPU-Rechner einschalten und als FlowAgent-Spoke
 registrieren (Ein-Befehl-Installer `install.sh --enroll`), Telemetrie beider
 GPUs prüfen, NVIDIA-Treiber ≥ 570 für Blackwell, freier Plattenplatz ≥ 200 GB
 für Datensatz, Checkpoints und Container.
@@ -368,7 +368,7 @@ Beschriftungen, `1.234,56`, `TT.MM.JJJJ`, Beispiel-USt-IdNr. und -IBAN),
 nur für die Probe mit Pillow gezeichnet. Je Bild ein Aufruf
 `POST /v1/vision/parse` (`model=donut-cord-v2`) und zum Vergleich
 `POST /v1/ocr` (`backend=tesseract`, `lang=deu+eng`) gegen den laufenden
-vision-service (`http://100.102.132.11:8015`), nacheinander, keine
+vision-service (`http://<vision-host>:8015`), nacheinander, keine
 Konfigurationsänderung. Bewertung: Donut-Treffer nur, wenn der Wert im
 passenden CORD-Feld bzw. in `fields` steht (Betrag auf den Cent); für
 Rechnungsnummer und Datum (CORD hat keine solchen Felder) genügt das Vorkommen
@@ -464,9 +464,9 @@ Empfehlungen“**. Status vorher: offen (HUMAN_DECISION_REQUIRED), jetzt
 | E4 | Echte anonymisierte Belege für die Evaluation (T4)? | **Nein** (zunächst) | Abnahme mit T1–T3 (synthetisch, T3 gedruckt/gescannt); keine echten Belege in Training, Evaluation oder Repository. |
 | E5 | Prüfziffer-gültige, aber fiktive IBAN/USt-IdNr.? | **Ja, sichtbar als synthetisch markiert** | IBAN mit gültiger ISO-13616-Prüfziffer aus fiktiver Bankleitzahlliste, USt-IdNr. DE mit gültiger Prüfziffer (ISO 7064 MOD 11,10), AT mit gültiger Prüfziffer; jede Seite trägt die Kennzeichnung `SYNTHETISCH`. |
 | E6 | Abnahmeschwellen aus 2d | **Wie vorgeschlagen** | T2/T3: Gesamtbetrag ≥ 98 %, Datum ≥ 98 %, Rechnungsnummer ≥ 95 %, IBAN und USt-IdNr. ≥ 97 %; Falschwert-Quote nach Plausibilität ≤ 0,5 % je Feld; auf T3 besser als Tesseract + Regex in ≥ 4 von 5 Pflichtfeldern. |
-| E7 | Betrieb: Training und Inferenz | **janpow-ai (2 GPUs) über den FlowAgent als Hauptort**; NUC nur als ausdrücklicher Rückfall; **xtts-Pause ja** | DDP bei gleichen Karten, sonst zwei parallele Läufe (2c-bis); kein stilles Ausweichen auf die NUC; für Rückfall-Trainingsnächte auf der NUC darf xtts pausieren. |
+| E7 | Betrieb: Training und Inferenz | **GPU-Rechner (2 GPUs) über den FlowAgent als Hauptort**; Arbeitsstation nur als ausdrücklicher Rückfall; **xtts-Pause ja** | DDP bei gleichen Karten, sonst zwei parallele Läufe (2c-bis); kein stilles Ausweichen auf die Arbeitsstation; für Rückfall-Trainingsnächte auf der Arbeitsstation darf xtts pausieren. |
 | E8 | Umfang Version 1 | **Nur Kopf-/Summenfelder** | Ziel-JSON `<s_auditcore_invoice_v1>` ohne Positionen; Positionen erst in Version 2 (neue Schema-Major-Version). |
-| E9 | janpow-ai dauerhaft betreiben? | **Nein, nur für Trainingsläufe und bei Bedarf für Inferenz**; Rückfall NUC | Planung meldet janpow-ai als „nicht verfügbar“, solange der Rechner aus ist; Inferenz-Rückfall über den vision-service der NUC. |
+| E9 | GPU-Rechner dauerhaft betreiben? | **Nein, nur für Trainingsläufe und bei Bedarf für Inferenz**; Rückfall Arbeitsstation | Planung meldet den GPU-Rechner als „nicht verfügbar“, solange der Rechner aus ist; Inferenz-Rückfall über den vision-service der Arbeitsstation. |
 
 ### Umsetzungsstand (Runde vom 24.09.2026)
 
@@ -478,4 +478,4 @@ Planetappen in Abschnitt 4:
 | E0 | Entscheidungen dokumentiert (dieser Abschnitt) | E0 |
 | E1 | Paket `auditcore_invoicesynth` 0.1.0 (Anreicherung, Layouts, Augmentierung, Manifest, Bewertung) | E1 + E2 |
 | E2 | `auditcore_documents` 0.2.0: `DonutPort`, `HttpDonut`, `FakeDonut`, `LocalDonut` (Extra `donut`), `DonutFieldMergeStage`, `DONUT_PIPELINE` | E5 |
-| E3 | Trainingswerkzeug **vorbereitet** (Profile, Checkpoints, Wiederaufnahme, systemd-Vorlage, FlowAgent-Job) mit CPU-Rauchtest; **kein** Training, janpow-ai ist offline | Teil von E3 |
+| E3 | Trainingswerkzeug **vorbereitet** (Profile, Checkpoints, Wiederaufnahme, systemd-Vorlage, FlowAgent-Job) mit CPU-Rauchtest; **kein** Training, der GPU-Rechner ist offline | Teil von E3 |
