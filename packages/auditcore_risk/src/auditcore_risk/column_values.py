@@ -120,9 +120,11 @@ def _object_missing(array: npt.NDArray[np.generic]) -> Bools | None:
 def _missing(data: ColumnData, name: str) -> Bools:
     array = data.array(name)
     if array is not None and array.dtype.kind in "fc":
-        return np.isnan(array)
+        numeric_mask: Bools = np.isnan(array)
+        return numeric_mask
     if array is not None and array.dtype.kind in "Mm":
-        return np.isnat(array)
+        datetime_mask: Bools = np.isnat(array)
+        return datetime_mask
     if array is not None and array.dtype.kind in "biuUS":
         return np.zeros(data.size, dtype=np.bool_)
     if array is not None and array.dtype.kind == "O":

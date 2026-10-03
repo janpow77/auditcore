@@ -45,8 +45,14 @@ Lasttestumgebung, daher sind kleine Unterschiede nicht belastbar.
 Alle fünf verglichenen Ergebnis-Hashes einschließlich des nicht tabellierten
 5.000-Zeilen-Quotenfalls stimmen überein. Die Batch-Daten wiederholen zehn
 synthetische Muster; der Cachegewinn ist damit kein repräsentativer Mittelwert
-über sämtliche möglichen Belegbestände. Fälle mit überwiegend eindeutigen
-Werten müssen ebenfalls gemessen werden.
+über sämtliche möglichen Belegbestände. Ein ergänzender Lauf mit 100.000 vollständig unterschiedlichen Quotentexten
+und zwei Threads ergibt 331,3 ms vorher und 363,0 ms danach. Unter dieser
+nicht isolierten Last ist also kein Gewinn belegt, sondern rund 10 %
+Mehrzeit. Der begrenzte Quotencache hilft bei Wiederholungen; seine
+Verwaltung kostet bei ausschließlich neuen Werten zusätzliche Zeit.
+`PreparedRates` lohnt sich hier vor allem bei der Wiederverwendung für
+mehrere Betragsspalten. Die Ergebnis-Hashes stimmen auch in diesem Fall
+überein; Messreihen unter isolierter Anwendungsbelastung bleiben erforderlich.
 
 Ein gesonderter Vergleich der vorbereiteten Kerne liefert bei 100.000
 Werten und acht Threads für eine Schwellenmaske etwa 19 µs mit NumPy,

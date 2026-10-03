@@ -390,5 +390,38 @@
       "median_ms": 1.436326012481004,
       "sha256": "87c5e2d5254c5d6f16812bbeb53e06f587fab24fe19200a1af0bb11bb0ed7bf7"
     }
+  },
+  "unique_rates_followup": {
+    "note": "Synthetischer Nachlauf mit zwei Numba-Threads während paralleler Release-Prüfungen; keine isolierte Lasttestumgebung. Jede Quote kommt nur einmal vor.",
+    "before": {
+      "n": 100000,
+      "unique_rates": 100000,
+      "times_ms": [
+        325.61453800008167,
+        320.4411469923798,
+        360.90696400788147,
+        333.45439200638793,
+        331.28396100073587,
+        334.73646199854556,
+        328.2799430016894
+      ],
+      "median_ms": 331.28396100073587,
+      "sha256": "3b60a050b7affbfde4b5fe7f281b5c633c51b71212dc50931f6087539d0f1b04"
+    },
+    "after": {
+      "n": 100000,
+      "unique_rates": 100000,
+      "times_ms": [
+        362.9811989958398,
+        352.86997200455517,
+        388.4891769994283,
+        362.9563090071315,
+        364.17429099674337,
+        354.25131500232965,
+        359.4974920124514
+      ],
+      "median_ms": 362.9563090071315,
+      "sha256": "3b60a050b7affbfde4b5fe7f281b5c633c51b71212dc50931f6087539d0f1b04"
+    }
   }
 }
