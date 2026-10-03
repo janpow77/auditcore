@@ -150,3 +150,26 @@ befehl = ["auditcore-codegate", "check", "--package", "auditcore_privacy", "--sk
 zeitlimit_s = 300
 
 
+
+# Deterministische Rechenkerne (optionales Numba); Tests laufen mit Engine und als reines Python.
+[pruefprofile.compute]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.compute.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_compute", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.compute.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_compute/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 600
+
+[pruefprofile.compute.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_compute && exec python3 -m mypy src --no-color-output --no-error-summary"]
+zeitlimit_s = 300
+
+[pruefprofile.compute.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_compute", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300
