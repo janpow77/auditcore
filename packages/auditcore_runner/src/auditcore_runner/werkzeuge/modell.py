@@ -46,6 +46,9 @@ class Tool:
     success_codes: tuple[int, ...] = (0, 1)
     stage: str = "pruefen"
     network: bool = False
+    allow_empty: bool = False
+    # Repository commands may depend on state outside Git (``.env``, running containers).
+    cacheable: bool = True
 
     @property
     def can_fix(self) -> bool:
@@ -61,6 +64,7 @@ class ToolSetting:
     priority: int = 50
     command: tuple[str, ...] | None = None
     fix_command: tuple[str, ...] | None = None
+    allow_empty: bool = False
 
 
 @dataclass(frozen=True)
@@ -92,6 +96,8 @@ class CheckProfile:
             tool,
             command=setting.command if setting.command is not None else tool.command,
             fix_command=setting.fix_command if setting.fix_command is not None else tool.fix_command,
+            allow_empty=setting.allow_empty,
+            cacheable=tool.cacheable and setting.command is None,
         )
         if tool.area != CUSTOM_AREA or not configured.command:
             return configured
@@ -173,7 +179,10 @@ def _setting(raw: object, where: str) -> ToolSetting:
         raise RepoConfigError(f"{where}: aktiv (bool), zeitlimit_s, prioritaet (Zahl)")
     command = _optional_command(data, "befehl", where)
     fix_command = _optional_command(data, "autofix_befehl", where)
-    return ToolSetting(enabled, timeout, priority, command, fix_command)
+    allow_empty = data.get("leer_erlaubt", False)
+    if not isinstance(allow_empty, bool):
+        raise RepoConfigError(f"{where}.leer_erlaubt: wahr/falsch erwartet")
+    return ToolSetting(enabled, timeout, priority, command, fix_command, allow_empty)
 
 
 def _optional_command(data: dict[str, object], key: str, where: str) -> tuple[str, ...] | None:
@@ -277,6 +286,7 @@ def apply_machine_settings(profile: CheckProfile, overrides: dict[str, ToolSetti
                 machine,
                 command=repository.command,
                 fix_command=repository.fix_command,
+                allow_empty=repository.allow_empty,
             )
         combined[name] = machine
     return replace(profile, settings=combined)

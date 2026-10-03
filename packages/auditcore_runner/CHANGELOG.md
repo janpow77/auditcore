@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Nichts geprüft ist rot: Ein JUnit-Bericht ohne ausgeführten Testfall (fehlt,
+  leer oder alles übersprungen) ergibt Status und Befund `nichts_geprueft` mit
+  der Skip-Meldung statt „ok“; die Baseline blendet ihn nicht aus. Das
+  Ergebnisdokument trägt `gesamt` (`gruen`/`rot`) und `probleme`; `lokal` und
+  `befunde` enden bei Rot (auch bei `fehlt`, `fehler`, `zeitlimit`, `unlesbar`)
+  mit Exitcode 1. Neuer Profilschalter `leer_erlaubt` (Standard aus), neue Route
+  `GET /api/ergebnis`. Alte Berichtsdateien werden vor jedem Lauf gelöscht,
+  überschriebene `befehl` nicht mehr zwischengespeichert, unlesbares JUnit-XML
+  ergibt `unlesbar` statt eines Tracebacks.
 - Prüfprofile dürfen Werkzeuge ohne Katalogeintrag mit eigenem `befehl` deklarieren
   (etwa `compose` mit `docker compose config --quiet`): Exitcode als Befund, mit
   `{ausgabe}` JUnit-Bericht, ohne Cache. Unbekannte Werkzeuge ohne `befehl` melden
