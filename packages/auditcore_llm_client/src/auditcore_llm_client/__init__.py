@@ -81,7 +81,7 @@ if TYPE_CHECKING:
     from auditcore_llm_client.async_client import AsyncLlmClient
     from auditcore_llm_client.sync_client import LlmClient
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 __all__ = [
     "AUDIT_DESIGNER",

@@ -1,0 +1,19 @@
+auditcore_compute 0.1.0 — attribution and authorization
+
+New implementation in auditcore. No code was copied from other repositories.
+Numba (BSD-2-Clause) is an optional dependency (extra [jit]) and is neither
+vendored nor modified; NumPy (BSD-3-Clause) is a runtime dependency.
+
+Day-count conventions follow the ISDA 2006 Definitions, section 4.16
+(Actual/360, Actual/365 (Fixed), Actual/Actual (ISDA), 30E/360 and
+30E/360 (ISDA)); the modified z-score follows Iglewicz/Hoaglin (1993), the
+fences follow Tukey (1977), quantiles follow Hyndman/Fan (1996) type 7 and the
+compensated sum follows Neumaier (1974). The documents are cited by name only;
+no text of them is included.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library.
+
+The library computes; it does not decide. Rate tables, thresholds, tolerances
+and outlier factors are inputs of the caller; none is built in.

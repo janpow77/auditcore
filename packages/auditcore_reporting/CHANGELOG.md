@@ -2,7 +2,7 @@
 
 Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
-## Unreleased
+## 0.3.1 – 2026-10-03
 
 - Neues Modul `auditcore_reporting.templates`: versionierte Berichtsvorlagen
   (`define_template`, `TemplateRegistry`, `builtin_registry`, `render`,

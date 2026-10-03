@@ -36,6 +36,12 @@ def main() -> int:
         type=Path,
         default=Path(__file__).resolve().parents[1] / "packaging/library-extras.json",
     )
+    parser.add_argument(
+        "--runtime-dependency-mappings",
+        type=Path,
+        default=Path(__file__).resolve().parents[1] / "packaging/library-runtime.json",
+        help="Declared third-party runtime requirements per package and their Debian packages",
+    )
     args = parser.parse_args()
     # Preserve the venv executable path: resolving its symlink loses its environment.
     platform_python = args.platform_python.absolute()
@@ -99,7 +105,27 @@ def main() -> int:
         if args.optional_dependency_mappings.is_file()
         else {}
     )
+    # Third-party runtime requirements (e.g. numpy) are not built here: each must be
+    # declared with its Debian package; pip installs them from the configured index
+    # before the hash-bound install of the local wheels, APT from the test image.
+    runtime_mappings = (
+        json.loads(args.runtime_dependency_mappings.read_text())
+        if args.runtime_dependency_mappings.is_file()
+        else {}
+    )
     license_option = ["--allow-unreviewed-license"] if args.allow_unreviewed_license else []
+
+    def third_party(package: dict[str, Any]) -> dict[str, str]:
+        declared = runtime_mappings.get(package["name"], {})
+        external = {
+            requirement: declared.get(requirement, "")
+            for requirement in package["runtime_requirements"]
+            if not re.fullmatch(r"auditcore[A-Za-z0-9_.-]*==[0-9.]+", requirement)
+        }
+        if not all(external.values()):
+            raise ValueError("Undeclared third-party runtime requirement; see library-runtime.json")
+        return external
+
     try:
         run(
             "installed-platform",
@@ -164,6 +190,10 @@ def main() -> int:
             }
             report["packages"].append(record)
             wheels.append(wheel)
+        external_requirements = sorted(
+            {r for package in report["packages"] for r in third_party(package)}
+        )
+        report["third_party_runtime_requirements"] = external_requirements
         index = output / "pip-index"
         run(
             "pip-index",
@@ -179,6 +209,24 @@ def main() -> int:
         consumer = output / "consumer"
         venv.EnvBuilder(with_pip=True).create(consumer)
         python = str(consumer / "bin/python")
+        if external_requirements:
+            lock = Path(__file__).resolve().parents[1] / "requirements/ci.lock"
+            run(
+                "third-party-runtime",
+                [
+                    python,
+                    "-I",
+                    "-m",
+                    "pip",
+                    "--isolated",
+                    "install",
+                    "--only-binary=:all:",
+                    "--no-cache-dir",
+                    "--disable-pip-version-check",
+                    *(["-c", str(lock)] if lock.is_file() else []),
+                    *external_requirements,
+                ],
+            )
         run(
             "requirements-install",
             [
@@ -238,7 +286,10 @@ def main() -> int:
             expected = {selected}
             pending = [selected]
             while pending:
-                for requirement in by_distribution[pending.pop()]["runtime_requirements"]:
+                current = by_distribution[pending.pop()]
+                for requirement in current["runtime_requirements"]:
+                    if requirement in third_party(current):
+                        continue  # preinstalled third-party runtime requirement
                     match = re.fullmatch(r"([A-Za-z0-9_.-]+)==([0-9.]+)", requirement)
                     if not match:
                         raise ValueError("Selective proof requires pinned internal dependencies")
@@ -293,8 +344,10 @@ def main() -> int:
             for revision in (1, 2):
                 repository = output / f"apt-{revision}"
                 for package, wheel in zip(report["packages"], wheels, strict=True):
-                    mapping = {}
+                    mapping = dict(third_party(package))
                     for requirement in package["runtime_requirements"]:
+                        if requirement in mapping:
+                            continue
                         match = re.fullmatch(r"([A-Za-z0-9_.-]+)==([0-9.]+)", requirement)
                         if not match:
                             raise ValueError(
@@ -440,8 +493,30 @@ def main() -> int:
             commands.append("echo APT_REMOVE_PASS")
             script = output / "apt-lifecycle.sh"
             script.write_text("\n".join(commands) + "\n")
+            image_name = args.image
+            debian_runtime = sorted(
+                {
+                    re.sub(r" \(.*\)$", "", dependency)
+                    for package in report["packages"]
+                    for dependency in third_party(package).values()
+                }
+            )
+            if debian_runtime:
+                # The lifecycle container has no network: preinstall the declared
+                # Debian packages of third-party runtime requirements in a derived image.
+                context = output / "apt-runtime-image"
+                context.mkdir()
+                (context / "Dockerfile").write_text(
+                    f"FROM {args.image}\n"
+                    "RUN apt-get update && apt-get install -y --no-install-recommends "
+                    + " ".join(debian_runtime)
+                    + " && rm -rf /var/lib/apt/lists/*\n"
+                )
+                image_name = f"{args.image}-runtime"
+                run("apt-runtime-image", ["docker", "build", "-t", image_name, str(context)])
+                report["apt_runtime_packages"] = debian_runtime
             image = run(
-                "apt-image", ["docker", "image", "inspect", args.image, "--format", "{{.Id}}"]
+                "apt-image", ["docker", "image", "inspect", image_name, "--format", "{{.Id}}"]
             )
             report["apt_image_digest"] = image.strip()
             transcript = run(
@@ -454,7 +529,7 @@ def main() -> int:
                     "none",
                     "--mount",
                     f"type=bind,src={output},dst=/packages,readonly",
-                    args.image,
+                    image_name,
                     "sh",
                     "/packages/apt-lifecycle.sh",
                 ],

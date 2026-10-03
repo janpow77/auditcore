@@ -137,17 +137,18 @@ def normalize_vat_id(value: object) -> str:
 
 
 def _groups(
-    documents: Documents, key_field: str, value_field: str
-) -> dict[str, dict[str, list[int]]]:
-    groups: dict[str, dict[str, list[int]]] = {}
+    documents: Documents,
+) -> tuple[dict[str, dict[str, list[int]]], dict[str, dict[str, list[int]]]]:
+    by_supplier: dict[str, dict[str, list[int]]] = {}
+    by_vat: dict[str, dict[str, list[int]]] = {}
     for idx, doc in enumerate(documents):
         supplier = normalize_supplier_name(doc.get("supplier_name", ""))
         vat_id = normalize_vat_id(doc.get("supplier_vat_id"))
         if not supplier or not vat_id:
             continue
-        values = {"supplier": supplier, "vat_id": vat_id}
-        groups.setdefault(values[key_field], {}).setdefault(values[value_field], []).append(idx)
-    return groups
+        by_supplier.setdefault(supplier, {}).setdefault(vat_id, []).append(idx)
+        by_vat.setdefault(vat_id, {}).setdefault(supplier, []).append(idx)
+    return by_supplier, by_vat
 
 
 def _listing(variants: dict[str, list[int]]) -> str:
@@ -190,9 +191,10 @@ def _consistency_finding(
 
 def check_vat_id_consistency(documents: Documents, result: WatchdogResult) -> None:
     """ERG-02: USt-IdNr./Steuernummer je Lieferant eindeutig und umgekehrt."""
-    for supplier, variants in _groups(documents, "supplier", "vat_id").items():
+    by_supplier, by_vat = _groups(documents)
+    for supplier, variants in by_supplier.items():
         if len(variants) > 1:
             result.findings.append(_consistency_finding(supplier, variants, by_supplier=True))
-    for vat_id, variants in _groups(documents, "vat_id", "supplier").items():
+    for vat_id, variants in by_vat.items():
         if len(variants) > 1:
             result.findings.append(_consistency_finding(vat_id, variants, by_supplier=False))

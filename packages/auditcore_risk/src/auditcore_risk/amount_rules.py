@@ -9,16 +9,22 @@ from __future__ import annotations
 import math
 import re
 from collections.abc import Mapping
+from typing import cast
 
 from .base import (
+    CENT_LIMIT,
+    CENT_UNDECIDABLE,
     Context,
     JsonObject,
     Outcome,
     Table,
+    amount_cents,
     amount_values,
+    in_cents,
     present_amounts,
     procurement_threshold,
     relevance,
+    tolerance_cents,
 )
 from .errors import InputError
 from .values import fmt, text
@@ -186,8 +192,26 @@ def nonzero_without_text(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def balance_mismatch(p: JsonObject, table: Table, ctx: Context) -> Outcome:
-    """Minuend minus all subtrahends differs from zero by more than the tolerance."""
+def _balance_cents(columns: list[list[float]], index: int) -> tuple[int, int] | None:
+    """Minuend and sum of subtrahends in cents, ``None`` if a part cannot be converted."""
+    cents = [amount_cents(column[index]) for column in columns]
+    if any(c is None for c in cents):
+        return None
+    parts = cast(list[int], cents)
+    subtracted = sum(parts[1:])
+    return None if abs(subtracted) > CENT_LIMIT else (parts[0], subtracted)
+
+
+def balance_reason(p: JsonObject, rest_cents: int) -> str:
+    """Reason of a balance mismatch (shared with the vectorised path)."""
+    return (
+        f"{p['minuend']} − {' − '.join(p['subtrahends'])} = {fmt(rest_cents / 100)} "
+        f"(Toleranz {p['tolerance']}, in ganzen Cent)."
+    )
+
+
+def _balance_float(p: JsonObject, table: Table) -> Outcome:
+    """Legacy: float ``minuend − subtrahends`` beyond the tolerance (source arithmetic)."""
     minuend = present_amounts(table, {**p, "field": p["minuend"]})
     subtrahends = [present_amounts(table, {**p, "field": s}) for s in p["subtrahends"]]
     out = Outcome.constant(len(table), False)
@@ -203,6 +227,37 @@ def balance_mismatch(p: JsonObject, table: Table, ctx: Context) -> Outcome:
             )
             out.evidence[i] = {"difference": rest}
     return out
+
+
+def _balance_in_cents(p: JsonObject, table: Table) -> Outcome:
+    names = [p["minuend"], *p["subtrahends"]]
+    columns = [present_amounts(table, {**p, "field": name}) for name in names]
+    tolerance = tolerance_cents(p["tolerance"])
+    out = Outcome.constant(len(table), False)
+    for i in range(len(table)):
+        parts = _balance_cents(columns, i)
+        if parts is None:
+            out.flags[i] = None
+            out.reasons[i] = CENT_UNDECIDABLE
+            out.evidence[i] = {name: column[i] for name, column in zip(names, columns, strict=True)}
+            continue
+        rest = parts[0] - parts[1]
+        if abs(rest) > tolerance:
+            out.flags[i] = True
+            out.reasons[i] = balance_reason(p, rest)
+            out.evidence[i] = {"difference": rest / 100, "difference_cents": rest}
+    return out
+
+
+def balance_mismatch(p: JsonObject, table: Table, ctx: Context) -> Outcome:
+    """Minuend minus all subtrahends differs from zero by more than the tolerance.
+
+    With ``arithmetic: "cents"`` every amount is rounded to whole cents first
+    (``ROUND_HALF_UP``); an amount that is not finite or above 10 Mrd. € (also
+    the sum of the subtrahends) leaves the record undetermined. Without it the
+    source's float arithmetic applies unchanged (legacy profiles).
+    """
+    return _balance_in_cents(p, table) if in_cents(p) else _balance_float(p, table)
 
 
 def amount_with_marker(p: JsonObject, table: Table, ctx: Context) -> Outcome:

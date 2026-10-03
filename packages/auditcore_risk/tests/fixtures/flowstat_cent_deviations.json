@@ -1,0 +1,576 @@
+{
+ "description": "Geänderte Entscheidungen von BL_RF07/BL_RF10 gegenüber der aufgezeichneten Ausgabe (flowstat_observed.json) im Profil audit_designer.flowstat_belegliste 2026.10.1 (ganze Cent, RK-C12); erzeugt mit tools/flowstat_cent_deviations.py.",
+ "profile": {
+  "id": "audit_designer.flowstat_belegliste",
+  "version": "2026.10.1",
+  "fingerprint": "d0888a03b014b2ce6641fe994c99b3c6af8aaf542988ecf29c4b2ab92e123efd",
+  "status": "APPROVED"
+ },
+ "rf07": [
+  {
+   "frame": "rf01-rf02",
+   "row": 6,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": false,
+   "new": null,
+   "values": {
+    "projektbetrag": {
+     "$float": "inf"
+    },
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": {
+     "$float": "inf"
+    }
+   },
+   "reason": "Betrag nicht endlich (inf, 0.0, inf); in ganzen Cent nicht prüfbar (Gleitkomma: Differenz NaN, daher kein Treffer)."
+  },
+  {
+   "frame": "random-20260923-001",
+   "row": 6,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 6544.26,
+    "kuerzungsbetrag": {
+     "$float": "nan"
+    },
+    "anerkannter_betrag": 6544.27
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-002",
+   "row": 11,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 52751.81,
+    "kuerzungsbetrag": {
+     "$float": "nan"
+    },
+    "anerkannter_betrag": 52751.82
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-002",
+   "row": 15,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 13152.41,
+    "kuerzungsbetrag": 231.29,
+    "anerkannter_betrag": 12921.130000000001
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-003",
+   "row": 2,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 35542.21,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 35542.22
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-005",
+   "row": 8,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 8000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 8000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-006",
+   "row": 3,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 12000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 12000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-012",
+   "row": 18,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 57644.92,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 57644.93
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-019",
+   "row": 2,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 49204.25,
+    "kuerzungsbetrag": {
+     "$float": "nan"
+    },
+    "anerkannter_betrag": 49204.26
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-020",
+   "row": 13,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 46939.56,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 46939.57
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-023",
+   "row": 5,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 15000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 15000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-023",
+   "row": 19,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 222551.92,
+    "kuerzungsbetrag": 466.82,
+    "anerkannter_betrag": 222085.11000000002
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000009313226 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-025",
+   "row": 4,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 48929.4,
+    "kuerzungsbetrag": 42.3,
+    "anerkannter_betrag": 48887.11
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-026",
+   "row": 21,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 13369.34,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 13369.35
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-026",
+   "row": 22,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 38000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 38000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-030",
+   "row": 0,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 38926.94,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 38926.950000000004
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-031",
+   "row": 7,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 44959.14,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 44959.15
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-032",
+   "row": 0,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 5000.0,
+    "kuerzungsbetrag": 126.07,
+    "anerkannter_betrag": 4873.9400000000005
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-033",
+   "row": 1,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 4378.71,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 4378.72
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-036",
+   "row": 8,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 34000.0,
+    "kuerzungsbetrag": 90.17,
+    "anerkannter_betrag": 33909.840000000004
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-038",
+   "row": 24,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 35014.34,
+    "kuerzungsbetrag": {
+     "$float": "nan"
+    },
+    "anerkannter_betrag": 35014.35
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-039",
+   "row": 5,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 44044.55,
+    "kuerzungsbetrag": 143.72,
+    "anerkannter_betrag": 43900.840000000004
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-041",
+   "row": 1,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 46812.38,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 46812.39
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-041",
+   "row": 6,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 57264.54,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 57264.55
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-043",
+   "row": 5,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 4584.33,
+    "kuerzungsbetrag": {
+     "$float": "nan"
+    },
+    "anerkannter_betrag": 4584.34
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-044",
+   "row": 5,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 4846.91,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 4846.92
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-047",
+   "row": 0,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 40000.0,
+    "kuerzungsbetrag": 360.87,
+    "anerkannter_betrag": 39639.14
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-052",
+   "row": 1,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 8000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 8000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-054",
+   "row": 2,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 39058.13,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 39058.14
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-054",
+   "row": 7,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 9000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 9000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-054",
+   "row": 14,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 6433.12,
+    "kuerzungsbetrag": 393.98,
+    "anerkannter_betrag": 6039.150000000001
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000001127773 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-055",
+   "row": 0,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 16000.0,
+    "kuerzungsbetrag": {
+     "$float": "nan"
+    },
+    "anerkannter_betrag": 16000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-057",
+   "row": 12,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 16266.8,
+    "kuerzungsbetrag": {
+     "$float": "nan"
+    },
+    "anerkannter_betrag": 16266.81
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-067",
+   "row": 6,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 194908.1,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 194908.11000000002
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000009313226 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-069",
+   "row": 7,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 4744.96,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 4744.97
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-069",
+   "row": 8,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 46992.81,
+    "kuerzungsbetrag": 24.2,
+    "anerkannter_betrag": 46968.62
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-078",
+   "row": 15,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 34000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 34000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-082",
+   "row": 0,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 12598.48,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 12598.49
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-082",
+   "row": 5,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 17149.1,
+    "kuerzungsbetrag": 395.49,
+    "anerkannter_betrag": 16753.62
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-082",
+   "row": 22,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 3000.0,
+    "kuerzungsbetrag": 0.0,
+    "anerkannter_betrag": 3000.01
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-088",
+   "row": 16,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 44145.83,
+    "kuerzungsbetrag": 101.57,
+    "anerkannter_betrag": 44044.270000000004
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000002037268 > 0,01 (Darstellungsfehler der Binärzahl)."
+  },
+  {
+   "frame": "random-20260923-088",
+   "row": 25,
+   "rule": "BL_RF07_ACCEPTED_MISMATCH",
+   "old": true,
+   "new": false,
+   "values": {
+    "projektbetrag": 3593.78,
+    "kuerzungsbetrag": 13.61,
+    "anerkannter_betrag": 3580.1800000000003
+   },
+   "reason": "Differenz -1 Cent liegt innerhalb der Toleranz von 1 Cent; in Gleitkomma ist der Betrag der Differenz 0.010000000000218279 > 0,01 (Darstellungsfehler der Binärzahl)."
+  }
+ ],
+ "rf10_changed_frames": []
+}

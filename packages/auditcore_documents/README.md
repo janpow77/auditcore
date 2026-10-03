@@ -429,3 +429,26 @@ Quelldateien mit Git-Blobs: `NOTICE` und `provenance.json`.
 ## Änderungen
 
 Siehe [CHANGELOG.md](CHANGELOG.md).
+
+## Laufzeit von Batch-Prüfung und OCR
+
+Batch-Prüfungen bereiten wiederkehrende Zahltexte, Lieferantennamen und
+formale Dokumentbefunde innerhalb eines Prüflaufs einmal auf. Der Zustand
+wird nach dem Lauf, auch bei Fehlern, verworfen. Fachliche Ergebnisse und
+Ausgabereihenfolgen bleiben unverändert.
+
+`OcrRouting(max_concurrent_pages=1)` verarbeitet Gateway-Seiten standardmäßig
+weiter nacheinander. Werte von 1 bis 50 begrenzen die Anzahl gleichzeitig
+laufender Anfragen pro Dokument. Die Anwendung muss zusätzlich das gemeinsame
+Gateway-Budget über Dokumente und Worker hinweg einhalten. Rasterung und lokale
+OCR werden dadurch nicht parallelisiert. Seitenfehler bleiben Teilfehler;
+Transportausnahmen und Abbrüche beenden auch die übrigen gestarteten Anfragen.
+
+Für mehrere Dokumente im selben Eventloop steht
+`pipeline.LimitedRouterOcr(router, max_concurrent_requests=2)` bereit. Dieselbe
+Instanz wird allen beteiligten OCR-Stufen übergeben und nutzt den vorhandenen
+Verbindungspool des umschlossenen Ports. Abgebrochene wartende Anfragen verbrauchen
+keinen Platz. Pro Worker/Eventloop ist eine eigene Instanz nötig; das Gesamtbudget
+mehrerer Prozesse muss weiterhin die Anwendung oder das Gateway einhalten.
+
+[Recherche, Messungen und Bedingungen für den Rollout](../../docs/performance/compute-review-2026-10-03.md).

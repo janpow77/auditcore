@@ -1,6 +1,6 @@
 # Changelog auditcore_statistics
 
-## Unreleased
+## 0.3.5 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
 Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom

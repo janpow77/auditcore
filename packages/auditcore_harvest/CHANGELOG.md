@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4 – 2026-10-03
+
+Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
+exakt gebundenen internen Abhängigkeiten.
+
 ## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`.

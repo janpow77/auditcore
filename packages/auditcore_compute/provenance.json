@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_compute",
+  "version": "0.1.0",
+  "contract": "auditcore_compute/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [],
+  "methodology": [
+    {
+      "document": "ISDA 2006 Definitions, Section 4.16 (Day Count Fraction)",
+      "use": "Zinsmethoden act/360, act/365, act/act (ISDA), 30E/360 (4.16(g)) und 30E/360 ISDA (4.16(h))",
+      "text_included": false
+    },
+    {
+      "document": "§ 49a Abs. 3 VwVfG (Verzinsung des Erstattungsbetrags mit fünf Prozentpunkten über dem Basiszinssatz)",
+      "use": "Anwendungsbeispiel für stückweise Zinssätze; die Satztabelle ist Eingabe, kein Zinssatz ist eingebaut",
+      "text_included": false
+    },
+    {
+      "document": "Iglewicz/Hoaglin (1993), How to Detect and Handle Outliers; Tukey (1977), Exploratory Data Analysis; Hyndman/Fan (1996), Sample Quantiles in Statistical Packages",
+      "use": "Modifizierter z-Wert (0,6745), Tukey-Zäune, Quantile Typ 7",
+      "text_included": false
+    },
+    {
+      "document": "Neumaier (1974), Rundungsfehleranalyse einiger Verfahren zur Summation endlicher Summen",
+      "use": "Kompensierte sequenzielle Summation",
+      "text_included": false
+    }
+  ],
+  "builds_on": [],
+  "characterization": {
+    "kind": "reference_implementation_differential",
+    "legacy_parity": "NOT_APPLICABLE_NEW_IMPLEMENTATION",
+    "tests": "packages/auditcore_compute/tests"
+  },
+  "origin": "Neu in auditcore geschrieben nach dem Lastenheft für einen hardwarenah kompilierten Rechenkern; Ergänzung zu auditcore_sampling und auditcore_extrapolation, deren Verfahren nicht neu implementiert werden (siehe docs/abgrenzung.md).",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore. Numba und NumPy bleiben unter ihren eigenen Lizenzen und werden nicht mitgeliefert."
+    }
+  },
+  "method_validation": "REFERENCE_IMPLEMENTATION_DIFFERENTIAL_TESTS"
+}

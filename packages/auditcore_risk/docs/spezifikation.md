@@ -1,6 +1,6 @@
 # Spezifikation auditcore_risk
 
-Stand: 26.09.2026, Paketversion 0.3.4. Charakterisierung: riskanalysis
+Stand: 03.10.2026, Paketversion 0.4.0. Charakterisierung: riskanalysis
 (173 Frames, `tests/test_replay_riskanalysis.py`), Flowstat in audit_designer und
 audit-portal (112 Frames, `tests/test_replay_flowstat.py`), flowinvoice
 RiskChecker, Betrugsprüfung und Kriterien der risikobasierten
@@ -26,6 +26,7 @@ keinen profilübergreifenden Risikoscore (Entscheidung K1).
 |---|---|---|
 | `load_profile(id, version)`, `available_profiles()` | ausdrücklich benanntes Regelprofil | unveränderliches `RiskProfile` (Regeln mit Code, Art, Parametern, Fundstelle; `reference` mit Fingerabdruck) |
 | `evaluate(datensätze, profil, *, columns=None, reference_date=None, points=None)` | Zuordnungen Spalte → Wert; Spaltenmenge (Vorgabe: Vereinigung der Schlüssel) | `Evaluation`: je Datensatz `RecordResult` (`flags` Code → `True`/`False`/`None`, `hits`, `undetermined` mit Grund, Werte, profileigene Bewertung), datensatzweite `DatasetFinding`s, `skipped` mit Grund, `summary` im Format des Profils |
+| `columns.evaluate_columns(spalten, profil, *, reference_date=None)`, `frame.evaluate_frame_columns(frame, profil, …)` | Spaltenname → Liste, ndarray oder Serie gleicher Länge (Profile ohne Bewertung je Datensatz) | `ColumnEvaluation`: Merkmale, Unbestimmte und Trefferzahlen je Regel als Arrays, Werte, Datensatzbefunde, `skipped`, `summary` und Weg je Regel (`vectorised`/`records`); gleiche Entscheidungen wie `evaluate`, ohne Begründungen je Treffer |
 | `missing_columns(profil, spalten)` | Spaltennamen | je Regel fehlende Pflichtspalten |
 | `name_similarity(regel, links, rechts)`, `identifier_missing(regel, wert)` | eine Regel der Art `name_similarity` bzw. `missing_procurement` | Ähnlichkeit 0–1 bzw. „Vergabekennung fehlt“ |
 | `flatten_record(datensatz)` | verschachtelte Zuordnung | eine Ebene `eltern.kind` |
@@ -86,6 +87,7 @@ Nettobetrag im Profil 2026.09.5 (K2a).
 |---|---|---|---|
 | Red Flags von riskanalysis mit allen Eigenheiten (RK-L03: RF12 über Gruppen hinweg, `Müller → mu ller` in RF09, Nettoschwellen auf Bruttobeträge) | `riskanalysis.year_bound` 2026.09.2 ff. (netto, `same_group`, `mueller`-Umschrift, Jahresschwellen) | Profil `riskanalysis.legacy` b5c523bf7eaa | RK-L01 |
 | Flowstat-Belegliste: BL_RF08 nur leere Werte, BL_RF09 Teilzeichenketten | unverändert (keine korrigierte Fassung beauftragt) | Profil `audit_designer.flowstat_belegliste` 1254591156d3 | RK-L02, I5–I7 |
+| Flowstat-Belegliste: BL_RF07/BL_RF10 in Gleitkomma (1-Cent-Differenzen treffen) | `audit_designer.flowstat_belegliste` 2026.10.1 (ganze Cent) | Profil `audit_designer.flowstat_belegliste` 1254591156d3 | RK-C12 |
 | RiskChecker-Score = Summe der Gewichte / 5 (RK-L04) | nur als profileigene Bewertung; Splitting an EU-Schwelle des Jahres (K9) | Profil `flowinvoice.risk_checker` fb2d18568d2e | Replays |
 | Punkte der risikobasierten Verwaltungsüberprüfung einer Zwischengeschalteten Stelle aus Code-Konstanten statt Profildatei (RK-L08) | Profil nach Profildatei V1.21 (K11) | Profil `flowinvoice.rbvk_intermediate_body` fb2d18568d2e | Replays |
 | Ex-ante-Gewichte zur Laufzeit kalibriert (RK-L09) | kalibrierte Punkte ausdrücklich über `points` | Profile `flowinvoice.exante_basis`, `flowinvoice.exante_heuristik` | Replays |

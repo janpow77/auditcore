@@ -24,6 +24,7 @@ from auditcore_documents.pipeline.watchdog import (
     ExtractionQualityWatchdog,
     WatchdogResult,
 )
+from auditcore_documents.pipeline.watchdog.cache import prepared_run
 from auditcore_documents.pipeline.watchdog.inventory_checks import (
     check_invoice_number_gaps,
     check_vat_id_consistency,
@@ -113,6 +114,7 @@ class BatchCheckService:
             check_vat_id_consistency(documents, result)
         return result
 
+    @prepared_run
     def check(self, payload: object) -> dict[str, object]:
         """``POST /runs``: Bestand prüfen; Befunde je Regel mit betroffenen Belegen."""
         inventory = parse_inventory(payload, self.settings.max_documents)
