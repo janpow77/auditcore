@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Prüfprofile dürfen Werkzeuge ohne Katalogeintrag mit eigenem `befehl` deklarieren
+  (etwa `compose` mit `docker compose config --quiet`): Exitcode als Befund, mit
+  `{ausgabe}` JUnit-Bericht, ohne Cache. Unbekannte Werkzeuge ohne `befehl` melden
+  Status `unbekannt` und Exitcode 2 statt eines Tracebacks oder stillen Auslassens.
 - Oberfläche: Klassen hinzufügen/umbenennen, Art je Klasse, Anmeldeart im Status (Bündel neu gebaut).
 - Oberfläche enthalten: `auditcore-runner ui` liefert die Runner-Konsole aus `@auditcore/ui` (Gruppe `runner`) als `data/web/runner-elements.js` aus; Paketseite ohne Platzhaltertext.
 - Vollständiger Werkzeugkatalog im Runner-Image, fest gepinnt (Binärdateien mit
