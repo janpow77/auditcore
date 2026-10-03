@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_flow_agent",
+  "version": "0.1.0",
+  "contract": "auditcore_flow_agent/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [],
+  "references": [
+    "https://github.com/htcondor/htcondor",
+    "https://github.com/gpustack/gpustack",
+    "https://github.com/celery/celery",
+    "https://github.com/rq/rq"
+  ],
+  "characterization": {
+    "kind": "synthetic_contract_and_process_regression",
+    "legacy_parity": "NOT_ASSERTED",
+    "tests": "packages/auditcore_flow_agent/tests"
+  },
+  "license": "MIT",
+  "publication": "NOT_EXECUTED"
+}

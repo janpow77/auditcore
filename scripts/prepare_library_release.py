@@ -204,6 +204,7 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
 #: Other packages may declare extras of the same name; those stay ordinary extras.
 RENDERER_OWNERS = {"pdf": "auditcore_invoicegenerator", "excel": "auditcore_reporting"}
 PACKAGES = {
+    "auditcore_flow_agent",
     "auditcore_account",
     "auditcore_dummygenerator",
     "auditcore_invoicegenerator",
@@ -345,7 +346,7 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
                 check_extracted_authorization(
                     name, json.loads(archive.read(f"{name}/provenance.json"))
                 )
-            elif name not in {"auditcore_reporting", "auditcore_account"}:
+            elif name not in {"auditcore_reporting", "auditcore_account", "auditcore_flow_agent"}:
                 provenance = json.loads(archive.read(f"{name}/provenance.json"))
                 authorization = provenance.get("license_authorization") or provenance.get(
                     "rights", {}

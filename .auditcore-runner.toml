@@ -149,6 +149,28 @@ zeitlimit_s = 120
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_privacy", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
 
+# Gemeinsame Auftragsverteilung, Ressourcenreservierung und Prozessüberwachung.
+[pruefprofile.flow_agent]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.flow_agent.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_flow_agent", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.flow_agent.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_flow_agent/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.flow_agent.werkzeug.mypy]
+befehl = ["python3", "-m", "mypy", "--strict", "packages/auditcore_flow_agent/src", "--no-color-output", "--no-error-summary"]
+zeitlimit_s = 120
+
+[pruefprofile.flow_agent.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_flow_agent", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300
 
 
 # Deterministische Rechenkerne (optionales Numba); Tests laufen mit Engine und als reines Python.
