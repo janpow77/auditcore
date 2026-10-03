@@ -22,8 +22,8 @@ from pathlib import Path
 from ..profile import state_dir
 from .befunde import Finding, deduplicate, relative_to
 from .katalog import Registry
-from .modell import CheckProfile, Tool
-from .parser import PARSERS
+from .modell import CUSTOM_AREA, EXIT_CODE_PARSER, REPO_FILE, CheckProfile, Tool
+from .parser import NOTHING_CHECKED, PARSERS
 
 CONFIG_FILES = (
     "pyproject.toml",
@@ -52,6 +52,9 @@ CONFIG_FILES = (
     ".pre-commit-config.yaml",
 )
 TOOL_CACHE_VOLUME = "auditcore-runner-werkzeug-cache"
+NOTHING_CHECKED_STATUS = "nichts_geprueft"
+# Statuses that mean the tool did not check the code: the overall result is red.
+RED_STATUSES = ("fehler", "fehlt", "zeitlimit", "unlesbar", "unbekannt", NOTHING_CHECKED_STATUS)
 COMMAND_NOT_FOUND = 127  # shell and ``docker run`` when the program is missing
 
 
@@ -74,7 +77,7 @@ def content_key(path: Path) -> str:
 
 def config_hash(path: Path, tool: Tool) -> str:
     """Hash of the tool definition and the configuration files that influence it."""
-    digest = hashlib.sha256(json.dumps([tool.command, tool.parser]).encode())
+    digest = hashlib.sha256(json.dumps([tool.command, tool.parser, tool.allow_empty]).encode())
     for directory in (path, *path.parents):
         for name in CONFIG_FILES:
             file = directory / name
@@ -169,6 +172,9 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
     work.mkdir(exist_ok=True)
     (work / ".gitignore").write_text("*\n", encoding="utf-8")
     output = work / tool.output_file if tool.output_file else None
+    if output is not None:
+        # A report left over from an earlier run must never stand in for this one.
+        output.unlink(missing_ok=True)
     target = f"{runner.output_prefix()}/{tool.output_file}"
     argv = [part.replace("{ausgabe}", target) for part in tool.command]
     started = time.monotonic()
@@ -190,6 +196,8 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         return ToolResult(
             tool.name, "fehlt", seconds, message=f"{argv[0]} im Image bzw. auf dem Rechner nicht gefunden"
         )
+    if tool.parser == EXIT_CODE_PARSER:
+        return ToolResult(tool.name, "ok", seconds, _exit_code_findings(tool, result))
     if result.returncode not in tool.success_codes:
         return ToolResult(tool.name, "fehler", seconds, message=result.stderr.strip()[-400:])
     raw = output.read_text(encoding="utf-8") if output and output.exists() else result.stdout
@@ -198,7 +206,25 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
     except (ValueError, KeyError) as error:
         return ToolResult(tool.name, "unlesbar", seconds, message=str(error)[:300])
     local = relative_to(_named(tool, findings), (str(runner.root), "/work"))
-    return ToolResult(tool.name, "ok", seconds, [_scan_root_relative(f, runner.root) for f in local])
+    checked = [_scan_root_relative(f, runner.root) for f in local]
+    try:
+        reason = None if tool.allow_empty or tool.parser not in NOTHING_CHECKED else NOTHING_CHECKED[tool.parser](raw)
+    except ValueError as error:
+        return ToolResult(tool.name, "unlesbar", seconds, message=str(error)[:300])
+    if reason is not None:
+        message = f"nichts geprüft – {reason}"[:400]
+        empty = Finding(tool=tool.name, rule=NOTHING_CHECKED_STATUS, path=REPO_FILE, line=0, message=message)
+        return ToolResult(tool.name, NOTHING_CHECKED_STATUS, seconds, [*checked, empty], message)
+    return ToolResult(tool.name, "ok", seconds, checked)
+
+
+def _exit_code_findings(tool: Tool, result: subprocess.CompletedProcess[str]) -> list[Finding]:
+    """Generic tools without report: a failing exit code is one finding with the tail of the output."""
+    if result.returncode in tool.success_codes:
+        return []
+    output = (result.stderr.strip() or result.stdout.strip())[-400:]
+    message = f"{' '.join(tool.command)} endete mit Exitcode {result.returncode}" + (f": {output}" if output else "")
+    return [Finding(tool=tool.name, rule="exitcode", path=REPO_FILE, line=0, message=message)]
 
 
 def _named(tool: Tool, findings: list[Finding]) -> list[Finding]:
@@ -246,7 +272,13 @@ def _write_cache(key: str, result: ToolResult) -> None:
 
 
 def run_tool(runner: Runner, tool: Tool, timeout: int, content: str, use_cache: bool = True) -> ToolResult:
-    """One tool, from cache when its inputs are unchanged."""
+    """One tool, from cache when its inputs are unchanged.
+
+    Tools running a repository ``befehl`` are never cached: such commands may
+    depend on state outside Git (``.env``, running containers), which the key
+    does not cover.
+    """
+    use_cache = use_cache and tool.cacheable
     key = cache_key(tool, runner.version(tool), runner, content)
     cached = _read_cache(key) if use_cache else None
     if cached is not None:
@@ -287,6 +319,13 @@ def applies(tool: Tool, files: list[str]) -> bool:
 
 
 def _check(runner: Runner, tool: Tool, timeout: int, content: str, files: list[str], use_cache: bool) -> ToolResult:
+    if tool.area == CUSTOM_AREA and not tool.command:
+        return ToolResult(
+            tool.name,
+            "unbekannt",
+            0.0,
+            message=f"nicht im Katalog; eigenes Werkzeug braucht befehl in {REPO_FILE}",
+        )
     if not applies(tool, files):
         return ToolResult(tool.name, "entfaellt", 0.0, message="keine passenden Dateien")
     return run_tool(runner, tool, timeout, content, use_cache)
@@ -296,16 +335,21 @@ def run_profile(runner: Runner, registry: Registry, profile: CheckProfile, use_c
     """Run all enabled checking tools of a profile; returns the result document."""
     content = content_key(runner.root)
     files = _git(runner.root, "ls-files", "--cached", "--others", "--exclude-standard").splitlines()
-    tools = [t for t in (profile.configured_tool(registry.get(n)) for n in profile.ordered_tools()) if t.command]
+    configured = (profile.configured_tool(registry.get(n)) for n in profile.ordered_tools())
+    # Catalog tools without command only fix (prek); unknown tools without command are reported.
+    tools = [t for t in configured if t.command or t.area == CUSTOM_AREA]
     results = [
         _check(runner, tool, profile.setting(tool.name).timeout_seconds, content, files, use_cache) for tool in tools
     ]
     findings = deduplicate(f for r in results for f in r.findings)
+    problems = [f"{r.tool}: {r.message or r.status}" for r in results if r.status in RED_STATUSES]
     return {
         "schema": "auditcore-runner/ergebnis/1",
         "profil": profile.name,
         "pfad": str(runner.root),
         "inhalt": content,
+        "gesamt": "rot" if problems or findings else "gruen",
+        "probleme": problems,
         "werkzeuge": [r.as_dict() for r in results],
         "befunde": [f.as_dict() for f in findings],
     }
