@@ -28,6 +28,8 @@ from auditcore_risk.columns import RECORDS, VECTORISED, ColumnEvaluation, evalua
 from auditcore_risk.frame import evaluate_frame, evaluate_frame_columns
 
 FLOWSTAT = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+CENTS = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")
+BOTH = (FLOWSTAT, CENTS)
 RISKANALYSIS = load_profile("riskanalysis.legacy", "b5c523bf7eaa")
 YEAR_BOUND = load_profile("riskanalysis.year_bound", "2026.09.5")
 FS_CASES = fixture("flowstat_observed.json")["cases"]
@@ -69,13 +71,12 @@ def _frame(case: dict[str, Any]) -> pd.DataFrame:
 @pytest.mark.parametrize("case", FS_CASES, ids=[c["name"] for c in FS_CASES])
 def test_flowstat_frames_match_the_record_path(case: dict[str, Any]) -> None:
     frame = _frame(case)
-    result = evaluate_frame_columns(frame, FLOWSTAT)
-    assert_same(result, evaluate_frame(frame, FLOWSTAT))
     rows = [decode(r) for r in case["rows"]]
     lists = {c: [row.get(c) for row in rows] for c in case["columns"]}
-    assert_same(
-        evaluate_columns(lists, FLOWSTAT), evaluate(rows, FLOWSTAT, columns=case["columns"])
-    )
+    for profile in BOTH:
+        assert_same(evaluate_frame_columns(frame, profile), evaluate_frame(frame, profile))
+        expected = evaluate(rows, profile, columns=case["columns"])
+        assert_same(evaluate_columns(lists, profile), expected)
 
 
 @pytest.mark.parametrize("case", RA_CASES, ids=[c["name"] for c in RA_CASES])
@@ -137,17 +138,19 @@ SETTINGS = settings(max_examples=150, deadline=None, suppress_health_check=[Heal
 @given(_rows(AMOUNT), COLUMN_SUBSETS)
 def test_random_frames_match(rows: list[dict[str, object]], columns: list[str]) -> None:
     frame = pd.DataFrame(rows, columns=columns)
-    assert_same(evaluate_frame_columns(frame, FLOWSTAT), evaluate_frame(frame, FLOWSTAT))
+    for profile in BOTH:
+        assert_same(evaluate_frame_columns(frame, profile), evaluate_frame(frame, profile))
 
 
 @SETTINGS
 @given(_rows(TEXT_AMOUNT))
 def test_random_lists_and_arrays_match(rows: list[dict[str, object]]) -> None:
-    expected = evaluate(rows, FLOWSTAT, columns=FS_COLUMNS)
     lists = {c: [row.get(c) for row in rows] for c in FS_COLUMNS}
-    assert_same(evaluate_columns(lists, FLOWSTAT), expected)
     arrays = {c: np.array(v, dtype=object) for c, v in lists.items()}
-    assert_same(evaluate_columns(arrays, FLOWSTAT), expected)
+    for profile in BOTH:
+        expected = evaluate(rows, profile, columns=FS_COLUMNS)
+        assert_same(evaluate_columns(lists, profile), expected)
+        assert_same(evaluate_columns(arrays, profile), expected)
 
 
 def test_numpy_columns_match() -> None:
@@ -164,9 +167,12 @@ def test_numpy_columns_match() -> None:
         "vergabe": np.array(["", "V", ""]),
         "direktvergabe": np.array(["ja", "", "nein"]),
     }
-    result = evaluate_columns(columns, FLOWSTAT)
+    result = evaluate_columns(columns, CENTS)
     rows = [{c: columns[c].astype(object)[i] for c in columns} for i in range(3)]
-    assert_same(result, evaluate(rows, FLOWSTAT, columns=list(columns)))
+    assert_same(result, evaluate(rows, CENTS, columns=list(columns)))
+    assert_same(
+        evaluate_columns(columns, FLOWSTAT), evaluate(rows, FLOWSTAT, columns=list(columns))
+    )
     assert result.record_flags("BL_RF09_DIRECT_AWARD_HIGH_AMOUNT") == [True, False, False]
     assert result.hits("BL_RF06_CUT_WITHOUT_REASON").tolist() == [2]
     assert set(result.paths.values()) == {VECTORISED}
@@ -174,8 +180,10 @@ def test_numpy_columns_match() -> None:
 
 def test_typical_frame_is_fully_vectorised() -> None:
     case = next(c for c in FS_CASES if c["name"] == "rf05-dubletten")
-    result = evaluate_frame_columns(_frame(case), FLOWSTAT)
-    assert dict(result.paths) == {r.code: VECTORISED for r in FLOWSTAT.rules}
+    result = evaluate_frame_columns(_frame(case), CENTS)
+    assert dict(result.paths) == {r.code: VECTORISED for r in CENTS.rules}
+    legacy = evaluate_frame_columns(_frame(case), FLOWSTAT).paths  # float sums: math.fsum
+    assert legacy["BL_RF10_VENDOR_CONCENTRATION"] == RECORDS
     assert result.engine and {"name", "mode"} <= set(result.engine[0])
     lists = {c: [decode(r).get(c) for r in case["rows"]] for c in case["columns"]}
     assert evaluate_columns(lists, FLOWSTAT).paths["BL_RF04_PAYMENT_BEFORE_INVOICE"] == RECORDS
@@ -230,7 +238,7 @@ def test_empty_columns() -> None:
 def _custom(changes: dict[str, dict[str, Any]]) -> Any:
     """Flowstat profile with changed params/requires per rule code (other rules dropped)."""
     raw = files("auditcore_risk.profile_data").joinpath(
-        "audit_designer.flowstat_belegliste-1254591156d3.json"
+        "audit_designer.flowstat_belegliste-2026.10.1.json"
     )
     data = json.loads(raw.read_text(encoding="utf-8"))
     rules = []
@@ -288,10 +296,10 @@ def test_missing_identifier_column_raises_in_both_paths() -> None:
 def test_large_tables_sum_with_python_integers(monkeypatch: pytest.MonkeyPatch) -> None:
     case = next(c for c in FS_CASES if c["name"] == "rf10-konzentration")
     frame = _frame(case)
-    expected = evaluate_frame_columns(frame, FLOWSTAT)
+    expected = evaluate_frame_columns(frame, CENTS)
     monkeypatch.setattr(column_kinds, "_SAFE_SUM_ROWS", 0)
-    assert_same(evaluate_frame_columns(frame, FLOWSTAT), evaluate_frame(frame, FLOWSTAT))
-    assert evaluate_frame_columns(frame, FLOWSTAT).summary == expected.summary
+    assert_same(evaluate_frame_columns(frame, CENTS), evaluate_frame(frame, CENTS))
+    assert evaluate_frame_columns(frame, CENTS).summary == expected.summary
 
 
 def test_radix_compaction_and_unhashable_texts(monkeypatch: pytest.MonkeyPatch) -> None:

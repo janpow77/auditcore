@@ -27,7 +27,7 @@ def main() -> None:
         "numpy>=1.24",
     ], runtime
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 14
+    assert len(available_profiles()) == 15
     assert len(available_fraud_profiles()) == 6
     flowstat = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
     result = evaluate([{"projektbetrag": 24_500.0}, {"projektbetrag": 5_000.0}], flowstat)
@@ -38,7 +38,8 @@ def main() -> None:
     from auditcore_risk.columns import evaluate_columns
 
     balance = {"projektbetrag": [100.0], "kuerzungsbetrag": [0.0], "anerkannter_betrag": [99.99]}
-    columns = evaluate_columns(balance, flowstat)
+    cents = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")
+    columns = evaluate_columns(balance, cents)
     assert columns.record_flags("BL_RF07_ACCEPTED_MISMATCH") == [False]  # whole cents
     assert columns.summary == ()
     checker = load_profile("flowinvoice.risk_checker", "fb2d18568d2e")

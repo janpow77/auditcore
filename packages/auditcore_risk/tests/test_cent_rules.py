@@ -13,7 +13,8 @@ from hypothesis import strategies as st
 from auditcore_risk import ProfileError, evaluate, load_profile, profile_from_dict
 from auditcore_risk.columns import evaluate_columns
 
-FLOWSTAT = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+FLOWSTAT = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")
+LEGACY = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
 RF07, RF10 = "BL_RF07_ACCEPTED_MISMATCH", "BL_RF10_VENDOR_CONCENTRATION"
 BALANCE = ["projektbetrag", "kuerzungsbetrag", "anerkannter_betrag"]
 SHARE = ["projektbetrag", "rechnungssteller"]
@@ -48,6 +49,10 @@ def test_balance_compares_whole_cents() -> None:
     assert dict(hit.evidence) == {"difference": 0.02, "difference_cents": 2}
     assert "= 0,02 (Toleranz 0.01, in ganzen Cent)" in hit.reason
     assert "nicht prüfbar" in records.records[3].undetermined[RF07]
+    legacy = evaluate(rows, LEGACY, columns=BALANCE)  # float arithmetic of the source
+    assert [r.flags[RF07] for r in legacy.records] == [True, True, False, False, True, True, False]
+    legacy_columns = evaluate_columns({c: [r.get(c) for r in rows] for c in BALANCE}, LEGACY)
+    assert legacy_columns.record_flags(RF07) == [r.flags[RF07] for r in legacy.records]
 
 
 @settings(deadline=None)
@@ -93,7 +98,7 @@ def test_share_without_decidable_total() -> None:
 
 def _profile_with(tolerance: object) -> dict[str, Any]:
     raw = files("auditcore_risk.profile_data").joinpath(
-        "audit_designer.flowstat_belegliste-1254591156d3.json"
+        "audit_designer.flowstat_belegliste-2026.10.1.json"
     )
     data: dict[str, Any] = json.loads(raw.read_text(encoding="utf-8"))
     rule = next(r for r in data["rules"] if r["code"] == RF07)
@@ -106,3 +111,12 @@ def test_tolerance_must_be_whole_cents() -> None:
     for bad in (0.005, -0.01, 2e10):
         with pytest.raises(ProfileError, match="ganzen Cent"):
             profile_from_dict(_profile_with(bad))
+    legacy = _profile_with(0.005)
+    for rule in legacy["rules"]:
+        rule["params"].pop("arithmetic", None)
+    assert profile_from_dict(legacy).rule(RF07).params["tolerance"] == 0.005
+    for rule in legacy["rules"]:
+        if rule["code"] == RF10:
+            rule["params"]["arithmetic"] = "float"
+    with pytest.raises(ProfileError, match="arithmetic"):
+        profile_from_dict(legacy)

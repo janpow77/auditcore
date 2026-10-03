@@ -6,6 +6,7 @@ then flag each record by the aggregate it belongs to.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Hashable, Mapping, Sequence
 from typing import Any, cast
 
@@ -19,6 +20,7 @@ from .base import (
     Table,
     amount_cents,
     correct_sum,
+    in_cents,
     present_amounts,
     relevance,
 )
@@ -296,21 +298,52 @@ def top_share_undecided(row: int | None) -> DatasetOutcome:
     return {"triggered": False, "value": None, "reason": "Gesamtsumme nicht positiv."}
 
 
-def top_share(p: JsonObject, table: Table, ctx: Context) -> Outcome:
-    """Dataset finding: share of the largest group in the total amount, summed in whole cents.
+def _nanmax(values: Sequence[float]) -> float:
+    present = [v for v in values if not math.isnan(v)]
+    return max(present) if present else math.nan
 
-    Amounts are rounded to whole cents (``ROUND_HALF_UP``) before summing; an
-    amount that is not finite or above 10 Mrd. € leaves the share undetermined.
-    """
+
+def _top_share_float(p: JsonObject, table: Table) -> DatasetOutcome:
+    """Legacy: share from correctly rounded float sums (RK-C06), as in 0.3.4."""
     name, group_f = p["amount_field"], p["group_field"]
     numbers = [coerce_number(table.value(i, name), name) for i in range(len(table))]
-    out = Outcome.constant(len(table), None)
+    total = correct_sum([v for v in numbers if v is not None])
+    if not total > 0:
+        return {"triggered": False, "value": None, "reason": "Gesamtsumme nicht positiv."}
+    sums: dict[Hashable, list[float]] = {}
+    for i, v in enumerate(numbers):
+        raw = table.value(i, group_f)
+        key = MISSING_KEY if is_missing(raw) else hashable(raw, group_f)
+        sums.setdefault(key, [])
+        if v is not None:
+            sums[key].append(v)
+    by_group = {k: correct_sum(v) for k, v in sums.items()}
+    top = _nanmax(list(by_group.values()))
+    share = top / total
+    leader = next((k for k, v in by_group.items() if v == top), None)
+    return {
+        "triggered": bool(share >= float(p["share_ge"])),
+        "value": share,
+        "reason": (
+            f"Anteil des größten {group_f} an der Summe {name}: {share:.4f} "
+            f"(Schwelle ≥ {p['share_ge']})."
+        ),
+        "evidence": {
+            "group": None if leader is MISSING_KEY else leader,
+            "group_sum": top,
+            "total": total,
+        },
+    }
+
+
+def _top_share_cents(p: JsonObject, table: Table) -> DatasetOutcome:
+    name, group_f = p["amount_field"], p["group_field"]
+    numbers = [coerce_number(table.value(i, name), name) for i in range(len(table))]
     bad = _first_unconvertible(numbers)
     cents = [0 if v is None or bad is not None else cast(int, amount_cents(v)) for v in numbers]
     total = sum(cents)
     if bad is not None or not total > 0:
-        out.dataset = top_share_undecided(bad)
-        return out
+        return top_share_undecided(bad)
     sums: dict[Hashable, int] = {}
     for i, value in enumerate(cents):
         raw = table.value(i, group_f)
@@ -318,5 +351,17 @@ def top_share(p: JsonObject, table: Table, ctx: Context) -> Outcome:
         sums[key] = sums.get(key, 0) + value
     top = max(sums.values())
     leader = next(k for k, v in sums.items() if v == top)
-    out.dataset = top_share_outcome(p, total, top, leader)
+    return top_share_outcome(p, total, top, leader)
+
+
+def top_share(p: JsonObject, table: Table, ctx: Context) -> Outcome:
+    """Dataset finding: share of the largest group in the total amount.
+
+    With ``arithmetic: "cents"`` the amounts are rounded to whole cents
+    (``ROUND_HALF_UP``) before summing; an amount that is not finite or above
+    10 Mrd. € leaves the share undetermined. Without it the correctly rounded
+    float sums of 0.3.4 apply (legacy profiles).
+    """
+    out = Outcome.constant(len(table), None)
+    out.dataset = _top_share_cents(p, table) if in_cents(p) else _top_share_float(p, table)
     return out

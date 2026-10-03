@@ -240,6 +240,245 @@
    "fingerprint": "7dfc1311e7db21b3af199b6727bc9ec182062285423ee6e2b9ec73426dde313e",
    "input_contract": "Spalten wie nach normalize_belegliste (Beträge als Zahl, Datumsfelder als Datum)."
   },
+  "audit_designer.flowstat_belegliste@2026.10.1": {
+   "fields": [
+    {
+     "meaning": "Anerkannter Betrag; Quellspalten „anerkannter Betrag“, „anerkannt“, „accepted amount“ (Rolle `AMOUNT_ACCEPTED`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "anerkannter_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF07_ACCEPTED_MISMATCH",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Anerkannter Betrag ≠ Projektbetrag − Kürzung",
+       "role": "Subtrahend"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kennzeichen Direktvergabe; Quellspalten „Direktvergabe“, „Freihändige Vergabe“, „direct award“ (Rolle `DIRECT_AWARD_FLAG`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "direktvergabe",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF09_DIRECT_AWARD_HIGH_AMOUNT",
+       "empty": "kein Treffer (kein Merkmal)",
+       "label": "Direktvergabe über 25.000",
+       "role": "Kennzeichen (Muster „ja|true|1“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzungsbetrag; Quellspalten „Kuerzungsbetrag“, „Kürzungsbetrag“, „Abweichung“, „Korrektur“ (Rolle `AMOUNT_DEVIATION`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "kuerzungsbetrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF06_CUT_WITHOUT_REASON",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Kürzung ohne Kürzungsgrund",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF07_ACCEPTED_MISMATCH",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Anerkannter Betrag ≠ Projektbetrag − Kürzung",
+       "role": "Subtrahend"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzungsgrund; Quellspalten „Kuerzungsgrund“, „Kürzungsgrund“, „Korrekturgrund“, „Feststellungsgrund“ (Rolle `CUT_REASON`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "kuerzungsgrund",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF06_CUT_WITHOUT_REASON",
+       "empty": "gilt als fehlend (Merkmal bei Betrag ≠ 0)",
+       "label": "Kürzung ohne Kürzungsgrund",
+       "role": "Begründungstext"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektbezogener Betrag des Belegs; Quellspalten „projektbez. Betrag“, „projektbezogener Betrag“, „Projektbetrag“ (Rolle `AMOUNT_PROJECT`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "projektbetrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF01_ROUND_AMOUNT",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Runder Tausenderbetrag",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF02_NEAR_THRESHOLD",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Betrag knapp unter Vergabeschwelle",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF05_DUPLICATE_INVOICE",
+       "empty": "leere Werte gelten untereinander als gleich",
+       "label": "Doppelte Rechnung",
+       "role": "Schlüsselteil"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF07_ACCEPTED_MISMATCH",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Anerkannter Betrag ≠ Projektbetrag − Kürzung",
+       "role": "Minuend"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF08_PROCUREMENT_MISSING",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Betrag > 25.000 ohne Vergabeangabe",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF09_DIRECT_AWARD_HIGH_AMOUNT",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Direktvergabe über 25.000",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF10_VENDOR_CONCENTRATION",
+       "empty": "nicht gezählt (auch nicht numerischer Text)",
+       "label": "Konzentration auf einen Rechnungssteller (≥ 50 % der Summe)",
+       "role": "Betrag (Anteil)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum; Quellspalten „Rechnungsdatum“, „Belegdatum“, „Invoice Date“ (Rolle `DATE_INVOICE`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "rechnungsdatum",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF04_PAYMENT_BEFORE_INVOICE",
+       "empty": "kein Merkmal; Text, der kein ISO-Datum ist → Abbruch (`InputError`)",
+       "label": "Zahlung vor Rechnungsdatum",
+       "role": "Vergleichsdatum"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsnummer bzw. externe Referenz; Quellspalten „Rechnungsnummer / ext. Referenz“, „Rechnungsnummer“, „ext. Referenz“, „Externe Referenz“, „Rechnung Nr“ (Rolle `INVOICE_REFERENCE`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "rechnungsnummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF05_DUPLICATE_INVOICE",
+       "empty": "leere Werte gelten untereinander als gleich",
+       "label": "Doppelte Rechnung",
+       "role": "Schlüsselteil"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller; Quellspalten „Rechnungssteller“, „Auftragnehmer“, „Kreditor“, „Lieferant“, „Vendor“ (Rolle `VENDOR_NAME`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "rechnungssteller",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF05_DUPLICATE_INVOICE",
+       "empty": "leere Werte gelten untereinander als gleich",
+       "label": "Doppelte Rechnung",
+       "role": "Schlüsselteil"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF10_VENDOR_CONCENTRATION",
+       "empty": "eigene Gruppe „fehlend“",
+       "label": "Konzentration auf einen Rechnungssteller (≥ 50 % der Summe)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeangabe; Quellspalten „Vergabe“, „Vergabenummer“, „Vergabe-ID“ (Rolle `PROCUREMENT_REFERENCE`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "vergabe",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF08_PROCUREMENT_MISSING",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, `\"None\"`)",
+       "label": "Betrag > 25.000 ohne Vergabeangabe",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Datum der Bezahlung; Quellspalten „Datum der Bezahlung“, „Zahlungsdatum“, „Wertstellung“, „Valuta“ (Rolle `DATE_PAYMENT`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "zahlungsdatum",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF03_MISSING_PAYMENT_DATE",
+       "empty": "Merkmal",
+       "label": "Zahlungsdatum fehlt",
+       "role": "Pflichtangabe"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF04_PAYMENT_BEFORE_INVOICE",
+       "empty": "kein Merkmal; Text, der kein ISO-Datum ist → Abbruch (`InputError`)",
+       "label": "Zahlung vor Rechnungsdatum",
+       "role": "Datum (Merkmal, wenn vor dem Vergleichsdatum)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "d0888a03b014b2ce6641fe994c99b3c6af8aaf542988ecf29c4b2ab92e123efd",
+   "input_contract": "Spalten wie nach normalize_belegliste (Beträge als Zahl, Datumsfelder als Datum)."
+  },
   "flowinvoice.exante_basis@fb2d18568d2e": {
    "fields": [
     {

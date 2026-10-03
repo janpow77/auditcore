@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- `auditcore_risk` 0.4.0: BL_RF07 und BL_RF10 rechnen in ganzen Cent (RK-C12,
-  fachlich freigegeben; 41 BL_RF07-Treffer mit genau 1 Cent Differenz entfallen
+- `auditcore_risk` 0.4.0: neue Profilversion `audit_designer.flowstat_belegliste`
+  2026.10.1 rechnet BL_RF07 und BL_RF10 in ganzen Cent (RK-C12, fachlich
+  freigegeben; Legacy-Profil 1254591156d3 unverändert; 41 BL_RF07-Treffer mit genau 1 Cent Differenz entfallen
   in den 112 Flowstat-Frames, ein Beleg mit unendlichem Betrag wird unbestimmt);
   neuer Spaltenpfad `columns.evaluate_columns` / `frame.evaluate_frame_columns`
   ohne `to_dict("records")` (500.000 Belege 0,9 s statt 21,9 s). Neue

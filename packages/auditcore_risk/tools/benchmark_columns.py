@@ -25,7 +25,7 @@ from auditcore_compute import engine_report
 from auditcore_risk import evaluate, load_profile
 from auditcore_risk.frame import evaluate_frame_columns
 
-PROFILE = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+PROFILE = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")
 
 
 def synthetic_frame(count: int, seed: int) -> pd.DataFrame:

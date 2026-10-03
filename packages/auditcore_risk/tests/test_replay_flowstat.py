@@ -1,11 +1,11 @@
-"""RK-L: every recorded Flowstat ``_red_flags`` output is reproduced, RK-C12 aside.
+"""RK-L: every recorded Flowstat ``_red_flags`` output is reproduced.
 
 Fixture: ``tools/capture_flowstat.py`` executed the unchanged, blob-identical
 function of audit_designer@1254591 and audit-portal@ac1ccc7 (pandas 2.1.4,
-NumPy 1.26.2) on frames in the normalised column contract. Since 0.4.0
-BL_RF07/BL_RF10 compute in whole cents (RK-C12); every decision that differs
-from the recording is listed in ``flowstat_cent_deviations.json``
-(``tools/flowstat_cent_deviations.py``) and checked here row by row.
+NumPy 1.26.2) on frames in the normalised column contract. The legacy profile
+1254591156d3 reproduces them; version 2026.10.1 computes BL_RF07/BL_RF10 in
+whole cents (RK-C12), every decision that differs from the recording is listed
+in flowstat_cent_deviations.json (tools/flowstat_cent_deviations.py).
 """
 
 from __future__ import annotations
@@ -20,23 +20,11 @@ from auditcore_risk import evaluate, load_profile
 
 FIXTURE = fixture("flowstat_observed.json")
 CASES = FIXTURE["cases"]
-DEVIATIONS = fixture("flowstat_cent_deviations.json")
 PROFILE = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+CENTS = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")
+DEVIATIONS = fixture("flowstat_cent_deviations.json")
 RF07 = "BL_RF07_ACCEPTED_MISMATCH"
 PARTS = ("projektbetrag", "kuerzungsbetrag", "anerkannter_betrag")
-
-
-def _expected(case: dict[str, Any]) -> list[dict[str, Any]]:
-    """Recorded overview minus the RF07 hits that RK-C12 removes in this frame."""
-    removed = sum(1 for d in DEVIATIONS["rf07"] if d["frame"] == case["name"] and d["old"] is True)
-    out = []
-    for entry in decode(case["red_flags"]):
-        if entry["code"] == RF07:
-            entry = {**entry, "count": entry["count"] - removed}
-            if entry["count"] == 0:
-                continue
-        out.append(entry)
-    return out
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["name"] for c in CASES])
@@ -44,7 +32,7 @@ def test_counts_and_share(case: dict[str, Any]) -> None:
     rows = [decode(row) for row in case["rows"]]
     result = evaluate(rows, PROFILE, columns=case["columns"])
     actual = [dict(s) for s in result.summary]
-    expected = _expected(case)
+    expected = decode(case["red_flags"])
     assert [a["code"] for a in actual] == [e["code"] for e in expected]
     for a, e in zip(actual, expected, strict=True):
         if "count" in e:
@@ -56,17 +44,15 @@ def test_counts_and_share(case: dict[str, Any]) -> None:
 
 
 def test_share_differences_are_last_digit_only() -> None:
-    """RK-C12: the share is an exact ratio of cent sums; it differs from the recorded
-    float share (NumPy/pandas sums) in at most the last two binary digits."""
     differing = 0
     for case in CASES:
         rows = [decode(row) for row in case["rows"]]
         result = evaluate(rows, PROFILE, columns=case["columns"])
-        for a, e in zip(result.summary, _expected(case), strict=True):
+        for a, e in zip(result.summary, decode(case["red_flags"]), strict=True):
             if "share" in e and a["share"] != e["share"]:
                 differing += 1
                 assert abs(a["share"] - e["share"]) <= 2 * math.ulp(e["share"])
-    assert differing == 6
+    assert differing <= 5
 
 
 def test_fixture_scope_and_sources() -> None:
@@ -79,6 +65,43 @@ def test_fixture_scope_and_sources() -> None:
     assert {s["git_blob"] for s in FIXTURE["sources"]} == {
         "d03738cb7e250e3cd838c88157992e0b4093ef35"
     }
+
+
+# --------------------------------------------------------------------------- 2026.10.1 (RK-C12)
+
+
+def _expected_in_cents(case: dict[str, Any]) -> list[dict[str, Any]]:
+    """Recorded overview minus the BL_RF07 hits that RK-C12 removes in this frame."""
+    removed = sum(1 for d in DEVIATIONS["rf07"] if d["frame"] == case["name"] and d["old"] is True)
+    out = []
+    for entry in decode(case["red_flags"]):
+        if entry["code"] == RF07:
+            entry = {**entry, "count": entry["count"] - removed}
+            if entry["count"] == 0:
+                continue
+        out.append(entry)
+    return out
+
+
+@pytest.mark.parametrize("case", CASES, ids=[c["name"] for c in CASES])
+def test_cent_version_counts(case: dict[str, Any]) -> None:
+    rows = [decode(row) for row in case["rows"]]
+    actual = [dict(s) for s in evaluate(rows, CENTS, columns=case["columns"]).summary]
+    expected = _expected_in_cents(case)
+    assert [a["code"] for a in actual] == [e["code"] for e in expected]
+    for a, e in zip(actual, expected, strict=True):
+        if "count" in e:
+            assert a == e
+        else:  # exact ratio of cent sums: at most the last two binary digits differ
+            assert abs(a["share"] - e["share"]) <= 2 * math.ulp(e["share"])
+
+
+def test_cent_version_profile() -> None:
+    assert CENTS.status == "APPROVED" and CENTS.fingerprint != PROFILE.fingerprint
+    assert dict(CENTS.source["derived_from"]) == {"profile": PROFILE.id, "version": "1254591156d3"}
+    changed = {r.code for r, old in zip(CENTS.rules, PROFILE.rules, strict=True) if r != old}
+    assert changed == {RF07, "BL_RF10_VENDOR_CONCENTRATION"}
+    assert DEVIATIONS["profile"] == CENTS.reference
 
 
 def _float_rest(row: dict[str, Any]) -> float:
@@ -95,7 +118,7 @@ def test_rf07_deviations_are_exactly_the_listed_rows() -> None:
     seen = set()
     for case in CASES:
         rows = [decode(row) for row in case["rows"]]
-        result = evaluate(rows, PROFILE, columns=case["columns"])
+        result = evaluate(rows, CENTS, columns=case["columns"])
         if RF07 in result.skipped:
             continue
         for index, record in enumerate(result.records):

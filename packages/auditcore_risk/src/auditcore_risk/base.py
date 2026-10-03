@@ -146,6 +146,16 @@ CENT_UNDECIDABLE = (
 )
 
 
+#: Optional parameter of ``balance_mismatch``/``top_share``: ``"cents"`` computes in whole
+#: cents; without it the kinds keep the float arithmetic of the source (legacy profiles).
+ARITHMETIC_CENTS = "cents"
+
+
+def in_cents(params: JsonObject) -> bool:
+    """Whether a rule computes in whole cents (parameter ``arithmetic: "cents"``)."""
+    return params.get("arithmetic") == ARITHMETIC_CENTS
+
+
 def amount_cents(value: float) -> int | None:
     """Whole cents of an amount (``auditcore_compute.to_cents``, ROUND_HALF_UP).
 

@@ -45,11 +45,13 @@ def test_packaged_profiles_and_status() -> None:
     decided.append(("riskanalysis.year_bound", "2026.09.4"))
     decided.append(("riskanalysis.year_bound", "2026.09.5"))
     decided.append(("flowinvoice.risk_checker", "2026.09.3"))
+    decided.append(("audit_designer.flowstat_belegliste", "2026.10.1"))
     assert available_profiles() == tuple(
         sorted([LEGACY, YEAR, FLOWSTAT, RISK_CHECKER, *VERWK, *decided])
     )
     assert load_profile(*LEGACY).status == "LEGACY_CHARACTERIZED"
     assert load_profile(*FLOWSTAT).status == "LEGACY_CHARACTERIZED"
+    assert load_profile("audit_designer.flowstat_belegliste", "2026.10.1").status == "APPROVED"
     assert load_profile(*YEAR).status == "CANDIDATE_HUMAN_DECISION_REQUIRED"  # superseded
     assert load_profile("riskanalysis.year_bound", "2026.09.2").status == "APPROVED"
     for pid, version in available_profiles():

@@ -20,6 +20,7 @@ from .base import (
     Table,
     amount_cents,
     amount_values,
+    in_cents,
     present_amounts,
     procurement_threshold,
     relevance,
@@ -209,13 +210,26 @@ def balance_reason(p: JsonObject, rest_cents: int) -> str:
     )
 
 
-def balance_mismatch(p: JsonObject, table: Table, ctx: Context) -> Outcome:
-    """Minuend minus all subtrahends, in whole cents, differs from zero by more than the tolerance.
+def _balance_float(p: JsonObject, table: Table) -> Outcome:
+    """Legacy: float ``minuend − subtrahends`` beyond the tolerance (source arithmetic)."""
+    minuend = present_amounts(table, {**p, "field": p["minuend"]})
+    subtrahends = [present_amounts(table, {**p, "field": s}) for s in p["subtrahends"]]
+    out = Outcome.constant(len(table), False)
+    for i, m in enumerate(minuend):
+        rest = m
+        for column in subtrahends:
+            rest = rest - column[i]
+        if abs(rest) > float(p["tolerance"]):
+            out.flags[i] = True
+            out.reasons[i] = (
+                f"{p['minuend']} − {' − '.join(p['subtrahends'])} = {fmt(rest)} "
+                f"(Toleranz {p['tolerance']})."
+            )
+            out.evidence[i] = {"difference": rest}
+    return out
 
-    Every amount is rounded to whole cents first (``ROUND_HALF_UP``); an amount
-    that is not finite or above 10 Mrd. € (also the sum of the subtrahends)
-    leaves the record undetermined.
-    """
+
+def _balance_in_cents(p: JsonObject, table: Table) -> Outcome:
     names = [p["minuend"], *p["subtrahends"]]
     columns = [present_amounts(table, {**p, "field": name}) for name in names]
     tolerance = tolerance_cents(p["tolerance"])
@@ -233,6 +247,17 @@ def balance_mismatch(p: JsonObject, table: Table, ctx: Context) -> Outcome:
             out.reasons[i] = balance_reason(p, rest)
             out.evidence[i] = {"difference": rest / 100, "difference_cents": rest}
     return out
+
+
+def balance_mismatch(p: JsonObject, table: Table, ctx: Context) -> Outcome:
+    """Minuend minus all subtrahends differs from zero by more than the tolerance.
+
+    With ``arithmetic: "cents"`` every amount is rounded to whole cents first
+    (``ROUND_HALF_UP``); an amount that is not finite or above 10 Mrd. € (also
+    the sum of the subtrahends) leaves the record undetermined. Without it the
+    source's float arithmetic applies unchanged (legacy profiles).
+    """
+    return _balance_in_cents(p, table) if in_cents(p) else _balance_float(p, table)
 
 
 def amount_with_marker(p: JsonObject, table: Table, ctx: Context) -> Outcome:

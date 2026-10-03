@@ -87,6 +87,7 @@ Nettobetrag im Profil 2026.09.5 (K2a).
 |---|---|---|---|
 | Red Flags von riskanalysis mit allen Eigenheiten (RK-L03: RF12 über Gruppen hinweg, `Müller → mu ller` in RF09, Nettoschwellen auf Bruttobeträge) | `riskanalysis.year_bound` 2026.09.2 ff. (netto, `same_group`, `mueller`-Umschrift, Jahresschwellen) | Profil `riskanalysis.legacy` b5c523bf7eaa | RK-L01 |
 | Flowstat-Belegliste: BL_RF08 nur leere Werte, BL_RF09 Teilzeichenketten | unverändert (keine korrigierte Fassung beauftragt) | Profil `audit_designer.flowstat_belegliste` 1254591156d3 | RK-L02, I5–I7 |
+| Flowstat-Belegliste: BL_RF07/BL_RF10 in Gleitkomma (1-Cent-Differenzen treffen) | `audit_designer.flowstat_belegliste` 2026.10.1 (ganze Cent) | Profil `audit_designer.flowstat_belegliste` 1254591156d3 | RK-C12 |
 | RiskChecker-Score = Summe der Gewichte / 5 (RK-L04) | nur als profileigene Bewertung; Splitting an EU-Schwelle des Jahres (K9) | Profil `flowinvoice.risk_checker` fb2d18568d2e | Replays |
 | Punkte der risikobasierten Verwaltungsüberprüfung einer Zwischengeschalteten Stelle aus Code-Konstanten statt Profildatei (RK-L08) | Profil nach Profildatei V1.21 (K11) | Profil `flowinvoice.rbvk_intermediate_body` fb2d18568d2e | Replays |
 | Ex-ante-Gewichte zur Laufzeit kalibriert (RK-L09) | kalibrierte Punkte ausdrücklich über `points` | Profile `flowinvoice.exante_basis`, `flowinvoice.exante_heuristik` | Replays |

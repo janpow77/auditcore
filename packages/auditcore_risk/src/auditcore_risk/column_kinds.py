@@ -19,7 +19,15 @@ import numpy as np
 from auditcore_compute.validation import DEVIATION, reconcile
 
 from .amount_rules import _lower_bound, identifier_state
-from .base import CENT_LIMIT, Context, DatasetOutcome, JsonObject, relevance, tolerance_cents
+from .base import (
+    CENT_LIMIT,
+    Context,
+    DatasetOutcome,
+    JsonObject,
+    in_cents,
+    relevance,
+    tolerance_cents,
+)
 from .column_values import (
     Bools,
     ColumnData,
@@ -161,8 +169,22 @@ def _blank(note: str | None) -> bool:
     return note is None or note.strip() == ""
 
 
+def _balance_float(p: JsonObject, data: ColumnData) -> VectorOutcome:
+    """Legacy float arithmetic, element-wise in the same order as the record kind."""
+    names = [p["minuend"], *p["subtrahends"]]
+    values = [amounts(data, name, p["parse"], p["missing_value"]) for name in names]
+    difference = values[0]
+    with np.errstate(invalid="ignore"):  # inf − inf = NaN: no hit, as in the record kind
+        for column in values[1:]:
+            difference = difference - column
+        flags = np.abs(difference) > float(p["tolerance"])
+    return VectorOutcome.from_flags(flags)
+
+
 def balance_mismatch(p: JsonObject, data: ColumnData, ctx: Context) -> VectorOutcome | None:
-    """Minuend minus subtrahends in whole cents beyond the tolerance (``reconcile``)."""
+    """Minuend minus subtrahends beyond the tolerance; in whole cents through ``reconcile``."""
+    if not in_cents(p):
+        return _balance_float(p, data)
     names = [p["minuend"], *p["subtrahends"]]
     converted = [cents(amounts(data, name, p["parse"], p["missing_value"])) for name in names]
     decidable = np.logical_and.reduce([ok for _, ok in converted])
@@ -237,7 +259,9 @@ def _group_sums(codes: Ints, values: Ints, groups: int) -> list[int]:
 
 
 def top_share(p: JsonObject, data: ColumnData, ctx: Context) -> VectorOutcome | None:
-    """Share of the largest group in the total amount, summed in whole cents."""
+    """Share of the largest group in whole cents (float sums: record kind, ``math.fsum``)."""
+    if not in_cents(p):
+        return None
     name = p["amount_field"]
     if data.has(name):
         values, missing = numbers(data, name, "coerce")

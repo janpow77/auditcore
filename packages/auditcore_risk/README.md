@@ -90,7 +90,7 @@ NumPy-Arrays; Begründungen je Treffer liefert weiterhin `evaluate`.
 from auditcore_risk import load_profile
 from auditcore_risk.columns import evaluate_columns
 
-profil = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+profil = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")  # ganze Cent
 spalten = {
     "projektbetrag": [100.00, 25_000.00],
     "kuerzungsbetrag": [0.00, 0.00],
@@ -202,6 +202,7 @@ Module und Regelarten:
 |---|---|---|---|
 | `riskanalysis.legacy` | `b5c523bf7eaa` | `LEGACY_CHARACTERIZED` | riskanalysis `red_flags.py` (RF01, RF02, RF08–RF15), exakt reproduziert |
 | `audit_designer.flowstat_belegliste` | `1254591156d3` | `LEGACY_CHARACTERIZED` | Flowstat `_red_flags` (BL_RF01–BL_RF10) in audit_designer und audit-portal |
+| `audit_designer.flowstat_belegliste` | `2026.10.1` | `APPROVED` (empfohlen) | Entscheidung 03.10.2026: BL_RF07 und BL_RF10 in ganzen Cent (RK-C12), übrige Regeln wie 1254591156d3 |
 | `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | abgelöst durch 2026.09.2 |
 | `riskanalysis.year_bound` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 |
 | `riskanalysis.year_bound` | `2026.09.3` | `APPROVED` | abgelöst durch 2026.09.4 (EU-Schwellen nur 2024–2027) |
@@ -308,8 +309,9 @@ Details und alle Entscheidungen: [docs/behavior-changes.md](docs/behavior-change
 - RK-C08 bis RK-C11: deterministische Reihenfolge von Warnungen,
   Fehlervertrag statt Absturz bei TED und Dubletten, Merkmalsaufbereitung der
   VerwK-Punkte-Scores bleibt in der Anwendung.
-- RK-C12 (ab 0.4.0, fachlich freigegeben): `balance_mismatch` (BL_RF07) und
-  `top_share` (BL_RF10) rechnen in ganzen Cent (`ROUND_HALF_UP`); in 41 der
+- RK-C12 (ab 0.4.0, fachlich freigegeben): Profilversion
+  `audit_designer.flowstat_belegliste` 2026.10.1 rechnet BL_RF07 und BL_RF10
+  in ganzen Cent (`ROUND_HALF_UP`); in 41 der
   1.668 Belege der 112 Flowstat-Frames entfällt ein BL_RF07-Treffer mit genau
   1 Cent Differenz, ein Beleg mit unendlichem Betrag ist unbestimmt;
   BL_RF10-Entscheidungen unverändert. Liste: `tests/fixtures/flowstat_cent_deviations.json`.

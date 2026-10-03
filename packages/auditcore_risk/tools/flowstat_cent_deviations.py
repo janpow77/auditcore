@@ -2,7 +2,7 @@
 
 ``tests/fixtures/flowstat_observed.json`` stays the recorded output of the
 original ``_red_flags`` (float arithmetic). This tool evaluates every frame
-with the library (whole cents since auditcore_risk 0.4.0) and with the float
+with profile version 2026.10.1 (whole cents) and with the float
 arithmetic of the source (``|projekt − kürzung − anerkannt| > 0.01`` on the
 coerced amounts, missing = 0; concentration via correctly rounded float sums),
 and writes every changed decision with its reason::
@@ -27,7 +27,7 @@ from auditcore_risk import evaluate, load_profile  # noqa: E402
 from auditcore_risk.base import amount_cents  # noqa: E402
 from auditcore_risk.values import coerce_number  # noqa: E402
 
-PROFILE = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+PROFILE = load_profile("audit_designer.flowstat_belegliste", "2026.10.1")
 RF07, RF10 = "BL_RF07_ACCEPTED_MISMATCH", "BL_RF10_VENDOR_CONCENTRATION"
 PARTS = ("projektbetrag", "kuerzungsbetrag", "anerkannter_betrag")
 
@@ -116,8 +116,8 @@ def main() -> None:
     data = {
         "description": (
             "Geänderte Entscheidungen von BL_RF07/BL_RF10 gegenüber der aufgezeichneten "
-            "Ausgabe (flowstat_observed.json) nach der Umstellung auf ganze Cent (RK-C12, "
-            "auditcore_risk 0.4.0); erzeugt mit tools/flowstat_cent_deviations.py."
+            "Ausgabe (flowstat_observed.json) im Profil audit_designer.flowstat_belegliste "
+            "2026.10.1 (ganze Cent, RK-C12); erzeugt mit tools/flowstat_cent_deviations.py."
         ),
         "profile": PROFILE.reference,
         **deviations(),

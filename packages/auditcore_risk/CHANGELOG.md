@@ -2,19 +2,23 @@
 
 ## 0.4.0 – 2026-10-03 – BL_RF07/BL_RF10 in ganzen Cent, Spaltenpfad (noch nicht veröffentlicht)
 
-**Ergebnisänderung (RK-C12, fachlich freigegeben):** `balance_mismatch`
-(BL_RF07, anerkannter Betrag ≠ Projektbetrag − Kürzung) und `top_share`
-(BL_RF10, Anteil des größten Rechnungsstellers) rechnen in ganzen Cent.
-Jeder Betrag wird zuerst mit `auditcore_compute.to_cents` kaufmännisch
+**Neue Profilversion `audit_designer.flowstat_belegliste` 2026.10.1
+(RK-C12, Nutzerentscheidung vom 03.10.2026, `APPROVED`, abgeleitet von
+1254591156d3, eigener Fingerabdruck):** BL_RF07 (anerkannter Betrag ≠
+Projektbetrag − Kürzung) und BL_RF10 (Anteil des größten Rechnungsstellers)
+rechnen in ganzen Cent; die Regelarten `balance_mismatch` und `top_share`
+haben dafür den optionalen Parameter `arithmetic: "cents"`. Das Legacy-Profil
+1254591156d3 bleibt abrufbar und bitgleich (Gleitkomma der Quelle, alle
+112 Frames wie aufgezeichnet). Jeder Betrag wird zuerst mit `auditcore_compute.to_cents` kaufmännisch
 (`ROUND_HALF_UP` über `Decimal(str(x))`) gerundet; die Toleranz 0,01 ist
 1 Cent. Ein Betrag, der nicht endlich ist oder 10 Mrd. € übersteigt (bei
 BL_RF07 auch die Summe der Abzüge), macht BL_RF07 für den Beleg unbestimmt
 (`None` mit Grund) bzw. den BL_RF10-Anteil nicht bestimmbar (kein Treffer,
-`value` `None`). Profilparameter `tolerance` muss ganze Cent angeben
-(Profilprüfung). Alle übrigen Regeln aller Profile liefern bitgleich dieselben
+`value` `None`). Mit `arithmetic: "cents"` muss `tolerance` ganze Cent
+angeben (Profilprüfung). Alle bestehenden Profile liefern bitgleich dieselben
 Ergebnisse wie 0.3.4.
 
-Neu-Charakterisierung gegen die 112 Flowstat-Frames
+Charakterisierung der Version 2026.10.1 gegen die 112 Flowstat-Frames
 (`tools/flowstat_cent_deviations.py`, `tests/fixtures/flowstat_cent_deviations.json`;
 `flowstat_observed.json` bleibt die Aufzeichnung des Originals):
 
@@ -48,7 +52,10 @@ Spalten. Merkmale, Zähler, Werte, Datensatzbefunde und Übersicht sind gleich
 `evaluate` (Abgleich auf allen 112 Flowstat- und 173 riskanalysis-Frames und
 mit Hypothesis); Begründungen je Treffer liefert weiterhin `evaluate`. Profile
 mit Bewertung je Datensatz (`assessment`) lehnt der Spaltenpfad ab.
-`tools/benchmark_columns.py`: 500.000 Belege 0,9 s statt 21,9 s.
+Im Legacy-Profil (Gleitkomma) läuft BL_RF10 über die Regelart je Datensatz
+(`math.fsum` ist nicht bitgleich vektorisierbar), BL_RF07 vektorisiert in
+derselben Rechenreihenfolge. `tools/benchmark_columns.py` (Profil 2026.10.1):
+500.000 Belege 0,9 s statt 21,9 s.
 
 Neue Laufzeitabhängigkeiten `auditcore_compute==0.1.0` und `numpy>=1.24`
 (`import auditcore_risk` lädt beide nicht; der Datensatzpfad importiert

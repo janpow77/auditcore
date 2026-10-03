@@ -190,8 +190,19 @@ def _check_concentration(params: JsonObject, where: str) -> None:
 
 
 #: Kind-specific checks after the common ones (kinds absent here have none).
+def _check_arithmetic(params: JsonObject, where: str) -> None:
+    need(
+        params.get("arithmetic", "cents") == "cents",
+        where,
+        'arithmetic kennt nur "cents" (ohne Parameter: Gleitkomma der Quelle)',
+    )
+
+
 def _check_balance(params: JsonObject, where: str) -> None:
-    """The tolerance of ``balance_mismatch`` is compared in whole cents."""
+    """In whole cents (``arithmetic: "cents"``) the tolerance must be whole cents."""
+    _check_arithmetic(params, where)
+    if "arithmetic" not in params:
+        return
     tolerance = Decimal(str(params["tolerance"]))
     need(
         Decimal(0) <= tolerance <= Decimal(10_000_000_000) and tolerance % Decimal("0.01") == 0,
@@ -202,6 +213,7 @@ def _check_balance(params: JsonObject, where: str) -> None:
 
 KIND_CHECKS: dict[str, Check] = {
     "balance_mismatch": _check_balance,
+    "top_share": _check_arithmetic,
     "near_threshold": _check_near_threshold,
     "leave_one_out_rate": _check_propagation,
     "numeric_compare": _check_numeric_compare,
