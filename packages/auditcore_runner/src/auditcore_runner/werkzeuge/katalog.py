@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 from .katalog_voll import DOC_TOOLS, PYTHON_TOOLS, SECURITY_TOOLS
 from .katalog_web import GUI_TOOLS, HOOK_TOOLS, JS_TOOLS, STRUCTURE_TOOLS
-from .modell import Cost, Tool
+from .modell import CUSTOM_AREA, EXIT_CODE_PARSER, Cost, Tool
 
 MINIMUM_TOOLS: tuple[Tool, ...] = (
     Tool(
@@ -126,8 +126,9 @@ class Registry:
         self.tools[tool.name] = tool
 
     def get(self, name: str) -> Tool:
+        """Catalog tool, or an empty generic tool that a profile completes with its own ``befehl``."""
         if name not in self.tools:
-            return Tool(name=name, area="custom", command=(), parser="keine", success_codes=(0,))
+            return Tool(name=name, area=CUSTOM_AREA, command=(), parser=EXIT_CODE_PARSER, success_codes=(0,))
         return self.tools[name]
 
     def names(self) -> list[str]:

@@ -14,7 +14,7 @@ from . import codemods, github, image, measure, profile_io, workflows
 from .hardware import detect
 from .profile import default_profile_path
 from .werkzeuge import aufgaben, bericht, einstellungen
-from .werkzeuge.ausfuehren import Runner, last_result_path, run_fixes, run_profile
+from .werkzeuge.ausfuehren import NOTHING_CHECKED_STATUS, Runner, last_result_path, run_fixes, run_profile
 from .werkzeuge.befunde import deduplicate, load_baseline, only_new, save_baseline, to_sarif
 from .werkzeuge.katalog import Registry
 from .werkzeuge.modell import apply_machine_settings, load_codemods, load_repo_profiles
@@ -43,22 +43,40 @@ def cmd_local(args: argparse.Namespace) -> int:
     last_result_path().write_text(json.dumps(document, ensure_ascii=False) + "\n", encoding="utf-8")
     for tool in document["werkzeuge"] if isinstance(document["werkzeuge"], list) else []:
         print(
-            f"{tool['werkzeug']:<11} {tool['status']:<9} {tool['befunde']:>4} Befunde  {tool['sekunden']:>6} s"
+            f"{tool['werkzeug']:<11} {tool['status']:<15} {tool['befunde']:>4} Befunde  {tool['sekunden']:>6} s"
             f"{'  (Cache)' if tool['aus_cache'] else ''}  {tool['meldung']}"
         )
     findings = bericht.findings_from_documents([document])
     print(f"\n{len(findings)} Befunde, Bericht: auditcore-runner befunde")
-    return 1 if findings else 0
+    _print_problems(document)
+    tools = document["werkzeuge"] if isinstance(document["werkzeuge"], list) else []
+    unknown = [str(t["werkzeug"]) for t in tools if t["status"] == "unbekannt"]
+    if unknown:
+        print(f"unbekannte Werkzeuge im Prüfprofil: {', '.join(unknown)}", file=sys.stderr)
+        return 2
+    return 1 if findings or document.get("gesamt") == "rot" else 0
+
+
+def _print_problems(document: dict[str, object]) -> None:
+    """Red overall result: name every tool that did not check, so a green-looking run cannot hide it."""
+    problems = document.get("probleme")
+    if document.get("gesamt") == "rot" and isinstance(problems, list) and problems:
+        print("Gesamtergebnis rot:", file=sys.stderr)
+        for problem in problems:
+            print(f"  {problem}", file=sys.stderr)
 
 
 def cmd_findings(args: argparse.Namespace) -> int:
     source = Path(args.ergebnis) if args.ergebnis else last_result_path()
-    findings = deduplicate(bericht.findings_from_documents([json.loads(source.read_text(encoding="utf-8"))]))
+    document = json.loads(source.read_text(encoding="utf-8"))
+    findings = deduplicate(bericht.findings_from_documents([document]))
     if args.baseline_setzen:
         save_baseline(Path(args.baseline_setzen), findings)
         print(f"Baseline mit {len(findings)} Befunden geschrieben.")
         return 0
     new = only_new(findings, load_baseline(Path(args.baseline))) if args.baseline else findings
+    # "Nothing checked" is never accepted through a baseline; only leer_erlaubt in the profile allows it.
+    new += [f for f in findings if f.rule == NOTHING_CHECKED_STATUS and f not in new]
     if args.sarif:
         Path(args.sarif).write_text(json.dumps(to_sarif(new), indent=2) + "\n", encoding="utf-8")
     if args.aufgabenpaket:
@@ -67,7 +85,9 @@ def cmd_findings(args: argparse.Namespace) -> int:
         target.write_text(aufgaben.render(package), encoding="utf-8")
         print(aufgaben.command(package, target, args.art), file=sys.stderr)
     print(bericht.render(new, args.max, args.budget), end="")
-    return 1 if new else 0
+    if isinstance(document, dict):
+        _print_problems(document)
+    return 1 if new or (isinstance(document, dict) and document.get("gesamt") == "rot") else 0
 
 
 def _external(command: list[str], parse: object, cwd: Path) -> list[workflows.WorkflowFinding]:

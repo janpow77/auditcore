@@ -12,7 +12,11 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import cast
 
-AREAS = ("python", "js", "sicherheit", "struktur", "doku", "gui", "gpu", "extern", "codemod")
+AREAS = ("python", "js", "sicherheit", "struktur", "doku", "gui", "gpu", "extern", "codemod", "eigen")
+# Werkzeuge ohne Katalogeintrag, die ein Repository-Profil mit eigenem ``befehl`` deklariert.
+CUSTOM_AREA = "eigen"
+EXIT_CODE_PARSER = "exitcode"
+OUTPUT_PLACEHOLDER = "{ausgabe}"
 STAGES = ("autofix", "codemod", "pruefen")
 TRIGGERS = ("lokal", "pr", "nacht", "fuell")
 REPO_FILE = ".auditcore-runner.toml"
@@ -42,6 +46,9 @@ class Tool:
     success_codes: tuple[int, ...] = (0, 1)
     stage: str = "pruefen"
     network: bool = False
+    allow_empty: bool = False
+    # Repository commands may depend on state outside Git (``.env``, running containers).
+    cacheable: bool = True
 
     @property
     def can_fix(self) -> bool:
@@ -57,6 +64,7 @@ class ToolSetting:
     priority: int = 50
     command: tuple[str, ...] | None = None
     fix_command: tuple[str, ...] | None = None
+    allow_empty: bool = False
 
 
 @dataclass(frozen=True)
@@ -77,13 +85,25 @@ class CheckProfile:
         return sorted(active, key=lambda t: (self.setting(t).priority, self.tools.index(t)))
 
     def configured_tool(self, tool: Tool) -> Tool:
-        """Apply command overrides from this repository profile to a catalog tool."""
+        """Apply command overrides from this repository profile to a catalog tool.
+
+        A tool without catalog entry (area ``eigen``) becomes a generic tool
+        through its ``befehl``: with ``{ausgabe}`` the command writes a JUnit
+        report (``<name>.xml``), otherwise its exit code decides (``exitcode``).
+        """
         setting = self.setting(tool.name)
-        return replace(
+        configured = replace(
             tool,
             command=setting.command if setting.command is not None else tool.command,
             fix_command=setting.fix_command if setting.fix_command is not None else tool.fix_command,
+            allow_empty=setting.allow_empty,
+            cacheable=tool.cacheable and setting.command is None,
         )
+        if tool.area != CUSTOM_AREA or not configured.command:
+            return configured
+        if any(OUTPUT_PLACEHOLDER in part for part in configured.command):
+            return replace(configured, parser="junit-xml", output_file=f"{tool.name}.xml", success_codes=(0, 1))
+        return replace(configured, parser=EXIT_CODE_PARSER, output_file="", success_codes=(0,))
 
 
 PR_TOOLS = (
@@ -159,7 +179,10 @@ def _setting(raw: object, where: str) -> ToolSetting:
         raise RepoConfigError(f"{where}: aktiv (bool), zeitlimit_s, prioritaet (Zahl)")
     command = _optional_command(data, "befehl", where)
     fix_command = _optional_command(data, "autofix_befehl", where)
-    return ToolSetting(enabled, timeout, priority, command, fix_command)
+    allow_empty = data.get("leer_erlaubt", False)
+    if not isinstance(allow_empty, bool):
+        raise RepoConfigError(f"{where}.leer_erlaubt: wahr/falsch erwartet")
+    return ToolSetting(enabled, timeout, priority, command, fix_command, allow_empty)
 
 
 def _optional_command(data: dict[str, object], key: str, where: str) -> tuple[str, ...] | None:
@@ -263,6 +286,7 @@ def apply_machine_settings(profile: CheckProfile, overrides: dict[str, ToolSetti
                 machine,
                 command=repository.command,
                 fix_command=repository.fix_command,
+                allow_empty=repository.allow_empty,
             )
         combined[name] = machine
     return replace(profile, settings=combined)
