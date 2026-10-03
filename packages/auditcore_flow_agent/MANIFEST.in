@@ -1,0 +1,3 @@
+include LICENSE NOTICE README.md CHANGELOG.md provenance.json
+recursive-include src/auditcore_flow_agent *.py py.typed provenance.json
+recursive-include tests *.py
