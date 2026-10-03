@@ -1,5 +1,8 @@
 {
   "auditcore_compute": {
     "numpy>=1.24": "python3-numpy (>= 1:1.24)"
+  },
+  "auditcore_risk": {
+    "numpy>=1.24": "python3-numpy (>= 1:1.24)"
   }
 }

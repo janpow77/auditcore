@@ -50,19 +50,23 @@ Produktionsdatenbank).
 * Stelle: `backend/app/modules/flowstat/services/belegliste_analysis_service.py:_red_flags`
   (Aufrufer `analyze_belegliste` → `api/data_sources.py`,
   `vorhaben_context_service.py`, `node_handlers/template_handlers.py`).
-* Umstellung (Vorschlag):
+* Umstellung (Vorschlag, ab 0.4.0 spaltenweise ohne `to_dict("records")`):
 
   ```python
-  from auditcore_risk import evaluate, load_profile
+  from auditcore_risk import load_profile
+  from auditcore_risk.frame import evaluate_frame_columns
 
   _PROFIL = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
 
 
   def _red_flags(data: pd.DataFrame) -> list[dict[str, Any]]:
-      records = data.to_dict("records")
-      return [dict(s) for s in evaluate(records, _PROFIL, columns=list(data.columns)).summary]
+      return [dict(s) for s in evaluate_frame_columns(data, _PROFIL).summary]
   ```
-* Nachweis: Replay aller 112 Originalfälle im Paket (RK-L02). Eine lokale
+
+  Gleiche Übersicht wie `evaluate(data.to_dict("records"), …)`; gemessen
+  (`tools/benchmark_columns.py`, 500.000 synthetische Belege) 0,9 s statt
+  21,9 s. BL_RF07/BL_RF10 rechnen ab 0.4.0 in ganzen Cent (RK-C12).
+* Nachweis: Replay aller 112 Originalfälle im Paket (RK-L02, RK-C12). Eine lokale
   Ausführung der Designer-/Portal-Testsuite ist **NOT_EXECUTED** (umfangreiche
   Anwendungsabhängigkeiten); Status: geplant.
 

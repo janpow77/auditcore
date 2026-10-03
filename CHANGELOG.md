@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- `auditcore_risk` 0.4.0: BL_RF07 und BL_RF10 rechnen in ganzen Cent (RK-C12,
+  fachlich freigegeben; 41 BL_RF07-Treffer mit genau 1 Cent Differenz entfallen
+  in den 112 Flowstat-Frames, ein Beleg mit unendlichem Betrag wird unbestimmt);
+  neuer Spaltenpfad `columns.evaluate_columns` / `frame.evaluate_frame_columns`
+  ohne `to_dict("records")` (500.000 Belege 0,9 s statt 21,9 s). Neue
+  Abhängigkeiten `auditcore_compute==0.1.0` und `numpy>=1.24`
+  (`packaging/library-runtime.json`).
+- `auditcore_compute` 0.1.0 (vor Veröffentlichung ergänzt): `to_cents_buffer`
+  und `factorize` vektorisiert und bitgleich zum Elementpfad,
+  `validation.first_occurrence_codes`.
+
 - Neues Paket `auditcore_compute` 0.1.0: deterministische Rechenkerne mit
   optionaler Numba-Kompilierung (`@accelerate`, `to_buffer`, Rückfall auf
   dieselbe Python-Funktion mit Meldung, `fastmath` verboten), Zinsen auf

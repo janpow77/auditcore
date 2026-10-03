@@ -1,6 +1,6 @@
 # Spezifikation auditcore_risk
 
-Stand: 26.09.2026, Paketversion 0.3.4. Charakterisierung: riskanalysis
+Stand: 03.10.2026, Paketversion 0.4.0. Charakterisierung: riskanalysis
 (173 Frames, `tests/test_replay_riskanalysis.py`), Flowstat in audit_designer und
 audit-portal (112 Frames, `tests/test_replay_flowstat.py`), flowinvoice
 RiskChecker, Betrugsprüfung und Kriterien der risikobasierten
@@ -26,6 +26,7 @@ keinen profilübergreifenden Risikoscore (Entscheidung K1).
 |---|---|---|
 | `load_profile(id, version)`, `available_profiles()` | ausdrücklich benanntes Regelprofil | unveränderliches `RiskProfile` (Regeln mit Code, Art, Parametern, Fundstelle; `reference` mit Fingerabdruck) |
 | `evaluate(datensätze, profil, *, columns=None, reference_date=None, points=None)` | Zuordnungen Spalte → Wert; Spaltenmenge (Vorgabe: Vereinigung der Schlüssel) | `Evaluation`: je Datensatz `RecordResult` (`flags` Code → `True`/`False`/`None`, `hits`, `undetermined` mit Grund, Werte, profileigene Bewertung), datensatzweite `DatasetFinding`s, `skipped` mit Grund, `summary` im Format des Profils |
+| `columns.evaluate_columns(spalten, profil, *, reference_date=None)`, `frame.evaluate_frame_columns(frame, profil, …)` | Spaltenname → Liste, ndarray oder Serie gleicher Länge (Profile ohne Bewertung je Datensatz) | `ColumnEvaluation`: Merkmale, Unbestimmte und Trefferzahlen je Regel als Arrays, Werte, Datensatzbefunde, `skipped`, `summary` und Weg je Regel (`vectorised`/`records`); gleiche Entscheidungen wie `evaluate`, ohne Begründungen je Treffer |
 | `missing_columns(profil, spalten)` | Spaltennamen | je Regel fehlende Pflichtspalten |
 | `name_similarity(regel, links, rechts)`, `identifier_missing(regel, wert)` | eine Regel der Art `name_similarity` bzw. `missing_procurement` | Ähnlichkeit 0–1 bzw. „Vergabekennung fehlt“ |
 | `flatten_record(datensatz)` | verschachtelte Zuordnung | eine Ebene `eltern.kind` |

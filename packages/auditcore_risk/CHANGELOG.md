@@ -1,6 +1,60 @@
 # Changelog – auditcore_risk
 
-## Unreleased
+## 0.4.0 – 2026-10-03 – BL_RF07/BL_RF10 in ganzen Cent, Spaltenpfad (noch nicht veröffentlicht)
+
+**Ergebnisänderung (RK-C12, fachlich freigegeben):** `balance_mismatch`
+(BL_RF07, anerkannter Betrag ≠ Projektbetrag − Kürzung) und `top_share`
+(BL_RF10, Anteil des größten Rechnungsstellers) rechnen in ganzen Cent.
+Jeder Betrag wird zuerst mit `auditcore_compute.to_cents` kaufmännisch
+(`ROUND_HALF_UP` über `Decimal(str(x))`) gerundet; die Toleranz 0,01 ist
+1 Cent. Ein Betrag, der nicht endlich ist oder 10 Mrd. € übersteigt (bei
+BL_RF07 auch die Summe der Abzüge), macht BL_RF07 für den Beleg unbestimmt
+(`None` mit Grund) bzw. den BL_RF10-Anteil nicht bestimmbar (kein Treffer,
+`value` `None`). Profilparameter `tolerance` muss ganze Cent angeben
+(Profilprüfung). Alle übrigen Regeln aller Profile liefern bitgleich dieselben
+Ergebnisse wie 0.3.4.
+
+Neu-Charakterisierung gegen die 112 Flowstat-Frames
+(`tools/flowstat_cent_deviations.py`, `tests/fixtures/flowstat_cent_deviations.json`;
+`flowstat_observed.json` bleibt die Aufzeichnung des Originals):
+
+- BL_RF07, 41 Treffer entfallen (alt `True`, neu `False`): Differenz genau
+  −1 Cent, als Gleitkommazahl knapp über 0,01 (z. B. 6.544,26 − 0 − 6.544,27 =
+  −0,010000000000218279). random-20260923-001 Zeile 6; -002 Zeile 11, 15;
+  -003 Zeile 2; -005 Zeile 8; -006 Zeile 3; -012 Zeile 18; -019 Zeile 2;
+  -020 Zeile 13; -023 Zeile 5, 19; -025 Zeile 4; -026 Zeile 21, 22; -030
+  Zeile 0; -031 Zeile 7; -032 Zeile 0; -033 Zeile 1; -036 Zeile 8; -038
+  Zeile 24; -039 Zeile 5; -041 Zeile 1, 6; -043 Zeile 5; -044 Zeile 5; -047
+  Zeile 0; -052 Zeile 1; -054 Zeile 2, 7, 14; -055 Zeile 0; -057 Zeile 12;
+  -067 Zeile 6; -069 Zeile 7, 8; -078 Zeile 15; -082 Zeile 0, 5, 22; -088
+  Zeile 16, 25. Die Zähler BL_RF07 sinken in 31 Frames entsprechend.
+- BL_RF07, 1 Beleg unbestimmt (alt `False`, neu `None`): rf01-rf02 Zeile 6,
+  Projektbetrag und anerkannter Betrag unendlich (Gleitkomma: inf − inf = NaN,
+  kein Treffer); der Zähler bleibt 0.
+- BL_RF10: keine Entscheidung geändert; in 6 Frames weicht der Anteil in den
+  letzten beiden Binärstellen ab (exakter Quotient der Cent-Summen).
+
+**Spaltenpfad:** `auditcore_risk.columns.evaluate_columns(columns, profile, *,
+reference_date=None) -> ColumnEvaluation` und
+`auditcore_risk.frame.evaluate_frame_columns(frame, profile, *,
+reference_date=None)` werten Spalten (Listen, ndarrays, pandas-/polars-Serien)
+ohne `to_dict("records")` aus. Vektorisiert über `auditcore_compute`
+(`to_cents_buffer`, `reconcile`, `factorize`) bzw. NumPy: `round_multiple`,
+`near_threshold` (feste Schwellen), `missing_value`, `date_before`
+(`datetime64`), `duplicate_key`, `nonzero_without_text`, `balance_mismatch`,
+`missing_procurement`, `amount_with_marker`, `top_share`; alle übrigen
+Regelarten und Parameter laufen über die Regelart je Datensatz auf denselben
+Spalten. Merkmale, Zähler, Werte, Datensatzbefunde und Übersicht sind gleich
+`evaluate` (Abgleich auf allen 112 Flowstat- und 173 riskanalysis-Frames und
+mit Hypothesis); Begründungen je Treffer liefert weiterhin `evaluate`. Profile
+mit Bewertung je Datensatz (`assessment`) lehnt der Spaltenpfad ab.
+`tools/benchmark_columns.py`: 500.000 Belege 0,9 s statt 21,9 s.
+
+Neue Laufzeitabhängigkeiten `auditcore_compute==0.1.0` und `numpy>=1.24`
+(`import auditcore_risk` lädt beide nicht; der Datensatzpfad importiert
+`to_cents` erst bei BL_RF07/BL_RF10).
+
+## Unreleased (vor 0.4.0)
 
 Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 11 Invarianten (I1–I11) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`; keine Befunde. `hypothesis` im Extra `dev`.
 

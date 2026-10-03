@@ -1,8 +1,11 @@
-"""RK-L: every recorded Flowstat ``_red_flags`` output is reproduced.
+"""RK-L: every recorded Flowstat ``_red_flags`` output is reproduced, RK-C12 aside.
 
 Fixture: ``tools/capture_flowstat.py`` executed the unchanged, blob-identical
 function of audit_designer@1254591 and audit-portal@ac1ccc7 (pandas 2.1.4,
-NumPy 1.26.2) on frames in the normalised column contract.
+NumPy 1.26.2) on frames in the normalised column contract. Since 0.4.0
+BL_RF07/BL_RF10 compute in whole cents (RK-C12); every decision that differs
+from the recording is listed in ``flowstat_cent_deviations.json``
+(``tools/flowstat_cent_deviations.py``) and checked here row by row.
 """
 
 from __future__ import annotations
@@ -17,7 +20,23 @@ from auditcore_risk import evaluate, load_profile
 
 FIXTURE = fixture("flowstat_observed.json")
 CASES = FIXTURE["cases"]
+DEVIATIONS = fixture("flowstat_cent_deviations.json")
 PROFILE = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
+RF07 = "BL_RF07_ACCEPTED_MISMATCH"
+PARTS = ("projektbetrag", "kuerzungsbetrag", "anerkannter_betrag")
+
+
+def _expected(case: dict[str, Any]) -> list[dict[str, Any]]:
+    """Recorded overview minus the RF07 hits that RK-C12 removes in this frame."""
+    removed = sum(1 for d in DEVIATIONS["rf07"] if d["frame"] == case["name"] and d["old"] is True)
+    out = []
+    for entry in decode(case["red_flags"]):
+        if entry["code"] == RF07:
+            entry = {**entry, "count": entry["count"] - removed}
+            if entry["count"] == 0:
+                continue
+        out.append(entry)
+    return out
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["name"] for c in CASES])
@@ -25,7 +44,7 @@ def test_counts_and_share(case: dict[str, Any]) -> None:
     rows = [decode(row) for row in case["rows"]]
     result = evaluate(rows, PROFILE, columns=case["columns"])
     actual = [dict(s) for s in result.summary]
-    expected = decode(case["red_flags"])
+    expected = _expected(case)
     assert [a["code"] for a in actual] == [e["code"] for e in expected]
     for a, e in zip(actual, expected, strict=True):
         if "count" in e:
@@ -37,15 +56,17 @@ def test_counts_and_share(case: dict[str, Any]) -> None:
 
 
 def test_share_differences_are_last_digit_only() -> None:
+    """RK-C12: the share is an exact ratio of cent sums; it differs from the recorded
+    float share (NumPy/pandas sums) in at most the last two binary digits."""
     differing = 0
     for case in CASES:
         rows = [decode(row) for row in case["rows"]]
         result = evaluate(rows, PROFILE, columns=case["columns"])
-        for a, e in zip(result.summary, decode(case["red_flags"]), strict=True):
+        for a, e in zip(result.summary, _expected(case), strict=True):
             if "share" in e and a["share"] != e["share"]:
                 differing += 1
                 assert abs(a["share"] - e["share"]) <= 2 * math.ulp(e["share"])
-    assert differing <= 5
+    assert differing == 6
 
 
 def test_fixture_scope_and_sources() -> None:
@@ -58,3 +79,42 @@ def test_fixture_scope_and_sources() -> None:
     assert {s["git_blob"] for s in FIXTURE["sources"]} == {
         "d03738cb7e250e3cd838c88157992e0b4093ef35"
     }
+
+
+def _float_rest(row: dict[str, Any]) -> float:
+    def amount(name: str) -> float:
+        value = row.get(name)
+        return 0.0 if value is None or value != value else float(value)
+
+    return amount(PARTS[0]) - amount(PARTS[1]) - amount(PARTS[2])
+
+
+def test_rf07_deviations_are_exactly_the_listed_rows() -> None:
+    """RK-C12: only the listed rows change, each for the stated reason."""
+    listed = {(d["frame"], d["row"]): d for d in DEVIATIONS["rf07"]}
+    seen = set()
+    for case in CASES:
+        rows = [decode(row) for row in case["rows"]]
+        result = evaluate(rows, PROFILE, columns=case["columns"])
+        if RF07 in result.skipped:
+            continue
+        for index, record in enumerate(result.records):
+            rest = _float_rest(rows[index])
+            legacy = abs(rest) > 0.01  # float arithmetic of the source (NaN → no hit)
+            entry = listed.get((case["name"], index))
+            if entry is None:
+                assert record.flags[RF07] == legacy, (case["name"], index)
+                continue
+            seen.add((case["name"], index))
+            assert (entry["old"], entry["new"]) == (legacy, record.flags[RF07])
+            if entry["new"] is None:
+                assert not all(math.isfinite(v) for v in map(decode, entry["values"].values()))
+            else:
+                assert abs(round(rest * 100)) <= 1 < abs(rest) * 100
+    assert seen == set(listed)
+    assert len(listed) == 42
+    assert sum(1 for d in listed.values() if d["old"] is True and d["new"] is False) == 41
+
+
+def test_rf10_decisions_are_unchanged() -> None:
+    assert DEVIATIONS["rf10_changed_frames"] == []

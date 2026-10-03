@@ -18,9 +18,14 @@ from auditcore_risk import (
 def main() -> None:
     """Exercise both legacy profiles and the optional-extra boundaries."""
     package = distribution("auditcore_risk")
-    assert package.version == "0.3.4"
+    assert package.version == "0.4.0"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_common==0.2.0", "auditcore_entity_matching==0.2.4"], runtime
+    assert runtime == [
+        "auditcore_common==0.2.0",
+        "auditcore_compute==0.1.0",
+        "auditcore_entity_matching==0.2.4",
+        "numpy>=1.24",
+    ], runtime
     assert find_spec("auditcore") is None
     assert len(available_profiles()) == 14
     assert len(available_fraud_profiles()) == 6
@@ -30,6 +35,12 @@ def main() -> None:
         {"code": "BL_RF01_ROUND_AMOUNT", "count": 1},
         {"code": "BL_RF02_NEAR_THRESHOLD", "count": 1},
     ]
+    from auditcore_risk.columns import evaluate_columns
+
+    balance = {"projektbetrag": [100.0], "kuerzungsbetrag": [0.0], "anerkannter_betrag": [99.99]}
+    columns = evaluate_columns(balance, flowstat)
+    assert columns.record_flags("BL_RF07_ACCEPTED_MISMATCH") == [False]  # whole cents
+    assert columns.summary == ()
     checker = load_profile("flowinvoice.risk_checker", "fb2d18568d2e")
     request = {
         "net_amount": 60_000.0,

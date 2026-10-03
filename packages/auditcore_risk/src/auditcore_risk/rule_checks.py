@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable
+from decimal import Decimal
 
 from .base import OPERATOR_SYMBOLS, JsonObject, is_number, need
 from .errors import ProfileError
@@ -189,7 +190,18 @@ def _check_concentration(params: JsonObject, where: str) -> None:
 
 
 #: Kind-specific checks after the common ones (kinds absent here have none).
+def _check_balance(params: JsonObject, where: str) -> None:
+    """The tolerance of ``balance_mismatch`` is compared in whole cents."""
+    tolerance = Decimal(str(params["tolerance"]))
+    need(
+        Decimal(0) <= tolerance <= Decimal(10_000_000_000) and tolerance % Decimal("0.01") == 0,
+        where,
+        "tolerance muss ein nicht negativer Betrag in ganzen Cent bis 10 Mrd. € sein",
+    )
+
+
 KIND_CHECKS: dict[str, Check] = {
+    "balance_mismatch": _check_balance,
     "near_threshold": _check_near_threshold,
     "leave_one_out_rate": _check_propagation,
     "numeric_compare": _check_numeric_compare,

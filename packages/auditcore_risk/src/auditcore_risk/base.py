@@ -137,6 +137,36 @@ def present_amounts(table: Table, params: JsonObject, name_key: str = "field") -
     return cast(list[float], amount_values(table, params, name_key))
 
 
+#: Largest amount in euros that the cent rules decide (auditcore_compute's per-row bound).
+CENT_LIMIT_EUROS = 10_000_000_000
+CENT_LIMIT = CENT_LIMIT_EUROS * 100
+#: Reason of a cent rule for an amount it cannot convert.
+CENT_UNDECIDABLE = (
+    "Betrag nicht endlich oder über 10 Mrd. € je Zeile; in ganzen Cent nicht prüfbar."
+)
+
+
+def amount_cents(value: float) -> int | None:
+    """Whole cents of an amount (``auditcore_compute.to_cents``, ROUND_HALF_UP).
+
+    ``None`` for non-finite amounts and amounts above 10 Mrd. € in magnitude;
+    the vectorised path (:mod:`.column_kinds`) applies the same bound.
+    """
+    if not (math.isfinite(value) and abs(value) <= 10 * CENT_LIMIT_EUROS):
+        return None
+    from auditcore_compute import to_cents
+
+    cents = to_cents(value)
+    return cents if abs(cents) <= CENT_LIMIT else None
+
+
+def tolerance_cents(value: float) -> int:
+    """A profile tolerance in euros as whole cents (checked to be whole cents on load)."""
+    from auditcore_compute import to_cents
+
+    return to_cents(float(value))
+
+
 def seq_sum(values: Iterable[float], start: float = 0) -> float:
     """Plain left-to-right addition, i.e. Python ≤ 3.11 ``sum``.
 
