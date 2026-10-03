@@ -7,12 +7,14 @@ Reductions deliberately retain the original sequential reference order.
 
 from __future__ import annotations
 
+from typing import TypeAlias
+
 import numpy as np
 import numpy.typing as npt
 
-Ints = npt.NDArray[np.int64]
-Bools = npt.NDArray[np.bool_]
-Statuses = npt.NDArray[np.int8]
+Ints: TypeAlias = npt.NDArray[np.int64]
+Bools: TypeAlias = npt.NDArray[np.bool_]
+Statuses: TypeAlias = npt.NDArray[np.int8]
 
 
 def share(amounts: Ints, numerators: Ints, denominators: Ints, out: Ints) -> None:

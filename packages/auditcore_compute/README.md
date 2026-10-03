@@ -75,7 +75,7 @@ check = reconcile([100, 200], [100, 201], tolerance_cents=1)
 assert check.status.tolist() == [0, 1]  # 0 = gleich, 1 = innerhalb der Toleranz
 dip = double_funding(["RE-7", "RE-7", "RE-8"], [500, 500, 500], ["V-1", "V-2", "V-1"])
 assert dip.flagged.tolist() == [True, True, False]
-assert {info.mode for info in engine_report()} <= {"jit", "python"}
+assert {info.mode for info in engine_report()} <= {"jit", "numpy", "python"}
 ```
 
 Fehlende Werte werden nie still zu 0:
@@ -143,6 +143,11 @@ Keine benannten Profile. Laufzeitschalter:
   Serielle und parallele Kompilierungen erhalten unterschiedliche Cache-Schlüssel.
 - Wiederholte Quoten werden in einem typgetrennten Cache mit höchstens
   1.024 Einträgen aufbereitet. Dokument- oder Mandantendaten werden dort nicht gehalten.
+  Für mehrere Betragsspalten lässt sich auch die vollständige Aufbereitung
+  wiederverwenden: `PreparedRates(["0.4", "0.5"])` aus
+  `auditcore_compute.finance` wird direkt an `share_cents`, `cofinancing`
+  oder `apply_reduction` übergeben. Das Objekt hält einen schreibgeschützten
+  Schnappschuss; jede Betragsspalte muss dieselbe Zeilenzahl haben.
 - Die Anwendung budgetiert Worker, Numba- und gegebenenfalls BLAS-Threads
   gemeinsam. JIT-Aufwärmen erfolgt bei Prozessen mit `fork` im Kindprozess.
   Weitere Entscheidungen und Messgrenzen: [Performance-Review](../../docs/performance/compute-review-2026-10-03.md).

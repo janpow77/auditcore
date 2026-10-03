@@ -748,6 +748,12 @@ def main() -> int:
     parser.add_argument("--version", default="0.1.0")
     parser.add_argument("--optional-verification-output", type=Path)
     parser.add_argument(
+        "--signing-workspace",
+        type=Path,
+        default=ROOT,
+        help="Workspace with the persistent dedicated .auditcore/release-signing key",
+    )
+    parser.add_argument(
         "--npm-workspace",
         type=Path,
         default=ROOT,
@@ -796,7 +802,7 @@ def main() -> int:
         ],
         environment,
     )
-    key_home = ROOT / ".auditcore/release-signing"
+    key_home = args.signing_workspace.absolute() / ".auditcore/release-signing"
     if key_home.is_symlink() or output.is_relative_to(key_home) or key_home.is_relative_to(output):
         raise ValueError("Signing keys must remain isolated from release assets")
     key_home.mkdir(parents=True, exist_ok=True, mode=0o700)

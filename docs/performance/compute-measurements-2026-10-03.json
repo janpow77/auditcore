@@ -373,5 +373,22 @@
         "numpy": 110.0118
       }
     }
-  ]
+  ],
+  "prepared_rates_followup": {
+    "note": "Synthetischer Nachlauf während paralleler Release-Prüfungen, kein isolierter Lasttest. Vorbereitung einmalig; erster Aufruf enthält gegebenenfalls JIT-Kompilierung für schreibgeschützte Eingaben.",
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "numba_threads": 8,
+    "ordinary": {
+      "first_ms": 102.53789598937146,
+      "median_ms": 100.66606600594241,
+      "sha256": "87c5e2d5254c5d6f16812bbeb53e06f587fab24fe19200a1af0bb11bb0ed7bf7"
+    },
+    "prepared": {
+      "preparation_ms": 110.10605299088638,
+      "first_ms": 451.5353930037236,
+      "median_ms": 1.436326012481004,
+      "sha256": "87c5e2d5254c5d6f16812bbeb53e06f587fab24fe19200a1af0bb11bb0ed7bf7"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 # Changelog auditcore_registry_sources
 
-## Unreleased
+## 0.2.4 – 2026-10-03
 
 Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation
 `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle,

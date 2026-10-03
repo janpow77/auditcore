@@ -21,9 +21,9 @@ def main() -> None:
     assert package.version == "0.4.0"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == [
-        "auditcore_common==0.2.0",
+        "auditcore_common==0.2.1",
         "auditcore_compute==0.1.0",
-        "auditcore_entity_matching==0.2.4",
+        "auditcore_entity_matching==0.2.5",
         "numpy>=1.24",
     ], runtime
     assert find_spec("auditcore") is None

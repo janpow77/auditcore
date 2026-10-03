@@ -83,6 +83,7 @@ from auditcore_documents.pipeline.stages.ocr import (
     ParsedPage,
     RouterResult,
 )
+from auditcore_documents.pipeline.stages.ocr_budget import LimitedRouterOcr
 from auditcore_documents.pipeline.stages.persist import FileArtifactStore, PersistStage
 from auditcore_documents.pipeline.stages.postprocess import PostprocessStage, parse_amount
 from auditcore_documents.pipeline.stages.preprocess import PreprocessStage
@@ -224,6 +225,7 @@ __all__ = [
     "HashingService",
     "InMemoryAuditLog",
     "IngestionStage",
+    "LimitedRouterOcr",
     "LlmSettings",
     "OcrBackend",
     "OcrMetrics",

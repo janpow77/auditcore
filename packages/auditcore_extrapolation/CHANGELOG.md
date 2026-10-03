@@ -1,6 +1,6 @@
 # Changelog auditcore_extrapolation
 
-## Unreleased
+## 0.2.0 – 2026-10-03
 
 - Ausschluss und Ersetzen von Einheiten nach verhältnismäßiger Kontrolle
   (Leitfaden 7.10): `Stratum.excluded_*`, Erweiterung auf die ursprüngliche

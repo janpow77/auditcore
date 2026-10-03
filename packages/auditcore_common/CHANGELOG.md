@@ -1,6 +1,6 @@
 # Changelog auditcore_common
 
-## Unreleased
+## 0.2.1 – 2026-10-03
 
 - `rest.decode_body` nimmt `too_large_code` und `invalid_json_code` (Vorgabe
   `too_large`/`invalid_json`, bisheriges Verhalten unverändert), damit

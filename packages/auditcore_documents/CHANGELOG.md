@@ -1,7 +1,10 @@
 # Changelog – auditcore_documents
 
-## Unreleased
+## 0.5.0 – 2026-10-03
 
+- `LimitedRouterOcr` begrenzt Gateway-Anfragen mehrerer Dokumente im selben
+  Eventloop mit einem gemeinsam genutzten Budget; wartende Abbrüche und
+  Eventloop-Wechsel sind ausdrücklich behandelt.
 - Bestandsprüfungen verwenden vorbereitete Zahltexte, Lieferantennamen und
   formale Befunde innerhalb eines Prüflaufs wieder; keine Wiederverwendung
   von Dokumentdaten zwischen unabhängigen Läufen.

@@ -444,4 +444,11 @@ Gateway-Budget über Dokumente und Worker hinweg einhalten. Rasterung und lokale
 OCR werden dadurch nicht parallelisiert. Seitenfehler bleiben Teilfehler;
 Transportausnahmen und Abbrüche beenden auch die übrigen gestarteten Anfragen.
 
+Für mehrere Dokumente im selben Eventloop steht
+`pipeline.LimitedRouterOcr(router, max_concurrent_requests=2)` bereit. Dieselbe
+Instanz wird allen beteiligten OCR-Stufen übergeben und nutzt den vorhandenen
+Verbindungspool des umschlossenen Ports. Abgebrochene wartende Anfragen verbrauchen
+keinen Platz. Pro Worker/Eventloop ist eine eigene Instanz nötig; das Gesamtbudget
+mehrerer Prozesse muss weiterhin die Anwendung oder das Gateway einhalten.
+
 [Recherche, Messungen und Bedingungen für den Rollout](../../docs/performance/compute-review-2026-10-03.md).

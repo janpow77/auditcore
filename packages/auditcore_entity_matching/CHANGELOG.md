@@ -1,6 +1,6 @@
 # Changelog auditcore_entity_matching
 
-## Unreleased
+## 0.2.5 – 2026-10-03
 
 - Neue Profilversion `flowworkshop.state_aid` 2026.09.3 mit dem Verfahren
   `casefold_then_translate`: Kleinschreibung und NFC vor der Zeichentabelle,

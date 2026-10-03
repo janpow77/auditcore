@@ -83,10 +83,23 @@ def ocr(concurrency: int) -> dict[str, object]:
     )
 
 
+def prepared_rates(amounts: np.ndarray, rates: list[str]) -> dict[str, object]:
+    """Separate preparation from repeated evaluation; old revisions lack this API."""
+    from auditcore_compute.finance import PreparedRates
+
+    started = time.perf_counter()
+    prepared = PreparedRates(rates)
+    preparation_ms = (time.perf_counter() - started) * 1000
+    result = measure(lambda: share_cents(amounts, prepared))
+    assert result["sha256"] == digest(share_cents(amounts, rates))
+    return {"preparation_ms": preparation_ms, **result}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--parallel-ocr", action="store_true")
+    parser.add_argument("--prepared-rates", action="store_true")
     args = parser.parse_args()
     amounts = np.random.default_rng(20261003).integers(-50_000_000, 50_000_000, 500_000)
     rates = ["0.4", "0.5", "0.6", "0.75", "0.85"] * 100_000
@@ -103,6 +116,9 @@ def main() -> None:
         "engine": [item.as_dict() for item in engine_report()],
         "process_peak_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
     }
+    if args.prepared_rates:
+        result["prepared_rates_500000"] = prepared_rates(amounts, rates)
+        result["process_peak_rss_kib"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps({name: value for name, value in result.items() if name != "engine"}))
 

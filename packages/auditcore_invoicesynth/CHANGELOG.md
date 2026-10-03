@@ -1,5 +1,10 @@
 # Changelog auditcore_invoicesynth
 
+## 0.2.1 – 2026-10-03
+
+Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
+exakt gebundenen internen Abhängigkeiten.
+
 Rekonstruiert aus der Git-Historie (Pull Requests #46, #48, #79).
 
 ## 0.2.0 – 2026-09-26 – Paketstand für Release v0.4.2

@@ -132,6 +132,11 @@ Aufbewahrung dieses Verzeichnisses gehören zum Maintainerbetrieb. Nur der
 exportierte öffentliche Key gehört zu den Release-Assets. Kein Upload ganzer
 `.auditcore`-Verzeichnisse oder Verifikationsprotokolle.
 
+Bei der Vorbereitung in einem Git-Worktree zeigt `--signing-workspace` auf
+den Hauptcheckout mit diesem bestehenden dedizierten Schlüssel. Dadurch
+bleibt die Signaturidentität erhalten, ohne den privaten Schlüssel in den
+Worktree zu kopieren oder dort einen neuen Schlüssel zu erzeugen.
+
 Die [Preview v0.1.0](https://github.com/janpow77/auditcore/releases/tag/v0.1.0)
 ist mit 27 Assets veröffentlicht. Der Downloadpfad lautet
 `https://github.com/janpow77/auditcore/releases/download/v0.1.0`.

@@ -2,6 +2,9 @@
 
 ## Unreleased – Laufzeitoptimierung
 
+- `PreparedRates` hält fertig aufbereitete Quoten für mehrere Betragsspalten;
+  die erneute Umwandlung entfällt. Kürzungsberechnungen validieren Beträge
+  nur einmal am öffentlichen Eintrittspunkt.
 - Wiederkehrende Quoten werden typgetrennt und mit begrenztem Speicherbedarf
   aufbereitet. Elementweise Prüfungen erhalten einen NumPy-Rückfallpfad;
   `use_python()` behält die bisherige Referenzausführung.

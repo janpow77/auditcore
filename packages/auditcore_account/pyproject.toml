@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_auth==0.1.1"]
+dependencies = ["auditcore_auth==0.1.2"]
 [project.optional-dependencies]
 images = ["Pillow>=12.1"]
 passwords = ["argon2-cffi>=21.1"]

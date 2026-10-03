@@ -11,16 +11,16 @@ requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
 dependencies = [
-    "auditcore_common==0.2.0",
+    "auditcore_common==0.2.1",
     "auditcore_compute==0.1.0",
-    "auditcore_entity_matching==0.2.4",
+    "auditcore_entity_matching==0.2.5",
     "numpy>=1.24",
 ]
 
 [project.optional-dependencies]
-fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.4"]
+fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.5"]
 pandas = ["pandas>=2.1"]
-procurement = ["auditcore_procurement==0.2.4"]
+procurement = ["auditcore_procurement==0.2.5"]
 web = ["starlette>=0.26.1"]
 fastapi = ["fastapi>=0.92"]
 dev = [
@@ -31,8 +31,8 @@ dev = [
     "mypy>=1.15",
     "build>=1.2",
     "pandas>=2.1",
-    "auditcore_entity_matching[fuzzy]==0.2.4",
-    "auditcore_procurement==0.2.4",
+    "auditcore_entity_matching[fuzzy]==0.2.5",
+    "auditcore_procurement==0.2.5",
     "starlette>=0.26.1",
     "fastapi>=0.92",
     "httpx>=0.23.3",

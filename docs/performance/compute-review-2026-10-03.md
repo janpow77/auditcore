@@ -1,9 +1,10 @@
 # Performance-Review: auditcore Compute und Dokumentauswertungen
 
 Stand: 3. Oktober 2026. Technische Recherche und lokale Vergleichsmessung;
-keine Freigabe eines Produktivrollouts. Arbeitsbasis: `f1950dca` mit den
-vorbereiteten Compute-/Risk-Erweiterungen. Der unabhängige Gesamtrelease läuft
-weiter; dessen endgültige Artefakte und Versionsstände sind noch abzugleichen.
+keine Messung eines Produktivrollouts. Arbeitsbasis der Vergleichsmessung:
+`f1950dca` mit den vorbereiteten Compute-/Risk-Erweiterungen. Für den nun
+beauftragten Gesamtrelease v0.6.0 sind die CI- und Runner-Korrekturen aus
+PRs #224–226 integriert. Veröffentlichte Paketversionen werden nicht ersetzt.
 
 Das Vorgehen ist tragfähig, aber ein allgemeines Optimum ist nicht belegt.
 Die größten nachgewiesenen Gewinne kommen aus weniger wiederholter
@@ -58,7 +59,8 @@ auf dem Zielserver ist offen. Andere Kerne behalten zunächst ihre separat
 zu prüfenden Grenzen.
 
 Reproduzierbarer Einstieg: `scripts/benchmarks/compute_documents.py` mit
-`--output DATEI`, beim neuen OCR-Pfad zusätzlich `--parallel-ocr`. Für die
+`--output DATEI`, beim neuen OCR-Pfad zusätzlich `--parallel-ocr` und zur
+getrennten Messung vorbereiteter Quoten `--prepared-rates`. Für die
 Basis können unveränderte Paketquellen über `PYTHONPATH` geladen werden.
 Der erste dort ausgewiesene Aufruf ist kein kontrollierter Kaltstart: Import
 und vorhandene Dateicaches sind nicht ausgeschaltet. Rohdaten der ersten
@@ -66,6 +68,14 @@ Messung liegen im lokalen `scratchpad/performance-before.json` und
 `scratchpad/performance-after.json`; Kernauswahl im `scratchpad/dispatch-probe.json`.
 Die vergleichbaren Mediane, Ergebnis-Hashes und Kernauswahl sind zusätzlich
 im [Messprotokoll](compute-measurements-2026-10-03.json) versioniert.
+
+Die Bibliothek bietet zusätzlich `PreparedRates`: Einmal validierte Quoten
+lassen sich für mehrere gleich lange Betragsspalten wiederverwenden. Die
+Vorbereitung wird getrennt gemessen und muss bei einmaliger Nutzung zur
+Rechenzeit addiert werden. `LimitedRouterOcr` begrenzt die gleichzeitig
+laufenden Anfragen mehrerer Dokumentjobs, wenn diese dieselbe Instanz in
+einem Eventloop verwenden. Das ersetzt keine Grenze über mehrere Prozesse
+oder Server. Die Seitenparallelität bleibt standardmäßig bei einer Anfrage.
 
 ## Verbindliche Ergänzungen für die Umsetzung
 

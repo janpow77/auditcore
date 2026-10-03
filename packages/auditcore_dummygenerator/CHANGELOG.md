@@ -1,6 +1,6 @@
 # Changelog auditcore_dummygenerator
 
-## Unreleased
+## 0.1.4 – 2026-10-03
 
 Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`
 (Zweck, Verträge, zehn Invarianten, Fehlerfälle, Abgrenzung, Abweichungen vom

@@ -1,6 +1,6 @@
 # Changelog – auditcore_price_analysis
 
-## Unreleased
+## 0.1.4 – 2026-10-03
 
 - Profile `regulierung.hpp.nahwaerme` und `regulierung.hpp.wasser`
   **2026.09.3** (Entscheidung PA-R01): Fix- und Variabelanteil ergeben
