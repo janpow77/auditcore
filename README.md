@@ -234,11 +234,10 @@ Paket-README und `provenance.json` erzeugt.
 
 </details>
 
-Veröffentlichte Previews stehen auf der
-[Releases-Seite](https://github.com/janpow77/auditcore/releases): je nach Release Wheels,
-Source-Distributionen, signierte Debian-Pakete und – seit
-[v0.5.0](https://github.com/janpow77/auditcore/releases/tag/v0.5.0) – npm-Tarballs mit
-`npm-packages.json`. Der Paketindex `https://janpow77.github.io/auditcore/simple/` verlinkt
+Der aktuelle [Pre-release v0.6.0](https://github.com/janpow77/auditcore/releases/tag/v0.6.0)
+bündelt 33 Python-Bibliotheken und 10 npm-Pakete: Wheels, Source-Distributionen,
+signierte Debian-Pakete und npm-Tarballs mit `npm-packages.json`.
+Installationshinweise und Prüfnachweise stehen in der [Paketquellen-Anleitung](docs/deployment/package-feed.md). Der Paketindex `https://janpow77.github.io/auditcore/simple/` verlinkt
 alle Versionen mit SHA-256. Weiteres: [vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md),
 [Paketgrenzen und weitere Kandidaten](docs/architecture/DOMAIN_PACKAGE_PLAN.md),
 technischer Frameworknachweis im [Phasenbericht](docs/reports/FRAMEWORK_PHASES_1_2.md).
