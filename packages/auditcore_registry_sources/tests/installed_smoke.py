@@ -45,7 +45,7 @@ def main() -> None:
     assert required == [
         "auditcore_common==0.2.1",
         "auditcore_entity_matching==0.2.5",
-        "auditcore_harvest==0.1.4",
+        "auditcore_harvest==0.2.0",
     ], required
     assert find_spec("auditcore") is None
     assert len(available_profiles()) == 20

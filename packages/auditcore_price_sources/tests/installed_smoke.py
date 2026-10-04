@@ -11,7 +11,7 @@ def main() -> None:
     package = distribution("auditcore_price_sources")
     assert package.version == "0.1.5"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_common==0.2.1", "auditcore_harvest==0.1.4"], runtime
+    assert runtime == ["auditcore_common==0.2.1", "auditcore_harvest==0.2.0"], runtime
     assert find_spec("auditcore") is None
     from auditcore_harvest import (
         AdapterRegistry,
