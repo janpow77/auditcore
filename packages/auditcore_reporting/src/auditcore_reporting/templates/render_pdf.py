@@ -15,6 +15,7 @@ from auditcore_common.optional import require_module
 
 from .design import NEUTRAL_DESIGN, DesignProfile
 from .errors import RenderDependencyError
+from .options import DEFAULT_OPTIONS, RenderOptions
 from .render_docx import provenance
 from .resolve import (
     Node,
@@ -122,14 +123,18 @@ def _flowables(node: Node, styles: _Styles, width: float, design: DesignProfile)
     return [platypus.PageBreak()]
 
 
-def _canvas_class(design: DesignProfile) -> type:
+def _canvas_class(design: DesignProfile, options: RenderOptions) -> type:
     """Canvas that writes header, footer and "Seite X von Y" after the last page."""
     canvas_module = require_module("reportlab.pdfgen.canvas", RenderDependencyError, _MESSAGE)
+    created = options.created_utc
+    stamp = created.strftime("D:%Y%m%d%H%M%S+00'00'") if created is not None else ""
 
     class NumberedCanvas(canvas_module.Canvas):  # type: ignore[misc,name-defined]
         def __init__(self, *args: object, **kwargs: object) -> None:
             super().__init__(*args, **kwargs)
             self._pages: list[dict[str, object]] = []
+            if stamp:
+                self.setDateFormatter(lambda *_parts: stamp)
 
         def showPage(self) -> None:  # noqa: N802 - reportlab API
             self._pages.append(dict(self.__dict__))
@@ -161,7 +166,11 @@ def _canvas_class(design: DesignProfile) -> type:
     return NumberedCanvas
 
 
-def render_pdf(document: ResolvedDocument, design: DesignProfile = NEUTRAL_DESIGN) -> bytes:
+def render_pdf(
+    document: ResolvedDocument,
+    design: DesignProfile = NEUTRAL_DESIGN,
+    options: RenderOptions = DEFAULT_OPTIONS,
+) -> bytes:
     """PDF bytes (A4); raises :class:`RenderDependencyError` without the ``pdf`` extra."""
     platypus = require_module("reportlab.platypus", RenderDependencyError, _MESSAGE)
     pagesizes = require_module("reportlab.lib.pagesizes", RenderDependencyError, _MESSAGE)
@@ -169,12 +178,13 @@ def render_pdf(document: ResolvedDocument, design: DesignProfile = NEUTRAL_DESIG
     buffer = io.BytesIO()
     template = platypus.SimpleDocTemplate(
         buffer, pagesize=pagesizes.A4, leftMargin=margin, rightMargin=margin, topMargin=margin,
-        bottomMargin=margin, title=document.title, subject=provenance(document),
-        creator="auditcore_reporting", author="", invariant=1,
+        bottomMargin=margin, title=options.document_title(document.title),
+        subject=provenance(document), creator="auditcore_reporting", author=options.author,
+        invariant=1,
     )  # fmt: skip
     styles = _Styles(design)
     story: list[object] = []
     for node in document.nodes:
         story.extend(_flowables(node, styles, template.width, design))
-    template.build(story, canvasmaker=_canvas_class(design))
+    template.build(story, canvasmaker=_canvas_class(design, options))
     return buffer.getvalue()

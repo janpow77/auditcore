@@ -7,8 +7,10 @@ JSON form (``"if"`` is optional on every block)::
     {"type": "textblock", "id": "ohne_feststellungen"}
     {"type": "list", "source": "anlagen", "as": "a", "item": "{{ a.titel }}"}
     {"type": "table", "source": "positionen", "as": "p", "empty": "Keine Positionen.",
+     "header_if_empty": true,
      "columns": [{"header": "Betrag", "cell": "{{ p.betrag | eur }}", "align": "right"}]}
-    {"type": "fields", "rows": [{"label": "Aktenzeichen", "value": "{{ aktenzeichen }}"}]}
+    {"type": "fields", "empty": "—",
+     "rows": [{"label": "Aktenzeichen", "value": "{{ aktenzeichen }}"}]}
     {"type": "pagebreak"}
     {"type": "section", "title": "Feststellung {{ f.nummer }}", "for": "feststellungen",
      "as": "f", "blocks": [...]}
@@ -51,6 +53,14 @@ def condition_of(data: Mapping[str, object], where: str) -> Condition | None:
     if value is None or isinstance(value, (str, Mapping)):
         return value
     raise TemplateError(f"{where}.if: Bedingung muss Name oder Objekt sein.")
+
+
+def flag_of(data: Mapping[str, object], key: str, where: str) -> bool:
+    """Optional ``true``/``false`` field (default ``false``)."""
+    value = data.get(key, False)
+    if not isinstance(value, bool):
+        raise TemplateError(f"{where}.{key}: true oder false.")
+    return value
 
 
 def mapping_of(value: object, where: str) -> Mapping[str, object]:
@@ -110,6 +120,7 @@ def _table(data: Mapping[str, object], where: str, depth: int) -> Block:
         text_of(data, "as", where, "zeile"),
         condition_of(data, where),
         text_of(data, "empty", where, ""),
+        flag_of(data, "header_if_empty", where),
     )
 
 
@@ -118,7 +129,10 @@ def _fields(data: Mapping[str, object], where: str, depth: int) -> Block:
     for index, raw in enumerate(list_of(data.get("rows"), f"{where}.rows")):
         row = mapping_of(raw, f"{where}.rows[{index}]")
         rows.append(Field(text_of(row, "label", where), text_of(row, "value", where)))
-    return Fields(tuple(rows), condition_of(data, where))
+    empty = data.get("empty")
+    if empty is not None and not isinstance(empty, str):
+        raise TemplateError(f"{where}.empty: Text erwartet.")
+    return Fields(tuple(rows), condition_of(data, where), empty)
 
 
 def _pagebreak(data: Mapping[str, object], where: str, depth: int) -> Block:

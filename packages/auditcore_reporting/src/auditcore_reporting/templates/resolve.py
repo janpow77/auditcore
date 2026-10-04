@@ -166,23 +166,30 @@ class _Resolver:
     def listing(self, block: BulletList | Table, scope: Scope, where: str) -> None:
         entries = [scope.bind(block.var, entry) for entry in self.items(block.source, scope)]
         if not entries:
+            if isinstance(block, Table) and block.header_if_empty:
+                self.table(block, scope, entries, where)
             self.paragraphs(self.text(block.empty_text, scope, where), "")
         elif isinstance(block, BulletList):
             items = tuple(self.text(block.item, inner, where) for inner in entries)
             self.emit(RList(items), sum(map(len, items)))
         else:
-            rows = tuple(
-                tuple(self.text(c.cell, inner, where) for c in block.columns) for inner in entries
-            )
-            headers = tuple(self.text(c.header, scope, where) for c in block.columns)
-            aligns = tuple(c.align for c in block.columns)
-            self.emit(RTable(headers, aligns, rows), sum(len(cell) for row in rows for cell in row))
+            self.table(block, scope, entries, where)
+
+    def table(self, block: Table, scope: Scope, entries: list[Scope], where: str) -> None:
+        rows = tuple(
+            tuple(self.text(c.cell, inner, where) for c in block.columns) for inner in entries
+        )
+        headers = tuple(self.text(c.header, scope, where) for c in block.columns)
+        aligns = tuple(c.align for c in block.columns)
+        self.emit(RTable(headers, aligns, rows), sum(len(cell) for row in rows for cell in row))
 
     def fields(self, block: Fields, scope: Scope, where: str) -> None:
         rows = []
         for row in block.rows:
             value = self.text(row.value, scope, where)
-            if value.strip():
+            if not value.strip() and block.empty is not None:
+                value = self.text(block.empty, scope, where)
+            if value.strip() or block.empty is not None:
                 rows.append((self.text(row.label, scope, where), value))
         if rows:
             self.emit(RFields(tuple(rows)), sum(len(label) + len(v) for label, v in rows))

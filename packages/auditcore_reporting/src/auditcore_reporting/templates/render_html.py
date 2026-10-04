@@ -10,6 +10,7 @@ from __future__ import annotations
 from html import escape
 
 from .design import NEUTRAL_DESIGN, DesignProfile
+from .options import DEFAULT_OPTIONS, RenderOptions
 from .resolve import (
     Node,
     ResolvedDocument,
@@ -78,16 +79,25 @@ def _node(node: Node) -> str:
     return '<hr class="page">'
 
 
-def render_html(document: ResolvedDocument, design: DesignProfile = NEUTRAL_DESIGN) -> str:
+def render_html(
+    document: ResolvedDocument,
+    design: DesignProfile = NEUTRAL_DESIGN,
+    options: RenderOptions = DEFAULT_OPTIONS,
+) -> str:
     """Complete HTML5 page; identical input gives an identical page."""
     header = f"<header>{_text(design.header_text)}</header>" if design.header_text else ""
     footer = f"<footer>{_text(design.footer_text)}</footer>" if design.footer_text else ""
     body = "\n".join(_node(node) for node in document.nodes)
     generator = escape(f"{document.template_id} {document.template_version}", quote=True)
     meta = f'<meta name="generator" content="auditcore_reporting {generator}">'
+    if options.author:
+        meta += f'<meta name="author" content="{escape(options.author, quote=True)}">'
+    if options.created_utc is not None:
+        stamp = options.created_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+        meta += f'<meta name="dcterms.created" content="{stamp}">'
     return (
         '<!DOCTYPE html>\n<html lang="de"><head><meta charset="utf-8">'
         f'<meta http-equiv="Content-Security-Policy" content="{_CSP}">{meta}'
-        f"<title>{_text(document.title)}</title><style>{_style(design)}</style></head>"
+        f"<title>{_text(options.document_title(document.title))}</title><style>{_style(design)}</style></head>"
         f"<body>{header}<main>\n{body}\n</main>{footer}</body></html>\n"
     )

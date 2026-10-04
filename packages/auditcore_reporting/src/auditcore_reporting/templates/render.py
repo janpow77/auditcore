@@ -9,6 +9,7 @@ from auditcore_common.hashing import canonical_sha256
 from .design import NEUTRAL_DESIGN, DesignProfile
 from .errors import TemplateError
 from .model import ReportTemplate
+from .options import DEFAULT_OPTIONS, RenderOptions
 from .resolve import ResolveLimits, checked_data, resolve
 from .values import plain
 
@@ -40,9 +41,13 @@ def render(
     output: str = "docx",
     design: DesignProfile = NEUTRAL_DESIGN,
     limits: ResolveLimits | None = None,
+    *,
+    options: RenderOptions = DEFAULT_OPTIONS,
 ) -> RenderResult:
     """Render ``data`` with ``template`` as ``docx``, ``pdf`` or ``html``.
 
+    ``options`` sets document properties (author, title, creation time); Word
+    templates keep the properties of their source file and reject them.
     Raises :class:`TemplateDataError` (data contract), :class:`RenderLimitError`,
     :class:`RenderDependencyError` (missing extra) or :class:`TemplateError`.
     """
@@ -51,6 +56,11 @@ def render(
             f"{template.id}: Format {output!r} nicht vorgesehen ({template.formats})."
         )
     if template.docx is not None:
+        if options != DEFAULT_OPTIONS:
+            raise TemplateError(
+                f"{template.id}: Render-Optionen gelten nur für Vorlagen mit Blöcken;"
+                " Word-Vorlagen behalten die Eigenschaften der Vorlagedatei."
+            )
         from .docx_template import render_docx_template
 
         content = render_docx_template(template, data, limits)
@@ -63,15 +73,15 @@ def render(
     if output == "html":
         from .render_html import render_html
 
-        content = render_html(document, design).encode("utf-8")
+        content = render_html(document, design, options).encode("utf-8")
     elif output == "pdf":
         from .render_pdf import render_pdf
 
-        content = render_pdf(document, design)
+        content = render_pdf(document, design, options)
     else:
         from .render_docx import render_docx
 
-        content = render_docx(document, design)
+        content = render_docx(document, design, options)
     return RenderResult(
         content, output, MEDIA_TYPES[output], document.template_id, document.template_version,
         document.template_fingerprint, document.data_sha256, f"{design.id}@{design.version}",

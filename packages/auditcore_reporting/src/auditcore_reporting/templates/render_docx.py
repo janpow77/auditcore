@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from . import _wordml as wml
 from .design import NEUTRAL_DESIGN, DesignProfile
+from .options import DEFAULT_OPTIONS, RenderOptions
 from .resolve import (
     Node,
     ResolvedDocument,
@@ -151,8 +152,12 @@ def provenance(document: ResolvedDocument) -> str:
     )
 
 
-def render_docx(document: ResolvedDocument, design: DesignProfile = NEUTRAL_DESIGN) -> bytes:
-    """DOCX bytes; identical document and profile give identical bytes."""
+def render_docx(
+    document: ResolvedDocument,
+    design: DesignProfile = NEUTRAL_DESIGN,
+    options: RenderOptions = DEFAULT_OPTIONS,
+) -> bytes:
+    """DOCX bytes; identical document, profile and options give identical bytes."""
     width = _A4[0] - 2 * round(design.margin_cm * 567)
     with_header = bool(design.header_text or design.footer_text or design.page_numbers)
     body = "".join(_node(node, width, design) for node in document.nodes)
@@ -163,7 +168,15 @@ def render_docx(document: ResolvedDocument, design: DesignProfile = NEUTRAL_DESI
     entries = [
         ("[Content_Types].xml", wml.content_types(with_header)),
         ("_rels/.rels", wml.package_rels()),
-        ("docProps/core.xml", wml.core(document.title, provenance(document))),
+        (
+            "docProps/core.xml",
+            wml.core(
+                options.document_title(document.title),
+                provenance(document),
+                options.author,
+                options.created_utc,
+            ),
+        ),
         ("docProps/app.xml", wml.app()),
         ("word/document.xml", xml.encode("utf-8")),
         ("word/_rels/document.xml.rels", wml.document_rels(with_header)),

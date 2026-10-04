@@ -23,6 +23,7 @@ from .errors import (
     UnsafeDocumentError,
 )
 from .model import FORMATS, ReportTemplate, TextBlock
+from .options import RenderOptions
 from .registry import TemplateRegistry, builtin_registry
 from .render import MEDIA_TYPES, RenderResult, render
 from .resolve import ResolvedDocument, ResolveLimits, resolve
@@ -35,6 +36,7 @@ __all__ = [
     "Issue",
     "RenderDependencyError",
     "RenderLimitError",
+    "RenderOptions",
     "RenderResult",
     "ReportTemplate",
     "ResolveLimits",
