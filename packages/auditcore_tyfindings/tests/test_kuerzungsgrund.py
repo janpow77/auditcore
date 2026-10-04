@@ -30,7 +30,8 @@ def test_null_heisst_kein_kuerzungsgrund() -> None:
 
 
 @pytest.mark.parametrize(
-    ("schluessel", "kennziffer"), [("830", "8.3"), ("810", "8.10"), ("890", "8.90"), (" 810 ", "8.10")]
+    ("schluessel", "kennziffer"),
+    [("830", "8.3"), ("810", "8.10"), ("890", "8.90"), (" 810 ", "8.10")],
 )
 def test_fachlich_zugeordnete_schluessel(schluessel: str, kennziffer: str) -> None:
     eintrag = kuerzungsgrund(schluessel)
