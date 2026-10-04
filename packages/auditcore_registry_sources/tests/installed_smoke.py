@@ -40,7 +40,7 @@ CSV = (
 def main() -> None:
     """Exercise parsing, profiles, the screening boundary, API/register parsing and UBO."""
     package = distribution("auditcore_registry_sources")
-    assert package.version == "0.2.4"
+    assert package.version == "0.2.5"
     required = sorted(r for r in package.requires or [] if "extra ==" not in r)
     assert required == [
         "auditcore_common==0.2.1",
