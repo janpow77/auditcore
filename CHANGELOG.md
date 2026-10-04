@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Neues Paket `auditcore_tyfindings` 0.1.0: Types of Findings 2021–2027 für
+  Feststellungen der EFRE-Verwaltungsprüfungen, portiert aus dem VBA-Modul
+  `modAKB_ToF.bas` – Katalog (86 Unterkategorien), Zuordnung der
+  Fehlerkennziffern mit Schlüsselwortregeln und Gold-plating-Kennzeichen,
+  Formalregeln für nichtfinanzielle Mängel, versioniertes Profil
+  `efre.tof_2021_2027` 2026.10.1 mit Fingerabdruck. Dazu die bewusst
+  unvollständige Tabelle `efre.kuerzungsgrund_zs` (nur „0“ sicher, übrige
+  Schlüssel vom Fachbereich zu befüllen). Lokaler Paritätstest gegen eine
+  VBA-Ergebnismappe: 574 Belege und 46 Mängel ohne Abweichung.
 - Pre-release v0.7.0 (03.10.2026): neues Paket `auditcore_flow_agent` 0.1.0
   (Auftragswarteschlange, Ressourcenvergabe, Prozesswächter); alle übrigen
   Bibliotheken unverändert. Öffentlicher Nachweis in

@@ -1,0 +1,16 @@
+auditcore_tyfindings 0.1.0 — attribution and authorization
+
+Port of the VBA module modAKB_ToF.bas (akb-makro, commit 4799ac6c, by
+Jan Riener) to Python. The catalogue, the error-code table and the keyword
+rules were generated from the VBA expressions by tools/vba_profil.py; no
+other code was copied.
+
+The catalogue numbers, categories and English descriptions reproduce the
+European Commission's table "Types of findings 2021-2027" as contained in
+the VBA module. The German short labels and the mapping rules are a proposal
+of the source application, to be checked against the error catalogue of the
+managing authority; gold-plating candidates are hints, not findings.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library.

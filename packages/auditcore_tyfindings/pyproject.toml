@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_tyfindings"
+version = "0.1.0"
+description = "Types of Findings 2021-2027 for EFRE management verifications: versioned catalogue and mapping of error codes, keyword rules and gold-plating flags"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["auditcore_common==0.2.1"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-xdist>=3.6",
+    "pytest-timeout>=2.3",
+    "pytest-cov>=5",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "openpyxl>=3.1.5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_tyfindings = ["py.typed", "provenance.json", "profile_data/*.json", "kuerzungsgrund_data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --durations=25"
+timeout = 120
+markers = [
+    "slow: läuft länger als etwa 5 s; mit -m 'not slow' abwählbar",
+    "gpu: braucht torch/transformers (Donut); gezielt mit -m gpu",
+    "network: braucht Netzzugang; in CI ohne Netz abwählbar",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+# Keine feste python_version: jeder CI-Job prüft gegen seine eigene Laufzeit.
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["openpyxl", "openpyxl.*"]
+ignore_missing_imports = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]
