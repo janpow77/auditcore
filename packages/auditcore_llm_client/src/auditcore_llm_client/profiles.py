@@ -20,7 +20,8 @@ from auditcore_llm_client.jsontypes import JsonValue
 class GenerateRoute(StrEnum):
     """How a single prompt (plus optional system prompt) is sent to the ai-router."""
 
-    #: audit_designer: Ollama ``/api/chat`` with fixed options, HTTP 404 → ``/v1/chat/completions``.
+    #: Ollama ``/api/chat`` with the profile's fixed options (audit_designer; none in
+    #: ``OLLAMA_CHAT_PLAIN``), HTTP 404 → ``/v1/chat/completions``.
     OLLAMA_CHAT = "ollama_chat"
     #: flowinvoice/audit-portal: Ollama ``/api/generate``.
     OLLAMA_GENERATE = "ollama_generate"
@@ -181,23 +182,32 @@ COCKPIT = Profile(
     env=EnvNames(url="AI_ROUTER_URL", app_id="AI_ROUTER_APP_ID", api_key="AI_ROUTER_API_KEY"),
 )
 
+_GENERIC_ENV = EnvNames(
+    url="AI_ROUTER_URL",
+    app_id="AI_ROUTER_APP_ID",
+    api_key="AI_ROUTER_API_KEY",
+    flow_agent_url="FLOW_AGENT_URL",
+    flow_agent_app_id="FLOW_AGENT_APP_ID",
+    flow_agent_key="FLOW_AGENT_APP_KEY",
+    flow_agent_quality="FLOW_AGENT_QUALITY",
+)
+
 #: Neutral profile for new consumers: OpenAI-compatible routes, no fixed options.
-GENERIC = Profile(
-    name="generic",
+GENERIC = Profile(name="generic", default_app_id="auditcore", env=_GENERIC_ENV)
+
+#: Plain Ollama ``/api/chat`` for ``generate``: no fixed options, no ``keep_alive``,
+#: no ``think`` flag, no sampling defaults, ``<think>`` blocks kept. Only what the
+#: caller passes is sent; HTTP 404 → ``/v1/chat/completions`` as in AUDIT_DESIGNER.
+OLLAMA_CHAT_PLAIN = Profile(
+    name="ollama_chat_plain",
     default_app_id="auditcore",
-    env=EnvNames(
-        url="AI_ROUTER_URL",
-        app_id="AI_ROUTER_APP_ID",
-        api_key="AI_ROUTER_API_KEY",
-        flow_agent_url="FLOW_AGENT_URL",
-        flow_agent_app_id="FLOW_AGENT_APP_ID",
-        flow_agent_key="FLOW_AGENT_APP_KEY",
-        flow_agent_quality="FLOW_AGENT_QUALITY",
-    ),
+    env=_GENERIC_ENV,
+    generate_route=GenerateRoute.OLLAMA_CHAT,
 )
 
 PROFILES: dict[str, Profile] = {
-    p.name: p for p in (AUDIT_DESIGNER, FLOWINVOICE, AUDIT_PORTAL, COCKPIT, GENERIC)
+    p.name: p
+    for p in (AUDIT_DESIGNER, FLOWINVOICE, AUDIT_PORTAL, COCKPIT, GENERIC, OLLAMA_CHAT_PLAIN)
 }
 
 
