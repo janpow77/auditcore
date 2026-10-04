@@ -51,6 +51,7 @@ from .model import (
 )
 from .policies import CancelToken, RateLimit, RetryPolicy
 from .ports import Clock, CredentialProvider, EventSink, Sink, Sleeper, StateStore, Transport
+from .transport import DEFAULT_STATUS_POLICY, StatusPolicy
 
 __all__ = ["CancelToken", "HarvestEngine", "RateLimit", "RetryPolicy"]
 
@@ -77,6 +78,7 @@ class HarvestEngine:
     request_timeout: float = 30.0
     events: EventSink = field(default_factory=_NullEvents)
     rng: random.Random = field(default_factory=lambda: random.Random(0))
+    status_policy: StatusPolicy = DEFAULT_STATUS_POLICY
 
     def _emit(self, kind: str, request: HarvestRequest, **fields: object) -> None:
         self.events.emit(
@@ -245,6 +247,7 @@ class HarvestEngine:
                 self.clock,
                 self.request_timeout,
                 run.pages + 1,
+                self.status_policy,
             )
             page = self._fetch(adapter, context, cursor, cancel, run.deadline, run.attempts)
             run.pages += 1
@@ -293,13 +296,13 @@ class HarvestEngine:
             self._pages(run, adapter, request, sink, settings, cursor, cancel)
             status = RunStatus.PARTIAL if run.partial else RunStatus.COMPLETE
         except Cancelled as error:
-            run.errors.append(error.to_dict())
+            run.fail(error)
             status = RunStatus.CANCELLED
         except LimitReached as error:
-            run.errors.append(error.to_dict())
+            run.fail(error)
             status = RunStatus.PARTIAL
         except HarvestError as error:
-            run.errors.append(error.to_dict())
+            run.fail(error)
             status = RunStatus.PARTIAL if run.current is not run.before else RunStatus.FAILED
         result = run.result(source, request, status, self.clock.now().isoformat())
         self._emit(
@@ -332,6 +335,12 @@ class _Run:
     exhausted: bool = False
     partial: bool = False
     from_beginning: bool = True
+    last_error: HarvestError | None = None
+
+    def fail(self, error: HarvestError) -> None:
+        """Record the error that ends the run."""
+        self.errors.append(error.to_dict())
+        self.last_error = error
 
     def result(
         self, source: Source, request: HarvestRequest, status: RunStatus, finished: str
@@ -361,4 +370,6 @@ class _Run:
                 and source.snapshot_semantics is SnapshotSemantics.FULL_SNAPSHOT_REPLACE
             ),
             attempts=self.attempts[0],
+            http_status=None if self.last_error is None else self.last_error.http_status,
+            error_kind=None if self.last_error is None else self.last_error.kind,
         )
