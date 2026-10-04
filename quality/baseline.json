@@ -371,6 +371,18 @@
       },
       "coverage_percent": 98.92
     },
+    "auditcore_tyfindings": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 13
+      },
+      "coverage_percent": 100.0
+    },
     "js:common": {
       "metrics": {
         "eslint_file_disables": 0,

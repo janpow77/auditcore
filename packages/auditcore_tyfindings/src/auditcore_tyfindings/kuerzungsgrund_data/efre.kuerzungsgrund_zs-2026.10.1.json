@@ -1,0 +1,16 @@
+{
+ "schema": "auditcore_tyfindings.kuerzungsgrund/1",
+ "id": "efre.kuerzungsgrund_zs",
+ "version": "2026.10.1",
+ "status": "INCOMPLETE_DOMAIN_INPUT_REQUIRED",
+ "legal_status": "Schlüssel des Kürzungsgrunds in den Beleglisten der Zwischengeschalteten Stelle. Sicher bekannt ist nur „0“ (kein Kürzungsgrund). Die übrigen Schlüssel sind bekannt, ihre Fehlerkennziffer ist es nicht; vom Fachbereich zu befüllen.",
+ "source": {
+  "kind": "fachliche_angabe",
+  "note": "Schlüsselbeispiele „0“, „810“, „890“ aus dem Auftrag vom 04.10.2026; keine Zuordnung erfunden."
+ },
+ "eintraege": [
+  {"schluessel": "0", "status": "kein_kuerzungsgrund", "kennziffer": null, "bemerkung": "kein Kürzungsgrund"},
+  {"schluessel": "810", "status": "offen", "kennziffer": null, "bemerkung": "vom Fachbereich zu befüllen"},
+  {"schluessel": "890", "status": "offen", "kennziffer": null, "bemerkung": "vom Fachbereich zu befüllen"}
+ ]
+}
