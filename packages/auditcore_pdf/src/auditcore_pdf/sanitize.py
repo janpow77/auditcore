@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import contextlib
-import re
 from typing import TYPE_CHECKING
 
+from auditcore_pdf.matching import PatternSpec, TextMatcher
 from auditcore_pdf.models import SanitizationPolicy
 
 if TYPE_CHECKING:
@@ -13,63 +13,99 @@ if TYPE_CHECKING:
 
 PDF_ANNOT_REDACT = 12
 
+#: Von PyMuPDF berechnete, nicht schreibbare Metadatenfelder
+_READONLY_METADATA = frozenset({"format", "encryption"})
 
-def _matches_any(text: str, terms: list[str], patterns: list[str]) -> bool:
-    """Prüft, ob der gegebene Text einen der Begriffe oder regulären Ausdrücke enthält."""
-    if not text:
-        return False
-    if any(t and t.lower() in text.lower() for t in terms):
+
+def is_binary_attachment(data: bytes) -> bool:
+    """Gilt ein Anhang als binär oder komprimiert und damit als nicht textlich prüfbar?"""
+    if b"\x00" in data:
         return True
-    return any(p and bool(re.search(p, text, re.IGNORECASE)) for p in patterns)
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError:
+        return True
+    return False
+
+
+def remove_xmp(doc: Document) -> list[str]:
+    """Entfernt den XMP-Strom des Dokuments und alle XMP-Verweise an anderen Objekten."""
+    removed: list[str] = []
+    with contextlib.suppress(Exception):
+        if doc.get_xml_metadata():
+            doc.del_xml_metadata()
+            removed.append("xmp_metadata")
+    catalog = doc.pdf_catalog()
+    count = 0
+    for xref in range(1, doc.xref_length()):
+        if xref != catalog and doc.xref_get_key(xref, "Metadata")[0] == "xref":
+            doc.xref_set_key(xref, "Metadata", "null")
+            count += 1
+    if count:
+        removed.append(f"xmp_objekte:{count}")
+    return removed
+
+
+def _clean_xmp_on_match(doc: Document, matcher: TextMatcher) -> list[str]:
+    with contextlib.suppress(Exception):
+        xml = doc.get_xml_metadata()
+        if xml and matcher.matches(xml):
+            doc.del_xml_metadata()
+            return ["xmp_metadata"]
+    return []
+
+
+def _scrub_info(doc: Document, meta: dict[str, str], matcher: TextMatcher) -> list[str]:
+    cleaned = [
+        key
+        for key, value in meta.items()
+        if key not in _READONLY_METADATA and value and matcher.matches(str(value))
+    ]
+    if cleaned:
+        doc.set_metadata({**meta, **dict.fromkeys(cleaned, "")})
+    return cleaned
 
 
 def sanitize_metadata(
     doc: Document,
     terms: list[str],
-    patterns: list[str],
+    patterns: list[PatternSpec],
     policy: SanitizationPolicy,
 ) -> list[str]:
-    """Bereinigt Standard- und XMP-Metadaten des Dokuments."""
-    cleaned_fields: list[str] = []
-    meta = dict(doc.metadata or {})
+    """Bereinigt Standard- und XMP-Metadaten des Dokuments.
 
-    standard_keys = ["title", "author", "subject", "keywords", "creator", "producer"]
-
+    Geprüft werden alle schreibbaren Felder einschließlich Erstell- und Änderungsdatum.
+    Mit ``policy.remove_xmp`` wird XMP bei jeder Metadatenbereinigung entfernt, weil
+    XMP oft ältere Fassungen und kodierte Werte enthält, die eine Textsuche nicht
+    sicher erfasst; sonst nur bei Treffer (``clean_xmp``).
+    """
+    meta = {str(k): str(v or "") for k, v in (doc.metadata or {}).items()}
     if policy.remove_all_metadata:
-        empty_meta = {k: "" for k in meta}
-        doc.set_metadata(empty_meta)
-        if policy.clean_xmp:
-            with contextlib.suppress(Exception):
-                doc.del_xml_metadata()
-        return list(meta.keys())
+        doc.set_metadata(dict.fromkeys(meta, ""))
+        xmp = remove_xmp(doc) if policy.clean_xmp or policy.remove_xmp else []
+        return list(meta) + xmp
+    if not policy.scrub_metadata:
+        return []
+    matcher = TextMatcher(terms, patterns)
+    cleaned = _scrub_info(doc, meta, matcher)
+    if policy.remove_xmp:
+        cleaned.extend(remove_xmp(doc))
+    elif policy.clean_xmp:
+        cleaned.extend(_clean_xmp_on_match(doc, matcher))
+    return cleaned
 
-    if policy.scrub_metadata:
-        updated = False
-        new_meta = dict(meta)
-        for k in standard_keys:
-            val = str(meta.get(k, "") or "")
-            if val and _matches_any(val, terms, patterns):
-                new_meta[k] = ""
-                cleaned_fields.append(k)
-                updated = True
-        if updated:
-            doc.set_metadata(new_meta)
 
-        # XMP-Metadatenstrom prüfen und bei Bedarf bereinigen
-        if policy.clean_xmp:
-            with contextlib.suppress(Exception):
-                xml = doc.get_xml_metadata()
-                if xml and _matches_any(xml, terms, patterns):
-                    doc.del_xml_metadata()
-                    cleaned_fields.append("xmp_metadata")
-
-    return cleaned_fields
+def _attachment_has_match(doc: Document, name: str, matcher: TextMatcher) -> bool:
+    data = b""
+    with contextlib.suppress(Exception):
+        data = bytes(doc.embfile_get(name))
+    return matcher.matches(name) or matcher.matches(data.decode("utf-8", errors="ignore"))
 
 
 def sanitize_attachments(
     doc: Document,
     terms: list[str],
-    patterns: list[str],
+    patterns: list[PatternSpec],
     policy: SanitizationPolicy,
 ) -> list[str]:
     """Entfernt oder bereinigt eingebettete Dateien (EmbeddedFiles)."""
@@ -79,31 +115,33 @@ def sanitize_attachments(
     except Exception:
         return removed
 
+    matcher = TextMatcher(terms, patterns)
     for name in names:
-        should_remove = policy.strip_attachments
-        if not should_remove:
-            if _matches_any(name, terms, patterns):
-                should_remove = True
-            else:
-                with contextlib.suppress(Exception):
-                    data = doc.embfile_get(name)
-                    text_sample = data.decode("utf-8", errors="ignore")
-                    if _matches_any(text_sample, terms, patterns):
-                        should_remove = True
-        if should_remove:
+        if policy.strip_attachments or _attachment_has_match(doc, name, matcher):
             with contextlib.suppress(Exception):
                 doc.embfile_del(name)
                 removed.append(name)
     return removed
 
 
+def find_unverifiable_attachments(doc: Document) -> list[str]:
+    """Namen der Anhänge, deren Inhalt binär oder komprimiert ist (nicht textlich prüfbar)."""
+    unverifiable: list[str] = []
+    with contextlib.suppress(Exception):
+        for name in doc.embfile_names():
+            if is_binary_attachment(bytes(doc.embfile_get(name))):
+                unverifiable.append(str(name))
+    return unverifiable
+
+
 def sanitize_annotations(
     doc: Document,
     terms: list[str],
-    patterns: list[str],
+    patterns: list[PatternSpec],
     policy: SanitizationPolicy,
 ) -> int:
     """Entfernt oder bereinigt Notizen, Kommentare und Hervorhebungen mit vertraulichem Inhalt."""
+    matcher = TextMatcher(terms, patterns)
     removed_count = 0
     for idx in range(doc.page_count):
         page = doc[idx]
@@ -119,16 +157,11 @@ def sanitize_annotations(
                 continue
 
             info = annot.info or {}
-            content = str(info.get("content", "") or "")
-            subject = str(info.get("subject", "") or "")
-            title = str(info.get("title", "") or "")
-            annot_text = f"{content} {subject} {title}".strip()
+            annot_text = " ".join(
+                str(info.get(key, "") or "") for key in ("content", "subject", "title")
+            ).strip()
 
-            should_delete = policy.strip_annotations
-            if not should_delete and annot_text and _matches_any(annot_text, terms, patterns):
-                should_delete = True
-
-            if should_delete:
+            if policy.strip_annotations or matcher.matches(annot_text):
                 with contextlib.suppress(Exception):
                     page.delete_annot(annot)
                     removed_count += 1

@@ -64,6 +64,19 @@ def make_matrix(zoom_x: float, zoom_y: float) -> Matrix:
     return fitz.Matrix(zoom_x, zoom_y)
 
 
+def glyph_text_flags(base: str) -> int | None:
+    """Textflags, die ActualText ignorieren und die tatsächlichen Glyphen liefern.
+
+    ``base`` ist der Name der Grundflags (``TEXTFLAGS_WORDS`` oder ``TEXTFLAGS_TEXT``).
+    ``None``, wenn die installierte PyMuPDF-Version ``TEXT_IGNORE_ACTUALTEXT`` nicht kennt.
+    """
+    _require_engine()
+    ignore = getattr(fitz, "TEXT_IGNORE_ACTUALTEXT", None)
+    if ignore is None:
+        return None
+    return int(getattr(fitz, base)) | int(ignore)
+
+
 def open_pdf(content: bytes) -> Document:
     """Öffnet ein PDF-Dokument sicher aus einem Byte-Puffer im Arbeitsspeicher."""
     _require_engine()
