@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pre-release v0.8.0 (04.10.2026): neues Paket `auditcore_tyfindings` 0.1.0
+  (Types of Findings 2021–2027); alle übrigen Bibliotheken unverändert.
+  Öffentlicher Nachweis in `docs/reports/domain-public-installation-v0.8.0.json`.
 - Neues Paket `auditcore_tyfindings` 0.1.0: Types of Findings 2021–2027 für
   Feststellungen der EFRE-Verwaltungsprüfungen, portiert aus dem VBA-Modul
   `modAKB_ToF.bas` – Katalog (86 Unterkategorien), Zuordnung der
