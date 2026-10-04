@@ -14,6 +14,11 @@ JSON form (``"if"`` is optional on every block)::
     {"type": "fields", "empty": "—",
      "rows": [{"label": "Aktenzeichen", "value": "{{ aktenzeichen }}"}]}
     {"type": "pagebreak"}
+    {"type": "heading", "text": "1. Anlass", "anchor": "anlass"}
+    {"type": "paragraph", "text": "Siehe Anlass", "link": "anlass"}
+    {"type": "image", "image": "wappen", "width_cm": 2.5, "align": "center", "alt": "Wappen"}
+    {"type": "image", "source": "anlage.foto"}      # base64 or data: URI in the data
+    {"type": "toc", "title": "Inhalt", "levels": 2}
     {"type": "section", "title": "Feststellung {{ f.nummer }}", "for": "feststellungen",
      "as": "f", "blocks": [...]}
 """
@@ -31,10 +36,12 @@ from .model import (
     BlockRef,
     BulletList,
     Column,
+    Contents,
     Field,
     Fields,
     Fill,
     Heading,
+    Image,
     PageBreak,
     Paragraph,
     Section,
@@ -43,6 +50,7 @@ from .model import (
 
 MAX_BLOCK_DEPTH = 8
 _HEX = re.compile(r"[0-9A-F]{6}")
+_ANCHOR = re.compile(r"[a-z][a-z0-9-]{0,31}")
 
 
 def text_of(data: Mapping[str, object], key: str, where: str, default: str | None = None) -> str:
@@ -83,15 +91,57 @@ def list_of(value: object, where: str) -> list[object]:
     return value
 
 
+def anchor_of(data: Mapping[str, object], key: str, where: str) -> str:
+    """Optional jump target ``[a-z][a-z0-9-]`` (≤ 32); ``auto-…`` is reserved."""
+    value = text_of(data, key, where, "")
+    if value and (not _ANCHOR.fullmatch(value) or value.startswith("auto-")):
+        raise TemplateError(f"{where}.{key}: Sprungmarke aus a-z, 0-9, - (nicht 'auto-…').")
+    return value
+
+
 def _heading(data: Mapping[str, object], where: str, depth: int) -> Block:
     level = data.get("level", 1)
     if level not in (1, 2, 3):
         raise TemplateError(f"{where}.level: 1, 2 oder 3.")
-    return Heading(text_of(data, "text", where), int(str(level)), condition_of(data, where))
+    return Heading(
+        text_of(data, "text", where), int(str(level)), condition_of(data, where),
+        anchor_of(data, "anchor", where),
+    )  # fmt: skip
 
 
 def _paragraph(data: Mapping[str, object], where: str, depth: int) -> Block:
-    return Paragraph(text_of(data, "text", where), condition_of(data, where))
+    return Paragraph(
+        text_of(data, "text", where), condition_of(data, where), anchor_of(data, "link", where)
+    )
+
+
+def _number(data: Mapping[str, object], key: str, where: str, low: float, high: float) -> float:
+    value = data.get(key, 0)
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not low <= value <= high:
+        raise TemplateError(f"{where}.{key}: Zahl von {low:g} bis {high:g}.")
+    return float(value)
+
+
+def _image(data: Mapping[str, object], where: str, depth: int) -> Block:
+    image, source = text_of(data, "image", where, ""), text_of(data, "source", where, "")
+    if bool(image) == bool(source):
+        raise TemplateError(f"{where}: genau eins von 'image' (Name) und 'source' (Datenpfad).")
+    align = text_of(data, "align", where, "left")
+    if align not in ("left", "right", "center"):
+        raise TemplateError(f"{where}.align: left, right oder center.")
+    return Image(
+        image, source, _number(data, "width_cm", where, 0, 30), align,
+        text_of(data, "alt", where, ""), condition_of(data, where),
+    )  # fmt: skip
+
+
+def _contents(data: Mapping[str, object], where: str, depth: int) -> Block:
+    levels = data.get("levels", 2)
+    if levels not in (1, 2, 3):
+        raise TemplateError(f"{where}.levels: 1, 2 oder 3.")
+    return Contents(
+        text_of(data, "title", where, "Inhalt"), int(str(levels)), condition_of(data, where)
+    )
 
 
 def _textblock(data: Mapping[str, object], where: str, depth: int) -> Block:
@@ -137,13 +187,6 @@ def fills_of(data: Mapping[str, object], key: str, where: str) -> tuple[Fill, ..
     return tuple(_fill(rule, f"{where}.{key}[{i}]") for i, rule in enumerate(rules))
 
 
-def _width(data: Mapping[str, object], where: str) -> float:
-    value = data.get("width", 0)
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 <= value <= 100:
-        raise TemplateError(f"{where}.width: relative Breite 0–100 (0 = gleicher Anteil).")
-    return float(value)
-
-
 def _column(value: object, where: str) -> Column:
     data = mapping_of(value, where)
     align = text_of(data, "align", where, "left")
@@ -151,7 +194,8 @@ def _column(value: object, where: str) -> Column:
         raise TemplateError(f"{where}.align: left, right oder center.")
     return Column(
         text_of(data, "header", where), text_of(data, "cell", where), align,
-        _width(data, where), flag_of(data, "bold", where), fills_of(data, "fill", where),
+        _number(data, "width", where, 0, 100), flag_of(data, "bold", where),
+        fills_of(data, "fill", where),
     )  # fmt: skip
 
 
@@ -206,6 +250,7 @@ def _section(data: Mapping[str, object], where: str, depth: int) -> Block:
         text_of(data, "as", where, "eintrag"),
         text_of(data, "id", where, ""),
         int(str(level)),
+        anchor_of(data, "anchor", where),
     )
 
 
@@ -218,6 +263,8 @@ _PARSERS: dict[str, Callable[[Mapping[str, object], str, int], Block]] = {
     "fields": _fields,
     "pagebreak": _pagebreak,
     "section": _section,
+    "image": _image,
+    "toc": _contents,
 }
 
 

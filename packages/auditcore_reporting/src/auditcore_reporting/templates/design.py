@@ -15,6 +15,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 
 from .errors import TemplateError
+from .images import ReportImage
 
 #: PDF base fonts that need no font file (WinAnsi covers ä, ö, ü, ß, €, „ “ –).
 PDF_FONTS = ("Helvetica", "Times-Roman", "Courier")
@@ -90,6 +91,8 @@ class DesignProfile:
     orientation: str = "portrait"
     #: TrueType fonts selectable as ``pdf_font`` (Python API only, not JSON).
     pdf_fonts: tuple[PdfFont, ...] = ()
+    #: Pictures of the corporate design (coat of arms, logo) for ``image`` blocks.
+    images: tuple[ReportImage, ...] = ()
 
     def __post_init__(self) -> None:
         if not _ID.fullmatch(self.id):
@@ -113,6 +116,8 @@ class DesignProfile:
     def _check_fonts(self) -> None:
         if not self.font_family.strip() or len(self.font_family) > 80 or "<" in self.font_family:
             raise TemplateError(f"Gestaltungsprofil {self.id}: ungültige Schriftart.")
+        if not all(isinstance(image, ReportImage) for image in self.images):
+            raise TemplateError(f"Gestaltungsprofil {self.id}: images als ReportImage.")
         names = [font.name for font in self.pdf_fonts]
         if len(set(names)) != len(names) or not all(isinstance(f, PdfFont) for f in self.pdf_fonts):
             raise TemplateError(f"Gestaltungsprofil {self.id}: pdf_fonts mit eindeutigen Namen.")
@@ -130,6 +135,7 @@ class DesignProfile:
         data = {f.name: getattr(self, f.name) for f in fields(self)}
         data["heading_sizes_pt"] = list(self.heading_sizes_pt)
         data["pdf_fonts"] = [font.to_dict() for font in self.pdf_fonts]
+        data["images"] = [image.name for image in self.images]
         return data
 
 
@@ -152,8 +158,11 @@ def design_from_dict(data: Mapping[str, object]) -> DesignProfile:
     if unknown:
         raise TemplateError(f"Gestaltungsprofil: unbekannte Felder {unknown}.")
     values = dict(data)
-    if values.pop("pdf_fonts", []) not in ([], ()):
-        raise TemplateError("Gestaltungsprofil: pdf_fonts nur über die Python-API (PdfFont).")
+    if values.pop("pdf_fonts", []) not in ([], ()) or values.pop("images", []) not in ([], ()):
+        raise TemplateError(
+            "Gestaltungsprofil: pdf_fonts und images nur über die Python-API"
+            " (PdfFont, ReportImage)."
+        )
     if "heading_sizes_pt" in values:
         sizes = values["heading_sizes_pt"]
         if not isinstance(sizes, (list, tuple)):

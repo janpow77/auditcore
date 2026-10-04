@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 
 from .errors import TemplateError
+from .images import ReportImage
 from .values import CONTROL
 
 _MAX_TEXT = 255
@@ -29,16 +30,21 @@ class RenderOptions:
     ``title`` replaces the resolved template title as document property only
     (the visible text is unchanged); ``created`` must carry a time zone and is
     written in UTC (DOCX ``dcterms:created``/``modified``, PDF ``CreationDate``/
-    ``ModDate``). Empty values leave the output exactly as without options.
+    ``ModDate``). ``images`` supply pictures for ``image`` blocks. Empty
+    values leave the output exactly as without options.
     """
 
     author: str = ""
     title: str = ""
     created: datetime | None = None
+    #: Pictures for ``image`` blocks; they take precedence over the design profile's.
+    images: tuple[ReportImage, ...] = ()
 
     def __post_init__(self) -> None:
         _checked(self.author, "author")
         _checked(self.title, "title")
+        if not all(isinstance(image, ReportImage) for image in self.images):
+            raise TemplateError("Render-Optionen: images als ReportImage.")
         if self.created is not None and self.created.utcoffset() is None:
             raise TemplateError("Render-Optionen: created braucht eine Zeitzone.")
 

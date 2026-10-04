@@ -69,7 +69,7 @@ def render(
             content, output, MEDIA_TYPES[output], template.id, template.version,
             template.fingerprint, canonical_sha256(values), "docx-vorlage", (),
         )  # fmt: skip
-    document = resolve(template, data, limits)
+    document = resolve(template, data, limits, images=(*options.images, *design.images))
     if output == "html":
         from .render_html import render_html
 

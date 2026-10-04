@@ -198,8 +198,9 @@ Textbausteinen. Ausgabe deterministisch: gleiche Eingaben, gleiche Bytes
 (feste ZIP-Zeitstempel, reportlab `invariant`). DOCX und HTML entstehen ohne
 Fremdpakete; PDF braucht `[pdf]`. Die Gestaltung ist ein austauschbares
 `DesignProfile` (Schrift, Farben, Ränder, Kopf- und Fußzeile); mitgeliefert
-ist nur `neutral-v1`. Logos und Briefköpfe gehören in die Word-Vorlage der
-Anwendung. Mitgelieferte neutrale Vorlagen: `vermerk` und `pruefbericht`
+ist nur `neutral-v1`. Briefköpfe gehören in die Word-Vorlage der
+Anwendung; Wappen und Logos kann der Block `image` aus übergebenen bytes
+einsetzen. Mitgelieferte neutrale Vorlagen: `vermerk` und `pruefbericht`
 (ESI-Fonds, Art. 74/77 VO (EU) 2021/1060).
 
 ```python
@@ -277,6 +278,41 @@ html = render(quer, {"zeilen": [{"name": "A", "neu": True}]}, "html").content.de
 assert "@page{size:A4 landscape}" in html and "background:#FFF2CC" in html
 # PDF mit eigener Schrift: DesignProfile(id="amt", pdf_font="Amt",
 #     pdf_fonts=(PdfFont("Amt", regular_ttf_bytes, bold=bold_ttf_bytes),))
+```
+
+Bilder, Sprungmarken und Inhaltsverzeichnis (ab 0.4.0): `{"type": "image",
+"image": "wappen", "width_cm": 2.5}` setzt ein `ReportImage` (PNG/JPEG als
+bytes aus `RenderOptions.images` oder `DesignProfile.images`) ein,
+`{"type": "image", "source": "pfad"}` ein Base64-Bild aus den Daten.
+`"anchor"` an Überschriften und Abschnitten, `"link"` an Absätzen,
+`{"type": "toc"}` und `"outline": true` ergeben Sprünge, ein
+Inhaltsverzeichnis (PDF mit Seitenzahlen) und PDF-Lesezeichen:
+
+```python
+import base64
+
+from auditcore_reporting.templates import RenderOptions, ReportImage, define_template, render
+
+pixel = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+)
+akte = define_template(
+    {
+        "id": "akte",
+        "version": "1.0.0",
+        "title": "Akte",
+        "outline": True,
+        "schema": {"type": "object", "properties": {}},
+        "blocks": [
+            {"type": "toc", "levels": 1},
+            {"type": "paragraph", "text": "Zur Anlage", "link": "anlage"},
+            {"type": "heading", "text": "Anlage", "anchor": "anlage"},
+            {"type": "image", "image": "wappen", "width_cm": 2},
+        ],
+    }
+)
+html = render(akte, {}, "html", options=RenderOptions(images=(ReportImage("wappen", pixel),)))
+assert '<a href="#anlage">Zur Anlage</a>' in html.content.decode()
 ```
 
 `format_eur` (Modul `format_de`) setzt den gemeinsamen Vertrag

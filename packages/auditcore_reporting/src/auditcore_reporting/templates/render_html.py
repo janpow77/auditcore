@@ -7,15 +7,18 @@ and as an archivable HTML version.
 
 from __future__ import annotations
 
+import base64
 from html import escape
 
 from .design import NEUTRAL_DESIGN, DesignProfile, page_orientation
 from .options import DEFAULT_OPTIONS, RenderOptions
 from .resolve import (
     Node,
+    RContents,
     ResolvedDocument,
     RFields,
     RHeading,
+    RImage,
     RList,
     RPageBreak,
     RParagraph,
@@ -93,12 +96,40 @@ def _table(node: RTable) -> str:
     return f"<table>{columns}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
 
 
-def _node(node: Node) -> str:
+def _picture(node: RImage) -> str:
+    width, _ = node.size_cm(100.0)
+    source = f"data:image/{node.image.kind};base64,{base64.b64encode(node.image.data).decode()}"
+    image = (
+        f'<img src="{source}" alt="{escape(node.alt, quote=True)}"'
+        f' style="width:{width:.2f}cm;max-width:100%">'
+    )
+    return f'<p class="{node.align}">{image}</p>'
+
+
+def _contents(node: RContents) -> str:
+    items = "".join(
+        f'<li style="margin-left:{(level - 1) * 1.5}em"><a href="#{anchor}">{_text(text)}</a></li>'
+        for level, text, anchor in node.entries
+    )
+    return f'<nav><p><b>{_text(node.title)}</b></p><ul style="list-style:none">{items}</ul></nav>'
+
+
+def _navigation(node: RHeading | RParagraph) -> str:
     if isinstance(node, RHeading):
-        return f"<h{node.level}>{_text(node.text)}</h{node.level}>"
-    if isinstance(node, RParagraph):
-        block = f' data-block="{escape(node.block, quote=True)}"' if node.block else ""
-        return f"<p{block}>{_text(node.text)}</p>"
+        anchor = f' id="{node.anchor}"' if node.anchor else ""
+        return f"<h{node.level}{anchor}>{_text(node.text)}</h{node.level}>"
+    block = f' data-block="{escape(node.block, quote=True)}"' if node.block else ""
+    text = f'<a href="#{node.link}">{_text(node.text)}</a>' if node.link else _text(node.text)
+    return f"<p{block}>{text}</p>"
+
+
+def _node(node: Node) -> str:
+    if isinstance(node, (RHeading, RParagraph)):
+        return _navigation(node)
+    if isinstance(node, RImage):
+        return _picture(node)
+    if isinstance(node, RContents):
+        return _contents(node)
     if isinstance(node, RList):
         return "<ul>" + "".join(f"<li>{_text(item)}</li>" for item in node.items) + "</ul>"
     if isinstance(node, RTable):
@@ -119,6 +150,8 @@ def render_html(
     header = f"<header>{_text(design.header_text)}</header>" if design.header_text else ""
     footer = f"<footer>{_text(design.footer_text)}</footer>" if design.footer_text else ""
     body = "\n".join(_node(node) for node in document.nodes)
+    pictures = any(isinstance(node, RImage) for node in document.nodes)
+    csp = f"{_CSP}; img-src data:" if pictures else _CSP
     style = _style(design, page_orientation(document.orientation, design))
     generator = escape(f"{document.template_id} {document.template_version}", quote=True)
     meta = f'<meta name="generator" content="auditcore_reporting {generator}">'
@@ -129,7 +162,7 @@ def render_html(
         meta += f'<meta name="dcterms.created" content="{stamp}">'
     return (
         '<!DOCTYPE html>\n<html lang="de"><head><meta charset="utf-8">'
-        f'<meta http-equiv="Content-Security-Policy" content="{_CSP}">{meta}'
+        f'<meta http-equiv="Content-Security-Policy" content="{csp}">{meta}'
         f"<title>{_text(options.document_title(document.title))}</title><style>{style}</style></head>"
         f"<body>{header}<main>\n{body}\n</main>{footer}</body></html>\n"
     )

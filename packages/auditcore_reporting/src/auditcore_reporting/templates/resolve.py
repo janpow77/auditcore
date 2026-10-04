@@ -8,28 +8,32 @@ formats show identical content.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from auditcore_common.hashing import canonical_sha256
 
 from .conditions import Condition, evaluate
 from .errors import Issue, RenderLimitError, TemplateDataError, TemplateError
+from .images import ReportImage, decode_picture
 from .model import (
     Block,
     BlockRef,
     BulletList,
+    Contents,
     Fields,
     Fill,
     Heading,
+    Image,
     PageBreak,
     Paragraph,
     ReportTemplate,
     Section,
     Table,
 )
+from .navigation import needs_targets
 from .placeholders import Scope, substitute
 from .schema import validate
-from .values import lookup, plain
+from .values import is_filled, lookup, plain
 
 
 @dataclass(frozen=True)
@@ -39,22 +43,26 @@ class ResolveLimits:
     max_nodes: int = 20_000
     max_characters: int = 5_000_000
     max_loop_items: int = 10_000
+    #: Sum of all pictures in one document.
+    max_image_bytes: int = 30 * 1024 * 1024
 
 
 @dataclass(frozen=True)
 class RHeading:
-    """Resolved heading."""
+    """Resolved heading; ``anchor`` is its jump target (``""`` = none)."""
 
     text: str
     level: int
+    anchor: str = ""
 
 
 @dataclass(frozen=True)
 class RParagraph:
-    """Resolved paragraph; ``block`` names the text block it came from."""
+    """Resolved paragraph; ``block`` names its text block, ``link`` its jump target."""
 
     text: str
     block: str = ""
+    link: str = ""
 
 
 @dataclass(frozen=True)
@@ -95,7 +103,32 @@ class RPageBreak:
     """Resolved page break."""
 
 
-Node = RHeading | RParagraph | RList | RTable | RFields | RPageBreak
+@dataclass(frozen=True)
+class RImage:
+    """Resolved picture: checked PNG/JPEG, target width in cm (0 = natural), alignment."""
+
+    image: ReportImage
+    width_cm: float = 0.0
+    align: str = "left"
+    alt: str = ""
+
+    def size_cm(self, max_width_cm: float) -> tuple[float, float]:
+        """Width and height in cm: requested width or 96 dpi, never wider than the text."""
+        natural = self.image.width_px * 2.54 / 96
+        width = min(self.width_cm or natural, max_width_cm)
+        return width, width * self.image.height_px / self.image.width_px
+
+
+@dataclass(frozen=True)
+class RContents:
+    """Resolved table of contents: ``(level, text, anchor)`` per heading up to ``levels``."""
+
+    title: str
+    levels: int
+    entries: tuple[tuple[int, str, str], ...] = ()
+
+
+Node = RHeading | RParagraph | RList | RTable | RFields | RPageBreak | RImage | RContents
 
 
 @dataclass(frozen=True)
@@ -111,15 +144,22 @@ class ResolvedDocument:
     text_blocks: tuple[str, ...]
     #: Page orientation set by the template (``""`` = design profile decides).
     orientation: str = ""
+    #: PDF bookmarks for the headings (template key ``outline``).
+    outline: bool = False
 
 
 class _Resolver:
-    def __init__(self, template: ReportTemplate, limits: ResolveLimits) -> None:
+    def __init__(
+        self, template: ReportTemplate, limits: ResolveLimits, images: Mapping[str, ReportImage]
+    ) -> None:
         self.template = template
         self.limits = limits
+        self.images = images
         self.nodes: list[Node] = []
         self.used: list[str] = []
         self.characters = 0
+        self.image_bytes = 0
+        self.repeats: dict[str, int] = {}
 
     def emit(self, node: Node, size: int) -> None:
         self.nodes.append(node)
@@ -155,26 +195,53 @@ class _Resolver:
     def block(self, block: Block, scope: Scope, where: str) -> None:
         if not isinstance(block, Section) and not self.holds(block.condition, scope):
             return
-        if isinstance(block, Heading):
-            text = self.text(block.text, scope, where)
-            self.emit(RHeading(text, block.level), len(text))
-        elif isinstance(block, Paragraph):
-            self.paragraphs(self.text(block.text, scope, where), "")
-        elif isinstance(block, BlockRef):
+        if isinstance(block, BlockRef):
             self.paragraphs(self.block_text(block.block, scope), block.block)
         elif isinstance(block, (BulletList, Table)):
             self.listing(block, scope, where)
         elif isinstance(block, Fields):
             self.fields(block, scope, where)
-        elif isinstance(block, PageBreak):
-            self.emit(RPageBreak(), 0)
-        else:
+        elif isinstance(block, Section):
             self.section(block, scope, where)
+        else:
+            self.leaf(block, scope, where)
 
-    def paragraphs(self, text: str, block: str) -> None:
+    def leaf(
+        self, block: Heading | Paragraph | PageBreak | Image | Contents, scope: Scope, where: str
+    ) -> None:
+        if isinstance(block, Heading):
+            text = self.text(block.text, scope, where)
+            self.emit(RHeading(text, block.level, block.anchor), len(text))
+        elif isinstance(block, Paragraph):
+            self.paragraphs(self.text(block.text, scope, where), "", block.link)
+        elif isinstance(block, Image):
+            self.picture(block, scope, where)
+        elif isinstance(block, Contents):
+            title = self.text(block.title, scope, where)
+            self.emit(RContents(title, block.levels), len(title))
+        else:
+            self.emit(RPageBreak(), 0)
+
+    def picture(self, block: Image, scope: Scope, where: str) -> None:
+        if block.image:
+            image = self.images.get(block.image)
+            if image is None:
+                raise TemplateError(f"{where}: Bild {block.image!r} fehlt (RenderOptions.images).")
+        else:
+            value = lookup(scope.values, block.source)
+            if not is_filled(value):
+                return
+            image = ReportImage("daten", decode_picture(value, f"{where}: {block.source}"))
+        self.image_bytes += len(image.data)
+        if self.image_bytes > self.limits.max_image_bytes:
+            raise RenderLimitError(f"Mehr als {self.limits.max_image_bytes} Bytes Bilder.")
+        alt = self.text(block.alt, scope, where)
+        self.emit(RImage(image, block.width_cm, block.align, alt), len(alt))
+
+    def paragraphs(self, text: str, block: str, link: str = "") -> None:
         for part in text.split("\n\n"):
             if part.strip():
-                self.emit(RParagraph(part.strip("\n"), block), len(part))
+                self.emit(RParagraph(part.strip("\n"), block, link), len(part))
 
     def listing(self, block: BulletList | Table, scope: Scope, where: str) -> None:
         entries = [scope.bind(block.var, entry) for entry in self.items(block.source, scope)]
@@ -234,6 +301,13 @@ class _Resolver:
         if rows:
             self.emit(RFields(tuple(rows)), sum(len(label) + len(v) for label, v in rows))
 
+    def anchor(self, anchor: str) -> str:
+        """``anchor`` for the first occurrence, then ``anchor-2``, ``anchor-3`` …"""
+        if not anchor:
+            return ""
+        count = self.repeats[anchor] = self.repeats.get(anchor, 0) + 1
+        return anchor if count == 1 else f"{anchor}-{count}"
+
     def section(self, block: Section, scope: Scope, where: str) -> None:
         scopes = [scope]
         if block.repeat is not None:
@@ -243,7 +317,7 @@ class _Resolver:
                 continue
             if block.title:
                 title = self.text(block.title, inner, where)
-                self.emit(RHeading(title, block.level), len(title))
+                self.emit(RHeading(title, block.level, self.anchor(block.anchor)), len(title))
             for index, child in enumerate(block.blocks):
                 self.block(child, inner, f"{where}.blocks[{index}]")
 
@@ -258,26 +332,58 @@ def checked_data(template: ReportTemplate, data: object) -> Mapping[str, object]
     return data
 
 
+def _targets(nodes: Sequence[Node]) -> list[Node]:
+    """Number untargeted headings ``auto-N`` and fill the tables of contents."""
+    numbered: list[Node] = []
+    counter = 0
+    for node in nodes:
+        if isinstance(node, RHeading) and not node.anchor:
+            counter += 1
+            node = replace(node, anchor=f"auto-{counter}")
+        numbered.append(node)
+    headings = [(n.level, n.text, n.anchor) for n in numbered if isinstance(n, RHeading)]
+    return [
+        replace(n, entries=tuple(h for h in headings if h[0] <= n.levels))
+        if isinstance(n, RContents)
+        else n
+        for n in numbered
+    ]
+
+
 def resolve(
-    template: ReportTemplate, data: object, limits: ResolveLimits | None = None
+    template: ReportTemplate,
+    data: object,
+    limits: ResolveLimits | None = None,
+    *,
+    images: Sequence[ReportImage] = (),
 ) -> ResolvedDocument:
-    """Validate ``data`` against the data contract and resolve all blocks."""
+    """Validate ``data`` against the data contract and resolve all blocks.
+
+    ``images`` supply the pictures of ``image`` blocks by name (first wins).
+    """
     if template.docx is not None:
         raise TemplateError(
             f"{template.id}: DOCX-Vorlagen werden mit render_docx_template gefüllt."
         )
     values = checked_data(template, plain(data))
-    resolver = _Resolver(template, limits or ResolveLimits())
+    named: dict[str, ReportImage] = {}
+    for image in images:
+        named.setdefault(image.name, image)
+    resolver = _Resolver(template, limits or ResolveLimits(), named)
     scope = Scope(values, resolver.block_text)
     for index, block in enumerate(template.blocks):
         resolver.block(block, scope, f"blocks[{index}]")
+    nodes = resolver.nodes
+    if needs_targets(template.blocks, template.outline):
+        nodes = _targets(nodes)
     return ResolvedDocument(
         resolver.text(template.title, scope, "title"),
         template.id,
         template.version,
         template.fingerprint,
         canonical_sha256(values),
-        tuple(resolver.nodes),
+        tuple(nodes),
         tuple(resolver.used),
         template.orientation,
+        template.outline,
     )

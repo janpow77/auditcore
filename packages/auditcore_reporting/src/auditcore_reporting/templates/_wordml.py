@@ -47,8 +47,23 @@ def text(value: str) -> str:
     return escape(value)
 
 
-def content_types(with_header: bool) -> bytes:
-    """``[Content_Types].xml``."""
+def runs(value: str, props: str = "") -> str:
+    """One run with line breaks and tabs; ``props`` is the run formatting (``<w:b/>`` …)."""
+    parts: list[str] = []
+    for index, line in enumerate(value.split("\n")):
+        if index:
+            parts.append("<w:br/>")
+        for position, chunk in enumerate(line.split("\t")):
+            if position:
+                parts.append("<w:tab/>")
+            if chunk:
+                parts.append(f'<w:t xml:space="preserve">{text(chunk)}</w:t>')
+    formatting = f"<w:rPr>{props}</w:rPr>" if props else ""
+    return f"<w:r>{formatting}{''.join(parts)}</w:r>" if parts else ""
+
+
+def content_types(with_header: bool, pictures: Sequence[str] = ()) -> bytes:
+    """``[Content_Types].xml``; ``pictures`` are the media extensions (``png``, ``jpeg``)."""
     parts = [
         ("/word/document.xml", f"{_DOC_TYPE}.document.main+xml"),
         ("/word/styles.xml", f"{_DOC_TYPE}.styles+xml"),
@@ -72,6 +87,7 @@ def content_types(with_header: bool) -> bytes:
         + '<Default Extension="rels"'
         ' ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
         + '<Default Extension="xml" ContentType="application/xml"/>'
+        + "".join(f'<Default Extension="{e}" ContentType="image/{e}"/>' for e in pictures)
         + overrides
         + "</Types>"
     ).encode("utf-8")
@@ -100,8 +116,8 @@ def package_rels() -> bytes:
     )
 
 
-def document_rels(with_header: bool) -> bytes:
-    """``word/_rels/document.xml.rels``."""
+def document_rels(with_header: bool, pictures: Sequence[tuple[str, str]] = ()) -> bytes:
+    """``word/_rels/document.xml.rels``; ``pictures`` as (relationship id, target)."""
     items = [
         ("rId1", f"{_REL}/styles", "styles.xml"),
         ("rId2", f"{_REL}/settings", "settings.xml"),
@@ -112,6 +128,7 @@ def document_rels(with_header: bool) -> bytes:
             ("rId4", f"{_REL}/header", "header1.xml"),
             ("rId5", f"{_REL}/footer", "footer1.xml"),
         ]
+    items += [(rid, f"{_REL}/image", target) for rid, target in pictures]
     return _relationships(items)
 
 

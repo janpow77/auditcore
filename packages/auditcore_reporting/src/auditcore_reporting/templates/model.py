@@ -29,19 +29,24 @@ class TextBlock:
 
 @dataclass(frozen=True)
 class Heading:
-    """Heading of level 1–3."""
+    """Heading of level 1–3; ``anchor`` makes it a jump target (links, table of contents)."""
 
     text: str
     level: int = 1
     condition: Condition | None = None
+    anchor: str = ""
 
 
 @dataclass(frozen=True)
 class Paragraph:
-    """Paragraph with placeholders; line breaks are kept."""
+    """Paragraph with placeholders; line breaks are kept.
+
+    With ``link`` the whole paragraph is an internal link to that anchor.
+    """
 
     text: str
     condition: Condition | None = None
+    link: str = ""
 
 
 @dataclass(frozen=True)
@@ -139,6 +144,32 @@ class Fields:
 
 
 @dataclass(frozen=True)
+class Image:
+    """Picture (PNG/JPEG): a named image of the render call or design, or base64 data.
+
+    Exactly one of ``image`` (name) and ``source`` (data path holding base64
+    or a ``data:image/…;base64,`` URI) is set. ``width_cm`` 0 = natural size
+    at 96 dpi, limited to the text width.
+    """
+
+    image: str = ""
+    source: str = ""
+    width_cm: float = 0.0
+    align: str = "left"
+    alt: str = ""
+    condition: Condition | None = None
+
+
+@dataclass(frozen=True)
+class Contents:
+    """Table of contents with jumps to the headings up to ``levels`` (PDF with page numbers)."""
+
+    title: str = "Inhalt"
+    levels: int = 2
+    condition: Condition | None = None
+
+
+@dataclass(frozen=True)
 class PageBreak:
     """Page break (DOCX, PDF); a separator in HTML."""
 
@@ -156,9 +187,14 @@ class Section:
     var: str = "eintrag"
     id: str = ""
     level: int = 2
+    #: Jump target of the title; repetitions get ``anchor-2``, ``anchor-3`` …
+    anchor: str = ""
 
 
-Block = Heading | Paragraph | BlockRef | BulletList | Table | Fields | PageBreak | Section
+Block = (
+    Heading | Paragraph | BlockRef | BulletList | Table | Fields | PageBreak | Section | Image
+    | Contents
+)  # fmt: skip
 
 
 @dataclass(frozen=True)
@@ -187,6 +223,8 @@ class ReportTemplate:
     name: str = ""
     #: Page orientation of the template (``""`` = design profile decides).
     orientation: str = ""
+    #: PDF bookmarks (outline) for all headings.
+    outline: bool = False
 
     def text_block(self, block_id: str) -> TextBlock | None:
         """Text block by id."""

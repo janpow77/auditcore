@@ -9,14 +9,17 @@ in the document properties (``dc:description``).
 
 from __future__ import annotations
 
+from . import _docx_parts as parts
 from . import _wordml as wml
 from .design import NEUTRAL_DESIGN, DesignProfile, page_orientation
 from .options import DEFAULT_OPTIONS, RenderOptions
 from .resolve import (
     Node,
+    RContents,
     ResolvedDocument,
     RFields,
     RHeading,
+    RImage,
     RList,
     RPageBreak,
     RParagraph,
@@ -28,17 +31,7 @@ _JC = {"left": "left", "right": "right", "center": "center"}
 
 
 def _runs(value: str, bold: bool = False) -> str:
-    props = "<w:rPr><w:b/></w:rPr>" if bold else ""
-    parts: list[str] = []
-    for index, line in enumerate(value.split("\n")):
-        if index:
-            parts.append("<w:br/>")
-        for position, chunk in enumerate(line.split("\t")):
-            if position:
-                parts.append("<w:tab/>")
-            if chunk:
-                parts.append(f'<w:t xml:space="preserve">{wml.text(chunk)}</w:t>')
-    return f"<w:r>{props}{''.join(parts)}</w:r>" if parts else ""
+    return wml.runs(value, "<w:b/>" if bold else "")
 
 
 def _paragraph(value: str, style: str = "", align: str = "", bold: bool = False) -> str:
@@ -127,11 +120,31 @@ def _frame(width: int, widths: list[int], borders: str, rows: str) -> str:
     )
 
 
-def _node(node: Node, width: int, design: DesignProfile) -> str:
-    if isinstance(node, RHeading):
-        return _paragraph(node.text, f"Heading{node.level}")
-    if isinstance(node, RParagraph):
-        return _paragraph(node.text)
+class _Body:
+    """Running numbers (bookmarks, drawings) and picture parts of one document."""
+
+    def __init__(self, width: int, design: DesignProfile) -> None:
+        self.width = width
+        self.design = design
+        self.media = parts.Media()
+        self.number = 0
+
+    def node(self, node: Node) -> str:
+        if isinstance(node, RHeading):
+            self.number += 1
+            return parts.heading(node, self.number)
+        if isinstance(node, RParagraph):
+            return parts.link(node.text, node.link) if node.link else _paragraph(node.text)
+        if isinstance(node, RImage):
+            self.number += 1
+            rid = self.media.add(node)
+            return parts.picture(node, rid, self.number, self.width / 567)
+        if isinstance(node, RContents):
+            return parts.contents(node)
+        return _node(node, self.width, self.design)
+
+
+def _node(node: RList | RTable | RFields | RPageBreak, width: int, design: DesignProfile) -> str:
     if isinstance(node, RList):
         numbering = '<w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr>'
         return "".join(
@@ -210,13 +223,15 @@ def render_docx(
     orientation = page_orientation(document.orientation, design)
     width = _page(orientation)[0] - 2 * round(design.margin_cm * 567)
     with_header = bool(design.header_text or design.footer_text or design.page_numbers)
-    body = "".join(_node(node, width, design) for node in document.nodes)
+    builder = _Body(width, design)
+    body = "".join(builder.node(node) for node in document.nodes)
+    media = builder.media
     xml = (
         wml.DECLARATION + f'<w:document xmlns:w="{wml.W}" xmlns:r="{wml.R}"><w:body>'
         f"{body}{_section(design, with_header, orientation)}</w:body></w:document>"
     )
     entries = [
-        ("[Content_Types].xml", wml.content_types(with_header)),
+        ("[Content_Types].xml", wml.content_types(with_header, media.extensions)),
         ("_rels/.rels", wml.package_rels()),
         (
             "docProps/core.xml",
@@ -229,7 +244,10 @@ def render_docx(
         ),
         ("docProps/app.xml", wml.app()),
         ("word/document.xml", xml.encode("utf-8")),
-        ("word/_rels/document.xml.rels", wml.document_rels(with_header)),
+        (
+            "word/_rels/document.xml.rels",
+            wml.document_rels(with_header, [(rid, target) for rid, target, _ in media.parts]),
+        ),
         ("word/styles.xml", wml.styles(design)),
         ("word/settings.xml", wml.settings()),
         ("word/numbering.xml", wml.numbering()),
@@ -237,4 +255,5 @@ def render_docx(
     if with_header:
         header, footer = _header_footer(design, width)
         entries += [("word/header1.xml", header), ("word/footer1.xml", footer)]
+    entries += [(f"word/{target}", data) for _, target, data in media.parts]
     return wml.write_zip(entries)

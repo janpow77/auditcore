@@ -56,6 +56,25 @@ unverändert, `tests/test_templates_options.py`).
   bei der Anwendung); `to_dict` zeigt nur Name und SHA-256, `design_from_dict`
   nimmt keine Schriftdateien an. DOCX und HTML nennen weiterhin
   `font_family`.
+- Bilder: Block `image` mit `image` (Name eines `ReportImage` aus
+  `RenderOptions.images` oder `DesignProfile.images`, Optionen gehen vor)
+  oder `source` (Datenpfad mit Base64 bzw. `data:image/png|jpeg;base64,`),
+  dazu `width_cm`, `align`, `alt`. Nur PNG/JPEG aus bytes; Format und Größe
+  werden aus dem Dateikopf gelesen, keine Pfade, kein Netz. Neue Grenze
+  `ResolveLimits.max_image_bytes` (30 MiB je Dokument). DOCX als Medienteil
+  (je Inhalt einmal) mit DrawingML, PDF `platypus.Image`, HTML als
+  `data:`-URI (CSP erhält `img-src data:` nur bei Bildern).
+- Sprungmarken und Links: `"anchor"` an `heading` und `section` (bei
+  Wiederholung `anker-2`, `anker-3` …), `"link"` am `paragraph`; Ziele werden
+  beim Anlegen geprüft (eindeutig, deklariert, `auto-…` reserviert).
+  Inhaltsverzeichnis als Block `toc` (`title`, `levels` 1–3) und
+  PDF-Lesezeichen mit `"outline": true` in der Vorlage; Überschriften ohne
+  eigene Marke erhalten dann `auto-1`, `auto-2` …. PDF: benannte Ziele,
+  Verweise und Inhaltsverzeichnis mit Seitenzahlen (`multiBuild`, Aufbau bis
+  die Gesamtseitenzahl stabil ist); DOCX: Textmarken und `w:hyperlink`
+  (Inhaltsverzeichnis als verlinkte Zeilen ohne Seitenzahlen, Word-Navigation
+  über die Überschriftsformate); HTML: `id`, `<a href>` und `<nav>`.
+  Dokumente ohne diese Schlüssel werden wie bisher gebaut.
 - Paketstand 0.4.0; `auditcore_dataprotection` 0.5.3 pinnt
   `auditcore_reporting[excel]==0.4.0`.
 

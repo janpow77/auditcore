@@ -22,6 +22,7 @@ from .errors import (
     TemplateNotFoundError,
     UnsafeDocumentError,
 )
+from .images import ReportImage
 from .model import FORMATS, ReportTemplate, TextBlock
 from .options import RenderOptions
 from .registry import TemplateRegistry, builtin_registry
@@ -39,6 +40,7 @@ __all__ = [
     "RenderLimitError",
     "RenderOptions",
     "RenderResult",
+    "ReportImage",
     "ReportTemplate",
     "ResolveLimits",
     "ResolvedDocument",
