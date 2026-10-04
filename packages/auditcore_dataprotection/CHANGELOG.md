@@ -1,5 +1,21 @@
 # Changelog auditcore_dataprotection
 
+## 0.5.3 – 2026-10-04
+
+Fehlerbehebung (#234): `pdf.render_pdf` (und damit `legacy_report_pdf`) brach
+mit WeasyPrint ≥ 68 bei jedem Dokument mit Ressourcenverweis mit
+`AttributeError: 'function' object has no attribute '_fail_on_errors'` ab.
+Der Abrufer ist jetzt ein `weasyprint.URLFetcher(allowed_protocols={"data"},
+allow_redirects=False)`; für WeasyPrint < 68 bleibt ein Funktionsabrufer mit
+derselben Sperre. Abgelehnte Ressourcen (http, https, file, relative Pfade)
+werden ohne Abruf ausgelassen, das PDF entsteht trotzdem.
+
+Verhaltensänderung: Eingebettete `data:`-Ressourcen (z. B. Bilder) werden jetzt
+aufgelöst; bisher wurden auch sie abgelehnt. Netz- und Dateizugriff bleiben
+gesperrt. Extra `pdf`: `weasyprint>=60.2,!=68.0` – WeasyPrint 68.0 vergleicht
+`allowed_protocols` mit dem Teil vor `://` und lehnt deshalb auch `data:` ab
+(in 68.1 behoben). Geprüft mit WeasyPrint 60.2, 67.0, 68.1, 69.0 und 70.0.
+
 ## 0.5.2 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,

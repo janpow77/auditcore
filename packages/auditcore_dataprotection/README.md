@@ -435,7 +435,7 @@ Python ≥ 3.11, zur Laufzeit `auditcore_common==0.2.0` (gemeinsame
 Hilfsfunktionen, nur Standardbibliothek); die Plattform `auditcore` ist keine
 Abhängigkeit. Optional über `[excel]`
 `openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.3.0`, über `[pdf]`
-`weasyprint>=60.2`, über `[web]` Starlette und über `[fastapi]` FastAPI.
+`weasyprint>=60.2,!=68.0`, über `[web]` Starlette und über `[fastapi]` FastAPI.
 
 ## Sicherheit und Datenschutz
 
@@ -443,7 +443,9 @@ Die Dienste prüfen bei jeder Operation Berechtigung, Mandant und Revision und
 erzeugen Audit-Ereignisse; freigegebene Fassungen sind gesperrt, die
 Anwendung erzwingt das zusätzlich in ihrer Datenbank. Die Bibliothek speichert
 selbst nichts und nutzt kein Netzwerk. Tabellentexte werden in XLSX immer als
-Literal geschrieben (keine Formeln). Der Vorschlag ist eine Empfehlung:
+Literal geschrieben (keine Formeln). Die PDF-Ausgabe löst nur eingebettete
+`data:`-Ressourcen auf; alle anderen Verweise (http, https, file, relative Pfade)
+werden ohne Abruf ausgelassen, das Dokument entsteht trotzdem. Der Vorschlag ist eine Empfehlung:
 Entscheidung und Freigabe bleiben menschliche, zurechenbare Schritte, und
 eine fehlende Angabe wird nie zu „Nein“ oder zu einer Freigabe.
 

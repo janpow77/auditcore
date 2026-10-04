@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `auditcore_dataprotection` 0.5.3 (#234): `render_pdf` übergibt WeasyPrint
+  einen `URLFetcher` statt einer Funktion und bricht mit WeasyPrint ≥ 68 bei
+  Ressourcenverweisen nicht mehr ab; nur `data:` wird aufgelöst, alles andere
+  ohne Abruf ausgelassen. Extra `pdf`: `weasyprint>=60.2,!=68.0`.
+
 - Pre-release v0.7.0 (03.10.2026): neues Paket `auditcore_flow_agent` 0.1.0
   (Auftragswarteschlange, Ressourcenvergabe, Prozesswächter); alle übrigen
   Bibliotheken unverändert. Öffentlicher Nachweis in
