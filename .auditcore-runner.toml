@@ -218,3 +218,26 @@ zeitlimit_s = 300
 [pruefprofile.documents.werkzeug.codegate]
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_documents", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
+
+# Types of Findings 2021–2027 (Zuordnung der Fehlerkennziffern); Paritätstest nur lokal mit Umgebungsvariable.
+[pruefprofile.tyfindings]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 600
+autofix = false
+
+[pruefprofile.tyfindings.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_tyfindings", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.tyfindings.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_tyfindings/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.tyfindings.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_tyfindings && exec python3 -m mypy src --no-color-output --no-error-summary"]
+zeitlimit_s = 300
+
+[pruefprofile.tyfindings.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_tyfindings", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300

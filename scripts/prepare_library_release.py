@@ -110,6 +110,8 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     "auditcore_compute": frozenset(),
     # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
     "auditcore_invoicesynth": frozenset(),
+    # Portierung aus dem VBA-Modul modAKB_ToF.bas (lokales Repository ohne Remote).
+    "auditcore_tyfindings": frozenset({("akb-makro", "4799ac6c32cb09cda1575136ea8ce594201df86a")}),
     # Neuimplementierung; Ausgangspunkt ci/runner im selben Repository.
     "auditcore_runner": frozenset(
         {("janpow77/auditcore", "7b71f1c13cda06bd375e50ad8f909618ec09986c")}
