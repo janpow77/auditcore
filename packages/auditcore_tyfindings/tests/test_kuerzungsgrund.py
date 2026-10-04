@@ -13,7 +13,7 @@ from auditcore_tyfindings import (
 )
 from auditcore_tyfindings.kuerzungsgrund import STANDARDTABELLE, tabelle_aus_dict
 
-FINGERPRINT = "233f8046386ccb88f05652c3a38d8af93ae647a9f45749fcd33673f3a055b4f6"
+FINGERPRINT = "c83107ee967d0aa13e145415c449a58aa701436d17c7bb54f07a65b2000b9b01"
 
 
 def test_tabelle_versioniert_mit_fingerprint() -> None:
@@ -29,11 +29,13 @@ def test_null_heisst_kein_kuerzungsgrund() -> None:
     assert kennziffer_aus_kuerzungsgrund("0") is None
 
 
-@pytest.mark.parametrize("schluessel", ["810", "890", " 810 "])
-def test_bekannte_schluessel_sind_offen(schluessel: str) -> None:
+@pytest.mark.parametrize(
+    ("schluessel", "kennziffer"), [("810", "8.10"), ("890", "8.90"), (" 810 ", "8.10")]
+)
+def test_fachlich_zugeordnete_schluessel(schluessel: str, kennziffer: str) -> None:
     eintrag = kuerzungsgrund(schluessel)
-    assert eintrag is not None and eintrag.status == "offen"
-    assert kennziffer_aus_kuerzungsgrund(schluessel) is None
+    assert eintrag is not None and eintrag.status == "zugeordnet"
+    assert kennziffer_aus_kuerzungsgrund(schluessel) == kennziffer
 
 
 @pytest.mark.parametrize("schluessel", ["8100", "00", "811", ""])

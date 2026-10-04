@@ -127,9 +127,11 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
   kommt nur mit einer neuen Paketversion.
 - **`efre.kuerzungsgrund_zs` Version `2026.10.1`**: Kürzungsgründe der
   Beleglisten der Zwischengeschalteten Stelle → Fehlerkennziffer
-  (`kennziffer_aus_kuerzungsgrund`). Sicher ist nur „0“ = kein Kürzungsgrund;
-  „810“ und „890“ sind als offen geführt (Fehlerkennziffer `None`) und **vom
-  Fachbereich zu befüllen**. Nichts ist erfunden.
+  (`kennziffer_aus_kuerzungsgrund`). „0“ = kein Kürzungsgrund,
+  „810“ = Fehlerkennziffer 8.10, „890“ = 8.90 (fachliche Angabe vom
+  04.10.2026). Weitere Schlüssel liefern `None` und sind **vom Fachbereich zu
+  ergänzen**. Nichts ist erfunden; insbesondere wird keine allgemeine
+  Umrechnungsregel unterstellt.
 - Regeln, Zuordnungswege und das Erzeugen eines Profils aus dem VBA-Modul:
   [docs/zuordnungsregeln.md](docs/zuordnungsregeln.md).
 - Umgebungsvariable `AUDITCORE_TYFINDINGS_PARITY_XLSX`: nur für den lokalen
