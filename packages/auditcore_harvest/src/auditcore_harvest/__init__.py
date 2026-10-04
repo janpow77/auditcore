@@ -2,10 +2,13 @@
 
 Public API of contract version 1 (``CONTRACT_VERSION``). Source adapters live
 in their family packages and depend on this core, not the other way round.
+The asynchronous, abortable engine lives in :mod:`auditcore_harvest.aio`
+(imported explicitly, because it loads :mod:`asyncio`).
 """
 
 from .adapter import AdapterRegistry, FetchContext, SourceAdapter, require
 from .content import BinaryContent
+from .crawl import AsyncCrawlAdapter, CrawlAdapter, CrawlLimits, CrawlTask, StageResult
 from .engine import CancelToken, HarvestEngine, RateLimit, RetryPolicy
 from .errors import (
     AuthError,
@@ -66,6 +69,7 @@ __all__ = [
     "CONTRACT_VERSION",
     "JSON",
     "AdapterRegistry",
+    "AsyncCrawlAdapter",
     "AuthError",
     "AuthKind",
     "BinaryContent",
@@ -77,6 +81,9 @@ __all__ = [
     "Clock",
     "ConfigError",
     "CookieSession",
+    "CrawlAdapter",
+    "CrawlLimits",
+    "CrawlTask",
     "CredentialProvider",
     "Cursor",
     "ErrorKind",
@@ -108,6 +115,7 @@ __all__ = [
     "SnapshotSemantics",
     "Source",
     "SourceAdapter",
+    "StageResult",
     "StateStore",
     "StatusPolicy",
     "Transport",

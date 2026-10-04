@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from .errors import HarvestError, RateLimitError
@@ -48,22 +49,50 @@ class RateLimit:
     min_interval_seconds: float = 0.0
     _last: float | None = field(default=None, init=False, repr=False)
 
+    def pending(self, clock: Clock) -> float:
+        """Seconds still to wait before the next request (``0.0`` if none)."""
+        if self._last is None:
+            return 0.0
+        return max(0.0, self.min_interval_seconds - (clock.monotonic() - self._last))
+
+    def mark(self, clock: Clock) -> None:
+        """Remember that a request starts now."""
+        self._last = clock.monotonic()
+
     def wait(self, clock: Clock, sleeper: Sleeper) -> None:
         """Sleep until the interval has passed."""
-        now = clock.monotonic()
-        if self._last is not None:
-            remaining = self.min_interval_seconds - (now - self._last)
-            if remaining > 0:
-                sleeper.sleep(remaining)
-        self._last = clock.monotonic()
+        remaining = self.pending(clock)
+        if remaining > 0:
+            sleeper.sleep(remaining)
+        self.mark(clock)
 
 
 @dataclass
 class CancelToken:
-    """Cooperative cancellation checked between pages and attempts."""
+    """Cooperative cancellation checked between pages and attempts.
+
+    The asynchronous engine also registers a callback with :meth:`on_cancel`
+    so that :meth:`cancel` aborts a request in progress. ``cancel`` may be
+    called from another thread; callbacks must be thread-safe.
+    """
 
     cancelled: bool = False
+    _callbacks: list[Callable[[], None]] = field(
+        default_factory=list, init=False, repr=False, compare=False
+    )
 
     def cancel(self) -> None:
-        """Request cancellation."""
+        """Request cancellation and notify registered callbacks."""
         self.cancelled = True
+        for callback in list(self._callbacks):
+            callback()
+
+    def on_cancel(self, callback: Callable[[], None]) -> Callable[[], None]:
+        """Register ``callback``; returns a function that removes it again."""
+        self._callbacks.append(callback)
+
+        def remove() -> None:
+            if callback in self._callbacks:
+                self._callbacks.remove(callback)
+
+        return remove

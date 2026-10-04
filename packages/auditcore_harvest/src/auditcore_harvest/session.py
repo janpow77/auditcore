@@ -145,13 +145,21 @@ class CookieSession:
             f"Mehr als {self.max_redirects} Weiterleitungen; Abruf abgebrochen.", retryable=False
         )
 
+    def step(self, hop: Hop, response: Response, chain: list[Response]) -> Response | Hop:
+        """Store cookies, then return the final response or the next request.
 
-def finish(response: Response, chain: list[Response]) -> Response:
-    """Final response with every intermediate response of the chain as history."""
-    history: list[Response] = []
-    for reply in chain:
-        history.extend((*reply.history, replace(reply, history=())))
-    return replace(response, history=(*history, *response.history))
+        ``chain`` collects the intermediate responses; the final response
+        carries them as ``history``.
+        """
+        self.absorb(response, hop)
+        following = self.next_hop(hop, response)
+        if following is not None:
+            chain.append(response)
+            return following
+        history: list[Response] = []
+        for reply in chain:
+            history.extend((*reply.history, replace(reply, history=())))
+        return replace(response, history=(*history, *response.history))
 
 
 class SessionTransport:
@@ -183,10 +191,8 @@ class SessionTransport:
                 data=hop.data,
                 timeout=timeout,
             )
-            self.session.absorb(response, hop)
-            following = self.session.next_hop(hop, response)
-            if following is None:
-                return finish(response, chain)
-            chain.append(response)
-            hop = following
+            outcome = self.session.step(hop, response, chain)
+            if isinstance(outcome, Response):
+                return outcome
+            hop = outcome
         raise self.session.too_many()

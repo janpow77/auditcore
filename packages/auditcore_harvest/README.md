@@ -139,19 +139,30 @@ ausführbar in `docs/examples/eigener_adapter.py`.
   aufgeben); `BinaryContent` (Bytes und Medientyp im `HarvestRecord`);
   `SessionTransport`/`CookieSession` (Cookies über Weiterleitungen und
   Folgeabrufe einer Sitzung).
+- `auditcore_harvest.aio` (ab 0.2.0): `AsyncHarvestEngine`,
+  `AsyncSourceAdapter`, `AsyncTransport`, `AsyncSessionTransport`. Ein
+  `CancelToken.cancel()` oder das Ablaufen von `max_duration_seconds` bricht
+  die laufende Anfrage sofort ab (Ergebnis `cancelled` bzw. `partial` mit
+  `limit_reached`), statt erst an deren eigener Zeitgrenze zu enden.
+- `auditcore_harvest.crawl` (ab 0.2.0): Vertrag für mehrstufige Abläufe und
+  Crawls mit wechselnder Kandidatenliste – `CrawlTask`, Stufen-Port `Stage`
+  bzw. `AsyncStage`, `StageResult`, `Frontier` (als Cursor gespeichert),
+  `CrawlLimits`, `CrawlAdapter`/`AsyncCrawlAdapter`.
 - `auditcore_harvest.testing`: wiederverwendbare Contract-Suite für Adapter
-  (`check_adapter`, `assert_adapter`).
+  (`check_adapter`, `assert_adapter`); ab 0.2.0 mit
+  `malformed=MalformedExpectation.RAW_DOCUMENT` für Rohdokument-Adapter.
 - `auditcore_harvest.reference`: ausführbare Referenzadapter (JSON-API,
   RSS/Atom).
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_harvest.__all__` (55):
+Öffentliche Namen aus `auditcore_harvest.__all__` (60):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
 | `CONTRACT_VERSION` | Konstante | – | `model` |
 | `JSON` | Konstante | JSON payload at the source boundary. This is the one deliberate ``Any`` of the contract: raw source documents are only known to be JSON-compatible, and adapters narrow them with `` … | `model` |
 | `AdapterRegistry` | Klasse | Explicit registration; no import-time discovery or plugin magic. | `adapter` |
+| `AsyncCrawlAdapter` | Klasse | Asynchronous :class:`CrawlAdapter` for :class:`~auditcore_harvest.aio.AsyncHarvestEngine`. | `crawl` |
 | `AuthError` | Ausnahme | Credentials missing, rejected or expired (never retried automatically). | `errors` |
 | `AuthKind` | Aufzählung | Credential need of a source; secrets come from the credential provider. | `model` |
 | `BinaryContent` | Datenklasse | Raw document bytes and their declared media type (``application/pdf``, ...). | `content` |
@@ -163,6 +174,9 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `Clock` | Protokoll | Time source for timestamps, deadlines and rate limiting. | `ports` |
 | `ConfigError` | Ausnahme | Invalid or missing adapter configuration (never retried). | `errors` |
 | `CookieSession` | Klasse | Cookie jar and redirect rules of one session, independent of the transport. | `session` |
+| `CrawlAdapter` | Klasse | Source adapter running ``stages`` over a frontier, one task per page. | `crawl` |
+| `CrawlLimits` | Datenklasse | Bounds of one crawl: depth of discovered tasks and total number of tasks. | `crawl` |
+| `CrawlTask` | Datenklasse | One unit of work: a stage name, a locator and optional JSON data. | `crawl` |
 | `CredentialProvider` | Protokoll | Supplies secrets by source and name; the core never stores or logs them. | `ports` |
 | `Cursor` | Typalias | – | `model` |
 | `ErrorKind` | Aufzählung | What went wrong, independent of the error class and its message. | `kinds` |
@@ -194,6 +208,7 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `SnapshotSemantics` | Aufzählung | What a complete run means for the consumer's stored inventory. | `model` |
 | `Source` | Datenklasse | Identity and declared behavior of one source profile. | `model` |
 | `SourceAdapter` | Protokoll | Contract every source adapter implements (contract version 1). | `adapter` |
+| `StageResult` | Datenklasse | What a stage produced for one task. | `crawl` |
 | `StateStore` | Protokoll | Persists checkpoints with compare-and-set semantics. | `ports` |
 | `StatusPolicy` | Datenklasse | How :func:`raise_for_status` maps HTTP status codes; the default is the contract-1 mapping. | `transport` |
 | `Transport` | Protokoll | Performs exactly one request; retries and paging belong to the engine. | `ports` |
@@ -210,12 +225,15 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | Modul | Kurzbeschreibung |
 |---|---|
 | `auditcore_harvest.adapter` | Adapter interface: one source profile, one bounded page per call. |
+| `auditcore_harvest.aio` | Asynchronous, abortable variant of the harvest flow. |
 | `auditcore_harvest.catalog` | Versioned source catalogue (``auditcore_harvest.catalog/1``). |
 | `auditcore_harvest.catalogs` | – |
 | `auditcore_harvest.cli` | ``auditcore-harvest``: validate the source catalogue and replay adapters on fixtures. |
 | `auditcore_harvest.content` | Binary payload of a record (for example a PDF) with its media type. |
+| `auditcore_harvest.crawl` | Contract for multi-stage runs and crawls with a changing candidate list. |
 | `auditcore_harvest.engine` | The harvest flow shared by all adapters. |
 | `auditcore_harvest.errors` | Structured harvest errors; the engine decides retries from ``retryable``/``retry_after``. |
+| `auditcore_harvest.flow` | Steps of the harvest flow shared by the synchronous and the asynchronous engine. |
 | `auditcore_harvest.kinds` | Machine-readable error kinds shared by the error and result contracts. |
 | `auditcore_harvest.memory` | Reference implementations of the ports for tests, replays and simple consumers. |
 | `auditcore_harvest.model` | Versioned data contracts of the harvest core (``auditcore_harvest.contract/1``). |
@@ -279,8 +297,9 @@ Python ≥ 3.11, zur Laufzeit die Standardbibliothek und ab 0.1.2
 `auditcore_common==0.2.0` (sicheres XML, kanonische Hashes; nur
 Standardbibliothek). Optional über `[xml]` `defusedxml>=0.7.1`. Die Plattform
 `auditcore` ist keine Abhängigkeit; HTTP-Clients (`httpx`, `requests`) bringt
-der Consumer über seinen `Transport` mit. Der Kern ist synchron; asynchrone
-Consumer rufen ihn über `asyncio.to_thread` auf.
+der Consumer über seinen `Transport` mit. Neben dem synchronen
+`HarvestEngine` gibt es ab 0.2.0 `auditcore_harvest.aio.AsyncHarvestEngine`
+für asynchrone Adapter und Transporte (abbrechbar, nur Standardbibliothek).
 
 ## Sicherheit und Datenschutz
 

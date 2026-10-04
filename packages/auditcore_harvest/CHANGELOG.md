@@ -37,12 +37,35 @@ Optionen ist das Laufzeitverhalten unverändert.
   (Zwischenantworten) und `header_values()`.
 - Beispiel `docs/examples/urllib_transport.py`: `follow_redirects=False`,
   `raw_headers`, Zeitüberschreitung als `ErrorKind.TIMEOUT`.
+- **Async und Abbruch:** Modul `auditcore_harvest.aio` mit
+  `AsyncHarvestEngine`, `AsyncSourceAdapter`, `AsyncFetchContext`
+  (`await context.fetch(...)`), `AsyncTransport`, `AsyncSleeper`/
+  `AsyncioSleeper` und `AsyncSessionTransport`. `CancelToken.cancel()` (auch
+  aus einem anderen Thread) bricht eine laufende Anfrage sofort ab
+  (`cancelled`); das Ablaufen von `max_duration_seconds` bricht Anfrage oder
+  Wartezeit ab (`partial`, `limit_reached`); ein `task.cancel()` des
+  Aufrufers bricht ab und reicht `CancelledError` weiter. Das Modul wird nicht
+  aus `auditcore_harvest` importiert, damit `import auditcore_harvest` kein
+  `asyncio`/`socket` lädt. `CancelToken.on_cancel()` registriert Rückrufe.
+- **Mehrstufige Abläufe und Crawls:** Modul `auditcore_harvest.crawl` mit
+  `CrawlTask`, Stufen-Port `Stage`/`AsyncStage`, `StageResult`, `Frontier`
+  (Kandidatenliste als Cursor `auditcore_harvest.crawl/1`, dedupliziert),
+  `CrawlLimits` (verworfene Kandidaten als `RecordIssue`) sowie
+  `CrawlAdapter`/`AsyncCrawlAdapter`.
+- **Contract-Suite:** `check_adapter`/`assert_adapter(...,
+  malformed=MalformedExpectation.RAW_DOCUMENT)` prüft Rohdokument-Adapter
+  darauf, dass die Bytes unverändert übernommen werden;
+  `NOT_APPLICABLE` meldet `SKIPPED`. Standard `PARSER_ERROR` unverändert.
 
 ### Geändert
 - `to_dict()` von Fehlern und `HarvestResult` enthält zusätzlich
   `http_status` und `error_kind` (additiv; bestehende Schlüssel unverändert).
 - `ReplayTransport` meldet aufgezeichnete Zeitüberschreitungen mit
   `ErrorKind.TIMEOUT`.
+- Intern: der abrufunabhängige Ablauf (Seitenprüfung, Senke, Checkpoint,
+  Grenzen, Ereignisse, Laufbuchhaltung) liegt in `auditcore_harvest.flow` und
+  wird vom synchronen und asynchronen Engine gemeinsam genutzt; Verhalten des
+  `HarvestEngine` unverändert. `RateLimit` hat `pending()`/`mark()`.
 
 ### Abhängige Pakete
 Neue exakte Pins `auditcore_harvest==0.2.0` mit Patch-Versionen ohne
