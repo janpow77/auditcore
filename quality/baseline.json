@@ -381,7 +381,10 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 13
       },
-      "coverage_percent": 100.0
+      "coverage_percent": 100.0,
+      "ausnahme_begruendung": {
+        "non_english_identifiers": "Fachsprache der EFRE-Prüfung (Types of Findings, Fehlerkennziffern) wie auditcore_geo bewusst deutsch benannt; neues Paket mit 13 öffentlichen deutschen Bezeichnern, Konvention wie auditcore_geo (PR #233)."
+      }
     },
     "js:common": {
       "metrics": {
