@@ -1,5 +1,40 @@
 # Changelog – auditcore_documents
 
+## 0.6.0 – unveröffentlicht
+
+- Verhaltensänderung (DC-C12, Issue #238): `remove_repeating_margins`
+  erkennt Seitenzahlen und wiederkehrende Kopf-/Fußzeilen nur noch im
+  Randbereich (je `edge_lines` erste und letzte nichtleere Zeilen, Standard 3)
+  und behält das erste Vorkommen einer wiederkehrenden Randzeile. Bisher fiel
+  jede reine Zahlenzeile weg, auch mitten in einer Preistabelle, und ein
+  Gültigkeitsdatum im Seitenkopf ging auf allen Seiten verloren. Der neue
+  Standard entfernt keinen Inhalt außerhalb des Randes; deshalb ist er die
+  Vorgabe von `remove_repeating_margins`, `paragraphs_from_pdf_pages`,
+  `pdf_paragraphs`, `read_text_paragraphs` und `read_document`. Neu:
+  `MarginRules`, `DEFAULT_MARGINS`, `LEGACY_MARGINS` und Parameter
+  `margins`/`rules`.
+- Profile: `LEGACY` und `LEGACY_DIFFLIB` lesen PDF mit `LEGACY_MARGINS`
+  (bitgleich, Fingerabdrücke unverändert; auch `DocumentCompareService`).
+  `CORRECTED` (= `RECOMMENDED`) steigt auf 2026.10.1
+  (`result_version` `1.1.0+auditcore.2026.10.1`, neuer Fingerabdruck) und
+  nutzt die neuen Randregeln (`CompareProfile.pdf_margins="edge-only"`).
+  PDF-Vergleiche mit `CORRECTED` können daher mehr Absätze und Änderungen
+  zeigen; DOCX-Vergleiche sind unverändert.
+- `OcrStage(raster_dpi=…, raster_max_pages=…)` und
+  `pipeline.pdfium_rasterizer_for(dpi=…, max_pages=…)`: Auflösung und
+  Seitengrenze der Rasterung sind wählbar; Standard bleibt 200 dpi und 50
+  Seiten. Werte für einen eigenen Rasterer werden mit `ValueError`
+  abgewiesen, statt still zu wirken.
+- Neu: `pipeline.TesseractCli`, ein eingebauter `TesseractPort` über das
+  Programm `tesseract` (Subprozess ohne Shell, TSV-Ausgabe mit Konfidenzen,
+  PDF über den Rasterer). Begründung: Die Bibliothek bleibt ohne OCR-Modell
+  und ohne neue Python-Abhängigkeit (kein `pytesseract`); das Programm ist
+  wie `pdftotext` ein externes Werkzeug der Umgebung. Ohne Port nennt die
+  Fehlermeldung `TESSERACT_OCR_FAILED` den Anschluss.
+- Doku: `normalise_*` sind ausdrücklich Abgleichs-, keine
+  Extraktionsnormalisierung (Kleinschreibung, Nummerierung und Satzzeichen
+  gehen verloren).
+
 ## 0.5.0 – 2026-10-03
 
 - `LimitedRouterOcr` begrenzt Gateway-Anfragen mehrerer Dokumente im selben

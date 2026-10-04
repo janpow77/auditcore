@@ -130,8 +130,8 @@ def looks_like_pdf(data: bytes) -> bool:
     return data[:1024].lstrip()[:5].startswith(b"%PDF")
 
 
-def pdfium_rasterizer(data: bytes) -> list[tuple[int, bytes]] | None:
-    """Seiten als PNG (höchstens 50, 200 dpi); ``None`` ohne pypdfium2 oder bei Fehlern."""
+def render_pdf_pages(data: bytes, *, dpi: int, max_pages: int) -> list[tuple[int, bytes]] | None:
+    """Höchstens ``max_pages`` Seiten mit ``dpi`` als PNG; ``None`` ohne pypdfium2/bei Fehlern."""
     try:
         import pypdfium2 as pdfium
     except ImportError:
@@ -142,10 +142,10 @@ def pdfium_rasterizer(data: bytes) -> list[tuple[int, bytes]] | None:
         return None
     pages: list[tuple[int, bytes]] = []
     try:
-        for index in range(min(len(document), MAX_OCR_PAGES)):
+        for index in range(min(len(document), max_pages)):
             page = document[index]
             try:
-                bitmap = page.render(scale=OCR_RENDER_DPI / 72.0)
+                bitmap = page.render(scale=dpi / 72.0)
                 buffer = io.BytesIO()
                 bitmap.to_pil().save(buffer, format="PNG")
                 pages.append((index + 1, buffer.getvalue()))
@@ -156,6 +156,11 @@ def pdfium_rasterizer(data: bytes) -> list[tuple[int, bytes]] | None:
     finally:
         document.close()
     return pages or None
+
+
+def pdfium_rasterizer(data: bytes) -> list[tuple[int, bytes]] | None:
+    """Seiten als PNG (höchstens 50, 200 dpi); ``None`` ohne pypdfium2 oder bei Fehlern."""
+    return render_pdf_pages(data, dpi=OCR_RENDER_DPI, max_pages=MAX_OCR_PAGES)
 
 
 def degraded_result(raw_json: dict[str, Any], pages_failed: int, duration_ms: int) -> OcrOutput:

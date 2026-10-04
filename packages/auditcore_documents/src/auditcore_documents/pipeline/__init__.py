@@ -84,6 +84,7 @@ from auditcore_documents.pipeline.stages.ocr import (
     RouterResult,
 )
 from auditcore_documents.pipeline.stages.ocr_budget import LimitedRouterOcr
+from auditcore_documents.pipeline.stages.ocr_engines import TesseractCli, pdfium_rasterizer_for
 from auditcore_documents.pipeline.stages.persist import FileArtifactStore, PersistStage
 from auditcore_documents.pipeline.stages.postprocess import PostprocessStage, parse_amount
 from auditcore_documents.pipeline.stages.preprocess import PreprocessStage
@@ -253,10 +254,12 @@ __all__ = [
     "RunStatus",
     "StageError",
     "StageMetrics",
+    "TesseractCli",
     "ValidationResult",
     "ValidationStage",
     "WebhookExport",
     "build_pipeline",
     "libmagic_detector",
+    "pdfium_rasterizer_for",
     "sniff_mime",
 ]

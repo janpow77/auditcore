@@ -36,6 +36,9 @@ from auditcore_documents.normalize import (
     word_diff,
 )
 from auditcore_documents.pdftext import (
+    DEFAULT_MARGINS,
+    LEGACY_MARGINS,
+    MarginRules,
     legacy_pdf_pages,
     paragraphs_from_pdf_pages,
     pdftotext_pages,
@@ -76,16 +79,18 @@ from auditcore_documents.settings import (
 )
 from auditcore_documents.synopsis import synopsis_extra, synopsis_records
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 __all__ = [
     "ALLOWED_EXTENSIONS",
     "COMMAND_PATTERNS",
     "CORRECTED",
     "DEFAULT_LIMITS",
+    "DEFAULT_MARGINS",
     "DEFAULT_SETTINGS",
     "LEGACY",
     "LEGACY_DIFFLIB",
+    "LEGACY_MARGINS",
     "PROFILES",
     "RECOMMENDED",
     "CompareError",
@@ -97,6 +102,7 @@ __all__ = [
     "DependencyError",
     "LawParagraph",
     "LimitExceededError",
+    "MarginRules",
     "ParseError",
     "ReadContext",
     "ReadLimits",

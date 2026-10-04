@@ -24,6 +24,7 @@ from auditcore_documents import legacy
 from auditcore_documents.errors import CompareError, ParseError
 from auditcore_documents.matching import similarity
 from auditcore_documents.model import CompareItem
+from auditcore_documents.pdftext import LEGACY_MARGINS
 from auditcore_documents.reasons import apply_reasons_worker
 from auditcore_documents.render_docx import render_docx
 from auditcore_documents.synopsis import synopsis_extra, synopsis_records
@@ -132,12 +133,20 @@ def test_read_document(entry: dict[str, Any]) -> None:
     if "error" in entry:
         with pytest.raises(CompareError) as caught:
             ad.read_document(
-                path, entry["mode"], ocr_callback=ocr, page_source=recorded_page_source
+                path,
+                entry["mode"],
+                ocr_callback=ocr,
+                page_source=recorded_page_source,
+                margins=LEGACY_MARGINS,
             )
         assert_same_error(caught.value, entry)
         return
     mode, items = ad.read_document(
-        path, entry["mode"], ocr_callback=ocr, page_source=recorded_page_source
+        path,
+        entry["mode"],
+        ocr_callback=ocr,
+        page_source=recorded_page_source,
+        margins=LEGACY_MARGINS,
     )
     assert mode == entry["resolved_mode"]
     assert [asdict(item) for item in items] == entry["items"]
@@ -165,7 +174,9 @@ def test_detect_mode(entry: dict[str, Any]) -> None:
 
 @pytest.mark.parametrize("entry", DATA["pdf_pages"], ids=lambda e: f"{e['file']}-{e['extractor']}")
 def test_pdf_paragraphs_from_recorded_pages(entry: dict[str, Any]) -> None:
-    assert [list(p) for p in ad.paragraphs_from_pdf_pages(entry["pages"])] == entry["paragraphs"]
+    assert [
+        list(p) for p in ad.paragraphs_from_pdf_pages(entry["pages"], margins=LEGACY_MARGINS)
+    ] == entry["paragraphs"]
 
 
 @pytest.mark.parametrize("entry", DATA["pdf_pages"], ids=lambda e: f"{e['file']}-{e['extractor']}")
@@ -198,8 +209,10 @@ def test_pypdf_error_contract() -> None:
 
 @pytest.mark.parametrize("entry", DATA["page_paragraphs"])
 def test_page_margin_and_paragraph_rules(entry: dict[str, Any]) -> None:
-    assert ad.remove_repeating_margins(entry["pages"]) == entry["margins"]
-    assert [list(p) for p in ad.paragraphs_from_pdf_pages(entry["pages"])] == entry["paragraphs"]
+    assert ad.remove_repeating_margins(entry["pages"], LEGACY_MARGINS) == entry["margins"]
+    assert [
+        list(p) for p in ad.paragraphs_from_pdf_pages(entry["pages"], margins=LEGACY_MARGINS)
+    ] == entry["paragraphs"]
 
 
 @pytest.mark.parametrize("entry", DATA["compare"], ids=lambda e: f"{e['case']}-{e['scorer']}")

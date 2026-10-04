@@ -12,7 +12,9 @@ bildet die Entscheidungen und Normalisierungen des Originals ab:
 * Qualitätsbewertung (OK ≥ 0,85; Review ≥ 0,60; sonst REJECTED).
 
 Zeitmessung und Rasterung sind injizierbar; ``pdfium_rasterizer`` nutzt wie
-das Original pypdfium2/Pillow (Extra ``ocr-raster``).
+das Original pypdfium2/Pillow (Extra ``ocr-raster``), Auflösung und
+Seitengrenze über ``OcrStage(raster_dpi=…, raster_max_pages=…)``. Ein
+eingebauter ``TesseractPort`` ist ``TesseractCli`` (Programm ``tesseract``).
 """
 
 from __future__ import annotations
@@ -24,6 +26,11 @@ from pathlib import Path
 from auditcore_documents.pipeline.context import OcrMetrics, PipelineContext, RunStatus
 from auditcore_documents.pipeline.donut import DonutPort
 from auditcore_documents.pipeline.stages.base import PipelineStage, StageError
+from auditcore_documents.pipeline.stages.ocr_engines import (
+    TESSERACT_MISSING,
+    TesseractCli,
+    resolve_rasterizer,
+)
 from auditcore_documents.pipeline.stages.ocr_parallel import recognize_pages
 from auditcore_documents.pipeline.stages.ocr_results import (
     DONUT_LABELS,
@@ -71,6 +78,7 @@ __all__ = [
     "RouterOcr",
     "RouterPage",
     "RouterResult",
+    "TesseractCli",
     "TesseractPort",
     "chandra_result",
     "combine_router_pages",
@@ -102,6 +110,8 @@ class OcrStage(PipelineStage):
         routing: OcrRouting | None = None,
         router: RouterOcr | None = None,
         rasterizer: Rasterizer | None = pdfium_rasterizer,
+        raster_dpi: int = OCR_RENDER_DPI,
+        raster_max_pages: int = MAX_OCR_PAGES,
         chandra: ChandraPort | None = None,
         tesseract: TesseractPort | None = None,
         timer: Callable[[], float] = time.time,
@@ -120,7 +130,8 @@ class OcrStage(PipelineStage):
         self.max_retries = max_retries
         self.routing = routing or OcrRouting()
         self.router = router
-        self.rasterizer = rasterizer
+        #: Auflösung und Seitengrenze gelten für den eingebauten pdfium-Rasterer.
+        self.rasterizer = resolve_rasterizer(rasterizer, dpi=raster_dpi, max_pages=raster_max_pages)
         self.chandra = chandra
         self.tesseract = tesseract
         self.timer = timer
@@ -311,7 +322,7 @@ class OcrStage(PipelineStage):
         path = self._input(context)
         try:
             if self.tesseract is None:
-                raise RuntimeError("No Tesseract engine configured")
+                raise RuntimeError(TESSERACT_MISSING)
             return tesseract_result(self.tesseract.parse(path), self.tesseract_languages)
         except Exception as exc:  # noqa: BLE001 - Originalvertrag
             raise StageError(

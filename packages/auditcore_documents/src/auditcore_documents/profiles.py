@@ -11,9 +11,13 @@ from typing import Literal
 
 from auditcore_common.hashing import canonical_sha256
 
+from auditcore_documents.pdftext import DEFAULT_MARGINS, LEGACY_MARGINS, MarginRules
 from auditcore_documents.scoring import ScorerName
 
 AmendmentReading = Literal["legacy-skip-headings", "all-paragraphs"]
+#: Seitenränder von PDF: ``"legacy"`` wie im Original (ganze Seite, jedes
+#: Vorkommen), ``"edge-only"`` nur im Rand, erstes Vorkommen bleibt (Issue #238).
+PdfMargins = Literal["legacy", "edge-only"]
 
 
 @dataclass(frozen=True)
@@ -33,6 +37,13 @@ class CompareProfile:
     renumber_after_insert: bool
     status: str
     source: str
+    #: Seitenränder von PDF (ab 2026.10.1); Vorgabe ist das Originalverhalten.
+    pdf_margins: PdfMargins = "legacy"
+
+    @property
+    def margin_rules(self) -> MarginRules:
+        """Regeln für ``remove_repeating_margins`` gemäß ``pdf_margins``."""
+        return LEGACY_MARGINS if self.pdf_margins == "legacy" else DEFAULT_MARGINS
 
     @property
     def fingerprint(self) -> str:
@@ -41,6 +52,8 @@ class CompareProfile:
         # abweichen: so bleiben die Fingerabdrücke der Originalprofile stabil.
         if not data.get("renumber_after_insert"):
             data.pop("renumber_after_insert", None)
+        if data.get("pdf_margins") == "legacy":
+            data.pop("pdf_margins", None)
         return canonical_sha256(data, compact=False)
 
     def identity(self) -> dict[str, str]:
@@ -82,16 +95,19 @@ LEGACY_DIFFLIB = CompareProfile(
 #: Änderungsbefehle, die mit „§“ beginnen, werden gelesen (DC-C04), nach einer
 #: Einfügung wird umnummeriert (DC-L01), Ersetzungen treffen alle Vorkommen
 #: (DC-L02), ohne rapidfuzz klarer Fehler (DC-C01); Profilidentität im Ergebnis.
+#: Ab 2026.10.1 entfernt es PDF-Seitenränder nur im Randbereich und behält das
+#: erste Vorkommen wiederkehrender Randzeilen (DC-C06, Issue #238).
 CORRECTED = CompareProfile(
     profile_id="auditcore.document_compare",
-    version="2026.09.2",
-    result_version="1.1.0+auditcore.2026.09.2",
+    version="2026.10.1",
+    result_version="1.1.0+auditcore.2026.10.1",
     scorer="rapidfuzz-token-set",
     amendment_reading="all-paragraphs",
     record_profile=True,
     renumber_after_insert=True,
     status="DECIDED_RECOMMENDED",
     source=_SOURCE,
+    pdf_margins="edge-only",
 )
 
 #: Empfohlenes Profil für neue Anwendungen (D1).

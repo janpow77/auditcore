@@ -40,7 +40,7 @@ Prüfer: Er stellt Unterschiede fest, trifft aber keine Prüfungsentscheidung.
 | `auditcore_documents.web` (Extras `web`/`fastapi`) | REST-Anfragen der Synopse-Oberfläche und der Belegerkennung | JSON-Antworten | keine Authentifizierung; Eigentümer je Anfrage über `identify` |
 
 Profile des Vergleichs: `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare`
-2026.09.2, verlangt `rapidfuzz`), `LEGACY` (Original mit rapidfuzz) und
+2026.10.1, verlangt `rapidfuzz`; PDF-Seitenränder nach DC-C12), `LEGACY` (Original mit rapidfuzz) und
 `LEGACY_DIFFLIB` (Original ohne rapidfuzz). Das Profil steht in
 `metadata["profile"]` jedes Ergebnisses.
 
@@ -127,6 +127,7 @@ Korrekturen (vollständig in `docs/behavior-changes.md` DC-C01…DC-C11 und
 | keine Größen-/Seitengrenzen | `ReadLimits` (DC-C03) | `tests/test_contract.py` |
 | „§ … wird aufgehoben“ nie als Befehl gelesen | im Profil `CORRECTED` gelesen (DC-C04, D1) | `tests/test_decisions.py` |
 | keine Umnummerierung nach Einfügung | `renumber_after_insert` in `CORRECTED` (DC-L01, D2) | `tests/test_decisions.py` |
+| jede reine Zahlenzeile und das erste Vorkommen wiederkehrender Randzeilen entfernt | nur im Randbereich, erstes Vorkommen bleibt (`MarginRules`, DC-C12); `LEGACY` unverändert | `tests/test_margins.py` |
 | Regelmeldungen der Validierungsstufe englisch | deutsch mit echten Umlauten, Codes/Ergebnisse unverändert (D9) | `tests/test_pipeline_replay.py`, `tests/test_spezifikation_bestand.py` (I11) |
 | Watchdog nur als Bibliotheksfunktion, keine Nummernlücken-/USt-IdNr.-Prüfung | REST-Vertrag `documents_batch_checks/1`, Ergänzungen ERG-01/ERG-02 außerhalb der Eskalation | `tests/test_batch_checks.py`, I12–I16 |
 | REVIEW_NEEDED wurde als OK gemeldet; IBAN-Muster lief über Zeilenenden | in `CORRECTED_PIPELINE` korrigiert (PL-C01, PL-C02) | `tests/test_pipeline_units.py` |

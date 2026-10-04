@@ -68,6 +68,14 @@ Produktionsdatenbank), Wheel `auditcore_documents-0.1.0` per
    )
    from auditcore_documents.pdftext import paragraphs_from_pdf_pages as _paragraphs_from_pdf_pages
    from auditcore_documents.pdftext import remove_repeating_margins as _remove_repeating_margins
+   ```
+   Ab 0.6.0 behalten `_remove_repeating_margins` und `_paragraphs_from_pdf_pages`
+   ohne Argument Zahlen außerhalb des Randes und das erste Vorkommen
+   wiederkehrender Randzeilen (DC-C12). Bitgleiches Altverhalten:
+   `functools.partial(remove_repeating_margins, rules=LEGACY_MARGINS)` bzw.
+   `paragraphs_from_pdf_pages(pages, margins=LEGACY_MARGINS)`;
+   `DocumentCompareService` (Profil `LEGACY`) nutzt `LEGACY_MARGINS` selbst.
+   ```python
    from auditcore_documents.reading import detect_mode, read_document
    ```
 5. `configuration.py`: Konstanten, `merge_settings`, `sanitise_settings` aus

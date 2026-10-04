@@ -54,7 +54,7 @@ def test_legacy_fingerprints_are_stable() -> None:
 def test_d1_corrected_is_the_recommended_compare_profile() -> None:
     assert ad.RECOMMENDED is ad.CORRECTED
     assert ad.CORRECTED.status == "DECIDED_RECOMMENDED"
-    assert ad.CORRECTED.version == "2026.09.2"
+    assert ad.CORRECTED.version == "2026.10.1"
     assert ad.CORRECTED.renumber_after_insert and not ad.LEGACY.renumber_after_insert
 
 

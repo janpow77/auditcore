@@ -1,4 +1,13 @@
-"""Normalisierung und Wortdifferenz (unverändert aus ``parsing.py`` des Originals)."""
+"""Abgleichsnormalisierung und Wortdifferenz (unverändert aus ``parsing.py`` des Originals).
+
+Die ``normalise_*``-Funktionen erzeugen **Vergleichsschlüssel**, keinen Text
+zur Weitergabe: Sie schreiben klein (``casefold``), vereinheitlichen
+Leerraum und entfernen je nach Variante führende Nummerierungen und
+Satzzeichen. Für Zuordnung, Ähnlichkeit und Änderungsart ist das gewollt;
+für Extraktion, Anzeige oder Ablage (Beträge, Kennungen, Gliederungsnummern,
+Zitate) sind sie ungeeignet, weil Information verloren geht. Extraktion
+arbeitet auf dem Originaltext (``CompareItem.text``, ``read_text_paragraphs``).
+"""
 
 from __future__ import annotations
 
@@ -37,7 +46,10 @@ def _semantic_once(text: str) -> str:
 
 
 def normalise_for_match(text: str, *, numbering: Numbering = "once") -> str:
-    """Für die Zuordnung normalisieren; führende Nummerierung wird ignoriert.
+    """Vergleichsschlüssel für die Zuordnung; führende Nummerierung wird ignoriert.
+
+    Nur für den Abgleich: Kleinschreibung und Entfernen der Nummerierung
+    verändern den Text; nicht für Extraktion oder Anzeige verwenden.
 
     ``numbering="once"`` (Standard) entfernt wie das Original genau eine
     führende Nummerierung und ist deshalb nicht idempotent („1. 2. Text“ →
@@ -47,7 +59,10 @@ def normalise_for_match(text: str, *, numbering: Numbering = "once") -> str:
 
 
 def normalise_semantic(text: str, *, numbering: Numbering = "once") -> str:
-    """Reine Zeichensetzungs- und Nummerierungsänderungen herausrechnen.
+    """Vergleichsschlüssel ohne Zeichensetzung und Nummerierung (Änderungsart).
+
+    Nur für den Abgleich: entfernt zusätzlich Satzzeichen (auch Dezimal- und
+    Datumstrenner); nicht für Extraktion oder Anzeige verwenden.
 
     ``numbering`` wie bei :func:`normalise_for_match`; mit ``"all"`` werden
     auch Ziffern entfernt, die erst das Streichen der Satzzeichen freilegt
@@ -57,7 +72,10 @@ def normalise_semantic(text: str, *, numbering: Numbering = "once") -> str:
 
 
 def normalise_verbatim(text: str) -> str:
-    """Nur Leerraum und Groß-/Kleinschreibung vereinheitlichen."""
+    """Vergleichsschlüssel: nur Leerraum und Groß-/Kleinschreibung vereinheitlichen.
+
+    Nur für den Abgleich (wortgleiche Fassungen erkennen), nicht für Extraktion.
+    """
     return re.sub(r"\s+", " ", text or "").strip().casefold()
 
 

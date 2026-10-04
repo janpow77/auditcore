@@ -57,7 +57,9 @@ class DocumentCompareService:
     def read(
         cls, path: Path, mode: str = "auto", *, ocr_callback: OcrCallback | None = None
     ) -> tuple[str, list[CompareItem]]:
-        return _read_document(path, mode, ocr_callback=ocr_callback)
+        return _read_document(
+            path, mode, ocr_callback=ocr_callback, margins=cls.profile.margin_rules
+        )
 
     @classmethod
     def compare(
