@@ -111,6 +111,7 @@ def test_port_11434_rejected_with_reason() -> None:
 def test_pool_reuses_client_per_normalised_url() -> None:
     gateway = Gateway([{"json": {"response": "a"}}, {"json": {"response": "b"}}])
     with LlmClientPool(PLAIN, transport=gateway.transport()) as pool:
+        assert pool.config is PLAIN
         first = pool.client("http://a.test/")
         assert pool.client("http://a.test") is first
         assert pool.client() is not first and pool.client().config.base_url == "http://r.test"
