@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_tyfindings",
+  "version": "0.1.0",
+  "contract": "auditcore_tyfindings/1",
+  "classification": "LEGACY_PORT",
+  "sources": [
+    {
+      "repository": "akb-makro",
+      "commit": "4799ac6c32cb09cda1575136ea8ce594201df86a",
+      "path": "src/modAKB_ToF.bas",
+      "sha256": "4aef164d4304acf062b9691b08512cb5f4e1733a9222e01eb2b75e2152c2f0a9",
+      "symbols": ["ToFEintrag", "ToFStandard", "ToFFormalStandard", "ToFZuordnen", "ToFFormalZuordnen", "ToFKategorie"],
+      "note": "Lokales Repository ohne Remote; Katalog und Regeln mit tools/vba_profil.py aus den VBA-Ausdrücken erzeugt (ChrW in echte Umlaute zurückgewandelt)."
+    }
+  ],
+  "methodology": [
+    {
+      "document": "Europäische Kommission, Types of findings 2021–2027 (Tabelle der Feststellungsarten)",
+      "use": "Nummern, Kategorien und englische Originalbezeichnungen des Katalogs, wie im VBA-Modul übernommen",
+      "text_included": true
+    }
+  ],
+  "builds_on": [],
+  "characterization": {
+    "kind": "legacy_output_parity",
+    "legacy_parity": "PASS_LOCAL_REAL_DATA",
+    "cases": {"tblBelege": 574, "tblMaengel": 46, "deviations": 0},
+    "run": "Ergebnismappe des VBA-Laufs vom 04.10.2026 (AKB 1.5), nur lokal über AUDITCORE_TYFINDINGS_PARITY_XLSX; keine Inhalte oder Fixtures im Repository",
+    "tests": "packages/auditcore_tyfindings/tests"
+  },
+  "origin": "Portierung der ToF-Zuordnung aus dem VBA-Makro der AKB-Auswertung (modAKB_ToF.bas), damit FlowInvoice (VerwK) und der Dummydaten-Generator dieselbe Zuordnung nutzen.",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die portierte Bibliothek in auditcore, nicht für das VBA-Repository akb-makro. Die Bezeichnungen der Kommissionstabelle bleiben Inhalt der Europäischen Kommission."
+    }
+  },
+  "method_validation": "LEGACY_OUTPUT_PARITY"
+}
