@@ -1,6 +1,39 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Pre-release v0.7.0](https://github.com/janpow77/auditcore/releases/tag/v0.7.0)**
+**Aktuell: [Pre-release v0.8.0](https://github.com/janpow77/auditcore/releases/tag/v0.8.0)**
+mit 35 Python-Bibliotheken, 10 npm-Paketen und 234 Release-Dateien mit signierten Prüfsummen.
+Neu ist `auditcore_tyfindings` 0.1.0: Zuordnung der Feststellungen der
+EFRE-Verwaltungsprüfungen zu den Types of Findings 2021–2027 (Katalog,
+Kennziffer- und Formalregeln, versioniertes Profil mit Fingerabdruck).
+Die übrigen 34 Python-Bibliotheken und alle npm-Pakete sind gegenüber v0.7.0
+unverändert; ihre Wheels, Debian-Pakete und npm-Tarballs sind bytegleich, die
+SDists inhaltsgleich (nur die Archivzeitstempel des Neubaus weichen ab, der
+Paketindex verlinkt die neueren Dateien).
+
+Die Versionen und Prüfsummen stehen im
+[Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.8.0/preview-manifest.json)
+und in den signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.8.0/SHA256SUMS).
+Der bestehende Signaturschlüssel bleibt unverändert:
+`E427F95CC37CBFD0876314CA0D1580A6CAE37327`.
+
+```bash
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.8.0/requirements-auditcore_tyfindings.txt
+# oder über den Paketindex
+python -m pip install auditcore-tyfindings==0.1.0 --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+Am 04.10.2026 wurden alle 234 Dateien anonym heruntergeladen und geprüft:
+Prüfsummen und Signaturen, pip-Installation aller 35 Pakete über die Hash-Locks
+und den Paketindex mit Funktionsprüfung, APT-Installation und Entfernung, die
+zehn npm-Tarballs sowie die PDF-/Excel-Ausgabe. Alle zehn npm-Versionen sind
+bereits mit identischer Integrität veröffentlicht.
+[Öffentlicher Prüfnachweis](../reports/domain-public-installation-v0.8.0.json).
+Der Bibliotheksrelease stellt produktive Anwendungen nicht automatisch um.
+
+## Historischer Stand v0.7.0
+
+**[Pre-release v0.7.0](https://github.com/janpow77/auditcore/releases/tag/v0.7.0)**
 mit 34 Python-Bibliotheken, 10 npm-Paketen und 228 Release-Dateien mit signierten Prüfsummen.
 Neu ist `auditcore_flow_agent` 0.1.0: dauerhafte Auftragswarteschlange,
 atomare Ressourcenvergabe mit Kapazitätsprüfung und überwachte Prozessausführung.
