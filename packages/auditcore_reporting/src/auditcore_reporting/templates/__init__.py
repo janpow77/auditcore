@@ -12,7 +12,7 @@ extra ``docx`` (defusedxml), PDF the extra ``pdf`` (reportlab).
 from __future__ import annotations
 
 from .definition import define_template
-from .design import NEUTRAL_DESIGN, DesignProfile, design_from_dict
+from .design import NEUTRAL_DESIGN, DesignProfile, PdfFont, design_from_dict
 from .errors import (
     Issue,
     RenderDependencyError,
@@ -34,6 +34,7 @@ __all__ = [
     "NEUTRAL_DESIGN",
     "DesignProfile",
     "Issue",
+    "PdfFont",
     "RenderDependencyError",
     "RenderLimitError",
     "RenderOptions",

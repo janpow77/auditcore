@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from html import escape
 
-from .design import NEUTRAL_DESIGN, DesignProfile
+from .design import NEUTRAL_DESIGN, DesignProfile, page_orientation
 from .options import DEFAULT_OPTIONS, RenderOptions
 from .resolve import (
     Node,
@@ -29,10 +29,11 @@ def _text(text: str) -> str:
     return escape(text).replace("\n", "<br>")
 
 
-def _style(design: DesignProfile) -> str:
+def _style(design: DesignProfile, orientation: str) -> str:
     h1, h2, h3 = design.heading_sizes_pt
     font = escape(design.font_family, quote=True).replace(";", "")
-    return (
+    page = "@page{size:A4 landscape}" if orientation == "landscape" else ""
+    return page + (
         f"body{{font-family:'{font}',sans-serif;font-size:{design.font_size_pt}pt;"
         f"margin:{design.margin_cm}cm;line-height:1.4;color:#1a1a1a;background:#fff}}"
         f"h1,h2,h3{{color:#{design.accent_color};margin:1.2em 0 .4em}}"
@@ -48,18 +49,48 @@ def _style(design: DesignProfile) -> str:
     )
 
 
+_BORDER_STYLE = {
+    "grid": "",
+    "horizontal": "border-left:none;border-right:none;",
+    "none": "border:none;",
+}
+
+
+def _cell_style(node: RTable, row: int, column: int) -> str:
+    style = _BORDER_STYLE[node.borders]
+    if node.fills and node.fills[row][column]:
+        style += f"background:#{node.fills[row][column]};"
+    if node.bold and node.bold[row][column]:
+        style += "font-weight:bold;"
+    return f' style="{style}"' if style else ""
+
+
 def _table(node: RTable) -> str:
+    head_style = _BORDER_STYLE[node.borders]
+    head_style += f"background:#{node.header_fill};" if node.header_fill else ""
+    head_attr = f' style="{head_style}"' if head_style else ""
     head = "".join(
-        f'<th class="{align}">{_text(text)}</th>'
+        f'<th class="{align}"{head_attr}>{_text(text)}</th>'
         for text, align in zip(node.headers, node.aligns, strict=True)
     )
     body = "".join(
         "<tr>"
-        + "".join(f'<td class="{a}">{_text(c)}</td>' for c, a in zip(row, node.aligns, strict=True))
+        + "".join(
+            f'<td class="{a}"{_cell_style(node, r, c)}>{_text(value)}</td>'
+            for c, (value, a) in enumerate(zip(row, node.aligns, strict=True))
+        )
         + "</tr>"
-        for row in node.rows
+        for r, row in enumerate(node.rows)
     )
-    return f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
+    columns = ""
+    if node.widths:
+        total = sum(node.widths)
+        columns = (
+            "<colgroup>"
+            + "".join(f'<col style="width:{100 * w / total:.2f}%">' for w in node.widths)
+            + "</colgroup>"
+        )
+    return f"<table>{columns}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
 
 
 def _node(node: Node) -> str:
@@ -88,6 +119,7 @@ def render_html(
     header = f"<header>{_text(design.header_text)}</header>" if design.header_text else ""
     footer = f"<footer>{_text(design.footer_text)}</footer>" if design.footer_text else ""
     body = "\n".join(_node(node) for node in document.nodes)
+    style = _style(design, page_orientation(document.orientation, design))
     generator = escape(f"{document.template_id} {document.template_version}", quote=True)
     meta = f'<meta name="generator" content="auditcore_reporting {generator}">'
     if options.author:
@@ -98,6 +130,6 @@ def render_html(
     return (
         '<!DOCTYPE html>\n<html lang="de"><head><meta charset="utf-8">'
         f'<meta http-equiv="Content-Security-Policy" content="{_CSP}">{meta}'
-        f"<title>{_text(options.document_title(document.title))}</title><style>{_style(design)}</style></head>"
+        f"<title>{_text(options.document_title(document.title))}</title><style>{style}</style></head>"
         f"<body>{header}<main>\n{body}\n</main>{footer}</body></html>\n"
     )

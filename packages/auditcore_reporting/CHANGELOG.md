@@ -36,6 +36,26 @@ unverändert, `tests/test_templates_options.py`).
   eine neue `auditcore_common`-Version die exakten Pins aller Pakete
   nachziehen müsste. Der Filter `eur` der Vorlagen bleibt unverändert
   (normales Leerzeichen, Golden-Hashes).
+- Seitenausrichtung: `DesignProfile.orientation` (`portrait`/`landscape`,
+  A4) und Schlüssel `"orientation"` in der Vorlage (geht dem Profil vor; nicht
+  bei Word-Vorlagen). DOCX `w:pgSz` mit `w:orient="landscape"`, PDF
+  `landscape(A4)`, HTML `@page{size:A4 landscape}`. Gilt für das ganze
+  Dokument; ein Wechsel innerhalb des Dokuments ist nicht vorgesehen.
+- Tabellen: je Spalte `width` (relative Gewichte, 0 = gleicher Anteil),
+  `bold` und `fill` (Farbe `RRGGBB` oder Regeln `[{"if", "color", "bold"}]`
+  für einzelne Zellen); je Tabelle `borders` (`grid` Standard, `horizontal`,
+  `none`), `header_fill`, `stripe` (jede zweite Zeile) und `row_fill`
+  (Zeilenfarbe/Hervorhebung per Bedingung). Vorrang: Zellregel vor Zeilenregel
+  vor Streifen. Bedingungen werden beim Anlegen gegen den Datenvertrag geprüft.
+  Ohne diese Schlüssel bleibt jede Tabelle byte-gleich.
+- Unicode-Schriften im PDF: `PdfFont(name, regular, bold=None)` (TrueType als
+  bytes) in `DesignProfile.pdf_fonts`, auswählbar über `pdf_font`. reportlab
+  bettet eine Teilmenge ein (deterministisch); damit erscheinen z. B. ☐/☒,
+  griechische oder osteuropäische Zeichen. Ohne Schriftdatei bleiben die
+  Basis-14-Schriften. Das Paket liefert keine Schriftdateien aus (Lizenz liegt
+  bei der Anwendung); `to_dict` zeigt nur Name und SHA-256, `design_from_dict`
+  nimmt keine Schriftdateien an. DOCX und HTML nennen weiterhin
+  `font_family`.
 - Paketstand 0.4.0; `auditcore_dataprotection` 0.5.3 pinnt
   `auditcore_reporting[excel]==0.4.0`.
 

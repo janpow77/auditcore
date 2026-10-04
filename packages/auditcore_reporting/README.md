@@ -229,7 +229,31 @@ from auditcore_reporting.templates import RenderOptions, builtin_registry, rende
 memo = builtin_registry().get("vermerk")
 options = RenderOptions(author="Prüfbehörde", created=datetime(2026, 10, 4, tzinfo=UTC))
 assert render(memo, memo.sample, "docx", options=options).content[:2] == b"PK"
-assert format_eur(1234.5) == "1.234,50 €" and format_eur(None) == "—"
+assert format_eur(1234.5) == "1.234,50\u00a0€" and format_eur(None) == "—"
+```
+
+Seitenlayout, Tabellen und Schriften (ab 0.4.0): `"orientation":
+"landscape"` in der Vorlage oder im `DesignProfile` (Vorlage geht vor);
+Tabellenspalten mit `width` (relativ), `bold` und `fill` (Farbe oder Regeln
+mit `if`), Tabellen mit `borders` (`grid`, `horizontal`, `none`),
+`header_fill`, `stripe` und `row_fill`. Für Zeichen außerhalb von WinAnsi
+(☐, ☒, Ω …) nimmt das PDF eine TrueType-Schrift der Anwendung auf
+(`PdfFont`, bytes; das Paket liefert keine Schriftdateien):
+
+```python
+from auditcore_reporting.templates import define_template, render
+
+schema = {"type": "object", "properties": {"zeilen": {"type": "array", "items": {
+    "type": "object", "properties": {"name": {"type": "string"}, "neu": {"type": "boolean"}}}}}}
+table = {"type": "table", "source": "zeilen", "as": "z", "borders": "horizontal",
+         "row_fill": [{"if": "z.neu", "color": "FFF2CC", "bold": True}],
+         "columns": [{"header": "Name", "cell": "{{ z.name }}", "width": 3}]}
+quer = define_template({"id": "liste", "version": "1.0.0", "title": "Liste",
+                        "orientation": "landscape", "schema": schema, "blocks": [table]})
+html = render(quer, {"zeilen": [{"name": "A", "neu": True}]}, "html").content.decode()
+assert "@page{size:A4 landscape}" in html and "background:#FFF2CC" in html
+# PDF mit eigener Schrift: DesignProfile(id="amt", pdf_font="Amt",
+#     pdf_fonts=(PdfFont("Amt", regular_ttf_bytes, bold=bold_ttf_bytes),))
 ```
 
 `format_eur` (Modul `format_de`) setzt den gemeinsamen Vertrag

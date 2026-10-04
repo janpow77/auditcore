@@ -63,13 +63,33 @@ class BulletList:
     empty_text: str = ""
 
 
+#: Table borders: full grid (default), horizontal lines only, or none.
+BORDERS = ("grid", "horizontal", "none")
+
+
+@dataclass(frozen=True)
+class Fill:
+    """Colour (RRGGBB) and emphasis of a cell or row; the first rule whose condition holds wins."""
+
+    color: str = ""
+    condition: Condition | None = None
+    bold: bool = False
+
+
 @dataclass(frozen=True)
 class Column:
-    """Table column: header and cell text (placeholders see the row as the table ``var``)."""
+    """Table column: header and cell text (placeholders see the row as the table ``var``).
+
+    ``width`` is a relative weight (0 = equal share), ``bold`` emphasises the
+    whole column, ``fills`` colour single cells (static or by condition).
+    """
 
     header: str
     cell: str
     align: str = "left"
+    width: float = 0.0
+    bold: bool = False
+    fills: tuple[Fill, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -83,6 +103,18 @@ class Table:
     empty_text: str = ""
     #: Draw the header row even without rows (followed by ``empty_text``).
     header_if_empty: bool = False
+    borders: str = "grid"
+    #: Header colour (``""`` = design profile's ``table_header_fill``).
+    header_fill: str = ""
+    #: Colour of every second body row (``""`` = none).
+    stripe: str = ""
+    #: Row colours/emphasis by condition; cell fills take precedence.
+    row_fills: tuple[Fill, ...] = ()
+
+    @property
+    def styled(self) -> bool:
+        """Any cell colour or emphasis beyond the plain default table."""
+        return bool(self.stripe or self.row_fills) or any(c.bold or c.fills for c in self.columns)
 
 
 @dataclass(frozen=True)
@@ -153,6 +185,8 @@ class ReportTemplate:
     docx: bytes | None = field(default=None, repr=False)
     #: Display name without placeholders (lists, selection); ``title`` is the document title.
     name: str = ""
+    #: Page orientation of the template (``""`` = design profile decides).
+    orientation: str = ""
 
     def text_block(self, block_id: str) -> TextBlock | None:
         """Text block by id."""
