@@ -1,0 +1,37 @@
+{
+ "schema": "auditcore_tyfindings.kuerzungsgrund/1",
+ "id": "efre.kuerzungsgrund_zs",
+ "version": "2026.10.1",
+ "status": "INCOMPLETE_DOMAIN_INPUT_REQUIRED",
+ "legal_status": "Schlüssel des Kürzungsgrunds in den Beleglisten der Zwischengeschalteten Stelle. „0“ bedeutet kein Kürzungsgrund; „830“ = Fehlerkennziffer 8.3, „810“ = 8.10 und „890“ = 8.9 (fachliche Angabe vom 04.10.2026). Weitere Schlüssel sind vom Fachbereich zu ergänzen.",
+ "source": {
+  "kind": "fachliche_angabe",
+  "note": "Schlüsselbeispiele „0“, „810“, „890“ aus dem Auftrag vom 04.10.2026; Zuordnung 830 → 8.3, 810 → 8.10 und 890 → 8.9 vom Fachbereich am 04.10.2026 angegeben; keine Zuordnung erfunden."
+ },
+ "eintraege": [
+  {
+   "schluessel": "0",
+   "status": "kein_kuerzungsgrund",
+   "kennziffer": null,
+   "bemerkung": "kein Kürzungsgrund"
+  },
+  {
+   "schluessel": "830",
+   "status": "zugeordnet",
+   "kennziffer": "8.3",
+   "bemerkung": "fachliche Angabe vom 04.10.2026"
+  },
+  {
+   "schluessel": "810",
+   "status": "zugeordnet",
+   "kennziffer": "8.10",
+   "bemerkung": "fachliche Angabe vom 04.10.2026"
+  },
+  {
+   "schluessel": "890",
+   "status": "zugeordnet",
+   "kennziffer": "8.9",
+   "bemerkung": "fachliche Angabe vom 04.10.2026"
+  }
+ ]
+}
