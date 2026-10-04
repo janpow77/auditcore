@@ -1,0 +1,954 @@
+{
+ "derived_from": {
+  "id": "efre.tof_2021_2027",
+  "version": "2026.10.1"
+ },
+ "formalregeln": [
+  {
+   "id": "formal:1",
+   "suchwort": "wirtschaftliche eigentümer",
+   "tof": "9.3"
+  },
+  {
+   "id": "formal:2",
+   "suchwort": "eigentümer",
+   "tof": "9.3"
+  },
+  {
+   "id": "formal:3",
+   "suchwort": "publizit",
+   "tof": "8.1"
+  },
+  {
+   "id": "formal:4",
+   "suchwort": "kommunikation",
+   "tof": "8.1"
+  },
+  {
+   "id": "formal:5",
+   "suchwort": "logo",
+   "tof": "8.1"
+  },
+  {
+   "id": "formal:6",
+   "suchwort": "plakat",
+   "tof": "8.1"
+  },
+  {
+   "id": "formal:7",
+   "suchwort": "förderhinweis",
+   "tof": "8.1"
+  },
+  {
+   "id": "formal:8",
+   "suchwort": "beihilfe",
+   "tof": "2.11"
+  },
+  {
+   "id": "formal:9",
+   "suchwort": "de-minimis",
+   "tof": "2.11"
+  },
+  {
+   "id": "formal:10",
+   "suchwort": "tam-meldung",
+   "tof": "2.11"
+  },
+  {
+   "id": "formal:11",
+   "suchwort": "transparenz",
+   "tof": "2.11"
+  },
+  {
+   "id": "formal:12",
+   "suchwort": "buchführung",
+   "tof": "10.2"
+  },
+  {
+   "id": "formal:13",
+   "suchwort": "buchhaltung",
+   "tof": "10.2"
+  },
+  {
+   "id": "formal:14",
+   "suchwort": "kostenstelle",
+   "tof": "10.2"
+  },
+  {
+   "id": "formal:15",
+   "suchwort": "getrennt",
+   "tof": "10.2"
+  },
+  {
+   "id": "formal:16",
+   "suchwort": "aufbewahr",
+   "tof": "9.2"
+  },
+  {
+   "id": "formal:17",
+   "suchwort": "prüfpfad",
+   "tof": "9.2"
+  },
+  {
+   "id": "formal:18",
+   "suchwort": "digital",
+   "tof": "9.2"
+  },
+  {
+   "id": "formal:19",
+   "suchwort": "original",
+   "tof": "9.2"
+  },
+  {
+   "id": "formal:20",
+   "suchwort": "belegdaten",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:21",
+   "suchwort": "rechnungsdatum",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:22",
+   "suchwort": "rg.dat",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:23",
+   "suchwort": "zahldatum",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:24",
+   "suchwort": "datum",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:25",
+   "suchwort": "rechnungsnummer",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:26",
+   "suchwort": "re-nr",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:27",
+   "suchwort": "unterlagen",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:28",
+   "suchwort": "nachweis",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:29",
+   "suchwort": "unterschrift",
+   "tof": "9.1"
+  },
+  {
+   "id": "formal:30",
+   "suchwort": "falsch",
+   "tof": "9.1"
+  }
+ ],
+ "id": "efre.tof_2021_2027",
+ "katalog": [
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: keine Bekanntmachung oder unzulässige Direktvergabe",
+   "nummer": "1.1",
+   "original": "Lack of publication of contract notice or unjustified direct award (i.e. unlawful negotiated procedure without prior publication of a contract notice)."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: künstliche Aufteilung von Aufträgen",
+   "nummer": "1.2",
+   "original": "Artificial splitting of works/services/supplies contracts."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Fristen für Angebote oder Teilnahmeanträge nicht eingehalten",
+   "nummer": "1.3",
+   "original": "Non-compliance with - time limits for receipt of tenders; or - time limits for receipt of requests to participate; Or Failure to extend time limits for receipt of tenders where significant changes are made to the procurement documents."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: zu kurze Zeit oder Beschränkung beim Zugang zu Unterlagen",
+   "nummer": "1.4",
+   "original": "Insufficient time for potential tenderers/candidates to obtain tender documentation; Or Restrictions to obtain tender documentation."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Fristverlängerung nicht bekannt gemacht oder nicht gewährt",
+   "nummer": "1.5",
+   "original": "Lack of publication of extended time limits for receipt of tenders; Or Failure to extend time limits for receipt of tenders."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Verhandlungsverfahren oder Dialog nicht gerechtfertigt",
+   "nummer": "1.6",
+   "original": "Cases not justifying the use of a competitive procedure with negotiation or competitive dialog."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Eignungs- oder Zuschlagskriterien nicht bekannt gemacht",
+   "nummer": "1.7",
+   "original": "Failure to publish in the contract notice the selection and/or award criteria (and their weighting); or conditions for performance of contracts or technical specifications; Or Failure to describe in sufficient detail the selection and/or award criteria (and their weighting); Or Failure to communicate/publish clarifications/additional information."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: diskriminierende Kriterien oder Spezifikationen",
+   "nummer": "1.8",
+   "original": "Use of - criteria for exclusion, selection, award; or - conditions for performance of contracts; or - technical specifications that are discriminatory on the basis of unjustified national, regional or local preferences."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: unzulässige, nicht diskriminierende Kriterien",
+   "nummer": "1.9",
+   "original": "Use of - criteria for exclusion, selection, award; or - conditions for performance of contracts; or - technical specifications that are not discriminatory in the sense of the previous type of irregularity (i.e. illegal, disproportionate) but still restrict access for economic operators."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Auftragsgegenstand unzureichend bestimmt",
+   "nummer": "1.10",
+   "original": "Insufficient or imprecise definition of the subject-matter of the contract."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: fehlende Begründung für Verzicht auf Lose",
+   "nummer": "1.11",
+   "original": "Lack of justification for not subdividing contract into lots."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: elektronische oder gebündelte Beschaffung nicht regelkonform",
+   "nummer": "1.12",
+   "original": "Non-compliance with the procedures for electronic and aggregated procurement established in Directive 2014/24/EU."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: ungerechtfertigte Beschränkung von Unteraufträgen",
+   "nummer": "1.13",
+   "original": "Unjustified limitation of subcontracting."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Kriterien nach Angebotsöffnung geändert oder falsch angewandt",
+   "nummer": "1.14",
+   "original": "Selection criteria (or technical specifications) were modified after opening of tenders or were incorrectly applied."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Wertung nach abweichenden oder zusätzlichen Kriterien",
+   "nummer": "1.15",
+   "original": "Evaluation of tenders using award criteria that are different from the ones stated in the contract notice or tender specifications; Or Evaluation using additional award criteria that were not published."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Verhandlung während des Verfahrens",
+   "nummer": "1.16",
+   "original": "Negotiation during the award procedure, including modification of the winning tender during evaluation."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: wesentliche Änderung der Bedingungen im Verhandlungsverfahren",
+   "nummer": "1.17",
+   "original": "Competitive procedure with negotiation, with substantial modification of the conditions set out in the contract notice or tender specifications."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: ungerechtfertigter Ausschluss ungewöhnlich niedriger Angebote",
+   "nummer": "1.18",
+   "original": "Unjustified rejection of abnormally low tenders."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Interessenkonflikt mit Auswirkung auf das Ergebnis",
+   "nummer": "1.19",
+   "original": "Conflict of interest with impact on the outcome of the procurement procedure."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: unzulässige Vorbefassung von Bietern",
+   "nummer": "1.20",
+   "original": "Irregular prior involvement of candidates/tenderers towards the contracting authority."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: unzureichender Prüfpfad zur Vergabe",
+   "nummer": "1.21",
+   "original": "Insufficient audit trail for the award of the contract."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: Angebotsabsprachen",
+   "nummer": "1.22",
+   "original": "Bid-rigging (i.e. identified by a competition/anti-cartel office)."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: unzulässige Vertragsänderung",
+   "nummer": "1.23",
+   "original": "Modifications of the contract elements set out in the contract notice or tender specifications, not in compliance with Directive 2014/24/EU."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: nationale Regeln für Nicht-Auftraggeber verletzt",
+   "nummer": "1.24",
+   "original": "Non-compliance with the national rules on procurement carried out by entities other than Contracting Authorities."
+  },
+  {
+   "kategorie": "1 Public Procurement - Contract notice and tender specifications",
+   "kategorie_de": "Öffentliche Auftragsvergabe",
+   "kurzbezeichnung": "Vergabe: sonstige Verstöße",
+   "nummer": "1.25",
+   "original": "Other (e.g. market consultations not properly documented, incorrect transposition of the public procurement Directives in the national legislation)."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: nicht notifiziert",
+   "nummer": "2.1",
+   "original": "Failure to notify State aid."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: falsche Regelung angewandt",
+   "nummer": "2.2",
+   "original": "Wrong aid scheme applied."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: Regelung falsch angewandt, nicht berechtigte Unternehmen",
+   "nummer": "2.3",
+   "original": "Misapplication of the aid scheme, including ineligible beneficiaries/undertaking."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: Überwachungspflichten nicht erfüllt",
+   "nummer": "2.4",
+   "original": "Monitoring requirements not fulfilled."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: Referenzinvestition nicht berücksichtigt",
+   "nummer": "2.5",
+   "original": "Reference investment not taken into account in the applicable aid scheme."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: Einnahmen nicht berücksichtigt",
+   "nummer": "2.6",
+   "original": "No consideration of revenue in the applicable aid scheme."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: Anreizeffekt nicht gewahrt",
+   "nummer": "2.7",
+   "original": "No respect of the incentive effect of the aid."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: Beihilfeintensität überschritten",
+   "nummer": "2.8",
+   "original": "Aid intensity not respected."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: De-minimis-Schwelle überschritten",
+   "nummer": "2.9",
+   "original": "De Minimis threshold exceeded."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: DAWI-Regeln fehlerhaft angewandt",
+   "nummer": "2.10",
+   "original": "Error in the application of the rules on services of general economic interest (SGEI) (e.g. failure to provide adequate justification for the aid or to demonstrate that the aid is necessary to achieve a legitimate objective of common interest)."
+  },
+  {
+   "kategorie": "2 State aid",
+   "kategorie_de": "Staatliche Beihilfen",
+   "kurzbezeichnung": "Beihilfe: sonstige Verstöße",
+   "nummer": "2.11",
+   "original": "Other related to State aid rules (e.g. lack of verification of State aid by the MA/IB in case of re-granting schemes)."
+  },
+  {
+   "kategorie": "3 Ineligible project",
+   "kategorie_de": "Nicht förderfähiges Vorhaben",
+   "kurzbezeichnung": "Vorhaben nicht förderfähig",
+   "nummer": "3.1",
+   "original": "Project not eligible."
+  },
+  {
+   "kategorie": "3 Ineligible project",
+   "kategorie_de": "Nicht förderfähiges Vorhaben",
+   "kurzbezeichnung": "Ziel des Vorhabens nicht erreicht",
+   "nummer": "3.2",
+   "original": "Project's objective not achieved (including non respect of codes for the types of intervention)."
+  },
+  {
+   "kategorie": "3 Ineligible project",
+   "kategorie_de": "Nicht förderfähiges Vorhaben",
+   "kurzbezeichnung": "Abgeschlossenes Vorhaben gefördert (Art. 63 Abs. 6)",
+   "nummer": "3.3",
+   "original": "Retrospective projects (Art. 63(6) CPR)."
+  },
+  {
+   "kategorie": "3 Ineligible project",
+   "kategorie_de": "Nicht förderfähiges Vorhaben",
+   "kurzbezeichnung": "Kein Nachweis der Nutzung bei geteilten Investitionen",
+   "nummer": "3.4",
+   "original": "No evidence about the direct measurement of the use on the project (i.e. for shared investments/equipment between two or more projects)."
+  },
+  {
+   "kategorie": "3 Ineligible project",
+   "kategorie_de": "Nicht förderfähiges Vorhaben",
+   "kurzbezeichnung": "Vorhaben: sonstige Gründe",
+   "nummer": "3.5",
+   "original": "Other."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Ausgaben außerhalb des Förderzeitraums",
+   "nummer": "4.1",
+   "original": "Expenditure incurred before or after the eligibility period."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Vom Begünstigten nicht gezahlte Ausgaben",
+   "nummer": "4.2",
+   "original": "Expenditure not paid by beneficiary."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Ausgaben ohne Projektbezug",
+   "nummer": "4.3",
+   "original": "Expenditure not related the project."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Ausgaben außerhalb des Fördergebiets",
+   "nummer": "4.4",
+   "original": "Expenditure outside of the eligibility area (taking into account Art. 63(4) CPR)."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Nicht förderfähige Steuern und Kosten",
+   "nummer": "4.5",
+   "original": "Ineligible taxes (e.g. VAT) and costs according to the national legislation."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Ziel nur teilweise erreicht",
+   "nummer": "4.6",
+   "original": "Ineligible expenditure due to project's objective partially achieved."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Erwerb von Grundstücken oder Immobilien regelwidrig",
+   "nummer": "4.7",
+   "original": "Non-compliance with rules on purchase of land or real estate."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Nicht förderfähiger Begünstigter",
+   "nummer": "4.8",
+   "original": "Ineligible beneficiary."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Nicht förderfähige Teilnehmer oder Zielgruppe",
+   "nummer": "4.9",
+   "original": "Ineligible participants/final recipient for grant projects/ Ineligible target group."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Interessenkonflikt (Art. 61 Haushaltsordnung)",
+   "nummer": "4.10",
+   "original": "Conflict of interest (Art. 61 Financial Regulation)."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Doppelfinanzierung",
+   "nummer": "4.11",
+   "original": "Double financing."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Leistung nicht erbracht oder nicht geliefert",
+   "nummer": "4.12",
+   "original": "Expenditure for works not performed or goods/services not delivered/executed."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Nicht genehmigte Änderung des Vorhabens",
+   "nummer": "4.13",
+   "original": "Ineligible expenditure incurred due to changes in the project's scope or objectives without obtaining the necessary approvals or amendments to the project's contract."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Nicht förderfähige Personalausgaben",
+   "nummer": "4.14",
+   "original": "Ineligible staff expenditure (e.g. incorrect productive hours, incorrect remuneration, unjustified hours in timesheets)."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Nicht förderfähige Reise- und Übernachtungskosten",
+   "nummer": "4.15",
+   "original": "Ineligible expenditure linked to travel and accommodation."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Verstoß gegen besondere Förderbestimmungen",
+   "nummer": "4.16",
+   "original": "Expenditure noncompliant with specific contractual arrangements and/or with regulations on eligibility requirements (i.e. national or project level)."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Unregelmäßigkeit bei öffentlich-privater Partnerschaft",
+   "nummer": "4.17",
+   "original": "Irregularities related to a public private partnership."
+  },
+  {
+   "kategorie": "4 Ineligible expenditure",
+   "kategorie_de": "Nicht förderfähige Ausgaben",
+   "kurzbezeichnung": "Sonstige nicht förderfähige Ausgaben",
+   "nummer": "4.18",
+   "original": "Other ineligible expenditure (e.g. rounding of monetary amounts/wrong application contractual costs, ineligible expenditure activity returned after payment, etc.)."
+  },
+  {
+   "kategorie": "5 Simplified Cost Options",
+   "kategorie_de": "Vereinfachte Kostenoptionen",
+   "kurzbezeichnung": "Vereinfachte Kostenoptionen: fehlerhafte Methode",
+   "nummer": "5.1",
+   "original": "Wrong methodology."
+  },
+  {
+   "kategorie": "5 Simplified Cost Options",
+   "kategorie_de": "Vereinfachte Kostenoptionen",
+   "kurzbezeichnung": "Vereinfachte Kostenoptionen: fehlerhafte Anwendung",
+   "nummer": "5.2",
+   "original": "Wrong application of the methodology (e.g. wrong calculation, wrong input data, wrong adjustment, follow-up error in the application of flat rates), including non-compliance with the conditions for reimbursement."
+  },
+  {
+   "kategorie": "5 Simplified Cost Options",
+   "kategorie_de": "Vereinfachte Kostenoptionen",
+   "kurzbezeichnung": "Vereinfachte Kostenoptionen nicht genutzt",
+   "nummer": "5.3",
+   "original": "Non-compliance with the mandatory use of simplified costs."
+  },
+  {
+   "kategorie": "6 Financing Not Linked to Costs",
+   "kategorie_de": "Nicht kostenbezogene Finanzierung",
+   "kurzbezeichnung": "Bedingungen oder Ergebnisse nicht erreicht (Art. 95)",
+   "nummer": "6.1",
+   "original": "Failure to fulfill the conditions or failure to achieve the results (Art. 95 CPR)."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: Auswahl des Fonds regelwidrig",
+   "nummer": "7.1",
+   "original": "Non-compliance with the rules for selection of Holding Fund/Specific Fund (direct award by MA or competitive calls)."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: Dokumentation oder Prüfpfad fehlt",
+   "nummer": "7.2",
+   "original": "Lack or incomplete documentation and/or audit trail, cf. Annex XIII CPR (e.g. ex-ante assessment; funding agreements or strategy documents; other documentation supporting the payment applications from final recipients such as business plans or equivalent, including previous annual accounts; checklists and reports at the level of the bodies implementing FIs; etc.)."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: nicht förderfähige Ausgaben",
+   "nummer": "7.3",
+   "original": "Ineligible expenditure (e.g. investments, management cost and fees)."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: nicht förderfähige Endempfänger",
+   "nummer": "7.4",
+   "original": "Ineligible final recipients."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: Zinsen und Rückflüsse regelwidrig verwendet",
+   "nummer": "7.5",
+   "original": "The interest and other gains generated by support from the Funds and/or re-use of resources attributable to the Funds not used in accordance with Art. 60 and/or 62 CPR."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: Kombination mit Zuschüssen regelwidrig",
+   "nummer": "7.6",
+   "original": "In case of combination of support with grants in a single FI operation, the conditions of Art. 58(5) CPR were not respected."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: unvereinbare Beihilfe",
+   "nummer": "7.7",
+   "original": "Incompatible State aid."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: Publizität nach Art. 50",
+   "nummer": "7.8",
+   "original": "Non-compliance with the information and publicity measures set out in Art. 50 CPR."
+  },
+  {
+   "kategorie": "7 Financial Instruments (FIs)",
+   "kategorie_de": "Finanzinstrumente",
+   "kurzbezeichnung": "Finanzinstrumente: sonstige",
+   "nummer": "7.9",
+   "original": "Other."
+  },
+  {
+   "kategorie": "8 Information and publicity measures",
+   "kategorie_de": "Information und Kommunikation",
+   "kurzbezeichnung": "Kommunikationspflichten nach Art. 50",
+   "nummer": "8.1",
+   "original": "Non-compliance with the responsibilities under Art. 50 CPR (e.g. lack of durable plaques, billboards, poster, communication event, no visible statement highlighting the support on website, documents or communication material)."
+  },
+  {
+   "kategorie": "9 Missing supporting information or documentation",
+   "kategorie_de": "Fehlende Nachweise oder Unterlagen",
+   "kurzbezeichnung": "Fehlende oder unvollständige Unterlagen",
+   "nummer": "9.1",
+   "original": "Missing, incomplete or incorrect supporting information or documentation."
+  },
+  {
+   "kategorie": "9 Missing supporting information or documentation",
+   "kategorie_de": "Fehlende Nachweise oder Unterlagen",
+   "kurzbezeichnung": "Unvollständiger Prüfpfad",
+   "nummer": "9.2",
+   "original": "Lack or incomplete audit trail (including due to unreliable IT systems)."
+  },
+  {
+   "kategorie": "9 Missing supporting information or documentation",
+   "kategorie_de": "Fehlende Nachweise oder Unterlagen",
+   "kurzbezeichnung": "Wirtschaftliche Eigentümer nicht erfasst",
+   "nummer": "9.3",
+   "original": "Failure to collect information on the beneficial owners of the recipients of Union funding (Art. 69(2) and Annex XVII CPR)."
+  },
+  {
+   "kategorie": "10 Accounting and calculation errors at project level",
+   "kategorie_de": "Rechen- und Buchungsfehler im Vorhaben",
+   "kurzbezeichnung": "Rechen- und Buchungsfehler auf Vorhabenebene",
+   "nummer": "10.1",
+   "original": "Accounting and calculation errors at project level (including at grant level)."
+  },
+  {
+   "kategorie": "10 Accounting and calculation errors at project level",
+   "kategorie_de": "Rechen- und Buchungsfehler im Vorhaben",
+   "kurzbezeichnung": "Keine getrennte Buchführung",
+   "nummer": "10.2",
+   "original": "Failure to keep separate accounting records or failure to use appropriate accounting codes for transactions reimbursed based on costs actually incurred by a beneficiary according to Art. 53(1)(a) CPR."
+  },
+  {
+   "kategorie": "11 Performance indicators",
+   "kategorie_de": "Leistungsindikatoren",
+   "kurzbezeichnung": "Fehlerhafte Outputdaten",
+   "nummer": "11.1",
+   "original": "Incorrect output data."
+  },
+  {
+   "kategorie": "11 Performance indicators",
+   "kategorie_de": "Leistungsindikatoren",
+   "kurzbezeichnung": "Fehlerhafte Ergebnisdaten",
+   "nummer": "11.2",
+   "original": "Incorrect result data."
+  },
+  {
+   "kategorie": "12 Environmental rules",
+   "kategorie_de": "Umweltvorschriften",
+   "kurzbezeichnung": "Umweltvorschriften nicht eingehalten",
+   "nummer": "12.1",
+   "original": "Non respect of environmental requirements (Natura 2000, Environmental Impact Assessment (EIA), Climate proofing)."
+  },
+  {
+   "kategorie": "13 Equal Opportunities / Non discrimination",
+   "kategorie_de": "Chancengleichheit und Nichtdiskriminierung",
+   "kurzbezeichnung": "Gleichstellung und Nichtdiskriminierung verletzt",
+   "nummer": "13.1",
+   "original": "Non-compliance with the principle of gender equality, equal opportunities and non-discrimination."
+  },
+  {
+   "kategorie": "13 Equal Opportunities / Non discrimination",
+   "kategorie_de": "Chancengleichheit und Nichtdiskriminierung",
+   "kurzbezeichnung": "Grundrechtecharta verletzt",
+   "nummer": "13.2",
+   "original": "Non-compliance with the Charter of Fundamental Rights of the European Union."
+  },
+  {
+   "kategorie": "14 Sound Financial Management",
+   "kategorie_de": "Wirtschaftlichkeit der Haushaltsführung",
+   "kurzbezeichnung": "Grundsatz der Wirtschaftlichkeit verletzt",
+   "nummer": "14.1",
+   "original": "Non-compliance with the principle of sound financial management (e.g. poor project management, failure to comply with obligations assumed by the beneficiary, including failure to respect the deadlines for submitting documents, unused cash discounts/reductions)."
+  },
+  {
+   "kategorie": "14 Sound Financial Management",
+   "kategorie_de": "Wirtschaftlichkeit der Haushaltsführung",
+   "kurzbezeichnung": "Zahlungsfrist von 80 Tagen nicht eingehalten",
+   "nummer": "14.2",
+   "original": "Non-compliance with the deadline for payment to beneficiaries (80 days, cf. Art. 74(1)(b) CPR)."
+  },
+  {
+   "kategorie": "15 Data protection",
+   "kategorie_de": "Datenschutz",
+   "kurzbezeichnung": "Datenschutz verletzt",
+   "nummer": "15.1",
+   "original": "Non-compliance with the rules of data protection."
+  }
+ ],
+ "kennziffern": [
+  {
+   "bemerkung": "Ausgaben außerhalb des Durchführungszeitraums",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "8.1",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": "4.1"
+  },
+  {
+   "bemerkung": "nicht oder nicht vollständig bezahlt",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "8.2",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": "4.2"
+  },
+  {
+   "bemerkung": "erstattungsfähige Umsatzsteuer",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "8.5",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": "4.5"
+  },
+  {
+   "bemerkung": "doppelt abgerechneter Beleg; 4.11 nur bei Doppelfinanzierung aus anderer Quelle",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "8.8",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": "4.18"
+  },
+  {
+   "bemerkung": "Übertragungs- und Rechenfehler",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "7.1",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": "10.1"
+  },
+  {
+   "bemerkung": "fehlender Prüfpfad, keine Rechnung im Rechtssinn",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "5.2",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": "9.2"
+  },
+  {
+   "bemerkung": "Nichteinhaltung von Fördervoraussetzungen der EFRE-Förderrichtlinie, z. B. Teilnehmerzahl",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "5.1",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": "4.16"
+  },
+  {
+   "bemerkung": "offen; mit dem Fehlerkatalog der Verwaltungsbehörde zu klären",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "8.3",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": null
+  },
+  {
+   "bemerkung": "mehrdeutig; ohne Treffer 4.18",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "8.9",
+   "mehrdeutig": true,
+   "regeln": [
+    {
+     "gold_plating": false,
+     "id": "kennziffer:8.9:regel:1",
+     "suchwort": "skonto",
+     "tof": "4.2"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:8.9:regel:2",
+     "suchwort": "nachlass",
+     "tof": "4.2"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:8.9:regel:3",
+     "suchwort": "rabatt",
+     "tof": "4.2"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:8.9:regel:4",
+     "suchwort": "tagegeld",
+     "tof": "4.15"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:8.9:regel:5",
+     "suchwort": "frühstück",
+     "tof": "4.15"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:8.9:regel:6",
+     "suchwort": "hotel",
+     "tof": "4.15"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:8.9:regel:7",
+     "suchwort": "aktivier",
+     "tof": "4.18"
+    }
+   ],
+   "tof": "4.18"
+  },
+  {
+   "bemerkung": "Sammelziffer; ohne Treffer nicht zugeordnet; Bagatellgrenze 50 EUR (BNBest-EFRE) als Gold-plating-Kandidat",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "16",
+   "mehrdeutig": true,
+   "regeln": [
+    {
+     "gold_plating": false,
+     "id": "kennziffer:16:regel:1",
+     "suchwort": "1.720 stunden",
+     "tof": "4.14"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:16:regel:2",
+     "suchwort": "stunden",
+     "tof": "4.14"
+    },
+    {
+     "gold_plating": false,
+     "id": "kennziffer:16:regel:3",
+     "suchwort": "personal",
+     "tof": "4.14"
+    },
+    {
+     "gold_plating": true,
+     "id": "kennziffer:16:regel:4",
+     "suchwort": "unter 50",
+     "tof": "4.16"
+    }
+   ],
+   "tof": null
+  },
+  {
+   "bemerkung": "nicht zugeordnet",
+   "finanziell": true,
+   "gold_plating": false,
+   "kennziffer": "ohne Kennziffer",
+   "mehrdeutig": false,
+   "regeln": [],
+   "tof": null
+  }
+ ],
+ "legal_status": "Aus dem VBA-Modul modAKB_ToF übernommener Vorschlag der Zuordnung, abgeleitet aus den Beschreibungen im Bericht über die Verwaltungsprüfungen; gegen den Fehlerkatalog der Verwaltungsbehörde zu prüfen. Gold-plating-Kandidaten sind ein Hinweis, keine Feststellung.",
+ "open_decisions": [
+  "Kennziffer 8.3 ist offen; mit dem Fehlerkatalog der Verwaltungsbehörde zu klären.",
+  "Die Zuordnung ist ein Vorschlag aus den Berichtsbeschreibungen und gegen den Fehlerkatalog der Verwaltungsbehörde zu prüfen."
+ ],
+ "schema": "auditcore_tyfindings.profile/1",
+ "source": {
+  "commit": "4799ac6c32cb09cda1575136ea8ce594201df86a",
+  "path": "src/modAKB_ToF.bas",
+  "repository": "akb-makro",
+  "sha256": "4aef164d4304acf062b9691b08512cb5f4e1733a9222e01eb2b75e2152c2f0a9",
+  "symbols": [
+   "ToFEintrag",
+   "ToFStandard",
+   "ToFFormalStandard",
+   "ToFZuordnen",
+   "ToFFormalZuordnen",
+   "ToFKategorie"
+  ]
+ },
+ "status": "LEGACY_CHARACTERIZED",
+ "version": "2026.10.2"
+}

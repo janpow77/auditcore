@@ -1,5 +1,15 @@
 # Changelog – auditcore_tyfindings
 
+## Unveröffentlicht
+
+- Profil `efre.tof_2021_2027` 2026.10.2 (abgeleitet aus 2026.10.1, nur
+  ausdrücklich ladbar): Feld `kategorie_de` je Katalogeintrag mit den deutschen
+  Kategoriebezeichnungen, fachlich freigegeben am 05.10.2026 (identisch mit der
+  FlowInvoice-Übergangstabelle). Neu `ToFEintrag.kategorie_de` (Standard `None`)
+  und `ToFProfil.kategorie_de(kategorie)`; der Profillader prüft, dass
+  `kategorie_de` vollständig und je Kategorie einheitlich ist, und akzeptiert
+  `derived_from`. `STANDARDPROFIL` bleibt 2026.10.1 (Fingerabdruck unverändert).
+
 ## 0.1.0 – 2026-10-04 – erste Fassung (noch nicht veröffentlicht)
 
 Portierung der ToF-Zuordnung aus `modAKB_ToF.bas` (akb-makro, Commit 4799ac6c).

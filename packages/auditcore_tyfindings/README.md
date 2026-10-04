@@ -125,6 +125,13 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
   `katalog` verwenden es, wenn kein `profil` übergeben wird; andere Versionen
   lädt `load_profile(id, version)` ausdrücklich. Ein neues Standardprofil
   kommt nur mit einer neuen Paketversion.
+- **`efre.tof_2021_2027` Version `2026.10.2`** (nur ausdrücklich über
+  `load_profile`): abgeleitet aus `2026.10.1` (`derived_from`), Regeln und
+  Katalog unverändert; jeder Katalogeintrag trägt zusätzlich `kategorie_de`,
+  die deutsche Kategoriebezeichnung (fachlich freigegeben am 05.10.2026,
+  identisch mit FlowInvoice). `ToFProfil.kategorie_de("4")` liefert
+  „Nicht förderfähige Ausgaben“; in `2026.10.1` ist der Wert `None`.
+  Fingerabdruck `98f24bcdd286fb076bd9c24ea978cc0d2aebc0320a5aa9bf8e697c164832fa8c`.
 - **`efre.kuerzungsgrund_zs` Version `2026.10.1`**: Kürzungsgründe der
   Beleglisten der Zwischengeschalteten Stelle → Fehlerkennziffer
   (`kennziffer_aus_kuerzungsgrund`). „0“ = kein Kürzungsgrund,
