@@ -243,13 +243,36 @@ mit `if`), Tabellen mit `borders` (`grid`, `horizontal`, `none`),
 ```python
 from auditcore_reporting.templates import define_template, render
 
-schema = {"type": "object", "properties": {"zeilen": {"type": "array", "items": {
-    "type": "object", "properties": {"name": {"type": "string"}, "neu": {"type": "boolean"}}}}}}
-table = {"type": "table", "source": "zeilen", "as": "z", "borders": "horizontal",
-         "row_fill": [{"if": "z.neu", "color": "FFF2CC", "bold": True}],
-         "columns": [{"header": "Name", "cell": "{{ z.name }}", "width": 3}]}
-quer = define_template({"id": "liste", "version": "1.0.0", "title": "Liste",
-                        "orientation": "landscape", "schema": schema, "blocks": [table]})
+schema = {
+    "type": "object",
+    "properties": {
+        "zeilen": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"name": {"type": "string"}, "neu": {"type": "boolean"}},
+            },
+        }
+    },
+}
+table = {
+    "type": "table",
+    "source": "zeilen",
+    "as": "z",
+    "borders": "horizontal",
+    "row_fill": [{"if": "z.neu", "color": "FFF2CC", "bold": True}],
+    "columns": [{"header": "Name", "cell": "{{ z.name }}", "width": 3}],
+}
+quer = define_template(
+    {
+        "id": "liste",
+        "version": "1.0.0",
+        "title": "Liste",
+        "orientation": "landscape",
+        "schema": schema,
+        "blocks": [table],
+    }
+)
 html = render(quer, {"zeilen": [{"name": "A", "neu": True}]}, "html").content.decode()
 assert "@page{size:A4 landscape}" in html and "background:#FFF2CC" in html
 # PDF mit eigener Schrift: DesignProfile(id="amt", pdf_font="Amt",
