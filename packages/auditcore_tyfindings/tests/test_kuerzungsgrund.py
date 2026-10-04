@@ -13,7 +13,7 @@ from auditcore_tyfindings import (
 )
 from auditcore_tyfindings.kuerzungsgrund import STANDARDTABELLE, tabelle_aus_dict
 
-FINGERPRINT = "c83107ee967d0aa13e145415c449a58aa701436d17c7bb54f07a65b2000b9b01"
+FINGERPRINT = "6e8b0cc9ead71dc215e138039d134912498dca4e11644e8373407be4612ddf14"
 
 
 def test_tabelle_versioniert_mit_fingerprint() -> None:
@@ -30,7 +30,7 @@ def test_null_heisst_kein_kuerzungsgrund() -> None:
 
 
 @pytest.mark.parametrize(
-    ("schluessel", "kennziffer"), [("810", "8.10"), ("890", "8.90"), (" 810 ", "8.10")]
+    ("schluessel", "kennziffer"), [("830", "8.3"), ("810", "8.10"), ("890", "8.90"), (" 810 ", "8.10")]
 )
 def test_fachlich_zugeordnete_schluessel(schluessel: str, kennziffer: str) -> None:
     eintrag = kuerzungsgrund(schluessel)

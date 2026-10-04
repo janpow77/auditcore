@@ -128,7 +128,7 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
 - **`efre.kuerzungsgrund_zs` Version `2026.10.1`**: Kürzungsgründe der
   Beleglisten der Zwischengeschalteten Stelle → Fehlerkennziffer
   (`kennziffer_aus_kuerzungsgrund`). „0“ = kein Kürzungsgrund,
-  „810“ = Fehlerkennziffer 8.10, „890“ = 8.90 (fachliche Angabe vom
+  „830“ = Fehlerkennziffer 8.3, „810“ = 8.10, „890“ = 8.90 (fachliche Angabe vom
   04.10.2026). Weitere Schlüssel liefern `None` und sind **vom Fachbereich zu
   ergänzen**. Nichts ist erfunden; insbesondere wird keine allgemeine
   Umrechnungsregel unterstellt.
