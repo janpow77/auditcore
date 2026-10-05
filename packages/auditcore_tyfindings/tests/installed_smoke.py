@@ -16,12 +16,13 @@ from auditcore_tyfindings import (
 def main() -> None:
     """Catalogue, error-code mapping, keyword rules and profile fingerprint."""
     package = distribution("auditcore_tyfindings")
-    assert package.version == "0.1.0"
+    assert package.version == "0.2.0"
     assert [r for r in package.requires or [] if "extra ==" not in r] == ["auditcore_common==0.2.1"]
     assert find_spec("auditcore") is None
     assert len(katalog()) == 86
     profil = load_profile(*STANDARDPROFIL)
-    assert profil.fingerprint == "149acf962219ec306a83615e56e42500691dd56aa08557f147688862a0adcdc5"
+    assert profil.fingerprint == "f83a36f21f57605f85a117cd7b004ae9ce04c42fcb73b749c34e189970ad7ebf"
+    assert profil.kategorie_de("4") == "Nicht förderfähige Ausgaben"
     assert zuordnen("8.9", "Skonto").tof_unterkategorie == "4.2"
     assert zuordnen("16", "unter 50 EUR").gold_plating
     assert zuordnen("1.10").zuordnungsweg == "nicht zugeordnet"
