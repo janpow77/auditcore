@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Neues Paket `auditcore_officebank` 0.1.0 (unveröffentlicht), Etappe 0 laut
+  [Plan](docs/projekt/20261005_Plan_auditcore_officebank_0.1.md): Rechnerprofil
+  und Projektdatei mit Schemaversion, Ausgabe-Maskierung, Gast-Schnittstelle mit
+  Fake, CLI `auditcore-officebank` (`status`, `konfig`; geplante Gruppen enden
+  mit Exit 3), Kern nur Standardbibliothek, Extras `[docx]` und `[xlsx]`. Dazu
+  das Plugin-Gerüst `plugins/auditcore-office/` (Manifest, 8 Skills und
+  6 Agenten als Platzhalter) und das Prüfprofil `officebank`.
 - Pre-release v0.8.1 (05.10.2026): `auditcore_tyfindings` 0.2.0 mit dem
   Standardprofil 2026.10.2 (deutsche Kategoriebezeichnungen); alle übrigen
   Bibliotheken und npm-Pakete unverändert. Öffentlicher Nachweis in

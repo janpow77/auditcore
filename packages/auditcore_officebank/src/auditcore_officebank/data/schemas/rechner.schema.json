@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "auditcore-officebank/rechner/1",
+  "title": "Rechnerprofil der officebank (profil.toml)",
+  "description": "Rechnerabhängige Einstellungen. Secrets stehen nie im Profil; MCP-Endpunkte nennen nur den Namen des Tokens.",
+  "type": "object",
+  "required": ["schema", "vm", "austausch", "autor"],
+  "properties": {
+    "schema": {"const": "auditcore-officebank/rechner/1"},
+    "vm": {
+      "type": "object",
+      "required": ["name", "backend"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "backend": {"enum": ["utm"]}
+      }
+    },
+    "austausch": {
+      "type": "object",
+      "required": ["bind", "port"],
+      "properties": {
+        "bind": {"type": "string", "minLength": 1, "description": "Host-Adresse im VM-Netz, nie 0.0.0.0"},
+        "port": {"type": "integer", "minimum": 1, "maximum": 65535}
+      }
+    },
+    "autor": {
+      "type": "object",
+      "required": ["kopfkommentar"],
+      "properties": {"kopfkommentar": {"type": "string", "minLength": 1}}
+    },
+    "mcp": {
+      "type": "object",
+      "properties": {
+        "endpunkte": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["url", "token"],
+            "properties": {
+              "url": {"type": "string", "minLength": 1},
+              "token": {"type": "string", "minLength": 1, "description": "Name des Secrets, nicht der Wert"}
+            }
+          }
+        }
+      }
+    },
+    "upload": {
+      "type": "object",
+      "description": "Upload-Ziele: Name → Ziel (z. B. rclone-Remote mit Ordner)",
+      "additionalProperties": {"type": "string", "minLength": 1}
+    }
+  }
+}
