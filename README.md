@@ -206,7 +206,7 @@ Paket-README und `provenance.json` erzeugt.
 | [`auditcore_runner`](packages/auditcore_runner) | 0.1.0 | Ephemere self-hosted GitHub-Runner auf eigenen Rechnern – isoliert, dynamisch nach Last skaliert – und eine lokale Prüfbank mit einheitlichen, baseline-gefilterten Befunden. | keine; Extras: `github-app`, `workflows` | neu |
 | [`auditcore_sampling`](packages/auditcore_sampling) | 0.2.4 | Stichprobenumfänge (MUS, einfache Zufallsstichprobe), systematische MUS-Auswahl, Zufallsauswahl und Schichtung mit ausdrücklich benannten, quellengebundenen Methoden. | `auditcore_common==0.2.1`; Extras: `web` | spezifiziert |
 | [`auditcore_statistics`](packages/auditcore_statistics) | 0.3.5 | Beschreibende Prüfstatistik (Benford-Test erster und erster zwei Ziffern, Konformitätsmaße nach MAD und z-Test) mit benannten, quellengebundenen Methodenprofilen. | `auditcore_common==0.2.1`; Extras: `web` | spezifiziert |
-| [`auditcore_tyfindings`](packages/auditcore_tyfindings) | 0.1.0 | Types of Findings 2021–2027 für Feststellungen der EFRE-Verwaltungsprüfungen: versionierter Katalog, Zuordnung der Fehlerkennziffern mit Schlüsselwortregeln und Gold-plating-Kennzeichen. | `auditcore_common==0.2.1` | charakterisiert |
+| [`auditcore_tyfindings`](packages/auditcore_tyfindings) | 0.2.0 | Types of Findings 2021–2027 für Feststellungen der EFRE-Verwaltungsprüfungen: versionierter Katalog, Zuordnung der Fehlerkennziffern mit Schlüsselwortregeln und Gold-plating-Kennzeichen. | `auditcore_common==0.2.1` | charakterisiert |
 
 **Quellen-Adapter**
 
