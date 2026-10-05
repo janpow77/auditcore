@@ -43,10 +43,11 @@ Das Repository ist als striktes Clean-Domain-Monorepo aufgebaut: Es trennt Platt
 | [`ci/`](ci/) | CI-Konfiguration | Spezifikationen und Hilfsskripte für Runner-Umgebungen und GitHub Actions. |
 | [`contexts/`](contexts/) | Ausführungskontexte | Strukturierte JSON-Kontexte für Plattformwerkzeuge (`core.json`, `quality.json`, etc.). |
 | [`packaging/`](packaging/) | Paketierung | Metadaten und Extras-Konfigurationen für Python- und OS-Pakete. |
+| [`plugins/`](plugins/) | Claude-Code-Plugins | `auditcore-office` (Abläufe, Agentenrollen, Hooks und Vorlagen für Office-Makroprojekte; ruft die CLI `auditcore-officebank` auf, Stand Gerüst). |
 
 ### Zentrale Steuerungs- und Konfigurationsdateien
 
-- [`.auditcore-runner.toml`](.auditcore-runner.toml): Konfiguration der lokalen und CI-Prüfprofile für den `auditcore-runner` (`checklists`, `pdf`, `privacy`, `runner`, `schnell`, `voll`).
+- [`.auditcore-runner.toml`](.auditcore-runner.toml): Konfiguration der lokalen und CI-Prüfprofile für den `auditcore-runner` (`checklists`, `pdf`, `privacy`, `runner`, `officebank`, `schnell`, `voll`).
 - [`pyproject.toml`](pyproject.toml): Monorepo-Workspace-Konfiguration (Ruff, Mypy, Pytest, Pyrefly, Setuptools).
 - [`package.json`](package.json) / [`package-lock.json`](package-lock.json): Root-Konfiguration der JavaScript/TypeScript-Toolchain und Workspaces.
 - [`eslint.config.mjs`](eslint.config.mjs): Zentrales Flat-Config-Regelwerk für JavaScript, TypeScript und Vue.
