@@ -1,2 +1,9 @@
 auditcore_pdf – auditcore Monorepo.
 Eigenständige Implementierung für PDF-Verarbeitung, Seitenoperationen und Schwärzung.
+
+Dieses Paket steht unter der MIT-Lizenz und enthält keinen Code von PyMuPDF.
+Die PDF-Funktionen benötigen das optionale Extra [pymupdf]. PyMuPDF (Artifex
+Software) steht unter der GNU AGPL-3.0 oder einer kommerziellen Lizenz. Wer das
+Extra installiert und die Anwendung weitergibt oder über ein Netzwerk anbietet,
+muss die Bedingungen der AGPL-3.0 erfüllen oder eine kommerzielle Lizenz von
+Artifex erwerben.

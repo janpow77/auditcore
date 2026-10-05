@@ -5,7 +5,10 @@ Seitenoperationen, Anzeige und nachprüfbare Schwärzung.
 from __future__ import annotations
 
 from auditcore_pdf.engine import MAX_PAGES, is_pymupdf_available, open_pdf
+from auditcore_pdf.imagecheck import find_unverifiable_pages
 from auditcore_pdf.models import (
+    DEFAULT_IMAGE_COVERAGE_THRESHOLD,
+    DEFAULT_PATTERNS,
     STANDARD_PATTERNS,
     DocumentInfo,
     PageInfo,
@@ -26,10 +29,12 @@ from auditcore_pdf.operations import (
 )
 from auditcore_pdf.redact import find_redaction_targets, redact_document
 from auditcore_pdf.sanitize import (
+    find_unverifiable_attachments,
     sanitize_annotations,
     sanitize_attachments,
     sanitize_metadata,
 )
+from auditcore_pdf.structure_clean import sanitize_structure
 from auditcore_pdf.verification import verify_redaction
 from auditcore_pdf.viewer import (
     extract_all_text,
@@ -40,6 +45,8 @@ from auditcore_pdf.viewer import (
 )
 
 __all__ = [
+    "DEFAULT_IMAGE_COVERAGE_THRESHOLD",
+    "DEFAULT_PATTERNS",
     "MAX_PAGES",
     "STANDARD_PATTERNS",
     "DocumentInfo",
@@ -55,6 +62,8 @@ __all__ = [
     "extract_page_text",
     "extract_pages",
     "find_redaction_targets",
+    "find_unverifiable_attachments",
+    "find_unverifiable_pages",
     "get_document_info",
     "get_toc",
     "is_pymupdf_available",
@@ -67,8 +76,9 @@ __all__ = [
     "sanitize_annotations",
     "sanitize_attachments",
     "sanitize_metadata",
+    "sanitize_structure",
     "split_document",
     "verify_redaction",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

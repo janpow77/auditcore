@@ -47,6 +47,18 @@ nicht im öffentlichen Paketindex. Die Veröffentlichungsaktion wurde nicht ausg
    vorliegende Charakterisierung hat bei PDF-Schwärzung Klartextreste in Metadaten,
    Anlagen und Kommentaren sowie fehlende OCR-/Mehrzeilenfunde gezeigt. Ein
    Schwärzungsrelease benötigt daher separate Inhalts- und Metadatenprüfung.
+
+   *Stand 04.10.2026 (teilweise überholt):* `b95b4b7` hat die Schwärzung samt
+   Metadaten-, Anhangs- und Kommentarprüfung bereits umgesetzt; 0.1.0 ist seit
+   v0.6.0 veröffentlicht. Die beim Einsatz in regulierung gefundenen Restlücken
+   (Issue #239) schließt 0.2.0 (noch nicht veröffentlicht): Prüfung und Bereinigung
+   von Lesezeichen, Formularfeldern, Verknüpfungen, benannten Zielen,
+   Seitenbeschriftungen, Ebenen (auch ausgeblendet), Alt-/ActualText und
+   JavaScript; gemischte Seiten mit Bildanteil und binäre Anhänge gelten als
+   nicht prüfbar statt als geprüft; präzisere Standardmuster mit konservativer
+   Auswahl `DEFAULT_PATTERNS`. Offen bleibt OCR: Text in Bildern wird weiterhin
+   weder geschwärzt noch geprüft, nur gemeldet. Siehe
+   [`packages/auditcore_pdf/CHANGELOG.md`](../../packages/auditcore_pdf/CHANGELOG.md).
 5. Den Checklisten-Kern erst nach Festlegung des gemeinsamen Baum-, Antwort-,
    Versions- und Austauschvertrags extrahieren; Projekt-, Persistenz- und
    Freigabelogik bleiben zunächst Hostadapter.
