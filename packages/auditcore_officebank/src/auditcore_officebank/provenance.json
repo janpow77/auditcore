@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_officebank",
+  "version": "0.1.0",
+  "contract": "auditcore-officebank/projekt/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [],
+  "notes": "Aus privaten Projektwerkzeugen neu geschrieben; es wird kein Quelltext übernommen und es werden keine Projektpfade genannt.",
+  "characterization": {
+    "kind": "synthetic_contract",
+    "legacy_parity": "NOT_ASSERTED",
+    "tests": "packages/auditcore_officebank/tests"
+  },
+  "license": "MIT",
+  "publication": "NOT_EXECUTED"
+}

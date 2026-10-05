@@ -241,3 +241,26 @@ zeitlimit_s = 300
 [pruefprofile.tyfindings.werkzeug.codegate]
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_tyfindings", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
+
+# Office-, VBA- und VM-Prüfbank (Etappe 0: Gerüst) samt Plugin-Gerüst; ohne Office und ohne VM.
+[pruefprofile.officebank]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 600
+autofix = false
+
+[pruefprofile.officebank.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_officebank", "tests/test_plugin_office.py", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.officebank.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_officebank/tests", "tests/test_plugin_office.py", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.officebank.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_officebank && exec python3 -m mypy src --no-color-output --no-error-summary"]
+zeitlimit_s = 300
+
+[pruefprofile.officebank.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_officebank", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300
