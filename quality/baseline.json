@@ -254,9 +254,6 @@
       },
       "coverage_percent": 99.02
     },
-    "auditcore_officebank": {
-      "coverage_percent": 100.0
-    },
     "auditcore_pdf": {
       "coverage_percent": 100.0
     },

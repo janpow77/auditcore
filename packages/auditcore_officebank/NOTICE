@@ -1,6 +1,0 @@
-auditcore_officebank – auditcore Monorepo.
-Neue Implementierung einer Office-, VBA- und VM-Prüfbank. Die Abläufe stammen aus
-privaten Projektwerkzeugen und wurden neu geschrieben; es wurde kein Quelltext
-übernommen. Lizenz: MIT gemäß LICENSE.
-Office, das Office Deployment Tool und SQL-Server-Images werden nicht mitgeliefert,
-sondern zur Laufzeit vom Hersteller bezogen.
