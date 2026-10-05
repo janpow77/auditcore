@@ -37,6 +37,9 @@ class ToFEintrag:
     kategorie_bezeichnung: str
     original: str
     kurzbezeichnung: str
+    #: Deutsche Kategoriebezeichnung (ab Profil 2026.10.2, fachlich freigegeben
+    #: 05.10.2026); ``None`` in Profilen ohne deutsche Kategorietexte.
+    kategorie_de: str | None = None
 
     @property
     def kategorie(self) -> str:
@@ -112,6 +115,13 @@ class ToFProfil:
     def referenz(self) -> dict[str, str]:
         """Identität für Ergebnisprotokolle."""
         return {"id": self.id, "version": self.version, "fingerprint": self.fingerprint}
+
+    def kategorie_de(self, kategorie: str) -> str | None:
+        """Deutsche Bezeichnung einer Kategorie („4“) oder ``None``, wenn das Profil keine führt."""
+        for eintrag in self.katalog:
+            if eintrag.kategorie == kategorie:
+                return eintrag.kategorie_de
+        return None
 
     def eintrag(self, nummer: str) -> ToFEintrag | None:
         """Katalogeintrag zur Nummer (exakter Textvergleich) oder ``None``."""
