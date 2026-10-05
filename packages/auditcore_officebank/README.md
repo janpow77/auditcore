@@ -112,7 +112,7 @@ auditcore-officebank konfig schema projekt
 | Modul | Kurzbeschreibung |
 |---|---|
 | `auditcore_officebank.acceptance` | Abnahme gegen unabhängige Sollwerte (Etappe 4, Plan Kap. 2.7). |
-| `auditcore_officebank.build` | Inkrementeller Build nur aus committeten Ständen (Etappe 4, Plan Kap. 2.6). |
+| `auditcore_officebank.builder` | Inkrementeller Build nur aus committeten Ständen (Etappe 4, Plan Kap. 2.6). |
 | `auditcore_officebank.cli` | Kommandozeile ``auditcore-officebank`` (Befehle deutsch, wie beim Runner). |
 | `auditcore_officebank.config` | Rechnerprofil und Projektdatei (``.officebank.toml``) mit Schemaversion. |
 | `auditcore_officebank.delivery` | Datenfreies Lieferpaket, Schwärzung und Upload (Etappe 4, Plan Kap. 2.9). |

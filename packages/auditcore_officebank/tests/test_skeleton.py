@@ -5,11 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from auditcore_officebank.build import BuildInput
 
 import auditcore_officebank.project as project
 from auditcore_officebank import STAGES, StageNotImplemented, require, stage_of
 from auditcore_officebank.acceptance import Tolerances
+from auditcore_officebank.builder import BuildInput
 from auditcore_officebank.delivery import PackageSpec
 from auditcore_officebank.gates import GATE_ORDER, NATIVE_COMPILE_NOT_RUN
 from auditcore_officebank.mssql import MssqlService

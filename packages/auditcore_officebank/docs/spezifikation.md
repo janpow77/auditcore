@@ -28,7 +28,7 @@ und Plugin-Skills den Stand ohne Raten erkennen.
 | `stages` | Zuordnung CLI-Gruppe → Etappe |
 | `vm` | `GuestBackend` (Protocol), `GuestResult`, `VmState` |
 | `testing` | `FakeGuest` |
-| `office`, `mssql`, `build`, `acceptance`, `gates`, `delivery`, `project` | Docstrings und Typgerüste |
+| `office`, `mssql`, `builder`, `acceptance`, `gates`, `delivery`, `project` | Docstrings und Typgerüste |
 
 ## Schemas
 
