@@ -20,7 +20,7 @@ from .modell import KennzifferEintrag, Schluesselwortregel, ToFEintrag, ToFProfi
 SCHEMA: Final = "auditcore_tyfindings.profile/1"
 #: Profil, das :func:`auditcore_tyfindings.zuordnen` ohne ``profil`` verwendet.
 #: Ein neues Profil ändert diesen Wert nur mit einer neuen Paketversion.
-STANDARDPROFIL: Final = ("efre.tof_2021_2027", "2026.10.1")
+STANDARDPROFIL: Final = ("efre.tof_2021_2027", "2026.10.2")
 _RESSOURCEN: Final = "auditcore_tyfindings.profile_data"
 _SCHLUESSEL: Final = frozenset(
     {
@@ -34,6 +34,7 @@ _SCHLUESSEL: Final = frozenset(
         "katalog",
         "kennziffern",
         "formalregeln",
+        "derived_from",
     }
 )
 
@@ -85,12 +86,30 @@ def _katalog(daten: JsonObjekt) -> tuple[ToFEintrag, ...]:
                 kategorie_bezeichnung=_text(zeile, "kategorie", nummer),
                 original=_text(zeile, "original", nummer),
                 kurzbezeichnung=_text(zeile, "kurzbezeichnung", nummer),
+                kategorie_de=(
+                    _text(zeile, "kategorie_de", nummer) if "kategorie_de" in zeile else None
+                ),
             )
         )
     nummern = [e.nummer for e in eintraege]
     if len(set(nummern)) != len(nummern):
         raise ProfilFehler("Katalog: doppelte Nummer.")
+    _kategorie_de_einheitlich(eintraege)
     return tuple(eintraege)
+
+
+def _kategorie_de_einheitlich(eintraege: list[ToFEintrag]) -> None:
+    """``kategorie_de`` steht in allen oder keinem Eintrag und ist je Kategorie gleich."""
+    vorhanden = {e.kategorie_de is not None for e in eintraege}
+    if len(vorhanden) > 1:
+        raise ProfilFehler("Katalog: 'kategorie_de' fehlt in einzelnen Einträgen.")
+    je_kategorie: dict[str, str | None] = {}
+    for eintrag in eintraege:
+        bisher = je_kategorie.setdefault(eintrag.kategorie, eintrag.kategorie_de)
+        if bisher != eintrag.kategorie_de:
+            raise ProfilFehler(
+                f"Katalog: Kategorie {eintrag.kategorie} mit abweichender deutscher Bezeichnung."
+            )
 
 
 def _regel(roh: object, nummern: frozenset[str], wo: str) -> Schluesselwortregel:
@@ -153,6 +172,11 @@ def profil_aus_dict(daten: Mapping[str, object]) -> ToFProfil:
         raise ProfilFehler(f"Unbekannte Profilschlüssel: {sorted(unbekannt)}.")
     if roh.get("schema") != SCHEMA:
         raise ProfilFehler(f"Profilschema {SCHEMA} erwartet.")
+    if "derived_from" in roh:
+        herkunft = _objekt(roh["derived_from"], "derived_from")
+        if herkunft.get("id") != roh.get("id"):
+            raise ProfilFehler("'derived_from' muss auf dasselbe Profil verweisen.")
+        _text(herkunft, "version", "derived_from")
     katalog = _katalog(roh)
     nummern = frozenset(e.nummer for e in katalog)
     entscheidungen = _liste(roh, "open_decisions")
