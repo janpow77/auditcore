@@ -144,23 +144,24 @@ def test_fehlerhaftes_profil(pfad: tuple[object, ...], wert: object) -> None:
         profil_aus_dict(_veraendert(pfad, wert))
 
 
-#: Deutsche Kategoriebezeichnungen, fachlich freigegeben am 05.10.2026
-#: (identisch mit der FlowInvoice-Übergangstabelle).
+#: Deutsche Kategoriebezeichnungen, fachlich freigegeben am 05.10.2026:
+#: Fassung der AKB-Auswertung (ToFKategorieDe in modAKB_ToF.bas), identisch
+#: mit der FlowInvoice-Übergangstabelle.
 KATEGORIE_DE = {
-    "1": "Öffentliche Auftragsvergabe",
+    "1": "Öffentliche Auftragsvergabe - Auftragsbekanntmachung und Vergabeunterlagen",
     "2": "Staatliche Beihilfen",
     "3": "Nicht förderfähiges Vorhaben",
     "4": "Nicht förderfähige Ausgaben",
     "5": "Vereinfachte Kostenoptionen",
-    "6": "Nicht kostenbezogene Finanzierung",
+    "6": "Nicht mit Kosten verknüpfte Finanzierung",
     "7": "Finanzinstrumente",
-    "8": "Information und Kommunikation",
+    "8": "Informations- und Publizitätsmaßnahmen",
     "9": "Fehlende Nachweise oder Unterlagen",
-    "10": "Rechen- und Buchungsfehler im Vorhaben",
+    "10": "Buchungs- und Rechenfehler auf Vorhabenebene",
     "11": "Leistungsindikatoren",
     "12": "Umweltvorschriften",
     "13": "Chancengleichheit und Nichtdiskriminierung",
-    "14": "Wirtschaftlichkeit der Haushaltsführung",
+    "14": "Wirtschaftliche Haushaltsführung",
     "15": "Datenschutz",
 }
 

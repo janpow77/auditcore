@@ -128,10 +128,11 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
 - **`efre.tof_2021_2027` Version `2026.10.2`** (nur ausdrücklich über
   `load_profile`): abgeleitet aus `2026.10.1` (`derived_from`), Regeln und
   Katalog unverändert; jeder Katalogeintrag trägt zusätzlich `kategorie_de`,
-  die deutsche Kategoriebezeichnung (fachlich freigegeben am 05.10.2026,
-  identisch mit FlowInvoice). `ToFProfil.kategorie_de("4")` liefert
+  die deutsche Kategoriebezeichnung (fachlich freigegeben am 05.10.2026;
+  maßgeblich ist die Fassung der AKB-Auswertung, `ToFKategorieDe` in
+  `modAKB_ToF.bas`, identisch mit FlowInvoice). `ToFProfil.kategorie_de("4")` liefert
   „Nicht förderfähige Ausgaben“; in `2026.10.1` ist der Wert `None`.
-  Fingerabdruck `98f24bcdd286fb076bd9c24ea978cc0d2aebc0320a5aa9bf8e697c164832fa8c`.
+  Fingerabdruck `f83a36f21f57605f85a117cd7b004ae9ce04c42fcb73b749c34e189970ad7ebf`.
 - **`efre.kuerzungsgrund_zs` Version `2026.10.1`**: Kürzungsgründe der
   Beleglisten der Zwischengeschalteten Stelle → Fehlerkennziffer
   (`kennziffer_aus_kuerzungsgrund`). „0“ = kein Kürzungsgrund,

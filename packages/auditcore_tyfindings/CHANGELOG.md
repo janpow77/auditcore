@@ -4,8 +4,9 @@
 
 - Profil `efre.tof_2021_2027` 2026.10.2 (abgeleitet aus 2026.10.1, nur
   ausdrücklich ladbar): Feld `kategorie_de` je Katalogeintrag mit den deutschen
-  Kategoriebezeichnungen, fachlich freigegeben am 05.10.2026 (identisch mit der
-  FlowInvoice-Übergangstabelle). Neu `ToFEintrag.kategorie_de` (Standard `None`)
+  Kategoriebezeichnungen, fachlich freigegeben am 05.10.2026; maßgeblich ist die
+  Fassung der AKB-Auswertung (`ToFKategorieDe` in `modAKB_ToF.bas`, Entscheidung
+  05.10.2026), identisch mit der FlowInvoice-Übergangstabelle. Neu `ToFEintrag.kategorie_de` (Standard `None`)
   und `ToFProfil.kategorie_de(kategorie)`; der Profillader prüft, dass
   `kategorie_de` vollständig und je Kategorie einheitlich ist, und akzeptiert
   `derived_from`. `STANDARDPROFIL` bleibt 2026.10.1 (Fingerabdruck unverändert).
