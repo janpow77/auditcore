@@ -117,14 +117,22 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
 
 ## Profile und Konfiguration
 
-- **`efre.tof_2021_2027` Version `2026.10.1`** (`STANDARDPROFIL`): Katalog mit
+- **`efre.tof_2021_2027` Version `2026.10.1`** (bis Paketversion 0.1.0 `STANDARDPROFIL`, weiter über `load_profile` ladbar): Katalog mit
   86 Unterkategorien in 15 Kategorien, Kennziffertabelle (11 Zeilen) und 30
   Formalregeln, Fingerabdruck
   `149acf962219ec306a83615e56e42500691dd56aa08557f147688862a0adcdc5`
-  (SHA-256 über das kanonische JSON). `zuordnen`, `formal_zuordnen` und
-  `katalog` verwenden es, wenn kein `profil` übergeben wird; andere Versionen
-  lädt `load_profile(id, version)` ausdrücklich. Ein neues Standardprofil
-  kommt nur mit einer neuen Paketversion.
+  (SHA-256 über das kanonische JSON). Ein neues Standardprofil kommt nur mit
+  einer neuen Paketversion.
+- **`efre.tof_2021_2027` Version `2026.10.2`** (`STANDARDPROFIL` ab
+  Paketversion 0.2.0): `zuordnen`, `formal_zuordnen` und `katalog` verwenden
+  es, wenn kein `profil` übergeben wird; andere Versionen lädt
+  `load_profile(id, version)` ausdrücklich. Abgeleitet aus `2026.10.1` (`derived_from`), Regeln und
+  Katalog unverändert; jeder Katalogeintrag trägt zusätzlich `kategorie_de`,
+  die deutsche Kategoriebezeichnung (fachlich freigegeben am 05.10.2026;
+  maßgeblich ist die Fassung der AKB-Auswertung, `ToFKategorieDe` in
+  `modAKB_ToF.bas`, identisch mit FlowInvoice). `ToFProfil.kategorie_de("4")` liefert
+  „Nicht förderfähige Ausgaben“; in `2026.10.1` ist der Wert `None`.
+  Fingerabdruck `f83a36f21f57605f85a117cd7b004ae9ce04c42fcb73b749c34e189970ad7ebf`.
 - **`efre.kuerzungsgrund_zs` Version `2026.10.1`**: Kürzungsgründe der
   Beleglisten der Zwischengeschalteten Stelle → Fehlerkennziffer
   (`kennziffer_aus_kuerzungsgrund`). „0“ = kein Kürzungsgrund,
