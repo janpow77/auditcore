@@ -1,0 +1,19 @@
+{
+  "name": "auditcore-office",
+  "version": "0.0.1",
+  "description": "Abläufe, Agentenrollen, Hooks und Vorlagen für Office-Makroprojekte auf Basis der CLI auditcore-officebank (Gerüst, noch ohne Abläufe).",
+  "author": {
+    "name": "auditcore maintainers"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/plugins/auditcore-office",
+  "repository": "https://github.com/janpow77/auditcore",
+  "keywords": [
+    "office",
+    "vba",
+    "access",
+    "excel",
+    "word",
+    "pruefbank"
+  ]
+}
