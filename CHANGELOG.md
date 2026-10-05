@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `auditcore_tyfindings` 0.2.0: Profil `efre.tof_2021_2027` 2026.10.2 mit
+  deutschen Kategoriebezeichnungen (`kategorie_de`, Fassung der AKB-Auswertung,
+  fachlich freigegeben am 05.10.2026) ist neues `STANDARDPROFIL`; neu
+  `ToFEintrag.kategorie_de` und `ToFProfil.kategorie_de(kategorie)`. Regeln und
+  Zuordnungsergebnisse unverändert, 2026.10.1 bleibt ladbar.
 - Pre-release v0.8.0 (04.10.2026): neues Paket `auditcore_tyfindings` 0.1.0
   (Types of Findings 2021–2027); alle übrigen Bibliotheken unverändert.
   Öffentlicher Nachweis in `docs/reports/domain-public-installation-v0.8.0.json`.
