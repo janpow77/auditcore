@@ -20,7 +20,7 @@ from .modell import KennzifferEintrag, Schluesselwortregel, ToFEintrag, ToFProfi
 SCHEMA: Final = "auditcore_tyfindings.profile/1"
 #: Profil, das :func:`auditcore_tyfindings.zuordnen` ohne ``profil`` verwendet.
 #: Ein neues Profil ändert diesen Wert nur mit einer neuen Paketversion.
-STANDARDPROFIL: Final = ("efre.tof_2021_2027", "2026.10.1")
+STANDARDPROFIL: Final = ("efre.tof_2021_2027", "2026.10.2")
 _RESSOURCEN: Final = "auditcore_tyfindings.profile_data"
 _SCHLUESSEL: Final = frozenset(
     {

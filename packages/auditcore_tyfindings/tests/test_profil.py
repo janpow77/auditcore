@@ -21,6 +21,9 @@ from auditcore_tyfindings import (
 )
 
 FINGERPRINT = "149acf962219ec306a83615e56e42500691dd56aa08557f147688862a0adcdc5"
+#: Fingerabdruck des Standardprofils 2026.10.2 (deutsche Kategoriebezeichnungen).
+FINGERPRINT_STANDARD = "f83a36f21f57605f85a117cd7b004ae9ce04c42fcb73b749c34e189970ad7ebf"
+PROFIL_2026_10_1 = ("efre.tof_2021_2027", "2026.10.1")
 #: Anzahl der Unterkategorien je Kategorie der Kommissionstabelle 2021–2027.
 JE_KATEGORIE = {
     "1": 25,
@@ -75,7 +78,7 @@ def test_kategorie(unterkategorie: str | None, erwartet: str | None) -> None:
 
 
 def test_fingerprint_stabil() -> None:
-    profil = load_profile(*STANDARDPROFIL)
+    profil = load_profile(*PROFIL_2026_10_1)
     assert profil.fingerprint == FINGERPRINT
     assert profil_aus_dict(_dokument()).fingerprint == FINGERPRINT
     assert profil.referenz == {
@@ -92,7 +95,7 @@ def test_fingerprint_aendert_sich_mit_dem_inhalt() -> None:
 
 
 def test_verfuegbare_profile() -> None:
-    assert verfuegbare_profile() == (STANDARDPROFIL, ("efre.tof_2021_2027", "2026.10.2"))
+    assert verfuegbare_profile() == (PROFIL_2026_10_1, STANDARDPROFIL)
 
 
 @pytest.mark.parametrize(
@@ -181,10 +184,23 @@ def test_profil_2026_10_2_fuehrt_deutsche_kategorien() -> None:
     assert profil.fingerprint != FINGERPRINT
 
 
-def test_standardprofil_ohne_deutsche_kategorien_unveraendert() -> None:
-    assert STANDARDPROFIL == ("efre.tof_2021_2027", "2026.10.1")
-    assert standardprofil().kategorie_de("4") is None
-    assert all(e.kategorie_de is None for e in katalog())
+def test_standardprofil_ist_2026_10_2_mit_deutschen_kategorien() -> None:
+    assert STANDARDPROFIL == ("efre.tof_2021_2027", "2026.10.2")
+    profil = standardprofil()
+    assert profil.fingerprint == FINGERPRINT_STANDARD
+    assert profil.referenz == {
+        "id": "efre.tof_2021_2027",
+        "version": "2026.10.2",
+        "fingerprint": FINGERPRINT_STANDARD,
+    }
+    assert profil.kategorie_de("4") == "Nicht förderfähige Ausgaben"
+    assert all(e.kategorie_de == KATEGORIE_DE[e.kategorie] for e in katalog())
+
+
+def test_profil_2026_10_1_bleibt_ohne_deutsche_kategorien_ladbar() -> None:
+    profil = load_profile(*PROFIL_2026_10_1)
+    assert profil.kategorie_de("4") is None
+    assert all(e.kategorie_de is None for e in profil.katalog)
 
 
 def test_2026_10_2_unterscheidet_sich_nur_durch_kategorie_de_und_kennung() -> None:
