@@ -1,0 +1,4 @@
+include LICENSE NOTICE README.md CHANGELOG.md provenance.json
+recursive-include docs *.md
+recursive-include src/auditcore_officebank *.py py.typed provenance.json *.json
+recursive-include tests *.py
