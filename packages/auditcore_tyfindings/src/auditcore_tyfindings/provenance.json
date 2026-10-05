@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_tyfindings",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contract": "auditcore_tyfindings/1",
   "classification": "LEGACY_PORT",
   "sources": [
@@ -11,7 +11,7 @@
       "path": "src/modAKB_ToF.bas",
       "sha256": "4aef164d4304acf062b9691b08512cb5f4e1733a9222e01eb2b75e2152c2f0a9",
       "symbols": ["ToFEintrag", "ToFStandard", "ToFFormalStandard", "ToFZuordnen", "ToFFormalZuordnen", "ToFKategorie"],
-      "note": "Lokales Repository ohne Remote; Katalog und Regeln mit tools/vba_profil.py aus den VBA-Ausdrücken erzeugt (ChrW in echte Umlaute zurückgewandelt)."
+      "note": "Lokales Repository ohne Remote; Katalog und Regeln mit tools/vba_profil.py aus den VBA-Ausdrücken erzeugt (ChrW in echte Umlaute zurückgewandelt). Die deutschen Kategoriebezeichnungen des Profils 2026.10.2 entsprechen ToFKategorieDe in modAKB_ToF.bas (fachlich freigegeben 05.10.2026)."
     }
   ],
   "methodology": [
