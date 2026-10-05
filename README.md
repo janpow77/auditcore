@@ -236,7 +236,7 @@ Paket-README und `provenance.json` erzeugt.
 
 </details>
 
-Der aktuelle [Pre-release v0.8.0](https://github.com/janpow77/auditcore/releases/tag/v0.8.0)
+Der aktuelle [Pre-release v0.8.1](https://github.com/janpow77/auditcore/releases/tag/v0.8.1)
 bündelt 35 Python-Bibliotheken und 10 npm-Pakete: Wheels, Source-Distributionen,
 signierte Debian-Pakete und npm-Tarballs mit `npm-packages.json`.
 Installationshinweise und Prüfnachweise stehen in der [Paketquellen-Anleitung](docs/deployment/package-feed.md). Der Paketindex `https://janpow77.github.io/auditcore/simple/` verlinkt
