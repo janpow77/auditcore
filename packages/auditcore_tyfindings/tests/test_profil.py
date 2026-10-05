@@ -21,6 +21,9 @@ from auditcore_tyfindings import (
 )
 
 FINGERPRINT = "149acf962219ec306a83615e56e42500691dd56aa08557f147688862a0adcdc5"
+#: Fingerabdruck des Standardprofils 2026.10.2 (deutsche Kategoriebezeichnungen).
+FINGERPRINT_STANDARD = "f83a36f21f57605f85a117cd7b004ae9ce04c42fcb73b749c34e189970ad7ebf"
+PROFIL_2026_10_1 = ("efre.tof_2021_2027", "2026.10.1")
 #: Anzahl der Unterkategorien je Kategorie der Kommissionstabelle 2021–2027.
 JE_KATEGORIE = {
     "1": 25,
@@ -75,7 +78,7 @@ def test_kategorie(unterkategorie: str | None, erwartet: str | None) -> None:
 
 
 def test_fingerprint_stabil() -> None:
-    profil = load_profile(*STANDARDPROFIL)
+    profil = load_profile(*PROFIL_2026_10_1)
     assert profil.fingerprint == FINGERPRINT
     assert profil_aus_dict(_dokument()).fingerprint == FINGERPRINT
     assert profil.referenz == {
@@ -92,7 +95,7 @@ def test_fingerprint_aendert_sich_mit_dem_inhalt() -> None:
 
 
 def test_verfuegbare_profile() -> None:
-    assert verfuegbare_profile() == (STANDARDPROFIL,)
+    assert verfuegbare_profile() == (PROFIL_2026_10_1, STANDARDPROFIL)
 
 
 @pytest.mark.parametrize(
@@ -142,3 +145,85 @@ def _veraendert(pfad: tuple[object, ...], wert: object) -> dict[str, object]:
 def test_fehlerhaftes_profil(pfad: tuple[object, ...], wert: object) -> None:
     with pytest.raises(ProfilFehler):
         profil_aus_dict(_veraendert(pfad, wert))
+
+
+#: Deutsche Kategoriebezeichnungen, fachlich freigegeben am 05.10.2026:
+#: Fassung der AKB-Auswertung (ToFKategorieDe in modAKB_ToF.bas), identisch
+#: mit der FlowInvoice-Übergangstabelle.
+KATEGORIE_DE = {
+    "1": "Öffentliche Auftragsvergabe - Auftragsbekanntmachung und Vergabeunterlagen",
+    "2": "Staatliche Beihilfen",
+    "3": "Nicht förderfähiges Vorhaben",
+    "4": "Nicht förderfähige Ausgaben",
+    "5": "Vereinfachte Kostenoptionen",
+    "6": "Nicht mit Kosten verknüpfte Finanzierung",
+    "7": "Finanzinstrumente",
+    "8": "Informations- und Publizitätsmaßnahmen",
+    "9": "Fehlende Nachweise oder Unterlagen",
+    "10": "Buchungs- und Rechenfehler auf Vorhabenebene",
+    "11": "Leistungsindikatoren",
+    "12": "Umweltvorschriften",
+    "13": "Chancengleichheit und Nichtdiskriminierung",
+    "14": "Wirtschaftliche Haushaltsführung",
+    "15": "Datenschutz",
+}
+
+
+def _dokument_2026_10_2() -> dict[str, object]:
+    datei = resources.files("auditcore_tyfindings.profile_data").joinpath(
+        "efre.tof_2021_2027-2026.10.2.json"
+    )
+    return json.loads(datei.read_text(encoding="utf-8"))  # type: ignore[no-any-return]
+
+
+def test_profil_2026_10_2_fuehrt_deutsche_kategorien() -> None:
+    profil = load_profile("efre.tof_2021_2027", "2026.10.2")
+    assert {k: profil.kategorie_de(k) for k in KATEGORIE_DE} == KATEGORIE_DE
+    assert all(e.kategorie_de == KATEGORIE_DE[e.kategorie] for e in profil.katalog)
+    assert profil.kategorie_de("16") is None
+    assert profil.fingerprint != FINGERPRINT
+
+
+def test_standardprofil_ist_2026_10_2_mit_deutschen_kategorien() -> None:
+    assert STANDARDPROFIL == ("efre.tof_2021_2027", "2026.10.2")
+    profil = standardprofil()
+    assert profil.fingerprint == FINGERPRINT_STANDARD
+    assert profil.referenz == {
+        "id": "efre.tof_2021_2027",
+        "version": "2026.10.2",
+        "fingerprint": FINGERPRINT_STANDARD,
+    }
+    assert profil.kategorie_de("4") == "Nicht förderfähige Ausgaben"
+    assert all(e.kategorie_de == KATEGORIE_DE[e.kategorie] for e in katalog())
+
+
+def test_profil_2026_10_1_bleibt_ohne_deutsche_kategorien_ladbar() -> None:
+    profil = load_profile(*PROFIL_2026_10_1)
+    assert profil.kategorie_de("4") is None
+    assert all(e.kategorie_de is None for e in profil.katalog)
+
+
+def test_2026_10_2_unterscheidet_sich_nur_durch_kategorie_de_und_kennung() -> None:
+    alt, neu = _dokument(), _dokument_2026_10_2()
+    assert neu.pop("derived_from") == {"id": "efre.tof_2021_2027", "version": "2026.10.1"}
+    assert neu.pop("version") == "2026.10.2" and alt.pop("version") == "2026.10.1"
+    eintraege = neu["katalog"]
+    assert isinstance(eintraege, list)
+    for eintrag in eintraege:
+        eintrag.pop("kategorie_de")
+    assert neu == alt
+
+
+def test_kategorie_de_muss_vollstaendig_und_einheitlich_sein() -> None:
+    teilweise = copy.deepcopy(_dokument_2026_10_2())
+    teilweise["katalog"][0].pop("kategorie_de")  # type: ignore[index]
+    with pytest.raises(ProfilFehler, match="fehlt in einzelnen"):
+        profil_aus_dict(teilweise)
+    abweichend = copy.deepcopy(_dokument_2026_10_2())
+    abweichend["katalog"][1]["kategorie_de"] = "Anders"  # type: ignore[index]
+    with pytest.raises(ProfilFehler, match="abweichender deutscher"):
+        profil_aus_dict(abweichend)
+    fremd = copy.deepcopy(_dokument_2026_10_2())
+    fremd["derived_from"] = {"id": "anderes", "version": "1"}
+    with pytest.raises(ProfilFehler, match="derived_from"):
+        profil_aus_dict(fremd)
