@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Pre-release v0.8.1 (05.10.2026): `auditcore_tyfindings` 0.2.0 mit dem
+  Standardprofil 2026.10.2 (deutsche Kategoriebezeichnungen); alle übrigen
+  Bibliotheken und npm-Pakete unverändert. Öffentlicher Nachweis in
+  `docs/reports/domain-public-installation-v0.8.1.json`.
 - `auditcore_tyfindings` 0.2.0: Profil `efre.tof_2021_2027` 2026.10.2 mit
   deutschen Kategoriebezeichnungen (`kategorie_de`, Fassung der AKB-Auswertung,
   fachlich freigegeben am 05.10.2026) ist neues `STANDARDPROFIL`; neu
