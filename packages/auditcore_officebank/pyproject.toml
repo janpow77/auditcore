@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_officebank"
+version = "0.1.0"
+description = "Office, VBA and VM check bench: configuration, gates, guest control, build, acceptance and data-free delivery for Office macro projects"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = []
+
+[project.optional-dependencies]
+docx = ["python-docx>=1.1,<2"]
+xlsx = ["openpyxl>=3.0.9,<4"]
+dev = ["pytest>=8", "pytest-xdist>=3.6", "pytest-timeout>=2.3", "pytest-cov>=5", "ruff>=0.11", "mypy>=1.15", "build>=1.2"]
+
+[project.scripts]
+auditcore-officebank = "auditcore_officebank.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_officebank = ["py.typed", "provenance.json", "data/schemas/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --durations=10"
+timeout = 120
+markers = [
+    "slow: läuft länger als etwa 5 s; mit -m 'not slow' abwählbar",
+    "gpu: braucht torch/transformers (Donut); gezielt mit -m gpu",
+    "network: braucht Netzzugang; in CI ohne Netz abwählbar",
+    "vm: braucht eine Windows-VM mit Office; nie in CI",
+    "office_mac: braucht Excel für Mac; nie in CI",
+    "pwsh: braucht PowerShell (pwsh) für Parse-Tests der Gastskripte",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C901"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]
