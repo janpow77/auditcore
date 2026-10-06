@@ -4,6 +4,7 @@ import { InMemoryStorage } from '@auditcore/bpmn-flowaudit'
 import { createCollectionCore, DIAGRAM_MIME, type CollectionCore } from '@auditcore/bpmn-flowaudit/ui'
 import { fillCollection } from '../../bpmn-flowaudit/test/parity/cases-collection'
 import { CollectionTree } from '../src/collection/CollectionTree'
+import { GroupOverview } from '../src/collection/GroupOverview'
 import { FlowauditWorkbench } from '../src/FlowauditWorkbench'
 import { useCollectionBinding } from '../src/useCollection'
 import { fixture, flush, until } from './helpers'
@@ -41,6 +42,56 @@ describe('collection controller', () => {
     expect((await core.approveDiagram('bewilligung', xml, '2.0', {}))?.sha256).toMatch(/^[0-9a-f]{64}$/)
     expect(await core.approveDiagram('bewilligung', `${xml} `, '2.0', {})).toBeUndefined()
     expect(core.store.get().error).toContain('bereits freigegeben')
+  })
+})
+
+function Overview({ core }: { core: CollectionCore }) {
+  const store = useCollectionBinding(core)
+  return (
+    <GroupOverview
+      overview={store.overview}
+      issues={store.issues}
+      title="Oberste Ebene"
+      cards={store.cards}
+      onDescribeFolder={(id, text) => void store.describeFolder(id, text)}
+      onDescribeDiagram={(id, text) => void store.describeDiagram(id, text)}
+    />
+  )
+}
+
+describe('GroupOverview (React)', () => {
+  it('offers host folder actions in a small menu per folder card', async () => {
+    const core = createCollectionCore(new InMemoryStorage())
+    const folderId = await fillCollection(core)
+    const onFolderAction = vi.fn()
+    function WithActions() {
+      const store = useCollectionBinding(core)
+      return <GroupOverview overview={store.overview} issues={[]} title="Oberste Ebene" cards={store.cards} folderActions={[{ id: 'matrix', label: 'Kontrollmatrix erzeugen' }]} onFolderAction={onFolderAction} />
+    }
+    const { container } = render(<WithActions />)
+    const menus = container.querySelectorAll('.fa-folder-card .fa-toolbar-menu')
+    expect(menus).toHaveLength(1)
+    fireEvent.click(menus[0]!.querySelector('button')!)
+    fireEvent.click(container.querySelector('[role="menuitem"]')!)
+    expect(onFolderAction).toHaveBeenCalledWith('matrix', folderId, ['bewilligung'])
+  })
+
+  it('shows folder cards, edits descriptions inline and keeps the hints collapsed', async () => {
+    const storage = new InMemoryStorage()
+    const core = createCollectionCore(storage)
+    const folderId = await fillCollection(core)
+    const { container } = render(<Overview core={core} />)
+    expect(Array.from(container.querySelectorAll('.fa-folder-card h3')).map((node) => node.textContent)).toEqual(['Antragsverfahren', 'Ohne Ordner'])
+    expect(container.querySelector('.fa-overview__ka-cell')).toBeNull()
+    expect(container.querySelector('details.fa-overview__hints')!.hasAttribute('open')).toBe(false)
+    fireEvent.click(container.querySelector('.fa-folder-card .fa-describe')!)
+    const field = container.querySelector('textarea')!
+    fireEvent.change(field, { target: { value: 'Bewilligungsverfahren' } })
+    fireEvent.keyDown(field, { key: 'Enter' })
+    await until(async () => (await storage.loadCollection())?.folders[0]?.description === 'Bewilligungsverfahren')
+    await flush()
+    expect(core.store.get().collection.folders.get(folderId)?.description).toBe('Bewilligungsverfahren')
+    expect(container.querySelector('.fa-folder-card .fa-describe')!.textContent).toBe('Bewilligungsverfahren')
   })
 })
 

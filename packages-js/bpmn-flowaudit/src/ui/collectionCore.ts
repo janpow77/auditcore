@@ -9,10 +9,14 @@ import {
   checkCollection,
   DiagramCollection,
   EMPTY_DIAGRAM,
+  folderCards,
   groupOverview,
   idFromName,
   loadDefinitions,
   modelFromDefinitions,
+  readDiagramInfo,
+  saveDefinitions,
+  setDiagramInfo,
   type DiagramEntry,
   type FolderNode,
   type StoragePort,
@@ -54,6 +58,17 @@ export function collectionTree(collection: DiagramCollection, filter: Collection
 export const isFiltering = (filter: CollectionFilter): boolean => Boolean(filter.search || filter.status || filter.tag)
 export const collectionOverview = (collection: DiagramCollection, folderId: string | null) => groupOverview(collection, { folderId })
 export const collectionIssues = (collection: DiagramCollection) => checkCollection(collection)
+/** Number of audit hints of an overview: collection issues plus diagrams with expired validity. */
+export const hintCount = (overview: { expired: string[] }, issues: readonly unknown[]): number => issues.length + overview.expired.length
+export const collectionCards = (collection: DiagramCollection, folderId: string | null) => folderCards(collection, folderId)
+
+/** XML with the description set in the diagram info (empty text removes it). */
+export async function describedXml(xml: string, description: string): Promise<string> {
+  const loaded = await loadDefinitions(xml)
+  const info = readDiagramInfo(loaded.definitions) ?? {}
+  if (!setDiagramInfo(loaded.definitions, { ...info, description }, loaded.moddle)) throw new Error('Das Diagramm hat kein Hauptelement für die Diagramm-Infos.')
+  return saveDefinitions(loaded)
+}
 
 type Guard = <T>(action: () => Promise<T>) => Promise<T | undefined>
 
@@ -118,6 +133,22 @@ function collectionActions(store: Store<CollectionState>, storage: StoragePort, 
   }
 }
 
+/** Descriptions of folders (collection) and diagrams (diagram info in the XML). */
+function descriptionActions(store: Store<CollectionState>, storage: StoragePort, persist: () => Promise<void>, guarded: Guard) {
+  const current = () => store.get().collection
+  return {
+    describeFolder: (id: string, description: string) => guarded(async () => (current().describeFolder(id, description), await persist())),
+    /** Written into the diagram info, then saved like an edit of the diagram. */
+    describeDiagram: (id: string, description: string) =>
+      guarded(async () => {
+        const xml = await describedXml(await storage.loadDiagram(id), description)
+        await storage.saveDiagram(id, xml)
+        current().update(id, await modelOf(xml))
+        await persist()
+      }),
+  }
+}
+
 export function createCollectionCore(storage: StoragePort) {
   const store = createStore<CollectionState>({ collection: new DiagramCollection(), revision: 0, filter: { search: '', status: '', tag: '' }, selectedFolder: null, loading: false, error: null })
   const touch = () => store.set((state) => ({ revision: state.revision + 1 }))
@@ -150,6 +181,7 @@ export function createCollectionCore(storage: StoragePort) {
     store,
     load,
     ...collectionActions(store, storage, persist, guarded),
+    ...descriptionActions(store, storage, persist, guarded),
     openDiagram: (id: string) => storage.loadDiagram(id),
     setFilter: (patch: Partial<CollectionFilter>) => store.set((state) => ({ filter: { ...state.filter, ...patch } })),
     selectFolder: (id: string | null) => store.set({ selectedFolder: id }),

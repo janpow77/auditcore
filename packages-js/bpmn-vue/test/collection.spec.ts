@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { InMemoryStorage } from '@auditcore/bpmn-flowaudit'
 import CollectionTree from '../src/components/collection/CollectionTree.vue'
+import GroupOverview from '../src/components/collection/GroupOverview.vue'
 import FlowauditWorkbench from '../src/components/FlowauditWorkbench.vue'
 import { DIAGRAM_MIME, readDrag, setDrag } from '@auditcore/bpmn-flowaudit/ui'
 import { createCollectionStore } from '../src/stores/collectionStore'
@@ -62,6 +63,48 @@ describe('collection store', () => {
     store.selectedFolder.value = folderId
     expect(store.overview.value.count).toBe(1)
     expect(store.overview.value.activities).toBeGreaterThan(0)
+  })
+})
+
+describe('GroupOverview', () => {
+  it('offers host folder actions in a small menu per folder card', async () => {
+    const { store, folderId } = await filledStore()
+    wrapper = mount(GroupOverview, { props: { overview: store.overview.value, issues: [], title: 'Oberste Ebene', cards: store.cards.value, folderActions: [{ id: 'matrix', label: 'Kontrollmatrix erzeugen' }] }, attachTo: document.body })
+    const menus = wrapper.findAll('.fa-folder-card .fa-toolbar-menu')
+    expect(menus).toHaveLength(1)
+    await menus[0]!.find('button').trigger('click')
+    await wrapper.find('[role="menuitem"]').trigger('click')
+    expect(wrapper.emitted<[string, string, string[]]>('folder-action')![0]).toEqual(['matrix', folderId, ['bewilligung']])
+    wrapper.unmount()
+    wrapper = mount(GroupOverview, { props: { overview: store.overview.value, issues: [], title: 'Oberste Ebene', cards: store.cards.value } })
+    expect(wrapper.find('.fa-folder-card .fa-toolbar-menu').exists()).toBe(false)
+  })
+
+  it('shows folder cards, edits descriptions inline and keeps the hints collapsed', async () => {
+    const { storage, store, folderId } = await filledStore()
+    wrapper = mount(GroupOverview, {
+      props: { overview: store.overview.value, issues: store.issues.value, title: 'Oberste Ebene', cards: store.cards.value, 'onDescribeFolder': store.describeFolder, 'onDescribeDiagram': store.describeDiagram },
+      attachTo: document.body,
+    })
+    expect(wrapper.findAll('.fa-folder-card').map((card) => card.find('h3').text())).toEqual(['Antragsverfahren', 'Ohne Ordner'])
+    expect(wrapper.find('.fa-overview__ka-cell').exists()).toBe(false)
+    expect(wrapper.find('details.fa-overview__hints').attributes('open')).toBeUndefined()
+    expect(wrapper.find('summary').text()).toMatch(/^Prüfhinweise \(\d+\)$/)
+    const folderText = wrapper.find('.fa-folder-card .fa-describe')
+    expect(folderText.text()).toBe('Keine Beschreibung')
+    await folderText.trigger('click')
+    const field = wrapper.find('textarea')
+    await field.setValue('Bewilligungsverfahren')
+    await field.trigger('keydown', { key: 'Enter' })
+    await until(async () => (await storage.loadCollection())?.folders[0]?.description === 'Bewilligungsverfahren')
+    expect(store.collection.value.folders.get(folderId)?.description).toBe('Bewilligungsverfahren')
+    await wrapper.findAll('.fa-describe')[1]!.trigger('click')
+    await wrapper.find('textarea').setValue('verworfen')
+    await wrapper.find('textarea').trigger('keydown', { key: 'Escape' })
+    expect(wrapper.find('textarea').exists()).toBe(false)
+    expect(store.entry('bewilligung')?.info?.description ?? '').not.toBe('verworfen')
+    await wrapper.find('.fa-folder-card__open').trigger('click')
+    expect(wrapper.emitted<[string]>('open')![0]![0]).toBe('bewilligung')
   })
 })
 
