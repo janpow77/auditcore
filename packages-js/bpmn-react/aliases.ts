@@ -1,7 +1,7 @@
 /**
  * Source aliases for tests and the build: sibling packages are used from
- * source (no build order); only the core stylesheet is bundled into the
- * library CSS, all other @auditcore imports stay external.
+ * source (no build order); the stylesheets of the core editor and of the UI
+ * core are bundled into the library CSS, all other @auditcore imports stay external.
  */
 
 import { resolve } from 'node:path'
@@ -9,7 +9,10 @@ import { resolve } from 'node:path'
 const here = new URL('.', import.meta.url).pathname
 const flowaudit = resolve(here, '../bpmn-flowaudit/src')
 
-export const styleAlias = { '@auditcore/bpmn-flowaudit/ui.css': `${flowaudit}/ui/ui.css` }
+export const styleAlias = {
+  '@auditcore/bpmn-flowaudit/ui.css': `${flowaudit}/ui/ui.css`,
+  '@auditcore/bpmn-editor/style.css': resolve(here, '../bpmn-editor/src/styles/bpmn-editor.css'),
+}
 
 export function sourceAliases(): Record<string, string> {
   return {
