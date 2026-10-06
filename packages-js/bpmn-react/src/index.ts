@@ -4,6 +4,8 @@
  * core `@auditcore/bpmn-flowaudit/ui`, shared with `@auditcore/bpmn-vue`.
  */
 
+// Base styles of the core editor (diagram-js) first, the FlowAudit UI on top.
+import '@auditcore/bpmn-editor/style.css'
 import '@auditcore/bpmn-flowaudit/ui.css'
 
 export { FlowauditEditor } from './FlowauditEditor'

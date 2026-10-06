@@ -1,7 +1,7 @@
 /** Props and ref handle of the React `FlowauditEditor` (same contract as the Vue component). */
 
 import type { Approval, Comment, DiagramInfo, KeyKind, PaletteColor, ProfileData, ProfileSummary, RoleAlias, ValidationPort } from '@auditcore/bpmn-flowaudit'
-import type { CompareSource, EditorCore, EditorFactory, EditorPorts, Locale, Theme, ToolbarAction, ValidationCore } from '@auditcore/bpmn-flowaudit/ui'
+import type { CompareSource, EditorCore, EditorFactory, EditorPorts, HostAction, Locale, Theme, ToolbarAction, ValidationCore } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface FlowauditEditorProps {
   /** BPMN XML (controlled; changes are reported through `onXmlChange`). */
@@ -23,6 +23,8 @@ export interface FlowauditEditorProps {
   roleAliases?: RoleAlias[]
   replacements?: Record<string, string>
   hiddenActions?: ToolbarAction[]
+  /** Actions of the host in the „Prüfen“ menu or (group `export`) in the export dialog. */
+  hostActions?: HostAction[]
   saving?: boolean
   editorFactory?: EditorFactory
   theme?: Theme
@@ -38,6 +40,8 @@ export interface FlowauditEditorProps {
   onAnalysis?: () => void
   onShare?: () => void
   onExportExcel?: () => void
+  /** Vue `host-action`: id of the chosen host action. */
+  onHostAction?: (id: string) => void
   onApprove?: (payload: { xml: string; info: DiagramInfo }) => void
   onSelectionChange?: (elementId: string | null) => void
   onError?: (message: string) => void

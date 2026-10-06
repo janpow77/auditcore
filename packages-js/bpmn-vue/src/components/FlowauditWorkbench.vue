@@ -9,7 +9,7 @@ import type { Comment, ProfileData, ProfileSummary, RoleAlias, StoragePort, Vali
 import type { EditorPorts } from '../stores/context'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import { createCollectionStore } from '../stores/collectionStore'
-import type { EditorFactory } from '@auditcore/bpmn-flowaudit/ui'
+import type { EditorFactory, FolderAction, HostAction } from '@auditcore/bpmn-flowaudit/ui'
 import CollectionTree from './collection/CollectionTree.vue'
 import DiagramInfoColumn from './collection/DiagramInfoColumn.vue'
 import GroupOverview from './collection/GroupOverview.vue'
@@ -26,10 +26,17 @@ const props = withDefaults(
     author?: string
     roleAliases?: RoleAlias[]
     editorFactory?: EditorFactory
+    hostActions?: HostAction[]
+    folderActions?: FolderAction[]
   }>(),
-  { profile: null, editorFactory: undefined, profiles: () => [], ports: () => ({}), locale: 'de', author: '', roleAliases: () => [] },
+  { profile: null, editorFactory: undefined, profiles: () => [], ports: () => ({}), locale: 'de', author: '', roleAliases: () => [], hostActions: () => [], folderActions: () => [] },
 )
-const emit = defineEmits<{ (e: 'open', id: string): void; (e: 'error', message: string): void }>()
+const emit = defineEmits<{
+  (e: 'open', id: string): void
+  (e: 'error', message: string): void
+  (e: 'host-action', id: string, diagramId: string): void
+  (e: 'folder-action', id: string, folderId: string, diagramIds: string[]): void
+}>()
 const { t } = provideI18n(createI18n(props.locale))
 // Ports are plain objects; a reactive proxy (e.g. from `reactive()`) would break cloning in the ports.
 const storage = toRaw(props.storage)
@@ -116,6 +123,8 @@ onMounted(() => store.load())
         :role-aliases="roleAliases"
         :saving="saving"
         :editor-factory="editorFactory"
+        :host-actions="hostActions"
+        @host-action="openEntry && emit('host-action', $event, openEntry.id)"
         @update:xml="onXml"
         @update:name="store.renameDiagram(openEntry.id, $event)"
         @update:comments="comments = $event"
@@ -124,7 +133,19 @@ onMounted(() => store.load())
         @new="createAndOpen"
       />
       <div v-else class="fa-workbench__overview">
-        <GroupOverview :overview="store.overview.value" :profile="profile" :issues="store.issues.value" :title="folderTitle" @open="open" />
+        <GroupOverview
+          :overview="store.overview.value"
+          :profile="profile"
+          :issues="store.issues.value"
+          :title="folderTitle"
+          :cards="store.cards.value"
+          :top-level="!store.selectedFolder.value"
+          :folder-actions="folderActions"
+          @open="open"
+          @folder-action="(id, folderId, diagramIds) => emit('folder-action', id, folderId, diagramIds)"
+          @describe-folder="store.describeFolder"
+          @describe-diagram="store.describeDiagram"
+        />
         <DiagramInfoColumn v-if="selectedEntry" class="fa-workbench__info" :store="store" :entry="selectedEntry" @open="open" @deleted="onDeleted" />
       </div>
     </main>

@@ -90,6 +90,15 @@ gleichen Namens (`v-model:xml` → `xml` + `onXmlChange`, `update:name` →
 exportiert; sie brauchen den Editorkontext (`EditorContextProvider`) bzw.
 eine Sammlung aus `useCollection`.
 
+### Übersicht, Palette und Aktionen des Hosts (ab 0.3.0)
+
+Gleicher Vertrag wie `@auditcore/bpmn-vue` (siehe dort): `style.css` enthält
+die diagram-js-Grundstile. `GroupOverview` nimmt `cards`, `folderActions`,
+`onDescribeFolder`, `onDescribeDiagram` und
+`onFolderAction(id, folderId, diagramIds)`; `FlowauditEditor` nimmt
+`hostActions: { id; label; group?: 'export' }[]` und `onHostAction(id)`;
+`FlowauditWorkbench` reicht beide durch (`onHostAction(id, diagramId)`).
+
 ## API-Überblick
 
 Wichtig: `FlowauditBpmnEditor`, `FlowauditEditor` (Ref: `getXml`, `getSvg`,
