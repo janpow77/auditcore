@@ -6,7 +6,7 @@
 
 import type { ChangeEvent } from 'react'
 import { PALETTE_COLORS, type Direction, type PaletteColor } from '@auditcore/bpmn-flowaudit'
-import { actionDisabled, FILE_ACTIONS, PAGE_OPTIONS, VIEW_ACTIONS, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
+import { actionDisabled, FILE_ACTIONS, PAGE_OPTIONS, VIEW_ACTIONS, type HostAction, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import { ColorSwatches } from '../base/ColorSwatches'
 import { FaIcon } from '../base/FaIcon'
 import { ToolbarMenu } from '../base/ToolbarMenu'
@@ -25,7 +25,9 @@ export interface EditorToolbarProps {
   active: Partial<Record<ToolbarAction, boolean>>
   hidden?: ToolbarAction[]
   palette?: readonly PaletteColor[]
+  hostActions?: HostAction[]
   onAction: (action: ToolbarAction) => void
+  onHostAction?: (id: string) => void
   onNameChange?: (value: string) => void
   onColor?: (color: PaletteColor | null) => void
   onDirection?: (value: Direction) => void
@@ -124,7 +126,7 @@ export function EditorToolbar(props: EditorToolbarProps) {
       <span className="fa-toolbar__sep" />
       <ViewGroup props={props} />
       <span className="fa-toolbar__sep" />
-      <CheckMenu hidden={props.hidden} disabled={disabled} onAction={props.onAction} />
+      <CheckMenu hidden={props.hidden} disabled={disabled} onAction={props.onAction} hostActions={props.hostActions} onHostAction={props.onHostAction} />
       <ModeButtons hidden={props.hidden} active={props.active} onAction={props.onAction} />
       <span className="fa-toolbar__spacer" />
       <button type="button" className="fa-icon-btn" aria-label={t('toolbar.theme')} title={t('toolbar.theme')} onClick={() => props.onAction('theme')}>

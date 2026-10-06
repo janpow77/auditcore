@@ -77,6 +77,17 @@ describe('ExportDialog', () => {
     fireEvent.click(button(container, 'SVG'))
     expect(onExport.mock.calls[0]![0].neutral).toBe(true)
   })
+
+  it('lists only export host actions and reports them by id', () => {
+    const onHostAction = vi.fn()
+    const onOpenChange = vi.fn()
+    const { container } = render(<ExportDialog open defaultTitle="X" data={data} hostActions={[{ id: 'kontrollmatrix', label: 'Kontrollmatrix (XLSX)', group: 'export' as const }, { id: 'abgleich', label: 'Abgleich starten' }]} onOpenChange={onOpenChange} onExport={noop} onHostAction={onHostAction} />)
+    expect(container.textContent).toContain('Weitere Ausgaben')
+    expect(container.textContent).not.toContain('Abgleich starten')
+    fireEvent.click(button(container, 'Kontrollmatrix'))
+    expect(onHostAction).toHaveBeenCalledWith('kontrollmatrix')
+    expect(onOpenChange).toHaveBeenLastCalledWith(false)
+  })
 })
 
 describe('EnrichmentDialog', () => {

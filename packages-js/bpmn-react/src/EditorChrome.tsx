@@ -46,6 +46,8 @@ function Toolbar({ runtime, props, ui, readonly }: PartProps & { runtime: Editor
       active={activeActions(ui)}
       hidden={props.hiddenActions ?? []}
       palette={props.palette}
+      hostActions={props.hostActions}
+      onHostAction={props.onHostAction}
       onAction={actions.run}
       onNameChange={props.onNameChange}
       onColor={(color: PaletteColor | null) => actions.color(color)}
