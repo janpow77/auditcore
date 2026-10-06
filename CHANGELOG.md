@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- npm `@auditcore/bpmn-flowaudit`, `@auditcore/bpmn-vue` und
+  `@auditcore/bpmn-react` 0.3.0: Übersicht der obersten Ebene als Ordnerkarten
+  mit inline bearbeitbaren Beschreibungen und eingeklapptem Bereich
+  „Prüfhinweise“, Palette „Elemente“/„Pool mit Rolle“ als Symbole, Kacheln oder
+  Liste, Umbruch der Rollenkacheln, dezente Linienauswahl (diagram-js-Grundstile
+  jetzt in `style.css` enthalten) sowie Aktionen des Hosts (`hostActions`,
+  `folderActions`). Anlass: Auftrag des audit_designer zum BPMN-Editor
+  (06.10.2026).
 - Neues Paket `auditcore_officebank` 0.1.0 (unveröffentlicht), Etappe 0 laut
   [Plan](docs/projekt/20261005_Plan_auditcore_officebank_0.1.md): Rechnerprofil
   und Projektdatei mit Schemaversion, Ausgabe-Maskierung, Gast-Schnittstelle mit

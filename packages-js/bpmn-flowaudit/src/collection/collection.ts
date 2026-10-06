@@ -98,6 +98,14 @@ export class DiagramCollection {
     this.folder(id).name = name
   }
 
+  /** Sets the description of a folder; an empty text removes it. */
+  describeFolder(id: string, description: string): void {
+    const folder = this.folder(id)
+    const text = description.trim()
+    if (text) folder.description = text
+    else delete folder.description
+  }
+
   private folder(id: string): Folder {
     const folder = this.folders.get(id)
     if (!folder) throw new CollectionError('unknownFolder', { id })
