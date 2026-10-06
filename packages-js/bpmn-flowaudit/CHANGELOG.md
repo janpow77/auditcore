@@ -1,5 +1,25 @@
 # Changelog – @auditcore/bpmn-flowaudit
 
+## 0.3.0 – 2026-10-06
+
+- Neu: `folderCards()`/`FolderCard`/`CardDiagram` (Ordnerkarten einer Ebene),
+  `DiagramCollection.describeFolder()`, im UI-Kern `collectionCards`,
+  `hintCount`, `describedXml` sowie die Aktionen `describeFolder` und
+  `describeDiagram` des Sammlungs-Controllers. Diagrammbeschreibungen stehen in
+  der Diagramm-Info (`flowaudit:diagrammInfo`, Feld `beschreibung`) und werden
+  über `StoragePort.saveDiagram` gespeichert; Ordnerbeschreibungen über
+  `saveCollection` (Feld `description`, schon im Schema). Der `StoragePort`
+  bleibt unverändert.
+- Neu: Palettenansichten `PALETTE_VIEWS`, `readPaletteView`,
+  `writePaletteView`, `paletteName`, `paletteCaption`; `PaletteItem` trägt bei
+  Rollen `short` und `roleLabel` aus dem Rollenkatalog.
+- Neu: `HostAction`, `FolderAction`, `hostActionsFor()` für Aktionen der
+  einbettenden Anwendung.
+- `ui.css`: Ordnerkarten, Prüfhinweise, Palettenansichten, Umbruch der
+  Rollenkacheln, dezente Linienauswahl mit hellen Knickpunkten (auch ohne
+  diagram-js-Stylesheet wirksam).
+- Texte DE/EN für alle neuen Bedienelemente.
+
 ## 0.2.1 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/bpmn-flowaudit` statt `@flowaudit/bpmn-flowaudit` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-bpmn-flowaudit-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.

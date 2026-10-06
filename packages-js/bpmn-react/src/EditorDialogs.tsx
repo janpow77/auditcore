@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { collectExportData, type Approval, type ProcessModel, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
-import { dialogPatch, elementNames, EMPTY_EXPORT_DATA, type DialogId, type EditorPorts } from '@auditcore/bpmn-flowaudit/ui'
+import { dialogPatch, elementNames, EMPTY_EXPORT_DATA, type DialogId, type EditorPorts, type HostAction } from '@auditcore/bpmn-flowaudit/ui'
 import { DiagramInfoDialog } from './dialogs/DiagramInfoDialog'
 import { ElementSearch } from './dialogs/ElementSearch'
 import { EnrichmentDialog } from './dialogs/EnrichmentDialog'
@@ -20,7 +20,9 @@ export interface EditorDialogsProps {
   profiles: ProfileSummary[]
   approvals: Approval[]
   ports: EditorPorts
+  hostActions?: HostAction[]
   onApplyXml: (xml: string) => void
+  onHostAction?: (id: string) => void
 }
 
 /** Model snapshot for search/export/enrichment and XML for the XML view, taken when a dialog opens. */
@@ -42,7 +44,7 @@ function useDialogData(runtime: EditorRuntime) {
   return { dialogs, model, xml }
 }
 
-export function EditorDialogs({ runtime, name, diagramId, profiles, approvals, ports, onApplyXml }: EditorDialogsProps) {
+export function EditorDialogs({ runtime, name, diagramId, profiles, approvals, ports, hostActions, onApplyXml, onHostAction }: EditorDialogsProps) {
   const { dialogs, model, xml } = useDialogData(runtime)
   const { info } = useStoreState(runtime.session.editor.store)
   const { suggestions } = useStoreState(runtime.actions.store)
@@ -56,7 +58,7 @@ export function EditorDialogs({ runtime, name, diagramId, profiles, approvals, p
   return (
     <>
       <DiagramInfoDialog open={dialogs.info} info={info} profiles={profiles} approvals={approvals} fallbackTitle={name} onOpenChange={setOpen('info')} onApply={actions.applyInfo} onApprove={actions.approve} onNewVersion={actions.newVersion} />
-      <ExportDialog open={dialogs.export} defaultTitle={info?.title || name} subtitle={info?.subtitle} data={exportData} confidentiality={info?.confidentiality} excel onOpenChange={setOpen('export')} onExport={(choice) => void actions.runExport(choice)} />
+      <ExportDialog open={dialogs.export} defaultTitle={info?.title || name} subtitle={info?.subtitle} data={exportData} confidentiality={info?.confidentiality} excel hostActions={hostActions} onOpenChange={setOpen('export')} onExport={(choice) => void actions.runExport(choice)} onHostAction={onHostAction} />
       <EnrichmentDialog open={dialogs.enrich} suggestions={suggestions} names={names} onOpenChange={setOpen('enrich')} onApply={actions.applyEnrichment} />
       <EsiDialog open={dialogs.esi} port={ports.esi} xml={editor.exportXml} diagramId={diagramId} onOpenChange={setOpen('esi')} onJump={jump} />
       <ElementSearch open={dialogs.search} model={model} onOpenChange={setOpen('search')} onJump={jump} />
