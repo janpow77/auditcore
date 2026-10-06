@@ -1,7 +1,7 @@
 /** Parts of the editor toolbar: name field, undo/redo, check menu and mode toggles. */
 
 import { useEffect, useState } from 'react'
-import { CHECK_ACTIONS, EDIT_ACTIONS, MODE_ACTIONS, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
+import { CHECK_ACTIONS, EDIT_ACTIONS, hostActionsFor, MODE_ACTIONS, type HostAction, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { ToolbarMenu } from '../base/ToolbarMenu'
 import { useI18n } from '../i18n'
@@ -36,21 +36,48 @@ export function EditButtons({ disabled, onAction }: { disabled: Disabled; onActi
   ))
 }
 
-export function CheckMenu({ hidden, disabled, onAction }: { hidden?: ToolbarAction[]; disabled: Disabled; onAction: (action: ToolbarAction) => void }) {
+interface CheckMenuProps {
+  hidden?: ToolbarAction[]
+  disabled: Disabled
+  onAction: (action: ToolbarAction) => void
+  hostActions?: HostAction[]
+  onHostAction?: (id: string) => void
+}
+
+function HostEntries({ actions, close, onHostAction }: { actions: HostAction[]; close: () => void; onHostAction?: (id: string) => void }) {
+  const { t } = useI18n()
+  if (!actions.length) return null
+  return (
+    <>
+      <p className="fa-menu-hint fa-menu-heading">{t('toolbar.hostActions')}</p>
+      {actions.map((entry) => (
+        <button key={entry.id} type="button" role="menuitem" className="fa-menu-item" onClick={() => (onHostAction?.(entry.id), close())}>
+          <span className="fa-menu-item__spacer" />
+          <span>{entry.label}</span>
+        </button>
+      ))}
+    </>
+  )
+}
+
+export function CheckMenu({ hidden, disabled, onAction, hostActions, onHostAction }: CheckMenuProps) {
   const { t } = useI18n()
   return (
     <ToolbarMenu label={t('toolbar.check')} icon="validate" showLabel>
-      {(close) =>
-        CHECK_ACTIONS.filter((entry) => !hidden?.includes(entry.id)).map((entry) => (
-          <button key={entry.id} type="button" role="menuitem" className="fa-menu-item" disabled={disabled(entry.id, entry.writes)} onClick={() => (onAction(entry.id), close())}>
-            <FaIcon name={entry.icon} />
-            <span>
-              {t(entry.label)}
-              {entry.hint ? <span className="fa-menu-hint">{t(entry.hint)}</span> : null}
-            </span>
-          </button>
-        ))
-      }
+      {(close) => (
+        <>
+          {CHECK_ACTIONS.filter((entry) => !hidden?.includes(entry.id)).map((entry) => (
+            <button key={entry.id} type="button" role="menuitem" className="fa-menu-item" disabled={disabled(entry.id, entry.writes)} onClick={() => (onAction(entry.id), close())}>
+              <FaIcon name={entry.icon} />
+              <span>
+                {t(entry.label)}
+                {entry.hint ? <span className="fa-menu-hint">{t(entry.hint)}</span> : null}
+              </span>
+            </button>
+          ))}
+          <HostEntries actions={hostActionsFor(hostActions, 'menu')} close={close} onHostAction={onHostAction} />
+        </>
+      )}
     </ToolbarMenu>
   )
 }

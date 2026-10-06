@@ -36,7 +36,7 @@ function Info({ core }: { core: CollectionCore }) {
 
 function Overview({ core }: { core: CollectionCore }) {
   const store = useCollectionBinding(core)
-  return <GroupOverview overview={store.overview} profile={bundledProfiles()[0] ?? null} issues={store.issues} title="Oberste Ebene" />
+  return <GroupOverview overview={store.overview} profile={bundledProfiles()[0] ?? null} issues={store.issues} title="Oberste Ebene" cards={store.cards} />
 }
 
 describe('collection parity (Vue ↔ React)', () => {
@@ -70,7 +70,7 @@ describe('collection parity (Vue ↔ React)', () => {
 
   it('GroupOverview', async () => {
     const { vue, react } = await both()
-    const rendered = await renderBoth(VueGroupOverview, { overview: vue.overview.value, profile: bundledProfiles()[0] ?? null, issues: vue.issues.value, title: 'Oberste Ebene' }, <Overview core={react} />)
+    const rendered = await renderBoth(VueGroupOverview, { overview: vue.overview.value, profile: bundledProfiles()[0] ?? null, issues: vue.issues.value, title: 'Oberste Ebene', cards: vue.cards.value }, <Overview core={react} />)
     expectParity(rendered, OVERVIEW_EXPECT)
   })
 
