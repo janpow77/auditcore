@@ -6,7 +6,7 @@
  */
 
 import { computed, reactive, ref, shallowRef, triggerRef } from 'vue'
-import { collectionIssues, collectionOverview, collectionTree, createCollectionCore, isFiltering, type CollectionFilter } from '@auditcore/bpmn-flowaudit/ui'
+import { collectionCards, collectionIssues, collectionOverview, collectionTree, createCollectionCore, isFiltering, type CollectionFilter } from '@auditcore/bpmn-flowaudit/ui'
 import type { StoragePort } from '@auditcore/bpmn-flowaudit'
 import { useStore } from '../composables/useStore'
 
@@ -35,6 +35,7 @@ export function createCollectionStore(storage: StoragePort) {
     tree: computed(() => collectionTree(collection.value, filter)),
     overview: computed(() => collectionOverview(collection.value, selectedFolder.value)),
     issues: computed(() => collectionIssues(collection.value)),
+    cards: computed(() => collectionCards(collection.value, selectedFolder.value)),
     isFiltering: computed(() => isFiltering(filter)),
     setFilter: (patch: Partial<CollectionFilter>) => Object.assign(filter, patch),
     selectFolder: (id: string | null) => (selectedFolder.value = id),

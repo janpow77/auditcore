@@ -8,7 +8,7 @@
  */
 import { computed, onMounted, ref, watch } from 'vue'
 import { label, PALETTE_COLORS, profileReference, rolesFor, type Approval, type Comment, type DiagramInfo, type PaletteColor, type ProfileData, type ProfileSummary, type RoleAlias, type ValidationPort } from '@auditcore/bpmn-flowaudit'
-import { activeActions, choosePopoverColor, choosePopoverRole, createExporter, dialogPatch, filterKeys as keyIndex, handleShortcut, isLocked, readImportFile, savePayload, type CompareSource, type EditorFactory, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
+import { activeActions, choosePopoverColor, choosePopoverRole, createExporter, dialogPatch, filterKeys as keyIndex, handleShortcut, isLocked, readImportFile, savePayload, type CompareSource, type EditorFactory, type HostAction, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import { defaultEditorFactory } from '../editor/defaultFactory'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import type { EditorPorts } from '../stores/context'
@@ -44,11 +44,13 @@ const props = withDefaults(
     roleAliases?: RoleAlias[]
     replacements?: Record<string, string>
     hiddenActions?: ToolbarAction[]
+    /** Actions of the host in the „Prüfen“ menu or (group `export`) in the export dialog. */
+    hostActions?: HostAction[]
     saving?: boolean
     editorFactory?: EditorFactory
     theme?: 'auto' | 'light' | 'dark'
   }>(),
-  { name: '', diagramId: undefined, palette: undefined, editorFactory: undefined, theme: undefined, profile: null, profiles: () => [], ports: () => ({}), locale: 'de', lockApproved: true, comments: () => [], approvals: () => [], author: '', compareSources: () => [], roleAliases: () => [], replacements: () => ({}), hiddenActions: () => [] },
+  { name: '', diagramId: undefined, palette: undefined, editorFactory: undefined, theme: undefined, profile: null, profiles: () => [], ports: () => ({}), locale: 'de', lockApproved: true, comments: () => [], approvals: () => [], author: '', compareSources: () => [], roleAliases: () => [], replacements: () => ({}), hiddenActions: () => [], hostActions: () => [] },
 )
 const emit = defineEmits<{
   (e: 'update:xml', xml: string): void
@@ -59,6 +61,7 @@ const emit = defineEmits<{
   (e: 'analysis'): void
   (e: 'share'): void
   (e: 'export-excel'): void
+  (e: 'host-action', id: string): void
   (e: 'approve', payload: { xml: string; info: DiagramInfo }): void
   (e: 'selection-change', elementId: string | null): void
   (e: 'error', message: string): void
@@ -146,6 +149,8 @@ defineExpose({ getXml: () => editor.exportXml(), getSvg: () => editor.exportSvg(
       :active="active"
       :hidden="hiddenActions"
       :palette="palette"
+      :host-actions="hostActions"
+      @host-action="emit('host-action', $event)"
       @action="actions.run"
       @update:name="emit('update:name', $event)"
       @color="actions.color"
@@ -179,6 +184,6 @@ defineExpose({ getXml: () => editor.exportXml(), getSvg: () => editor.exportSvg(
         @jump="editor.select"
       />
     </div>
-    <EditorDialogs :setup="setup" :actions="actions" :name="name" :diagram-id="diagramId" :profiles="profiles" :approvals="approvals" :ports="ports" @apply-xml="emit('update:xml', $event)" />
+    <EditorDialogs :setup="setup" :actions="actions" :name="name" :diagram-id="diagramId" :profiles="profiles" :approvals="approvals" :ports="ports" :host-actions="hostActions" @apply-xml="emit('update:xml', $event)" @host-action="emit('host-action', $event)" />
   </div>
 </template>

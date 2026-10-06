@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { hasIcon } from '@auditcore/bpmn-flowaudit'
 import EditorToolbar from '../src/components/toolbar/EditorToolbar.vue'
-import { CORE_ENTRY_ICONS, EDIT_ACTIONS, FILE_ACTIONS, handleShortcut, readPaletteEntries, TABS, VIEW_ACTIONS } from '@auditcore/bpmn-flowaudit/ui'
+import { CORE_ENTRY_ICONS, EDIT_ACTIONS, FILE_ACTIONS, handleShortcut, PALETTE_VIEW_KEY, readPaletteEntries, TABS, VIEW_ACTIONS } from '@auditcore/bpmn-flowaudit/ui'
+import { rolesFor } from '@auditcore/bpmn-flowaudit'
 import ToolPalette from '../src/components/palette/ToolPalette.vue'
 import FaIcon from '../src/components/base/FaIcon.vue'
 import ColorSwatches from '../src/components/base/ColorSwatches.vue'
@@ -24,6 +25,19 @@ describe('icons', () => {
 })
 
 describe('EditorToolbar', () => {
+  it('shows menu host actions in the check menu, not as buttons, and emits their id', async () => {
+    const wrapper = mount(EditorToolbar, { props: { ...toolbarProps, hostActions: [{ id: 'kontrollmatrix', label: 'Kontrollmatrix (XLSX)', group: 'export' as const }, { id: 'abgleich', label: 'Abgleich starten' }] }, attachTo: document.body })
+    const buttonsBefore = wrapper.findAll('.fa-toolbar > button').length
+    expect(wrapper.text()).not.toContain('Abgleich starten')
+    await wrapper.findAll('.fa-toolbar-menu > button').find((item) => item.text().includes('Prüfen'))!.trigger('click')
+    expect(wrapper.text()).toContain('Weitere Aktionen')
+    expect(wrapper.text()).not.toContain('Kontrollmatrix')
+    await wrapper.findAll('[role="menuitem"]').find((item) => item.text() === 'Abgleich starten')!.trigger('click')
+    expect(wrapper.emitted<[string]>('host-action')![0]).toEqual(['abgleich'])
+    expect(wrapper.findAll('.fa-toolbar > button')).toHaveLength(buttonsBefore)
+    wrapper.unmount()
+  })
+
   it('emits actions, renames and disables undo/redo by state', async () => {
     const wrapper = mount(EditorToolbar, { props: toolbarProps })
     expect(wrapper.text()).toContain('ungespeichert')
@@ -53,8 +67,29 @@ describe('palette', () => {
 
   it('triggers entries by click', async () => {
     const wrapper = mount(ToolPalette, { props: { items: readPaletteEntries({ 'create.task': { group: 'activity', title: 'Aufgabe' } }) } })
-    await wrapper.find('button').trigger('click')
+    await wrapper.find('.fa-palette__item').trigger('click')
     expect(wrapper.emitted<[string, Event]>('trigger')![0]![0]).toBe('create.task')
+  })
+
+  it('switches between icons, tiles and list in one menu and keeps the choice', async () => {
+    localStorage.removeItem(PALETTE_VIEW_KEY)
+    const items = readPaletteEntries({ 'create.task': { group: 'activity', title: 'Aufgabe anlegen' }, 'flowaudit-pool-rfs': { group: 'flowaudit-roles', title: 'Pool anlegen: RFS' } }, rolesFor(null, '2021-2027'))
+    const wrapper = mount(ToolPalette, { props: { items }, attachTo: document.body })
+    expect(wrapper.findAll('.fa-palette__head button')).toHaveLength(1)
+    expect(wrapper.find('.fa-palette__caption').exists()).toBe(false)
+    await wrapper.find('.fa-palette__head button').trigger('click')
+    await wrapper.findAll('[role="menuitemradio"]')[2]!.trigger('click')
+    expect(localStorage.getItem(PALETTE_VIEW_KEY)).toBe('list')
+    expect(wrapper.text()).toContain('Stelle mit Rechnungsführungsfunktion (Art. 76 CPR)')
+    expect(wrapper.text()).toContain('Aufgabe')
+    await wrapper.findAll('.fa-palette__item').at(-1)!.trigger('dragstart')
+    expect(wrapper.emitted<[string, Event]>('trigger')!.at(-1)![0]).toBe('flowaudit-pool-rfs')
+    const again = mount(ToolPalette, { props: { items } })
+    expect(again.find('.fa-palette--list').exists()).toBe(true)
+    localStorage.setItem(PALETTE_VIEW_KEY, 'tiles')
+    expect(mount(ToolPalette, { props: { items } }).find('.fa-palette__caption').text()).toBe('Aufgabe')
+    localStorage.removeItem(PALETTE_VIEW_KEY)
+    wrapper.unmount()
   })
 })
 

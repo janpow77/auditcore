@@ -92,7 +92,7 @@ SVG/PNG/PDF-Export, diagram-js-Module (Plaketten, Hervorhebung,
 Rollen-Palette) und eigene Icons.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (450):
+Exporte der Einstiegspunkte aus `package.json#exports` (453):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -115,6 +115,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (450):
 | `@auditcore/bpmn-flowaudit` | `CRITERION_SHORT` | Konstante | – | `enrichment/textPatterns` |
 | `@auditcore/bpmn-flowaudit` | `CROSS_REFERENCE_KINDS` | Konstante | – | `schema/vocabulary` |
 | `@auditcore/bpmn-flowaudit` | `Canvas` | Schnittstelle | – | `diagram/services` |
+| `@auditcore/bpmn-flowaudit` | `CardDiagram` | Schnittstelle | – | `collection/cards` |
 | `@auditcore/bpmn-flowaudit` | `CatalogueBlock` | Schnittstelle | – | `profile/profile` |
 | `@auditcore/bpmn-flowaudit` | `CataloguePort` | Schnittstelle | KA/BK catalogue. The application supplies the texts (e.g. of the Methodological Note); without a port the key requirements of the profile apply. | `ports` |
 | `@auditcore/bpmn-flowaudit` | `CategorySuggestion` | Schnittstelle | – | `reports/categorySuggestion` |
@@ -199,6 +200,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (450):
 | `@auditcore/bpmn-flowaudit` | `FlowstatField` | Typ | – | `model/flowstatAttributes` |
 | `@auditcore/bpmn-flowaudit` | `FlowstatTask` | Schnittstelle | – | `model/flowstatAttributes` |
 | `@auditcore/bpmn-flowaudit` | `Folder` | Schnittstelle | – | `collection/collectionData` |
+| `@auditcore/bpmn-flowaudit` | `FolderCard` | Schnittstelle | – | `collection/cards` |
 | `@auditcore/bpmn-flowaudit` | `FolderNode` | Schnittstelle | – | `collection/collection` |
 | `@auditcore/bpmn-flowaudit` | `FooterBlock` | Schnittstelle | A block of the footer area with its height. | `export/svgBlocks` |
 | `@auditcore/bpmn-flowaudit` | `GERMAN_SVG_TEXTS` | Konstante | – | `export/svgPostProcessing` |
@@ -420,6 +422,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (450):
 | `@auditcore/bpmn-flowaudit` | `flowauditEditorOptions` | Funktion | Everything the editor needs: modules, moddle extension and module config. | `diagram/modules` |
 | `@auditcore/bpmn-flowaudit` | `flowauditModdleDescriptor` | Konstante | For `moddleExtensions: { flowaudit: flowauditModdleDescriptor }`. | `schema/descriptor` |
 | `@auditcore/bpmn-flowaudit` | `flowauditModules` | Funktion | – | `diagram/modules` |
+| `@auditcore/bpmn-flowaudit` | `folderCards` | Funktion | Cards for the folder `folderId` (`null` = top level): one per subfolder, then – if present – one for the diagrams directly in the folder. | `collection/cards` |
 | `@auditcore/bpmn-flowaudit` | `forWriting` | Funktion | Prepares a legal basis for writing: text content is mandatory (1.0 readers show it). Existing free text is never overwritten. | `model/legalBasis` |
 | `@auditcore/bpmn-flowaudit` | `fromModdle` | Funktion | moddle element → TypeScript object (empty values are dropped). | `model/moddleMapping` |
 | `@auditcore/bpmn-flowaudit` | `fromWire` | Funktion | JSON of `auditcore_bpmn` → TypeScript object (camelCase keys). | `model/wire` |
