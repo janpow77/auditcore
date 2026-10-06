@@ -39,7 +39,7 @@ function choose(code: string): void {
   <div class="fa-tab-role">
     <template v-if="isContainer">
       <p class="fa-help">{{ t('props.role.help') }}</p>
-      <div class="fa-role-grid" role="radiogroup" :aria-label="t('props.role.role')">
+      <div class="fa-role-grid" role="radiogroup" :lang="locale" :aria-label="t('props.role.role')">
         <button
           v-for="role in roles"
           :key="role.code"

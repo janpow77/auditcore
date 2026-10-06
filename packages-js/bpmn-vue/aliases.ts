@@ -13,6 +13,7 @@ export function sourceAliases(): Record<string, string> {
   return {
     '@auditcore/bpmn-flowaudit/profiles': `${flowaudit}/profile/bundled.ts`,
     '@auditcore/bpmn-flowaudit/ui.css': `${flowaudit}/ui/ui.css`,
+    '@auditcore/bpmn-editor/style.css': resolve(here, '../bpmn-editor/src/styles/bpmn-editor.css'),
     '@auditcore/bpmn-flowaudit/ui': `${flowaudit}/ui/index.ts`,
     '@auditcore/bpmn-flowaudit': `${flowaudit}/index.ts`,
     '@auditcore/bpmn-editor': resolve(here, '../bpmn-editor/src/index.ts'),
@@ -23,6 +24,13 @@ export function sourceAliases(): Record<string, string> {
   }
 }
 
-/** Only the UI stylesheet of the core is bundled into the library CSS (all other @auditcore imports stay external). */
-export const styleAlias = { '@auditcore/bpmn-flowaudit/ui.css': resolve(here, '../bpmn-flowaudit/src/ui/ui.css') }
+/**
+ * The stylesheets of the core editor (diagram-js base styles) and of the UI
+ * core are bundled into the library CSS, so a host needs one import only;
+ * all other @auditcore imports stay external.
+ */
+export const styleAlias = {
+  '@auditcore/bpmn-flowaudit/ui.css': resolve(here, '../bpmn-flowaudit/src/ui/ui.css'),
+  '@auditcore/bpmn-editor/style.css': resolve(here, '../bpmn-editor/src/styles/bpmn-editor.css'),
+}
 export const isExternal = (id: string): boolean => /^(vue|diagram-js|bpmn-moddle)($|\/)/.test(id) || (/^@auditcore\//.test(id) && !id.endsWith('.css'))

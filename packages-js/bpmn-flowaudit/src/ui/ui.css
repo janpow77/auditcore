@@ -349,6 +349,11 @@
   background: var(--fa-surface-2);
 }
 
+.fa-menu-item__spacer {
+  flex: none;
+  width: 14px;
+}
+
 .fa-menu-item:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -357,6 +362,18 @@
 .fa-menu-hint {
   display: block;
   font-size: 12px;
+  color: var(--fa-text-muted);
+}
+
+.fa-menu-heading {
+  margin: 6px 0 2px;
+  padding: 6px 8px 0;
+  border-top: 1px solid var(--fa-border);
+}
+
+.fa-folder-card__head .fa-toolbar-menu .fa-icon-btn {
+  width: 26px;
+  height: 26px;
   color: var(--fa-text-muted);
 }
 
@@ -411,6 +428,86 @@
 
 .fa-canvas-host .djs-container {
   background: var(--fa-canvas);
+}
+
+/*
+ * Selected sequence flows, segment draggers and bendpoints. diagram-js draws
+ * them as SVG shapes without fill attributes; without its stylesheet they
+ * render as solid black bars and dots. These rules keep them subtle even
+ * when a host stylesheet interferes: the line keeps its stroke width and
+ * gets a soft halo in the accent colour, bendpoints are small light circles
+ * with a coloured rim that only grow stronger on hover.
+ */
+.fa-canvas-host .djs-container {
+  --bendpoint-fill-color: var(--fa-canvas);
+  --bendpoint-stroke-color: var(--fa-primary);
+  --element-selected-outline-stroke-color: var(--fa-primary);
+}
+
+.fa-canvas-host .djs-connection.selected .djs-visual > path,
+.fa-canvas-host .djs-connection.selected .djs-visual > polyline {
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--fa-primary) 55%, transparent));
+}
+
+.fa-canvas-host .djs-segment-dragger,
+.fa-canvas-host .djs-bendpoint {
+  display: none;
+}
+
+.fa-canvas-host .djs-bendpoints.hover .djs-segment-dragger,
+.fa-canvas-host .djs-bendpoints.selected .djs-segment-dragger,
+.fa-canvas-host .djs-bendpoints.hover .djs-bendpoint,
+.fa-canvas-host .djs-bendpoints.selected .djs-bendpoint,
+.fa-canvas-host .djs-segment-dragger:hover,
+.fa-canvas-host .djs-bendpoint:hover,
+.fa-canvas-host .djs-segment-dragger.djs-dragging,
+.fa-canvas-host .djs-bendpoint.djs-dragging {
+  display: block;
+}
+
+.fa-canvas-host .djs-drag-active .djs-bendpoints *,
+.fa-canvas-host .djs-bendpoints:not(.hover) .floating,
+.fa-canvas-host .djs-bendpoint.floating:not(.positioned) {
+  display: none;
+}
+
+.fa-canvas-host .djs-segment-dragger .djs-hit,
+.fa-canvas-host .djs-bendpoint .djs-hit {
+  fill: none;
+  stroke: none;
+  pointer-events: all;
+}
+
+.fa-canvas-host .djs-segment-dragger .djs-visual {
+  display: none;
+  fill: color-mix(in srgb, var(--fa-primary) 30%, transparent);
+  stroke: none;
+}
+
+.fa-canvas-host .djs-segment-dragger:hover .djs-visual,
+.fa-canvas-host .djs-segment-dragger.djs-dragging .djs-visual {
+  display: block;
+}
+
+.fa-canvas-host .djs-bendpoint .djs-visual {
+  fill: var(--fa-canvas);
+  stroke: var(--fa-primary);
+  stroke-width: 1.5px;
+}
+
+.fa-canvas-host .djs-bendpoint:hover .djs-visual,
+.fa-canvas-host .djs-bendpoint.djs-dragging .djs-visual,
+.fa-canvas-host .djs-bendpoint.floating .djs-visual {
+  fill: var(--fa-primary);
+  stroke: var(--fa-canvas);
+}
+
+.fa-canvas-host .djs-segment-dragger.horizontal .djs-hit {
+  cursor: ns-resize;
+}
+
+.fa-canvas-host .djs-segment-dragger.vertical .djs-hit {
+  cursor: ew-resize;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -891,6 +988,150 @@
   padding-left: 18px;
 }
 
+.fa-overview__folders {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.fa-folder-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+.fa-folder-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fa-folder-card__name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.fa-folder-card__count {
+  flex: none;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--fa-text-muted);
+}
+
+.fa-folder-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--fa-border);
+}
+
+.fa-folder-card__item {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--fa-border);
+}
+
+.fa-folder-card__item:last-child {
+  border-bottom: 0;
+}
+
+.fa-folder-card__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fa-folder-card__open {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fa-primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.fa-folder-card__open:hover {
+  text-decoration: underline;
+}
+
+.fa-describe {
+  display: -webkit-box;
+  width: 100%;
+  padding: 2px 4px;
+  margin: 0 -4px;
+  border: 1px solid transparent;
+  border-radius: var(--fa-radius-sm);
+  background: transparent;
+  color: var(--fa-text-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: left;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  cursor: text;
+}
+
+.fa-describe:hover:not(:disabled),
+.fa-describe:focus-visible {
+  border-color: var(--fa-border);
+  background: var(--fa-surface-2);
+}
+
+.fa-describe:disabled {
+  cursor: default;
+}
+
+.fa-describe--empty {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.fa-describe__field {
+  width: 100%;
+  font-size: 12px;
+  resize: vertical;
+}
+
+.fa-overview__hints {
+  margin-top: 24px;
+  border-top: 1px solid var(--fa-border);
+  padding-top: 10px;
+}
+
+.fa-overview__hints > summary {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fa-text-muted);
+  cursor: pointer;
+}
+
+.fa-overview__hints-body {
+  padding: 10px 0 0 16px;
+}
+
+.fa-overview__legal {
+  display: grid;
+  max-width: 420px;
+  gap: 4px;
+}
+
 /* TreeFolder */
 .fa-tree__children {
   margin: 0;
@@ -1110,9 +1351,11 @@
 /* ToolPalette */
 .fa-palette {
   display: flex;
+  flex: none;
   flex-direction: column;
   gap: 12px;
   width: 132px;
+  max-width: 40%;
   padding: 10px 8px;
   border-right: 1px solid var(--fa-border);
   background: var(--fa-surface);
@@ -1169,6 +1412,99 @@
 
 .fa-palette__hint {
   margin-top: auto;
+}
+
+.fa-palette__head {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px -2px -6px;
+}
+
+.fa-palette__head .fa-icon-btn {
+  width: 26px;
+  height: 26px;
+  color: var(--fa-text-muted);
+}
+
+.fa-palette--tiles {
+  width: 196px;
+}
+
+.fa-palette--list {
+  width: 268px;
+}
+
+.fa-palette__grid--tiles {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fa-palette__section--shapes .fa-palette__grid--tiles {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fa-palette__grid--tiles .fa-palette__item {
+  flex-direction: column;
+  gap: 4px;
+  width: auto;
+  height: auto;
+  min-height: 64px;
+  padding: 6px 2px;
+}
+
+.fa-palette__grid--tiles .fa-palette__role {
+  width: 40px;
+  height: 40px;
+}
+
+.fa-palette__caption {
+  max-width: 100%;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.fa-palette__grid--list {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+
+.fa-palette__grid--list .fa-palette__item {
+  justify-content: flex-start;
+  gap: 8px;
+  width: auto;
+  height: auto;
+  min-height: 34px;
+  padding: 4px 6px;
+  border-color: transparent;
+  text-align: left;
+}
+
+.fa-palette__grid--list .fa-palette__item:hover:not(:disabled) {
+  border-color: var(--fa-border);
+}
+
+.fa-palette__grid--list .fa-palette__role {
+  flex: none;
+}
+
+.fa-palette__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.fa-palette__short {
+  font-size: 11px;
+}
+
+.fa-palette__name {
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 
 /* EditorToolbar */
@@ -1630,10 +1966,12 @@
 
 .fa-role-option {
   display: grid;
-  grid-template-columns: 24px auto;
+  grid-template-columns: 24px minmax(0, 1fr);
   grid-template-rows: auto auto;
   column-gap: 8px;
   align-items: center;
+  align-self: stretch;
+  min-width: 0;
   padding: 7px 9px;
   border: 1px solid var(--fa-border);
   border-radius: var(--fa-radius-sm);
@@ -1660,8 +1998,16 @@
   font-size: 12px;
 }
 
+.fa-role-option__short,
+.fa-role-option__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
 .fa-role-option__label {
   font-size: 12px;
+  line-height: 1.3;
   color: inherit;
   opacity: 0.85;
 }

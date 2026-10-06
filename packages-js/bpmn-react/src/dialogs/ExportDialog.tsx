@@ -6,7 +6,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react'
 import { CONFIDENTIALITY, DEFAULT_EXPORT_CHOICE, label, type ExportChoice, type ExportData, type ExportFormat } from '@auditcore/bpmn-flowaudit'
-import { EXPORT_FORMATS, FORMAT_ICONS, initialExportChoice, ORIENTATIONS } from '@auditcore/bpmn-flowaudit/ui'
+import { EXPORT_FORMATS, FORMAT_ICONS, hostActionsFor, initialExportChoice, ORIENTATIONS, type HostAction } from '@auditcore/bpmn-flowaudit/ui'
 import { BaseDialog } from '../base/BaseDialog'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'
@@ -21,8 +21,28 @@ export interface ExportDialogProps {
   data: ExportData
   confidentiality?: string
   excel?: boolean
+  hostActions?: HostAction[]
   onOpenChange: (open: boolean) => void
   onExport: (choice: ExportChoice) => void
+  onHostAction?: (id: string) => void
+}
+
+function HostOutputs({ actions, run }: { actions: HostAction[]; run: (id: string) => void }) {
+  const { t } = useI18n()
+  if (!actions.length) return null
+  return (
+    <>
+      <h3 className="fa-section__title fa-section">{t('export.hostActions')}</h3>
+      <div className="fa-export__formats">
+        {actions.map((entry) => (
+          <button key={entry.id} type="button" className="fa-btn" onClick={() => run(entry.id)}>
+            <FaIcon name="export" size={16} />
+            {entry.label}
+          </button>
+        ))}
+      </div>
+    </>
+  )
 }
 
 interface PartProps {
@@ -83,7 +103,7 @@ function PageOptions({ choice, set }: PartProps) {
   )
 }
 
-export function ExportDialog({ open, defaultTitle, subtitle, data, confidentiality, excel, onOpenChange, onExport }: ExportDialogProps) {
+export function ExportDialog({ open, defaultTitle, subtitle, data, confidentiality, excel, hostActions, onOpenChange, onExport, onHostAction }: ExportDialogProps) {
   const { t } = useI18n()
   const [choice, setChoice] = useState<Choice>({ ...DEFAULT_EXPORT_CHOICE })
 
@@ -94,6 +114,10 @@ export function ExportDialog({ open, defaultTitle, subtitle, data, confidentiali
   const set = (patch: Partial<Choice>) => setChoice((current) => ({ ...current, ...patch }))
   const run = (format: ExportFormat) => {
     onExport({ ...choice, format })
+    onOpenChange(false)
+  }
+  const runHost = (id: string) => {
+    onHostAction?.(id)
     onOpenChange(false)
   }
 
@@ -111,6 +135,7 @@ export function ExportDialog({ open, defaultTitle, subtitle, data, confidentiali
         ))}
         {excel ? <button type="button" className="fa-btn" onClick={() => run('excel')}><FaIcon name="analysis" size={16} />{t('export.format.excel')}</button> : null}
       </div>
+      <HostOutputs actions={hostActionsFor(hostActions, 'export')} run={runHost} />
     </BaseDialog>
   )
 }

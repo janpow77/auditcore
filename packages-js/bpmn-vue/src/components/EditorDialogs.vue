@@ -2,7 +2,7 @@
 /** All dialogs of the editor, driven by the editor setup and actions. */
 import { computed, ref, shallowRef, watch } from 'vue'
 import { collectExportData, type Approval, type DiagramInfo, type ProcessModel, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
-import { elementNames, EMPTY_EXPORT_DATA } from '@auditcore/bpmn-flowaudit/ui'
+import { elementNames, EMPTY_EXPORT_DATA, type HostAction } from '@auditcore/bpmn-flowaudit/ui'
 import DiagramInfoDialog from './dialogs/DiagramInfoDialog.vue'
 import ElementSearch from './dialogs/ElementSearch.vue'
 import EnrichmentDialog from './dialogs/EnrichmentDialog.vue'
@@ -22,8 +22,9 @@ const props = defineProps<{
   profiles: ProfileSummary[]
   approvals: Approval[]
   ports: EditorPorts
+  hostActions?: HostAction[]
 }>()
-const emit = defineEmits<{ (e: 'apply-xml', xml: string): void }>()
+const emit = defineEmits<{ (e: 'apply-xml', xml: string): void; (e: 'host-action', id: string): void }>()
 
 const dialogs = computed(() => props.setup.ui.dialogs)
 const editor = props.setup.editor
@@ -66,7 +67,9 @@ const info = computed(() => editor.state.info as DiagramInfo | null)
     :data="exportData"
     :confidentiality="info?.confidentiality"
     excel
+    :host-actions="hostActions"
     @export="actions.runExport"
+    @host-action="emit('host-action', $event)"
   />
   <EnrichmentDialog v-model:open="dialogs.enrich" :suggestions="actions.suggestions.value" :names="names" @apply="actions.applyEnrichment" />
   <EsiDialog v-model:open="dialogs.esi" :port="ports.esi" :xml="() => editor.exportXml()" :diagram-id="diagramId" @jump="editor.select" />

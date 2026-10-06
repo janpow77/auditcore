@@ -5,7 +5,7 @@
  * direction, page view and panel toggles. Actions are emitted as `action`.
  */
 import { PALETTE_COLORS, type PaletteColor } from '@auditcore/bpmn-flowaudit'
-import { actionDisabled, CHECK_ACTIONS, EDIT_ACTIONS, FILE_ACTIONS, MODE_ACTIONS, PAGE_OPTIONS as pageOptions, VIEW_ACTIONS, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
+import { actionDisabled, CHECK_ACTIONS, hostActionsFor, EDIT_ACTIONS, FILE_ACTIONS, MODE_ACTIONS, PAGE_OPTIONS as pageOptions, VIEW_ACTIONS, type HostAction, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import ColorSwatches from '../base/ColorSwatches.vue'
 import FaIcon from '../base/FaIcon.vue'
 import ToolbarMenu from '../base/ToolbarMenu.vue'
@@ -23,6 +23,7 @@ const props = defineProps<{
   active: Partial<Record<ToolbarAction, boolean>>
   hidden?: ToolbarAction[]
   palette?: readonly PaletteColor[]
+  hostActions?: HostAction[]
 }>()
 const emit = defineEmits<{
   (e: 'action', action: ToolbarAction): void
@@ -31,11 +32,13 @@ const emit = defineEmits<{
   (e: 'direction', value: 'waagerecht' | 'senkrecht'): void
   (e: 'page-view', value: string): void
   (e: 'import-file', file: File): void
+  (e: 'host-action', id: string): void
 }>()
 const { t } = useI18n()
 
 
 const visible = (id: ToolbarAction) => !props.hidden?.includes(id)
+const menuHostActions = () => hostActionsFor(props.hostActions, 'menu')
 const disabled = (id: ToolbarAction, writes?: boolean) => actionDisabled(id, writes, props)
 
 function onFile(event: Event): void {
@@ -93,6 +96,13 @@ function onFile(event: Event): void {
         <button v-if="visible(entry.id)" type="button" role="menuitem" class="fa-menu-item" :disabled="disabled(entry.id, entry.writes)" @click="(emit('action', entry.id), close())">
           <FaIcon :name="entry.icon" />
           <span>{{ t(entry.label) }}<span v-if="entry.hint" class="fa-menu-hint">{{ t(entry.hint) }}</span></span>
+        </button>
+      </template>
+      <template v-if="menuHostActions().length">
+        <p class="fa-menu-hint fa-menu-heading">{{ t('toolbar.hostActions') }}</p>
+        <button v-for="entry in menuHostActions()" :key="entry.id" type="button" role="menuitem" class="fa-menu-item" @click="(emit('host-action', entry.id), close())">
+          <span class="fa-menu-item__spacer" />
+          <span>{{ entry.label }}</span>
         </button>
       </template>
     </ToolbarMenu>

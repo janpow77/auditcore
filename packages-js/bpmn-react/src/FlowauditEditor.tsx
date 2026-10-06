@@ -44,7 +44,7 @@ function useContextValue(runtime: EditorRuntime | null, props: FlowauditEditorPr
 
 function Dialogs({ runtime, props }: { runtime: EditorRuntime | null; props: FlowauditEditorProps }) {
   if (!runtime) return null
-  return <EditorDialogs runtime={runtime} name={props.name ?? ''} diagramId={props.diagramId} profiles={props.profiles ?? []} approvals={props.approvals ?? []} ports={props.ports ?? {}} onApplyXml={(xml) => props.onXmlChange?.(xml)} />
+  return <EditorDialogs runtime={runtime} name={props.name ?? ''} diagramId={props.diagramId} profiles={props.profiles ?? []} approvals={props.approvals ?? []} ports={props.ports ?? {}} hostActions={props.hostActions} onApplyXml={(xml) => props.onXmlChange?.(xml)} onHostAction={props.onHostAction} />
 }
 
 function shortcutHandler(runtime: EditorRuntime | null) {

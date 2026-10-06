@@ -27,7 +27,7 @@ function RoleChoice({ actor, onUpdate }: { actor: Actor; onUpdate: (patch: Parti
   return (
     <>
       <p className="fa-help">{t('props.role.help')}</p>
-      <div className="fa-role-grid" role="radiogroup" aria-label={t('props.role.role')}>
+      <div className="fa-role-grid" role="radiogroup" lang={locale} aria-label={t('props.role.role')}>
         {roles.map((role) => (
           <button
             key={role.code}
