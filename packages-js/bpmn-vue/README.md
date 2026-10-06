@@ -88,6 +88,57 @@ dieses Pakets binden dessen Controller an Vue.
 `docs/bpmn/rest-api.md`; die API-Basis kommt aus `window.FLOWAUDIT_CONFIG`,
 `<meta name="flowaudit-api-base">` oder `?api=…`.
 
+### Übersicht, Palette und Aktionen des Hosts (ab 0.3.0)
+
+**Stile:** `@auditcore/bpmn-vue/style.css` enthält die Grundstile von diagram-js
+(aus `@auditcore/bpmn-editor`) und die Oberfläche. Ein weiterer CSS-Import ist
+nicht nötig. Fehlen die Grundstile, zeichnet der Browser Knickpunkte und
+Segment-Anfasser einer gewählten Linie als schwarze Flächen.
+
+**Übersicht einer Ebene (`GroupOverview`):** `cards` (aus
+`store.cards.value`, framework-frei `collectionCards(collection, folderId)`)
+ergibt je Unterordner eine Karte mit Beschreibung und Diagrammen, dazu eine
+Karte für die Diagramme der Ebene selbst. Beschreibungen sind inline
+bearbeitbar; `describe-folder(id, text)` und `describe-diagram(id, text)` gehen
+an `store.describeFolder` bzw. `store.describeDiagram`:
+
+* Ordnerbeschreibung → `Folder.description` → `StoragePort.saveCollection`
+  (Wire-Feld `description`).
+* Diagrammbeschreibung → Diagramm-Info im XML (`flowaudit:diagrammInfo`,
+  `beschreibung`) → `StoragePort.saveDiagram`. Gelesen wird sie aus
+  `DiagramEntry.info.description`.
+
+Der `StoragePort` bleibt unverändert. Ein Host, der Beschreibungen zusätzlich in
+eigenen Spalten führt, gleicht sie in `saveCollection`/`saveDiagram` ab.
+
+**Aktionen des Hosts:** Die Bibliothek zeigt sie nur an und meldet den Klick;
+die Bedeutung kennt allein der Host.
+
+```vue
+<FlowauditEditor
+  :host-actions="[{ id: 'matrix', label: 'Kontrollmatrix (XLSX)', group: 'export' }, { id: 'abgleich', label: 'Abgleich starten' }]"
+  @host-action="(id) => runHostAction(id)"
+/>
+<GroupOverview
+  :cards="store.cards.value"
+  :folder-actions="[{ id: 'matrix', label: 'Kontrollmatrix für den Ordner' }]"
+  @folder-action="(id, folderId, diagramIds) => runFolderAction(id, folderId, diagramIds)"
+/>
+```
+
+* `hostActions: { id: string; label: string; group?: 'export' }[]` – ohne
+  `group` im Menü „Prüfen“ (Abschnitt „Weitere Aktionen“), mit
+  `group: 'export'` im Exportdialog („Weitere Ausgaben“). Keine zusätzlichen
+  Schaltflächen in der Werkzeugleiste. Ereignis `host-action(id)`.
+* `folderActions: { id: string; label: string }[]` – kleines Menü „Mehr“ je
+  Ordnerkarte. Ereignis `folder-action(id, folderId, diagramIds)`; `diagramIds`
+  sind alle Diagramme des Ordners einschließlich Unterordnern.
+* `FlowauditWorkbench` reicht beide durch und meldet
+  `host-action(id, diagramId)` sowie `folder-action(id, folderId, diagramIds)`.
+
+**Palette:** „Elemente“ und „Pool mit Rolle“ als Symbole, große Kacheln oder
+Liste; die Wahl steht im Browser unter `auditcore.bpmn.paletteView`.
+
 ## API-Überblick
 
 Wichtige Eigenschaften von `FlowauditEditor`: `xml`, `name`, `diagramId`,
@@ -226,6 +277,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | `roleAliases` | `RoleAlias[]` | nein | `() => []` | – |
 | `replacements` | `Record<string, string>` | nein | `() => ({})` | – |
 | `hiddenActions` | `ToolbarAction[]` | nein | `() => []` | – |
+| `hostActions` | `HostAction[]` | nein | `() => []` | Actions of the host in the „Prüfen“ menu or (group `export`) in the export dialog. |
 | `saving` | `boolean` | nein | – | – |
 | `editorFactory` | `EditorFactory` | nein | `undefined` | – |
 | `theme` | `'auto' \| 'light' \| 'dark'` | nein | `undefined` | – |
@@ -240,6 +292,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | `analysis` | `[]` | – |
 | `share` | `[]` | – |
 | `export-excel` | `[]` | – |
+| `host-action` | `[id: string]` | – |
 | `approve` | `[payload: { xml: string; info: DiagramInfo }]` | – |
 | `selection-change` | `[elementId: string \| null]` | – |
 | `error` | `[message: string]` | – |
@@ -258,24 +311,35 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | `author` | `string` | nein | `''` | – |
 | `roleAliases` | `RoleAlias[]` | nein | `() => []` | – |
 | `editorFactory` | `EditorFactory` | nein | `undefined` | – |
+| `hostActions` | `HostAction[]` | nein | `() => []` | – |
+| `folderActions` | `FolderAction[]` | nein | `() => []` | – |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `open` | `[id: string]` | – |
 | `error` | `[message: string]` | – |
+| `host-action` | `[id: string, diagramId: string]` | – |
+| `folder-action` | `[id: string, folderId: string, diagramIds: string[]]` | – |
 
 #### `GroupOverview`
 
 | Prop | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|
 | `overview` | `Overview` | ja | – | – |
-| `profile` | `ProfileData \| null` | ja | – | – |
+| `profile` | `ProfileData \| null` | nein | `null` | – |
 | `issues` | `ValidationIssue[]` | ja | – | – |
 | `title` | `string` | ja | – | – |
+| `cards` | `FolderCard[]` | nein | `() => []` | – |
+| `topLevel` | `boolean` | nein | `true` | – |
+| `readonly` | `boolean` | nein | `false` | – |
+| `folderActions` | `FolderAction[]` | nein | `() => []` | – |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `open` | `[id: string]` | – |
+| `describe-folder` | `[id: string, text: string]` | – |
+| `describe-diagram` | `[id: string, text: string]` | – |
+| `folder-action` | `[id: string, folderId: string, diagramIds: string[]]` | – |
 
 #### `IssueList`
 

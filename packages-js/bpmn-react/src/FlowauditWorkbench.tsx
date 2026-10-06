@@ -6,7 +6,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Comment, DiagramInfo, ProfileData, ProfileSummary, RoleAlias, StoragePort, ValidationPort } from '@auditcore/bpmn-flowaudit'
-import type { EditorFactory, EditorPorts, Locale } from '@auditcore/bpmn-flowaudit/ui'
+import type { EditorFactory, EditorPorts, FolderAction, HostAction, Locale } from '@auditcore/bpmn-flowaudit/ui'
 import { CollectionTree } from './collection/CollectionTree'
 import { DiagramInfoColumn } from './collection/DiagramInfoColumn'
 import { GroupOverview } from './collection/GroupOverview'
@@ -25,9 +25,13 @@ export interface FlowauditWorkbenchProps {
   author?: string
   roleAliases?: RoleAlias[]
   editorFactory?: EditorFactory
+  hostActions?: HostAction[]
+  folderActions?: FolderAction[]
   className?: string
   onOpen?: (id: string) => void
   onError?: (message: string) => void
+  onHostAction?: (id: string, diagramId: string) => void
+  onFolderAction?: (id: string, folderId: string, diagramIds: string[]) => void
 }
 
 interface OpenDiagram {
@@ -122,18 +126,33 @@ function EditorPane({ store, bench, props, opened }: { store: CollectionBinding;
       onSave={(payload) => void bench.save(payload)}
       onApprove={(payload) => void bench.approve(payload)}
       onNew={() => void bench.createAndOpen()}
+      hostActions={props.hostActions}
+      onHostAction={(id) => props.onHostAction?.(id, opened.id)}
     />
   )
 }
 
-function OverviewPane({ store, bench, profile }: { store: CollectionBinding; bench: Bench; profile: ProfileData | null }) {
+function OverviewPane({ store, bench, props }: { store: CollectionBinding; bench: Bench; props: FlowauditWorkbenchProps }) {
+  const profile = props.profile ?? null
   const { t } = useI18n()
   const { collection, selectedFolder } = store.state
   const selectedEntry = bench.selected ? store.entry(bench.selected) : undefined
   const folderTitle = selectedFolder ? (collection.folders.get(selectedFolder)?.name ?? '') : t('collection.topLevel')
   return (
     <div className="fa-workbench__overview">
-      <GroupOverview overview={store.overview} profile={profile} issues={store.issues} title={folderTitle} onOpen={(id) => void bench.open(id)} />
+      <GroupOverview
+        overview={store.overview}
+        profile={profile}
+        issues={store.issues}
+        title={folderTitle}
+        cards={store.cards}
+        topLevel={!selectedFolder}
+        onOpen={(id) => void bench.open(id)}
+        onDescribeFolder={(id, text) => void store.describeFolder(id, text)}
+        onDescribeDiagram={(id, text) => void store.describeDiagram(id, text)}
+        folderActions={props.folderActions}
+        onFolderAction={props.onFolderAction}
+      />
       {selectedEntry ? <DiagramInfoColumn className="fa-workbench__info" store={store} entry={selectedEntry} onOpen={(id) => void bench.open(id)} onDeleted={bench.onDeleted} /> : null}
     </div>
   )
@@ -163,7 +182,7 @@ function Workbench(props: FlowauditWorkbenchProps) {
         <CollectionTree store={store} selectedDiagram={bench.selected} openDiagram={opened?.id ?? null} onSelectDiagram={bench.setSelected} onOpenDiagram={(id) => void bench.open(id)} />
       </aside>
       <main className="fa-workbench__main">
-        {opened && openEntry ? <EditorPane store={store} bench={bench} props={props} opened={opened} /> : <OverviewPane store={store} bench={bench} profile={props.profile ?? null} />}
+        {opened && openEntry ? <EditorPane store={store} bench={bench} props={props} opened={opened} /> : <OverviewPane store={store} bench={bench} props={props} />}
       </main>
     </div>
   )
