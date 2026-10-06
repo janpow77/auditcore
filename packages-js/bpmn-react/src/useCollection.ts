@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react'
-import { collectionIssues, collectionOverview, collectionTree, createCollectionCore, type CollectionCore, type CollectionState } from '@auditcore/bpmn-flowaudit/ui'
+import { collectionCards, collectionIssues, collectionOverview, collectionTree, createCollectionCore, type CollectionCore, type CollectionState } from '@auditcore/bpmn-flowaudit/ui'
 import type { StoragePort } from '@auditcore/bpmn-flowaudit'
 import { useStoreState } from './hooks'
 
@@ -16,6 +16,7 @@ export type CollectionBinding = CollectionCore & {
   tree: ReturnType<typeof collectionTree>
   overview: ReturnType<typeof collectionOverview>
   issues: ReturnType<typeof collectionIssues>
+  cards: ReturnType<typeof collectionCards>
 }
 
 /** Binds an existing controller (e.g. created and filled outside React). */
@@ -26,7 +27,8 @@ export function useCollectionBinding(core: CollectionCore): CollectionBinding {
   const tree = useMemo(() => (void revision, collectionTree(collection, filter)), [collection, revision, filter])
   const overview = useMemo(() => (void revision, collectionOverview(collection, selectedFolder)), [collection, revision, selectedFolder])
   const issues = useMemo(() => (void revision, collectionIssues(collection)), [collection, revision])
-  return useMemo(() => ({ ...core, state, tree, overview, issues }), [core, state, tree, overview, issues])
+  const cards = useMemo(() => (void revision, collectionCards(collection, selectedFolder)), [collection, revision, selectedFolder])
+  return useMemo(() => ({ ...core, state, tree, overview, issues, cards }), [core, state, tree, overview, issues, cards])
 }
 
 /** Creates a controller for the storage port, loads it once and binds it. */

@@ -74,6 +74,16 @@ describe('ExportDialog', () => {
     await wrapper.findAll('button').find((item) => item.text().includes('SVG'))!.trigger('click')
     expect(wrapper.emitted<[ExportChoice]>('export')![0]![0]!.neutral).toBe(true)
   })
+
+  it('lists only export host actions and reports them by id', async () => {
+    const wrapper = mount(ExportDialog, { props: { open: true, defaultTitle: 'X', data, hostActions: [{ id: 'kontrollmatrix', label: 'Kontrollmatrix (XLSX)', group: 'export' as const }, { id: 'abgleich', label: 'Abgleich starten' }] } })
+    expect(wrapper.text()).toContain('Weitere Ausgaben')
+    expect(wrapper.text()).not.toContain('Abgleich starten')
+    await wrapper.findAll('button').find((item) => item.text().includes('Kontrollmatrix'))!.trigger('click')
+    expect(wrapper.emitted<[string]>('host-action')![0]).toEqual(['kontrollmatrix'])
+    expect(wrapper.emitted<[boolean]>('update:open')!.at(-1)).toEqual([false])
+    expect(mount(ExportDialog, { props: { open: true, defaultTitle: 'X', data } }).text()).not.toContain('Weitere Ausgaben')
+  })
 })
 
 describe('EnrichmentDialog', () => {

@@ -53,5 +53,9 @@ export const TREE_CASES: TreeCase[] = [
   { name: 'Ordner gewählt', filter: {}, selectFolder: true, expect: { counts: { '.fa-tree__row--folder.fa-tree__row--selected': 1 } } },
 ]
 
-export const OVERVIEW_EXPECT: Expectation = { texts: ['Diagramme', 'KA 1'], counts: { '.fa-overview__ka-cell': 18, '[role="meter"]': 1 } }
+/** Top level: card „Antragsverfahren“ (folder) and card „Ohne Ordner“; hints collapsed. */
+export const OVERVIEW_EXPECT: Expectation = {
+  texts: ['Antragsverfahren', 'Bewilligung', 'Ohne Ordner', 'Anreicherung', 'Prüfhinweise', 'Rechtsgrundlagen-Abdeckung'],
+  counts: { '.fa-folder-card': 2, '.fa-describe': 3, '.fa-overview__ka-cell': 0, 'details.fa-overview__hints:not([open])': 1, '[role="meter"]': 1 },
+}
 export const INFO_EXPECT: Expectation = { texts: ['Bewilligung', 'Öffnen'], roles: [['button', 'Öffnen'], ['combobox', 'Verschieben nach …']] }
