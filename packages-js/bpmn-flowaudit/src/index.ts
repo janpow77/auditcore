@@ -54,6 +54,7 @@ export * from './esi/esiRequirements'
 export * from './collection/collectionData'
 export * from './collection/excerpt'
 export * from './collection/collection'
+export * from './collection/cards'
 export * from './collection/analysis'
 export * from './collection/legacyTree'
 

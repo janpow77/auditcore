@@ -82,3 +82,27 @@ export const MODE_ACTIONS: ToolbarEntry[] = [
 export function actionDisabled(id: ToolbarAction, writes: boolean | undefined, state: { readonly: boolean; canUndo: boolean; canRedo: boolean }): boolean {
   return Boolean((writes && state.readonly) || (id === 'undo' && !state.canUndo) || (id === 'redo' && !state.canRedo))
 }
+
+/**
+ * Action of the embedding application. The library only shows it and
+ * reports the click (`host-action` / `onHostAction` with the id); what it
+ * does is up to the host. `label` is shown as given (already translated).
+ * Entries with `group: 'export'` appear in the export dialog, all others in
+ * the „Prüfen“ menu of the toolbar – never as additional buttons.
+ */
+export interface HostAction {
+  id: string
+  label: string
+  group?: 'export'
+}
+
+/** Action of the host per folder card of the collection overview (menu „Mehr“ of the card). */
+export interface FolderAction {
+  id: string
+  label: string
+}
+
+/** Host actions of one place: `export` for the export dialog, `menu` for the toolbar menu. */
+export function hostActionsFor(actions: readonly HostAction[] | undefined, place: 'export' | 'menu'): HostAction[] {
+  return (actions ?? []).filter((action) => (place === 'export' ? action.group === 'export' : action.group !== 'export'))
+}

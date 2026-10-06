@@ -6,13 +6,13 @@
  */
 import { reactive, watch } from 'vue'
 import { CONFIDENTIALITY, DEFAULT_EXPORT_CHOICE, label, type ExportChoice, type ExportData, type ExportFormat } from '@auditcore/bpmn-flowaudit'
-import { EXPORT_FORMATS, FORMAT_ICONS as ICONS, initialExportChoice, ORIENTATIONS } from '@auditcore/bpmn-flowaudit/ui'
+import { EXPORT_FORMATS, FORMAT_ICONS as ICONS, hostActionsFor, initialExportChoice, ORIENTATIONS, type HostAction } from '@auditcore/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 
-const props = defineProps<{ open: boolean; defaultTitle: string; subtitle?: string; data: ExportData; confidentiality?: string; excel?: boolean }>()
-const emit = defineEmits<{ (e: 'update:open', value: boolean): void; (e: 'export', choice: ExportChoice): void }>()
+const props = defineProps<{ open: boolean; defaultTitle: string; subtitle?: string; data: ExportData; confidentiality?: string; excel?: boolean; hostActions?: HostAction[] }>()
+const emit = defineEmits<{ (e: 'update:open', value: boolean): void; (e: 'export', choice: ExportChoice): void; (e: 'host-action', id: string): void }>()
 const { t, locale } = useI18n()
 const choice = reactive<Omit<ExportChoice, 'format'>>({ ...DEFAULT_EXPORT_CHOICE })
 
@@ -24,6 +24,13 @@ watch(
   },
   { immediate: true },
 )
+
+const exportHostActions = () => hostActionsFor(props.hostActions, 'export')
+
+function runHost(id: string): void {
+  emit('host-action', id)
+  emit('update:open', false)
+}
 
 function run(format: ExportFormat): void {
   emit('export', { ...choice, format })
@@ -69,5 +76,11 @@ function run(format: ExportFormat): void {
       </button>
       <button v-if="excel" type="button" class="fa-btn" @click="run('excel')"><FaIcon name="analysis" :size="16" />{{ t('export.format.excel') }}</button>
     </div>
+    <template v-if="exportHostActions().length">
+      <h3 class="fa-section__title fa-section">{{ t('export.hostActions') }}</h3>
+      <div class="fa-export__formats">
+        <button v-for="entry in exportHostActions()" :key="entry.id" type="button" class="fa-btn" @click="runHost(entry.id)"><FaIcon name="export" :size="16" />{{ entry.label }}</button>
+      </div>
+    </template>
   </BaseDialog>
 </template>
