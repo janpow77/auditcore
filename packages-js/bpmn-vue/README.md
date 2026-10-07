@@ -139,6 +139,41 @@ die Bedeutung kennt allein der Host.
 **Palette:** „Elemente“ und „Pool mit Rolle“ als Symbole, große Kacheln oder
 Liste; die Wahl steht im Browser unter `auditcore.bpmn.paletteView`.
 
+### Ansichten der Übersicht, Vorschaubilder und Seitenbereiche (ab 0.5.0)
+
+**Ansichten:** `GroupOverview` bietet Kacheln, Liste und – mit einer Quelle für
+Vorschaubilder – Vorschaubilder; umgeschaltet im Menü im Kopf, gemerkt unter
+`auditcore.bpmn.overviewView`. Karten mit vielen Diagrammen nehmen die ganze
+Zeile ein.
+
+**Vorschaubilder:** `thumbnails` erwartet eine Quelle nach
+`createThumbnails({ storage, render })`. `FlowauditWorkbench` erzeugt sie
+selbst; ein Host mit eigener Workbench verbindet sie so:
+
+```ts
+import { createSvgThumbnailRenderer, createThumbnails, defaultEditorFactory, createCollectionStore } from '@auditcore/bpmn-vue'
+
+const thumbnails = createThumbnails({ storage, render: createSvgThumbnailRenderer(defaultEditorFactory, 'de') })
+const store = createCollectionStore(storage, { onDiagramSaved: thumbnails.invalidate })
+// <GroupOverview :thumbnails="thumbnails" … />
+```
+
+Liefert der `StoragePort` optional `thumbnail(id)` (Bild-URL, etwa serverseitig
+gerendert), wird diese verwendet; sonst rendert der Browser – höchstens zwei
+Diagramme gleichzeitig, erst beim Sichtbarwerden.
+
+**Seitenbereiche:** `PanelResizer` ist die Trennlinie zu einem Seitenbereich
+(ziehen, Pfeiltasten, Pos1/Ende, Doppelklick für die Standardbreite; die
+kleine Schaltfläche klappt ein, eingeklappt bleibt eine schmale Leiste).
+`FlowauditEditor` nutzt sie für die Eigenschaften, `FlowauditWorkbench` für die
+Diagrammsammlung; Breite und Zustand stehen unter
+`auditcore.bpmn.panel.properties` bzw. `auditcore.bpmn.panel.collection`.
+Strg+Alt+P blendet die Eigenschaften ein und aus.
+
+```vue
+<PanelResizer v-model:width="panel.width" v-model:open="panel.open" :bounds="COLLECTION_PANEL" edge="left" name="Diagrammsammlung" />
+```
+
 ## API-Überblick
 
 Wichtige Eigenschaften von `FlowauditEditor`: `xml`, `name`, `diagramId`,
@@ -150,11 +185,12 @@ Wichtige Eigenschaften von `FlowauditEditor`: `xml`, `name`, `diagramId`,
 und Ereignisse stehen unten (generiert).
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (52):
+Exporte der Einstiegspunkte aus `package.json#exports` (64):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@auditcore/bpmn-vue` | `BaseDialog` | Vue-Komponente | – | `components/base/BaseDialog.vue` |
+| `@auditcore/bpmn-vue` | `COLLECTION_PANEL` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `CollectionStore` | Typ | – | `stores/collectionStore` |
 | `@auditcore/bpmn-vue` | `CollectionTree` | Vue-Komponente | – | `components/collection/CollectionTree.vue` |
 | `@auditcore/bpmn-vue` | `CompareSource` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
@@ -178,6 +214,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | `@auditcore/bpmn-vue` | `Locale` | Re-Export | – | `./i18n/useI18n` |
 | `@auditcore/bpmn-vue` | `MESSAGES_DE` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `MESSAGES_EN` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `OverviewView` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `PROPERTIES_PANEL` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `PanelBounds` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `PanelResizer` | Vue-Komponente | – | `components/base/PanelResizer.vue` |
+| `@auditcore/bpmn-vue` | `PanelState` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `PropertiesPanel` | Vue-Komponente | – | `panels/PropertiesPanel.vue` |
 | `@auditcore/bpmn-vue` | `RestCatalogue` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `RestEsi` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
@@ -189,6 +230,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | `@auditcore/bpmn-vue` | `SelectionStore` | Typ | – | `stores/selectionStore` |
 | `@auditcore/bpmn-vue` | `TABS` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `TabDefinition` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `ThumbnailRenderer` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `Thumbnails` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `ToolbarAction` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `ValidationStore` | Typ | – | `stores/validationStore` |
 | `@auditcore/bpmn-vue` | `bindEditorCore` | Funktion | Vue view of an editor controller: reactive `state` and the instance as computed. | `stores/editorStore` |
@@ -198,14 +241,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | `@auditcore/bpmn-vue` | `createEditorStore` | Funktion | – | `stores/editorStore` |
 | `@auditcore/bpmn-vue` | `createI18n` | Funktion | – | `i18n/useI18n` |
 | `@auditcore/bpmn-vue` | `createSelectionStore` | Funktion | – | `stores/selectionStore` |
+| `@auditcore/bpmn-vue` | `createSvgThumbnailRenderer` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `createThumbnails` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `createValidationStore` | Funktion | – | `stores/validationStore` |
 | `@auditcore/bpmn-vue` | `defaultEditorFactory` | Konstante | – | `editor/defaultFactory` |
 | `@auditcore/bpmn-vue` | `provideEditorContext` | Funktion | – | `stores/context` |
 | `@auditcore/bpmn-vue` | `provideI18n` | Funktion | – | `i18n/useI18n` |
+| `@auditcore/bpmn-vue` | `readPanel` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `restPorts` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-vue` | `useEditorContext` | Funktion | – | `stores/context` |
 | `@auditcore/bpmn-vue` | `useI18n` | Funktion | Injected i18n, or a German default when used standalone. | `i18n/useI18n` |
 | `@auditcore/bpmn-vue` | `useStore` | Funktion | – | `composables/useStore` |
+| `@auditcore/bpmn-vue` | `writePanel` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 
 ### Props und Ereignisse der Vue-Komponenten
 
@@ -333,6 +380,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | `topLevel` | `boolean` | nein | `true` | – |
 | `readonly` | `boolean` | nein | `false` | – |
 | `folderActions` | `FolderAction[]` | nein | `() => []` | – |
+| `thumbnails` | `Thumbnails \| null` | nein | `null` | – |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
@@ -366,6 +414,21 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `update` | `[items: LegalBasis[]]` | – |
+
+#### `PanelResizer`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `width` | `number` | ja | – | – |
+| `open` | `boolean` | ja | – | – |
+| `bounds` | `PanelBounds` | ja | – | – |
+| `edge` | `PanelEdge` | ja | – | – |
+| `name` | `string` | ja | – | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `update:width` | `[width: number]` | – |
+| `update:open` | `[open: boolean]` | – |
 
 #### `PropertiesPanel`
 
