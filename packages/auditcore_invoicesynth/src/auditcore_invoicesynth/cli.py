@@ -24,6 +24,7 @@ from auditcore_invoicesynth.fonts import (
     font_report,
 )
 from auditcore_invoicesynth.plan import SPLITS, SynthConfig
+from auditcore_invoicesynth.variety import VARIETIES
 
 
 def _config(args: argparse.Namespace) -> SynthConfig:
@@ -37,6 +38,7 @@ def _config(args: argparse.Namespace) -> SynthConfig:
         base_date=date.fromisoformat(args.base_date),
         counts=counts,
         dpi_choices=tuple(args.dpi),
+        variety=args.variety,
     )
 
 
@@ -56,6 +58,12 @@ def _common(sub: argparse.ArgumentParser) -> None:
     sub.add_argument("--dpi", type=int, action="append", default=None)
     sub.add_argument("--font-dir", action="append", default=[])
     sub.add_argument("--font-pins", help="JSON {Dateiname: SHA-256}")
+    sub.add_argument(
+        "--variety",
+        choices=VARIETIES,
+        default="v1",
+        help="Generatorvariante; v1 = bisherige Datensätze (Hash stabil), v2 = Stufe 5",
+    )
     for split in SPLITS:
         sub.add_argument(f"--{split.replace('_', '-')}", dest=split, type=int)
 

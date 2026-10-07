@@ -1,4 +1,6 @@
-"""Dreizehn Belegvorlagen (elf fürs Training, zwei nur für den Layout-Holdout).
+"""Fünfzehn Belegvorlagen (dreizehn fürs Training, zwei nur für den Layout-Holdout).
+
+Die Vorlagen ``kopf_zeile`` und ``kopf_kasten`` nutzt nur die Generatorvariante ``v2``.
 
 Die Vorlagen beschreiben nur Geometrie und Reihenfolge; gezeichnet wird über
 die Schnittstelle ``Canvas`` (Pillow-Umsetzung in ``render``). Jeder als Feld
@@ -27,10 +29,12 @@ from auditcore_invoicesynth.layout_model import HOLDOUT_LAYOUTS as HOLDOUT_LAYOU
 from auditcore_invoicesynth.layout_model import LAYOUTS as LAYOUTS
 from auditcore_invoicesynth.layout_model import PAGE_BOTTOM as PAGE_BOTTOM
 from auditcore_invoicesynth.layout_model import TRAINING_LAYOUTS as TRAINING_LAYOUTS
+from auditcore_invoicesynth.layout_model import V2_LAYOUTS as V2_LAYOUTS
 from auditcore_invoicesynth.layout_model import Canvas as Canvas
 from auditcore_invoicesynth.layout_model import Color as Color
 from auditcore_invoicesynth.layout_model import LayoutSpec as LayoutSpec
 from auditcore_invoicesynth.layout_model import Variant as Variant
+from auditcore_invoicesynth.layout_model import available_layouts as available_layouts
 from auditcore_invoicesynth.layout_model import expansion as expansion
 
 
