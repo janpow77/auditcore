@@ -3,6 +3,11 @@
 ## Unreleased
 
 - npm `@auditcore/bpmn-flowaudit`, `@auditcore/bpmn-vue` und
+  `@auditcore/bpmn-react` 0.3.1: Ordner der Diagrammsammlung umbenennen – auf
+  der Ordnerkarte direkt, im Baum per Doppelklick oder F2. Leere Namen werden
+  nicht übernommen. Anlass: Rückmeldung zum BPMN-Editor des audit_designer
+  (07.10.2026).
+- npm `@auditcore/bpmn-flowaudit`, `@auditcore/bpmn-vue` und
   `@auditcore/bpmn-react` 0.3.0: Übersicht der obersten Ebene als Ordnerkarten
   mit inline bearbeitbaren Beschreibungen und eingeklapptem Bereich
   „Prüfhinweise“, Palette „Elemente“/„Pool mit Rolle“ als Symbole, Kacheln oder
