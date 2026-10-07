@@ -10,7 +10,12 @@ from auditcore_invoicegenerator import InvoiceScenario
 
 from auditcore_invoicesynth.enrich import ALLOWED_VAT_RATES, VAT_SCHEMES, enrich
 from auditcore_invoicesynth.identifiers import iban_valid, vat_id_valid
-from auditcore_invoicesynth.layouts import HOLDOUT_LAYOUTS, LAYOUTS, TRAINING_LAYOUTS
+from auditcore_invoicesynth.layouts import (
+    HOLDOUT_LAYOUTS,
+    LAYOUTS,
+    TRAINING_LAYOUTS,
+    V2_LAYOUTS,
+)
 from auditcore_invoicesynth.plan import SynthConfig, plan_dataset, sample_seed
 
 FAMILIES = ("DejaVu Sans", "DejaVu Serif", "Liberation Sans")
@@ -76,7 +81,10 @@ def test_plan_is_deterministic_and_keeps_holdouts_separate() -> None:
         holdout = spec.split == "test_layout_holdout"
         assert (spec.layout in HOLDOUT_LAYOUTS) == holdout
         assert (spec.font_family == "DejaVu Serif") == holdout
-    assert {s.layout for s in first if s.split == "train"} == set(TRAINING_LAYOUTS)
+    # v1 (Standard) zieht die Vorlagen der Variante v2 nicht.
+    assert {s.layout for s in first if s.split == "train"} == set(TRAINING_LAYOUTS) - set(
+        V2_LAYOUTS
+    )
     assert any(s.language == "en" for s in first) and any(s.country == "AT" for s in first)
     assert any(s.errors for s in first) and any(s.augment for s in first)
     assert all(
