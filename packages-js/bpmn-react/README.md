@@ -107,12 +107,13 @@ Wichtig: `FlowauditBpmnEditor`, `FlowauditEditor` (Ref: `getXml`, `getSvg`,
 (generiert).
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (57):
+Exporte der Einstiegspunkte aus `package.json#exports` (70):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@auditcore/bpmn-react` | `ATTRIBUTE_PROPS` | Konstante | Mapping of the React props of `FlowauditBpmnEditor` to the attributes and events of the web component `<flowaudit-bpmn-editor>` (the contract both implementations share; see `ELEME … | `element/contract` |
 | `@auditcore/bpmn-react` | `BaseDialog` | Funktion | – | `base/BaseDialog` |
+| `@auditcore/bpmn-react` | `COLLECTION_PANEL` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `CollectionBinding` | Typ | What the collection components (`CollectionTree`, `DiagramInfoColumn`) receive as `store`. | `useCollection` |
 | `@auditcore/bpmn-react` | `CollectionTree` | Funktion | – | `collection/CollectionTree` |
 | `@auditcore/bpmn-react` | `CompareSource` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
@@ -144,6 +145,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (57):
 | `@auditcore/bpmn-react` | `Locale` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `MESSAGES_DE` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `MESSAGES_EN` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-react` | `OverviewView` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-react` | `PROPERTIES_PANEL` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-react` | `PanelBounds` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-react` | `PanelResizer` | Funktion | – | `base/PanelResizer` |
+| `@auditcore/bpmn-react` | `PanelResizerProps` | Schnittstelle | – | `base/PanelResizer` |
+| `@auditcore/bpmn-react` | `PanelState` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `PropertiesPanel` | Funktion | – | `panels/PropertiesPanel` |
 | `@auditcore/bpmn-react` | `RestCatalogue` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `RestEsi` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
@@ -154,9 +161,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (57):
 | `@auditcore/bpmn-react` | `RestValidation` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `TABS` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `TabDefinition` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-react` | `ThumbnailRenderer` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-react` | `Thumbnails` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `ToolbarAction` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `createI18n` | Funktion | – | `i18n` |
+| `@auditcore/bpmn-react` | `createSvgThumbnailRenderer` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-react` | `createThumbnails` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `defaultEditorFactory` | Konstante | – | `editorFactory` |
+| `@auditcore/bpmn-react` | `readPanel` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `restPorts` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 | `@auditcore/bpmn-react` | `useCollection` | Funktion | Creates a controller for the storage port, loads it once and binds it. | `useCollection` |
 | `@auditcore/bpmn-react` | `useCollectionBinding` | Funktion | Binds an existing controller (e.g. created and filled outside React). | `useCollection` |
@@ -168,6 +180,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (57):
 | `@auditcore/bpmn-react` | `useSelectionState` | Funktion | – | `context` |
 | `@auditcore/bpmn-react` | `useStoreState` | Funktion | State of a core controller (`@auditcore/bpmn-flowaudit/ui`) as React state. | `hooks` |
 | `@auditcore/bpmn-react` | `useValidationView` | Funktion | – | `context` |
+| `@auditcore/bpmn-react` | `writePanel` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
 <!-- api-overview:end -->
 
 ## Konfiguration

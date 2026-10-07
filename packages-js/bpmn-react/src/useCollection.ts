@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react'
-import { collectionCards, collectionIssues, collectionOverview, collectionTree, createCollectionCore, type CollectionCore, type CollectionState } from '@auditcore/bpmn-flowaudit/ui'
+import { collectionCards, collectionIssues, collectionOverview, collectionTree, createCollectionCore, type CollectionCore, type CollectionCoreOptions, type CollectionState } from '@auditcore/bpmn-flowaudit/ui'
 import type { StoragePort } from '@auditcore/bpmn-flowaudit'
 import { useStoreState } from './hooks'
 
@@ -32,8 +32,8 @@ export function useCollectionBinding(core: CollectionCore): CollectionBinding {
 }
 
 /** Creates a controller for the storage port, loads it once and binds it. */
-export function useCollection(storage: StoragePort): CollectionBinding {
-  const [core] = useState(() => createCollectionCore(storage))
+export function useCollection(storage: StoragePort, options: CollectionCoreOptions = {}): CollectionBinding {
+  const [core] = useState(() => createCollectionCore(storage, options))
   useEffect(() => {
     void core.load()
   }, [core])

@@ -1,5 +1,13 @@
 # Changelog – @auditcore/bpmn-react
 
+## 0.5.0 – 2026-10-07
+
+- Wie `@auditcore/bpmn-vue` 0.5.0: Ordnerübersicht mit Kacheln, Liste und
+  Vorschaubildern (`GroupOverview` Prop `thumbnails`, `OverviewThumbnail`),
+  `PanelResizer` für Eigenschaften und Diagrammsammlung, Vorschaubilder in
+  `FlowauditWorkbench`, `useCollection(storage, options)`. Pools lassen sich
+  in der Fläche greifen und verschieben (`@auditcore/bpmn-editor` 0.1.2).
+
 ## 0.4.0 – 2026-10-07
 
 - **Reiter „Prüfungsmerkmale“** (`PropertiesTab`) wie in `@auditcore/bpmn-vue`
