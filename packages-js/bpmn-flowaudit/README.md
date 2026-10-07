@@ -92,7 +92,7 @@ SVG/PNG/PDF-Export, diagram-js-Module (Plaketten, Hervorhebung,
 Rollen-Palette) und eigene Icons.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (453):
+Exporte der Einstiegspunkte aus `package.json#exports` (477):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -104,6 +104,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `AuditReference` | Schnittstelle | Reference to key requirement (KA) and assessment criterion (BK). | `schema/types` |
 | `@auditcore/bpmn-flowaudit` | `AuditStep` | Schnittstelle | Walk-through or control test step. | `schema/types` |
 | `@auditcore/bpmn-flowaudit` | `Bounds` | Schnittstelle | – | `model/processModel` |
+| `@auditcore/bpmn-flowaudit` | `CAMUNDA_NAMESPACE` | Konstante | – | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `CHECKLIST_ITEM` | Konstante | – | `enrichment/textPatterns` |
 | `@auditcore/bpmn-flowaudit` | `CODE_ATTRIBUTES` | Konstante | flowaudit attributes that are codes, never cleaned. | `neutralize/patterns` |
 | `@auditcore/bpmn-flowaudit` | `COLLECTION_SCHEMA` | Konstante | – | `collection/collectionData` |
@@ -251,6 +252,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `ModelElement` | Schnittstelle | – | `model/processModel` |
 | `@auditcore/bpmn-flowaudit` | `Modeling` | Schnittstelle | – | `diagram/services` |
 | `@auditcore/bpmn-flowaudit` | `MystOptions` | Schnittstelle | – | `export/myst` |
+| `@auditcore/bpmn-flowaudit` | `NamedProperty` | Schnittstelle | – | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `NeutralizationResult` | Schnittstelle | – | `neutralize/neutralize` |
 | `@auditcore/bpmn-flowaudit` | `NeutralizeOptions` | Schnittstelle | – | `neutralize/neutralize` |
 | `@auditcore/bpmn-flowaudit` | `OTHER_ROLE` | Konstante | Role „other body“ – fallback for unknown codes and own roles. | `schema/roles` |
@@ -279,6 +281,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `ProfileLegalSearch` | Klasse | Legal search over the frequent legal bases of a profile plus parsing of the typed citation. No network access. | `ports/inMemory` |
 | `@auditcore/bpmn-flowaudit` | `ProfilePort` | Schnittstelle | – | `ports` |
 | `@auditcore/bpmn-flowaudit` | `ProfileSummary` | Schnittstelle | – | `ports` |
+| `@auditcore/bpmn-flowaudit` | `PropertyCatalogue` | Schnittstelle | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `PropertyConditionData` | Schnittstelle | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `PropertyDefinitionData` | Schnittstelle | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `PropertyKind` | Typ | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `PropertyOption` | Schnittstelle | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `PropertyOptionData` | Schnittstelle | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `PropertyPatch` | Typ | Patch per property name; `''`, `null` or `undefined` removes the property. | `model/camundaProperties` |
+| `@auditcore/bpmn-flowaudit` | `PropertyPlan` | Schnittstelle | – | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `REGISTER` | Konstante | – | `enrichment/textPatterns` |
 | `@auditcore/bpmn-flowaudit` | `REMOVED_ELEMENTS` | Konstante | Elements removed completely. | `neutralize/patterns` |
 | `@auditcore/bpmn-flowaudit` | `REPORT_SCHEMA` | Konstante | – | `validation/validate` |
@@ -467,6 +477,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `matchElements` | Funktion | Element id old → element id new. | `compare/matching` |
 | `@auditcore/bpmn-flowaudit` | `modelFromDefinitions` | Funktion | Builds the model from moddle definitions (headless). | `model/buildModel` |
 | `@auditcore/bpmn-flowaudit` | `modelFromEditor` | Funktion | Builds the model from a running editor, using the current shape bounds. | `model/buildModel` |
+| `@auditcore/bpmn-flowaudit` | `namedPropertyValue` | Funktion | Value of the first property with this name (`''` if there is none). | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `neighbours` | Funktion | – | `compare/matching` |
 | `@auditcore/bpmn-flowaudit` | `neutralize` | Funktion | Neutralises a diagram; `replacements` adds names known to the application. | `neutralize/neutralize` |
 | `@auditcore/bpmn-flowaudit` | `nextStepId` | Funktion | Next id for an audit step (`PS1`, `PS2`, …) unique across the diagram. | `walkthrough/walkthrough` |
@@ -480,15 +491,24 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `pdfString` | Funktion | Escapes text for a PDF string literal (Latin-1 range only; others become „?“). | `export/pdf` |
 | `@auditcore/bpmn-flowaudit` | `periodStart` | Funktion | Start year from `YYYY-YYYY`, otherwise `null`. | `schema/roles` |
 | `@auditcore/bpmn-flowaudit` | `pixelsToMm` | Funktion | Diagram pixels → millimetres at 96 dpi (for choosing the page format). | `export/pdf` |
+| `@auditcore/bpmn-flowaudit` | `planPropertyPatch` | Funktion | Computes the changes without touching the model. | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `prepareSvg` | Funktion | Adds header, legends and directory of legal bases to the exported SVG. | `export/svgPostProcessing` |
 | `@auditcore/bpmn-flowaudit` | `processTable` | Funktion | Process description in flow order. | `reports/processReports` |
 | `@auditcore/bpmn-flowaudit` | `profileReference` | Funktion | – | `profile/profile` |
+| `@auditcore/bpmn-flowaudit` | `propertyActive` | Funktion | Whether the condition of a definition holds for the current values (no condition: always). | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `propertyAppliesTo` | Funktion | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `propertyContainers` | Funktion | All `camunda:properties` containers of a business object. | `model/camundaProperties` |
+| `@auditcore/bpmn-flowaudit` | `propertyDefinitions` | Funktion | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `propertyDefinitionsFor` | Funktion | Definitions offered for an element type. | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `propertyOptions` | Funktion | – | `profile/properties` |
+| `@auditcore/bpmn-flowaudit` | `propertySeparator` | Funktion | – | `profile/properties` |
 | `@auditcore/bpmn-flowaudit` | `protectUnknownElements` | Funktion | – | `model/unknownElements` |
 | `@auditcore/bpmn-flowaudit` | `readDiagramInfo` | Funktion | Diagram info: collaboration first, then processes in document order. | `model/buildModel` |
 | `@auditcore/bpmn-flowaudit` | `readDiagramInfoFromEditor` | Funktion | Editor: reads the diagram info (collaboration, otherwise first process). | `model/diagramInfo` |
 | `@auditcore/bpmn-flowaudit` | `readExtensions` | Funktion | Reads all FlowAudit data of a business object. | `model/extensions` |
 | `@auditcore/bpmn-flowaudit` | `readFlowstatValues` | Funktion | – | `model/flowstatAttributes` |
 | `@auditcore/bpmn-flowaudit` | `readMetadata` | Funktion | Reads the text value of a flowaudit entry; '' if not maintained. | `model/legacyMetadata` |
+| `@auditcore/bpmn-flowaudit` | `readNamedProperties` | Funktion | All properties of a business object in document order. | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `readSvgSize` | Funktion | – | `export/imageExport` |
 | `@auditcore/bpmn-flowaudit` | `readTasksFromXml` | Funktion | – | `model/flowstatAttributes` |
 | `@auditcore/bpmn-flowaudit` | `recordStep` | Funktion | Records or replaces an audit step at an element. | `walkthrough/walkthrough` |
@@ -508,6 +528,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `setColor` | Funktion | Sets a palette colour; `null` removes the colouring. | `diagram/colorContextPad` |
 | `@auditcore/bpmn-flowaudit` | `setDiagramInfo` | Funktion | Headless: sets the diagram info at the main element. | `model/diagramInfo` |
 | `@auditcore/bpmn-flowaudit` | `setExtensionsDirect` | Funktion | Like `writeExtensions`, but mutates the model directly (headless). | `model/extensions` |
+| `@auditcore/bpmn-flowaudit` | `setNamedPropertiesDirect` | Funktion | Like `writeNamedProperties`, but mutates the model directly (headless). | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `severityLabel` | Funktion | – | `validation/issue` |
 | `@auditcore/bpmn-flowaudit` | `sha256Xml` | Funktion | SHA-256 over the UTF-8 bytes of the XML exactly as stored (hex). | `collection/analysis` |
 | `@auditcore/bpmn-flowaudit` | `shortCitation` | Funktion | Short citation for display, e.g. „Art. 73 Abs. 2 Buchst. b VO (EU) 2021/1060“. | `model/legalBasis` |
@@ -516,6 +537,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `sourcesIn` | Funktion | – | `enrichment/textPatterns` |
 | `@auditcore/bpmn-flowaudit` | `splitFreeText` | Funktion | Splits a 1.0 free text with several acts („§ 55 BHO; Art. 74 VO (EU) 2021/1060“). | `model/legalBasis` |
 | `@auditcore/bpmn-flowaudit` | `splitList` | Funktion | – | `enrichment/textPatterns` |
+| `@auditcore/bpmn-flowaudit` | `splitPropertyValue` | Funktion | `"a; b;"` → `['a', 'b']`. | `profile/properties` |
 | `@auditcore/bpmn-flowaudit` | `suggestCategories` | Funktion | – | `reports/categorySuggestion` |
 | `@auditcore/bpmn-flowaudit` | `summarize` | Funktion | – | `esi/esiRequirements` |
 | `@auditcore/bpmn-flowaudit` | `svgGroup` | Funktion | – | `export/svgBlocks` |
@@ -548,7 +570,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (453):
 | `@auditcore/bpmn-flowaudit` | `writeExtensions` | Funktion | Writes part of the extensions through `modeling` (one undo step). When the last entry disappears, `extensionElements` is removed as well. | `model/extensions` |
 | `@auditcore/bpmn-flowaudit` | `writeFlowstatValues` | Funktion | Writes FlowStat fields canonically through `modeling.updateProperties`. | `model/flowstatAttributes` |
 | `@auditcore/bpmn-flowaudit` | `writeMetadata` | Funktion | Writes (or removes) a flowaudit text entry. | `model/legacyMetadata` |
+| `@auditcore/bpmn-flowaudit` | `writeNamedProperties` | Funktion | Writes properties through `modeling` (undoable). Changes inside existing containers are one command per container; a new or emptied container changes the extension list. | `model/camundaProperties` |
 | `@auditcore/bpmn-flowaudit` | `writeTaskToXml` | Funktion | Writes one task back; returns the new XML, or the old one if nothing matches. | `model/flowstatAttributes` |
+| `@auditcore/bpmn-flowaudit` | `yesValue` | Funktion | Value stored for “yes” of a `yes_no` property. | `profile/properties` |
 <!-- api-overview:end -->
 
 ## Konfiguration
