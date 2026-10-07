@@ -12,6 +12,7 @@ import { hintCount, statusLabel, type FolderAction } from '@auditcore/bpmn-flowa
 import { useI18n } from '../i18n'
 import { ToolbarMenu } from '../base/ToolbarMenu'
 import { InlineDescription } from './InlineDescription'
+import { InlineName } from './InlineName'
 
 export interface GroupOverviewProps {
   overview: Overview
@@ -25,6 +26,7 @@ export interface GroupOverviewProps {
   onOpen?: (id: string) => void
   onFolderAction?: (id: string, folderId: string, diagramIds: string[]) => void
   onDescribeFolder?: (id: string, text: string) => void
+  onRenameFolder?: (id: string, name: string) => void
   onDescribeDiagram?: (id: string, text: string) => void
 }
 
@@ -59,7 +61,9 @@ function Card({ card, props }: { card: FolderCard; props: GroupOverviewProps }) 
   return (
     <article className="fa-card fa-folder-card">
       <header className="fa-folder-card__head">
-        <h3 className="fa-folder-card__name">{name}</h3>
+        <h3 className="fa-folder-card__name">
+          {card.folderId ? <InlineName text={card.name} readonly={props.readonly} onSave={(text) => props.onRenameFolder?.(card.folderId ?? '', text)} /> : name}
+        </h3>
         <span className="fa-folder-card__count">{count}</span>
         <FolderMenu card={card} props={props} />
       </header>

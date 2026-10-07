@@ -1,5 +1,13 @@
 # Changelog – @auditcore/bpmn-vue
 
+## 0.3.1 – 2026-10-07
+
+- **Ordner umbenennen:** auf der Ordnerkarte (`GroupOverview`) ist der Name
+  direkt bearbeitbar (neu `InlineName`, Ereignis `rename-folder`); im Baum
+  (`CollectionTree`) per Doppelklick oder F2 auf den Ordnernamen mit Dialog
+  „Ordner umbenennen“. `FlowauditWorkbench` speichert über `renameFolder`.
+  Leerraum wird getrimmt, ein leerer Name nicht übernommen.
+
 ## 0.3.0 – 2026-10-06
 
 - **Übersicht der obersten Ebene** (`GroupOverview`): Ordnerkarten mit Name,
