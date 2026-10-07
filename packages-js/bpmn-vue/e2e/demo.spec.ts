@@ -35,7 +35,7 @@ test('folders can be renamed on the card and in the tree', async ({ page }) => {
   await dialog.getByRole('textbox').fill(oldName)
   await dialog.getByRole('button', { name: 'Übernehmen' }).click()
   // Der Doppelklick wählt den Ordner zugleich aus: Die Übersicht zeigt ihn selbst.
-  await expect(page.locator('.fa-overview > h2')).toHaveText(oldName)
+  await expect(page.locator('.fa-overview__head > h2')).toHaveText(oldName)
   await expect(page.getByRole('tree')).not.toContainText('Umbenannt im Test')
   await shot(page, '01c-ordner-umbenannt')
 })
@@ -165,4 +165,93 @@ test('walk-through test and English UI', async ({ page }) => {
   await page.getByRole('tab', { name: 'Walk-through test' }).click()
   await expect(page.locator('.fa-walk')).toBeVisible()
   await shot(page, '07-durchlauftest-en')
+})
+
+const box = (page: Page, id: string) => page.locator(`.djs-element[data-element-id="${id}"]`).first().boundingBox()
+
+test('frames move with their content, also when grabbed on a lane', async ({ page }) => {
+  await openDiagram(page, 'Rahmen: Pool, Teilprozess, Gruppe')
+  await page.waitForTimeout(300)
+  const drag = async (x: number, y: number, dx: number, dy: number) => {
+    await page.mouse.move(x, y)
+    await page.mouse.down()
+    await page.mouse.move(x + dx / 2, y + dy / 2, { steps: 5 })
+    await page.mouse.move(x + dx, y + dy, { steps: 5 })
+    await page.mouse.up()
+    await page.waitForTimeout(150)
+  }
+  // Pool in der Fläche greifen: Der Klick trifft die Bahn, verschoben wird der Pool samt Inhalt.
+  const pool = (await box(page, 'Pool_A'))!
+  const inner = (await box(page, 'Task_Innen'))!
+  await drag(pool.x + 80, pool.y + pool.height - 25, 40, 30)
+  const poolAfter = (await box(page, 'Pool_A'))!
+  const innerAfter = (await box(page, 'Task_Innen'))!
+  expect(Math.round(poolAfter.x - pool.x)).toBeGreaterThan(20)
+  expect(Math.round(innerAfter.x - inner.x)).toBe(Math.round(poolAfter.x - pool.x))
+  expect(await page.locator('.djs-element.selected').getAttribute('data-element-id')).toBe('Pool_A')
+  // Teilprozess am Rand, Gruppe und Textanmerkung
+  for (const id of ['Sub_1', 'Group_1', 'Note_1']) {
+    const before = (await box(page, id))!
+    await drag(before.x + before.width / 2, before.y + 2, 30, 20)
+    const after = (await box(page, id))!
+    expect(Math.round(after.x - before.x), id).toBeGreaterThan(10)
+  }
+  await shot(page, '14-rahmen-verschoben')
+})
+
+test('overview layouts: tiles, list and thumbnails, kept after reload', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => localStorage.clear())
+  await page.reload()
+  await page.getByRole('tree').getByText('Beispiele').first().click()
+  await expect(page.locator('.fa-folder-card--wide')).toHaveCount(1)
+  const choose = async (name: string) => {
+    await page.getByRole('button', { name: 'Ansicht der Übersicht' }).click()
+    await page.getByRole('menuitemradio', { name }).click()
+  }
+  await choose('Liste')
+  await expect(page.locator('.fa-diagram-list__row')).toHaveCount(6)
+  await expect(page.locator('.fa-diagram-list')).toContainText('Aktivitäten')
+  await shot(page, '15-uebersicht-liste')
+  await choose('Vorschaubilder')
+  await expect(page.locator('.fa-thumb__image img')).toHaveCount(5, { timeout: 20_000 })
+  await shot(page, '16-uebersicht-vorschau')
+  await page.reload()
+  await page.getByRole('tree').getByText('Beispiele').first().click()
+  await expect(page.locator('.fa-overview--thumbnails')).toHaveCount(1)
+})
+
+test('properties panel: drag the handle, collapse to a rail, kept after reload', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => localStorage.clear())
+  await openDiagram(page, 'Rahmen: Pool, Teilprozess, Gruppe')
+  const side = page.locator('.fa-side')
+  const handle = page.getByRole('separator', { name: 'Breite von „Eigenschaften“ ändern' })
+  const before = (await side.boundingBox())!.width
+  const grip = (await handle.boundingBox())!
+  await page.mouse.move(grip.x + 3, grip.y + 40)
+  await page.mouse.down()
+  await page.mouse.move(grip.x - 120, grip.y + 40, { steps: 6 })
+  await page.mouse.up()
+  const after = (await side.boundingBox())!.width
+  expect(Math.round(after - before)).toBeGreaterThan(100)
+  const canvas = (await page.locator('.fa-editor .djs-container').boundingBox())!
+  expect(canvas.x + canvas.width).toBeLessThanOrEqual((await side.boundingBox())!.x + 1)
+  await handle.hover()
+  await page.getByRole('button', { name: '„Eigenschaften“ ausblenden' }).click()
+  await expect(side).toHaveCount(0)
+  await expect(page.getByRole('button', { name: '„Eigenschaften“ einblenden' })).toBeVisible()
+  await shot(page, '17-eigenschaften-eingeklappt')
+  // Sammlungsspalte ebenfalls einklappbar
+  await page.getByRole('button', { name: '„Diagrammsammlung“ ausblenden' }).click({ force: true })
+  await expect(page.locator('.fa-workbench__side')).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByRole('button', { name: '„Diagrammsammlung“ einblenden' })).toBeVisible()
+  await page.getByRole('button', { name: '„Diagrammsammlung“ einblenden' }).click()
+  await openDiagram(page, 'Rahmen: Pool, Teilprozess, Gruppe').catch(async () => {
+    await page.getByRole('tree').getByText('Rahmen: Pool, Teilprozess, Gruppe').first().dblclick()
+  })
+  await expect(page.getByRole('button', { name: '„Eigenschaften“ einblenden' })).toBeVisible()
+  await page.getByRole('button', { name: '„Eigenschaften“ einblenden' }).click()
+  expect(Math.round((await page.locator('.fa-side').boundingBox())!.width)).toBe(Math.round(after))
 })

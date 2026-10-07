@@ -1,5 +1,15 @@
 # Changelog @auditcore/bpmn-editor
 
+## 0.1.2 – 2026-10-07
+
+- **Pools lassen sich in der Fläche greifen und verschieben.** Bahnen füllen
+  einen Pool bis auf den Titelstreifen aus und dürfen nicht allein verschoben
+  werden; ein Ziehen in der Fläche traf die Bahn und tat nichts, greifbar war
+  nur der schmale Titelstreifen. Neues Modul `lane-move`: Beim Start einer
+  Verschiebung werden Bahnen durch ihren Pool ersetzt (auch in einer
+  Mehrfachauswahl), der Pool wandert samt Inhalt. Ein Klick wählt weiterhin
+  die Bahn, Shift-Ziehen bleibt das Lasso.
+
 ## 0.1.1 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/bpmn-editor` statt `@flowaudit/bpmn-editor` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-bpmn-editor-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
