@@ -94,8 +94,11 @@ export class DiagramCollection {
     return folder
   }
 
+  /** Renames a folder; surrounding blanks are trimmed, an empty name keeps the old one. */
   renameFolder(id: string, name: string): void {
-    this.folder(id).name = name
+    const folder = this.folder(id)
+    const text = name.trim()
+    if (text) folder.name = text
   }
 
   /** Sets the description of a folder; an empty text removes it. */

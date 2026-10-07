@@ -20,6 +20,26 @@ test('collection with group overview', async ({ page }) => {
   await shot(page, '01b-pruefhinweise')
 })
 
+test('folders can be renamed on the card and in the tree', async ({ page }) => {
+  await page.goto('/')
+  const card = page.locator('.fa-folder-card').filter({ has: page.locator('.fa-inline-name') }).first()
+  const oldName = (await card.locator('.fa-inline-name').textContent())!.trim()
+  await card.locator('.fa-inline-name').click()
+  await page.locator('.fa-inline-name__field').fill('  Umbenannt im Test  ')
+  await page.locator('.fa-inline-name__field').press('Enter')
+  await expect(page.getByRole('tree')).toContainText('Umbenannt im Test')
+  const label = page.locator('.fa-tree__row--folder .fa-tree__label', { hasText: 'Umbenannt im Test' })
+  await label.dblclick()
+  const dialog = page.getByRole('dialog', { name: 'Ordner umbenennen' })
+  await expect(dialog.getByRole('textbox')).toHaveValue('Umbenannt im Test')
+  await dialog.getByRole('textbox').fill(oldName)
+  await dialog.getByRole('button', { name: 'Übernehmen' }).click()
+  // Der Doppelklick wählt den Ordner zugleich aus: Die Übersicht zeigt ihn selbst.
+  await expect(page.locator('.fa-overview > h2')).toHaveText(oldName)
+  await expect(page.getByRole('tree')).not.toContainText('Umbenannt im Test')
+  await shot(page, '01c-ordner-umbenannt')
+})
+
 test('palette views, role tiles and a selected sequence flow', async ({ page }) => {
   await page.evaluate(() => localStorage.clear()).catch(() => undefined)
   await openDiagram(page, 'Bewilligung und Auszahlung')
