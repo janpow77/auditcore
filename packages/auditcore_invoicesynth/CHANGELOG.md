@@ -1,5 +1,14 @@
 # Changelog auditcore_invoicesynth
 
+## Unveröffentlicht
+
+Bewertung (Runde A nach Stufe 4): `train.evaluate` repariert ein ausgelassenes
+`<s_supplier>` (`schema.repair_structure`), misst die Falschwert-Quote nach
+Plausibilität über das neue Modul `plausibility` (Prüfziffern IBAN und
+USt-IdNr. DE/AT, Datum, Rechnungsnummer, netto + USt = brutto; Regeln wie in
+`auditcore_documents`) und bewertet mit `--from-predictions` gespeicherte
+Vorhersagen ohne Modell und ohne GPU neu.
+
 ## 0.2.1 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und

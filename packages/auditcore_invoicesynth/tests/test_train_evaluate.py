@@ -6,12 +6,15 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from random import Random
 from typing import Any
 
 import pytest
 
 from auditcore_invoicesynth.dataset import load_split
-from auditcore_invoicesynth.schema import to_sequence
+from auditcore_invoicesynth.identifiers import fictional_bank_account, fictional_vat_id
+from auditcore_invoicesynth.plausibility import plausible_fields
+from auditcore_invoicesynth.schema import repair_structure, to_sequence
 from auditcore_invoicesynth.train import CheckpointManager
 from auditcore_invoicesynth.train import evaluate as train_eval
 
@@ -134,3 +137,59 @@ def test_tiny_checkpoint_evaluates_end_to_end(
     report = json.loads(out.read_text())
     assert report["model_dir"].endswith("checkpoint-00000002")
     assert report["results"]["kandidat"]["test_synthetic"]["documents"] == 1
+
+
+def test_supplier_tags_are_repaired() -> None:
+    parse = train_eval.parse_output(
+        "<s_auditcore_invoice_v1><s_due_date> Firma GmbH</s_name>"
+        "<s_vat_id> DE123456788</s_vat_id><s_total> 1,00</s_total></s>",
+        cord=False,
+    )
+    assert parse == {"total": "1,00", "supplier": {"vat_id": "DE123456788"}}
+    kept = repair_structure({"vat_id": "X", "supplier": {"vat_id": "Y", "name": "N"}})
+    assert kept == {"supplier": {"vat_id": "Y", "name": "N"}}
+    assert repair_structure({"total": "1"}) == {"total": "1"}
+
+
+def test_plausibility_rejects_wrong_check_digits() -> None:
+    iban = fictional_bank_account(Random(1), "DE").iban
+    vat_id = fictional_vat_id(Random(2), "DE")
+    flat = {
+        "iban": iban,
+        "supplier.vat_id": vat_id,
+        "invoice_date": "15.01.2026",
+        "invoice_number": "RE-2026-18133",
+        "net_amount": "100,00",
+        "vat_amount": "19,00",
+        "vat_rates": "19 %",
+        "total": "119,00",
+    }
+    assert plausible_fields(flat) == set(flat)
+    broken = {
+        **flat,
+        "iban": iban[:-1] + str((int(iban[-1]) + 1) % 10),
+        "supplier.vat_id": vat_id[:-1] + str((int(vat_id[-1]) + 1) % 10),
+        "invoice_number": "15.01.2026",
+        "total": "120,00",
+    }
+    assert plausible_fields(broken) == {"invoice_date", "vat_rates"}
+
+
+def test_rescore_from_saved_predictions(
+    small_dataset: tuple[Path, dict[str, Any]], tmp_path: Path
+) -> None:
+    dataset, _ = small_dataset
+    first = tmp_path / "eval/first.json"
+    train_eval.main(
+        ["--dataset", str(dataset), "--model-dir", str(tmp_path), "--out", str(first)],
+        make_predictor=_echo_predictor(dataset),
+    )
+    again = tmp_path / "eval/again.json"
+    code = train_eval.main(
+        ["--dataset", str(dataset), "--from-predictions", str(first), "--out", str(again)]
+    )
+    assert code == 0
+    old, new = (json.loads(p.read_text())["results"]["kandidat"] for p in (first, again))
+    for split in ("test_synthetic", "test_layout_holdout"):
+        assert new[split]["fields"] == old[split]["fields"]
+        assert new[split]["seconds_per_page"] == {"median": None, "p95": None}
