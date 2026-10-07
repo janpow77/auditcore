@@ -40,6 +40,8 @@ export interface DiagramElement {
 
 export interface ModdleFactory {
   create(type: string, attrs?: Record<string, unknown>): ModdleElement
+  /** Generic element of a foreign namespace (e.g. `camunda:property`). */
+  createAny?(name: string, nsUri: string, attrs?: Record<string, unknown>): ModdleElement
 }
 
 export interface Modeling {

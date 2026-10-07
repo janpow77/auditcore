@@ -25,6 +25,7 @@ export function bindSelectionCore(core: SelectionCore) {
     setFlowstat: (field: FlowstatField, value: number | string | null) => core.setFlowstat(field, value),
     property: (name: string) => (void version.value, core.property(name)),
     documentation: () => (void version.value, core.documentation()),
+    namedProperties: () => (void version.value, core.namedProperties()),
   }
 }
 

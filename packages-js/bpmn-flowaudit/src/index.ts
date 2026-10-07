@@ -14,6 +14,7 @@ export * from './schema/roles'
 // Model
 export * from './model/moddleMapping'
 export * from './model/extensions'
+export * from './model/camundaProperties'
 export * from './model/unknownElements'
 export * from './model/wire'
 export * from './model/legalBasis'
@@ -27,6 +28,7 @@ export * from './model/access'
 
 // Profiles and ports
 export * from './profile/profile'
+export * from './profile/properties'
 export * from './ports'
 export * from './ports/inMemory'
 
