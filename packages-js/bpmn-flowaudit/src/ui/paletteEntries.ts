@@ -5,6 +5,7 @@
  */
 
 import { label as localizedLabel, type Label, type Locale, type Role } from '../index'
+import { browserStorage, readChoice, writePreference, type PreferenceStorage } from './preferences'
 
 export interface PaletteItem {
   id: string
@@ -67,33 +68,14 @@ export const PALETTE_VIEWS = ['icons', 'tiles', 'list'] as const
 export type PaletteView = (typeof PALETTE_VIEWS)[number]
 export const PALETTE_VIEW_KEY = 'auditcore.bpmn.paletteView'
 
-type ViewStorage = Pick<Storage, 'getItem' | 'setItem'>
-
-function browserStorage(): ViewStorage | null {
-  try {
-    return typeof localStorage === 'undefined' ? null : localStorage
-  } catch {
-    return null
-  }
-}
-
 /** Stored palette view of this browser; `icons` when nothing (readable) is stored. */
-export function readPaletteView(storage: ViewStorage | null = browserStorage()): PaletteView {
-  try {
-    const value = storage?.getItem(PALETTE_VIEW_KEY)
-    return (PALETTE_VIEWS as readonly string[]).includes(value ?? '') ? (value as PaletteView) : 'icons'
-  } catch {
-    return 'icons'
-  }
+export function readPaletteView(storage: PreferenceStorage | null = browserStorage()): PaletteView {
+  return readChoice(PALETTE_VIEW_KEY, PALETTE_VIEWS, 'icons', storage)
 }
 
 /** Remembers the palette view locally (a blocked storage only loses the preference). */
-export function writePaletteView(view: PaletteView, storage: ViewStorage | null = browserStorage()): void {
-  try {
-    storage?.setItem(PALETTE_VIEW_KEY, view)
-  } catch {
-    // Private mode or blocked site data: the choice holds for this session only.
-  }
+export function writePaletteView(view: PaletteView, storage: PreferenceStorage | null = browserStorage()): void {
+  writePreference(PALETTE_VIEW_KEY, view, storage)
 }
 
 /** Caption of an entry in tile view: role short form or element name. */

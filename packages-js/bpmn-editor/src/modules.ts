@@ -34,6 +34,7 @@ import SnappingModule from './snapping'
 import AutoPlaceModule from './auto-place'
 import AutoResizeModule from './auto-resize'
 import DrilldownModule from './drilldown'
+import LaneMoveModule from './lane-move'
 
 export const CORE_MODULES: unknown[] = [
   SelectionModule,
@@ -49,6 +50,7 @@ export const MODELING_MODULES: unknown[] = [
   ModelingModule,
   TooltipsModule,
   MoveModule,
+  LaneMoveModule,
   ResizeModule,
   BendpointsModule,
   ConnectionPreviewModule,

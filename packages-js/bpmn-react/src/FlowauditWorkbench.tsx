@@ -6,7 +6,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Comment, DiagramInfo, ProfileData, ProfileSummary, RoleAlias, StoragePort, ValidationPort } from '@auditcore/bpmn-flowaudit'
-import type { EditorFactory, EditorPorts, FolderAction, HostAction, Locale } from '@auditcore/bpmn-flowaudit/ui'
+import { COLLECTION_PANEL, createSvgThumbnailRenderer, createThumbnails, readPanel, writePanel, type EditorFactory, type EditorPorts, type FolderAction, type HostAction, type Locale, type PanelState, type Thumbnails } from '@auditcore/bpmn-flowaudit/ui'
+import { PanelResizer } from './base/PanelResizer'
+import { defaultEditorFactory } from './editorFactory'
 import { CollectionTree } from './collection/CollectionTree'
 import { DiagramInfoColumn } from './collection/DiagramInfoColumn'
 import { GroupOverview } from './collection/GroupOverview'
@@ -132,7 +134,7 @@ function EditorPane({ store, bench, props, opened }: { store: CollectionBinding;
   )
 }
 
-function OverviewPane({ store, bench, props }: { store: CollectionBinding; bench: Bench; props: FlowauditWorkbenchProps }) {
+function OverviewPane({ store, bench, props, thumbnails }: { store: CollectionBinding; bench: Bench; props: FlowauditWorkbenchProps; thumbnails: Thumbnails }) {
   const profile = props.profile ?? null
   const { t } = useI18n()
   const { collection, selectedFolder } = store.state
@@ -153,6 +155,7 @@ function OverviewPane({ store, bench, props }: { store: CollectionBinding; bench
         onDescribeDiagram={(id, text) => void store.describeDiagram(id, text)}
         folderActions={props.folderActions}
         onFolderAction={props.onFolderAction}
+        thumbnails={thumbnails}
       />
       {selectedEntry ? <DiagramInfoColumn className="fa-workbench__info" store={store} entry={selectedEntry} onOpen={(id) => void bench.open(id)} onDeleted={bench.onDeleted} /> : null}
     </div>
@@ -170,8 +173,18 @@ function useErrorReport(error: string | null, onError?: (message: string) => voi
   }, [error])
 }
 
+/** Width and visibility of the collection column, kept per browser. */
+function useCollectionPanel() {
+  const [panel, setPanel] = useState<PanelState>(() => readPanel('collection', COLLECTION_PANEL))
+  useEffect(() => writePanel('collection', panel), [panel])
+  return { panel, setWidth: (width: number) => setPanel((current) => ({ ...current, width })), setOpen: (open: boolean) => setPanel((current) => ({ ...current, open })) }
+}
+
 function Workbench(props: FlowauditWorkbenchProps) {
-  const store = useCollection(props.storage)
+  const { t } = useI18n()
+  const [thumbnails] = useState(() => createThumbnails({ storage: props.storage, render: createSvgThumbnailRenderer(props.editorFactory ?? defaultEditorFactory, props.locale ?? 'de') }))
+  const store = useCollection(props.storage, { onDiagramSaved: thumbnails.invalidate })
+  const side = useCollectionPanel()
   const bench = useWorkbench(store, props)
   const { opened } = bench
   useErrorReport(store.state.error, props.onError)
@@ -179,11 +192,14 @@ function Workbench(props: FlowauditWorkbenchProps) {
 
   return (
     <div className={classes('fa-root fa-workbench', props.className)} lang={props.locale ?? 'de'}>
-      <aside className="fa-workbench__side">
-        <CollectionTree store={store} selectedDiagram={bench.selected} openDiagram={opened?.id ?? null} onSelectDiagram={bench.setSelected} onOpenDiagram={(id) => void bench.open(id)} />
-      </aside>
+      {side.panel.open ? (
+        <aside className="fa-workbench__side" style={{ width: side.panel.width }}>
+          <CollectionTree store={store} selectedDiagram={bench.selected} openDiagram={opened?.id ?? null} onSelectDiagram={bench.setSelected} onOpenDiagram={(id) => void bench.open(id)} />
+        </aside>
+      ) : null}
+      <PanelResizer width={side.panel.width} open={side.panel.open} bounds={COLLECTION_PANEL} edge="left" name={t('panel.collection')} onWidthChange={side.setWidth} onOpenChange={side.setOpen} />
       <main className="fa-workbench__main">
-        {opened && openEntry ? <EditorPane store={store} bench={bench} props={props} opened={opened} /> : <OverviewPane store={store} bench={bench} props={props} />}
+        {opened && openEntry ? <EditorPane store={store} bench={bench} props={props} opened={opened} /> : <OverviewPane store={store} bench={bench} props={props} thumbnails={thumbnails} />}
       </main>
     </div>
   )
