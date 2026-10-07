@@ -2075,3 +2075,12 @@ body,
   flex: 1;
   min-height: 0;
 }
+
+/* Prüfungsmerkmale (camunda:property nach dem Profil) */
+.fa-tab-properties { display: flex; flex-direction: column; gap: 12px; }
+.fa-property__choices { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.fa-property--inactive .fa-label,
+.fa-property--inactive .fa-property__choices,
+.fa-property--inactive .fa-select,
+.fa-property--inactive .fa-input { opacity: 0.55; }
+.fa-property__hint { font-style: italic; }

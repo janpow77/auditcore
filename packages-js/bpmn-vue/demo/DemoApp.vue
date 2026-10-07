@@ -5,11 +5,14 @@ import { InMemoryStorage, localized, ProfileCataloguePort, ProfileLegalSearch, S
 import { bundledProfiles, defaultProfile } from '@auditcore/bpmn-flowaudit/profiles'
 import { FlowauditWorkbench } from '../src'
 import { demoStorage } from './demoData'
+import { DEMO_PROPERTIES } from './demoProperties'
 
 const params = new URLSearchParams(window.location.search)
 const locale = params.get('locale') === 'en' ? 'en' : 'de'
 const storage = shallowRef<InMemoryStorage | null>(null)
-const profile: ProfileData | null = defaultProfile() ?? null
+const bundled = defaultProfile()
+// Example property catalogue: the audit attributes of the systems audits.
+const profile: ProfileData | null = bundled ? { ...bundled, properties: DEMO_PROPERTIES } : null
 const profilePort = new StaticProfilePort(bundledProfiles())
 const ports = { legalSearch: new ProfileLegalSearch(profile), catalogue: new ProfileCataloguePort(profilePort) }
 const profiles = bundledProfiles().map((entry) => ({ id: entry.id, version: entry.version, title: localized(entry.title, locale) }))
