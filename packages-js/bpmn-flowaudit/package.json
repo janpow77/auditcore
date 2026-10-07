@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "ajv": "^8.20.0",
-    "diagram-js": "^15.27.1"
+    "diagram-js": "^15.28.0"
   },
   "publishConfig": {
     "access": "public",
