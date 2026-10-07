@@ -4,12 +4,14 @@
  * plus editor – the successor of the audit_designer view `BpmnEditor.vue`.
  * Persistence goes through the storage port.
  */
-import { computed, onMounted, ref, toRaw, watch } from 'vue'
+import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue'
 import type { Comment, ProfileData, ProfileSummary, RoleAlias, StoragePort, ValidationPort } from '@auditcore/bpmn-flowaudit'
 import type { EditorPorts } from '../stores/context'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import { createCollectionStore } from '../stores/collectionStore'
-import type { EditorFactory, FolderAction, HostAction } from '@auditcore/bpmn-flowaudit/ui'
+import { COLLECTION_PANEL, createSvgThumbnailRenderer, createThumbnails, readPanel, writePanel, type EditorFactory, type FolderAction, type HostAction } from '@auditcore/bpmn-flowaudit/ui'
+import { defaultEditorFactory } from '../editor/defaultFactory'
+import PanelResizer from './base/PanelResizer.vue'
 import CollectionTree from './collection/CollectionTree.vue'
 import DiagramInfoColumn from './collection/DiagramInfoColumn.vue'
 import GroupOverview from './collection/GroupOverview.vue'
@@ -40,7 +42,11 @@ const emit = defineEmits<{
 const { t } = provideI18n(createI18n(props.locale))
 // Ports are plain objects; a reactive proxy (e.g. from `reactive()`) would break cloning in the ports.
 const storage = toRaw(props.storage)
-const store = createCollectionStore(storage)
+const thumbnails = createThumbnails({ storage, render: createSvgThumbnailRenderer(props.editorFactory ?? defaultEditorFactory, props.locale) })
+const store = createCollectionStore(storage, { onDiagramSaved: thumbnails.invalidate })
+// Width and visibility of the collection column are kept per browser.
+const sidePanel = reactive(readPanel('collection', COLLECTION_PANEL))
+watch(sidePanel, (state) => writePanel('collection', state))
 
 const selected = ref<string | null>(null)
 const openId = ref<string | null>(null)
@@ -102,9 +108,10 @@ onMounted(() => store.load())
 
 <template>
   <div class="fa-root fa-workbench" :lang="locale">
-    <aside class="fa-workbench__side">
+    <aside v-if="sidePanel.open" class="fa-workbench__side" :style="{ width: `${sidePanel.width}px` }">
       <CollectionTree :store="store" :selected-diagram="selected" :open-diagram="openId" @select-diagram="selected = $event" @open-diagram="open" />
     </aside>
+    <PanelResizer v-model:width="sidePanel.width" v-model:open="sidePanel.open" :bounds="COLLECTION_PANEL" edge="left" :name="t('panel.collection')" />
     <main class="fa-workbench__main">
       <FlowauditEditor
         v-if="openEntry"
@@ -141,6 +148,7 @@ onMounted(() => store.load())
           :cards="store.cards.value"
           :top-level="!store.selectedFolder.value"
           :folder-actions="folderActions"
+          :thumbnails="thumbnails"
           @open="open"
           @folder-action="(id, folderId, diagramIds) => emit('folder-action', id, folderId, diagramIds)"
           @describe-folder="store.describeFolder"

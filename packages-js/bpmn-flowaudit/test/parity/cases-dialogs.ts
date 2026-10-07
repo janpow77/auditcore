@@ -7,6 +7,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { loadDefinitions, modelFromDefinitions, type DiagramInfo, type ExportData, type ProcessModel, type Suggestion } from '../../src'
+import { SHORTCUTS } from '../../src/ui/shortcuts'
 import type { Expectation } from './expectation'
 
 export interface DialogCase<P> {
@@ -54,7 +55,7 @@ export const XML_CASE: DialogCase<Record<string, unknown>> = {
 export const SHORTCUT_CASE: DialogCase<Record<string, unknown>> = {
   name: 'Tastenkürzel-Hilfe',
   props: () => ({ open: true }),
-  expect: { texts: ['Speichern'], roles: [['dialog', 'Tastenkürzel']], counts: { tr: 17, kbd: 36 } },
+  expect: { texts: ['Speichern'], roles: [['dialog', 'Tastenkürzel']], counts: { tr: SHORTCUTS.length, kbd: SHORTCUTS.reduce((sum, [keys]) => sum + keys.length, 0) } },
 }
 
 export const SEARCH_CASE: DialogCase<Record<string, unknown>> = {

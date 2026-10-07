@@ -56,6 +56,8 @@ export function sessionCanvas(parts: { editor: EditorCore; canvas: Store<CanvasS
   function measure(): void {
     const host = options.host()
     canvas.set({ size: { width: host?.clientWidth ?? 0, height: host?.clientHeight ?? 0 } })
+    // diagram-js caches the container size; resizable panels change it.
+    editor.instance()?.get<{ resized?: () => void }>('canvas', false)?.resized?.()
   }
 
   function bind(created: EditorLike): void {

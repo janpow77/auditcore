@@ -28,6 +28,11 @@ export interface StoragePort {
   /** Comments per element (legacy `comments`, optional). */
   loadComments?(diagramId: string): Promise<Comment[]>
   saveComments?(diagramId: string, comments: Comment[]): Promise<void>
+  /**
+   * Thumbnail of a diagram as image URL (`data:` or `https:`), e.g. rendered
+   * on the server (optional). Without it the overview renders in the browser.
+   */
+  thumbnail?(diagramId: string): Promise<string | null>
 }
 
 /** Comment at an element (as `BpmnComment` in the audit_designer). */

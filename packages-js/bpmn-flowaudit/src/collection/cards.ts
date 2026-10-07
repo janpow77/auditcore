@@ -14,6 +14,11 @@ export interface CardDiagram {
   name: string
   description: string
   status: string
+  /** Activities and those with a legal basis (list view). */
+  activities: number
+  withLegalBasis: number
+  /** Valid from, otherwise approval date (ISO, may be empty). */
+  date: string
 }
 
 export interface FolderCard {
@@ -26,7 +31,16 @@ export interface FolderCard {
 }
 
 function cardDiagram(entry: DiagramEntry): CardDiagram {
-  return { id: entry.id, name: entry.name, description: entry.info?.description?.trim() ?? '', status: String(entry.info?.status ?? '') }
+  const info = entry.info
+  return {
+    id: entry.id,
+    name: entry.name,
+    description: info?.description?.trim() ?? '',
+    status: String(info?.status ?? ''),
+    activities: entry.excerpt.activities,
+    withLegalBasis: entry.excerpt.activitiesWithLegalBasis,
+    date: info?.validFrom || info?.approvedOn || '',
+  }
 }
 
 function folderCard(collection: DiagramCollection, folder: Folder): FolderCard {

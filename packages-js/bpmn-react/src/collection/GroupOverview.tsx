@@ -4,15 +4,20 @@
  * directly in the folder. Legal basis coverage, expired validity and
  * collection issues sit in the collapsed section „Prüfhinweise“. Key
  * requirement coverage and status distribution stay available in
- * `groupOverview` but are no longer shown here.
+ * `groupOverview` but are no longer shown here. Three layouts – tiles, list
+ * and thumbnails (with a `thumbnails` source) – are switched in one menu in
+ * the head; the choice is kept per browser.
  */
 
-import { issueMessage, type FolderCard, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@auditcore/bpmn-flowaudit'
-import { hintCount, statusLabel, type FolderAction } from '@auditcore/bpmn-flowaudit/ui'
+import { useState } from 'react'
+import { issueMessage, type CardDiagram, type FolderCard, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@auditcore/bpmn-flowaudit'
+import { diagramFacts, hintCount, isWideCard, overviewViews, readOverviewView, statusLabel, writeOverviewView, type FolderAction, type OverviewView, type Thumbnails } from '@auditcore/bpmn-flowaudit/ui'
 import { useI18n } from '../i18n'
+import { FaIcon } from '../base/FaIcon'
 import { ToolbarMenu } from '../base/ToolbarMenu'
 import { InlineDescription } from './InlineDescription'
 import { InlineName } from './InlineName'
+import { OverviewThumbnail } from './OverviewThumbnail'
 
 export interface GroupOverviewProps {
   overview: Overview
@@ -23,6 +28,8 @@ export interface GroupOverviewProps {
   topLevel?: boolean
   readonly?: boolean
   folderActions?: FolderAction[]
+  /** Source of thumbnails; without it the „Vorschaubilder“ layout is not offered. */
+  thumbnails?: Thumbnails | null
   onOpen?: (id: string) => void
   onFolderAction?: (id: string, folderId: string, diagramIds: string[]) => void
   onDescribeFolder?: (id: string, text: string) => void
@@ -54,12 +61,85 @@ function FolderMenu({ card, props }: { card: FolderCard; props: GroupOverviewPro
   )
 }
 
-function Card({ card, props }: { card: FolderCard; props: GroupOverviewProps }) {
+function TileList({ card, props }: { card: FolderCard; props: GroupOverviewProps }) {
   const { t, locale } = useI18n()
+  return (
+    <ul className="fa-folder-card__list">
+      {card.diagrams.map((diagram) => (
+        <li key={diagram.id} className="fa-folder-card__item">
+          <div className="fa-folder-card__row">
+            <button type="button" className="fa-folder-card__open" onClick={() => props.onOpen?.(diagram.id)}>{diagram.name}</button>
+            {diagram.status ? <span className="fa-badge">{statusLabel(diagram.status, t, locale)}</span> : null}
+          </div>
+          <InlineDescription text={diagram.description} name={diagram.name} readonly={props.readonly} onSave={(text) => props.onDescribeDiagram?.(diagram.id, text)} />
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function ListRow({ diagram, props }: { diagram: CardDiagram; props: GroupOverviewProps }) {
+  const { t, locale } = useI18n()
+  return (
+    <div className="fa-diagram-list__row" role="row">
+      <span role="cell" className="fa-diagram-list__name">
+        <button type="button" className="fa-folder-card__open" onClick={() => props.onOpen?.(diagram.id)}>{diagram.name}</button>
+        <InlineDescription text={diagram.description} name={diagram.name} readonly={props.readonly} onSave={(text) => props.onDescribeDiagram?.(diagram.id, text)} />
+      </span>
+      <span role="cell">{diagram.status ? <span className="fa-badge">{statusLabel(diagram.status, t, locale)}</span> : null}</span>
+      <span role="cell" className="fa-diagram-list__facts">{diagramFacts(diagram, t, locale).join(' · ')}</span>
+    </div>
+  )
+}
+
+function DiagramList({ card, name, props }: { card: FolderCard; name: string; props: GroupOverviewProps }) {
+  const { t } = useI18n()
+  return (
+    <div className="fa-diagram-list" role="table" aria-label={name}>
+      <div className="fa-diagram-list__row fa-diagram-list__row--head" role="row">
+        <span role="columnheader">{t('collection.overview.column.name')}</span>
+        <span role="columnheader">{t('collection.overview.column.status')}</span>
+        <span role="columnheader">{t('collection.overview.column.facts')}</span>
+      </div>
+      {card.diagrams.map((diagram) => (
+        <ListRow key={diagram.id} diagram={diagram} props={props} />
+      ))}
+    </div>
+  )
+}
+
+function ThumbGrid({ card, thumbnails, props }: { card: FolderCard; thumbnails: Thumbnails; props: GroupOverviewProps }) {
+  const { t, locale } = useI18n()
+  return (
+    <ul className="fa-thumb-grid">
+      {card.diagrams.map((diagram) => (
+        <li key={diagram.id} className="fa-thumb">
+          <button type="button" className="fa-thumb__open" title={diagram.name} onClick={() => props.onOpen?.(diagram.id)}>
+            <OverviewThumbnail diagramId={diagram.id} name={diagram.name} thumbnails={thumbnails} />
+            <span className="fa-thumb__name">{diagram.name}</span>
+          </button>
+          {diagram.status ? <span className="fa-badge fa-thumb__status">{statusLabel(diagram.status, t, locale)}</span> : null}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function CardBody({ card, name, view, props }: { card: FolderCard; name: string; view: OverviewView; props: GroupOverviewProps }) {
+  const { t } = useI18n()
+  if (!card.diagrams.length) return <p className="fa-help">{t('collection.overview.emptyFolder')}</p>
+  if (view === 'list') return <DiagramList card={card} name={name} props={props} />
+  if (view === 'thumbnails' && props.thumbnails) return <ThumbGrid card={card} thumbnails={props.thumbnails} props={props} />
+  return <TileList card={card} props={props} />
+}
+
+function Card({ card, view, props }: { card: FolderCard; view: OverviewView; props: GroupOverviewProps }) {
+  const { t } = useI18n()
   const name = card.name || ((props.topLevel ?? true) ? t('collection.overview.loose') : props.title)
   const count = card.count === 1 ? t('collection.overview.diagram') : t('collection.overview.diagrams', { count: card.count })
+  const wide = view !== 'tiles' || isWideCard(card.count, (props.cards ?? []).length)
   return (
-    <article className="fa-card fa-folder-card">
+    <article className={`fa-card fa-folder-card${wide ? ' fa-folder-card--wide' : ''}`}>
       <header className="fa-folder-card__head">
         <h3 className="fa-folder-card__name">
           {card.folderId ? <InlineName text={card.name} readonly={props.readonly} onSave={(text) => props.onRenameFolder?.(card.folderId ?? '', text)} /> : name}
@@ -68,22 +148,24 @@ function Card({ card, props }: { card: FolderCard; props: GroupOverviewProps }) 
         <FolderMenu card={card} props={props} />
       </header>
       {card.folderId ? <InlineDescription text={card.description} name={card.name} readonly={props.readonly} onSave={(text) => props.onDescribeFolder?.(card.folderId ?? '', text)} /> : null}
-      {card.diagrams.length ? (
-        <ul className="fa-folder-card__list">
-          {card.diagrams.map((diagram) => (
-            <li key={diagram.id} className="fa-folder-card__item">
-              <div className="fa-folder-card__row">
-                <button type="button" className="fa-folder-card__open" onClick={() => props.onOpen?.(diagram.id)}>{diagram.name}</button>
-                {diagram.status ? <span className="fa-badge">{statusLabel(diagram.status, t, locale)}</span> : null}
-              </div>
-              <InlineDescription text={diagram.description} name={diagram.name} readonly={props.readonly} onSave={(text) => props.onDescribeDiagram?.(diagram.id, text)} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="fa-help">{t('collection.overview.emptyFolder')}</p>
-      )}
+      <CardBody card={card} name={name} view={view} props={props} />
     </article>
+  )
+}
+
+function ViewMenu({ views, view, onChoose }: { views: OverviewView[]; view: OverviewView; onChoose: (view: OverviewView) => void }) {
+  const { t } = useI18n()
+  return (
+    <ToolbarMenu label={t('collection.overview.view')} icon="overview" align="right">
+      {(close) =>
+        views.map((option) => (
+          <button key={option} type="button" role="menuitemradio" className="fa-menu-item" aria-checked={view === option} onClick={() => (onChoose(option), close())}>
+            {view === option ? <FaIcon name="check" size={14} /> : <span className="fa-menu-item__spacer" />}
+            <span>{t(`collection.overview.view.${option}`)}</span>
+          </button>
+        ))
+      }
+    </ToolbarMenu>
   )
 }
 
@@ -128,13 +210,20 @@ function Hints({ overview, issues, onOpen }: Pick<GroupOverviewProps, 'overview'
 export function GroupOverview(props: GroupOverviewProps) {
   const { t } = useI18n()
   const cards = props.cards ?? []
+  const views = overviewViews(Boolean(props.thumbnails))
+  const [chosen, setChosen] = useState<OverviewView>(() => readOverviewView(Boolean(props.thumbnails)))
+  const view = views.includes(chosen) ? chosen : 'tiles'
+  const choose = (next: OverviewView) => (setChosen(next), writeOverviewView(next))
   return (
-    <section className="fa-overview" aria-label={t('collection.overview')}>
-      <h2>{props.title}</h2>
+    <section className={`fa-overview fa-overview--${view}`} aria-label={t('collection.overview')}>
+      <header className="fa-overview__head">
+        <h2>{props.title}</h2>
+        {cards.length ? <ViewMenu views={views} view={view} onChoose={choose} /> : null}
+      </header>
       {cards.length ? null : <p className="fa-help">{t('collection.overview.empty')}</p>}
       <div className="fa-overview__folders">
         {cards.map((card) => (
-          <Card key={card.folderId ?? '_'} card={card} props={props} />
+          <Card key={card.folderId ?? '_'} card={card} view={view} props={props} />
         ))}
       </div>
       <Hints overview={props.overview} issues={props.issues} onOpen={props.onOpen} />

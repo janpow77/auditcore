@@ -1,7 +1,8 @@
 /** Toolbar, palette, key filter, side panel and status bar of the React editor. */
 
 import { profileReference, type Direction, type PaletteColor } from '@auditcore/bpmn-flowaudit'
-import { activeActions, filterKeys, readImportFile, type UiState } from '@auditcore/bpmn-flowaudit/ui'
+import { activeActions, filterKeys, PROPERTIES_PANEL, readImportFile, type UiState } from '@auditcore/bpmn-flowaudit/ui'
+import { PanelResizer } from './base/PanelResizer'
 import { StatusBar } from './canvas/CanvasParts'
 import { useEditorState, useValidationView } from './context'
 import type { FlowauditEditorProps } from './editorProps'
@@ -79,23 +80,51 @@ function Filter({ runtime, ui }: { runtime: EditorRuntime; ui: UiState }) {
   )
 }
 
-export function EditorSide({ runtime, props, ui, readonly, part }: PartProps & { part: 'palette' | 'filter' | 'side' }) {
+interface SideProps {
+  part: 'palette' | 'filter' | 'side'
+  sideWidth?: number
+  onSideWidth?: (width: number) => void
+}
+
+function SidePart({ runtime, props, ui, sideWidth, onSideWidth }: PartProps & SideProps & { runtime: EditorRuntime }) {
+  const { t } = useI18n()
+  const width = sideWidth ?? PROPERTIES_PANEL.initial
+  const resizer = (
+    <PanelResizer
+      width={width}
+      open={ui.rightOpen}
+      bounds={PROPERTIES_PANEL}
+      edge="right"
+      name={t('panel.properties')}
+      onWidthChange={(next) => onSideWidth?.(next)}
+      onOpenChange={(rightOpen) => runtime.ui.set({ rightOpen })}
+    />
+  )
+  if (!ui.rightOpen) return resizer
+  return (
+    <>
+      {resizer}
+      <EditorSidePanel
+        style={{ width }}
+        view={ui.side}
+        comments={props.comments ?? []}
+        author={props.author ?? ''}
+        compareSources={props.compareSources ?? []}
+        palette={props.palette}
+        onViewChange={(view) => runtime.ui.set({ side: view })}
+        onCommentsChange={props.onCommentsChange}
+        onJump={(id) => runtime.session.editor.select(id)}
+      />
+    </>
+  )
+}
+
+export function EditorSide(parts: PartProps & SideProps) {
+  const { runtime, ui, readonly, part } = parts
   if (!runtime) return null
   if (part === 'palette') return ui.leftOpen ? <Palette runtime={runtime} readonly={readonly} /> : null
   if (part === 'filter') return ui.filterOpen ? <Filter runtime={runtime} ui={ui} /> : null
-  if (!ui.rightOpen) return null
-  return (
-    <EditorSidePanel
-      view={ui.side}
-      comments={props.comments ?? []}
-      author={props.author ?? ''}
-      compareSources={props.compareSources ?? []}
-      palette={props.palette}
-      onViewChange={(side) => runtime.ui.set({ side })}
-      onCommentsChange={props.onCommentsChange}
-      onJump={(id) => runtime.session.editor.select(id)}
-    />
-  )
+  return <SidePart {...parts} runtime={runtime} />
 }
 
 export function EditorFooter(parts: PartProps) {
