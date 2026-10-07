@@ -173,6 +173,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.layout_model` | Belegvorlagen als Daten: Zeichenfläche, Vorlagenparameter und Formatwahl. |
 | `auditcore_invoicesynth.layouts` | Dreizehn Belegvorlagen (elf fürs Training, zwei nur für den Layout-Holdout). |
 | `auditcore_invoicesynth.plan` | Deterministischer Variantenplan und Aufteilung in Trainings-/Testsätze. |
+| `auditcore_invoicesynth.plausibility` | Plausibilitätsprüfung für die Bewertung (Plan 2a, Zusammenführung). |
 | `auditcore_invoicesynth.render` | Pillow-Zeichenfläche für die Vorlagen (Extra ``render``). |
 | `auditcore_invoicesynth.schema` | Ziel-JSON ``auditcore_invoice_v1`` (nur Kopf-/Summenfelder, Entscheidung E8). |
 | `auditcore_invoicesynth.train` | Vorbereitetes Donut-Nachtraining (Plan 2c/2c-bis, Etappe E3). |
