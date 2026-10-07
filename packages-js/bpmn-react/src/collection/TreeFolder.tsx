@@ -25,6 +25,7 @@ export interface TreeFolderProps {
   onSelectDiagram: (id: string) => void
   onOpenDiagram: (id: string) => void
   onSelectFolder: (id: string | null) => void
+  onRenameFolder?: (id: string) => void
   onDrop: (payload: DropPayload) => void
 }
 
@@ -55,6 +56,7 @@ function DiagramRow({ entry, index, props, drop }: { entry: DiagramEntry; index:
 }
 
 function FolderRow({ props, expanded, over, setExpanded, setOver, drop }: { props: TreeFolderProps; expanded: boolean; over: boolean; setExpanded: (value: boolean) => void; setOver: (value: boolean) => void; drop: (event: DragEvent) => void }) {
+  const { t } = useI18n()
   const folder = props.node.folder
   if (!folder) return null
   return (
@@ -70,7 +72,14 @@ function FolderRow({ props, expanded, over, setExpanded, setOver, drop }: { prop
       <button type="button" className="fa-tree__toggle" aria-label={folder.name} onClick={() => setExpanded(!expanded)}>
         <FaIcon name={expanded ? 'chevron-down' : 'chevron-right'} size={14} />
       </button>
-      <button type="button" className="fa-tree__label" onClick={() => props.onSelectFolder(folder.id)}>
+      <button
+        type="button"
+        className="fa-tree__label"
+        title={t('collection.renameHint')}
+        onClick={() => props.onSelectFolder(folder.id)}
+        onDoubleClick={() => props.onRenameFolder?.(folder.id)}
+        onKeyDown={(event) => event.key === 'F2' && (event.preventDefault(), props.onRenameFolder?.(folder.id))}
+      >
         <FaIcon name={expanded ? 'folder-open' : 'folder'} size={16} />
         <span>{folder.name}</span>
       </button>
