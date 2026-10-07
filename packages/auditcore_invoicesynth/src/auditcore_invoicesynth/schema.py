@@ -131,7 +131,7 @@ def _decode(text: str) -> dict[str, Any]:
 SUPPLIER_KEYS = ("name", "vat_id")
 
 
-def repair_structure(parse: dict[str, Any]) -> dict[str, Any]:
+def repair_structure(parse: dict[str, object]) -> dict[str, object]:
     """Lieferantenfelder ohne ``<s_supplier>`` (ausgelassenes Tag) dem Lieferanten zuordnen.
 
     Ein vorhandener Wert im Lieferantenblock hat Vorrang; die Eingabe bleibt unverändert.
