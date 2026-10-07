@@ -5,8 +5,8 @@
  * XML is controlled through `xml` and `onXmlChange`.
  */
 
-import { forwardRef, useImperativeHandle, useMemo, useRef, type KeyboardEvent } from 'react'
-import { createStore, dialogPatch, handleShortcut, initialUiState, INITIAL_EDITOR_STATE, type ActionState } from '@auditcore/bpmn-flowaudit/ui'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { createStore, dialogPatch, handleShortcut, initialUiState, INITIAL_EDITOR_STATE, PROPERTIES_PANEL, readPanel, writePanel, type ActionState, type PanelState } from '@auditcore/bpmn-flowaudit/ui'
 import type { KeyKind } from '@auditcore/bpmn-flowaudit'
 import { EditorContextProvider, type EditorContext } from './context'
 import { EditorCanvas } from './EditorCanvas'
@@ -51,8 +51,22 @@ function shortcutHandler(runtime: EditorRuntime | null) {
   return (event: KeyboardEvent) => {
     if (!runtime) return
     const open = (id: 'search' | 'shortcuts') => () => runtime.ui.set(dialogPatch(runtime.ui.get(), id, true))
-    handleShortcut(event.nativeEvent, { save: () => void runtime.save(), search: open('search'), help: open('shortcuts') })
+    handleShortcut(event.nativeEvent, { save: () => void runtime.save(), search: open('search'), help: open('shortcuts'), panel: () => runtime.ui.set({ rightOpen: !runtime.ui.get().rightOpen }) })
   }
+}
+
+/** Width and visibility of the properties panel, kept per browser and mirrored into the UI state. */
+function useSidePanel(runtime: EditorRuntime | null, open: boolean) {
+  const [panel, setPanel] = useState<PanelState>(() => readPanel('properties', PROPERTIES_PANEL))
+  const initial = useRef(panel.open)
+  useEffect(() => {
+    runtime?.ui.set({ rightOpen: initial.current })
+  }, [runtime])
+  useEffect(() => {
+    if (runtime) setPanel((current) => (current.open === open ? current : { ...current, open }))
+  }, [runtime, open])
+  useEffect(() => writePanel('properties', panel), [panel])
+  return { width: panel.width, setWidth: (width: number) => setPanel((current) => ({ ...current, width })) }
 }
 
 const EditorShell = forwardRef<FlowauditEditorHandle, FlowauditEditorProps>(function EditorShell(props, ref) {
@@ -64,6 +78,7 @@ const EditorShell = forwardRef<FlowauditEditorHandle, FlowauditEditorProps>(func
   const { theme } = useStoreState(runtime?.actions.store ?? IDLE_ACTIONS)
   useImperativeHandle(ref, () => handleOf(runtime), [runtime])
   const readonly = runtime ? runtime.isReadonly() : Boolean(props.readonly)
+  const side = useSidePanel(runtime, ui.rightOpen)
   const parts = { runtime, props, ui, readonly }
 
   return (
@@ -77,7 +92,7 @@ const EditorShell = forwardRef<FlowauditEditorHandle, FlowauditEditorProps>(func
             <EditorCanvas host={host} runtime={runtime} pageView={ui.pageView} readonly={readonly} profile={props.profile ?? null} palette={props.palette} />
             <EditorFooter {...parts} />
           </main>
-          <EditorSide {...parts} part="side" />
+          <EditorSide {...parts} part="side" sideWidth={side.width} onSideWidth={side.setWidth} />
         </div>
         <Dialogs runtime={runtime} props={props} />
       </div>
