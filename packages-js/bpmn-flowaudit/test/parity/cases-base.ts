@@ -31,3 +31,26 @@ export const DIALOG_BASE_CASES: ReadonlyArray<ParityCase<DialogBaseProps>> = [
     expect: { texts: ['Synthetisches Verfahren'], roles: [['dialog', 'Prüfpfad'], ['button', 'Schließen']] },
   },
 ]
+
+export interface ResizerCaseProps {
+  width: number
+  open: boolean
+  bounds: { min: number; max: number; initial: number }
+  edge: 'left' | 'right'
+  name: string
+}
+
+const BOUNDS = { min: 300, max: 760, initial: 420 }
+
+export const RESIZER_CASES: ReadonlyArray<ParityCase<ResizerCaseProps>> = [
+  {
+    name: 'Trennlinie rechts, Bereich offen',
+    props: () => ({ width: 420, open: true, bounds: BOUNDS, edge: 'right', name: 'Eigenschaften' }),
+    expect: { roles: [['separator', 'Breite von „Eigenschaften“ ändern'], ['button', '„Eigenschaften“ ausblenden']], counts: { '[aria-valuenow="420"]': 1 } },
+  },
+  {
+    name: 'Bereich eingeklappt (schmale Leiste)',
+    props: () => ({ width: 300, open: false, bounds: BOUNDS, edge: 'left', name: 'Diagrammsammlung' }),
+    expect: { texts: ['Diagrammsammlung'], roles: [['button', '„Diagrammsammlung“ einblenden']], counts: { '[role="separator"]': 0, '.fa-panel-rail--left': 1 } },
+  },
+]
