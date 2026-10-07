@@ -1,5 +1,29 @@
 # Changelog – @auditcore/bpmn-flowaudit
 
+## 0.5.0 – 2026-10-07
+
+- **Ansichten der Ordnerübersicht** (`overviewViews.ts`): Kacheln, Liste und
+  Vorschaubilder (`OVERVIEW_VIEWS`, `readOverviewView`/`writeOverviewView`,
+  Schlüssel `auditcore.bpmn.overviewView`); `diagramFacts`, `legalShare`,
+  `isWideCard`. `CardDiagram` trägt zusätzlich `activities`,
+  `withLegalBasis` und `date`.
+- **Vorschaubilder** (`thumbnails.ts`): `createThumbnails({ storage, render,
+  concurrency })` mit Cache je Diagramm, höchstens zwei gleichzeitigen
+  Renderläufen und `null` bei Fehlern; `createSvgThumbnailRenderer(factory,
+  locale)` rendert im Browser mit dem Editorkern. Neuer optionaler Port
+  `StoragePort.thumbnail(id)` für serverseitige Vorschaubilder.
+- **Verschiebbare, einklappbare Seitenbereiche** (`panelSize.ts`):
+  `PROPERTIES_PANEL`, `COLLECTION_PANEL`, `readPanel`/`writePanel`
+  (Schlüssel `auditcore.bpmn.panel.<id>`), `dragWidth`, `keyWidth`,
+  `clampWidth`. Gemeinsame Einstellungshilfen `preferences.ts` (`readChoice`,
+  `readJson`, `writePreference`); die Palettenansicht nutzt sie.
+- `createCollectionCore(storage, { onDiagramSaved })` meldet jedes Schreiben
+  eines Diagramms (z. B. um das Vorschaubild zu verwerfen).
+- Tastenkürzel Strg+Alt+P blendet die Eigenschaften ein und aus
+  (`ShortcutHandlers.panel`, optional).
+- Die Zeichenfläche passt sich an geänderte Bereichsbreiten an
+  (`canvas.resized()` im Größenbeobachter).
+
 ## 0.4.0 – 2026-10-07
 
 - **Prüfungsmerkmale nach dem Profil:** `ProfileData.properties` (Block

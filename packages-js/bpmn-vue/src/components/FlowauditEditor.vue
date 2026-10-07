@@ -6,9 +6,9 @@
  * services of the application (legal search, KA/BK catalogue, validation,
  * ESI).
  */
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { label, PALETTE_COLORS, profileReference, rolesFor, type Approval, type Comment, type DiagramInfo, type PaletteColor, type ProfileData, type ProfileSummary, type RoleAlias, type ValidationPort } from '@auditcore/bpmn-flowaudit'
-import { activeActions, choosePopoverColor, choosePopoverRole, createExporter, dialogPatch, filterKeys as keyIndex, handleShortcut, isLocked, readImportFile, savePayload, type CompareSource, type EditorFactory, type HostAction, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
+import { activeActions, choosePopoverColor, choosePopoverRole, createExporter, dialogPatch, filterKeys as keyIndex, handleShortcut, isLocked, PROPERTIES_PANEL, readImportFile, readPanel, savePayload, writePanel, type CompareSource, type EditorFactory, type HostAction, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import { defaultEditorFactory } from '../editor/defaultFactory'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import type { EditorPorts } from '../stores/context'
@@ -23,6 +23,7 @@ import ColorSwatches from './base/ColorSwatches.vue'
 import KeyFilterBar from './views/KeyFilterBar.vue'
 import EditorSidePanel from './EditorSidePanel.vue'
 import EditorDialogs from './EditorDialogs.vue'
+import PanelResizer from './base/PanelResizer.vue'
 import '@auditcore/bpmn-flowaudit/ui.css'
 
 const props = withDefaults(
@@ -86,6 +87,11 @@ const setup = useEditorSetup(host, {
   onError: (message) => ((setup.ui.message = t('editor.importError', { message })), emit('error', message)),
 })
 const { editor, selection, validation, ui } = setup
+// Width and visibility of the properties panel are kept per browser.
+const sidePanel = reactive(readPanel('properties', PROPERTIES_PANEL))
+ui.rightOpen = sidePanel.open
+watch(() => ui.rightOpen, (open) => (sidePanel.open = open))
+watch(sidePanel, (state) => writePanel('properties', state))
 const exporter = createExporter({ editor, factory, name: () => props.name, diagramId: () => props.diagramId, profile: () => props.profile, author: () => props.author, replacements: () => props.replacements, palette: props.palette })
 
 async function save(): Promise<void> {
@@ -119,7 +125,12 @@ async function importFile(file: File): Promise<void> {
 }
 
 function onKeydown(event: KeyboardEvent): void {
-  handleShortcut(event, { save, search: () => Object.assign(ui, dialogPatch(ui, 'search', true)), help: () => Object.assign(ui, dialogPatch(ui, 'shortcuts', true)) })
+  handleShortcut(event, {
+    save,
+    search: () => Object.assign(ui, dialogPatch(ui, 'search', true)),
+    help: () => Object.assign(ui, dialogPatch(ui, 'shortcuts', true)),
+    panel: () => (ui.rightOpen = !ui.rightOpen),
+  })
 }
 
 watch(() => selection.element.value, (element) => emit('selection-change', element?.id ?? null))
@@ -173,9 +184,11 @@ defineExpose({ getXml: () => editor.exportXml(), getSvg: () => editor.exportSvg(
         </div>
         <StatusBar :scale="editor.state.scale" :count="validation.count.value" :profile="profile ? profileReference(profile) : undefined" :message="t(ui.message)" @issues="(ui.side = 'issues'), (ui.rightOpen = true)" />
       </main>
+      <PanelResizer v-model:width="sidePanel.width" v-model:open="ui.rightOpen" :bounds="PROPERTIES_PANEL" edge="right" :name="t('panel.properties')" />
       <EditorSidePanel
         v-if="ui.rightOpen"
         v-model:view="ui.side"
+        :style="{ width: `${sidePanel.width}px` }"
         :comments="comments"
         :author="author"
         :compare-sources="compareSources"
