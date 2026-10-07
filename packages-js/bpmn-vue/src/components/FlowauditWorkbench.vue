@@ -144,6 +144,7 @@ onMounted(() => store.load())
           @open="open"
           @folder-action="(id, folderId, diagramIds) => emit('folder-action', id, folderId, diagramIds)"
           @describe-folder="store.describeFolder"
+          @rename-folder="store.renameFolder"
           @describe-diagram="store.describeDiagram"
         />
         <DiagramInfoColumn v-if="selectedEntry" class="fa-workbench__info" :store="store" :entry="selectedEntry" @open="open" @deleted="onDeleted" />
