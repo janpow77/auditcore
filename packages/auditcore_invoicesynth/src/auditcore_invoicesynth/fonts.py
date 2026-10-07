@@ -1,7 +1,7 @@
 """Freie Schriften aus Systempaketen oder geprüftem Download – nie eingebettet.
 
 Zulässig sind nur Familien mit freier Lizenz (Katalog ``FONT_CATALOG``):
-DejaVu (Bitstream-Vera-Lizenz), Liberation und Noto (SIL OFL 1.1). Die
+DejaVu (Bitstream-Vera-Lizenz), Liberation, Noto und Lato (SIL OFL 1.1). Die
 Schriftdateien werden **nicht** mit dem Paket verteilt; der Generator sucht
 sie in Systemverzeichnissen (``fonts-dejavu-core``, ``fonts-liberation2``,
 ``fonts-noto-core``) oder lädt sie über einen injizierten Abruf mit fester
@@ -74,7 +74,11 @@ FONT_CATALOG: dict[str, FontFamilySpec] = {
     "Noto Serif": FontFamilySpec(
         "OFL-1.1", ("fonts-noto-core",), ("NotoSerif-Regular.ttf",), ("NotoSerif-Bold.ttf",)
     ),
+    # Generatorvariante v2: weitere freie Familie (Debian-Paket fonts-lato).
+    "Lato": FontFamilySpec("OFL-1.1", ("fonts-lato",), ("Lato-Regular.ttf",), ("Lato-Bold.ttf",)),
 }
+# Familien, die erst die Generatorvariante v2 verwendet (v1-Pläne bleiben unverändert).
+V2_FONT_FAMILIES: tuple[str, ...] = ("Lato",)
 
 
 class FontError(ValueError):
