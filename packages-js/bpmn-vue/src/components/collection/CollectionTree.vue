@@ -17,6 +17,7 @@ const emit = defineEmits<{ (e: 'select-diagram', id: string | null): void; (e: '
 const { t, locale } = useI18n()
 const overRoot = ref(false)
 const prompt = ref<{ kind: 'folder' | 'diagram'; open: boolean }>({ kind: 'folder', open: false })
+const renaming = ref<{ id: string; name: string; open: boolean }>({ id: '', name: '', open: false })
 
 const tags = computed(() => [...props.store.collection.value.tags.values()])
 const empty = computed(() => props.store.collection.value.diagrams.size === 0)
@@ -40,6 +41,11 @@ function dropOnRoot(event: DragEvent): void {
   overRoot.value = false
   const payload = readDrag(event)
   if (payload) void onDrop({ ...payload, target: { folderId: null } })
+}
+
+function startRename(id: string): void {
+  const folder = props.store.collection.value.folders.get(id)
+  if (folder) renaming.value = { id, name: folder.name, open: true }
 }
 
 function selectFolder(id: string | null): void {
@@ -90,6 +96,7 @@ function selectFolder(id: string | null): void {
         @select-diagram="emit('select-diagram', $event)"
         @open-diagram="emit('open-diagram', $event)"
         @select-folder="selectFolder"
+        @rename-folder="startRename"
         @drop="onDrop"
       />
     </ul>
@@ -98,6 +105,13 @@ function selectFolder(id: string | null): void {
       :title="prompt.kind === 'folder' ? t('collection.newFolder') : t('collection.newDiagram')"
       :label="prompt.kind === 'folder' ? t('collection.folderName') : t('collection.diagramName')"
       @confirm="create"
+    />
+    <PromptDialog
+      v-model:open="renaming.open"
+      :title="t('collection.renameFolder')"
+      :label="t('collection.folderName')"
+      :value="renaming.name"
+      @confirm="store.renameFolder(renaming.id, $event)"
     />
   </nav>
 </template>

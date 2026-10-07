@@ -59,10 +59,32 @@ function Status({ store }: { store: CollectionBinding }) {
   )
 }
 
+/** Dialog „Ordner umbenennen“ (double-click or F2 on a folder of the tree). */
+function useFolderRename(store: CollectionBinding): [(id: string) => void, JSX.Element] {
+  const { t } = useI18n()
+  const [renaming, setRenaming] = useState({ id: '', name: '', open: false })
+  const start = (id: string) => {
+    const folder = store.state.collection.folders.get(id)
+    if (folder) setRenaming({ id, name: folder.name, open: true })
+  }
+  const dialog = (
+    <PromptDialog
+      open={renaming.open}
+      title={t('collection.renameFolder')}
+      label={t('collection.folderName')}
+      value={renaming.name}
+      onOpenChange={(open) => setRenaming((current) => ({ ...current, open }))}
+      onConfirm={(name) => void store.renameFolder(renaming.id, name)}
+    />
+  )
+  return [start, dialog]
+}
+
 export function CollectionTree({ store, selectedDiagram, openDiagram, onSelectDiagram, onOpenDiagram }: CollectionTreeProps) {
   const { t } = useI18n()
   const [overRoot, setOverRoot] = useState(false)
   const [prompt, setPrompt] = useState<{ kind: PromptKind; open: boolean }>({ kind: 'folder', open: false })
+  const [startRename, renameDialog] = useFolderRename(store)
   const selectedFolder = store.state.selectedFolder
 
   const create = async (name: string) => {
@@ -110,7 +132,7 @@ export function CollectionTree({ store, selectedDiagram, openDiagram, onSelectDi
         <button type="button" className="fa-tree__label" onClick={() => selectFolder(null)}><FaIcon name="overview" size={16} />{t('collection.topLevel')}</button>
       </div>
       <ul role="tree" className="fa-tree" aria-label={t('collection.label')}>
-        <TreeFolder node={store.tree} depth={-1} selectedDiagram={selectedDiagram} selectedFolder={selectedFolder} openDiagram={openDiagram} onSelectDiagram={(id) => onSelectDiagram?.(id)} onOpenDiagram={(id) => onOpenDiagram?.(id)} onSelectFolder={selectFolder} onDrop={(payload) => void onDrop(payload)} />
+        <TreeFolder node={store.tree} depth={-1} selectedDiagram={selectedDiagram} selectedFolder={selectedFolder} openDiagram={openDiagram} onSelectDiagram={(id) => onSelectDiagram?.(id)} onOpenDiagram={(id) => onOpenDiagram?.(id)} onSelectFolder={selectFolder} onRenameFolder={startRename} onDrop={(payload) => void onDrop(payload)} />
       </ul>
       <PromptDialog
         open={prompt.open}
@@ -119,6 +141,7 @@ export function CollectionTree({ store, selectedDiagram, openDiagram, onSelectDi
         onOpenChange={(open) => setPrompt((current) => ({ ...current, open }))}
         onConfirm={(name) => void create(name)}
       />
+      {renameDialog}
     </nav>
   )
 }

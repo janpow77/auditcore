@@ -149,6 +149,7 @@ function OverviewPane({ store, bench, props }: { store: CollectionBinding; bench
         topLevel={!selectedFolder}
         onOpen={(id) => void bench.open(id)}
         onDescribeFolder={(id, text) => void store.describeFolder(id, text)}
+        onRenameFolder={(id, name) => void store.renameFolder(id, name)}
         onDescribeDiagram={(id, text) => void store.describeDiagram(id, text)}
         folderActions={props.folderActions}
         onFolderAction={props.onFolderAction}

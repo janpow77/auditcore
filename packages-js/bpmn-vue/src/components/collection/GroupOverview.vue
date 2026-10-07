@@ -13,6 +13,7 @@ import { hintCount, statusLabel as statusText, type FolderAction } from '@auditc
 import { useI18n } from '../../i18n/useI18n'
 import ToolbarMenu from '../base/ToolbarMenu.vue'
 import InlineDescription from './InlineDescription.vue'
+import InlineName from './InlineName.vue'
 
 const props = withDefaults(
   defineProps<{ overview: Overview; profile?: ProfileData | null; issues: ValidationIssue[]; title: string; cards?: FolderCard[]; topLevel?: boolean; readonly?: boolean; folderActions?: FolderAction[] }>(),
@@ -21,6 +22,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'open', id: string): void
   (e: 'describe-folder', id: string, text: string): void
+  (e: 'rename-folder', id: string, name: string): void
   (e: 'describe-diagram', id: string, text: string): void
   (e: 'folder-action', id: string, folderId: string, diagramIds: string[]): void
 }>()
@@ -40,7 +42,10 @@ const statusLabel = (code: string) => statusText(code, t, locale.value)
     <div class="fa-overview__folders">
       <article v-for="card in cards" :key="card.folderId ?? '_'" class="fa-card fa-folder-card">
         <header class="fa-folder-card__head">
-          <h3 class="fa-folder-card__name">{{ cardName(card) }}</h3>
+          <h3 class="fa-folder-card__name">
+            <InlineName v-if="card.folderId" :text="card.name" :readonly="readonly" @save="emit('rename-folder', card.folderId, $event)" />
+            <template v-else>{{ cardName(card) }}</template>
+          </h3>
           <span class="fa-folder-card__count">{{ countText(card.count) }}</span>
           <ToolbarMenu v-if="card.folderId && folderActions.length" v-slot="{ close }" :label="t('collection.folderActions', { name: card.name })" icon="more" align="right">
             <button
