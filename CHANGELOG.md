@@ -3,6 +3,18 @@
 ## Unreleased
 
 - npm `@auditcore/bpmn-flowaudit`, `@auditcore/bpmn-vue` und
+  `@auditcore/bpmn-react` 0.4.0: Reiter „Prüfungsmerkmale“ – Name/Wert-Merkmale
+  nach dem Profil (`profile.properties`), gespeichert als `camunda:property` und
+  damit im Camunda Modeler lesbar. Keine feste Merkmalsliste in der Bibliothek;
+  Laden und Speichern ohne Bearbeitung bleiben unverändert. Anlass: Pflege der
+  Prüfungsmerkmale der Systemprüfungen im BPMN-Editor des audit_designer
+  (07.10.2026).
+- npm `@auditcore/bpmn-flowaudit`, `@auditcore/bpmn-vue` und
+  `@auditcore/bpmn-react` 0.3.1: Ordner der Diagrammsammlung umbenennen – auf
+  der Ordnerkarte direkt, im Baum per Doppelklick oder F2. Leere Namen werden
+  nicht übernommen. Anlass: Rückmeldung zum BPMN-Editor des audit_designer
+  (07.10.2026).
+- npm `@auditcore/bpmn-flowaudit`, `@auditcore/bpmn-vue` und
   `@auditcore/bpmn-react` 0.3.0: Übersicht der obersten Ebene als Ordnerkarten
   mit inline bearbeitbaren Beschreibungen und eingeklapptem Bereich
   „Prüfhinweise“, Palette „Elemente“/„Pool mit Rolle“ als Symbole, Kacheln oder

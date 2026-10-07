@@ -1,5 +1,5 @@
 /**
- * Properties panel with tabs (General, Role, Legal bases, Audit reference,
+ * Properties panel with tabs (General, Role, Legal bases, Audit attributes, Audit reference,
  * Control & risk, Evidence, Findings, Source, Notes, Colour). Tabs follow the
  * WAI-ARIA tabs pattern (arrow keys, Home/End).
  */
@@ -8,13 +8,14 @@ import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import type { Comment, PaletteColor } from '@auditcore/bpmn-flowaudit'
 import { listsFor, tabMove, tabsFor, type TabDefinition, type TabId } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
-import { useSelectionState } from '../context'
+import { useEditorContext, useSelectionState } from '../context'
 import { useI18n } from '../i18n'
 import { ColorTab } from './tabs/ColorTab'
 import { GeneralTab } from './tabs/GeneralTab'
 import { LegalTab } from './tabs/LegalTab'
 import { ListsTab } from './tabs/ListsTab'
 import { NotesTab } from './tabs/NotesTab'
+import { PropertiesTab } from './tabs/PropertiesTab'
 import { RoleTab } from './tabs/RoleTab'
 
 export interface PropertiesPanelProps {
@@ -28,6 +29,7 @@ function TabContent({ tab, type, props }: { tab: TabDefinition; type: string; pr
   if (tab.id === 'general') return <GeneralTab />
   if (tab.id === 'role') return <RoleTab />
   if (tab.id === 'legal') return <LegalTab />
+  if (tab.id === 'properties') return <PropertiesTab />
   if (tab.id === 'notes') return <NotesTab comments={props.comments} author={props.author} onCommentsChange={props.onCommentsChange} />
   if (tab.id === 'color') return <ColorTab palette={props.palette} />
   return <ListsTab lists={listsFor(tab, type)} />
@@ -36,9 +38,10 @@ function TabContent({ tab, type, props }: { tab: TabDefinition; type: string; pr
 export function PropertiesPanel(props: PropertiesPanelProps) {
   const { t } = useI18n()
   const { element, type } = useSelectionState()
+  const { profile } = useEditorContext()
   const [active, setActive] = useState<TabId>('general')
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
-  const tabs = tabsFor(type)
+  const tabs = tabsFor(type, profile())
   const known = tabs.some((tab) => tab.id === active)
   const current = tabs.find((tab) => tab.id === (known ? active : 'general')) ?? tabs[0]
 

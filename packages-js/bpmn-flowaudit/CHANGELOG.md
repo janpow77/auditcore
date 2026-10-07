@@ -1,5 +1,34 @@
 # Changelog – @auditcore/bpmn-flowaudit
 
+## 0.4.0 – 2026-10-07
+
+- **Prüfungsmerkmale nach dem Profil:** `ProfileData.properties` (Block
+  `entries` mit `name`, `label`, `kind` = `text` | `choice` | `multi_choice` |
+  `yes_no`, `values`, optional `applies_to`, `help`, `depends_on`,
+  `separator`) beschreibt Name/Wert-Merkmale je Elementart; die Bibliothek
+  kennt keine feste Liste. Hilfen `propertyDefinitionsFor`, `propertyActive`,
+  `propertyOptions`, `splitPropertyValue`.
+- **`camunda:property` lesen und schreiben** (`model/camundaProperties.ts`):
+  `readNamedProperties`, `namedPropertyValue`, `writeNamedProperties`
+  (über `modeling`, rückgängig machbar), `setNamedPropertiesDirect`
+  (headless). Der Camunda-Namensraum wird bewusst nicht registriert – moddle
+  behält die Elemente generisch, Laden und Speichern ohne Bearbeitung bleiben
+  unverändert. Geschrieben wird nur das genannte Merkmal; ein leerer Wert
+  entfernt es, fremde Merkmale und ihre Reihenfolge bleiben erhalten.
+- UI-Kern: Reiter `properties` („Prüfungsmerkmale“), nur wenn das Profil
+  Merkmale für den Elementtyp definiert (`tabsFor(type, profile)`);
+  Formularmodell `propertyFields` mit `textPatch`, `togglePatch`,
+  `yesNoPatch`; Auswahl-Controller `namedProperties()`/`writeProperties()`.
+- `ModdleFactory.createAny` (optional) im Diensttyp; Texte DE/EN
+  `props.tab.properties`, `props.properties.*`; `ui.css` mit `.fa-property`.
+
+## 0.3.1 – 2026-10-07
+
+- `DiagramCollection.renameFolder()` trimmt den Namen; ein leerer Name lässt den
+  bisherigen stehen (bisher wurde er ungeprüft übernommen).
+- Texte DE/EN `collection.renameFolder`, `collection.renameHint`,
+  `collection.name.edit`, `collection.name.field`; `ui.css` mit `.fa-inline-name`.
+
 ## 0.3.0 – 2026-10-06
 
 - Neu: `folderCards()`/`FolderCard`/`CardDiagram` (Ordnerkarten einer Ebene),

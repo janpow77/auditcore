@@ -1,5 +1,25 @@
 # Changelog – @auditcore/bpmn-vue
 
+## 0.4.0 – 2026-10-07
+
+- **Reiter „Prüfungsmerkmale“** (`PropertiesTab`): Merkmale nach
+  `profile.properties` als Auswahl, Mehrfachauswahl, Ja/Nein oder Freitext,
+  gespeichert als `camunda:property` (im Camunda Modeler lesbar). Erscheint
+  nur, wenn das Profil Merkmale für den Elementtyp definiert; Bedingungen
+  (`depends_on`) blenden Felder sichtbar ab statt sie zu verstecken; Werte, die
+  das Profil nicht kennt, bleiben sichtbar und erhalten.
+- Demo mit Beispielkatalog der Systemprüfungen (`demo/demoProperties.ts`) und
+  einem Camunda-Modell; Playwright-Demo prüft Bearbeiten, Speichern und
+  erneutes Öffnen.
+
+## 0.3.1 – 2026-10-07
+
+- **Ordner umbenennen:** auf der Ordnerkarte (`GroupOverview`) ist der Name
+  direkt bearbeitbar (neu `InlineName`, Ereignis `rename-folder`); im Baum
+  (`CollectionTree`) per Doppelklick oder F2 auf den Ordnernamen mit Dialog
+  „Ordner umbenennen“. `FlowauditWorkbench` speichert über `renameFolder`.
+  Leerraum wird getrimmt, ein leerer Name nicht übernommen.
+
 ## 0.3.0 – 2026-10-06
 
 - **Übersicht der obersten Ebene** (`GroupOverview`): Ordnerkarten mit Name,

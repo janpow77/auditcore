@@ -7,12 +7,16 @@
 import {
   emptyExtensions,
   readExtensions,
+  readNamedProperties,
+  writeNamedProperties,
   readFlowstatValues,
   writeExtensions,
   writeFlowstatValues,
   type DiagramElement,
   type Extensions,
   type FlowstatField,
+  type NamedProperty,
+  type PropertyPatch,
 } from '../index'
 import type { EditorCore } from './editorCore'
 import type { EditorLike } from './editorFactory'
@@ -67,7 +71,17 @@ function selectionEditing(element: () => DiagramElement | null, editor: EditorCo
     return docs.map((doc) => doc.text ?? '').join('\n')
   }
 
-  return { write, rename, setDocumentation, flowstat, setFlowstat, property, documentation }
+  /** Name/value properties (`camunda:property`) of the element. */
+  function namedProperties(): NamedProperty[] {
+    return readNamedProperties(element()?.businessObject)
+  }
+
+  function writeProperties(patch: PropertyPatch): void {
+    const current = element()
+    if (current) writeNamedProperties(current, patch, editor.services())
+  }
+
+  return { write, rename, setDocumentation, flowstat, setFlowstat, property, documentation, namedProperties, writeProperties }
 }
 
 export function createSelectionCore(editor: EditorCore) {

@@ -1,5 +1,17 @@
 # Changelog – @auditcore/bpmn-react
 
+## 0.4.0 – 2026-10-07
+
+- **Reiter „Prüfungsmerkmale“** (`PropertiesTab`) wie in `@auditcore/bpmn-vue`
+  0.4.0: Merkmale nach `profile.properties`, gespeichert als
+  `camunda:property`.
+
+## 0.3.1 – 2026-10-07
+
+- **Ordner umbenennen** wie in `@auditcore/bpmn-vue` 0.3.1: Ordnerkarte mit
+  `InlineName` (`onRenameFolder`), Baum per Doppelklick oder F2 mit Dialog,
+  `FlowauditWorkbench` speichert über `renameFolder`.
+
 ## 0.3.0 – 2026-10-06
 
 - **Übersicht der obersten Ebene** (`GroupOverview`): Ordnerkarten mit Name,

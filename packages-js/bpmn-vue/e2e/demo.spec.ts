@@ -20,6 +20,26 @@ test('collection with group overview', async ({ page }) => {
   await shot(page, '01b-pruefhinweise')
 })
 
+test('folders can be renamed on the card and in the tree', async ({ page }) => {
+  await page.goto('/')
+  const card = page.locator('.fa-folder-card').filter({ has: page.locator('.fa-inline-name') }).first()
+  const oldName = (await card.locator('.fa-inline-name').textContent())!.trim()
+  await card.locator('.fa-inline-name').click()
+  await page.locator('.fa-inline-name__field').fill('  Umbenannt im Test  ')
+  await page.locator('.fa-inline-name__field').press('Enter')
+  await expect(page.getByRole('tree')).toContainText('Umbenannt im Test')
+  const label = page.locator('.fa-tree__row--folder .fa-tree__label', { hasText: 'Umbenannt im Test' })
+  await label.dblclick()
+  const dialog = page.getByRole('dialog', { name: 'Ordner umbenennen' })
+  await expect(dialog.getByRole('textbox')).toHaveValue('Umbenannt im Test')
+  await dialog.getByRole('textbox').fill(oldName)
+  await dialog.getByRole('button', { name: 'Übernehmen' }).click()
+  // Der Doppelklick wählt den Ordner zugleich aus: Die Übersicht zeigt ihn selbst.
+  await expect(page.locator('.fa-overview > h2')).toHaveText(oldName)
+  await expect(page.getByRole('tree')).not.toContainText('Umbenannt im Test')
+  await shot(page, '01c-ordner-umbenannt')
+})
+
 test('palette views, role tiles and a selected sequence flow', async ({ page }) => {
   await page.evaluate(() => localStorage.clear()).catch(() => undefined)
   await openDiagram(page, 'Bewilligung und Auszahlung')
@@ -90,6 +110,38 @@ test('editor with properties of a task', async ({ page }) => {
   await shot(page, '03-rechtsgrundlagen')
   await page.getByRole('tab', { name: 'Kontrolle & Risiko' }).click()
   await shot(page, '04-kontrolle-risiko')
+})
+
+test('audit attributes from the profile (camunda:property)', async ({ page }) => {
+  await openDiagram(page, 'Systemprüfung mit Prüfungsmerkmalen')
+  await page.locator('[data-element-id="T_DT_KA4_Doppelfoerderung"]').click()
+  await page.getByRole('tab', { name: 'Prüfungsmerkmale' }).click()
+  const panel = page.locator('.fa-tab-properties')
+  await expect(panel.locator('select').first()).toHaveValue('Durchlauftest')
+  const ka = panel.locator('.fa-property', { hasText: 'Kernanforderung' })
+  await expect(ka.getByLabel('KA 4', { exact: true })).toBeChecked()
+  await ka.getByLabel('KA 1', { exact: true }).check()
+  await expect(ka.getByLabel('KA 1', { exact: true })).toBeChecked()
+  await expect(panel.locator('.fa-property', { hasText: 'Offener Punkt' }).locator('input')).toBeChecked()
+  await shot(page, '10-pruefungsmerkmale')
+  // Wechsel der Auswahl und zurück: der Wert steht im Modell.
+  await page.locator('[data-element-id="T_DT_KA4_Interessenkonflikte"]').click()
+  await page.locator('[data-element-id="T_DT_KA4_Doppelfoerderung"]').click()
+  await page.getByRole('tab', { name: 'Prüfungsmerkmale' }).click()
+  await expect(page.locator('.fa-tab-properties .fa-property', { hasText: 'Kernanforderung' }).getByLabel('KA 1', { exact: true })).toBeChecked()
+  // Gateways tragen keine Merkmale: kein Reiter.
+  await page.locator('[data-element-id="G_Split"]').click()
+  await expect(page.getByRole('tab', { name: 'Prüfungsmerkmale' })).toHaveCount(0)
+  // Speichern und neu öffnen: der Wert steht im gespeicherten XML.
+  await page.getByRole('button', { name: 'Speichern' }).click()
+  await expect(page.getByText('ungespeichert')).toHaveCount(0)
+  await page.getByRole('tree').getByText('Anreicherung aus Dokumentation').dblclick()
+  await page.getByRole('tree').getByText('Systemprüfung mit Prüfungsmerkmalen').dblclick()
+  await page.locator('[data-element-id="T_DT_KA4_Doppelfoerderung"]').click()
+  await page.getByRole('tab', { name: 'Prüfungsmerkmale' }).click()
+  const reopened = page.locator('.fa-tab-properties .fa-property', { hasText: 'Kernanforderung' })
+  await expect(reopened.getByLabel('KA 1', { exact: true })).toBeChecked()
+  await expect(reopened.getByLabel('KA 4', { exact: true })).toBeChecked()
 })
 
 test('issues, diagram info and export dialog', async ({ page }) => {
