@@ -3,9 +3,9 @@
  * which element type and which lists it edits.
  */
 
-import { isActivity, isEvent, isFlowNode, isGateway, type ListExtensionKey } from '../index'
+import { isActivity, isEvent, isFlowNode, isGateway, propertyDefinitionsFor, type ListExtensionKey, type ProfileData } from '../index'
 
-export type TabId = 'general' | 'role' | 'legal' | 'references' | 'control' | 'evidence' | 'findings' | 'source' | 'notes' | 'color'
+export type TabId = 'general' | 'role' | 'legal' | 'properties' | 'references' | 'control' | 'evidence' | 'findings' | 'source' | 'notes' | 'color'
 
 export interface TabDefinition {
   id: TabId
@@ -29,6 +29,8 @@ export const TABS: TabDefinition[] = [
   { id: 'general', label: 'props.tab.general', icon: 'info', visible: () => true },
   { id: 'role', label: 'props.tab.role', icon: 'role-sonstige', visible: (type) => isContainer(type) || isFlowNode(type) },
   { id: 'legal', label: 'props.tab.legal', icon: 'marker-rechtsgrundlage', visible: (type) => isFlowNode(type) || isContainer(type) || isData(type) },
+  // Only offered when the profile defines properties for the type (see `tabsFor`).
+  { id: 'properties', label: 'props.tab.properties', icon: 'marker-checkliste', visible: () => true },
   { id: 'references', label: 'props.tab.references', icon: 'marker-pruefpunkt', visible: isElement, lists: ['auditReferences', 'crossReferences'] },
   { id: 'control', label: 'props.tab.control', icon: 'marker-schluesselkontrolle', visible: (type) => isActivity(type) || isGateway(type), lists: ['controls', 'risks'] },
   { id: 'evidence', label: 'props.tab.evidence', icon: 'marker-dokument', visible: (type) => isData(type) || isActivity(type) || isEvent(type), lists: ['evidence', 'deadlines'] },
@@ -45,6 +47,9 @@ export function listsFor(tab: TabDefinition, type: string): ListExtensionKey[] {
   return lists
 }
 
-export function tabsFor(type: string | null): TabDefinition[] {
-  return type ? TABS.filter((tab) => tab.visible(type)) : []
+/** Tabs for an element type; „Prüfungsmerkmale“ only if the profile defines properties for it. */
+export function tabsFor(type: string | null, profile?: ProfileData | null): TabDefinition[] {
+  if (!type) return []
+  const withProperties = propertyDefinitionsFor(profile, type).length > 0
+  return TABS.filter((tab) => tab.visible(type) && (tab.id !== 'properties' || withProperties))
 }

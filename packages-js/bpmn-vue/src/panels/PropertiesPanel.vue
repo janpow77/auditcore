@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Properties panel with tabs (General, Role, Legal bases, Audit reference,
+ * Properties panel with tabs (General, Role, Legal bases, Audit attributes, Audit reference,
  * Control & risk, Evidence, Findings, Source, Notes, Colour). Tabs follow the
  * WAI-ARIA tabs pattern (arrow keys, Home/End).
  */
@@ -15,16 +15,17 @@ import GeneralTab from './tabs/GeneralTab.vue'
 import LegalTab from './tabs/LegalTab.vue'
 import ListsTab from './tabs/ListsTab.vue'
 import NotesTab from './tabs/NotesTab.vue'
+import PropertiesTab from './tabs/PropertiesTab.vue'
 import RoleTab from './tabs/RoleTab.vue'
 
 defineProps<{ comments: Comment[]; author: string; palette?: readonly PaletteColor[] }>()
 const emit = defineEmits<{ (e: 'update:comments', value: Comment[]): void }>()
-const { selection } = useEditorContext()
+const { selection, profile } = useEditorContext()
 const { t } = useI18n()
 
 const active = ref<TabId>('general')
 const type = computed(() => selection.type.value)
-const tabs = computed(() => tabsFor(type.value))
+const tabs = computed(() => tabsFor(type.value, profile()))
 const current = computed(() => tabs.value.find((tab) => tab.id === active.value) ?? tabs.value[0])
 const tabRefs = ref<HTMLElement[]>([])
 
@@ -71,6 +72,7 @@ function onKey(event: KeyboardEvent, index: number): void {
         <GeneralTab v-if="current.id === 'general'" />
         <RoleTab v-else-if="current.id === 'role'" />
         <LegalTab v-else-if="current.id === 'legal'" />
+        <PropertiesTab v-else-if="current.id === 'properties'" />
         <NotesTab v-else-if="current.id === 'notes'" :comments="comments" :author="author" @update:comments="emit('update:comments', $event)" />
         <ColorTab v-else-if="current.id === 'color'" :palette="palette" />
         <ListsTab v-else :lists="listsFor(current, type ?? '')" />

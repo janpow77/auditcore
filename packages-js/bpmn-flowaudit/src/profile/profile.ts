@@ -12,6 +12,7 @@
 
 import { OTHER_ROLE, ROLES, roleAppliesTo, type Role } from '../schema/roles'
 import { label, type Label, type Locale } from '../schema/vocabulary'
+import type { PropertyCatalogue } from './properties'
 
 export const PROFILE_SCHEMA = 'auditcore_bpmn.profile/1'
 export const DEFAULT_PROFILE = 'foerderperiode-2021-2027'
@@ -95,6 +96,8 @@ export interface ProfileData {
   templates?: TemplateData[]
   legal_bases?: CatalogueBlock<LegalBasisTemplateData>
   custom_roles?: Record<string, CustomRoleData>
+  /** Name/value properties offered in the properties panel (UI only, see `properties.ts`). */
+  properties?: PropertyCatalogue
 }
 
 export interface RoleAlias {
