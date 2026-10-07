@@ -1,5 +1,6 @@
 /** Right column: properties, issue list, walk-through and comparison as tabs. */
 
+import type { CSSProperties } from 'react'
 import type { Comment, PaletteColor } from '@auditcore/bpmn-flowaudit'
 import { SIDE_VIEWS, type CompareSource, type SideView } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from './base/FaIcon'
@@ -16,6 +17,7 @@ export interface EditorSidePanelProps {
   author: string
   compareSources: CompareSource[]
   palette?: readonly PaletteColor[]
+  style?: CSSProperties
   onViewChange: (view: SideView) => void
   onCommentsChange?: (comments: Comment[]) => void
   onJump: (id: string) => void
@@ -37,7 +39,7 @@ export function EditorSidePanel(props: EditorSidePanelProps) {
   const { t } = useI18n()
   const errors = useValidationView().count.fehler
   return (
-    <div className="fa-side">
+    <div className="fa-side" style={props.style}>
       <div className="fa-side__tabs" role="tablist">
         {SIDE_VIEWS.map((entry) => (
           <button key={entry.id} type="button" role="tab" className="fa-side__tab" aria-selected={props.view === entry.id} title={t(entry.label)} onClick={() => props.onViewChange(entry.id)}>
