@@ -55,6 +55,7 @@ function Overview({ core }: { core: CollectionCore }) {
       cards={store.cards}
       onDescribeFolder={(id, text) => void store.describeFolder(id, text)}
       onDescribeDiagram={(id, text) => void store.describeDiagram(id, text)}
+      onRenameFolder={(id, name) => void store.renameFolder(id, name)}
     />
   )
 }
@@ -93,6 +94,25 @@ describe('GroupOverview (React)', () => {
     expect(core.store.get().collection.folders.get(folderId)?.description).toBe('Bewilligungsverfahren')
     expect(container.querySelector('.fa-folder-card .fa-describe')!.textContent).toBe('Bewilligungsverfahren')
   })
+
+  it('renames a folder inline on its card; an empty name keeps the old one', async () => {
+    const storage = new InMemoryStorage()
+    const core = createCollectionCore(storage)
+    const folderId = await fillCollection(core)
+    const { container } = render(<Overview core={core} />)
+    const title = container.querySelector('.fa-folder-card .fa-inline-name')!
+    expect(title.getAttribute('aria-label')).toBe('Namen bearbeiten: Antragsverfahren')
+    fireEvent.click(title)
+    fireEvent.change(container.querySelector('.fa-inline-name__field')!, { target: { value: '   ' } })
+    fireEvent.keyDown(container.querySelector('.fa-inline-name__field')!, { key: 'Enter' })
+    expect(core.store.get().collection.folders.get(folderId)?.name).toBe('Antragsverfahren')
+    fireEvent.click(container.querySelector('.fa-folder-card .fa-inline-name')!)
+    fireEvent.change(container.querySelector('.fa-inline-name__field')!, { target: { value: '  Bewilligungsverfahren ' } })
+    fireEvent.keyDown(container.querySelector('.fa-inline-name__field')!, { key: 'Enter' })
+    await until(async () => (await storage.loadCollection())?.folders[0]?.name === 'Bewilligungsverfahren')
+    await flush()
+    expect(container.querySelector('.fa-folder-card .fa-inline-name')!.textContent).toBe('Bewilligungsverfahren')
+  })
 })
 
 describe('CollectionTree (React)', () => {
@@ -107,6 +127,22 @@ describe('CollectionTree (React)', () => {
     fireEvent.change(within(screen.getByRole('dialog')).getByRole('textbox'), { target: { value: 'Prüfverfahren' } })
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Übernehmen' }))
     await until(() => [...core.store.get().collection.folders.values()].some((f) => f.name === 'Prüfverfahren'))
+  })
+
+  it('renames a folder by double-click or F2 through the prompt', async () => {
+    const { core } = await filled()
+    const { container } = render(<Tree core={core} />)
+    const label = () => container.querySelector('.fa-tree__row--folder .fa-tree__label')!
+    expect(label().getAttribute('title')).toBe('Doppelklick oder F2: umbenennen')
+    fireEvent.doubleClick(label())
+    const dialog = screen.getByRole('dialog', { name: 'Ordner umbenennen' })
+    expect((within(dialog).getByRole('textbox') as HTMLInputElement).value).toBe('Antragsverfahren')
+    fireEvent.change(within(dialog).getByRole('textbox'), { target: { value: ' Prüfstrategie ' } })
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Übernehmen' }))
+    await until(() => [...core.store.get().collection.folders.values()].some((f) => f.name === 'Prüfstrategie'))
+    await flush()
+    fireEvent.keyDown(label(), { key: 'F2' })
+    expect((within(screen.getByRole('dialog', { name: 'Ordner umbenennen' })).getByRole('textbox') as HTMLInputElement).value).toBe('Prüfstrategie')
   })
 
   it('selects and opens diagrams and moves them by drag and drop', async () => {

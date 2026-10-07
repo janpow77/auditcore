@@ -338,6 +338,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 |---|---|---|
 | `open` | `[id: string]` | – |
 | `describe-folder` | `[id: string, text: string]` | – |
+| `rename-folder` | `[id: string, name: string]` | – |
 | `describe-diagram` | `[id: string, text: string]` | – |
 | `folder-action` | `[id: string, folderId: string, diagramIds: string[]]` | – |
 
