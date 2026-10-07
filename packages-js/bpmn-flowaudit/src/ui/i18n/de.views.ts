@@ -186,6 +186,7 @@ export const MESSAGES_DE_VIEWS: Record<string, string> = {
   'shortcuts.connect': 'Verbinden',
   'shortcuts.edit': 'Beschriftung bearbeiten',
   'shortcuts.help': 'Diese Hilfe',
+  'shortcuts.panel': 'Eigenschaften ein-/ausblenden',
   'key.ctrl': 'Strg',
   'key.del': 'Entf',
   'color.title': 'Farbe',

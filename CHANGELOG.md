@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- npm `@auditcore/bpmn-editor` 0.1.2, `@auditcore/bpmn-flowaudit`,
+  `@auditcore/bpmn-vue` und `@auditcore/bpmn-react` 0.5.0: Ordnerübersicht in
+  voller Breite mit Kacheln, Liste und Vorschaubildern; Eigenschaften und
+  Diagrammsammlung mit verschiebbarer Trennlinie, einklappbar (Breite und
+  Zustand je Browser); Pools lassen sich in der Fläche greifen und mit Inhalt
+  verschieben (vorher nur am Titelstreifen). Anlass: Rückmeldung aus dem
+  BPMN-Editor des audit_designer (07.10.2026).
 - npm `@auditcore/bpmn-flowaudit`, `@auditcore/bpmn-vue` und
   `@auditcore/bpmn-react` 0.4.0: Reiter „Prüfungsmerkmale“ – Name/Wert-Merkmale
   nach dem Profil (`profile.properties`), gespeichert als `camunda:property` und

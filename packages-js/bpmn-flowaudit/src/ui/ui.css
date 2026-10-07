@@ -533,9 +533,10 @@
 /* EditorSidePanel */
 .fa-side {
   display: flex;
+  flex: none;
   flex-direction: column;
   width: 420px;
-  min-width: 320px;
+  min-width: 0;
   height: 100%;
   border-left: 1px solid var(--fa-border);
   background: var(--fa-surface);
@@ -625,9 +626,10 @@
 
 .fa-workbench__side {
   display: flex;
+  flex: none;
   flex-direction: column;
   width: 300px;
-  min-width: 240px;
+  min-width: 0;
   border-right: 1px solid var(--fa-border);
   background: var(--fa-surface);
   overflow: auto;
@@ -917,8 +919,16 @@
 }
 
 .fa-overview h2 {
-  margin: 0 0 14px;
+  margin: 0;
   font-size: 18px;
+}
+
+.fa-overview__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
 .fa-overview__cards {
@@ -2084,3 +2094,240 @@ body,
 .fa-property--inactive .fa-select,
 .fa-property--inactive .fa-input { opacity: 0.55; }
 .fa-property__hint { font-style: italic; }
+
+/* PanelResizer: handle between a side panel and the main area */
+.fa-resizer {
+  position: relative;
+  flex: none;
+  width: 7px;
+  margin: 0 -3px;
+  z-index: 3;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.fa-resizer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 1px;
+  background: transparent;
+  transition: background 0.12s ease, width 0.12s ease;
+}
+
+.fa-resizer:hover::before,
+.fa-resizer:focus-visible::before,
+.fa-resizer--active::before {
+  left: 2px;
+  width: 3px;
+  background: var(--fa-primary);
+}
+
+.fa-resizer:focus-visible {
+  outline: none;
+}
+
+.fa-resizer__toggle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 18px;
+  height: 32px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--fa-border);
+  border-radius: 9px;
+  background: var(--fa-surface);
+  color: var(--fa-text-muted);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.12s ease;
+  cursor: pointer;
+}
+
+.fa-resizer:hover .fa-resizer__toggle,
+.fa-resizer:focus-within .fa-resizer__toggle {
+  opacity: 1;
+}
+
+.fa-panel-rail {
+  display: flex;
+  flex: none;
+  width: 28px;
+  background: var(--fa-surface);
+}
+
+.fa-panel-rail--right {
+  border-left: 1px solid var(--fa-border);
+}
+
+.fa-panel-rail--left {
+  border-right: 1px solid var(--fa-border);
+}
+
+.fa-panel-rail__button {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--fa-text-muted);
+  cursor: pointer;
+}
+
+.fa-panel-rail__button:hover,
+.fa-panel-rail__button:focus-visible {
+  background: var(--fa-surface-2);
+  color: var(--fa-text);
+}
+
+.fa-panel-rail__label {
+  font-size: 12px;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-resizer::before,
+  .fa-resizer__toggle {
+    transition: none;
+  }
+}
+
+/* GroupOverview: wide cards, list and thumbnails */
+.fa-folder-card--wide {
+  grid-column: 1 / -1;
+}
+
+.fa-overview--tiles .fa-folder-card--wide .fa-folder-card__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  column-gap: 24px;
+}
+
+.fa-overview--tiles .fa-folder-card--wide .fa-folder-card__item:last-child {
+  border-bottom: 1px solid var(--fa-border);
+}
+
+.fa-diagram-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--fa-border);
+}
+
+.fa-diagram-list__row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(90px, auto) minmax(0, 2fr);
+  align-items: baseline;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--fa-border);
+}
+
+.fa-diagram-list__row:last-child {
+  border-bottom: 0;
+}
+
+.fa-diagram-list__row--head {
+  padding: 6px 0;
+  color: var(--fa-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.fa-diagram-list__name {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fa-diagram-list__name .fa-describe {
+  -webkit-line-clamp: 1;
+}
+
+.fa-diagram-list__facts {
+  color: var(--fa-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fa-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fa-thumb {
+  position: relative;
+  min-width: 0;
+}
+
+.fa-thumb__open {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fa-thumb__image {
+  display: grid;
+  aspect-ratio: 16 / 10;
+  place-items: center;
+  border: 1px solid var(--fa-border);
+  border-radius: var(--fa-radius-sm);
+  background: #fff;
+  overflow: hidden;
+}
+
+.fa-thumb__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.fa-thumb__image--loading {
+  background: var(--fa-surface-2);
+}
+
+.fa-thumb__empty {
+  color: var(--fa-text-muted);
+  font-size: 12px;
+}
+
+.fa-thumb__open:hover .fa-thumb__image,
+.fa-thumb__open:focus-visible .fa-thumb__image {
+  border-color: var(--fa-primary);
+}
+
+.fa-thumb__name {
+  color: var(--fa-primary);
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fa-thumb__status {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}

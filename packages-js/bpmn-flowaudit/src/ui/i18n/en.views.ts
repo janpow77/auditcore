@@ -172,6 +172,7 @@ export const MESSAGES_EN_VIEWS: Record<string, string> = {
   'shortcuts.connect': 'Connect',
   'shortcuts.edit': 'Edit label',
   'shortcuts.help': 'This help',
+  'shortcuts.panel': 'Show/hide properties',
   'key.ctrl': 'Ctrl',
   'key.del': 'Del',
   'color.title': 'Colour',
