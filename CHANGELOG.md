@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- `auditcore_invoicesynth` (unveröffentlicht): Generatorvariante `v2` für die
+  Donut-Trainingsrunde „Stufe 5“ (`--variety v2`, Standard bleibt `v1`).
+  Anlass: Fehleranalyse auf dem Layout-Holdout T2 (Fälligkeit 180× als
+  Lieferdatum gelesen, Rechnungsdatum 17× vertauscht; Ziffernfehler in
+  IBAN/USt-IdNr.; fehlender `<s_supplier>`-Block). Neu in `v2`: Reihenfolge der
+  Kopfdaten seed-bestimmt variiert, Lieferdatum in rund einem Viertel der Belege
+  weggelassen, Fälligkeit öfter als Fließtext mit fünf deutschen und drei
+  englischen Formulierungen, zusätzliche Beschriftungen (z. B.
+  „Leistungserbringung“, „Liefertag“, „Fälligkeitsdatum“, „zahlbar bis
+  spätestens“, „Rechnungsdatum/Invoice date“), zwei neue Trainingsvorlagen
+  `kopf_zeile` (Kopfdaten in einer Zeile) und `kopf_kasten` (senkrechter Kasten,
+  Beschriftung über dem Wert), USt-IdNr. wahlweise direkt unter dem
+  Absendernamen, seltene starke Verschlechterung (Herunter-/Hochskalieren,
+  Unschärfe, JPEG; Anteil 12 %) sowie die freie Schrift Lato (`fonts-lato`).
+  Reproduzierbarkeit: `v1` erzeugt bitgleich dieselben Datensätze und
+  Planprüfsummen wie bisher (geprüft: Datensatz-Hash und `plan_sha256`
+  unverändert); in `v2` bleibt der Satz `test_layout_holdout` (T2) bitgleich zu
+  `v1`, Holdout-Vorlagen und DejaVu Serif bleiben ausschließlich dort.
+
 - npm `@auditcore/bpmn-editor` 0.1.2, `@auditcore/bpmn-flowaudit`,
   `@auditcore/bpmn-vue` und `@auditcore/bpmn-react` 0.5.0: Ordnerübersicht in
   voller Breite mit Kacheln, Liste und Vorschaubildern; Eigenschaften und
