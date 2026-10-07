@@ -60,3 +60,22 @@ export const OVERVIEW_EXPECT: Expectation = {
   counts: { '.fa-folder-card': 2, '.fa-describe': 3, '.fa-inline-name': 1, '.fa-overview__ka-cell': 0, 'details.fa-overview__hints:not([open])': 1, '[role="meter"]': 1 },
 }
 export const INFO_EXPECT: Expectation = { texts: ['Bewilligung', 'Öffnen'], roles: [['button', 'Öffnen'], ['combobox', 'Verschieben nach …']] }
+
+/** List layout: one table per card, one row per diagram plus the head. */
+export const OVERVIEW_LIST_EXPECT: Expectation = {
+  texts: ['Diagramm', 'Umfang', 'Aktivitäten'],
+  counts: { '.fa-folder-card--wide': 2, '[role="table"]': 2, '.fa-diagram-list__row': 4, '.fa-folder-card__list': 0 },
+}
+
+/** Thumbnail layout with a synthetic source: one picture per diagram. */
+export const OVERVIEW_THUMB_EXPECT: Expectation = {
+  roles: [['img', 'Vorschau von Bewilligung'], ['img', 'Vorschau von Anreicherung']],
+  counts: { '.fa-thumb': 2, '.fa-thumb__image img': 2 },
+}
+
+/** A thumbnail source that answers at once (no rendering in tests). */
+export const syntheticThumbnails = {
+  get: async (id: string) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" data-id="${id}"/>`)}`,
+  invalidate: () => undefined,
+  clear: () => undefined,
+}
