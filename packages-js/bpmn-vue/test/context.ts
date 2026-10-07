@@ -4,10 +4,10 @@ import type { ProfileData } from '@auditcore/bpmn-flowaudit'
 import { provideEditorContext, type EditorContext, type EditorPorts } from '../src/stores/context'
 
 /** Mounts a component inside a minimal editor context (no core editor). */
-export function mountInContext(component: Component, props: Record<string, unknown>, options: { readonly?: boolean; profile?: ProfileData | null; ports?: EditorPorts } = {}) {
+export function mountInContext(component: Component, props: Record<string, unknown>, options: { readonly?: boolean; profile?: ProfileData | null; ports?: EditorPorts; selection?: Record<string, unknown> } = {}) {
   const context = {
     editor: { state: { ready: false, changes: 0 } },
-    selection: {},
+    selection: options.selection ?? {},
     validation: {},
     ports: options.ports ?? {},
     profile: () => options.profile ?? null,

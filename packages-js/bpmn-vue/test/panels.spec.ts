@@ -35,6 +35,7 @@ describe('tabs', () => {
     expect(ids('bpmn:Lane')).not.toContain('control')
     expect(ids('bpmn:SequenceFlow')).toEqual(['general', 'notes', 'color'])
     expect(tabsFor(null)).toEqual([])
+    expect(ids('bpmn:Task')).not.toContain('properties')
   })
 
   it('edits evidence only at data objects and deadlines only at activities', () => {
