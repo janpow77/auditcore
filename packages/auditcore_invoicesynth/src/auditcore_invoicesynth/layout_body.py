@@ -13,12 +13,14 @@ from auditcore_invoicesynth.labels import VAT_NOTES
 from auditcore_invoicesynth.layout_head import (
     continuation_header,
     currency_field,
+    due_in_text,
     ensure_space,
     key_value,
     label_value,
     page_footer,
 )
 from auditcore_invoicesynth.layout_model import GRAY, PAGE_BOTTOM, Canvas, LayoutSpec, Variant
+from auditcore_invoicesynth.variety import due_text
 
 COLUMNS = {"pos": 20.0, "desc": 31.0, "qty": 128.0, "unit": 158.0, "amount": 190.0}
 
@@ -191,13 +193,9 @@ def payment(
         text = VAT_NOTES[note][len(inv.invoice_number) % len(VAT_NOTES[note])]
         canvas.text(20, y, text, size=0.85)
         y += canvas.line_height(0.85) + 1
-    if spec.due_in_text:
+    if due_in_text(spec, variant):
         due = canvas.field("due_date", variant.date(inv.due_date))
-        text = (
-            f"Zahlbar bis {due} ohne Abzug."
-            if variant.language == "de"
-            else f"Payable by {due} without deduction."
-        )
+        text = due_text(variant, due, inv.invoice_date, inv.due_date)
     elif inv.kind == "credit_note":
         text = (
             "Der Betrag wird Ihrem Konto gutgeschrieben."
