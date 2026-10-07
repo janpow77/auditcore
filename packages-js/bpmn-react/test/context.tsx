@@ -7,10 +7,10 @@ import { EditorContextProvider, type EditorContext } from '../src/context'
 const store = <S extends object>(state: S) => ({ get: () => state, set: () => undefined, subscribe: () => () => undefined })
 
 /** Renders a component inside a minimal editor context (no core editor) – counterpart of Vue's `mountInContext`. */
-export function renderInContext(element: ReactElement, options: { readonly?: boolean; profile?: ProfileData | null; ports?: EditorPorts } = {}) {
+export function renderInContext(element: ReactElement, options: { readonly?: boolean; profile?: ProfileData | null; ports?: EditorPorts; selection?: Record<string, unknown> } = {}) {
   const context = {
     editor: { store: store({ ready: false, changes: 0, info: null }) },
-    selection: { store: store({ element: null, version: 0 }) },
+    selection: { store: store({ element: null, version: 0 }), ...options.selection },
     validation: { store: store({ local: [], server: [], running: false, error: null }) },
     ports: options.ports ?? {},
     profile: () => options.profile ?? null,
