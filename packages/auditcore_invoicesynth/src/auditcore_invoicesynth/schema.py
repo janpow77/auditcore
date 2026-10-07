@@ -128,6 +128,23 @@ def _decode(text: str) -> dict[str, Any]:
     return result
 
 
+SUPPLIER_KEYS = ("name", "vat_id")
+
+
+def repair_structure(parse: dict[str, Any]) -> dict[str, Any]:
+    """Lieferantenfelder ohne ``<s_supplier>`` (ausgelassenes Tag) dem Lieferanten zuordnen.
+
+    Ein vorhandener Wert im Lieferantenblock hat Vorrang; die Eingabe bleibt unverändert.
+    """
+    loose = {key: parse[key] for key in SUPPLIER_KEYS if isinstance(parse.get(key), str)}
+    if not loose:
+        return parse
+    supplier = parse.get("supplier")
+    merged = {**loose, **supplier} if isinstance(supplier, dict) else loose
+    rest = {key: value for key, value in parse.items() if key not in loose}
+    return {**rest, "supplier": merged}
+
+
 def from_sequence(sequence: str) -> dict[str, Any]:
     """Donut-Ausgabe → Ziel-JSON; unvollständige Tags werden übergangen."""
     text = sequence.replace("</s>", "").replace("<s>", "").replace("<pad>", "")

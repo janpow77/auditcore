@@ -11,6 +11,11 @@
   Felder werden abgebildet (``total.total_price`` → ``total``,
   ``sub_total.subtotal_price`` → ``net_amount``, ``sub_total.tax_price`` →
   Steuerzeile). Rechnungsnummer, Datum, IBAN und USt-IdNr. kennt CORD nicht.
+* Nachbearbeitung: ausgelassenes ``<s_supplier>`` wird repariert
+  (``schema.repair_structure``); die Falschwert-Quote nach Plausibilität
+  nutzt ``plausibility.plausible_fields`` (Prüfziffern, Datum, Summen).
+* ``--from-predictions <bericht.json>``: vorhandene Vorhersagen ohne Modell
+  und ohne GPU neu bewerten (Rohsequenzen aus den ``.jsonl``-Dateien).
 * Testsätze: ``test_synthetic`` (T1) und ``test_layout_holdout`` (T2). Je Satz
   und Modell ``<out>.<modell>.<satz>.jsonl`` mit Vorhersagen, dazu der
   Gesamtbericht mit Kennzahlen und Abnahmeprüfung (E6).
@@ -22,12 +27,14 @@ import argparse
 import json
 import sys
 import time
-from collections.abc import Callable, Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path
+from typing import cast
 
 from auditcore_invoicesynth.dataset import load_split, verify_dataset
 from auditcore_invoicesynth.evaluation import check_acceptance, evaluate
-from auditcore_invoicesynth.schema import TASK_TOKEN, from_sequence
+from auditcore_invoicesynth.plausibility import plausible_fields
+from auditcore_invoicesynth.schema import TASK_TOKEN, from_sequence, repair_structure
 from auditcore_invoicesynth.train.checkpoint import CheckpointManager
 from auditcore_invoicesynth.train.torch_predict import Predictor, donut_predictor
 
@@ -61,7 +68,7 @@ def cord_to_invoice(parse: Mapping[str, object]) -> dict[str, object]:
 
 def parse_output(sequence: str, *, cord: bool) -> dict[str, object]:
     if not cord:
-        return from_sequence(sequence)
+        return repair_structure(from_sequence(sequence))
     return cord_to_invoice(from_sequence(sequence.replace(CORD_PROMPT, "", 1)))
 
 
@@ -87,7 +94,31 @@ def run_split(
             pairs.append((row["gt_parse"], parse))
             record = {"file_name": row["file_name"], "parse": parse, "raw": sequence}
             handle.write(json.dumps(record, ensure_ascii=False) + "\n")
-    report = evaluate(pairs)
+    return _scored(pairs, seconds, out)
+
+
+def rescore_split(
+    dataset: Path, split: str, *, cord: bool, predictions: Path, out: Path
+) -> dict[str, object]:
+    """Gespeicherte Rohsequenzen neu auswerten (gleiche Nachbearbeitung, ohne Laufzeit)."""
+    truth = {row["file_name"]: row["gt_parse"] for row in load_split(dataset, split)}
+    pairs = []
+    with predictions.open(encoding="utf-8") as source, out.open("w", encoding="utf-8") as handle:
+        for line in source:
+            record = json.loads(line)
+            parse = parse_output(record["raw"], cord=cord)
+            pairs.append((truth[record["file_name"]], parse))
+            row = {"file_name": record["file_name"], "parse": parse, "raw": record["raw"]}
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    return _scored(pairs, [], out)
+
+
+def _scored(
+    pairs: Sequence[tuple[Mapping[str, object], Mapping[str, object]]],
+    seconds: list[float],
+    out: Path,
+) -> dict[str, object]:
+    report = evaluate(pairs, accept=plausible_fields)
     acceptance = check_acceptance(report)
     timing = _quantiles(seconds)
     return {
@@ -121,6 +152,7 @@ def _parser() -> argparse.ArgumentParser:
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--run-dir", help="neuester gültiger Checkpoint des Laufs")
     source.add_argument("--model-dir")
+    source.add_argument("--from-predictions", help="früherer Bericht (JSON), ohne Modell")
     parser.add_argument("--cord-model-dir", help="Vergleich Donut-CORD (optional)")
     parser.add_argument("--splits", nargs="+", default=list(DEFAULT_SPLITS))
     parser.add_argument("--limit", type=int, help="nur die ersten N Seiten je Satz")
@@ -140,6 +172,8 @@ def main(
     if not verification.ok:
         sys.stderr.write("Fehler: Datensatz weicht vom Manifest ab\n")
         return 2
+    if args.from_predictions:
+        return _rescore(args, dataset, verification.dataset_hash)
     model_dir = Path(args.model_dir) if args.model_dir else latest_checkpoint(Path(args.run_dir))
     candidates: list[tuple[str, Path, str, bool]] = [("kandidat", model_dir, TASK_TOKEN, False)]
     if args.cord_model_dir:
@@ -167,6 +201,37 @@ def main(
         "model_dir": str(model_dir),
         "results": results,
     }
+    return _write_report(out, report)
+
+
+def _rescore(args: argparse.Namespace, dataset: Path, dataset_hash: str) -> int:
+    previous = json.loads(Path(args.from_predictions).read_text(encoding="utf-8"))
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    results: dict[str, dict[str, dict[str, object]]] = {}
+    for name, splits in previous["results"].items():
+        results[name] = {
+            split: rescore_split(
+                dataset,
+                split,
+                cord=name == "donut_cord",
+                predictions=Path(old["predictions"]),
+                out=out.with_name(f"{out.stem}.{name}.{split}.jsonl"),
+            )
+            for split, old in splits.items()
+            if split in _splits(args.splits)
+        }
+    report = {
+        "dataset_hash": dataset_hash,
+        "model_dir": previous.get("model_dir"),
+        "rescored_from": str(args.from_predictions),
+        "results": results,
+    }
+    return _write_report(out, report)
+
+
+def _write_report(out: Path, report: Mapping[str, object]) -> int:
+    results = cast("dict[str, dict[str, dict[str, object]]]", report["results"])
     out.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
     summary = {
         f"{name}/{split}": result["summary"]
