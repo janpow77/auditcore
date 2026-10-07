@@ -38,12 +38,13 @@ from auditcore_invoicesynth.formats import AmountStyle, CurrencyStyle, DateStyle
 from auditcore_invoicesynth.labels import SYNTHETIC_FOOTER, SYNTHETIC_MARKER, Language
 from auditcore_invoicesynth.layouts import (
     HOLDOUT_LAYOUTS,
-    TRAINING_LAYOUTS,
     Variant,
+    available_layouts,
     expansion,
 )
 from auditcore_invoicesynth.plan import SPLITS, SampleSpec, SynthConfig, plan_dataset
 from auditcore_invoicesynth.schema import SCHEMA_VERSION, TASK_TOKEN, nest_fields, ordered
+from auditcore_invoicesynth.variety import apply_variety
 
 MANIFEST = "manifest.json"
 FORMAT = "auditcore-invoicesynth/donut-dataset/1"
@@ -98,6 +99,8 @@ def prepare_samples(config: SynthConfig, specs: list[SampleSpec]) -> list[Prepar
             rate_variant=spec.rate_variant,
             iban_grouped=spec.iban_grouped,
         )
+        if spec.variety != "v1":
+            variant = apply_variety(variant, spec.seed, credit_note=invoice.kind == "credit_note")
         prepared.append(PreparedSample(spec, invoice, variant))
     return prepared
 
@@ -122,7 +125,7 @@ def _runtime() -> dict[str, str]:
 
 def _meta(sample: PreparedSample, page: int, pages: int) -> dict[str, Any]:
     spec, invoice = sample.spec, sample.invoice
-    return {
+    meta: dict[str, object] = {
         "sample_id": spec.sample_id,
         "page": page,
         "pages": pages,
@@ -138,6 +141,11 @@ def _meta(sample: PreparedSample, page: int, pages: int) -> dict[str, Any]:
         "correct_total": f"{invoice.total:.2f}",
         "synthetic": True,
     }
+    if spec.variety != "v1":
+        # Nur ab v2, damit die Metadaten (und der Hash) von v1-Datensätzen gleich bleiben.
+        meta["variety"] = spec.variety
+        meta["degraded"] = spec.degrade is not None
+    return meta
 
 
 def build_dataset(
@@ -220,7 +228,7 @@ def _write_sample(
     Liefert je gespeicherter Seite die ``metadata.jsonl``-Zeile, erst nachdem das
     Bild geschrieben ist.
     """
-    from auditcore_invoicesynth.augment import augment_page
+    from auditcore_invoicesynth.augment import augment_page, degrade_page
     from auditcore_invoicesynth.render import render_pages
 
     spec = sample.spec
@@ -245,6 +253,8 @@ def _write_sample(
                 str(fonts.path(spec.font_family, "bold")), max(8, spec.dpi // 6)
             )
             image = augment_page(image, spec.augment, spec.seed + page_no, stamp_font=stamp_font)
+        if spec.degrade is not None:
+            image = degrade_page(image, spec.degrade)
         name = spec.sample_id + (f"-p{page_no}" if len(pages) > 1 else "") + ".png"
         image.save(directory / name, format="PNG", compress_level=6)
         ground_truth = {
@@ -289,7 +299,14 @@ def _manifest(
         },
         "runtime": _runtime(),
         "config": config.to_dict(),
-        "layouts": {"training": list(TRAINING_LAYOUTS), "holdout": list(HOLDOUT_LAYOUTS)},
+        "layouts": {
+            "training": [
+                name
+                for name in available_layouts(config.variety)
+                if name not in config.holdout_layouts
+            ],
+            "holdout": list(HOLDOUT_LAYOUTS),
+        },
         "split_rules": (
             "Holdout-Vorlagen und Holdout-Schriften nur in test_layout_holdout; "
             "Einzelseed je Beleg = SHA-256(seed:sample_id)"

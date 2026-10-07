@@ -204,7 +204,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 90.01
+      "coverage_percent": 90.53
     },
     "auditcore_kanban": {
       "metrics": {
