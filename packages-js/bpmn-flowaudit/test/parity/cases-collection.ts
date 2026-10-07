@@ -56,6 +56,7 @@ export const TREE_CASES: TreeCase[] = [
 /** Top level: card „Antragsverfahren“ (folder) and card „Ohne Ordner“; hints collapsed. */
 export const OVERVIEW_EXPECT: Expectation = {
   texts: ['Antragsverfahren', 'Bewilligung', 'Ohne Ordner', 'Anreicherung', 'Prüfhinweise', 'Rechtsgrundlagen-Abdeckung'],
-  counts: { '.fa-folder-card': 2, '.fa-describe': 3, '.fa-overview__ka-cell': 0, 'details.fa-overview__hints:not([open])': 1, '[role="meter"]': 1 },
+  roles: [['button', 'Namen bearbeiten: Antragsverfahren']],
+  counts: { '.fa-folder-card': 2, '.fa-describe': 3, '.fa-inline-name': 1, '.fa-overview__ka-cell': 0, 'details.fa-overview__hints:not([open])': 1, '[role="meter"]': 1 },
 }
 export const INFO_EXPECT: Expectation = { texts: ['Bewilligung', 'Öffnen'], roles: [['button', 'Öffnen'], ['combobox', 'Verschieben nach …']] }

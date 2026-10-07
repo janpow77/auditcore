@@ -1,5 +1,12 @@
 # Changelog – @auditcore/bpmn-flowaudit
 
+## 0.3.1 – 2026-10-07
+
+- `DiagramCollection.renameFolder()` trimmt den Namen; ein leerer Name lässt den
+  bisherigen stehen (bisher wurde er ungeprüft übernommen).
+- Texte DE/EN `collection.renameFolder`, `collection.renameHint`,
+  `collection.name.edit`, `collection.name.field`; `ui.css` mit `.fa-inline-name`.
+
 ## 0.3.0 – 2026-10-06
 
 - Neu: `folderCards()`/`FolderCard`/`CardDiagram` (Ordnerkarten einer Ebene),

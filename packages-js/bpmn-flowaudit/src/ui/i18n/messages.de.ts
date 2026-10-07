@@ -4,6 +4,7 @@
  */
 
 import { MESSAGES_DE_EDITOR } from './de.editor'
+import { MESSAGES_DE_COLLECTION } from './de.collection'
 import { MESSAGES_DE_VIEWS } from './de.views'
 
-export const MESSAGES_DE: Record<string, string> = { ...MESSAGES_DE_EDITOR, ...MESSAGES_DE_VIEWS }
+export const MESSAGES_DE: Record<string, string> = { ...MESSAGES_DE_EDITOR, ...MESSAGES_DE_COLLECTION, ...MESSAGES_DE_VIEWS }
