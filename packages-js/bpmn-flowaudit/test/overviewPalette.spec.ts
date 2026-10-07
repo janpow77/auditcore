@@ -50,6 +50,15 @@ describe('folder cards', () => {
     expect(() => collection.describeFolder('fehlt', 'x')).toThrow()
   })
 
+  it('renames folders with trimmed names and keeps the old name for an empty one', async () => {
+    const collection = await sample()
+    collection.renameFolder('leer', '  Prüfstrategie  ')
+    expect(collection.folders.get('leer')!.name).toBe('Prüfstrategie')
+    collection.renameFolder('leer', '   ')
+    expect(collection.folders.get('leer')!.name).toBe('Prüfstrategie')
+    expect(() => collection.renameFolder('fehlt', 'x')).toThrow()
+  })
+
   it('counts collection issues plus expired diagrams as audit hints', () => {
     expect(hintCount({ expired: ['a'] }, [{}, {}])).toBe(3)
     expect(hintCount({ expired: [] }, [])).toBe(0)
