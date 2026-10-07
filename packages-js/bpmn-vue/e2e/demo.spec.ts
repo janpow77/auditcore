@@ -112,6 +112,38 @@ test('editor with properties of a task', async ({ page }) => {
   await shot(page, '04-kontrolle-risiko')
 })
 
+test('audit attributes from the profile (camunda:property)', async ({ page }) => {
+  await openDiagram(page, 'Systemprüfung mit Prüfungsmerkmalen')
+  await page.locator('[data-element-id="T_DT_KA4_Doppelfoerderung"]').click()
+  await page.getByRole('tab', { name: 'Prüfungsmerkmale' }).click()
+  const panel = page.locator('.fa-tab-properties')
+  await expect(panel.locator('select').first()).toHaveValue('Durchlauftest')
+  const ka = panel.locator('.fa-property', { hasText: 'Kernanforderung' })
+  await expect(ka.getByLabel('KA 4', { exact: true })).toBeChecked()
+  await ka.getByLabel('KA 1', { exact: true }).check()
+  await expect(ka.getByLabel('KA 1', { exact: true })).toBeChecked()
+  await expect(panel.locator('.fa-property', { hasText: 'Offener Punkt' }).locator('input')).toBeChecked()
+  await shot(page, '10-pruefungsmerkmale')
+  // Wechsel der Auswahl und zurück: der Wert steht im Modell.
+  await page.locator('[data-element-id="T_DT_KA4_Interessenkonflikte"]').click()
+  await page.locator('[data-element-id="T_DT_KA4_Doppelfoerderung"]').click()
+  await page.getByRole('tab', { name: 'Prüfungsmerkmale' }).click()
+  await expect(page.locator('.fa-tab-properties .fa-property', { hasText: 'Kernanforderung' }).getByLabel('KA 1', { exact: true })).toBeChecked()
+  // Gateways tragen keine Merkmale: kein Reiter.
+  await page.locator('[data-element-id="G_Split"]').click()
+  await expect(page.getByRole('tab', { name: 'Prüfungsmerkmale' })).toHaveCount(0)
+  // Speichern und neu öffnen: der Wert steht im gespeicherten XML.
+  await page.getByRole('button', { name: 'Speichern' }).click()
+  await expect(page.getByText('ungespeichert')).toHaveCount(0)
+  await page.getByRole('tree').getByText('Anreicherung aus Dokumentation').dblclick()
+  await page.getByRole('tree').getByText('Systemprüfung mit Prüfungsmerkmalen').dblclick()
+  await page.locator('[data-element-id="T_DT_KA4_Doppelfoerderung"]').click()
+  await page.getByRole('tab', { name: 'Prüfungsmerkmale' }).click()
+  const reopened = page.locator('.fa-tab-properties .fa-property', { hasText: 'Kernanforderung' })
+  await expect(reopened.getByLabel('KA 1', { exact: true })).toBeChecked()
+  await expect(reopened.getByLabel('KA 4', { exact: true })).toBeChecked()
+})
+
 test('issues, diagram info and export dialog', async ({ page }) => {
   await openDiagram(page, 'Anreicherung aus')
   await page.locator('.fa-statusbar__issues').click()
