@@ -106,6 +106,25 @@ describe('GroupOverview', () => {
     await wrapper.find('.fa-folder-card__open').trigger('click')
     expect(wrapper.emitted<[string]>('open')![0]![0]).toBe('bewilligung')
   })
+
+  it('renames a folder inline on its card; an empty name keeps the old one', async () => {
+    const { storage, store, folderId } = await filledStore()
+    wrapper = mount(GroupOverview, {
+      props: { overview: store.overview.value, issues: store.issues.value, title: 'Oberste Ebene', cards: store.cards.value, 'onRenameFolder': store.renameFolder },
+      attachTo: document.body,
+    })
+    const title = wrapper.find('.fa-folder-card .fa-inline-name')
+    expect(title.attributes('aria-label')).toBe('Namen bearbeiten: Antragsverfahren')
+    await title.trigger('click')
+    await wrapper.find('.fa-inline-name__field').setValue('   ')
+    await wrapper.find('.fa-inline-name__field').trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('rename-folder')).toBeUndefined()
+    await wrapper.find('.fa-inline-name').trigger('click')
+    await wrapper.find('.fa-inline-name__field').setValue('  Bewilligungsverfahren ')
+    await wrapper.find('.fa-inline-name__field').trigger('keydown', { key: 'Enter' })
+    await until(async () => (await storage.loadCollection())?.folders[0]?.name === 'Bewilligungsverfahren')
+    expect(store.collection.value.folders.get(folderId)?.name).toBe('Bewilligungsverfahren')
+  })
 })
 
 describe('drag data', () => {
@@ -129,6 +148,21 @@ describe('CollectionTree', () => {
     await wrapper.find('[role="dialog"] .fa-btn--primary').trigger('click')
     await until(() => wrapper!.text().includes('Prüfverfahren'))
     expect([...store.collection.value.folders.values()].map((f) => f.name)).toContain('Prüfverfahren')
+  })
+
+  it('renames a folder by double-click or F2 through the prompt', async () => {
+    const { store, folderId } = await filledStore()
+    wrapper = mount(CollectionTree, { props: { store, selectedDiagram: null, openDiagram: null }, attachTo: document.body })
+    const label = wrapper.find('.fa-tree__row--folder .fa-tree__label')
+    expect(label.attributes('title')).toBe('Doppelklick oder F2: umbenennen')
+    await label.trigger('dblclick')
+    const dialog = () => wrapper!.findAll('[role="dialog"]').find((d) => d.text().includes('Ordner umbenennen'))!
+    expect((dialog().find('input').element as HTMLInputElement).value).toBe('Antragsverfahren')
+    await dialog().find('input').setValue(' Prüfstrategie ')
+    await dialog().find('.fa-btn--primary').trigger('click')
+    await until(() => store.collection.value.folders.get(folderId)?.name === 'Prüfstrategie')
+    await wrapper.find('.fa-tree__row--folder .fa-tree__label').trigger('keydown', { key: 'F2' })
+    expect((dialog().find('input').element as HTMLInputElement).value).toBe('Prüfstrategie')
   })
 
   it('selects and opens diagrams', async () => {

@@ -14,6 +14,7 @@ const emit = defineEmits<{
   (e: 'select-diagram', id: string): void
   (e: 'open-diagram', id: string): void
   (e: 'select-folder', id: string | null): void
+  (e: 'rename-folder', id: string): void
   (e: 'drop', payload: { kind: 'diagram' | 'folder'; id: string; target: DropTarget }): void
 }>()
 const { t, locale } = useI18n()
@@ -46,7 +47,14 @@ function onDrop(event: DragEvent, position?: number): void {
       <button type="button" class="fa-tree__toggle" :aria-label="node.folder.name" @click="expanded = !expanded">
         <FaIcon :name="expanded ? 'chevron-down' : 'chevron-right'" :size="14" />
       </button>
-      <button type="button" class="fa-tree__label" @click="emit('select-folder', node.folder.id)">
+      <button
+        type="button"
+        class="fa-tree__label"
+        :title="t('collection.renameHint')"
+        @click="emit('select-folder', node.folder.id)"
+        @dblclick="emit('rename-folder', node.folder.id)"
+        @keydown.f2.prevent="emit('rename-folder', node.folder.id)"
+      >
         <FaIcon :name="expanded ? 'folder-open' : 'folder'" :size="16" />
         <span>{{ node.folder.name }}</span>
       </button>
@@ -63,6 +71,7 @@ function onDrop(event: DragEvent, position?: number): void {
         @select-diagram="emit('select-diagram', $event)"
         @open-diagram="emit('open-diagram', $event)"
         @select-folder="emit('select-folder', $event)"
+        @rename-folder="emit('rename-folder', $event)"
         @drop="emit('drop', $event)"
       />
       <li v-for="(entry, index) in node.diagrams" :key="entry.id" role="treeitem" :aria-selected="selectedDiagram === entry.id">
