@@ -1,6 +1,6 @@
 import { act } from '@testing-library/react'
 import { flushPromises } from '@vue/test-utils'
-import { describe, it } from 'vitest'
+import { describe, it, vi } from 'vitest'
 import { InMemoryStorage } from '@auditcore/bpmn-flowaudit'
 import { createCollectionCore, type CollectionCore } from '@auditcore/bpmn-flowaudit/ui'
 import VueCollectionTree from '../../../bpmn-vue/src/components/collection/CollectionTree.vue'
@@ -8,7 +8,7 @@ import VueDiagramInfoColumn from '../../../bpmn-vue/src/components/collection/Di
 import VueGroupOverview from '../../../bpmn-vue/src/components/collection/GroupOverview.vue'
 import { createCollectionStore } from '../../../bpmn-vue/src/stores/collectionStore'
 import { bundledProfiles } from '@auditcore/bpmn-flowaudit/profiles'
-import { fillCollection, INFO_EXPECT, OVERVIEW_EXPECT, TREE_CASES } from '../../../bpmn-flowaudit/test/parity/cases-collection'
+import { fillCollection, INFO_EXPECT, OVERVIEW_EXPECT, OVERVIEW_LIST_EXPECT, OVERVIEW_THUMB_EXPECT, syntheticThumbnails, TREE_CASES } from '../../../bpmn-flowaudit/test/parity/cases-collection'
 import { CollectionTree } from '../../src/collection/CollectionTree'
 import { DiagramInfoColumn } from '../../src/collection/DiagramInfoColumn'
 import { GroupOverview } from '../../src/collection/GroupOverview'
@@ -34,9 +34,9 @@ function Info({ core }: { core: CollectionCore }) {
   return entry ? <DiagramInfoColumn store={store} entry={entry} /> : null
 }
 
-function Overview({ core }: { core: CollectionCore }) {
+function Overview({ core, thumbnails = null }: { core: CollectionCore; thumbnails?: typeof syntheticThumbnails | null }) {
   const store = useCollectionBinding(core)
-  return <GroupOverview overview={store.overview} profile={bundledProfiles()[0] ?? null} issues={store.issues} title="Oberste Ebene" cards={store.cards} />
+  return <GroupOverview overview={store.overview} profile={bundledProfiles()[0] ?? null} issues={store.issues} title="Oberste Ebene" cards={store.cards} thumbnails={thumbnails} />
 }
 
 describe('collection parity (Vue ↔ React)', () => {
@@ -73,6 +73,23 @@ describe('collection parity (Vue ↔ React)', () => {
     const rendered = await renderBoth(VueGroupOverview, { overview: vue.overview.value, profile: bundledProfiles()[0] ?? null, issues: vue.issues.value, title: 'Oberste Ebene', cards: vue.cards.value }, <Overview core={react} />)
     expectParity(rendered, OVERVIEW_EXPECT)
   })
+
+  for (const [view, expectation] of [['list', OVERVIEW_LIST_EXPECT], ['thumbnails', OVERVIEW_THUMB_EXPECT]] as const) {
+    it(`GroupOverview: Ansicht ${view}`, async () => {
+      localStorage.setItem('auditcore.bpmn.overviewView', view)
+      // Without an observer the pictures load at once (the test DOM never intersects).
+      vi.stubGlobal('IntersectionObserver', undefined)
+      try {
+        const { vue, react } = await both()
+        const props = { overview: vue.overview.value, profile: bundledProfiles()[0] ?? null, issues: vue.issues.value, title: 'Oberste Ebene', cards: vue.cards.value, thumbnails: syntheticThumbnails }
+        const rendered = await renderBoth(VueGroupOverview, props, <Overview core={react} thumbnails={syntheticThumbnails} />)
+        expectParity(rendered, expectation)
+      } finally {
+        localStorage.removeItem('auditcore.bpmn.overviewView')
+        vi.unstubAllGlobals()
+      }
+    })
+  }
 
   it('DiagramInfoColumn', async () => {
     const { vue, react } = await both()

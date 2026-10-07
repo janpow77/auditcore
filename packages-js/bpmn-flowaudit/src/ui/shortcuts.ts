@@ -1,12 +1,15 @@
 /**
  * Editor-level shortcuts in addition to the core's keyboard bindings:
- * Ctrl+S save, Ctrl+F element search, „?“ shortcut help.
+ * Ctrl+S save, Ctrl+F element search, Ctrl+Alt+P properties panel,
+ * „?“ shortcut help.
  */
 
 export interface ShortcutHandlers {
   save: () => void
   search: () => void
   help: () => void
+  /** Show or hide the properties panel (optional). */
+  panel?: () => void
 }
 
 function isTyping(target: EventTarget | null): boolean {
@@ -14,18 +17,27 @@ function isTyping(target: EventTarget | null): boolean {
   return Boolean(element && (element.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)))
 }
 
-export function handleShortcut(event: KeyboardEvent, handlers: ShortcutHandlers): boolean {
-  const ctrl = event.ctrlKey || event.metaKey
-  const key = event.key.toLowerCase()
-  if (ctrl && key === 's') {
-    handlers.save()
-  } else if (ctrl && key === 'f') {
-    handlers.search()
-  } else if (event.key === '?' && !isTyping(event.target)) {
-    handlers.help()
-  } else {
-    return false
+/** Ctrl (Cmd) shortcuts by `KeyboardEvent.code`, with the Alt key they require. */
+const CTRL_SHORTCUTS: [string, boolean, keyof ShortcutHandlers][] = [
+  ['KeyS', false, 'save'],
+  ['KeyF', false, 'search'],
+  ['KeyP', true, 'panel'],
+]
+
+/** Handler for an event, or `undefined` when no editor shortcut matches. */
+function shortcutFor(event: KeyboardEvent, handlers: ShortcutHandlers): (() => void) | undefined {
+  if (event.ctrlKey || event.metaKey) {
+    const key = event.key.toLowerCase()
+    const match = CTRL_SHORTCUTS.find(([code, alt]) => (event.code === code || key === code.slice(3).toLowerCase()) && event.altKey === alt)
+    return match ? handlers[match[2]] : undefined
   }
+  return event.key === '?' && !isTyping(event.target) ? handlers.help : undefined
+}
+
+export function handleShortcut(event: KeyboardEvent, handlers: ShortcutHandlers): boolean {
+  const handler = shortcutFor(event, handlers)
+  if (!handler) return false
+  handler()
   event.preventDefault()
   return true
 }
@@ -48,6 +60,7 @@ export const SHORTCUTS: [string[], string][] = [
   [['@ctrl', '0'], 'shortcuts.fit'],
   [['@ctrl', '←', '→', '↑', '↓'], 'shortcuts.move'],
   [['←', '→', '↑', '↓'], 'shortcuts.moveElement'],
+  [['@ctrl', 'Alt', 'P'], 'shortcuts.panel'],
   [['?'], 'shortcuts.help'],
 ]
 

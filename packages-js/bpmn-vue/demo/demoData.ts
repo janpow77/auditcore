@@ -9,6 +9,7 @@ import legacy from '../../bpmn-flowaudit/test/fixtures/legacy-1.0.bpmn?raw'
 import schema11 from '../../bpmn-flowaudit/test/fixtures/schema-1.1.bpmn?raw'
 import enrichment from '../../bpmn-flowaudit/test/fixtures/enrichment.bpmn?raw'
 import systemAudit from '../../bpmn-flowaudit/test/fixtures/camunda/synthetische-systempruefung.bpmn?raw'
+import frames from '../../bpmn-flowaudit/test/fixtures/rahmen/rahmen.bpmn?raw'
 
 const templates = import.meta.glob('../../../packages/auditcore_bpmn/src/auditcore_bpmn/templates/*.bpmn', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>
 
@@ -25,6 +26,7 @@ const EXAMPLES: DemoDiagram[] = [
   { id: 'altbestand', name: 'Altbestand (Schema 1.0)', folderId: 'beispiele', xml: legacy },
   { id: 'anreicherung', name: 'Anreicherung aus Dokumentation', folderId: 'beispiele', xml: enrichment },
   { id: 'systempruefung-merkmale', name: 'Systemprüfung mit Prüfungsmerkmalen (Camunda)', folderId: 'beispiele', xml: systemAudit },
+  { id: 'rahmen', name: 'Rahmen: Pool, Teilprozess, Gruppe', folderId: 'beispiele', xml: frames },
 ]
 
 function templateDiagrams(): DemoDiagram[] {

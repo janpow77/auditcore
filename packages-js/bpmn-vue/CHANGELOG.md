@@ -1,5 +1,25 @@
 # Changelog – @auditcore/bpmn-vue
 
+## 0.5.0 – 2026-10-07
+
+- **Ordnerübersicht in voller Breite mit drei Ansichten** (`GroupOverview`):
+  Kacheln, Liste (Name, Status, Beschreibung, Aktivitäten, Anteil mit
+  Rechtsgrundlage, Datum) und Vorschaubilder, umgeschaltet in einem Menü im
+  Kopf und je Browser gemerkt. Karten mit vielen Diagrammen nehmen die ganze
+  Zeile ein, lange Namen brechen um. Neue Prop `thumbnails`; ohne sie wird
+  „Vorschaubilder“ nicht angeboten. Neue Komponente `OverviewThumbnail`
+  (lädt erst beim Sichtbarwerden, zeigt ein Bild, nie Inline-SVG).
+- **`PanelResizer`**: Trennlinie zwischen Seitenbereich und Hauptbereich –
+  ziehen, Pfeiltasten und Pos1/Ende, Doppelklick setzt die Standardbreite,
+  kleine Schaltfläche klappt ein; eingeklappt bleibt eine schmale Leiste zum
+  Aufklappen. `FlowauditEditor` nutzt sie für die Eigenschaften (Breite und
+  Zustand je Browser), `FlowauditWorkbench` für die Diagrammsammlung.
+- `FlowauditWorkbench` erzeugt Vorschaubilder im Browser und verwirft sie
+  beim Speichern; `createCollectionStore(storage, options)` reicht
+  `onDiagramSaved` durch.
+- Pools lassen sich in der Fläche (auf der Bahn) greifen und verschieben
+  (`@auditcore/bpmn-editor` 0.1.2).
+
 ## 0.4.0 – 2026-10-07
 
 - **Reiter „Prüfungsmerkmale“** (`PropertiesTab`): Merkmale nach
