@@ -20,6 +20,7 @@ from auditcore_invoicesynth.formats import (
     format_rate,
 )
 from auditcore_invoicesynth.labels import LABELS, Language, pick
+from auditcore_invoicesynth.variety import Variety
 
 Color = tuple[int, int, int]
 BLACK: Color = (0, 0, 0)
@@ -102,6 +103,11 @@ LAYOUTS: dict[str, LayoutSpec] = {
     "bank_kopf_zweispaltig": LayoutSpec(
         bank="sender", meta="two_column", totals="bottom", show_vat_base=True
     ),
+    # Generatorvariante v2 (Stufe 5): Kopfdaten in einer Zeile bzw. als senkrechter
+    # Kasten mit Beschriftung über dem Wert; bewusst anders als das waagerechte
+    # Raster ``grid`` der Holdout-Vorlage ``holdout_kompakt``.
+    "kopf_zeile": LayoutSpec(meta="inline", bank="below_totals", show_vat_base=True),
+    "kopf_kasten": LayoutSpec(meta="stacked_box", table_lines=False, totals="bottom"),
     "holdout_kompakt": LayoutSpec(
         meta="grid", totals="left_box", bank="sender", scale=0.9, table_lines=False
     ),
@@ -110,7 +116,13 @@ LAYOUTS: dict[str, LayoutSpec] = {
     ),
 }
 HOLDOUT_LAYOUTS: tuple[str, ...] = ("holdout_kompakt", "holdout_briefkopf")
+V2_LAYOUTS: tuple[str, ...] = ("kopf_zeile", "kopf_kasten")
 TRAINING_LAYOUTS: tuple[str, ...] = tuple(n for n in LAYOUTS if n not in HOLDOUT_LAYOUTS)
+
+
+def available_layouts(variety: str) -> tuple[str, ...]:
+    """Vorlagen einer Generatorvariante; ``v1`` kennt die Vorlagen aus ``v2`` nicht."""
+    return tuple(n for n in LAYOUTS if variety != "v1" or n not in V2_LAYOUTS)
 
 
 def expansion(layout: str, items: int) -> int:
@@ -131,6 +143,7 @@ class Variant:
     rate_variant: int
     iban_grouped: bool
     labels: dict[str, str]
+    variety: Variety | None = None
 
     @classmethod
     def choose(
