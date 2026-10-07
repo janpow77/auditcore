@@ -73,7 +73,12 @@ export async function describedXml(xml: string, description: string): Promise<st
 type Guard = <T>(action: () => Promise<T>) => Promise<T | undefined>
 
 /** Persisting changes to folders, diagrams, tags and approvals. */
-function collectionActions(store: Store<CollectionState>, storage: StoragePort, persist: () => Promise<void>, guarded: Guard) {
+export interface CollectionCoreOptions {
+  /** Called after a diagram was written (e.g. to drop its thumbnail). */
+  onDiagramSaved?: (diagramId: string) => void
+}
+
+function collectionActions(store: Store<CollectionState>, storage: StoragePort, persist: () => Promise<void>, guarded: Guard, options: CollectionCoreOptions) {
   const current = () => store.get().collection
   const takenIds = () => new Set([...current().diagrams.keys(), ...current().folders.keys(), ...current().tags.keys()])
   const mutate = (change: (c: DiagramCollection) => void) => guarded(async () => (change(current()), await persist()))
@@ -89,6 +94,7 @@ function collectionActions(store: Store<CollectionState>, storage: StoragePort, 
     guarded(async () => {
       const id = idFromName(name, takenIds())
       await storage.saveDiagram(id, xml)
+      options.onDiagramSaved?.(id)
       current().addDiagram(id, { name, folderId, model: await modelOf(xml) })
       current().rename(id, name)
       await persist()
@@ -98,6 +104,7 @@ function collectionActions(store: Store<CollectionState>, storage: StoragePort, 
   const saveDiagram = (id: string, xml: string) =>
     guarded(async () => {
       await storage.saveDiagram(id, xml)
+      options.onDiagramSaved?.(id)
       current().update(id, await modelOf(xml))
       await persist()
     })
@@ -105,6 +112,7 @@ function collectionActions(store: Store<CollectionState>, storage: StoragePort, 
   const removeDiagram = (id: string) =>
     guarded(async () => {
       await storage.deleteDiagram(id)
+      options.onDiagramSaved?.(id)
       current().remove(id)
       await persist()
     })
@@ -134,7 +142,7 @@ function collectionActions(store: Store<CollectionState>, storage: StoragePort, 
 }
 
 /** Descriptions of folders (collection) and diagrams (diagram info in the XML). */
-function descriptionActions(store: Store<CollectionState>, storage: StoragePort, persist: () => Promise<void>, guarded: Guard) {
+function descriptionActions(store: Store<CollectionState>, storage: StoragePort, persist: () => Promise<void>, guarded: Guard, options: CollectionCoreOptions) {
   const current = () => store.get().collection
   return {
     describeFolder: (id: string, description: string) => guarded(async () => (current().describeFolder(id, description), await persist())),
@@ -143,13 +151,14 @@ function descriptionActions(store: Store<CollectionState>, storage: StoragePort,
       guarded(async () => {
         const xml = await describedXml(await storage.loadDiagram(id), description)
         await storage.saveDiagram(id, xml)
+        options.onDiagramSaved?.(id)
         current().update(id, await modelOf(xml))
         await persist()
       }),
   }
 }
 
-export function createCollectionCore(storage: StoragePort) {
+export function createCollectionCore(storage: StoragePort, options: CollectionCoreOptions = {}) {
   const store = createStore<CollectionState>({ collection: new DiagramCollection(), revision: 0, filter: { search: '', status: '', tag: '' }, selectedFolder: null, loading: false, error: null })
   const touch = () => store.set((state) => ({ revision: state.revision + 1 }))
 
@@ -180,8 +189,8 @@ export function createCollectionCore(storage: StoragePort) {
   return {
     store,
     load,
-    ...collectionActions(store, storage, persist, guarded),
-    ...descriptionActions(store, storage, persist, guarded),
+    ...collectionActions(store, storage, persist, guarded, options),
+    ...descriptionActions(store, storage, persist, guarded, options),
     openDiagram: (id: string) => storage.loadDiagram(id),
     setFilter: (patch: Partial<CollectionFilter>) => store.set((state) => ({ filter: { ...state.filter, ...patch } })),
     selectFolder: (id: string | null) => store.set({ selectedFolder: id }),

@@ -6,15 +6,15 @@
  */
 
 import { computed, reactive, ref, shallowRef, triggerRef } from 'vue'
-import { collectionCards, collectionIssues, collectionOverview, collectionTree, createCollectionCore, isFiltering, type CollectionFilter } from '@auditcore/bpmn-flowaudit/ui'
+import { collectionCards, collectionIssues, collectionOverview, collectionTree, createCollectionCore, isFiltering, type CollectionCoreOptions, type CollectionFilter } from '@auditcore/bpmn-flowaudit/ui'
 import type { StoragePort } from '@auditcore/bpmn-flowaudit'
 import { useStore } from '../composables/useStore'
 
 export type { CollectionFilter } from '@auditcore/bpmn-flowaudit/ui'
 export type CollectionStore = ReturnType<typeof createCollectionStore>
 
-export function createCollectionStore(storage: StoragePort) {
-  const core = createCollectionCore(storage)
+export function createCollectionStore(storage: StoragePort, options: CollectionCoreOptions = {}) {
+  const core = createCollectionCore(storage, options)
   const state = useStore(core.store)
   const collection = shallowRef(core.store.get().collection)
   core.store.subscribe(() => {
