@@ -2,7 +2,8 @@
 
 Drehung ±3°, leichte Perspektive, Unschärfe, JPEG-Artefakte, Salz-und-Pfeffer,
 Graustufe/Binarisierung, Stempel, Kugelschreiber-Striche, Lochung und
-Faltkante. Keine fremden Foto- oder Texturdaten; nur Zufallszahlen aus dem
+Faltkante; ab Variante v2 zusätzlich selten eine starke Verschlechterung
+(``degrade_page``). Keine fremden Foto- oder Texturdaten; nur Zufallszahlen aus dem
 übergebenen Seed (``random.Random``), keine globalen Zufallsquellen.
 """
 
@@ -13,7 +14,7 @@ from random import Random
 from types import ModuleType
 from typing import TYPE_CHECKING, Any
 
-from auditcore_invoicesynth.plan import AugmentSpec
+from auditcore_invoicesynth.plan import AugmentSpec, DegradeSpec
 from auditcore_invoicesynth.render import _pil
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -142,4 +143,25 @@ def _jpeg(image: Image, quality: int, image_mod: ModuleType) -> Image:
     buffer.seek(0)
     result: Image = image_mod.open(buffer)
     result.load()
+    return result
+
+
+def degrade_page(image: Image, spec: DegradeSpec) -> Image:
+    """Starke Verschlechterung (Variante v2): Auflösung herunter und wieder herauf, Unschärfe, JPEG.
+
+    Vollständig durch ``spec`` bestimmt; simuliert grobe Scans, in denen Ziffern
+    wie 6/8, 3/9 oder 0/9 nur noch knapp unterscheidbar sind.
+    """
+    image_mod, _, _ = _pil()
+    from PIL import ImageFilter
+
+    width, height = image.size
+    small = (max(1, round(width * spec.scale)), max(1, round(height * spec.scale)))
+    result = image.resize(small, image_mod.Resampling.BILINEAR).resize(
+        (width, height), image_mod.Resampling.BICUBIC
+    )
+    if spec.blur_radius:
+        result = result.filter(ImageFilter.GaussianBlur(spec.blur_radius))
+    if spec.jpeg_quality is not None:
+        result = _jpeg(result, spec.jpeg_quality, image_mod)
     return result

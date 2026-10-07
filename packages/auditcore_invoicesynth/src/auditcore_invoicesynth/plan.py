@@ -9,13 +9,15 @@ Holdout-Schriften kommen ausschließlich im Satz ``test_layout_holdout`` vor
 from __future__ import annotations
 
 import hashlib
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import date
 from random import Random
 from typing import Any
 
+from auditcore_invoicesynth.fonts import V2_FONT_FAMILIES
 from auditcore_invoicesynth.formats import AMOUNT_STYLES, CURRENCY_STYLES, DATE_STYLES
-from auditcore_invoicesynth.layouts import HOLDOUT_LAYOUTS, LAYOUTS
+from auditcore_invoicesynth.layouts import HOLDOUT_LAYOUTS, LAYOUTS, V2_LAYOUTS, available_layouts
+from auditcore_invoicesynth.variety import VARIETIES
 
 SPLITS = ("train", "validation", "test_synthetic", "test_layout_holdout")
 DE_SCHEMES = ("de_19", "de_19", "de_19", "de_7", "de_mixed", "de_mixed", "de_reverse_charge")
@@ -39,6 +41,19 @@ class AugmentSpec:
 
 
 @dataclass(frozen=True)
+class DegradeSpec:
+    """Seltene starke Verschlechterung (Variante ``v2``): niedrige Auflösung, Unschärfe, JPEG.
+
+    ``scale`` verkleinert das Seitenbild und vergrößert es wieder (bei 300 dpi
+    und ``scale=0.5`` entspricht das einem 150-dpi-Scan).
+    """
+
+    scale: float
+    blur_radius: float
+    jpeg_quality: int | None
+
+
+@dataclass(frozen=True)
 class SampleSpec:
     sample_id: str
     split: str
@@ -59,10 +74,15 @@ class SampleSpec:
     dpi: int
     augment: AugmentSpec | None
     seed: int
+    variety: str = "v1"
+    degrade: DegradeSpec | None = None
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         data["errors"] = list(self.errors)
+        if self.variety == "v1":
+            # Planprüfsummen der Variante v1 bleiben wie vor Einführung von v2.
+            del data["variety"], data["degrade"]
         return data
 
 
@@ -85,8 +105,13 @@ class SynthConfig:
     augment_share: float = 0.85
     holdout_layouts: tuple[str, ...] = HOLDOUT_LAYOUTS
     holdout_font_families: tuple[str, ...] = ("DejaVu Serif",)
+    variety: str = "v1"
+    degrade_share: float = 0.12
+    v2_layout_share: float = 0.18
 
     def validate(self) -> None:
+        if self.variety not in VARIETIES:
+            raise ValueError(f"Generatorvariante nur {VARIETIES}")
         if set(self.counts) - set(SPLITS) or any(v < 0 for v in self.counts.values()):
             raise ValueError(f"Aufteilung nur für {SPLITS} mit nichtnegativer Anzahl")
         if not set(self.holdout_layouts) <= set(LAYOUTS) or len(self.holdout_layouts) < 1:
@@ -95,7 +120,8 @@ class SynthConfig:
             raise ValueError("Mindestens eine Trainingsvorlage erforderlich")
         if not self.dpi_choices or any(d < 50 or d > 600 for d in self.dpi_choices):
             raise ValueError("Auflösung zwischen 50 und 600 dpi")
-        for share in (self.english_share, self.austria_share, self.error_share, self.augment_share):
+        shares = (self.english_share, self.austria_share, self.error_share, self.augment_share)
+        for share in (*shares, self.degrade_share, self.v2_layout_share):
             if not 0.0 <= share <= 1.0:
                 raise ValueError("Anteile zwischen 0 und 1")
 
@@ -126,16 +152,55 @@ def _augment(rng: Random) -> AugmentSpec:
     )
 
 
-def plan_dataset(config: SynthConfig, font_families: tuple[str, ...]) -> list[SampleSpec]:
-    """Vollständiger Plan; ``font_families`` sind die tatsächlich verfügbaren Familien."""
-    config.validate()
+DEGRADE_SALT = 0xDE6_0B02
+# Vorlagen mit eigener Fachlogik im Plan (Land/Steuerschema bzw. Belegart) bleiben stehen.
+FIXED_LAYOUTS = ("kleinunternehmer", "gutschrift")
+
+
+def _degrade(rng: Random) -> DegradeSpec:
+    return DegradeSpec(
+        scale=round(rng.uniform(0.4, 0.7), 3),
+        blur_radius=round(rng.uniform(0.3, 0.9), 2) if rng.random() < 0.6 else 0.0,
+        jpeg_quality=rng.randint(30, 60) if rng.random() < 0.6 else None,
+    )
+
+
+def _with_variety(spec: SampleSpec, config: SynthConfig) -> SampleSpec:
+    """Variante v2 außer im Layout-Holdout; dort bleibt T2 identisch zu v1."""
+    if config.variety == "v1" or spec.split == "test_layout_holdout":
+        return spec
+    rng = Random(spec.seed ^ DEGRADE_SALT)
+    degrade = _degrade(rng) if rng.random() < config.degrade_share else None
+    layout = spec.layout
+    if layout not in FIXED_LAYOUTS and rng.random() < config.v2_layout_share:
+        layout = rng.choice(V2_LAYOUTS)
+    return replace(spec, layout=layout, variety=config.variety, degrade=degrade)
+
+
+def _font_pools(
+    config: SynthConfig, font_families: tuple[str, ...]
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Schriften für Training und Layout-Holdout; v1 ohne die Familien aus v2."""
+    if config.variety == "v1":
+        font_families = tuple(f for f in font_families if f not in V2_FONT_FAMILIES)
     if not font_families:
         raise ValueError("Keine freie Schrift verfügbar")
     holdout_fonts = tuple(f for f in config.holdout_font_families if f in font_families)
     train_fonts = tuple(f for f in font_families if f not in holdout_fonts) or font_families
     if not tuple(f for f in font_families if f not in holdout_fonts):
         holdout_fonts = ()
-    train_layouts = tuple(name for name in LAYOUTS if name not in config.holdout_layouts)
+    return train_fonts, holdout_fonts
+
+
+def plan_dataset(config: SynthConfig, font_families: tuple[str, ...]) -> list[SampleSpec]:
+    """Vollständiger Plan; ``font_families`` sind die tatsächlich verfügbaren Familien."""
+    config.validate()
+    train_fonts, holdout_fonts = _font_pools(config, font_families)
+    # Die Vorlagen aus v2 zieht erst ``_with_variety`` mit eigener Zufallsfolge, damit
+    # Land, Generatorzähler und damit der Layout-Holdout gleich bleiben.
+    train_layouts = tuple(
+        name for name in available_layouts("v1") if name not in config.holdout_layouts
+    )
     specs: list[SampleSpec] = []
     for split in SPLITS:
         for number in range(1, config.counts.get(split, 0) + 1):
@@ -184,4 +249,4 @@ def plan_dataset(config: SynthConfig, font_families: tuple[str, ...]) -> list[Sa
                     seed=rng.getrandbits(63),
                 )
             )
-    return specs
+    return [_with_variety(spec, config) for spec in specs]
