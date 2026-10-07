@@ -9,6 +9,13 @@ USt-IdNr. DE/AT, Datum, Rechnungsnummer, netto + USt = brutto; Regeln wie in
 `auditcore_documents`) und bewertet mit `--from-predictions` gespeicherte
 Vorhersagen ohne Modell und ohne GPU neu.
 
+Generatorvariante `v2` für Stufe 5 (`build --variety v2`, Standard bleibt
+`v1` bitgleich): Kopfdaten in wechselnder Reihenfolge, Lieferdatum teils
+weggelassen, Fälligkeit öfter im Fließtext, weitere Beschriftungssynonyme,
+neue Trainingsvorlagen `kopf_zeile` und `kopf_kasten`, USt-IdNr. teils unter
+dem Absendernamen, seltene Bildverschlechterung (`augment.degrade_page`) und
+Schrift Lato. Der Layout-Holdout (T2) bleibt bitgleich zu `v1`.
+
 ## 0.2.1 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
