@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from auditcore_invoicesynth.cli import main
-from auditcore_invoicesynth.dataset import load_split, plan_summary, verify_dataset
+from auditcore_invoicesynth.dataset import DatasetError, load_split, plan_summary, verify_dataset
 from auditcore_invoicesynth.diagnostics import (
     DIAGNOSTIC_SETS,
     HOLDOUT_B,
@@ -187,6 +187,18 @@ def test_build_is_deterministic_and_verifiable(fonts: FontSet, tmp_path: Path) -
         DiagnosticConfig(count=3, seed=1, dpi_choices=(72,)), tmp_path / "c", fonts
     )
     assert other["dataset_hash"] != first["dataset_hash"]
+
+
+def test_build_shuffled_only_without_diagnostic_font(fonts: FontSet, tmp_path: Path) -> None:
+    """T2-gemischt braucht nur die T2-Schrift; läuft daher auch ohne URW Gothic (CI)."""
+    config = DiagnosticConfig(count=2, sets=(SHUFFLED,), dpi_choices=(72,))
+    manifest = build_diagnostics(config, tmp_path / "s", fonts)
+    assert manifest["kind"] == "diagnostics" and manifest["evaluation_only"] is True
+    assert verify_dataset(tmp_path / "s").ok
+    assert len(load_split(tmp_path / "s", SHUFFLED)) >= 2
+    assert not (tmp_path / "s" / HOLDOUT_B).exists()
+    with pytest.raises(DatasetError):
+        build_diagnostics(config, tmp_path / "s", fonts)
 
 
 def test_cli_build_diagnostics(
