@@ -7,6 +7,22 @@ drei lesbar sind und `netto + USt = brutto` stimmt. Fehlt einer, geht der Beleg 
 Prüfung (Befund Diagnosesatz T2b: falsche Gesamtbeträge ohne Steuerzeile wurden
 sonst übernommen).
 
+Diagnosesätze (nur Bewertung, nie Training): neues Kommando
+`build-diagnostics` (Modul `diagnostics`) schreibt ausschließlich
+`test_layout_holdout_shuffled` (T2-gemischt: T2-Vorlagen und DejaVu Serif,
+Kopfdaten-Reihenfolge und Weglassen des Lieferdatums aus
+`variety.choose_variety`, Beschriftungen wie T2) und `test_layout_holdout_b`
+(T2b: neue Vorlage `holdout_b_tabelle` – Absender mittig, Kopfdaten als
+umrahmte Tabelle rechts neben dem Empfänger mit Beschriftung links vom Wert in
+eigener Reihenfolge, Summenstreifen über der Positionstabelle – und Schrift
+URW Gothic aus `fonts-urw-base35`, AGPL-3.0 mit Schrift-Ausnahme) in ein
+eigenes Verzeichnis mit eigenem Manifest. `verify` und
+`train.evaluate --dataset <dir> --splits <satz>` lesen es unverändert.
+Diagnosevorlage und -schrift sind aus allen Plänen von `build` ausgeschlossen;
+Plan- und Datensatz-Hashes von v1 und v2 bleiben gleich. Die Schriftsuche
+findet zusätzlich `.otf`-Dateien. Ein Test hält die Plan-Hashes von v1 und v2
+(Seed 42, 20000/1000/1000/500) gegen den Stand vor den Diagnosesätzen fest.
+
 Bewertung (Runde A nach Stufe 4): `train.evaluate` repariert ein ausgelassenes
 `<s_supplier>` (`schema.repair_structure`), misst die Falschwert-Quote nach
 Plausibilität über das neue Modul `plausibility` (Prüfziffern IBAN und
