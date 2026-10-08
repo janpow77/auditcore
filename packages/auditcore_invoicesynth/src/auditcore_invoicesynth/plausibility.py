@@ -4,8 +4,9 @@ Spiegelt die Regeln von ``auditcore_documents`` (``donut_checks``) auf den
 flachen Feldern der Bewertung, ohne das Paket zu importieren: Prüfziffern für
 IBAN (ISO 13616, mod 97) und USt-IdNr. (DE, AT), lesbares Datum, Rechnungsnummer
 ohne Datums- oder Betragsform und ``netto + USt = brutto`` (± 1 Cent je
-Steuerzeile). Felder, die hier durchfallen, würde die Pipeline nicht
-automatisch übernehmen; daraus entsteht die Falschwert-Quote nach Plausibilität (E6).
+Steuerzeile; nur vollständig prüfbare Beträge). Felder, die hier durchfallen,
+würde die Pipeline nicht automatisch übernehmen; daraus entsteht die
+Falschwert-Quote nach Plausibilität (E6).
 """
 
 from __future__ import annotations
@@ -46,9 +47,14 @@ def _field_ok(name: str, value: str) -> bool:
 
 
 def _amounts_consistent(flat: Mapping[str, str]) -> bool:
-    """``netto + USt = brutto`` (± 1 Cent je Steuersatz); fehlt ein Betrag, keine Aussage."""
+    """``netto + USt = brutto`` (± 1 Cent je Steuersatz).
+
+    Beträge werden nur übernommen, wenn alle drei lesbar sind und zusammenpassen:
+    fehlt einer, ist die Summe nicht prüfbar und geht zur Prüfung (Befund Diagnosesatz
+    T2b: ohne Steuerzeile wurden falsche Gesamtbeträge sonst ungeprüft übernommen).
+    """
     net, vat, total = (parse_money(flat.get(name, "")) for name in AMOUNT_FIELDS)
     if net is None or vat is None or total is None:
-        return True
+        return False
     lines = max(1, len(flat.get("vat_rates", "").split("+")))
     return abs(net + vat - total) <= CENT * lines
