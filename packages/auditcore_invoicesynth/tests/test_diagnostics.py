@@ -219,10 +219,12 @@ def test_cli_build_diagnostics(
 STABLE_PLAN_SHA256 = {
     "v1": "3da7d6e15f5f3327e827b6fdcd8911e6f0ddaf049f4684789a6f618b300e8503",
     "v2": "c50af53aa36d592d85db17ba56bae757de849010640cb729c76515c50357d852",
+    # v3 (eingeführt mit den Summenorten): Wert dieser Einführung, ab dann stabil.
+    "v3": "1250705c48e1ead786d0658bc2e3329064fc8679bf84e7967bd83fdb2466852f",
 }
 
 
-@pytest.mark.parametrize("variety", ["v1", "v2"])
+@pytest.mark.parametrize("variety", ["v1", "v2", "v3"])
 def test_regular_plan_hashes_unchanged(variety: str) -> None:
     counts = {
         "train": 20000,
