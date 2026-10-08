@@ -1,9 +1,11 @@
-"""Kommandozeile ``auditcore-invoicesynth``: fonts, plan, build, verify, evaluate."""
+"""Kommandozeile ``auditcore-invoicesynth``: fonts, plan, build, build-diagnostics, verify,
+evaluate."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from datetime import date
 from pathlib import Path
@@ -14,6 +16,12 @@ from auditcore_invoicesynth.dataset import (
     load_split,
     plan_summary,
     verify_dataset,
+)
+from auditcore_invoicesynth.diagnostics import (
+    DIAGNOSTIC_SETS,
+    DiagnosticConfig,
+    build_diagnostics,
+    resolve_sets,
 )
 from auditcore_invoicesynth.evaluation import check_acceptance, evaluate
 from auditcore_invoicesynth.fonts import (
@@ -84,13 +92,46 @@ def _parser() -> argparse.ArgumentParser:
         default=0,
         help="Renderprozesse; 0 = automatisch (bis zu 16), 1 = sequenziell",
     )
+    _diagnostics_parser(commands.add_parser("build-diagnostics", help="nur Diagnosesätze"))
     verify_cmd = commands.add_parser("verify", help="Datensatz gegen Manifest prüfen")
     verify_cmd.add_argument("dataset")
     eval_cmd = commands.add_parser("evaluate", help="Vorhersagen bewerten")
     eval_cmd.add_argument("dataset")
-    eval_cmd.add_argument("--split", default="test_synthetic", choices=SPLITS)
+    eval_cmd.add_argument("--split", default="test_synthetic", choices=(*SPLITS, *DIAGNOSTIC_SETS))
     eval_cmd.add_argument("--predictions", required=True, help="JSONL {file_name, parse}")
     return parser
+
+
+def _diagnostics_parser(sub: argparse.ArgumentParser) -> None:
+    sub.add_argument("--out", required=True)
+    sub.add_argument("--seed", type=int, default=42)
+    sub.add_argument("--base-date", default="2026-01-15")
+    sub.add_argument("--dpi", type=int, action="append", default=None)
+    sub.add_argument("--font-dir", action="append", default=[])
+    sub.add_argument("--font-pins", help="JSON {Dateiname: SHA-256}")
+    sub.add_argument("--count", type=int, default=500, help="Belege je Diagnosesatz")
+    sub.add_argument(
+        "--sets",
+        default="shuffled,holdout_b",
+        help="Kommaliste: shuffled (T2-gemischt), holdout_b (T2b) oder Satznamen",
+    )
+    sub.add_argument("--workers", type=int, default=0, help="0 = automatisch (bis zu 16)")
+
+
+def _build_diagnostics(args: argparse.Namespace) -> int:
+    if args.workers < 0:
+        raise ValueError("--workers muss 0 oder größer sein")
+    config = DiagnosticConfig(
+        seed=args.seed,
+        base_date=date.fromisoformat(args.base_date),
+        count=args.count,
+        sets=resolve_sets(args.sets),
+        dpi_choices=tuple(args.dpi or [150, 200, 300]),
+    )
+    workers = args.workers or min(16, max(1, (os.cpu_count() or 2) - 2))
+    manifest = build_diagnostics(config, Path(args.out), _fonts(args), workers=workers)
+    _print({"dataset_hash": manifest["dataset_hash"], "sets": manifest["sets"]})
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -101,6 +142,8 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command in {"plan", "build"}:
             return _plan_or_build(args)
+        if args.command == "build-diagnostics":
+            return _build_diagnostics(args)
         if args.command == "verify":
             return _verify(args)
         return _evaluate(args)
