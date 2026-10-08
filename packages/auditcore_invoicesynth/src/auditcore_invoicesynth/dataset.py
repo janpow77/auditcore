@@ -145,6 +145,10 @@ def _meta(sample: PreparedSample, page: int, pages: int) -> dict[str, Any]:
         # Nur ab v2, damit die Metadaten (und der Hash) von v1-Datensätzen gleich bleiben.
         meta["variety"] = spec.variety
         meta["degraded"] = spec.degrade is not None
+    elif sample.variant.variety is not None:
+        # Diagnosesatz T2-gemischt: gedruckte Reihenfolge der Kopfdaten (v1/v2 nie betroffen).
+        meta["meta_order"] = list(sample.variant.variety.meta_order)
+        meta["supply_date_shown"] = sample.variant.variety.show_supply_date
     return meta
 
 
