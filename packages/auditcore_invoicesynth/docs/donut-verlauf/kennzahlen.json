@@ -1,5 +1,5 @@
 {
- "erzeugt": "2026-10-07T07:16:53+00:00",
+ "erzeugt": "2026-10-08T04:08:03+00:00",
  "stufen": [
   {
    "id": "pilot",
@@ -9070,6 +9070,3044 @@
         "missing": 3,
         "wrong": 1,
         "hallucinated": 1,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 0.997455,
+        "correct": 784,
+        "expected": 786,
+        "missing": 0,
+        "wrong": 2,
+        "hallucinated": 2,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "donut-stufe5-20261007-0",
+   "titel": "5 · Kopfdatenvielfalt (Weitertraining), Lauf 1",
+   "run": "39a890114fa430a0-0",
+   "testsaetze": "voll",
+   "hinweis": null,
+   "konfiguration": {
+    "karte": 0,
+    "image_size": "1280x960",
+    "per_device_batch": 4,
+    "grad_accum": 2,
+    "seed": 42,
+    "epochs": 3,
+    "datensatz_hash": "7a8e7caf24b9e631",
+    "max_stunden": 14
+   },
+   "training": {
+    "schritte": 8061,
+    "schritte_gesamt": 8061,
+    "zustand": "fertig",
+    "dauer_h": 3.15,
+    "loss_start": 0.4981,
+    "loss_ende": 0.00555,
+    "vram_spitze_gib": 11.397,
+    "kurve": [
+     [
+      34,
+      0.47288
+     ],
+     [
+      68,
+      0.25311
+     ],
+     [
+      102,
+      0.13605
+     ],
+     [
+      136,
+      0.0957
+     ],
+     [
+      170,
+      0.07472
+     ],
+     [
+      204,
+      0.0709
+     ],
+     [
+      238,
+      0.0694
+     ],
+     [
+      272,
+      0.06074
+     ],
+     [
+      306,
+      0.06372
+     ],
+     [
+      340,
+      0.05946
+     ],
+     [
+      374,
+      0.06286
+     ],
+     [
+      408,
+      0.05221
+     ],
+     [
+      442,
+      0.05439
+     ],
+     [
+      476,
+      0.04832
+     ],
+     [
+      510,
+      0.05335
+     ],
+     [
+      544,
+      0.04616
+     ],
+     [
+      578,
+      0.03879
+     ],
+     [
+      612,
+      0.03776
+     ],
+     [
+      646,
+      0.03646
+     ],
+     [
+      680,
+      0.0282
+     ],
+     [
+      714,
+      0.03547
+     ],
+     [
+      748,
+      0.03306
+     ],
+     [
+      782,
+      0.03521
+     ],
+     [
+      816,
+      0.03521
+     ],
+     [
+      850,
+      0.03508
+     ],
+     [
+      884,
+      0.03137
+     ],
+     [
+      918,
+      0.02673
+     ],
+     [
+      952,
+      0.02446
+     ],
+     [
+      986,
+      0.02977
+     ],
+     [
+      1020,
+      0.03164
+     ],
+     [
+      1054,
+      0.02918
+     ],
+     [
+      1088,
+      0.02839
+     ],
+     [
+      1122,
+      0.03266
+     ],
+     [
+      1156,
+      0.02713
+     ],
+     [
+      1190,
+      0.03017
+     ],
+     [
+      1224,
+      0.02825
+     ],
+     [
+      1258,
+      0.03634
+     ],
+     [
+      1292,
+      0.02885
+     ],
+     [
+      1326,
+      0.02576
+     ],
+     [
+      1360,
+      0.02204
+     ],
+     [
+      1394,
+      0.02832
+     ],
+     [
+      1428,
+      0.02871
+     ],
+     [
+      1462,
+      0.02686
+     ],
+     [
+      1496,
+      0.0245
+     ],
+     [
+      1530,
+      0.0226
+     ],
+     [
+      1564,
+      0.02809
+     ],
+     [
+      1598,
+      0.03065
+     ],
+     [
+      1632,
+      0.02913
+     ],
+     [
+      1666,
+      0.02969
+     ],
+     [
+      1700,
+      0.02872
+     ],
+     [
+      1734,
+      0.02188
+     ],
+     [
+      1768,
+      0.02665
+     ],
+     [
+      1802,
+      0.02797
+     ],
+     [
+      1836,
+      0.03203
+     ],
+     [
+      1870,
+      0.02155
+     ],
+     [
+      1904,
+      0.02428
+     ],
+     [
+      1938,
+      0.02575
+     ],
+     [
+      1972,
+      0.02896
+     ],
+     [
+      2006,
+      0.02563
+     ],
+     [
+      2040,
+      0.02436
+     ],
+     [
+      2074,
+      0.02831
+     ],
+     [
+      2108,
+      0.02898
+     ],
+     [
+      2142,
+      0.02579
+     ],
+     [
+      2176,
+      0.02285
+     ],
+     [
+      2210,
+      0.0207
+     ],
+     [
+      2244,
+      0.03008
+     ],
+     [
+      2278,
+      0.02527
+     ],
+     [
+      2312,
+      0.02667
+     ],
+     [
+      2346,
+      0.02547
+     ],
+     [
+      2380,
+      0.02553
+     ],
+     [
+      2414,
+      0.02498
+     ],
+     [
+      2448,
+      0.02313
+     ],
+     [
+      2482,
+      0.02583
+     ],
+     [
+      2516,
+      0.02363
+     ],
+     [
+      2550,
+      0.02361
+     ],
+     [
+      2584,
+      0.0244
+     ],
+     [
+      2618,
+      0.02121
+     ],
+     [
+      2652,
+      0.02523
+     ],
+     [
+      2686,
+      0.02359
+     ],
+     [
+      2720,
+      0.01668
+     ],
+     [
+      2754,
+      0.01317
+     ],
+     [
+      2788,
+      0.01381
+     ],
+     [
+      2822,
+      0.01589
+     ],
+     [
+      2856,
+      0.01637
+     ],
+     [
+      2890,
+      0.01538
+     ],
+     [
+      2924,
+      0.0157
+     ],
+     [
+      2958,
+      0.0193
+     ],
+     [
+      2992,
+      0.01595
+     ],
+     [
+      3026,
+      0.01732
+     ],
+     [
+      3060,
+      0.01372
+     ],
+     [
+      3094,
+      0.01393
+     ],
+     [
+      3128,
+      0.0153
+     ],
+     [
+      3162,
+      0.01739
+     ],
+     [
+      3196,
+      0.01534
+     ],
+     [
+      3230,
+      0.01741
+     ],
+     [
+      3264,
+      0.01666
+     ],
+     [
+      3298,
+      0.01323
+     ],
+     [
+      3332,
+      0.01397
+     ],
+     [
+      3366,
+      0.01547
+     ],
+     [
+      3400,
+      0.01886
+     ],
+     [
+      3434,
+      0.0146
+     ],
+     [
+      3468,
+      0.01732
+     ],
+     [
+      3502,
+      0.01303
+     ],
+     [
+      3536,
+      0.0159
+     ],
+     [
+      3570,
+      0.0154
+     ],
+     [
+      3604,
+      0.01469
+     ],
+     [
+      3638,
+      0.01408
+     ],
+     [
+      3672,
+      0.01566
+     ],
+     [
+      3706,
+      0.01552
+     ],
+     [
+      3740,
+      0.01148
+     ],
+     [
+      3774,
+      0.01666
+     ],
+     [
+      3808,
+      0.0136
+     ],
+     [
+      3842,
+      0.01221
+     ],
+     [
+      3876,
+      0.01734
+     ],
+     [
+      3910,
+      0.01348
+     ],
+     [
+      3944,
+      0.01335
+     ],
+     [
+      3978,
+      0.01585
+     ],
+     [
+      4012,
+      0.01525
+     ],
+     [
+      4046,
+      0.01321
+     ],
+     [
+      4080,
+      0.01198
+     ],
+     [
+      4114,
+      0.01426
+     ],
+     [
+      4148,
+      0.01229
+     ],
+     [
+      4182,
+      0.01306
+     ],
+     [
+      4216,
+      0.01407
+     ],
+     [
+      4250,
+      0.01204
+     ],
+     [
+      4284,
+      0.01246
+     ],
+     [
+      4318,
+      0.01257
+     ],
+     [
+      4352,
+      0.01389
+     ],
+     [
+      4386,
+      0.01434
+     ],
+     [
+      4420,
+      0.0113
+     ],
+     [
+      4454,
+      0.01402
+     ],
+     [
+      4488,
+      0.01404
+     ],
+     [
+      4522,
+      0.01274
+     ],
+     [
+      4556,
+      0.01859
+     ],
+     [
+      4590,
+      0.01175
+     ],
+     [
+      4624,
+      0.01257
+     ],
+     [
+      4658,
+      0.01084
+     ],
+     [
+      4692,
+      0.01064
+     ],
+     [
+      4726,
+      0.01319
+     ],
+     [
+      4760,
+      0.01306
+     ],
+     [
+      4794,
+      0.01261
+     ],
+     [
+      4828,
+      0.01559
+     ],
+     [
+      4862,
+      0.01116
+     ],
+     [
+      4896,
+      0.01476
+     ],
+     [
+      4930,
+      0.01445
+     ],
+     [
+      4964,
+      0.01348
+     ],
+     [
+      4998,
+      0.0118
+     ],
+     [
+      5032,
+      0.01369
+     ],
+     [
+      5066,
+      0.01055
+     ],
+     [
+      5100,
+      0.01153
+     ],
+     [
+      5134,
+      0.01165
+     ],
+     [
+      5168,
+      0.01177
+     ],
+     [
+      5202,
+      0.01166
+     ],
+     [
+      5236,
+      0.01047
+     ],
+     [
+      5270,
+      0.01022
+     ],
+     [
+      5304,
+      0.00955
+     ],
+     [
+      5338,
+      0.0117
+     ],
+     [
+      5372,
+      0.01268
+     ],
+     [
+      5406,
+      0.00913
+     ],
+     [
+      5440,
+      0.00596
+     ],
+     [
+      5474,
+      0.0055
+     ],
+     [
+      5508,
+      0.00611
+     ],
+     [
+      5542,
+      0.00747
+     ],
+     [
+      5576,
+      0.00567
+     ],
+     [
+      5610,
+      0.00709
+     ],
+     [
+      5644,
+      0.00705
+     ],
+     [
+      5678,
+      0.0062
+     ],
+     [
+      5712,
+      0.00544
+     ],
+     [
+      5746,
+      0.00487
+     ],
+     [
+      5780,
+      0.00447
+     ],
+     [
+      5814,
+      0.00585
+     ],
+     [
+      5848,
+      0.00918
+     ],
+     [
+      5882,
+      0.00803
+     ],
+     [
+      5916,
+      0.00813
+     ],
+     [
+      5950,
+      0.00637
+     ],
+     [
+      5984,
+      0.00647
+     ],
+     [
+      6018,
+      0.00638
+     ],
+     [
+      6052,
+      0.00922
+     ],
+     [
+      6086,
+      0.00786
+     ],
+     [
+      6120,
+      0.00662
+     ],
+     [
+      6154,
+      0.00727
+     ],
+     [
+      6188,
+      0.00657
+     ],
+     [
+      6222,
+      0.00689
+     ],
+     [
+      6256,
+      0.00837
+     ],
+     [
+      6290,
+      0.0054
+     ],
+     [
+      6324,
+      0.00668
+     ],
+     [
+      6358,
+      0.00445
+     ],
+     [
+      6392,
+      0.00604
+     ],
+     [
+      6426,
+      0.00603
+     ],
+     [
+      6460,
+      0.00554
+     ],
+     [
+      6494,
+      0.00692
+     ],
+     [
+      6528,
+      0.00538
+     ],
+     [
+      6562,
+      0.0066
+     ],
+     [
+      6596,
+      0.00548
+     ],
+     [
+      6630,
+      0.00456
+     ],
+     [
+      6664,
+      0.00571
+     ],
+     [
+      6698,
+      0.00658
+     ],
+     [
+      6732,
+      0.00593
+     ],
+     [
+      6766,
+      0.00591
+     ],
+     [
+      6800,
+      0.00649
+     ],
+     [
+      6834,
+      0.00541
+     ],
+     [
+      6868,
+      0.00719
+     ],
+     [
+      6902,
+      0.00512
+     ],
+     [
+      6936,
+      0.00622
+     ],
+     [
+      6970,
+      0.0053
+     ],
+     [
+      7004,
+      0.00441
+     ],
+     [
+      7038,
+      0.00451
+     ],
+     [
+      7072,
+      0.00451
+     ],
+     [
+      7106,
+      0.0051
+     ],
+     [
+      7140,
+      0.00586
+     ],
+     [
+      7174,
+      0.00515
+     ],
+     [
+      7208,
+      0.00406
+     ],
+     [
+      7242,
+      0.00607
+     ],
+     [
+      7276,
+      0.0065
+     ],
+     [
+      7310,
+      0.00461
+     ],
+     [
+      7344,
+      0.00542
+     ],
+     [
+      7378,
+      0.00465
+     ],
+     [
+      7412,
+      0.00539
+     ],
+     [
+      7446,
+      0.00448
+     ],
+     [
+      7480,
+      0.00495
+     ],
+     [
+      7514,
+      0.00593
+     ],
+     [
+      7548,
+      0.00377
+     ],
+     [
+      7582,
+      0.00704
+     ],
+     [
+      7616,
+      0.0054
+     ],
+     [
+      7650,
+      0.00488
+     ],
+     [
+      7684,
+      0.00489
+     ],
+     [
+      7718,
+      0.00491
+     ],
+     [
+      7752,
+      0.00371
+     ],
+     [
+      7786,
+      0.00643
+     ],
+     [
+      7820,
+      0.00473
+     ],
+     [
+      7854,
+      0.00486
+     ],
+     [
+      7888,
+      0.00523
+     ],
+     [
+      7922,
+      0.00485
+     ],
+     [
+      7956,
+      0.0041
+     ],
+     [
+      7990,
+      0.00507
+     ],
+     [
+      8024,
+      0.0058
+     ],
+     [
+      8058,
+      0.00457
+     ],
+     [
+      8061,
+      0.01235
+     ]
+    ]
+   },
+   "bewertung": {
+    "donut_cord": {
+     "test_layout_holdout": {
+      "belege": 500,
+      "belegquote": 0.0,
+      "sek_pro_seite": 0.639,
+      "abnahme": false,
+      "abnahme_fehler": [
+       "total: Genauigkeit 0.0440 < 0.98",
+       "invoice_date: Genauigkeit 0.0000 < 0.98",
+       "invoice_number: Genauigkeit 0.0000 < 0.95",
+       "iban: Genauigkeit 0.0000 < 0.97",
+       "supplier.vat_id: Genauigkeit 0.0000 < 0.97"
+      ],
+      "felder": {
+       "bic": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 487,
+        "missing": 487,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 487,
+        "missing": 487,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.052,
+        "correct": 26,
+        "expected": 500,
+        "missing": 294,
+        "wrong": 180,
+        "hallucinated": 160,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 487,
+        "missing": 487,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.044,
+        "correct": 22,
+        "expected": 500,
+        "missing": 357,
+        "wrong": 121,
+        "hallucinated": 117,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.025,
+        "correct": 11,
+        "expected": 440,
+        "missing": 348,
+        "wrong": 81,
+        "hallucinated": 62,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 440,
+        "missing": 440,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     },
+     "test_synthetic": {
+      "belege": 1121,
+      "belegquote": 0.0,
+      "sek_pro_seite": 0.657,
+      "abnahme": false,
+      "abnahme_fehler": [
+       "total: Genauigkeit 0.0480 < 0.98",
+       "invoice_date: Genauigkeit 0.0000 < 0.98",
+       "invoice_number: Genauigkeit 0.0000 < 0.95",
+       "iban: Genauigkeit 0.0000 < 0.97",
+       "supplier.vat_id: Genauigkeit 0.0000 < 0.97"
+      ],
+      "felder": {
+       "bic": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 968,
+        "missing": 968,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1000,
+        "missing": 1000,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 968,
+        "missing": 968,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1000,
+        "missing": 1000,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1121,
+        "missing": 1121,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.064773,
+        "correct": 57,
+        "expected": 880,
+        "missing": 473,
+        "wrong": 350,
+        "hallucinated": 363,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1121,
+        "missing": 1121,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 964,
+        "missing": 964,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1000,
+        "missing": 1000,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.048,
+        "correct": 48,
+        "expected": 1000,
+        "missing": 700,
+        "wrong": 252,
+        "hallucinated": 249,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.025445,
+        "correct": 20,
+        "expected": 786,
+        "missing": 631,
+        "wrong": 135,
+        "hallucinated": 122,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 786,
+        "missing": 786,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     }
+    },
+    "kandidat": {
+     "test_layout_holdout": {
+      "belege": 500,
+      "belegquote": 0.58,
+      "sek_pro_seite": 0.282,
+      "abnahme": false,
+      "abnahme_fehler": [
+       "invoice_date: Genauigkeit 0.7240 < 0.98",
+       "iban: Genauigkeit 0.8994 < 0.97",
+       "supplier.vat_id: Genauigkeit 0.8912 < 0.97"
+      ],
+      "felder": {
+       "bic": {
+        "accuracy": 0.774127,
+        "correct": 377,
+        "expected": 487,
+        "missing": 24,
+        "wrong": 86,
+        "hallucinated": 86,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.76,
+        "correct": 380,
+        "expected": 500,
+        "missing": 1,
+        "wrong": 119,
+        "hallucinated": 38,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.899384,
+        "correct": 438,
+        "expected": 487,
+        "missing": 6,
+        "wrong": 43,
+        "hallucinated": 43,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.724,
+        "correct": 362,
+        "expected": 500,
+        "missing": 0,
+        "wrong": 138,
+        "hallucinated": 4,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.988,
+        "correct": 494,
+        "expected": 500,
+        "missing": 0,
+        "wrong": 6,
+        "hallucinated": 6,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.974,
+        "correct": 487,
+        "expected": 500,
+        "missing": 1,
+        "wrong": 12,
+        "hallucinated": 12,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 0.998,
+        "correct": 499,
+        "expected": 500,
+        "missing": 1,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.89117,
+        "correct": 434,
+        "expected": 487,
+        "missing": 1,
+        "wrong": 52,
+        "hallucinated": 52,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.728,
+        "correct": 364,
+        "expected": 500,
+        "missing": 43,
+        "wrong": 93,
+        "hallucinated": 5,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.986,
+        "correct": 493,
+        "expected": 500,
+        "missing": 1,
+        "wrong": 6,
+        "hallucinated": 4,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.952273,
+        "correct": 419,
+        "expected": 440,
+        "missing": 2,
+        "wrong": 19,
+        "hallucinated": 19,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 1.0,
+        "correct": 440,
+        "expected": 440,
+        "missing": 0,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     },
+     "test_synthetic": {
+      "belege": 1121,
+      "belegquote": 0.90901,
+      "sek_pro_seite": 0.264,
+      "abnahme": false,
+      "abnahme_fehler": [
+       "iban: Genauigkeit 0.9360 < 0.97"
+      ],
+      "felder": {
+       "bic": {
+        "accuracy": 0.81405,
+        "correct": 788,
+        "expected": 968,
+        "missing": 33,
+        "wrong": 147,
+        "hallucinated": 147,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.997,
+        "correct": 997,
+        "expected": 1000,
+        "missing": 0,
+        "wrong": 3,
+        "hallucinated": 3,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.93595,
+        "correct": 906,
+        "expected": 968,
+        "missing": 5,
+        "wrong": 57,
+        "hallucinated": 57,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.995,
+        "correct": 995,
+        "expected": 1000,
+        "missing": 0,
+        "wrong": 5,
+        "hallucinated": 5,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.989295,
+        "correct": 1109,
+        "expected": 1121,
+        "missing": 1,
+        "wrong": 11,
+        "hallucinated": 11,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.989773,
+        "correct": 871,
+        "expected": 880,
+        "missing": 0,
+        "wrong": 9,
+        "hallucinated": 9,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 0.999108,
+        "correct": 1120,
+        "expected": 1121,
+        "missing": 1,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.975104,
+        "correct": 940,
+        "expected": 964,
+        "missing": 1,
+        "wrong": 23,
+        "hallucinated": 23,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.995,
+        "correct": 995,
+        "expected": 1000,
+        "missing": 0,
+        "wrong": 5,
+        "hallucinated": 5,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.99,
+        "correct": 990,
+        "expected": 1000,
+        "missing": 1,
+        "wrong": 9,
+        "hallucinated": 7,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.98855,
+        "correct": 777,
+        "expected": 786,
+        "missing": 1,
+        "wrong": 8,
+        "hallucinated": 8,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 0.998728,
+        "correct": 785,
+        "expected": 786,
+        "missing": 0,
+        "wrong": 1,
+        "hallucinated": 1,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "donut-stufe5-20261007-1",
+   "titel": "5 · Kopfdatenvielfalt (Weitertraining), Lauf 2",
+   "run": "58040121b93fafed-1",
+   "testsaetze": "voll",
+   "hinweis": null,
+   "konfiguration": {
+    "karte": 1,
+    "image_size": "1536x1152",
+    "per_device_batch": 2,
+    "grad_accum": 4,
+    "seed": 43,
+    "epochs": 3,
+    "datensatz_hash": "7a8e7caf24b9e631",
+    "max_stunden": 14
+   },
+   "training": {
+    "schritte": 8061,
+    "schritte_gesamt": 8061,
+    "zustand": "fertig",
+    "dauer_h": 7.49,
+    "loss_start": 0.6322,
+    "loss_ende": 0.00295,
+    "vram_spitze_gib": 9.545,
+    "kurve": [
+     [
+      34,
+      0.54108
+     ],
+     [
+      68,
+      0.23553
+     ],
+     [
+      102,
+      0.11707
+     ],
+     [
+      136,
+      0.07498
+     ],
+     [
+      170,
+      0.06705
+     ],
+     [
+      204,
+      0.06592
+     ],
+     [
+      238,
+      0.05693
+     ],
+     [
+      272,
+      0.05154
+     ],
+     [
+      306,
+      0.05244
+     ],
+     [
+      340,
+      0.05202
+     ],
+     [
+      374,
+      0.04223
+     ],
+     [
+      408,
+      0.04599
+     ],
+     [
+      442,
+      0.04241
+     ],
+     [
+      476,
+      0.0361
+     ],
+     [
+      510,
+      0.03588
+     ],
+     [
+      544,
+      0.03519
+     ],
+     [
+      578,
+      0.02692
+     ],
+     [
+      612,
+      0.0306
+     ],
+     [
+      646,
+      0.03226
+     ],
+     [
+      680,
+      0.02457
+     ],
+     [
+      714,
+      0.02219
+     ],
+     [
+      748,
+      0.02243
+     ],
+     [
+      782,
+      0.03157
+     ],
+     [
+      816,
+      0.0192
+     ],
+     [
+      850,
+      0.02004
+     ],
+     [
+      884,
+      0.02218
+     ],
+     [
+      918,
+      0.02453
+     ],
+     [
+      952,
+      0.01986
+     ],
+     [
+      986,
+      0.02063
+     ],
+     [
+      1020,
+      0.02244
+     ],
+     [
+      1054,
+      0.01753
+     ],
+     [
+      1088,
+      0.02288
+     ],
+     [
+      1122,
+      0.01491
+     ],
+     [
+      1156,
+      0.01812
+     ],
+     [
+      1190,
+      0.01954
+     ],
+     [
+      1224,
+      0.02174
+     ],
+     [
+      1258,
+      0.0233
+     ],
+     [
+      1292,
+      0.02187
+     ],
+     [
+      1326,
+      0.01905
+     ],
+     [
+      1360,
+      0.02197
+     ],
+     [
+      1394,
+      0.01717
+     ],
+     [
+      1428,
+      0.01896
+     ],
+     [
+      1462,
+      0.01448
+     ],
+     [
+      1496,
+      0.0214
+     ],
+     [
+      1530,
+      0.01857
+     ],
+     [
+      1564,
+      0.02016
+     ],
+     [
+      1598,
+      0.01858
+     ],
+     [
+      1632,
+      0.01972
+     ],
+     [
+      1666,
+      0.01961
+     ],
+     [
+      1700,
+      0.0187
+     ],
+     [
+      1734,
+      0.01968
+     ],
+     [
+      1768,
+      0.02036
+     ],
+     [
+      1802,
+      0.01563
+     ],
+     [
+      1836,
+      0.01799
+     ],
+     [
+      1870,
+      0.01758
+     ],
+     [
+      1904,
+      0.01325
+     ],
+     [
+      1938,
+      0.01526
+     ],
+     [
+      1972,
+      0.01431
+     ],
+     [
+      2006,
+      0.01472
+     ],
+     [
+      2040,
+      0.0154
+     ],
+     [
+      2074,
+      0.01465
+     ],
+     [
+      2108,
+      0.01942
+     ],
+     [
+      2142,
+      0.01706
+     ],
+     [
+      2176,
+      0.01725
+     ],
+     [
+      2210,
+      0.01417
+     ],
+     [
+      2244,
+      0.01528
+     ],
+     [
+      2278,
+      0.01711
+     ],
+     [
+      2312,
+      0.01366
+     ],
+     [
+      2346,
+      0.01884
+     ],
+     [
+      2380,
+      0.01496
+     ],
+     [
+      2414,
+      0.01743
+     ],
+     [
+      2448,
+      0.01423
+     ],
+     [
+      2482,
+      0.01691
+     ],
+     [
+      2516,
+      0.01797
+     ],
+     [
+      2550,
+      0.0146
+     ],
+     [
+      2584,
+      0.01578
+     ],
+     [
+      2618,
+      0.02177
+     ],
+     [
+      2652,
+      0.01438
+     ],
+     [
+      2686,
+      0.01972
+     ],
+     [
+      2720,
+      0.01072
+     ],
+     [
+      2754,
+      0.00898
+     ],
+     [
+      2788,
+      0.0105
+     ],
+     [
+      2822,
+      0.01024
+     ],
+     [
+      2856,
+      0.01064
+     ],
+     [
+      2890,
+      0.01197
+     ],
+     [
+      2924,
+      0.00954
+     ],
+     [
+      2958,
+      0.00885
+     ],
+     [
+      2992,
+      0.01005
+     ],
+     [
+      3026,
+      0.01031
+     ],
+     [
+      3060,
+      0.01279
+     ],
+     [
+      3094,
+      0.00798
+     ],
+     [
+      3128,
+      0.01372
+     ],
+     [
+      3162,
+      0.00933
+     ],
+     [
+      3196,
+      0.00876
+     ],
+     [
+      3230,
+      0.01108
+     ],
+     [
+      3264,
+      0.00832
+     ],
+     [
+      3298,
+      0.00892
+     ],
+     [
+      3332,
+      0.00722
+     ],
+     [
+      3366,
+      0.0094
+     ],
+     [
+      3400,
+      0.00961
+     ],
+     [
+      3434,
+      0.00808
+     ],
+     [
+      3468,
+      0.00941
+     ],
+     [
+      3502,
+      0.00875
+     ],
+     [
+      3536,
+      0.00895
+     ],
+     [
+      3570,
+      0.0087
+     ],
+     [
+      3604,
+      0.00846
+     ],
+     [
+      3638,
+      0.01215
+     ],
+     [
+      3672,
+      0.01031
+     ],
+     [
+      3706,
+      0.00949
+     ],
+     [
+      3740,
+      0.00676
+     ],
+     [
+      3774,
+      0.00894
+     ],
+     [
+      3808,
+      0.00885
+     ],
+     [
+      3842,
+      0.0087
+     ],
+     [
+      3876,
+      0.00867
+     ],
+     [
+      3910,
+      0.0126
+     ],
+     [
+      3944,
+      0.00867
+     ],
+     [
+      3978,
+      0.00867
+     ],
+     [
+      4012,
+      0.00818
+     ],
+     [
+      4046,
+      0.01119
+     ],
+     [
+      4080,
+      0.00794
+     ],
+     [
+      4114,
+      0.00892
+     ],
+     [
+      4148,
+      0.0086
+     ],
+     [
+      4182,
+      0.00994
+     ],
+     [
+      4216,
+      0.01039
+     ],
+     [
+      4250,
+      0.00964
+     ],
+     [
+      4284,
+      0.00863
+     ],
+     [
+      4318,
+      0.00943
+     ],
+     [
+      4352,
+      0.00857
+     ],
+     [
+      4386,
+      0.00849
+     ],
+     [
+      4420,
+      0.00917
+     ],
+     [
+      4454,
+      0.00728
+     ],
+     [
+      4488,
+      0.0101
+     ],
+     [
+      4522,
+      0.00681
+     ],
+     [
+      4556,
+      0.00722
+     ],
+     [
+      4590,
+      0.00692
+     ],
+     [
+      4624,
+      0.00685
+     ],
+     [
+      4658,
+      0.00842
+     ],
+     [
+      4692,
+      0.00616
+     ],
+     [
+      4726,
+      0.00761
+     ],
+     [
+      4760,
+      0.0079
+     ],
+     [
+      4794,
+      0.00953
+     ],
+     [
+      4828,
+      0.0065
+     ],
+     [
+      4862,
+      0.0073
+     ],
+     [
+      4896,
+      0.00706
+     ],
+     [
+      4930,
+      0.00729
+     ],
+     [
+      4964,
+      0.00895
+     ],
+     [
+      4998,
+      0.00637
+     ],
+     [
+      5032,
+      0.00925
+     ],
+     [
+      5066,
+      0.00748
+     ],
+     [
+      5100,
+      0.00856
+     ],
+     [
+      5134,
+      0.00739
+     ],
+     [
+      5168,
+      0.0058
+     ],
+     [
+      5202,
+      0.00613
+     ],
+     [
+      5236,
+      0.00907
+     ],
+     [
+      5270,
+      0.00554
+     ],
+     [
+      5304,
+      0.00784
+     ],
+     [
+      5338,
+      0.00626
+     ],
+     [
+      5372,
+      0.00753
+     ],
+     [
+      5406,
+      0.00299
+     ],
+     [
+      5440,
+      0.00422
+     ],
+     [
+      5474,
+      0.00414
+     ],
+     [
+      5508,
+      0.00323
+     ],
+     [
+      5542,
+      0.00413
+     ],
+     [
+      5576,
+      0.00392
+     ],
+     [
+      5610,
+      0.00521
+     ],
+     [
+      5644,
+      0.00283
+     ],
+     [
+      5678,
+      0.0042
+     ],
+     [
+      5712,
+      0.00406
+     ],
+     [
+      5746,
+      0.00416
+     ],
+     [
+      5780,
+      0.00442
+     ],
+     [
+      5814,
+      0.00303
+     ],
+     [
+      5848,
+      0.00399
+     ],
+     [
+      5882,
+      0.00372
+     ],
+     [
+      5916,
+      0.00288
+     ],
+     [
+      5950,
+      0.003
+     ],
+     [
+      5984,
+      0.00379
+     ],
+     [
+      6018,
+      0.00345
+     ],
+     [
+      6052,
+      0.00515
+     ],
+     [
+      6086,
+      0.00487
+     ],
+     [
+      6120,
+      0.00341
+     ],
+     [
+      6154,
+      0.00358
+     ],
+     [
+      6188,
+      0.0033
+     ],
+     [
+      6222,
+      0.00561
+     ],
+     [
+      6256,
+      0.00364
+     ],
+     [
+      6290,
+      0.00352
+     ],
+     [
+      6324,
+      0.00347
+     ],
+     [
+      6358,
+      0.00357
+     ],
+     [
+      6392,
+      0.00309
+     ],
+     [
+      6426,
+      0.00352
+     ],
+     [
+      6460,
+      0.00369
+     ],
+     [
+      6494,
+      0.00303
+     ],
+     [
+      6528,
+      0.00373
+     ],
+     [
+      6562,
+      0.00306
+     ],
+     [
+      6596,
+      0.0035
+     ],
+     [
+      6630,
+      0.00322
+     ],
+     [
+      6664,
+      0.00409
+     ],
+     [
+      6698,
+      0.00457
+     ],
+     [
+      6732,
+      0.00254
+     ],
+     [
+      6766,
+      0.00438
+     ],
+     [
+      6800,
+      0.00315
+     ],
+     [
+      6834,
+      0.00276
+     ],
+     [
+      6868,
+      0.00323
+     ],
+     [
+      6902,
+      0.00365
+     ],
+     [
+      6936,
+      0.00336
+     ],
+     [
+      6970,
+      0.00297
+     ],
+     [
+      7004,
+      0.00597
+     ],
+     [
+      7038,
+      0.00477
+     ],
+     [
+      7072,
+      0.00411
+     ],
+     [
+      7106,
+      0.00347
+     ],
+     [
+      7140,
+      0.00268
+     ],
+     [
+      7174,
+      0.00364
+     ],
+     [
+      7208,
+      0.0031
+     ],
+     [
+      7242,
+      0.00299
+     ],
+     [
+      7276,
+      0.0033
+     ],
+     [
+      7310,
+      0.00361
+     ],
+     [
+      7344,
+      0.00277
+     ],
+     [
+      7378,
+      0.00322
+     ],
+     [
+      7412,
+      0.00292
+     ],
+     [
+      7446,
+      0.00366
+     ],
+     [
+      7480,
+      0.00447
+     ],
+     [
+      7514,
+      0.00373
+     ],
+     [
+      7548,
+      0.00345
+     ],
+     [
+      7582,
+      0.00252
+     ],
+     [
+      7616,
+      0.00328
+     ],
+     [
+      7650,
+      0.00288
+     ],
+     [
+      7684,
+      0.00458
+     ],
+     [
+      7718,
+      0.00462
+     ],
+     [
+      7752,
+      0.00343
+     ],
+     [
+      7786,
+      0.00332
+     ],
+     [
+      7820,
+      0.00306
+     ],
+     [
+      7854,
+      0.004
+     ],
+     [
+      7888,
+      0.00222
+     ],
+     [
+      7922,
+      0.00223
+     ],
+     [
+      7956,
+      0.00226
+     ],
+     [
+      7990,
+      0.00189
+     ],
+     [
+      8024,
+      0.00234
+     ],
+     [
+      8058,
+      0.00357
+     ],
+     [
+      8061,
+      0.00166
+     ]
+    ]
+   },
+   "bewertung": {
+    "donut_cord": {
+     "test_layout_holdout": {
+      "belege": 500,
+      "belegquote": 0.0,
+      "sek_pro_seite": 0.639,
+      "abnahme": false,
+      "abnahme_fehler": [
+       "total: Genauigkeit 0.0440 < 0.98",
+       "invoice_date: Genauigkeit 0.0000 < 0.98",
+       "invoice_number: Genauigkeit 0.0000 < 0.95",
+       "iban: Genauigkeit 0.0000 < 0.97",
+       "supplier.vat_id: Genauigkeit 0.0000 < 0.97"
+      ],
+      "felder": {
+       "bic": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 487,
+        "missing": 487,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 487,
+        "missing": 487,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.052,
+        "correct": 26,
+        "expected": 500,
+        "missing": 294,
+        "wrong": 180,
+        "hallucinated": 160,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 487,
+        "missing": 487,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 500,
+        "missing": 500,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.044,
+        "correct": 22,
+        "expected": 500,
+        "missing": 357,
+        "wrong": 121,
+        "hallucinated": 117,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.025,
+        "correct": 11,
+        "expected": 440,
+        "missing": 348,
+        "wrong": 81,
+        "hallucinated": 62,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 440,
+        "missing": 440,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     },
+     "test_synthetic": {
+      "belege": 1121,
+      "belegquote": 0.0,
+      "sek_pro_seite": 0.658,
+      "abnahme": false,
+      "abnahme_fehler": [
+       "total: Genauigkeit 0.0480 < 0.98",
+       "invoice_date: Genauigkeit 0.0000 < 0.98",
+       "invoice_number: Genauigkeit 0.0000 < 0.95",
+       "iban: Genauigkeit 0.0000 < 0.97",
+       "supplier.vat_id: Genauigkeit 0.0000 < 0.97"
+      ],
+      "felder": {
+       "bic": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 968,
+        "missing": 968,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1000,
+        "missing": 1000,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 968,
+        "missing": 968,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1000,
+        "missing": 1000,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1121,
+        "missing": 1121,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.064773,
+        "correct": 57,
+        "expected": 880,
+        "missing": 473,
+        "wrong": 350,
+        "hallucinated": 363,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1121,
+        "missing": 1121,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 964,
+        "missing": 964,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 1000,
+        "missing": 1000,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.048,
+        "correct": 48,
+        "expected": 1000,
+        "missing": 700,
+        "wrong": 252,
+        "hallucinated": 249,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.025445,
+        "correct": 20,
+        "expected": 786,
+        "missing": 631,
+        "wrong": 135,
+        "hallucinated": 122,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "expected": 786,
+        "missing": 786,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     }
+    },
+    "kandidat": {
+     "test_layout_holdout": {
+      "belege": 500,
+      "belegquote": 0.72,
+      "sek_pro_seite": 0.338,
+      "abnahme": false,
+      "abnahme_fehler": [
+       "invoice_date: Genauigkeit 0.7760 < 0.98",
+       "iban: Genauigkeit 0.9569 < 0.97",
+       "supplier.vat_id: Genauigkeit 0.9487 < 0.97"
+      ],
+      "felder": {
+       "bic": {
+        "accuracy": 0.833676,
+        "correct": 406,
+        "expected": 487,
+        "missing": 16,
+        "wrong": 65,
+        "hallucinated": 65,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.83,
+        "correct": 415,
+        "expected": 500,
+        "missing": 5,
+        "wrong": 80,
+        "hallucinated": 24,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.956879,
+        "correct": 466,
+        "expected": 487,
+        "missing": 0,
+        "wrong": 21,
+        "hallucinated": 21,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.776,
+        "correct": 388,
+        "expected": 500,
+        "missing": 0,
+        "wrong": 112,
+        "hallucinated": 2,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.996,
+        "correct": 498,
+        "expected": 500,
+        "missing": 0,
+        "wrong": 2,
+        "hallucinated": 2,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.986,
+        "correct": 493,
+        "expected": 500,
+        "missing": 1,
+        "wrong": 6,
+        "hallucinated": 6,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 0.99,
+        "correct": 495,
+        "expected": 500,
+        "missing": 5,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.948665,
+        "correct": 462,
+        "expected": 487,
+        "missing": 5,
+        "wrong": 20,
+        "hallucinated": 20,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.774,
+        "correct": 387,
+        "expected": 500,
+        "missing": 2,
+        "wrong": 111,
+        "hallucinated": 9,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.998,
+        "correct": 499,
+        "expected": 500,
+        "missing": 0,
+        "wrong": 1,
+        "hallucinated": 1,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.993182,
+        "correct": 437,
+        "expected": 440,
+        "missing": 1,
+        "wrong": 2,
+        "hallucinated": 2,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_rates": {
+        "accuracy": 1.0,
+        "correct": 440,
+        "expected": 440,
+        "missing": 0,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       }
+      }
+     },
+     "test_synthetic": {
+      "belege": 1121,
+      "belegquote": 0.961641,
+      "sek_pro_seite": 0.322,
+      "abnahme": true,
+      "abnahme_fehler": [],
+      "felder": {
+       "bic": {
+        "accuracy": 0.853306,
+        "correct": 826,
+        "expected": 968,
+        "missing": 28,
+        "wrong": 114,
+        "hallucinated": 114,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "due_date": {
+        "accuracy": 0.997,
+        "correct": 997,
+        "expected": 1000,
+        "missing": 0,
+        "wrong": 3,
+        "hallucinated": 3,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "iban": {
+        "accuracy": 0.975207,
+        "correct": 944,
+        "expected": 968,
+        "missing": 0,
+        "wrong": 24,
+        "hallucinated": 24,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_date": {
+        "accuracy": 0.998,
+        "correct": 998,
+        "expected": 1000,
+        "missing": 0,
+        "wrong": 2,
+        "hallucinated": 2,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "invoice_number": {
+        "accuracy": 0.994648,
+        "correct": 1115,
+        "expected": 1121,
+        "missing": 1,
+        "wrong": 5,
+        "hallucinated": 5,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "net_amount": {
+        "accuracy": 0.996591,
+        "correct": 877,
+        "expected": 880,
+        "missing": 0,
+        "wrong": 3,
+        "hallucinated": 3,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.name": {
+        "accuracy": 1.0,
+        "correct": 1121,
+        "expected": 1121,
+        "missing": 0,
+        "wrong": 0,
+        "hallucinated": 0,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supplier.vat_id": {
+        "accuracy": 0.988589,
+        "correct": 953,
+        "expected": 964,
+        "missing": 0,
+        "wrong": 11,
+        "hallucinated": 11,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "supply_date": {
+        "accuracy": 0.997,
+        "correct": 997,
+        "expected": 1000,
+        "missing": 0,
+        "wrong": 3,
+        "hallucinated": 3,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "total": {
+        "accuracy": 0.997,
+        "correct": 997,
+        "expected": 1000,
+        "missing": 0,
+        "wrong": 3,
+        "hallucinated": 3,
+        "accepted": 0,
+        "accepted_wrong": 0
+       },
+       "vat_amount": {
+        "accuracy": 0.992366,
+        "correct": 780,
+        "expected": 786,
+        "missing": 0,
+        "wrong": 6,
+        "hallucinated": 6,
         "accepted": 0,
         "accepted_wrong": 0
        },
