@@ -44,7 +44,7 @@ from auditcore_invoicesynth.layouts import (
 )
 from auditcore_invoicesynth.plan import SPLITS, SampleSpec, SynthConfig, plan_dataset
 from auditcore_invoicesynth.schema import SCHEMA_VERSION, TASK_TOKEN, nest_fields, ordered
-from auditcore_invoicesynth.variety import apply_variety
+from auditcore_invoicesynth.variety import apply_variety, variety_meta
 
 MANIFEST = "manifest.json"
 FORMAT = "auditcore-invoicesynth/donut-dataset/1"
@@ -100,7 +100,10 @@ def prepare_samples(config: SynthConfig, specs: list[SampleSpec]) -> list[Prepar
             iban_grouped=spec.iban_grouped,
         )
         if spec.variety != "v1":
-            variant = apply_variety(variant, spec.seed, credit_note=invoice.kind == "credit_note")
+            credit = invoice.kind == "credit_note"
+            variant = apply_variety(
+                variant, spec.seed, credit_note=credit, variant_name=spec.variety
+            )
         prepared.append(PreparedSample(spec, invoice, variant))
     return prepared
 
@@ -145,6 +148,7 @@ def _meta(sample: PreparedSample, page: int, pages: int) -> dict[str, Any]:
         # Nur ab v2, damit die Metadaten (und der Hash) von v1-Datensätzen gleich bleiben.
         meta["variety"] = spec.variety
         meta["degraded"] = spec.degrade is not None
+        meta.update(variety_meta(sample.variant.variety) if spec.variety == "v3" else {})
     elif sample.variant.variety is not None:
         # Diagnosesatz T2-gemischt: gedruckte Reihenfolge der Kopfdaten (v1/v2 nie betroffen).
         meta["meta_order"] = list(sample.variant.variety.meta_order)

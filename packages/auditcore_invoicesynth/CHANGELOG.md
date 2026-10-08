@@ -2,6 +2,21 @@
 
 ## Unveröffentlicht
 
+Generatorvariante `v3` (`build --variety v3`; `v1` und `v2` bleiben bitgleich,
+Plan- und Datensatz-Hashes gegen `main` geprüft): `v2` plus, aus eigener
+Zufallsfolge je Beleg, (1) Summenorte – wie die Vorlage, unten links, umrahmter
+Kasten rechts zwischen Kopfdaten und Positionstabelle oder waagerechter Streifen
+Netto | USt | Gesamtbetrag (Beschriftung über dem Wert, ohne Hinterlegung)
+zwischen Kopf und Tabelle, je rund 12 % der Belege; (2) waagerechte Kopfdaten
+(neues Modul `layout_extra`): 3–5 Spalten mit Beschriftung über dem Wert, mit
+oder ohne Rahmen, ein- oder zweizeilig, Reihenfolge wie `v2`, Kundennummer und
+Seite als Zierzellen ohne Zielfeld, rund 16 % der Belege; (3) die
+Positionsspalte heißt nie „Gesamt“, damit nur der Gesamtbetrag so beschriftet
+ist. Der Layout-Holdout T2 bleibt bitgleich zu `v1`/`v2`; Holdout- und
+Diagnosevorlagen und -schriften kommen in train/validation/T1 nicht vor.
+**Ab v3 ist T2 (holdout_kompakt) kein reiner Unbekannt-Test mehr; maßgeblich
+sind T2b und T2-gemischt.**
+
 Plausibilität: Beträge (netto, USt, brutto) gelten nur noch als plausibel, wenn alle
 drei lesbar sind und `netto + USt = brutto` stimmt. Fehlt einer, geht der Beleg zur
 Prüfung (Befund Diagnosesatz T2b: falsche Gesamtbeträge ohne Steuerzeile wurden
