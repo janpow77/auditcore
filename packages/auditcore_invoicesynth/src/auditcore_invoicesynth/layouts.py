@@ -1,4 +1,5 @@
-"""Fünfzehn Belegvorlagen (dreizehn fürs Training, zwei nur für den Layout-Holdout).
+"""Sechzehn Belegvorlagen (dreizehn fürs Training, zwei für den Layout-Holdout T2,
+eine nur für den Diagnosesatz T2b).
 
 Die Vorlagen ``kopf_zeile`` und ``kopf_kasten`` nutzt nur die Generatorvariante ``v2``.
 
@@ -23,6 +24,7 @@ from auditcore_invoicesynth.layout_head import (
     sender,
 )
 from auditcore_invoicesynth.layout_model import BLACK as BLACK
+from auditcore_invoicesynth.layout_model import DIAGNOSTIC_LAYOUTS as DIAGNOSTIC_LAYOUTS
 from auditcore_invoicesynth.layout_model import FOOTER_TOP as FOOTER_TOP
 from auditcore_invoicesynth.layout_model import GRAY as GRAY
 from auditcore_invoicesynth.layout_model import HOLDOUT_LAYOUTS as HOLDOUT_LAYOUTS
@@ -44,13 +46,17 @@ def render_layout(canvas: Canvas, inv: SynthInvoice, variant: Variant, name: str
     markers(canvas)
     if spec.band:
         canvas.rect(0, 9, 210, 40, fill=(222, 229, 238), outline=None)
-    sender_x = 190.0 if spec.header == "right" else 20.0
+    sender_x = {"right": 190.0, "center": 105.0}.get(spec.header, 20.0)
     sender_end = sender(canvas, inv, variant, spec, sender_x, 14)
     recipient_y = max(50.0, sender_end + 4)
     recipient(canvas, inv, variant, 20, recipient_y)
     y = meta(canvas, inv, variant, spec, recipient_y + 2)
-    y = table(canvas, inv, variant, spec, max(y, 120))
-    y = totals(canvas, inv, variant, spec, y)
+    if spec.totals == "above_table":
+        y = totals(canvas, inv, variant, spec, max(y, 110))
+        y = table(canvas, inv, variant, spec, y)
+    else:
+        y = table(canvas, inv, variant, spec, max(y, 120))
+        y = totals(canvas, inv, variant, spec, y)
     y = ensure_space(canvas, inv, variant, y, 3 * canvas.line_height() + 4)
     y = payment(canvas, inv, variant, spec, y)
     if spec.bank == "below_totals":

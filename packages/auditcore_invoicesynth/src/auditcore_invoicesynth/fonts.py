@@ -1,7 +1,8 @@
 """Freie Schriften aus Systempaketen oder geprüftem Download – nie eingebettet.
 
 Zulässig sind nur Familien mit freier Lizenz (Katalog ``FONT_CATALOG``):
-DejaVu (Bitstream-Vera-Lizenz), Liberation, Noto und Lato (SIL OFL 1.1). Die
+DejaVu (Bitstream-Vera-Lizenz), Liberation, Noto und Lato (SIL OFL 1.1), dazu
+URW Gothic (AGPL-3.0 mit Schrift-Ausnahme, nur Diagnosesatz T2b). Die
 Schriftdateien werden **nicht** mit dem Paket verteilt; der Generator sucht
 sie in Systemverzeichnissen (``fonts-dejavu-core``, ``fonts-liberation2``,
 ``fonts-noto-core``) oder lädt sie über einen injizierten Abruf mit fester
@@ -76,9 +77,21 @@ FONT_CATALOG: dict[str, FontFamilySpec] = {
     ),
     # Generatorvariante v2: weitere freie Familie (Debian-Paket fonts-lato).
     "Lato": FontFamilySpec("OFL-1.1", ("fonts-lato",), ("Lato-Regular.ttf",), ("Lato-Bold.ttf",)),
+    # Nur Diagnosesatz T2b (Debian-Paket fonts-urw-base35, OpenType); nie im Training.
+    "URW Gothic": FontFamilySpec(
+        "AGPL-3.0-with-font-exception",
+        ("fonts-urw-base35",),
+        ("URWGothic-Book.otf",),
+        ("URWGothic-Demi.otf",),
+    ),
 }
 # Familien, die erst die Generatorvariante v2 verwendet (v1-Pläne bleiben unverändert).
 V2_FONT_FAMILIES: tuple[str, ...] = ("Lato",)
+# Familien nur für Diagnosesätze; kein Trainings-, Validierungs- oder T1/T2-Plan nutzt sie.
+DIAGNOSTIC_FONT_FAMILIES: tuple[str, ...] = ("URW Gothic",)
+
+
+FONT_SUFFIXES = frozenset({".ttf", ".otf"})
 
 
 class FontError(ValueError):
@@ -164,7 +177,9 @@ def _find_files(search_dirs: Iterable[Path], names: set[str]) -> dict[str, Path]
     for directory in search_dirs:
         if not directory.is_dir():
             continue
-        for path in sorted(directory.rglob("*.ttf")):
+        for path in sorted(directory.rglob("*")):
+            if path.suffix not in FONT_SUFFIXES:
+                continue
             if path.name in names and path.name not in found and path.is_file():
                 found[path.name] = path
     return found
