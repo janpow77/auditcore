@@ -50,6 +50,10 @@ auditcore-invoicesynth evaluate ds/ --split test_layout_holdout --predictions p.
 auditcore-invoicesynth build-diagnostics --count 500 --out diag/   # nur T2-gemischt und T2b (Bewertung)
 ```
 
+Ab `--variety v3` (Summenorte, waagerechte Kopfdaten mit Beschriftung über dem
+Wert) ist T2 (holdout_kompakt) kein reiner Unbekannt-Test mehr; maßgeblich sind
+T2b und T2-gemischt.
+
 ## Schnellstart
 
 Der Kern läuft ohne Zusatzpakete: Plan, Anreicherung, Kennungen und Ziel-JSON.
@@ -171,6 +175,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.identifiers` | Prüfziffer-gültige, aber fiktive Kennungen (Entscheidung E5 vom 24.09.2026). |
 | `auditcore_invoicesynth.labels` | Beschriftungs-Synonyme je Feld (deutsch überwiegend, englischer Anteil über den Plan). |
 | `auditcore_invoicesynth.layout_body` | Positionstabelle, Summenblock, Zahlungshinweis, Bankverbindung und Fußzeile. |
+| `auditcore_invoicesynth.layout_extra` | Anordnungen der Generatorvariante ``v3``: waagerechte Kopfdaten und Summenstreifen. |
 | `auditcore_invoicesynth.layout_head` | Kopfbereich eines Belegs: Kennzeichnung, Absender, Empfänger, Titel, Kopfdaten. |
 | `auditcore_invoicesynth.layout_model` | Belegvorlagen als Daten: Zeichenfläche, Vorlagenparameter und Formatwahl. |
 | `auditcore_invoicesynth.layouts` | Sechzehn Belegvorlagen (dreizehn fürs Training, zwei für den Layout-Holdout T2, eine nur für den Diagnosesatz T2b). |
@@ -179,7 +184,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.render` | Pillow-Zeichenfläche für die Vorlagen (Extra ``render``). |
 | `auditcore_invoicesynth.schema` | Ziel-JSON ``auditcore_invoice_v1`` (nur Kopf-/Summenfelder, Entscheidung E8). |
 | `auditcore_invoicesynth.train` | Vorbereitetes Donut-Nachtraining (Plan 2c/2c-bis, Etappe E3). |
-| `auditcore_invoicesynth.variety` | Generatorvariante ``v2`` (Trainingsrunde Stufe 5): Vielfalt der Kopfdaten. |
+| `auditcore_invoicesynth.variety` | Generatorvarianten ``v2``/``v3`` (Stufe 5/6): Vielfalt von Kopfdaten und Summen. |
 <!-- api-overview:end -->
 
 ## Profile und Konfiguration
