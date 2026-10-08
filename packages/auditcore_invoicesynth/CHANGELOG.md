@@ -20,7 +20,8 @@ eigenes Verzeichnis mit eigenem Manifest. `verify` und
 `train.evaluate --dataset <dir> --splits <satz>` lesen es unverändert.
 Diagnosevorlage und -schrift sind aus allen Plänen von `build` ausgeschlossen;
 Plan- und Datensatz-Hashes von v1 und v2 bleiben gleich. Die Schriftsuche
-findet zusätzlich `.otf`-Dateien.
+findet zusätzlich `.otf`-Dateien. Ein Test hält die Plan-Hashes von v1 und v2
+(Seed 42, 20000/1000/1000/500) gegen den Stand vor den Diagnosesätzen fest.
 
 Bewertung (Runde A nach Stufe 4): `train.evaluate` repariert ein ausgelassenes
 `<s_supplier>` (`schema.repair_structure`), misst die Falschwert-Quote nach

@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from auditcore_invoicesynth.cli import main
-from auditcore_invoicesynth.dataset import load_split, verify_dataset
+from auditcore_invoicesynth.dataset import load_split, plan_summary, verify_dataset
 from auditcore_invoicesynth.diagnostics import (
     DIAGNOSTIC_SETS,
     HOLDOUT_B,
@@ -200,3 +200,24 @@ def test_cli_build_diagnostics(
     assert (out / HOLDOUT_B / "metadata.jsonl").is_file()
     assert not (out / SHUFFLED).exists()
     assert main([*argv, "--workers", "-1"]) == 2
+
+
+# Plan-Hashes von origin/main (vor den Diagnosesätzen) mit allen Katalogschriften,
+# Seed 42, 20000/1000/1000/500; die Diagnoseschrift darf daran nichts ändern.
+STABLE_PLAN_SHA256 = {
+    "v1": "3da7d6e15f5f3327e827b6fdcd8911e6f0ddaf049f4684789a6f618b300e8503",
+    "v2": "c50af53aa36d592d85db17ba56bae757de849010640cb729c76515c50357d852",
+}
+
+
+@pytest.mark.parametrize("variety", ["v1", "v2"])
+def test_regular_plan_hashes_unchanged(variety: str) -> None:
+    counts = {
+        "train": 20000,
+        "validation": 1000,
+        "test_synthetic": 1000,
+        "test_layout_holdout": 500,
+    }
+    config = SynthConfig(counts=counts, variety=variety)
+    summary = plan_summary(config, ALL_FAMILIES)
+    assert summary["plan_sha256"] == STABLE_PLAN_SHA256[variety]
