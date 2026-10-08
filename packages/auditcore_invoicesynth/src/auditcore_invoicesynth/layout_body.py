@@ -99,6 +99,8 @@ def totals(
         return _totals_column(canvas, inv, variant, spec, y, vat_rows)
     if spec.totals == "bottom":
         return _totals_bottom(canvas, inv, variant, spec, y, vat_rows)
+    if spec.totals == "above_table":
+        return _totals_strip(canvas, inv, variant, spec, y, vat_rows)
     raise ValueError(f"Unbekannte Summenanordnung: {spec.totals}")
 
 
@@ -183,6 +185,45 @@ def _totals_bottom(
         140, y, canvas.field("total", variant.money(inv.printed_total)), size=1.2, bold=True
     )
     return max(vat_y, y + canvas.line_height(1.2)) + 4
+
+
+def _totals_strip(
+    canvas: Canvas,
+    inv: SynthInvoice,
+    variant: Variant,
+    spec: LayoutSpec,
+    y: float,
+    vat_rows: list[tuple[int, VatLine]],
+) -> float:
+    """Summenstreifen über der Positionstabelle (T2b): Gesamtbetrag links groß, Rest rechts."""
+    height = 4 + canvas.line_height(0.75) + canvas.line_height(1.3)
+    height = max(height, 3 + len(vat_rows) * canvas.line_height(0.85) + canvas.line_height(0.85))
+    canvas.rect(20, y, 190, y + height, fill=(228, 228, 228), outline=None)
+    canvas.text(23, y + 1.5, variant["total"], size=0.75, color=GRAY)
+    total = canvas.field("total", variant.money(inv.printed_total))
+    canvas.text(23, y + 2 + canvas.line_height(0.75), total, size=1.3, bold=True)
+    right_y = y + 1.5
+    if inv.vat_note_kind != "kleinunternehmer":
+        net = canvas.field("net_amount", variant.money(inv.net_amount))
+        label_value(
+            canvas,
+            100,
+            right_y,
+            variant["net_amount"] + ":",
+            net,
+            value_x=187,
+            align="right",
+            size=0.85,
+        )
+        right_y += canvas.line_height(0.85)
+    for index, line in vat_rows:
+        label = vat_label(variant, spec, canvas, index, line)
+        amount = canvas.field(f"vat_lines.{index}.amount", variant.money(line.amount))
+        label_value(
+            canvas, 100, right_y, label + ":", amount, value_x=187, align="right", size=0.85
+        )
+        right_y += canvas.line_height(0.85)
+    return max(y + height, right_y) + 5
 
 
 def payment(

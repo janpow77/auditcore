@@ -47,6 +47,7 @@ auditcore-invoicesynth plan  --seed 42             # Plan ohne Bilder
 auditcore-invoicesynth build --seed 42 --out ds/   # Pilot: 2 000 Belege
 auditcore-invoicesynth verify ds/                  # Dateien + Datensatz-Hash prüfen
 auditcore-invoicesynth evaluate ds/ --split test_layout_holdout --predictions p.jsonl
+auditcore-invoicesynth build-diagnostics --count 500 --out diag/   # nur T2-gemischt und T2b (Bewertung)
 ```
 
 ## Schnellstart
@@ -160,8 +161,9 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | Modul | Kurzbeschreibung |
 |---|---|
 | `auditcore_invoicesynth.augment` | Prozedurales Scanrauschen mit Pillow (Extra ``render``), vollständig seed-bestimmt. |
-| `auditcore_invoicesynth.cli` | Kommandozeile ``auditcore-invoicesynth``: fonts, plan, build, verify, evaluate. |
+| `auditcore_invoicesynth.cli` | Kommandozeile ``auditcore-invoicesynth``: fonts, plan, build, build-diagnostics, verify, evaluate. |
 | `auditcore_invoicesynth.dataset` | Datensatz im Donut-Format: Bilder, ``metadata.jsonl`` je Satz, Manifest, Hash. |
+| `auditcore_invoicesynth.diagnostics` | Diagnosesätze (nur Bewertung, nie Training): T2-gemischt und T2b. |
 | `auditcore_invoicesynth.enrich` | Anreicherung eines Generator-Datensatzes zu einem vollständigen deutschen Beleg. |
 | `auditcore_invoicesynth.evaluation` | Bewertungswerkzeug (Plan 2d): gleiche Kennzahlen für alle Kandidaten. |
 | `auditcore_invoicesynth.fonts` | Freie Schriften aus Systempaketen oder geprüftem Download – nie eingebettet. |
@@ -171,7 +173,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.layout_body` | Positionstabelle, Summenblock, Zahlungshinweis, Bankverbindung und Fußzeile. |
 | `auditcore_invoicesynth.layout_head` | Kopfbereich eines Belegs: Kennzeichnung, Absender, Empfänger, Titel, Kopfdaten. |
 | `auditcore_invoicesynth.layout_model` | Belegvorlagen als Daten: Zeichenfläche, Vorlagenparameter und Formatwahl. |
-| `auditcore_invoicesynth.layouts` | Fünfzehn Belegvorlagen (dreizehn fürs Training, zwei nur für den Layout-Holdout). |
+| `auditcore_invoicesynth.layouts` | Sechzehn Belegvorlagen (dreizehn fürs Training, zwei für den Layout-Holdout T2, eine nur für den Diagnosesatz T2b). |
 | `auditcore_invoicesynth.plan` | Deterministischer Variantenplan und Aufteilung in Trainings-/Testsätze. |
 | `auditcore_invoicesynth.plausibility` | Plausibilitätsprüfung für die Bewertung (Plan 2a, Zusammenführung). |
 | `auditcore_invoicesynth.render` | Pillow-Zeichenfläche für die Vorlagen (Extra ``render``). |

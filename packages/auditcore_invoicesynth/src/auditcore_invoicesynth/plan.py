@@ -14,7 +14,7 @@ from datetime import date
 from random import Random
 from typing import Any
 
-from auditcore_invoicesynth.fonts import V2_FONT_FAMILIES
+from auditcore_invoicesynth.fonts import DIAGNOSTIC_FONT_FAMILIES, V2_FONT_FAMILIES
 from auditcore_invoicesynth.formats import AMOUNT_STYLES, CURRENCY_STYLES, DATE_STYLES
 from auditcore_invoicesynth.layouts import HOLDOUT_LAYOUTS, LAYOUTS, V2_LAYOUTS, available_layouts
 from auditcore_invoicesynth.variety import VARIETIES
@@ -180,7 +180,15 @@ def _with_variety(spec: SampleSpec, config: SynthConfig) -> SampleSpec:
 def _font_pools(
     config: SynthConfig, font_families: tuple[str, ...]
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    """Schriften für Training und Layout-Holdout; v1 ohne die Familien aus v2."""
+    """Schriften für Training und Layout-Holdout; v1 ohne die Familien aus v2.
+
+    Diagnoseschriften (T2b) nur, wenn sie ausdrücklich Holdout-Schrift sind.
+    """
+    font_families = tuple(
+        f
+        for f in font_families
+        if f not in DIAGNOSTIC_FONT_FAMILIES or f in config.holdout_font_families
+    )
     if config.variety == "v1":
         font_families = tuple(f for f in font_families if f not in V2_FONT_FAMILIES)
     if not font_families:
