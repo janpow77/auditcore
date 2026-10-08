@@ -114,15 +114,38 @@ LAYOUTS: dict[str, LayoutSpec] = {
     "holdout_briefkopf": LayoutSpec(
         header="right", band=True, totals="boxed", vat_id_place="footer", show_vat_base=True
     ),
+    # Diagnosesatz T2b (nur ``build-diagnostics``, nie in Training, Validierung, T1 oder T2):
+    # Absender mittig, Kopfdaten als umrahmte zweispaltige Tabelle rechts neben dem
+    # Empfänger (Beschriftung links vom Wert, eigene Reihenfolge), Summenstreifen
+    # oberhalb der Positionstabelle.
+    "holdout_b_tabelle": LayoutSpec(
+        header="center",
+        meta="label_table",
+        totals="above_table",
+        bank="below_totals",
+        vat_id_place="footer",
+        table_lines=False,
+        scale=0.95,
+    ),
 }
 HOLDOUT_LAYOUTS: tuple[str, ...] = ("holdout_kompakt", "holdout_briefkopf")
 V2_LAYOUTS: tuple[str, ...] = ("kopf_zeile", "kopf_kasten")
-TRAINING_LAYOUTS: tuple[str, ...] = tuple(n for n in LAYOUTS if n not in HOLDOUT_LAYOUTS)
+DIAGNOSTIC_LAYOUTS: tuple[str, ...] = ("holdout_b_tabelle",)
+TRAINING_LAYOUTS: tuple[str, ...] = tuple(
+    n for n in LAYOUTS if n not in HOLDOUT_LAYOUTS and n not in DIAGNOSTIC_LAYOUTS
+)
 
 
 def available_layouts(variety: str) -> tuple[str, ...]:
-    """Vorlagen einer Generatorvariante; ``v1`` kennt die Vorlagen aus ``v2`` nicht."""
-    return tuple(n for n in LAYOUTS if variety != "v1" or n not in V2_LAYOUTS)
+    """Vorlagen einer Generatorvariante; ``v1`` kennt die Vorlagen aus ``v2`` nicht.
+
+    Die Diagnosevorlagen (T2b) gehören zu keiner Variante.
+    """
+    return tuple(
+        n
+        for n in LAYOUTS
+        if n not in DIAGNOSTIC_LAYOUTS and (variety != "v1" or n not in V2_LAYOUTS)
+    )
 
 
 def expansion(layout: str, items: int) -> int:
