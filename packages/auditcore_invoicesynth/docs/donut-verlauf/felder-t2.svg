@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="1400" viewBox="0 0 820 1400" font-family="DejaVu Sans, Arial, sans-serif" font-size="12">
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="1736" viewBox="0 0 820 1736" font-family="DejaVu Sans, Arial, sans-serif" font-size="12">
 <title>Feldgenauigkeit T2 neue Layouts je Stufe (Strich = Abnahmeschwelle)</title>
-<rect width="820" height="1400" fill="#ffffff"/>
+<rect width="820" height="1736" fill="#ffffff"/>
 <text x="16" y="22" font-size="14" font-weight="bold" fill="#1f2937">Feldgenauigkeit T2 neue Layouts je Stufe (Strich = Abnahmeschwelle)</text>
-<line x1="130.0" x2="130.0" y1="58" y2="1366" stroke="#e5e7eb"/>
-<text x="130.0" y="1382" text-anchor="middle" fill="#4b5563">0 %</text>
-<line x1="296.5" x2="296.5" y1="58" y2="1366" stroke="#e5e7eb"/>
-<text x="296.5" y="1382" text-anchor="middle" fill="#4b5563">25 %</text>
-<line x1="463.0" x2="463.0" y1="58" y2="1366" stroke="#e5e7eb"/>
-<text x="463.0" y="1382" text-anchor="middle" fill="#4b5563">50 %</text>
-<line x1="629.5" x2="629.5" y1="58" y2="1366" stroke="#e5e7eb"/>
-<text x="629.5" y="1382" text-anchor="middle" fill="#4b5563">75 %</text>
-<line x1="796.0" x2="796.0" y1="58" y2="1366" stroke="#e5e7eb"/>
-<text x="796.0" y="1382" text-anchor="middle" fill="#4b5563">100 %</text>
+<line x1="130.0" x2="130.0" y1="58" y2="1702" stroke="#e5e7eb"/>
+<text x="130.0" y="1718" text-anchor="middle" fill="#4b5563">0 %</text>
+<line x1="296.5" x2="296.5" y1="58" y2="1702" stroke="#e5e7eb"/>
+<text x="296.5" y="1718" text-anchor="middle" fill="#4b5563">25 %</text>
+<line x1="463.0" x2="463.0" y1="58" y2="1702" stroke="#e5e7eb"/>
+<text x="463.0" y="1718" text-anchor="middle" fill="#4b5563">50 %</text>
+<line x1="629.5" x2="629.5" y1="58" y2="1702" stroke="#e5e7eb"/>
+<text x="629.5" y="1718" text-anchor="middle" fill="#4b5563">75 %</text>
+<line x1="796.0" x2="796.0" y1="58" y2="1702" stroke="#e5e7eb"/>
+<text x="796.0" y="1718" text-anchor="middle" fill="#4b5563">100 %</text>
 <rect x="130" y="34" width="12" height="12" fill="#8a8a8a"/>
 <text x="148" y="44" fill="#1f2937">0 · Donut-CORD</text>
 <rect x="300" y="34" width="12" height="12" fill="#0072B2"/>
@@ -26,7 +26,11 @@
 <text x="998" y="44" fill="#1f2937">4 · IBAN-Positionsvielfalt, Lauf 1</text>
 <rect x="1150" y="34" width="12" height="12" fill="#D55E00"/>
 <text x="1168" y="44" fill="#1f2937">4 · IBAN-Positionsvielfalt, Lauf 2</text>
-<text x="122" y="120.0" text-anchor="end" fill="#1f2937">Gesamtbetrag</text>
+<rect x="1320" y="34" width="12" height="12" fill="#0072B2"/>
+<text x="1338" y="44" fill="#1f2937">5 · Kopfdatenvielfalt (Weitertraining), Lauf 1</text>
+<rect x="1490" y="34" width="12" height="12" fill="#E69F00"/>
+<text x="1508" y="44" fill="#1f2937">5 · Kopfdatenvielfalt (Weitertraining), Lauf 2</text>
+<text x="122" y="134.0" text-anchor="end" fill="#1f2937">Gesamtbetrag</text>
 <rect x="130" y="64" width="29.3" height="12" fill="#8a8a8a"/>
 <rect x="130" y="78" width="439.6" height="12" fill="#0072B2"/>
 <rect x="130" y="92" width="538.1" height="12" fill="#E69F00"/>
@@ -34,97 +38,121 @@
 <rect x="130" y="120" width="424.9" height="12" fill="#CC79A7"/>
 <rect x="130" y="134" width="659.3" height="12" fill="#56B4E9"/>
 <rect x="130" y="148" width="662.0" height="12" fill="#D55E00"/>
-<line x1="782.7" x2="782.7" y1="62" y2="164" stroke="#111827" stroke-width="2"/>
-<text x="122" y="228.0" text-anchor="end" fill="#1f2937">Rechnungsdatum</text>
-<rect x="130" y="172" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="186" width="353.0" height="12" fill="#0072B2"/>
-<rect x="130" y="200" width="598.1" height="12" fill="#E69F00"/>
-<rect x="130" y="214" width="558.1" height="12" fill="#009E73"/>
-<rect x="130" y="228" width="599.4" height="12" fill="#CC79A7"/>
-<rect x="130" y="242" width="646.0" height="12" fill="#56B4E9"/>
-<rect x="130" y="256" width="627.4" height="12" fill="#D55E00"/>
-<line x1="782.7" x2="782.7" y1="170" y2="272" stroke="#111827" stroke-width="2"/>
-<text x="122" y="336.0" text-anchor="end" fill="#1f2937">Rechnungsnummer</text>
-<rect x="130" y="280" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="294" width="353.0" height="12" fill="#0072B2"/>
-<rect x="130" y="308" width="600.7" height="12" fill="#E69F00"/>
-<rect x="130" y="322" width="555.4" height="12" fill="#009E73"/>
-<rect x="130" y="336" width="596.7" height="12" fill="#CC79A7"/>
-<rect x="130" y="350" width="630.0" height="12" fill="#56B4E9"/>
-<rect x="130" y="364" width="646.0" height="12" fill="#D55E00"/>
-<line x1="762.7" x2="762.7" y1="278" y2="380" stroke="#111827" stroke-width="2"/>
-<text x="122" y="444.0" text-anchor="end" fill="#1f2937">IBAN</text>
-<rect x="130" y="388" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="402" width="109.9" height="12" fill="#0072B2"/>
-<rect x="130" y="416" width="272.1" height="12" fill="#E69F00"/>
-<rect x="130" y="430" width="279.0" height="12" fill="#009E73"/>
-<rect x="130" y="444" width="276.2" height="12" fill="#CC79A7"/>
-<rect x="130" y="458" width="586.7" height="12" fill="#56B4E9"/>
-<rect x="130" y="472" width="630.4" height="12" fill="#D55E00"/>
-<line x1="776.0" x2="776.0" y1="386" y2="488" stroke="#111827" stroke-width="2"/>
-<text x="122" y="552.0" text-anchor="end" fill="#1f2937">USt-IdNr.</text>
-<rect x="130" y="496" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="510" width="302.1" height="12" fill="#0072B2"/>
-<rect x="130" y="524" width="471.8" height="12" fill="#E69F00"/>
-<rect x="130" y="538" width="575.7" height="12" fill="#009E73"/>
-<rect x="130" y="552" width="532.0" height="12" fill="#CC79A7"/>
-<rect x="130" y="566" width="570.3" height="12" fill="#56B4E9"/>
-<rect x="130" y="580" width="504.6" height="12" fill="#D55E00"/>
-<line x1="776.0" x2="776.0" y1="494" y2="596" stroke="#111827" stroke-width="2"/>
-<text x="122" y="660.0" text-anchor="end" fill="#1f2937">Lieferant</text>
-<rect x="130" y="604" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="618" width="592.7" height="12" fill="#0072B2"/>
-<rect x="130" y="632" width="620.7" height="12" fill="#E69F00"/>
-<rect x="130" y="646" width="660.7" height="12" fill="#009E73"/>
-<rect x="130" y="660" width="646.0" height="12" fill="#CC79A7"/>
-<rect x="130" y="674" width="648.7" height="12" fill="#56B4E9"/>
-<rect x="130" y="688" width="531.5" height="12" fill="#D55E00"/>
-<text x="122" y="768.0" text-anchor="end" fill="#1f2937">Nettobetrag</text>
-<rect x="130" y="712" width="34.6" height="12" fill="#8a8a8a"/>
-<rect x="130" y="726" width="519.5" height="12" fill="#0072B2"/>
-<rect x="130" y="740" width="567.4" height="12" fill="#E69F00"/>
-<rect x="130" y="754" width="574.1" height="12" fill="#009E73"/>
-<rect x="130" y="768" width="555.4" height="12" fill="#CC79A7"/>
-<rect x="130" y="782" width="636.7" height="12" fill="#56B4E9"/>
-<rect x="130" y="796" width="644.7" height="12" fill="#D55E00"/>
-<text x="122" y="876.0" text-anchor="end" fill="#1f2937">Steuerbetrag</text>
-<rect x="130" y="820" width="16.7" height="12" fill="#8a8a8a"/>
-<rect x="130" y="834" width="462.3" height="12" fill="#0072B2"/>
-<rect x="130" y="848" width="584.3" height="12" fill="#E69F00"/>
-<rect x="130" y="862" width="599.4" height="12" fill="#009E73"/>
-<rect x="130" y="876" width="549.4" height="12" fill="#CC79A7"/>
-<rect x="130" y="890" width="628.2" height="12" fill="#56B4E9"/>
-<rect x="130" y="904" width="650.9" height="12" fill="#D55E00"/>
-<text x="122" y="984.0" text-anchor="end" fill="#1f2937">Steuersätze</text>
-<rect x="130" y="928" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="942" width="572.0" height="12" fill="#0072B2"/>
-<rect x="130" y="956" width="628.2" height="12" fill="#E69F00"/>
-<rect x="130" y="970" width="619.1" height="12" fill="#009E73"/>
-<rect x="130" y="984" width="616.1" height="12" fill="#CC79A7"/>
-<rect x="130" y="998" width="659.9" height="12" fill="#56B4E9"/>
-<rect x="130" y="1012" width="664.5" height="12" fill="#D55E00"/>
-<text x="122" y="1092.0" text-anchor="end" fill="#1f2937">Fälligkeit</text>
-<rect x="130" y="1036" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="1050" width="399.6" height="12" fill="#0072B2"/>
-<rect x="130" y="1064" width="574.1" height="12" fill="#E69F00"/>
-<rect x="130" y="1078" width="659.3" height="12" fill="#009E73"/>
-<rect x="130" y="1092" width="608.7" height="12" fill="#CC79A7"/>
-<rect x="130" y="1106" width="638.0" height="12" fill="#56B4E9"/>
-<rect x="130" y="1120" width="512.8" height="12" fill="#D55E00"/>
-<text x="122" y="1200.0" text-anchor="end" fill="#1f2937">Leistungsdatum</text>
-<rect x="130" y="1144" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="1158" width="333.0" height="12" fill="#0072B2"/>
-<rect x="130" y="1172" width="506.2" height="12" fill="#E69F00"/>
-<rect x="130" y="1186" width="616.7" height="12" fill="#009E73"/>
-<rect x="130" y="1200" width="606.1" height="12" fill="#CC79A7"/>
-<rect x="130" y="1214" width="620.7" height="12" fill="#56B4E9"/>
-<rect x="130" y="1228" width="404.9" height="12" fill="#D55E00"/>
-<text x="122" y="1308.0" text-anchor="end" fill="#1f2937">BIC</text>
-<rect x="130" y="1252" width="0.0" height="12" fill="#8a8a8a"/>
-<rect x="130" y="1266" width="212.8" height="12" fill="#0072B2"/>
-<rect x="130" y="1280" width="236.6" height="12" fill="#E69F00"/>
-<rect x="130" y="1294" width="253.0" height="12" fill="#009E73"/>
-<rect x="130" y="1308" width="239.3" height="12" fill="#CC79A7"/>
-<rect x="130" y="1322" width="526.5" height="12" fill="#56B4E9"/>
-<rect x="130" y="1336" width="559.3" height="12" fill="#D55E00"/>
+<rect x="130" y="162" width="656.7" height="12" fill="#0072B2"/>
+<rect x="130" y="176" width="664.7" height="12" fill="#E69F00"/>
+<line x1="782.7" x2="782.7" y1="62" y2="192" stroke="#111827" stroke-width="2"/>
+<text x="122" y="270.0" text-anchor="end" fill="#1f2937">Rechnungsdatum</text>
+<rect x="130" y="200" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="214" width="353.0" height="12" fill="#0072B2"/>
+<rect x="130" y="228" width="598.1" height="12" fill="#E69F00"/>
+<rect x="130" y="242" width="558.1" height="12" fill="#009E73"/>
+<rect x="130" y="256" width="599.4" height="12" fill="#CC79A7"/>
+<rect x="130" y="270" width="646.0" height="12" fill="#56B4E9"/>
+<rect x="130" y="284" width="627.4" height="12" fill="#D55E00"/>
+<rect x="130" y="298" width="482.2" height="12" fill="#0072B2"/>
+<rect x="130" y="312" width="516.8" height="12" fill="#E69F00"/>
+<line x1="782.7" x2="782.7" y1="198" y2="328" stroke="#111827" stroke-width="2"/>
+<text x="122" y="406.0" text-anchor="end" fill="#1f2937">Rechnungsnummer</text>
+<rect x="130" y="336" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="350" width="353.0" height="12" fill="#0072B2"/>
+<rect x="130" y="364" width="600.7" height="12" fill="#E69F00"/>
+<rect x="130" y="378" width="555.4" height="12" fill="#009E73"/>
+<rect x="130" y="392" width="596.7" height="12" fill="#CC79A7"/>
+<rect x="130" y="406" width="630.0" height="12" fill="#56B4E9"/>
+<rect x="130" y="420" width="646.0" height="12" fill="#D55E00"/>
+<rect x="130" y="434" width="658.0" height="12" fill="#0072B2"/>
+<rect x="130" y="448" width="663.3" height="12" fill="#E69F00"/>
+<line x1="762.7" x2="762.7" y1="334" y2="464" stroke="#111827" stroke-width="2"/>
+<text x="122" y="542.0" text-anchor="end" fill="#1f2937">IBAN</text>
+<rect x="130" y="472" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="486" width="109.9" height="12" fill="#0072B2"/>
+<rect x="130" y="500" width="272.1" height="12" fill="#E69F00"/>
+<rect x="130" y="514" width="279.0" height="12" fill="#009E73"/>
+<rect x="130" y="528" width="276.2" height="12" fill="#CC79A7"/>
+<rect x="130" y="542" width="586.7" height="12" fill="#56B4E9"/>
+<rect x="130" y="556" width="630.4" height="12" fill="#D55E00"/>
+<rect x="130" y="570" width="599.0" height="12" fill="#0072B2"/>
+<rect x="130" y="584" width="637.3" height="12" fill="#E69F00"/>
+<line x1="776.0" x2="776.0" y1="470" y2="600" stroke="#111827" stroke-width="2"/>
+<text x="122" y="678.0" text-anchor="end" fill="#1f2937">USt-IdNr.</text>
+<rect x="130" y="608" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="622" width="302.1" height="12" fill="#0072B2"/>
+<rect x="130" y="636" width="471.8" height="12" fill="#E69F00"/>
+<rect x="130" y="650" width="575.7" height="12" fill="#009E73"/>
+<rect x="130" y="664" width="532.0" height="12" fill="#CC79A7"/>
+<rect x="130" y="678" width="570.3" height="12" fill="#56B4E9"/>
+<rect x="130" y="692" width="504.6" height="12" fill="#D55E00"/>
+<rect x="130" y="706" width="593.5" height="12" fill="#0072B2"/>
+<rect x="130" y="720" width="631.8" height="12" fill="#E69F00"/>
+<line x1="776.0" x2="776.0" y1="606" y2="736" stroke="#111827" stroke-width="2"/>
+<text x="122" y="814.0" text-anchor="end" fill="#1f2937">Lieferant</text>
+<rect x="130" y="744" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="758" width="592.7" height="12" fill="#0072B2"/>
+<rect x="130" y="772" width="620.7" height="12" fill="#E69F00"/>
+<rect x="130" y="786" width="660.7" height="12" fill="#009E73"/>
+<rect x="130" y="800" width="646.0" height="12" fill="#CC79A7"/>
+<rect x="130" y="814" width="648.7" height="12" fill="#56B4E9"/>
+<rect x="130" y="828" width="531.5" height="12" fill="#D55E00"/>
+<rect x="130" y="842" width="664.7" height="12" fill="#0072B2"/>
+<rect x="130" y="856" width="659.3" height="12" fill="#E69F00"/>
+<text x="122" y="950.0" text-anchor="end" fill="#1f2937">Nettobetrag</text>
+<rect x="130" y="880" width="34.6" height="12" fill="#8a8a8a"/>
+<rect x="130" y="894" width="519.5" height="12" fill="#0072B2"/>
+<rect x="130" y="908" width="567.4" height="12" fill="#E69F00"/>
+<rect x="130" y="922" width="574.1" height="12" fill="#009E73"/>
+<rect x="130" y="936" width="555.4" height="12" fill="#CC79A7"/>
+<rect x="130" y="950" width="636.7" height="12" fill="#56B4E9"/>
+<rect x="130" y="964" width="644.7" height="12" fill="#D55E00"/>
+<rect x="130" y="978" width="648.7" height="12" fill="#0072B2"/>
+<rect x="130" y="992" width="656.7" height="12" fill="#E69F00"/>
+<text x="122" y="1086.0" text-anchor="end" fill="#1f2937">Steuerbetrag</text>
+<rect x="130" y="1016" width="16.7" height="12" fill="#8a8a8a"/>
+<rect x="130" y="1030" width="462.3" height="12" fill="#0072B2"/>
+<rect x="130" y="1044" width="584.3" height="12" fill="#E69F00"/>
+<rect x="130" y="1058" width="599.4" height="12" fill="#009E73"/>
+<rect x="130" y="1072" width="549.4" height="12" fill="#CC79A7"/>
+<rect x="130" y="1086" width="628.2" height="12" fill="#56B4E9"/>
+<rect x="130" y="1100" width="650.9" height="12" fill="#D55E00"/>
+<rect x="130" y="1114" width="634.2" height="12" fill="#0072B2"/>
+<rect x="130" y="1128" width="661.5" height="12" fill="#E69F00"/>
+<text x="122" y="1222.0" text-anchor="end" fill="#1f2937">Steuersätze</text>
+<rect x="130" y="1152" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="1166" width="572.0" height="12" fill="#0072B2"/>
+<rect x="130" y="1180" width="628.2" height="12" fill="#E69F00"/>
+<rect x="130" y="1194" width="619.1" height="12" fill="#009E73"/>
+<rect x="130" y="1208" width="616.1" height="12" fill="#CC79A7"/>
+<rect x="130" y="1222" width="659.9" height="12" fill="#56B4E9"/>
+<rect x="130" y="1236" width="664.5" height="12" fill="#D55E00"/>
+<rect x="130" y="1250" width="666.0" height="12" fill="#0072B2"/>
+<rect x="130" y="1264" width="666.0" height="12" fill="#E69F00"/>
+<text x="122" y="1358.0" text-anchor="end" fill="#1f2937">Fälligkeit</text>
+<rect x="130" y="1288" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="1302" width="399.6" height="12" fill="#0072B2"/>
+<rect x="130" y="1316" width="574.1" height="12" fill="#E69F00"/>
+<rect x="130" y="1330" width="659.3" height="12" fill="#009E73"/>
+<rect x="130" y="1344" width="608.7" height="12" fill="#CC79A7"/>
+<rect x="130" y="1358" width="638.0" height="12" fill="#56B4E9"/>
+<rect x="130" y="1372" width="512.8" height="12" fill="#D55E00"/>
+<rect x="130" y="1386" width="506.2" height="12" fill="#0072B2"/>
+<rect x="130" y="1400" width="552.8" height="12" fill="#E69F00"/>
+<text x="122" y="1494.0" text-anchor="end" fill="#1f2937">Leistungsdatum</text>
+<rect x="130" y="1424" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="1438" width="333.0" height="12" fill="#0072B2"/>
+<rect x="130" y="1452" width="506.2" height="12" fill="#E69F00"/>
+<rect x="130" y="1466" width="616.7" height="12" fill="#009E73"/>
+<rect x="130" y="1480" width="606.1" height="12" fill="#CC79A7"/>
+<rect x="130" y="1494" width="620.7" height="12" fill="#56B4E9"/>
+<rect x="130" y="1508" width="404.9" height="12" fill="#D55E00"/>
+<rect x="130" y="1522" width="484.8" height="12" fill="#0072B2"/>
+<rect x="130" y="1536" width="515.5" height="12" fill="#E69F00"/>
+<text x="122" y="1630.0" text-anchor="end" fill="#1f2937">BIC</text>
+<rect x="130" y="1560" width="0.0" height="12" fill="#8a8a8a"/>
+<rect x="130" y="1574" width="212.8" height="12" fill="#0072B2"/>
+<rect x="130" y="1588" width="236.6" height="12" fill="#E69F00"/>
+<rect x="130" y="1602" width="253.0" height="12" fill="#009E73"/>
+<rect x="130" y="1616" width="239.3" height="12" fill="#CC79A7"/>
+<rect x="130" y="1630" width="526.5" height="12" fill="#56B4E9"/>
+<rect x="130" y="1644" width="559.3" height="12" fill="#D55E00"/>
+<rect x="130" y="1658" width="515.6" height="12" fill="#0072B2"/>
+<rect x="130" y="1672" width="555.2" height="12" fill="#E69F00"/>
 </svg>
