@@ -173,6 +173,8 @@ def test_plausibility_rejects_wrong_check_digits() -> None:
         "total": "120,00",
     }
     assert plausible_fields(broken) == {"invoice_date", "vat_rates"}
+    incomplete = {key: value for key, value in flat.items() if key != "vat_amount"}
+    assert plausible_fields(incomplete) == set(incomplete) - {"net_amount", "total"}
 
 
 def test_rescore_from_saved_predictions(
