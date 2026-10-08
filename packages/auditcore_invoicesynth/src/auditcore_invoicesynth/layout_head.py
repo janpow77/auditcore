@@ -73,7 +73,7 @@ def label_value(
 def sender(
     canvas: Canvas, inv: SynthInvoice, variant: Variant, spec: LayoutSpec, x: float, y: float
 ) -> float:
-    align = "right" if spec.header == "right" else "left"
+    align = spec.header if spec.header in {"right", "center"} else "left"
     canvas.text(
         x, y, canvas.field("supplier.name", inv.supplier.name), size=1.4, bold=True, align=align
     )
@@ -238,7 +238,33 @@ def _meta_stacked_box(
     return max(y + 4, title(canvas, inv, variant, 20, 100) + 4)
 
 
+#: Feste Reihenfolge der Kopfdatentabelle in T2b, bewusst anders als in allen Vorlagen.
+LABEL_TABLE_ORDER: tuple[str, ...] = ("invoice_date", "invoice_number", "due_date", "supply_date")
+
+
+def _meta_label_table(
+    canvas: Canvas, inv: SynthInvoice, variant: Variant, rows: list[MetaRow], y_top: float
+) -> float:
+    """Umrahmte Tabelle rechts neben dem Empfänger: Beschriftung links, Wert rechts (T2b)."""
+    if variant.variety is None:
+        rows = sorted(rows, key=lambda row: LABEL_TABLE_ORDER.index(row[1]))
+    x1, x_mid, x2 = 112.0, 150.0, 190.0
+    size = 0.85
+    height = canvas.line_height(size) + 2
+    y = y_top
+    canvas.line(x1, y, x2, y, width=0.3)
+    for label, key, value in rows:
+        canvas.rect(x1, y, x_mid, y + height, fill=(236, 236, 236))
+        canvas.text(x1 + 1.5, y + 1, label, size=size)
+        canvas.text(x2 - 1.5, y + 1, canvas.field(key, value), size=size, bold=True, align="right")
+        y += height
+        canvas.line(x1, y, x2, y, width=0.3)
+    canvas.rect(x1, y_top, x2, y, fill=None)
+    return max(y + 4, title(canvas, inv, variant, 20, 100) + 2)
+
+
 META_ARRANGEMENTS = {
+    "label_table": _meta_label_table,
     "right_column": _meta_right_column,
     "below_title": _meta_below_title,
     "two_column": _meta_two_column,
