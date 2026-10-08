@@ -86,6 +86,9 @@ _TOTAL_COLUMNS: dict[str, tuple[float, float]] = {
     "right": (112, 190),
     "left_box": (22, 98),
     "boxed": (112, 188),
+    # Ab v3: unten links ohne Rahmen bzw. umrahmter Kasten rechts vor der Positionstabelle.
+    "bottom_left": (20, 112),
+    "top_box": (114, 188),
 }
 
 
@@ -152,7 +155,7 @@ def _totals_column(
         size=1.1,
         bold=True,
     )
-    if spec.totals in {"left_box", "boxed"}:
+    if spec.totals in {"left_box", "boxed", "top_box"}:
         canvas.rect(x_label - 2, y_start - 2, x_value + 2, y + 1)
     return y + 4
 
