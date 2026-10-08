@@ -2,6 +2,11 @@
 
 ## Unveröffentlicht
 
+Plausibilität: Beträge (netto, USt, brutto) gelten nur noch als plausibel, wenn alle
+drei lesbar sind und `netto + USt = brutto` stimmt. Fehlt einer, geht der Beleg zur
+Prüfung (Befund Diagnosesatz T2b: falsche Gesamtbeträge ohne Steuerzeile wurden
+sonst übernommen).
+
 Bewertung (Runde A nach Stufe 4): `train.evaluate` repariert ein ausgelassenes
 `<s_supplier>` (`schema.repair_structure`), misst die Falschwert-Quote nach
 Plausibilität über das neue Modul `plausibility` (Prüfziffern IBAN und
