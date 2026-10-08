@@ -21,12 +21,14 @@
   "gpu_auftraege": [
     "donut-gross",
     "donut-iban-20261003",
-    "donut-stufe5-20261007"
+    "donut-stufe5-20261007",
+    "donut-stufe6-20261008"
   ],
   "titel_auftraege": {
     "donut-gross": "3 · Große Bilder",
     "donut-iban-20261003": "4 · IBAN-Positionsvielfalt",
-    "donut-stufe5-20261007": "5 · Kopfdatenvielfalt (Weitertraining)"
+    "donut-stufe5-20261007": "5 · Kopfdatenvielfalt (Weitertraining)",
+    "donut-stufe6-20261008": "6 · Summenblock-Orte (Weitertraining)"
   },
   "auftraege_ordner": "~/.config/flow-agent/gpu-auftraege"
 }
