@@ -3,9 +3,11 @@
 // zugehörigen Schreibaufrufe. Alle Werte berechnet der Server.
 
 export type AssistantMode = 'gefuehrt' | 'frei'
-export type QuestionKind = 'ja_nein_unklar' | 'text' | 'auswahl' | 'umsetzung' | 'zahl' | 'tabelle'
+export type QuestionKind = 'ja_nein_unklar' | 'text' | 'auswahl' | 'umsetzung' | 'zahl' | 'tabelle' | 'datum'
+/** Zuständige Stelle einer Frage; leer bei Kriterien aus dem Regelprofil. */
+export type QuestionRole = 'fachbereich' | 'it_betrieb' | 'recht' | ''
 export type StepStatus = 'vollstaendig' | 'klaerung' | 'offen'
-export type TaskKind = 'unklar' | 'unbestaetigt' | 'fehlt'
+export type TaskKind = 'unklar' | 'unbestaetigt' | 'fehlt' | 'offene_punkte'
 
 export interface AssistantAnswer {
   value: string
@@ -31,8 +33,12 @@ export interface AssistantQuestion {
   depth: number
   /** Hinweise als Aufzählung; `reference` ist die Fundstelle. */
   hints: string[]
-  /** Spalten einer Tabellenantwort. */
-  columns: { key: string; title: string; required: boolean }[]
+  /** Spalten einer Tabellenantwort; `choices` begrenzt die zulässigen Werte. */
+  columns: { key: string; title: string; required: boolean; choices: string[] }[]
+  /** Zuständige Stelle (Fachbereich, IT-Betrieb, Recht/Datenschutz). */
+  role: QuestionRole
+  /** Antworten, die eine offene Aufgabe hinterlassen (Abschlussfrage je Kapitel). */
+  task_if: string[]
   value: string | null
   answer: AssistantAnswer | null
 }

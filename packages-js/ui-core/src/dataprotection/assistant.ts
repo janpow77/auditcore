@@ -241,6 +241,11 @@ export function questionOptions(t: DataProtectionTranslate, question: AssistantQ
   return question.na_allowed ? [...base, { key: 'nicht_anwendbar', title: t('value_nicht_anwendbar') }] : base
 }
 
+/** Kennzeichen der zuständigen Stelle („Zuständig: IT-Betrieb“); leer ohne Zuständigkeit. */
+export function questionRoleLabel(t: DataProtectionTranslate, question: AssistantQuestion): string {
+  return question.role ? t('roleLabel', { role: prefixedLabel(t, 'role', question.role) }) : ''
+}
+
 /** Feldkennung einer Frage im DOM (Sprungziel der Fehlerübersicht). */
 export function questionFieldId(question: { id: string }): string {
   return `fa-q-${question.id.replace(/[^A-Za-z0-9_-]/g, '-')}`

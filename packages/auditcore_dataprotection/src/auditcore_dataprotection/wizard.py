@@ -59,13 +59,7 @@ class WizardAnswer:
 
     def to_dict(self) -> dict[str, str]:
         """JSON form inside ``assistent.antworten``."""
-        return {
-            "value": self.value,
-            "justification": self.justification,
-            "by": self.by,
-            "at": self.at,
-            "origin": self.origin,
-        }
+        return {k: str(getattr(self, k)) for k in ("value", "justification", "by", "at", "origin")}
 
 
 def _state(activity: Mapping[str, object]) -> Mapping[str, object]:
@@ -273,6 +267,8 @@ def tasks(
             answer = answers.get(question.id)
             if answer is not None and answer.value == UNCLEAR:
                 found.append(_task(step_id, question, "unklar"))
+            elif answer is not None and answer.value in question.task_if:
+                found.append(_task(step_id, question, "offene_punkte"))
             elif answer is not None and not answer.confirmed:
                 found.append(_task(step_id, question, "unbestaetigt"))
             elif question.required and question.id not in values:

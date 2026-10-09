@@ -35,7 +35,11 @@ function removeRow(index: number): void {
     <tbody>
       <tr v-for="(row, index) in rows" :key="index">
         <td v-for="column in question.columns" :key="column.key">
-          <input :value="row[column.key]" type="text" :aria-label="`${column.title} ${index + 1}`" @input="setCell(index, column.key, ($event.target as HTMLInputElement).value)" />
+          <select v-if="column.choices.length" :value="row[column.key]" :aria-label="`${column.title} ${index + 1}`" @change="setCell(index, column.key, ($event.target as HTMLSelectElement).value)">
+            <option value="">{{ t('chooseValue') }}</option>
+            <option v-for="choice in column.choices" :key="choice" :value="choice">{{ choice }}</option>
+          </select>
+          <input v-else :value="row[column.key]" type="text" :aria-label="`${column.title} ${index + 1}`" @input="setCell(index, column.key, ($event.target as HTMLInputElement).value)" />
         </td>
         <td><button type="button" @click="removeRow(index)">{{ t('removeRow', { row: index + 1 }) }}</button></td>
       </tr>

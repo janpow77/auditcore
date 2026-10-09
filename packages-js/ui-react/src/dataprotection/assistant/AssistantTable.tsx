@@ -24,7 +24,16 @@ export function AssistantTable({ question, value, onChange }: { question: Assist
             <tr key={index}>
               {question.columns.map((column) => (
                 <td key={column.key}>
-                  <input value={row[column.key]} type="text" aria-label={`${column.title} ${index + 1}`} onChange={(event) => setCell(index, column.key, event.target.value)} />
+                  {column.choices.length ? (
+                    <select value={row[column.key]} aria-label={`${column.title} ${index + 1}`} onChange={(event) => setCell(index, column.key, event.target.value)}>
+                      <option value="">{t('chooseValue')}</option>
+                      {column.choices.map((choice) => (
+                        <option key={choice} value={choice}>{choice}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input value={row[column.key]} type="text" aria-label={`${column.title} ${index + 1}`} onChange={(event) => setCell(index, column.key, event.target.value)} />
+                  )}
                 </td>
               ))}
               <td><button type="button" onClick={() => update(rows.filter((_, i) => i !== index))}>{t('removeRow', { row: index + 1 })}</button></td>

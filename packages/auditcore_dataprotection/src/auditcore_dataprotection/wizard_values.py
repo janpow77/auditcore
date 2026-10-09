@@ -9,9 +9,10 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
+from datetime import date
 
 from .errors import ValidationError
-from .wizard_catalog import KIND_NUMBER, KIND_TABLE, QuestionDef
+from .wizard_catalog import KIND_DATE, KIND_NUMBER, KIND_TABLE, QuestionDef
 
 MAX_ROWS = 200
 
@@ -25,17 +26,22 @@ def _rows(question: QuestionDef, value: str) -> list[dict[str, str]]:
         raise ValidationError(
             f"{question.id}: erwartet wird eine Liste mit höchstens {MAX_ROWS} Zeilen."
         )
-    keys = {key for key, _, _ in question.columns}
+    keys = {key for key, _, _, _ in question.columns}
     rows: list[dict[str, str]] = []
     for index, row in enumerate(raw, start=1):
         if not isinstance(row, Mapping) or set(row) - keys:
             raise ValidationError(f"{question.id}: Zeile {index} enthält unbekannte Spalten.")
         clean = {k: str(row.get(k) or "").strip() for k in keys}
         missing = [
-            title for key, title, required in question.columns if required and not clean[key]
+            title for key, title, required, _ in question.columns if required and not clean[key]
         ]
         if missing:
             raise ValidationError(f"{question.id}: in Zeile {index} fehlt {', '.join(missing)}.")
+        for key, title, _, allowed in question.columns:
+            if allowed and clean[key] and clean[key] not in allowed:
+                raise ValidationError(
+                    f"{question.id}: „{title}“ in Zeile {index} muss {' / '.join(allowed)} sein."
+                )
         rows.append(clean)
     if not rows:
         raise ValidationError(f"{question.id}: mindestens eine Zeile angeben oder „unklar“ wählen.")
@@ -48,6 +54,11 @@ def check_typed(question: QuestionDef, value: str) -> None:
         raise ValidationError(f"{question.id}: erwartet wird eine ganze Zahl ab 0.")
     if question.kind == KIND_TABLE:
         _rows(question, value)
+    if question.kind == KIND_DATE:
+        try:
+            date.fromisoformat(value.strip())
+        except ValueError as exc:
+            raise ValidationError(f"{question.id}: erwartet wird ein Datum (JJJJ-MM-TT).") from exc
 
 
 def to_register(question: QuestionDef, value: str) -> object:

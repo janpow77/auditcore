@@ -37,7 +37,6 @@ TEXT_FIELDS = (
     "drittland_garantien",
     "auftragsverarbeiter",
     "gemeinsame_verantwortliche",
-    "speicherdauer",
     "loeschfrist_rechtsgrundlage",
     "tom",
     "anmerkungen",
@@ -197,7 +196,11 @@ def normalize_content(
 
 
 def _blank(value: object) -> bool:
-    return value is None or (isinstance(value, str) and not value.strip())
+    return value is None or (isinstance(value, (str, list)) and not _filled(value))
+
+
+def _filled(value: str | list[object]) -> bool:
+    return bool(value.strip()) if isinstance(value, str) else bool(value)
 
 
 #: ``issue(code, field, message, blocking=True)`` of :func:`check_activity`.

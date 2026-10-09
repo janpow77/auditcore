@@ -182,6 +182,7 @@ unverändert, weil die neuen Abschnitte im Profil optional sind
 | DP-E23 | Rolle `auftragsverarbeiter`: eigene Pflichtfelder nach Art. 30 Abs. 2 DSGVO und § 65 Abs. 2 HDSIG (`auftraggeber`, `kategorien_verarbeitungen`, `tom`, Drittlandangabe) statt des Formulars des Verantwortlichen (T-06). |
 | DP-E24 | Die Empfehlungstexte `freigabe` und `freigabe_mit_auflagen` sprechen von der Freigabe der Dokumentation und stellen klar, dass über den Betrieb gesondert entschieden wird. |
 | DP-E25 | Listen im Verzeichnisexport (HTML, XLSX) werden lesbar ausgegeben; eine Übermittlung erscheint als „Empfänger – Rechtsgrundlage“ statt als Rohdarstellung. Das gilt für alle Profile, ändert aber nur Listenfelder, die die älteren Profile nicht verwenden. |
+| DP-E26 | `speicherdauer` darf eine Tabelle je Datenkategorie sein (`kategorie`, `frist`, `begruendung`, `pruefstelle`). Eine Zeile ohne Frist mit Begründung und Prüfstelle ist ein offener, nicht sperrender Punkt; ohne beides sperrt sie. Ein Text bleibt wie bisher zulässig. Neu geprüft werden die Tabellen `dienstleister` und `dienstleister_einordnung`; ein Auftragsverarbeiter mit Vertrag „fehlt“ oder „in Vorbereitung“ ergibt den nicht sperrenden Befund `missing_contract`. |
 
 Neu und unabhängig von der Profilfassung sind Arbeitsbereich, Wizard, Checkliste, getrennte Status,
 Sperren, Nachweise, Betriebsentscheidung und zentrale Übernahme. Den Abgleich mit dem Prüfkatalog je

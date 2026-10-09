@@ -25,15 +25,18 @@ KIND_CHOICE = "auswahl"
 KIND_IMPLEMENTATION = "umsetzung"
 KIND_NUMBER = "zahl"
 KIND_TABLE = "tabelle"
+KIND_DATE = "datum"
 KINDS = frozenset(
-    {KIND_YES_NO, KIND_TEXT, KIND_CHOICE, KIND_IMPLEMENTATION, KIND_NUMBER, KIND_TABLE}
+    {KIND_YES_NO, KIND_TEXT, KIND_CHOICE, KIND_IMPLEMENTATION, KIND_NUMBER, KIND_TABLE, KIND_DATE}
 )
+#: Who answers a question: the department, IT operations, or law/DPO.
+ROLES = ("fachbereich", "it_betrieb", "recht")
 
 YES, NO, UNCLEAR = "ja", "nein", "unklar"
 NOT_APPLICABLE = "nicht_anwendbar"
 IMPLEMENTATION_VALUES = ("nicht_begonnen", "geplant", "umgesetzt", "wirksam_nachgewiesen")
 
-CATALOG_FILE = "wizard-2026.10.2.json"
+CATALOG_FILE = "wizard-2026.10.3.json"
 SCREENING_STEP = "W09"
 
 _Json = Mapping[str, object]
@@ -68,8 +71,12 @@ class QuestionDef:
     depth: int = 0
     #: Hints as bullet points; ``reference`` is the "Fundstelle".
     hints: tuple[str, ...] = ()
-    #: Columns of a table answer: (key, title, required).
-    columns: tuple[tuple[str, str, bool], ...] = ()
+    #: Columns of a table answer: (key, title, required, allowed values or empty).
+    columns: tuple[tuple[str, str, bool, tuple[str, ...]], ...] = ()
+    #: Role that answers the question (``ROLES``); empty for profile criteria.
+    role: str = ""
+    #: Answer values that leave an open task (closing question "open points?").
+    task_if: tuple[str, ...] = ()
 
     @property
     def allowed_values(self) -> tuple[str, ...]:
@@ -98,7 +105,12 @@ class QuestionDef:
             "number": self.number,
             "depth": self.depth,
             "hints": list(self.hints),
-            "columns": [{"key": k, "title": t, "required": r} for k, t, r in self.columns],
+            "columns": [
+                {"key": k, "title": t, "required": r, "choices": list(c)}
+                for k, t, r, c in self.columns
+            ],
+            "role": self.role,
+            "task_if": list(self.task_if),
         }
 
 
@@ -189,10 +201,24 @@ def _question(raw: _Json) -> QuestionDef:
         number=str(raw.get("number") or ""),
         hints=tuple(str(h) for h in cast(Sequence[object], raw.get("hints") or ())),
         columns=tuple(
-            (str(c["key"]), str(c["title"]), bool(c.get("required", False)))
+            (
+                str(c["key"]),
+                str(c["title"]),
+                bool(c.get("required", False)),
+                tuple(str(v) for v in cast(Sequence[object], c.get("choices") or ())),
+            )
             for c in cast(Sequence[_Json], raw.get("columns") or ())
         ),
+        role=_role(raw.get("role")),
+        task_if=tuple(str(v) for v in cast(Sequence[object], raw.get("task_if") or ())),
     )
+
+
+def _role(raw: object) -> str:
+    role = str(raw or "")
+    if role and role not in ROLES:
+        raise ProfileError(f"Unbekannte Zuständigkeit „{role}“.")
+    return role
 
 
 def _with_depth(questions: tuple[QuestionDef, ...]) -> tuple[QuestionDef, ...]:
@@ -252,16 +278,15 @@ def catalog_for(profile: RuleProfile, base: WizardCatalog | None = None) -> Wiza
             required=True,
             na_allowed=False,
             reference=q.reference,
-            number=f"9.2.{index}",
+            number=f"9.1.{index}",
+            role="recht",
             depth=1,
             hints=(q.explanation,) if q.explanation else (),
         )
         for index, q in enumerate(profile.questions, start=1)
     )
     steps = tuple(
-        replace(s, questions=(*s.questions[:1], *screening, *s.questions[1:]))
-        if s.id == SCREENING_STEP
-        else s
+        replace(s, questions=(*screening, *s.questions)) if s.id == SCREENING_STEP else s
         for s in catalog.steps
     )
     return replace(catalog, steps=steps)

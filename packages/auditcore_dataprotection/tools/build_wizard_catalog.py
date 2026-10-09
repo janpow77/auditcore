@@ -1,10 +1,13 @@
-"""Fragenkatalog des Datenschutz-Assistenten (wizard-2026.10.2) erzeugen.
+"""Fragenkatalog des Datenschutz-Assistenten (wizard-2026.10.3) erzeugen.
 
 Aufbau nach dem Muster des Checklistendesigners (audit_designer, v05-Baum):
 nummerierte Fragen, Entscheidungsfragen mit JA-/NEIN-Zweig, Hinweise als
 Aufzählung mit vorangestellter Fundstelle; reine Eingaben enden mit Doppelpunkt.
 
-Fundstellen sind vor der Freigabe gegen die amtlichen Fassungen zu prüfen.
+Jede Frage nennt die zuständige Stelle (``ROLE``): Fachbereich, IT-Betrieb oder
+Recht/Datenschutz. Tatsachen werden vor ihrer rechtlichen Einordnung erfragt.
+HDSIG-Fundstellen sind am Gesetzeswortlaut geprüft; Auslegungshinweise stützen
+sich auf die in ``GUIDANCE`` genannten Veröffentlichungen von EDSA, DSK und HBDI.
 
     python tools/build_wizard_catalog.py
 """
@@ -16,7 +19,7 @@ from pathlib import Path
 
 TARGET = (
     Path(__file__).resolve().parents[1]
-    / "src/auditcore_dataprotection/catalogs/wizard-2026.10.2.json"
+    / "src/auditcore_dataprotection/catalogs/wizard-2026.10.3.json"
 )
 
 YN = "ja_nein_unklar"
@@ -25,10 +28,12 @@ CHOICE = "auswahl"
 IMPL = "umsetzung"
 NUMBER = "zahl"
 TABLE = "tabelle"
+DATE = "datum"
 
 
 def q(number, text, kind=TEXT, target="", reference="", hints=(), *, required=True,
-      parent=None, when=None, choices=(), justify=(), columns=(), context=None):  # fmt: skip
+      parent=None, when=None, choices=(), justify=(), columns=(), context=None,
+      task_if=()):  # fmt: skip
     """Ein Knoten des Baums; ``parent``/``when`` bilden den JA-/NEIN-Zweig."""
     item = {
         "id": number,
@@ -46,7 +51,12 @@ def q(number, text, kind=TEXT, target="", reference="", hints=(), *, required=Tr
     if choices:
         item["choices"] = [{"key": k, "title": t} for k, t in choices]
     if columns:
-        item["columns"] = [{"key": k, "title": t, "required": r} for k, t, r in columns]
+        item["columns"] = [
+            {"key": c[0], "title": c[1], "required": c[2], "choices": list(c[3:] and c[3])}
+            for c in columns
+        ]
+    if task_if:
+        item["task_if"] = list(task_if)
     if parent:
         item["show_if"] = {"question": parent, "in": list(when or ["ja"])}
     if context:
@@ -190,8 +200,8 @@ STEPS = [
                 "register:rechtsregime",
                 reference="§ 40 HDSIG (Anwendungsbereich des Dritten Teils)",
                 choices=[
-                    ("dsgvo", "DSGVO"),
-                    ("hdsig_ji", "Dritter Teil HDSIG"),
+                    ("dsgvo", "DSGVO (ergänzt durch den Zweiten Teil HDSIG)"),
+                    ("hdsig_ji", "Dritter Teil HDSIG (Richtlinie (EU) 2016/680)"),
                     ("unklar", "Unklar – Prüfung erforderlich"),
                 ],
                 hints=[
@@ -213,9 +223,17 @@ STEPS = [
             ),
             q(
                 "2.6.1",
-                "Weitere Zwecke und Begründung ihrer Vereinbarkeit mit dem ursprünglichen Zweck:",
+                "Weitere Zwecke:",
                 target="register:weitere_zwecke_beschreibung",
                 parent="2.6",
+            ),
+            q(
+                "2.6.2",
+                "Begründung, warum die weiteren Zwecke mit dem ursprünglichen Zweck vereinbar "
+                "sind:",
+                target="register:weitere_zwecke_vereinbarkeit",
+                parent="2.6",
+                reference="Art. 6 Abs. 4 DSGVO; § 44 HDSIG",
                 hints=[
                     "Ist ein weiterer Zweck nicht vereinbar, ist er als eigene Tätigkeit zu "
                     "erfassen."
@@ -246,11 +264,12 @@ STEPS = [
                 choices=[
                     ("verantwortlicher", "Verantwortlicher"),
                     ("auftragsverarbeiter", "Auftragsverarbeiter"),
-                    ("gemeinsam_verantwortlicher", "Gemeinsam Verantwortlicher"),
                 ],
                 hints=[
                     "Die Rolle bestimmt die Vorlage des Verzeichnisses (Art. 30 Abs. 1 oder "
-                    "Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG)."
+                    "Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG).",
+                    "Eine gemeinsame Verantwortlichkeit mit anderen Stellen wird unter 3.1.3 "
+                    "erfasst; die Dienststelle bleibt dabei Verantwortlicher.",
                 ],
             ),
             q(
@@ -268,6 +287,26 @@ STEPS = [
                 parent="3.1",
                 when=["auftragsverarbeiter"],
                 reference="Art. 30 Abs. 2 lit. b DSGVO; § 65 Abs. 2 HDSIG",
+            ),
+            q(
+                "3.1.3",
+                "Legt die Dienststelle die Zwecke und Mittel der Verarbeitung gemeinsam mit "
+                "einer anderen Stelle fest?",
+                YN,
+                "register:gemeinsame_verantwortlichkeit",
+                parent="3.1",
+                when=["verantwortlicher"],
+                reference="Art. 26 DSGVO",
+            ),
+            q(
+                "3.1.3.1",
+                "Gemeinsam Verantwortliche:",
+                target="register:gemeinsame_verantwortliche",
+                parent="3.1.3",
+                hints=[
+                    "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu "
+                    "hinterlegen."
+                ],
             ),
             q(
                 "3.2",
@@ -314,49 +353,73 @@ STEPS = [
             ),
             q(
                 "3.7",
-                "Werden Dienstleister eingesetzt, die personenbezogene Daten im Auftrag "
-                "verarbeiten?",
+                "Werden externe Dienstleister eingesetzt, die Zugang zu den Daten haben oder "
+                "haben können (z. B. Hosting, Wartung, Fernwartung, Support, Druck, "
+                "Aktenvernichtung)?",
                 YN,
                 "register:auftragsverarbeitung",
-                reference="Art. 28 DSGVO",
                 hints=[
-                    "Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich ist die "
-                    "weisungsgebundene Verarbeitung."
+                    "Es zählt auch die bloße Möglichkeit des Zugriffs, etwa bei Fernwartung.",
+                    "Die rechtliche Einordnung der Dienstleister folgt unter 3.7.2.",
                 ],
             ),
-            q("3.7.1", "Auftragsverarbeiter:", target="register:auftragsverarbeiter", parent="3.7"),
+            q(
+                "3.7.1",
+                "Dienstleister und ihre Leistungen:",
+                TABLE,
+                "register:dienstleister",
+                parent="3.7",
+                columns=[
+                    ("dienstleister", "Dienstleister", True),
+                    ("leistung", "Leistung", True),
+                    ("daten", "Zugängliche Daten", False),
+                    ("ort", "Ort der Leistungserbringung (Staat)", False),
+                ],
+                hints=["Je Dienstleister eine Zeile; Unterauftragnehmer gesondert angeben."],
+            ),
             q(
                 "3.7.2",
-                "Liegt mit jedem Auftragsverarbeiter ein Vertrag nach Art. 28 Abs. 3 DSGVO vor?",
-                YN,
-                "register:avv_besteht",
+                "Rechtliche Einordnung der Dienstleister:",
+                TABLE,
+                "register:dienstleister_einordnung",
                 parent="3.7",
-                reference="Art. 28 Abs. 3 DSGVO",
-                hints=["Ein fehlender Vertrag wird als offener Prüfpunkt geführt."],
+                reference="Art. 4 Nr. 8, Art. 28 DSGVO; § 57 HDSIG",
+                columns=[
+                    ("dienstleister", "Dienstleister", True),
+                    (
+                        "einordnung",
+                        "Einordnung",
+                        True,
+                        [
+                            "Auftragsverarbeiter",
+                            "eigenständig Verantwortlicher",
+                            "gemeinsam Verantwortlicher",
+                        ],
+                    ),
+                    (
+                        "vertrag",
+                        "Vertrag nach Art. 28 Abs. 3 DSGVO bzw. § 57 Abs. 5 HDSIG",
+                        True,
+                        ["liegt vor", "in Vorbereitung", "fehlt", "nicht erforderlich"],
+                    ),
+                ],
+                hints=[
+                    "Fehlt der Vertrag mit einem Auftragsverarbeiter oder ist er in "
+                    "Vorbereitung, wird ein offener Prüfpunkt geführt.",
+                ],
             ),
             q(
                 "3.8",
-                "Werden die Zwecke und Mittel gemeinsam mit einer anderen Stelle festgelegt?",
-                YN,
-                "register:gemeinsame_verantwortlichkeit",
-                reference="Art. 26 DSGVO",
-            ),
-            q(
-                "3.8.1",
-                "Gemeinsam Verantwortliche:",
-                target="register:gemeinsame_verantwortliche",
-                parent="3.8",
-                hints=[
-                    "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu "
-                    "hinterlegen."
-                ],
+                "Stelle, die über die Aufnahme des Betriebs entscheidet:",
+                target="register:entscheidungsstelle",
+                hints=["Funktion angeben, z. B. „Abteilungsleitung Z“."],
             ),
             q(
                 "3.9",
-                "Stelle, die über die Aufnahme des Betriebs entscheidet, und weitere zu "
-                "beteiligende Stellen:",
-                target="register:entscheidungsstelle",
-                hints=["Z. B. IT-Sicherheit, Organisation, gegebenenfalls Personalvertretung."],
+                "Weitere zu beteiligende Stellen:",
+                target="register:beteiligte_stellen",
+                required=False,
+                hints=["Z. B. IT-Sicherheit, Organisation, Personalvertretung."],
             ),
         ],
     },
@@ -392,34 +455,62 @@ STEPS = [
             ),
             q(
                 "4.3.1",
-                "Welche besonderen Kategorien, und auf welche Ausnahme stützt sich die "
-                "Verarbeitung?",
+                "Welche besonderen Kategorien werden verarbeitet?",
+                target="register:besondere_kategorien_art",
+                parent="4.3",
+                reference="Art. 9 Abs. 1 DSGVO; § 43 HDSIG",
+            ),
+            q(
+                "4.3.2",
+                "Vorschrift, die die Verarbeitung dieser Daten erlaubt, und vorgesehene Garantien:",
                 target="register:besondere_kategorien_grundlage",
                 parent="4.3",
                 reference="Art. 9 Abs. 2 DSGVO; § 43 HDSIG",
+                hints=[
+                    "Im Dritten Teil HDSIG ist die Verarbeitung nur zulässig, wenn sie zur "
+                    "Aufgabenerfüllung unbedingt erforderlich ist; § 43 Abs. 2 HDSIG nennt "
+                    "geeignete Garantien (z. B. Zugriffsbeschränkung, Pseudonymisierung, "
+                    "Verschlüsselung)."
+                ],
             ),
             q(
                 "4.4",
-                "Werden Daten über Straftaten, Ordnungswidrigkeiten, Verdachtsmomente oder "
-                "Sanktionen verarbeitet?",
+                "Werden Daten über strafrechtliche Verurteilungen, Straftaten oder einen "
+                "entsprechenden Verdacht verarbeitet?",
                 YN,
                 "register:daten_art10",
-                reference="Art. 10 DSGVO; Dritter Teil HDSIG",
+                reference="Art. 10 DSGVO; § 40 HDSIG",
                 hints=[
                     "Ist die Frage zu bejahen, ist die Einordnung unter 2.4 besonders "
-                    "sorgfältig zu prüfen."
+                    "sorgfältig zu prüfen.",
                 ],
             ),
             q(
                 "4.5",
+                "Werden Daten über Ordnungswidrigkeiten verarbeitet (z. B. Bußgeldverfahren)?",
+                YN,
+                "register:daten_owi",
+                reference="§ 40 HDSIG; Art. 10 DSGVO",
+                hints=[
+                    "Dient die Verarbeitung der Verfolgung oder Ahndung von "
+                    "Ordnungswidrigkeiten, gilt der Dritte Teil HDSIG (§ 40 HDSIG).",
+                    "Ob Daten über Ordnungswidrigkeiten außerhalb dieses Bereichs unter "
+                    "Art. 10 DSGVO fallen, ist nicht abschließend geklärt; der EuGH hat "
+                    "Strafpunkte für Verkehrsverstöße Art. 10 DSGVO zugeordnet (Urteil vom "
+                    "22.06.2021, C-439/19). Die Einordnung ist mit der oder dem "
+                    "Datenschutzbeauftragten abzustimmen.",
+                ],
+            ),
+            q(
+                "4.6",
                 "Herkunft der Daten:",
                 target="register:herkunft",
                 reference="Art. 14 Abs. 2 lit. f DSGVO",
                 hints=["Quelle, Aktualität und Übernahmeverfahren angeben."],
             ),
             q(
-                "4.6",
-                "Voraussichtliche Zahl der betroffenen Personen (Schätzung):",
+                "4.7",
+                "Voraussichtliche Zahl der betroffenen Personen je Jahr (Schätzung):",
                 NUMBER,
                 "register:anzahl_betroffene",
                 hints=[
@@ -429,12 +520,12 @@ STEPS = [
                 ],
             ),
             q(
-                "4.7",
+                "4.8",
                 "Zeitraum und räumliche Reichweite der Verarbeitung:",
                 target="register:umfang",
             ),
             q(
-                "4.8",
+                "4.9",
                 "Wie werden auf Tatsachen beruhende Daten von persönlichen Einschätzungen "
                 "unterschieden?",
                 target="register:tatsachen_trennung",
@@ -471,10 +562,15 @@ STEPS = [
             ),
             q(
                 "5.4",
-                "Werden Daten an Stellen außerhalb der verantwortlichen Dienststelle übermittelt?",
+                "Werden Daten an andere Stellen außerhalb der Dienststelle übermittelt, die sie "
+                "für eigene Zwecke verwenden (z. B. andere Behörden, Gerichte)?",
                 YN,
                 "register:uebermittlung_extern",
-                reference="§ 65 Abs. 1 HDSIG (Rechtsgrundlage einschließlich Übermittlungen)",
+                reference="§ 65 Abs. 1 Nr. 3 und 7 HDSIG; Art. 30 Abs. 1 Satz 2 lit. d DSGVO",
+                hints=[
+                    "Die Weitergabe an Auftragsverarbeiter (3.7.2) ist keine Übermittlung in "
+                    "diesem Sinn und wird hier nicht erfasst.",
+                ],
             ),
             q(
                 "5.4.1",
@@ -543,42 +639,29 @@ STEPS = [
         "questions": [
             q(
                 "6.1",
-                "Kann für jede Datenkategorie eine Lösch- oder Überprüfungsfrist angegeben werden?",
-                YN,
-                "register:frist_bestimmt",
+                "Lösch- oder Überprüfungsfristen je Datenkategorie:",
+                TABLE,
+                "register:speicherdauer",
                 reference="Art. 5 Abs. 1 lit. e, Art. 30 Abs. 1 Satz 2 lit. f DSGVO; "
-                "§ 65 Abs. 1 HDSIG",
+                "§ 65 Abs. 1 Nr. 8, § 70 Abs. 4 HDSIG",
+                columns=[
+                    ("kategorie", "Datenkategorie", True),
+                    ("frist", "Frist und auslösendes Ereignis", False),
+                    ("begruendung", "Begründung, falls noch keine Frist", False),
+                    ("pruefstelle", "Stelle, die die Frist klärt", False),
+                ],
                 hints=[
-                    "Das Gesetz verlangt die Angabe „wenn möglich“. Ohne konkrete Frist sind "
-                    "Begründung und Prüfstelle anzugeben; der Punkt bleibt als offene Aufgabe "
-                    "bestehen."
+                    "Je Datenkategorie eine Zeile, z. B. „Verfahrensakte: 5 Jahre nach "
+                    "rechtskräftigem Abschluss“.",
+                    "Das Gesetz verlangt die Angabe „wenn möglich“. Fehlt die Frist, sind "
+                    "Begründung und klärende Stelle anzugeben; die Zeile bleibt als offene "
+                    "Aufgabe bestehen.",
                 ],
             ),
             q(
                 "6.1.1",
-                "Fristen je Datenkategorie und auslösendes Ereignis:",
-                target="register:speicherdauer",
-                parent="6.1",
-            ),
-            q(
-                "6.1.2",
-                "Grundlage der Fristen:",
+                "Vorschriften oder Regelungen, aus denen sich die Fristen ergeben:",
                 target="register:loeschfrist_rechtsgrundlage",
-                parent="6.1",
-            ),
-            q(
-                "6.1.3",
-                "Begründung, warum noch keine Frist angegeben werden kann:",
-                target="register:speicherdauer_begruendung",
-                parent="6.1",
-                when=["nein"],
-            ),
-            q(
-                "6.1.4",
-                "Stelle, die die Frist klärt:",
-                target="register:speicherdauer_pruefstelle",
-                parent="6.1",
-                when=["nein"],
             ),
             q(
                 "6.2",
@@ -611,7 +694,8 @@ STEPS = [
                 "Sollen Rechte der betroffenen Personen beschränkt werden?",
                 YN,
                 "register:beschraenkung",
-                reference="Art. 23 DSGVO; § 70 HDSIG",
+                reference="Art. 23 DSGVO mit den Vorschriften des Zweiten Teils HDSIG; "
+                "§§ 51, 52 HDSIG",
             ),
             q(
                 "6.6.1",
@@ -620,7 +704,10 @@ STEPS = [
                 parent="6.6",
                 hints=[
                     "Eine pauschale Beschränkung (z. B. „Ordnungswidrigkeitenverfahren: keine "
-                    "Auskunft“) genügt nicht."
+                    "Auskunft“) genügt nicht.",
+                    "Im Dritten Teil HDSIG sind die Gründe für ein Absehen von der Auskunft zu "
+                    "dokumentieren (§ 52 Abs. 8 HDSIG); über das Absehen von der "
+                    "Benachrichtigung entscheidet die Leitung (§ 51 HDSIG).",
                 ],
             ),
         ],
@@ -701,20 +788,10 @@ STEPS = [
             ),
             q(
                 "7.6",
-                "Umsetzungsstand der Schutzmaßnahmen insgesamt:",
-                IMPL,
-                "register:massnahmen_stand",
-                hints=[
-                    "Der Stand je Maßnahme wird in der Maßnahmenliste geführt.",
-                    "Geplante Maßnahmen gelten nicht als wirksam.",
-                ],
-            ),
-            q(
-                "7.7",
                 "Stelle, die Verletzungen des Schutzes personenbezogener Daten bewertet und "
                 "die erforderlichen Meldungen veranlasst:",
                 target="register:vorfallmeldung",
-                reference="Art. 33, 34 DSGVO",
+                reference="Art. 33, 34 DSGVO; § 60 HDSIG",
             ),
         ],
     },
@@ -730,11 +807,11 @@ STEPS = [
                 "register:testdaten",
                 reference="Erwägungsgrund 26 DSGVO",
                 choices=[
-                    ("synthetisch", "synthetisch"),
-                    ("anonymisiert", "anonymisiert"),
-                    ("pseudonymisiert", "pseudonymisiert"),
-                    ("echt", "echte Daten"),
                     ("keine", "keine Testdaten"),
+                    ("synthetisch", "ausschließlich synthetische Daten"),
+                    ("anonymisiert", "anonymisierte Daten"),
+                    ("pseudonymisiert", "pseudonymisierte Daten (personenbezogen)"),
+                    ("echt", "Echtdaten (personenbezogen)"),
                 ],
                 hints=[
                     "Pseudonymisierte Daten sind personenbezogene Daten; sie gelten nicht als "
@@ -818,19 +895,11 @@ STEPS = [
     {
         "id": "W09",
         "title": "9 Vorprüfung zur Datenschutz-Folgenabschätzung",
-        "goal": "Begründete Vorprüfung nach Art. 35 DSGVO bzw. § 62 HDSIG. Die Kriterien 9.2 "
+        "goal": "Begründete Vorprüfung nach Art. 35 DSGVO bzw. § 62 HDSIG. Die Kriterien 9.1.x "
         "stammen aus dem gewählten Regelprofil.",
         "questions": [
             q(
-                "9.1",
-                "Einschlägige gesetzliche oder aufsichtsbehördliche Fallgruppe:",
-                target="register:dsfa_fallgruppe",
-                required=False,
-                reference="Art. 35 Abs. 3 und 4 DSGVO; § 62 Abs. 1 HDSIG",
-                hints=["„Noch nicht geprüft“ ist eine zulässige Angabe."],
-            ),
-            q(
-                "9.3",
+                "9.2",
                 "Bezug auf eine bestehende Folgenabschätzung oder eine einschlägige Ausnahme:",
                 target="register:dsfa_bezug",
                 required=False,
@@ -898,7 +967,8 @@ STEPS = [
             q(
                 "11.1.1",
                 "Datum der Einleitung der Konsultation:",
-                target="register:konsultation_eingeleitet_am",
+                DATE,
+                "register:konsultation_eingeleitet_am",
                 parent="11.1",
             ),
             q(
@@ -916,10 +986,25 @@ STEPS = [
             ),
             q(
                 "11.2",
-                "Sind fachliche Einwände, widersprüchliche Angaben und fehlende Nachweise geklärt?",
+                "Sind alle fachlichen Einwände geklärt?",
                 YN,
                 "register:einwaende_geklaert",
-                hints=["Offene Punkte werden in der Prüfliste geführt."],
+                task_if=["nein"],
+            ),
+            q(
+                "11.3",
+                "Sind widersprüchliche Angaben bereinigt?",
+                YN,
+                "register:widersprueche_geklaert",
+                task_if=["nein"],
+            ),
+            q(
+                "11.4",
+                "Liegen alle erforderlichen Nachweise vor?",
+                YN,
+                "register:nachweise_vollstaendig",
+                task_if=["nein"],
+                hints=["Fehlende Nachweise werden in der Prüfliste geführt."],
             ),
         ],
     },
@@ -931,23 +1016,35 @@ STEPS = [
         "questions": [
             q(
                 "12.1",
-                "Sind die Angaben vollständig, aktuell und von der fachlich zuständigen "
-                "Stelle bestätigt?",
+                "Sind die Angaben vollständig und aktuell?",
+                YN,
+                "register:angaben_vollstaendig",
+                task_if=["nein"],
+            ),
+            q(
+                "12.2",
+                "Hat die fachlich zuständige Stelle die Angaben bestätigt?",
                 YN,
                 "register:angaben_bestaetigt",
+                task_if=["nein"],
                 hints=[
                     "Mit der Beantwortung wird der Bearbeitungsstand dokumentiert; die "
                     "Freigabe erfolgt gesondert im Vier-Augen-Prinzip."
                 ],
             ),
             q(
-                "12.2",
+                "12.3",
                 "Stelle, die Verzeichnis, Folgenabschätzung, Verträge und Maßnahmen im "
-                "Betrieb aktuell hält, und ihre Vertretung:",
+                "Betrieb aktuell hält:",
                 target="register:pflege_zustaendigkeit",
             ),
             q(
-                "12.3",
+                "12.4",
+                "Vertretung dieser Stelle:",
+                target="register:pflege_vertretung",
+            ),
+            q(
+                "12.5",
                 "Verfahren bei Änderungen, Störungen, Außerbetriebnahme und Aufbewahrung "
                 "der Dokumentation:",
                 target="register:lebenszyklus",
@@ -963,25 +1060,19 @@ EXTRA_HINTS = {
         "Kurz darlegen, welcher Zweck die Einordnung trägt (z. B. Verfolgung einer "
         "Ordnungswidrigkeit im Einzelfall)."
     ],
+    "2.6.1": ["Jeden weiteren Zweck einzeln benennen."],
     "3.4": [
         "Die Vertretung stellt sicher, dass Rückfragen und Änderungen auch bei "
         "Abwesenheit bearbeitet werden."
     ],
     "3.6.1": ["Datum und Form der Einbindung (z. B. Stellungnahme per E-Mail) angeben."],
-    "3.7.1": ["Name des Dienstleisters und Gegenstand des Auftrags angeben."],
-    "4.7": ["Z. B. „laufende Verfahren seit 2026, landesweit“."],
+    "4.8": ["Z. B. „laufende Verfahren seit 2026, landesweit“."],
     "5.6.1": ["Jeden Empfänger mit Land angeben; Unterauftragnehmer eingeschlossen."],
     "5.7": [
         "Bezeichnung, Datum und Ablageort angeben; die Dokumente selbst werden als "
         "Nachweis hinterlegt."
     ],
-    "6.1.1": [
-        "Je Datenkategorie Frist und auslösendes Ereignis angeben (z. B. „Verfahrensakte: "
-        "5 Jahre nach rechtskräftigem Abschluss“)."
-    ],
-    "6.1.2": ["Norm, Verwaltungsvorschrift oder Hausregelung angeben."],
-    "6.1.3": ["Die Begründung macht nachvollziehbar, warum die Frist noch offen ist."],
-    "6.1.4": ["Der Punkt bleibt als offene Aufgabe bestehen, bis die Frist feststeht."],
+    "6.1.1": ["Norm, Verwaltungsvorschrift oder Hausregelung angeben."],
     "6.2": [
         "Konflikte zwischen Löschung und Aufbewahrung sowie die Übergabe an das Archiv angeben."
     ],
@@ -1013,26 +1104,204 @@ EXTRA_HINTS = {
     ],
     "11.1.2": ["Unterlagen mit Version und Datum angeben."],
     "11.1.3": ["Jede Auflage wird als Maßnahme mit Zuständigkeit geführt."],
-    "12.2": ["Die Zuständigkeit darf nicht an eine einzelne Person ohne Vertretung gebunden sein."],
-    "12.3": [
+    "12.4": ["Die Zuständigkeit darf nicht an eine einzelne Person ohne Vertretung gebunden sein."],
+    "12.5": [
         "Relevante Änderungen (neuer Zweck, neuer Empfänger, neue Technik) lösen eine "
         "erneute Prüfung aus; eine frühere Freigabe gilt nicht weiter."
     ],
 }
 
+# Amtliche Auslegungshilfen (Quellenkürzel siehe SOURCES); werden an die Hinweise angehängt.
+DSK_VVT = "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018)"
+DSK_KP5 = "DSK, Kurzpapier Nr. 5 Datenschutz-Folgenabschätzung (Stand 17.12.2018)"
+DSK_KP10 = "DSK, Kurzpapier Nr. 10 Informationspflichten (Stand 16.01.2018)"
+DSK_KP13 = "DSK, Kurzpapier Nr. 13 Auftragsverarbeitung (Stand 17.12.2018)"
+DSK_KP16 = "DSK, Kurzpapier Nr. 16 Gemeinsam Verantwortliche (Stand 19.03.2018)"
+EDSA_0720 = "EDSA, Leitlinien 07/2020 zu Verantwortlichem und Auftragsverarbeiter, v2.1"
+EDSA_0521 = "EDSA, Leitlinien 05/2021 zu Art. 3 und Kapitel V DSGVO, v2.0"
+EDSA_0122 = "EDSA, Leitlinien 01/2022 zum Auskunftsrecht, v2.1"
+EDSA_0922 = "EDSA, Leitlinien 9/2022 zur Meldung von Datenschutzverletzungen, v2.0"
+EDSA_0125 = "EDSA, Leitlinien 01/2025 zur Pseudonymisierung (Konsultationsfassung)"
+EDSA_0419 = "EDSA, Leitlinien 4/2019 zu Art. 25 DSGVO, v2.0"
+WP251 = "Art.-29-Gruppe, WP251 rev.01 (vom EDSA bestätigt)"
+WP248 = "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt)"
+HBDI_DSFA = "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO"
+HBDI_POL = "HBDI, Meldung von Datenschutzpannen bei der Polizei (Stand 31.03.2023)"
+
+GUIDANCE = {
+    "1.1": [
+        f"{DSK_VVT}, S. 1: Eine Verarbeitungstätigkeit ist in der Regel ein "
+        "Geschäftsprozess auf geeignetem Abstraktionsniveau; jeder neue Zweck begründet "
+        "eine eigene Tätigkeit."
+    ],
+    "2.1": [
+        f"{DSK_VVT}, Abschn. 6.2: Die Zwecke sind vorab festzulegen und so aussagekräftig "
+        "zu beschreiben, dass die Zulässigkeit vorläufig eingeschätzt werden kann."
+    ],
+    "2.7": [
+        f"{EDSA_0419}, Rn. 74–76: Zu prüfen ist, ob der Zweck mit weniger, gröberen oder "
+        "aggregierten Daten oder ganz ohne Personenbezug erreichbar ist."
+    ],
+    "3.7": [
+        f"{DSK_KP13}, S. 3: Wartung, Fernwartung und Support mit Zugriff oder "
+        "Zugriffsmöglichkeit auf personenbezogene Daten sind Auftragsverarbeitung; rein "
+        "technische Wartung der Infrastruktur (z. B. Strom, Kühlung) ist es nicht."
+    ],
+    "3.7.2": [
+        f"{EDSA_0720}, Rn. 82: Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich "
+        "ist die konkrete Tätigkeit, nicht die Art der Stelle.",
+        f"{DSK_KP13}, S. 1: Der Auftragsverarbeiter ist kein Dritter; seine Verarbeitung "
+        "wird dem Verantwortlichen zugerechnet.",
+    ],
+    "3.1.3": [
+        f"{DSK_KP16}, S. 1: Gemeinsame Verantwortung liegt vor, wenn mehrere Stellen "
+        "gemeinsam über Zwecke und Mittel entscheiden; sie privilegiert die Weitergabe "
+        "der Daten nicht."
+    ],
+    "5.3": [
+        f"{EDSA_0720}, Rn. 90: Empfänger ist jede Stelle, der Daten offengelegt werden, "
+        "auch ein Auftragsverarbeiter.",
+        f"{DSK_VVT}, Abschn. 6.4: Auch Organisationseinheiten derselben Behörde können "
+        "Empfänger sein; Zugriffsberechtigte nach Rollen oder Funktionen angeben, nicht "
+        "namentlich.",
+    ],
+    "5.6": [
+        f"{EDSA_0521}, Beispiel 11: Ein Fernzugriff aus einem Drittland ist eine "
+        "Übermittlung, auch wenn Daten nur angezeigt werden (z. B. Support).",
+        f"{DSK_VVT}, Abschn. 6.4: Zum Drittlandbezug ist stets eine Aussage zu treffen, "
+        "auch „keine Übermittlung vorgesehen“.",
+    ],
+    "6.1": [
+        f"{DSK_VVT}, Abschn. 6.6: Ein allgemeiner Verweis auf Aufbewahrungspflichten "
+        "genügt nicht; die Fristen sind je Datenkategorie präzise anzugeben."
+    ],
+    "6.4": [
+        f"{DSK_KP10}, S. 3: Bei Erhebung bei der betroffenen Person ist zum Zeitpunkt der "
+        "Erhebung zu informieren, sonst innerhalb angemessener Frist, höchstens eines "
+        "Monats."
+    ],
+    "6.5": [
+        f"{EDSA_0122}, Zusammenfassung: Auskunft unverzüglich, spätestens binnen eines "
+        "Monats; Verlängerung um zwei Monate nur mit Begründung gegenüber der betroffenen "
+        "Person."
+    ],
+    "7.3": [
+        f"{DSK_VVT}, Abschn. 6.7: Trotz „wenn möglich“ ist die allgemeine Beschreibung der "
+        "Regelfall; die vollständige Darstellung gehört in das Sicherheitskonzept "
+        "(z. B. nach Standard-Datenschutzmodell oder BSI-IT-Grundschutz)."
+    ],
+    "7.6": [
+        f"{EDSA_0922}, Rn. 31: Die 72-Stunden-Frist beginnt, sobald mit hinreichender "
+        "Sicherheit feststeht, dass personenbezogene Daten betroffen sind; auch nicht "
+        "meldepflichtige Verletzungen sind zu dokumentieren.",
+        f"{HBDI_POL}: Die Meldepflicht nach § 60 HDSIG trifft auch Bußgeldstellen und "
+        "Kommunen bei der Verfolgung von Ordnungswidrigkeiten.",
+    ],
+    "8.1": [
+        f"{EDSA_0125}, Rn. 22: Pseudonymisierte Daten bleiben personenbezogen, auch wenn "
+        "die Zuordnungsinformationen bei einer anderen Stelle liegen."
+    ],
+    "8.4": [
+        f"{WP251}, Abschn. II.A und II.B: Profiling setzt eine automatisierte Bewertung "
+        "persönlicher Aspekte voraus; eine ausschließlich automatisierte Entscheidung "
+        "ergeht ohne menschliche Beteiligung und ist davon zu unterscheiden."
+    ],
+    "9.2": [
+        f"{WP248}, S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine "
+        "Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        f"{HBDI_DSFA}: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht "
+        "automatisch entbehrlich.",
+    ],
+    "10.4": [
+        f"{DSK_KP5}, S. 1–3: Der Standpunkt der Betroffenen kann z. B. über Gremien der "
+        "Mitbestimmung eingeholt werden; die oder der Datenschutzbeauftragte berät."
+    ],
+}
+
+#: Quellen der Auslegungshinweise (Fundstellen im Netz).
+SOURCES = [
+    (DSK_VVT, "https://www.datenschutzkonferenz-online.de/media/ah/"
+     "201802_ah_verzeichnis_verarbeitungstaetigkeiten.pdf"),
+    (DSK_KP5, "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_5.pdf"),
+    (DSK_KP10, "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_10.pdf"),
+    (DSK_KP13, "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_13.pdf"),
+    (DSK_KP16, "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_16.pdf"),
+    (EDSA_0720, "https://www.edpb.europa.eu/system/files/2023-10/"
+     "EDPB_guidelines_202007_controllerprocessor_final_en.pdf"),
+    (EDSA_0521, "https://www.edpb.europa.eu/system/files/2023-02/edpb_guidelines_05-2021_"
+     "interplay_between_the_application_of_art3-chapter_v_of_the_gdpr_v2_en_0.pdf"),
+    (EDSA_0122, "https://www.edpb.europa.eu/system/files/2023-04/"
+     "edpb_guidelines_202201_data_subject_rights_access_v2_en.pdf"),
+    (EDSA_0922, "https://www.edpb.europa.eu/system/files/2023-04/"
+     "edpb_guidelines_202209_personal_data_breach_notification_v2.0_en.pdf"),
+    (EDSA_0125, "https://www.edpb.europa.eu/system/files/2025-01/"
+     "edpb_guidelines_202501_pseudonymisation_en.pdf"),
+    (EDSA_0419, "https://www.edpb.europa.eu/system/files/documents/files/file1/"
+     "edpb_guidelines_201904_dataprotection_by_design_and_by_default_v2.0_en.pdf"),
+    (WP251, "https://ec.europa.eu/newsroom/article29/redirection/document/49826"),
+    (WP248, "https://ec.europa.eu/newsroom/article29/redirection/document/47711"),
+    (HBDI_DSFA, "https://datenschutz.hessen.de/datenschutz/it-und-datenschutz/"
+     "datenschutz-folgenabschaetzung"),
+    (HBDI_POL, "https://datenschutz.hessen.de/datenschutz/polizei-und-justiz/"
+     "meldung-von-datenschutzpannen-bei-der-polizei"),
+]  # fmt: skip
+
+F, IT, R = "fachbereich", "it_betrieb", "recht"
+#: Zuständigkeit je Kapitel und abweichend je Frage.
+CHAPTER_ROLE = {"W01": F, "W02": R, "W03": F, "W04": F, "W05": IT, "W06": F, "W07": IT,
+                "W08": IT, "W09": R, "W10": R, "W11": R, "W12": F}  # fmt: skip
+ROLE = {
+    "1.4": IT, "1.5": IT, "1.7": R,
+    "2.1": F, "2.6": F, "2.6.1": F, "2.7": F,
+    "3.1": R, "3.1.1": R, "3.1.2": R, "3.5": IT, "3.7": IT, "3.7.1": IT, "3.7.2": R,
+    "3.1.3": R, "3.1.3.1": R,
+    "4.3.2": R,
+    "5.3": F, "5.4": F, "5.4.1": R, "5.6.2": R, "5.7": R,
+    "6.1.1": R, "6.2": R, "6.3": IT, "6.6": R, "6.6.1": R,
+    "7.1": F, "7.6": F,
+    "8.4": F, "8.4.1": F,
+    "10.1": F,
+}  # fmt: skip
+
+
+def closing(step: dict) -> list[dict]:
+    """Abschlussfrage je Kapitel; „Ja“ hinterlässt eine offene Aufgabe."""
+    chapter = step["title"].split()[0]
+    top = [int(i["number"].split(".")[1]) for i in step["questions"]]
+    number = f"{chapter}.{max(top) + 1}"
+    return [
+        q(
+            number,
+            f"Bestehen zu Kapitel {chapter} noch offene Punkte?",
+            YN,
+            task_if=["ja"],
+            hints=["Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."],
+        ),
+        q(
+            f"{number}.1",
+            "Offene Punkte und zuständige Stelle:",
+            parent=number,
+        ),
+    ]
+
 
 def main() -> None:
     for step in STEPS:
+        step["questions"].extend(closing(step))
         for item in step["questions"]:
-            if not item["hints"] and item["id"] in EXTRA_HINTS:
-                item["hints"] = EXTRA_HINTS[item["id"]]
-                item["help"] = " ".join(item["hints"])
+            hints = item["hints"] or EXTRA_HINTS.get(item["id"], [])
+            item["hints"] = [*hints, *GUIDANCE.get(item["id"], [])]
+            item["help"] = " ".join(item["hints"])
+            item["role"] = ROLE.get(item["id"], CHAPTER_ROLE[step["id"]])
     catalog = {
         "schema": "auditcore_dataprotection.wizard/1",
-        "version": "2026.10.2",
+        "version": "2026.10.3",
         "source": "Prüfkatalog VVT/DSFA vom 08.10.2026, Abschnitt 7; Aufbau nach dem "
-        "Checklistendesigner (Fragenbaum mit Hinweisen und Fundstellen). Arbeitsgrundlage, "
-        "keine Rechtsquelle; Fundstellen vor Freigabe gegen amtliche Fassungen prüfen.",
+        "Checklistendesigner (Fragenbaum mit Hinweisen und Fundstellen). HDSIG-Fundstellen "
+        "am Gesetzeswortlaut geprüft; Auslegungshinweise nach den unter „sources“ "
+        "genannten Veröffentlichungen von EDSA, DSK und HBDI. Arbeitsgrundlage, keine "
+        "Rechtsquelle.",
+        "sources": [{"title": t, "url": u} for t, u in SOURCES],
         "answer_values": {"ja_nein_unklar": ["ja", "nein", "unklar"]},
         "steps": STEPS,
     }

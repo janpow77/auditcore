@@ -232,7 +232,7 @@ def test_fragenkatalog_wird_geprueft() -> None:
         catalog_from_dict(
             {
                 "version": "1",
-                "steps": [{"id": "S", "title": "s", "questions": [{**base, "kind": "datum"}]}],
+                "steps": [{"id": "S", "title": "s", "questions": [{**base, "kind": "uhrzeit"}]}],
             }
         )
     with pytest.raises(ProfileError, match="fehlerhaft"):
@@ -509,9 +509,9 @@ def test_uebermittlungen_und_zahl_ueber_den_assistenten() -> None:
     world.workspace.answer(
         TENANT, FACH, activity_id, "5.4.1", _json.dumps(rows), expected_revision=2
     )
-    world.workspace.answer(TENANT, FACH, activity_id, "4.6", "1200", expected_revision=3)
+    world.workspace.answer(TENANT, FACH, activity_id, "4.7", "1200", expected_revision=3)
     with pytest.raises(ValidationError, match="ganze Zahl"):
-        world.workspace.answer(TENANT, FACH, activity_id, "4.6", "etwa 1200", expected_revision=4)
+        world.workspace.answer(TENANT, FACH, activity_id, "4.7", "etwa 1200", expected_revision=4)
     saved = world.register.draft(TENANT, FACH).activities[0]  # type: ignore[union-attr]
     assert saved["uebermittlungen"][0]["rechtsgrundlage"] == "§ 69 OWiG"
     assert saved["anzahl_betroffene"] == 1200
@@ -549,7 +549,7 @@ def test_tabellen_und_zahlenwerte_werden_geprueft() -> None:
 
     catalog = catalog_for(hdsig())
     table_q = catalog.question("5.4.1")
-    number_q = catalog.question("4.6")
+    number_q = catalog.question("4.7")
     for bad in ("kein json", '{"a": 1}', "[]", '[{"fremd": "x"}]', '["zeile"]',
                 '[{"empfaenger": "A"}]'):  # fmt: skip
         with pytest.raises(ValidationError):

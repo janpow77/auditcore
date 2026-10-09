@@ -2,6 +2,7 @@ import {
   needsJustification,
   questionFieldId,
   questionOptions,
+  questionRoleLabel,
   type AssistantQuestion as Question,
   type Draft,
 } from '@auditcore/ui-core'
@@ -37,6 +38,9 @@ function Input({ question, draft, id, onChange }: { question: Question; draft: D
   const options = question.kind === 'text' ? [] : questionOptions(t, question)
   if (question.kind === 'zahl' && !options.length) {
     return <input id={id} type="number" min="0" step="1" inputMode="numeric" value={draft.value} aria-label={`${question.text} ${t('numberInput')}`} onChange={(event) => onChange({ ...draft, value: event.target.value })} />
+  }
+  if (question.kind === 'datum' && !options.length) {
+    return <input id={id} type="date" value={draft.value} aria-label={`${question.text} ${t('dateInput')}`} onChange={(event) => onChange({ ...draft, value: event.target.value })} />
   }
   if (question.kind === 'tabelle' && !options.length) {
     return <AssistantTable question={question} value={draft.value} onChange={(value) => onChange({ ...draft, value })} />
@@ -85,6 +89,7 @@ export function AssistantQuestion({ question, draft, error, busy, onChange, onSa
     <fieldset className={['fa-assistant__question', question.depth ? `fa-assistant__question--depth-${Math.min(question.depth, 2)}` : ''].filter(Boolean).join(' ')} data-question={question.id} aria-describedby={`${id}-help`} aria-invalid={error ? 'true' : undefined}>
       <legend>
         <span className="fa-assistant__number">{question.number}</span> {question.text} <span className="fa-assistant__badge">{question.required ? t('requiredQuestion') : t('optionalQuestion')}</span>
+        {question.role ? <> <span className={`fa-assistant__role fa-assistant__role--${question.role}`}>{questionRoleLabel(t, question)}</span></> : null}
       </legend>
       <Help question={question} id={id} />
       <Suggestion question={question} busy={busy} onConfirm={onConfirm} />

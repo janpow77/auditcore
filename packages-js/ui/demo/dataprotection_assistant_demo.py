@@ -98,8 +98,18 @@ def write_fixture(path: Path) -> None:
     table = api.work.answer(
         a, activity_id, {"question_id": "5.4", "value": "ja", "expected_revision": 5}
     )
+    api.work.navigate(a, activity_id, {"mode": "frei", "step": "W03", "expected_revision": 6})
+    providers = api.work.answer(
+        a, activity_id, {"question_id": "3.7", "value": "ja", "expected_revision": 7}
+    )
+    api.work.navigate(a, activity_id, {"mode": "frei", "step": "W11", "expected_revision": 8})
+    consultation = api.work.answer(
+        a, activity_id, {"question_id": "11.1", "value": "ja", "expected_revision": 9}
+    )
     data = {
         "activity_id": activity_id,
+        "providers": providers,
+        "consultation": consultation,
         "fresh": fresh,
         "suggested": suggested,
         "free": free,

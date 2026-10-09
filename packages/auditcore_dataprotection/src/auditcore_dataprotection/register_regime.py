@@ -13,6 +13,8 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
 
+from .register_tables import check_retention_rows, check_service_providers, table_type_errors
+
 REGIME_GDPR = "dsgvo"
 REGIME_HDSIG = "hdsig_ji"
 REGIME_UNCLEAR = "unklar"
@@ -33,6 +35,8 @@ Report = Callable[..., None]
 
 
 def _blank(value: object) -> bool:
+    if isinstance(value, list):
+        return not value
     return value is None or (isinstance(value, str) and not value.strip())
 
 
@@ -179,6 +183,7 @@ def extra_type_errors(activity: Mapping[str, object]) -> list[str]:
     transfers = activity.get("uebermittlungen")
     if transfers is not None and not isinstance(transfers, list):
         errors.append("Feld 'uebermittlungen' muss eine Liste sein.")
+    errors.extend(table_type_errors(activity))
     return errors
 
 
@@ -194,6 +199,8 @@ def check_regime_activity(
     check_profiling(activity, issue, mandatory=profile_regime == REGIME_HDSIG)
     check_transfers(activity, issue)
     check_if_possible(activity, issue)
+    check_retention_rows(activity, issue)
+    check_service_providers(activity, issue)
     return False
 
 

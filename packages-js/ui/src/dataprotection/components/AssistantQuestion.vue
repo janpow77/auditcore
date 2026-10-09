@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { needsJustification, questionFieldId, questionOptions, type AssistantQuestion, type Draft } from '@auditcore/ui-core'
+import { needsJustification, questionFieldId, questionOptions, questionRoleLabel, type AssistantQuestion, type Draft } from '@auditcore/ui-core'
 import { useI18n } from '../../i18n'
 import AssistantTable from './AssistantTable.vue'
 import { dataprotectionMessages } from '../core'
@@ -25,6 +25,7 @@ function set(patch: Partial<Draft>): void {
       <span class="fa-assistant__number">{{ question.number }}</span>
       {{ question.text }}
       <span class="fa-assistant__badge">{{ question.required ? t('requiredQuestion') : t('optionalQuestion') }}</span>
+      <span v-if="question.role" :class="['fa-assistant__role', `fa-assistant__role--${question.role}`]">{{ questionRoleLabel(t, question) }}</span>
     </legend>
     <details v-if="question.hints.length || question.reference" :id="`${fieldId}-help`" class="fa-assistant__hints">
       <summary>{{ t('whyAsked') }}</summary>
@@ -44,6 +45,7 @@ function set(patch: Partial<Draft>): void {
       </label>
     </div>
     <input v-else-if="question.kind === 'zahl'" :id="fieldId" type="number" min="0" step="1" inputmode="numeric" :value="draft.value" :aria-label="`${question.text} ${t('numberInput')}`" @input="set({ value: ($event.target as HTMLInputElement).value })" />
+    <input v-else-if="question.kind === 'datum'" :id="fieldId" type="date" :value="draft.value" :aria-label="`${question.text} ${t('dateInput')}`" @input="set({ value: ($event.target as HTMLInputElement).value })" />
     <AssistantTable v-else-if="question.kind === 'tabelle'" :question="question" :value="draft.value" @change="(value) => set({ value })" />
     <textarea v-else :id="fieldId" :value="draft.value" rows="3" :aria-label="question.text" @input="set({ value: ($event.target as HTMLTextAreaElement).value })"></textarea>
     <label v-if="showReason">{{ t('answerJustification') }}

@@ -1,7 +1,69 @@
 {
  "schema": "auditcore_dataprotection.wizard/1",
- "version": "2026.10.2",
- "source": "Prüfkatalog VVT/DSFA vom 08.10.2026, Abschnitt 7; Aufbau nach dem Checklistendesigner (Fragenbaum mit Hinweisen und Fundstellen). Arbeitsgrundlage, keine Rechtsquelle; Fundstellen vor Freigabe gegen amtliche Fassungen prüfen.",
+ "version": "2026.10.3",
+ "source": "Prüfkatalog VVT/DSFA vom 08.10.2026, Abschnitt 7; Aufbau nach dem Checklistendesigner (Fragenbaum mit Hinweisen und Fundstellen). HDSIG-Fundstellen am Gesetzeswortlaut geprüft; Auslegungshinweise nach den unter „sources“ genannten Veröffentlichungen von EDSA, DSK und HBDI. Arbeitsgrundlage, keine Rechtsquelle.",
+ "sources": [
+  {
+   "title": "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018)",
+   "url": "https://www.datenschutzkonferenz-online.de/media/ah/201802_ah_verzeichnis_verarbeitungstaetigkeiten.pdf"
+  },
+  {
+   "title": "DSK, Kurzpapier Nr. 5 Datenschutz-Folgenabschätzung (Stand 17.12.2018)",
+   "url": "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_5.pdf"
+  },
+  {
+   "title": "DSK, Kurzpapier Nr. 10 Informationspflichten (Stand 16.01.2018)",
+   "url": "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_10.pdf"
+  },
+  {
+   "title": "DSK, Kurzpapier Nr. 13 Auftragsverarbeitung (Stand 17.12.2018)",
+   "url": "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_13.pdf"
+  },
+  {
+   "title": "DSK, Kurzpapier Nr. 16 Gemeinsam Verantwortliche (Stand 19.03.2018)",
+   "url": "https://www.datenschutzkonferenz-online.de/media/kp/dsk_kpnr_16.pdf"
+  },
+  {
+   "title": "EDSA, Leitlinien 07/2020 zu Verantwortlichem und Auftragsverarbeiter, v2.1",
+   "url": "https://www.edpb.europa.eu/system/files/2023-10/EDPB_guidelines_202007_controllerprocessor_final_en.pdf"
+  },
+  {
+   "title": "EDSA, Leitlinien 05/2021 zu Art. 3 und Kapitel V DSGVO, v2.0",
+   "url": "https://www.edpb.europa.eu/system/files/2023-02/edpb_guidelines_05-2021_interplay_between_the_application_of_art3-chapter_v_of_the_gdpr_v2_en_0.pdf"
+  },
+  {
+   "title": "EDSA, Leitlinien 01/2022 zum Auskunftsrecht, v2.1",
+   "url": "https://www.edpb.europa.eu/system/files/2023-04/edpb_guidelines_202201_data_subject_rights_access_v2_en.pdf"
+  },
+  {
+   "title": "EDSA, Leitlinien 9/2022 zur Meldung von Datenschutzverletzungen, v2.0",
+   "url": "https://www.edpb.europa.eu/system/files/2023-04/edpb_guidelines_202209_personal_data_breach_notification_v2.0_en.pdf"
+  },
+  {
+   "title": "EDSA, Leitlinien 01/2025 zur Pseudonymisierung (Konsultationsfassung)",
+   "url": "https://www.edpb.europa.eu/system/files/2025-01/edpb_guidelines_202501_pseudonymisation_en.pdf"
+  },
+  {
+   "title": "EDSA, Leitlinien 4/2019 zu Art. 25 DSGVO, v2.0",
+   "url": "https://www.edpb.europa.eu/system/files/documents/files/file1/edpb_guidelines_201904_dataprotection_by_design_and_by_default_v2.0_en.pdf"
+  },
+  {
+   "title": "Art.-29-Gruppe, WP251 rev.01 (vom EDSA bestätigt)",
+   "url": "https://ec.europa.eu/newsroom/article29/redirection/document/49826"
+  },
+  {
+   "title": "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt)",
+   "url": "https://ec.europa.eu/newsroom/article29/redirection/document/47711"
+  },
+  {
+   "title": "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO",
+   "url": "https://datenschutz.hessen.de/datenschutz/it-und-datenschutz/datenschutz-folgenabschaetzung"
+  },
+  {
+   "title": "HBDI, Meldung von Datenschutzpannen bei der Polizei (Stand 31.03.2023)",
+   "url": "https://datenschutz.hessen.de/datenschutz/polizei-und-justiz/meldung-von-datenschutzpannen-bei-der-polizei"
+  }
+ ],
  "answer_values": {
   "ja_nein_unklar": [
    "ja",
@@ -24,12 +86,14 @@
      "reference": "Art. 30 Abs. 1 Satz 2 DSGVO; § 65 Abs. 1 HDSIG",
      "hints": [
       "Die Bezeichnung beschreibt die fachliche Tätigkeit, nicht die eingesetzte Anwendung (z. B. „Verfolgung von Ordnungswidrigkeiten nach Gesetz X“, nicht „Fachverfahren Y“).",
-      "Unterstützt eine Anwendung mehrere Tätigkeiten, ist jede Tätigkeit gesondert zu erfassen."
+      "Unterstützt eine Anwendung mehrere Tätigkeiten, ist jede Tätigkeit gesondert zu erfassen.",
+      "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), S. 1: Eine Verarbeitungstätigkeit ist in der Regel ein Geschäftsprozess auf geeignetem Abstraktionsniveau; jeder neue Zweck begründet eine eigene Tätigkeit."
      ],
-     "help": "Die Bezeichnung beschreibt die fachliche Tätigkeit, nicht die eingesetzte Anwendung (z. B. „Verfolgung von Ordnungswidrigkeiten nach Gesetz X“, nicht „Fachverfahren Y“). Unterstützt eine Anwendung mehrere Tätigkeiten, ist jede Tätigkeit gesondert zu erfassen.",
+     "help": "Die Bezeichnung beschreibt die fachliche Tätigkeit, nicht die eingesetzte Anwendung (z. B. „Verfolgung von Ordnungswidrigkeiten nach Gesetz X“, nicht „Fachverfahren Y“). Unterstützt eine Anwendung mehrere Tätigkeiten, ist jede Tätigkeit gesondert zu erfassen. DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), S. 1: Eine Verarbeitungstätigkeit ist in der Regel ein Geschäftsprozess auf geeignetem Abstraktionsniveau; jeder neue Zweck begründet eine eigene Tätigkeit.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "1.2",
@@ -44,7 +108,8 @@
      "help": "Kurz in der Reihenfolge der Arbeitsschritte beschreiben: Eingang, Bearbeitung, Entscheidung, Abschluss.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "1.3",
@@ -59,7 +124,8 @@
      "help": "Die Abgrenzung verhindert, dass verschiedene Zwecke vermischt werden (z. B. allgemeine Marktbeobachtung und konkrete Verfolgung im Einzelfall).",
      "required": false,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "1.4",
@@ -74,7 +140,8 @@
      "help": "Auch E-Mail, Tabellenkalkulationen und Papierakten angeben.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "1.5",
@@ -103,7 +170,8 @@
        "key": "produktion",
        "title": "Produktion"
       }
-     ]
+     ],
+     "role": "it_betrieb"
     },
     {
      "id": "1.6",
@@ -118,7 +186,8 @@
      "help": "Die Frage dient der Vermeidung von Doppelerfassungen.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "1.6.1",
@@ -139,7 +208,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "fachbereich"
     },
     {
      "id": "1.7",
@@ -158,7 +228,47 @@
      "na_allowed": false,
      "justify_values": [
       "nein"
-     ]
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "1.8",
+     "number": "1.8",
+     "text": "Bestehen zu Kapitel 1 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "fachbereich"
+    },
+    {
+     "id": "1.8.1",
+     "number": "1.8.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "1.8",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "fachbereich"
     }
    ]
   },
@@ -176,12 +286,14 @@
      "reference": "Art. 5 Abs. 1 lit. b, Art. 30 Abs. 1 Satz 2 lit. b DSGVO; § 65 Abs. 1 HDSIG",
      "hints": [
       "Zwecke konkret und je Verarbeitungsschritt angeben.",
-      "Allgemeine Angaben wie „Verwaltung“ oder „Digitalisierung“ genügen nicht."
+      "Allgemeine Angaben wie „Verwaltung“ oder „Digitalisierung“ genügen nicht.",
+      "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.2: Die Zwecke sind vorab festzulegen und so aussagekräftig zu beschreiben, dass die Zulässigkeit vorläufig eingeschätzt werden kann."
      ],
-     "help": "Zwecke konkret und je Verarbeitungsschritt angeben. Allgemeine Angaben wie „Verwaltung“ oder „Digitalisierung“ genügen nicht.",
+     "help": "Zwecke konkret und je Verarbeitungsschritt angeben. Allgemeine Angaben wie „Verwaltung“ oder „Digitalisierung“ genügen nicht. DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.2: Die Zwecke sind vorab festzulegen und so aussagekräftig zu beschreiben, dass die Zulässigkeit vorläufig eingeschätzt werden kann.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "2.2",
@@ -196,7 +308,8 @@
      "help": "Norm mit Fundstelle angeben; die Prüfung obliegt der fachlich zuständigen Stelle.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "2.3",
@@ -212,7 +325,8 @@
      "help": "Das Verzeichnis schafft selbst keine Befugnis zur Verarbeitung. Übermittlungen werden gesondert unter 5.4 erfasst.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "2.4",
@@ -233,17 +347,18 @@
      "choices": [
       {
        "key": "dsgvo",
-       "title": "DSGVO"
+       "title": "DSGVO (ergänzt durch den Zweiten Teil HDSIG)"
       },
       {
        "key": "hdsig_ji",
-       "title": "Dritter Teil HDSIG"
+       "title": "Dritter Teil HDSIG (Richtlinie (EU) 2016/680)"
       },
       {
        "key": "unklar",
        "title": "Unklar – Prüfung erforderlich"
       }
-     ]
+     ],
+     "role": "recht"
     },
     {
      "id": "2.5",
@@ -258,7 +373,8 @@
      "help": "Kurz darlegen, welcher Zweck die Einordnung trägt (z. B. Verfolgung einer Ordnungswidrigkeit im Einzelfall).",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "2.6",
@@ -271,15 +387,38 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "2.6.1",
      "number": "2.6.1",
-     "text": "Weitere Zwecke und Begründung ihrer Vereinbarkeit mit dem ursprünglichen Zweck:",
+     "text": "Weitere Zwecke:",
      "kind": "text",
      "target": "register:weitere_zwecke_beschreibung",
      "reference": "",
+     "hints": [
+      "Jeden weiteren Zweck einzeln benennen."
+     ],
+     "help": "Jeden weiteren Zweck einzeln benennen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "2.6",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "fachbereich"
+    },
+    {
+     "id": "2.6.2",
+     "number": "2.6.2",
+     "text": "Begründung, warum die weiteren Zwecke mit dem ursprünglichen Zweck vereinbar sind:",
+     "kind": "text",
+     "target": "register:weitere_zwecke_vereinbarkeit",
+     "reference": "Art. 6 Abs. 4 DSGVO; § 44 HDSIG",
      "hints": [
       "Ist ein weiterer Zweck nicht vereinbar, ist er als eigene Tätigkeit zu erfassen."
      ],
@@ -292,7 +431,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "2.7",
@@ -302,12 +442,53 @@
      "target": "register:erforderlichkeit",
      "reference": "Art. 5 Abs. 1 lit. c, Art. 25 Abs. 2 DSGVO",
      "hints": [
-      "Geprüfte Alternativen und die Gründe ihrer Ablehnung angeben."
+      "Geprüfte Alternativen und die Gründe ihrer Ablehnung angeben.",
+      "EDSA, Leitlinien 4/2019 zu Art. 25 DSGVO, v2.0, Rn. 74–76: Zu prüfen ist, ob der Zweck mit weniger, gröberen oder aggregierten Daten oder ganz ohne Personenbezug erreichbar ist."
      ],
-     "help": "Geprüfte Alternativen und die Gründe ihrer Ablehnung angeben.",
+     "help": "Geprüfte Alternativen und die Gründe ihrer Ablehnung angeben. EDSA, Leitlinien 4/2019 zu Art. 25 DSGVO, v2.0, Rn. 74–76: Zu prüfen ist, ob der Zweck mit weniger, gröberen oder aggregierten Daten oder ganz ohne Personenbezug erreichbar ist.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
+    },
+    {
+     "id": "2.8",
+     "number": "2.8",
+     "text": "Bestehen zu Kapitel 2 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "2.8.1",
+     "number": "2.8.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "2.8",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "recht"
     }
    ]
   },
@@ -324,9 +505,10 @@
      "target": "register:rolle",
      "reference": "Art. 4 Nr. 7 und 8, Art. 26, Art. 28 DSGVO",
      "hints": [
-      "Die Rolle bestimmt die Vorlage des Verzeichnisses (Art. 30 Abs. 1 oder Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG)."
+      "Die Rolle bestimmt die Vorlage des Verzeichnisses (Art. 30 Abs. 1 oder Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG).",
+      "Eine gemeinsame Verantwortlichkeit mit anderen Stellen wird unter 3.1.3 erfasst; die Dienststelle bleibt dabei Verantwortlicher."
      ],
-     "help": "Die Rolle bestimmt die Vorlage des Verzeichnisses (Art. 30 Abs. 1 oder Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG).",
+     "help": "Die Rolle bestimmt die Vorlage des Verzeichnisses (Art. 30 Abs. 1 oder Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG). Eine gemeinsame Verantwortlichkeit mit anderen Stellen wird unter 3.1.3 erfasst; die Dienststelle bleibt dabei Verantwortlicher.",
      "required": true,
      "na_allowed": false,
      "justify_values": [],
@@ -338,12 +520,9 @@
       {
        "key": "auftragsverarbeiter",
        "title": "Auftragsverarbeiter"
-      },
-      {
-       "key": "gemeinsam_verantwortlicher",
-       "title": "Gemeinsam Verantwortlicher"
       }
-     ]
+     ],
+     "role": "recht"
     },
     {
      "id": "3.1.1",
@@ -362,7 +541,8 @@
       "in": [
        "auftragsverarbeiter"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "3.1.2",
@@ -381,7 +561,52 @@
       "in": [
        "auftragsverarbeiter"
       ]
-     }
+     },
+     "role": "recht"
+    },
+    {
+     "id": "3.1.3",
+     "number": "3.1.3",
+     "text": "Legt die Dienststelle die Zwecke und Mittel der Verarbeitung gemeinsam mit einer anderen Stelle fest?",
+     "kind": "ja_nein_unklar",
+     "target": "register:gemeinsame_verantwortlichkeit",
+     "reference": "Art. 26 DSGVO",
+     "hints": [
+      "DSK, Kurzpapier Nr. 16 Gemeinsam Verantwortliche (Stand 19.03.2018), S. 1: Gemeinsame Verantwortung liegt vor, wenn mehrere Stellen gemeinsam über Zwecke und Mittel entscheiden; sie privilegiert die Weitergabe der Daten nicht."
+     ],
+     "help": "DSK, Kurzpapier Nr. 16 Gemeinsam Verantwortliche (Stand 19.03.2018), S. 1: Gemeinsame Verantwortung liegt vor, wenn mehrere Stellen gemeinsam über Zwecke und Mittel entscheiden; sie privilegiert die Weitergabe der Daten nicht.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.1",
+      "in": [
+       "verantwortlicher"
+      ]
+     },
+     "role": "recht"
+    },
+    {
+     "id": "3.1.3.1",
+     "number": "3.1.3.1",
+     "text": "Gemeinsam Verantwortliche:",
+     "kind": "text",
+     "target": "register:gemeinsame_verantwortliche",
+     "reference": "",
+     "hints": [
+      "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu hinterlegen."
+     ],
+     "help": "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu hinterlegen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.1.3",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "recht"
     },
     {
      "id": "3.2",
@@ -396,7 +621,8 @@
      "help": "Verantwortlich ist die Dienststelle, nicht die entwickelnde Person oder das bearbeitende Referat.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "3.3",
@@ -411,7 +637,8 @@
      "help": "Funktion angeben, keine Privatperson.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "3.4",
@@ -426,7 +653,8 @@
      "help": "Die Vertretung stellt sicher, dass Rückfragen und Änderungen auch bei Abwesenheit bearbeitet werden.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "3.5",
@@ -441,7 +669,8 @@
      "help": "Interne und externe Stellen sowie ihre Zuständigkeitsgrenzen angeben.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "3.6",
@@ -456,7 +685,8 @@
      "help": "Die Einbindung soll frühzeitig erfolgen, nicht erst kurz vor Betriebsbeginn.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "3.6.1",
@@ -477,113 +707,198 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "fachbereich"
     },
     {
      "id": "3.7",
      "number": "3.7",
-     "text": "Werden Dienstleister eingesetzt, die personenbezogene Daten im Auftrag verarbeiten?",
+     "text": "Werden externe Dienstleister eingesetzt, die Zugang zu den Daten haben oder haben können (z. B. Hosting, Wartung, Fernwartung, Support, Druck, Aktenvernichtung)?",
      "kind": "ja_nein_unklar",
      "target": "register:auftragsverarbeitung",
-     "reference": "Art. 28 DSGVO",
+     "reference": "",
      "hints": [
-      "Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich ist die weisungsgebundene Verarbeitung."
+      "Es zählt auch die bloße Möglichkeit des Zugriffs, etwa bei Fernwartung.",
+      "Die rechtliche Einordnung der Dienstleister folgt unter 3.7.2.",
+      "DSK, Kurzpapier Nr. 13 Auftragsverarbeitung (Stand 17.12.2018), S. 3: Wartung, Fernwartung und Support mit Zugriff oder Zugriffsmöglichkeit auf personenbezogene Daten sind Auftragsverarbeitung; rein technische Wartung der Infrastruktur (z. B. Strom, Kühlung) ist es nicht."
      ],
-     "help": "Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich ist die weisungsgebundene Verarbeitung.",
+     "help": "Es zählt auch die bloße Möglichkeit des Zugriffs, etwa bei Fernwartung. Die rechtliche Einordnung der Dienstleister folgt unter 3.7.2. DSK, Kurzpapier Nr. 13 Auftragsverarbeitung (Stand 17.12.2018), S. 3: Wartung, Fernwartung und Support mit Zugriff oder Zugriffsmöglichkeit auf personenbezogene Daten sind Auftragsverarbeitung; rein technische Wartung der Infrastruktur (z. B. Strom, Kühlung) ist es nicht.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "3.7.1",
      "number": "3.7.1",
-     "text": "Auftragsverarbeiter:",
-     "kind": "text",
-     "target": "register:auftragsverarbeiter",
+     "text": "Dienstleister und ihre Leistungen:",
+     "kind": "tabelle",
+     "target": "register:dienstleister",
      "reference": "",
      "hints": [
-      "Name des Dienstleisters und Gegenstand des Auftrags angeben."
+      "Je Dienstleister eine Zeile; Unterauftragnehmer gesondert angeben."
      ],
-     "help": "Name des Dienstleisters und Gegenstand des Auftrags angeben.",
+     "help": "Je Dienstleister eine Zeile; Unterauftragnehmer gesondert angeben.",
      "required": true,
      "na_allowed": false,
      "justify_values": [],
+     "columns": [
+      {
+       "key": "dienstleister",
+       "title": "Dienstleister",
+       "required": true,
+       "choices": []
+      },
+      {
+       "key": "leistung",
+       "title": "Leistung",
+       "required": true,
+       "choices": []
+      },
+      {
+       "key": "daten",
+       "title": "Zugängliche Daten",
+       "required": false,
+       "choices": []
+      },
+      {
+       "key": "ort",
+       "title": "Ort der Leistungserbringung (Staat)",
+       "required": false,
+       "choices": []
+      }
+     ],
      "show_if": {
       "question": "3.7",
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "it_betrieb"
     },
     {
      "id": "3.7.2",
      "number": "3.7.2",
-     "text": "Liegt mit jedem Auftragsverarbeiter ein Vertrag nach Art. 28 Abs. 3 DSGVO vor?",
-     "kind": "ja_nein_unklar",
-     "target": "register:avv_besteht",
-     "reference": "Art. 28 Abs. 3 DSGVO",
+     "text": "Rechtliche Einordnung der Dienstleister:",
+     "kind": "tabelle",
+     "target": "register:dienstleister_einordnung",
+     "reference": "Art. 4 Nr. 8, Art. 28 DSGVO; § 57 HDSIG",
      "hints": [
-      "Ein fehlender Vertrag wird als offener Prüfpunkt geführt."
+      "Fehlt der Vertrag mit einem Auftragsverarbeiter oder ist er in Vorbereitung, wird ein offener Prüfpunkt geführt.",
+      "EDSA, Leitlinien 07/2020 zu Verantwortlichem und Auftragsverarbeiter, v2.1, Rn. 82: Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich ist die konkrete Tätigkeit, nicht die Art der Stelle.",
+      "DSK, Kurzpapier Nr. 13 Auftragsverarbeitung (Stand 17.12.2018), S. 1: Der Auftragsverarbeiter ist kein Dritter; seine Verarbeitung wird dem Verantwortlichen zugerechnet."
      ],
-     "help": "Ein fehlender Vertrag wird als offener Prüfpunkt geführt.",
+     "help": "Fehlt der Vertrag mit einem Auftragsverarbeiter oder ist er in Vorbereitung, wird ein offener Prüfpunkt geführt. EDSA, Leitlinien 07/2020 zu Verantwortlichem und Auftragsverarbeiter, v2.1, Rn. 82: Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich ist die konkrete Tätigkeit, nicht die Art der Stelle. DSK, Kurzpapier Nr. 13 Auftragsverarbeitung (Stand 17.12.2018), S. 1: Der Auftragsverarbeiter ist kein Dritter; seine Verarbeitung wird dem Verantwortlichen zugerechnet.",
      "required": true,
      "na_allowed": false,
      "justify_values": [],
+     "columns": [
+      {
+       "key": "dienstleister",
+       "title": "Dienstleister",
+       "required": true,
+       "choices": []
+      },
+      {
+       "key": "einordnung",
+       "title": "Einordnung",
+       "required": true,
+       "choices": [
+        "Auftragsverarbeiter",
+        "eigenständig Verantwortlicher",
+        "gemeinsam Verantwortlicher"
+       ]
+      },
+      {
+       "key": "vertrag",
+       "title": "Vertrag nach Art. 28 Abs. 3 DSGVO bzw. § 57 Abs. 5 HDSIG",
+       "required": true,
+       "choices": [
+        "liegt vor",
+        "in Vorbereitung",
+        "fehlt",
+        "nicht erforderlich"
+       ]
+      }
+     ],
      "show_if": {
       "question": "3.7",
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "3.8",
      "number": "3.8",
-     "text": "Werden die Zwecke und Mittel gemeinsam mit einer anderen Stelle festgelegt?",
-     "kind": "ja_nein_unklar",
-     "target": "register:gemeinsame_verantwortlichkeit",
-     "reference": "Art. 26 DSGVO",
-     "hints": [],
-     "help": "",
-     "required": true,
-     "na_allowed": false,
-     "justify_values": []
-    },
-    {
-     "id": "3.8.1",
-     "number": "3.8.1",
-     "text": "Gemeinsam Verantwortliche:",
-     "kind": "text",
-     "target": "register:gemeinsame_verantwortliche",
-     "reference": "",
-     "hints": [
-      "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu hinterlegen."
-     ],
-     "help": "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu hinterlegen.",
-     "required": true,
-     "na_allowed": false,
-     "justify_values": [],
-     "show_if": {
-      "question": "3.8",
-      "in": [
-       "ja"
-      ]
-     }
-    },
-    {
-     "id": "3.9",
-     "number": "3.9",
-     "text": "Stelle, die über die Aufnahme des Betriebs entscheidet, und weitere zu beteiligende Stellen:",
+     "text": "Stelle, die über die Aufnahme des Betriebs entscheidet:",
      "kind": "text",
      "target": "register:entscheidungsstelle",
      "reference": "",
      "hints": [
-      "Z. B. IT-Sicherheit, Organisation, gegebenenfalls Personalvertretung."
+      "Funktion angeben, z. B. „Abteilungsleitung Z“."
      ],
-     "help": "Z. B. IT-Sicherheit, Organisation, gegebenenfalls Personalvertretung.",
+     "help": "Funktion angeben, z. B. „Abteilungsleitung Z“.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
+    },
+    {
+     "id": "3.9",
+     "number": "3.9",
+     "text": "Weitere zu beteiligende Stellen:",
+     "kind": "text",
+     "target": "register:beteiligte_stellen",
+     "reference": "",
+     "hints": [
+      "Z. B. IT-Sicherheit, Organisation, Personalvertretung."
+     ],
+     "help": "Z. B. IT-Sicherheit, Organisation, Personalvertretung.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": [],
+     "role": "fachbereich"
+    },
+    {
+     "id": "3.10",
+     "number": "3.10",
+     "text": "Bestehen zu Kapitel 3 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "fachbereich"
+    },
+    {
+     "id": "3.10.1",
+     "number": "3.10.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.10",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "fachbereich"
     }
    ]
   },
@@ -605,7 +920,8 @@
      "help": "Z. B. Verfahrensbetroffene, Zeuginnen und Zeugen, Hinweisgebende, Vertretungen, Beschäftigte.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "4.2",
@@ -620,7 +936,8 @@
      "help": "Keine Beispieldatensätze aus echten Fällen eintragen.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "4.3",
@@ -633,15 +950,16 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "4.3.1",
      "number": "4.3.1",
-     "text": "Welche besonderen Kategorien, und auf welche Ausnahme stützt sich die Verarbeitung?",
+     "text": "Welche besonderen Kategorien werden verarbeitet?",
      "kind": "text",
-     "target": "register:besondere_kategorien_grundlage",
-     "reference": "Art. 9 Abs. 2 DSGVO; § 43 HDSIG",
+     "target": "register:besondere_kategorien_art",
+     "reference": "Art. 9 Abs. 1 DSGVO; § 43 HDSIG",
      "hints": [],
      "help": "",
      "required": true,
@@ -652,26 +970,67 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "fachbereich"
+    },
+    {
+     "id": "4.3.2",
+     "number": "4.3.2",
+     "text": "Vorschrift, die die Verarbeitung dieser Daten erlaubt, und vorgesehene Garantien:",
+     "kind": "text",
+     "target": "register:besondere_kategorien_grundlage",
+     "reference": "Art. 9 Abs. 2 DSGVO; § 43 HDSIG",
+     "hints": [
+      "Im Dritten Teil HDSIG ist die Verarbeitung nur zulässig, wenn sie zur Aufgabenerfüllung unbedingt erforderlich ist; § 43 Abs. 2 HDSIG nennt geeignete Garantien (z. B. Zugriffsbeschränkung, Pseudonymisierung, Verschlüsselung)."
+     ],
+     "help": "Im Dritten Teil HDSIG ist die Verarbeitung nur zulässig, wenn sie zur Aufgabenerfüllung unbedingt erforderlich ist; § 43 Abs. 2 HDSIG nennt geeignete Garantien (z. B. Zugriffsbeschränkung, Pseudonymisierung, Verschlüsselung).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "4.3",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "recht"
     },
     {
      "id": "4.4",
      "number": "4.4",
-     "text": "Werden Daten über Straftaten, Ordnungswidrigkeiten, Verdachtsmomente oder Sanktionen verarbeitet?",
+     "text": "Werden Daten über strafrechtliche Verurteilungen, Straftaten oder einen entsprechenden Verdacht verarbeitet?",
      "kind": "ja_nein_unklar",
      "target": "register:daten_art10",
-     "reference": "Art. 10 DSGVO; Dritter Teil HDSIG",
+     "reference": "Art. 10 DSGVO; § 40 HDSIG",
      "hints": [
       "Ist die Frage zu bejahen, ist die Einordnung unter 2.4 besonders sorgfältig zu prüfen."
      ],
      "help": "Ist die Frage zu bejahen, ist die Einordnung unter 2.4 besonders sorgfältig zu prüfen.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "4.5",
      "number": "4.5",
+     "text": "Werden Daten über Ordnungswidrigkeiten verarbeitet (z. B. Bußgeldverfahren)?",
+     "kind": "ja_nein_unklar",
+     "target": "register:daten_owi",
+     "reference": "§ 40 HDSIG; Art. 10 DSGVO",
+     "hints": [
+      "Dient die Verarbeitung der Verfolgung oder Ahndung von Ordnungswidrigkeiten, gilt der Dritte Teil HDSIG (§ 40 HDSIG).",
+      "Ob Daten über Ordnungswidrigkeiten außerhalb dieses Bereichs unter Art. 10 DSGVO fallen, ist nicht abschließend geklärt; der EuGH hat Strafpunkte für Verkehrsverstöße Art. 10 DSGVO zugeordnet (Urteil vom 22.06.2021, C-439/19). Die Einordnung ist mit der oder dem Datenschutzbeauftragten abzustimmen."
+     ],
+     "help": "Dient die Verarbeitung der Verfolgung oder Ahndung von Ordnungswidrigkeiten, gilt der Dritte Teil HDSIG (§ 40 HDSIG). Ob Daten über Ordnungswidrigkeiten außerhalb dieses Bereichs unter Art. 10 DSGVO fallen, ist nicht abschließend geklärt; der EuGH hat Strafpunkte für Verkehrsverstöße Art. 10 DSGVO zugeordnet (Urteil vom 22.06.2021, C-439/19). Die Einordnung ist mit der oder dem Datenschutzbeauftragten abzustimmen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "role": "fachbereich"
+    },
+    {
+     "id": "4.6",
+     "number": "4.6",
      "text": "Herkunft der Daten:",
      "kind": "text",
      "target": "register:herkunft",
@@ -682,12 +1041,13 @@
      "help": "Quelle, Aktualität und Übernahmeverfahren angeben.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
-     "id": "4.6",
-     "number": "4.6",
-     "text": "Voraussichtliche Zahl der betroffenen Personen (Schätzung):",
+     "id": "4.7",
+     "number": "4.7",
+     "text": "Voraussichtliche Zahl der betroffenen Personen je Jahr (Schätzung):",
      "kind": "zahl",
      "target": "register:anzahl_betroffene",
      "reference": "",
@@ -698,11 +1058,12 @@
      "help": "Eine Größenordnung genügt. Die Zahl fließt in die Vorprüfung zur Datenschutz-Folgenabschätzung ein (Kriterium „umfangreiche Verarbeitung“).",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
-     "id": "4.7",
-     "number": "4.7",
+     "id": "4.8",
+     "number": "4.8",
      "text": "Zeitraum und räumliche Reichweite der Verarbeitung:",
      "kind": "text",
      "target": "register:umfang",
@@ -713,11 +1074,12 @@
      "help": "Z. B. „laufende Verfahren seit 2026, landesweit“.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
-     "id": "4.8",
-     "number": "4.8",
+     "id": "4.9",
+     "number": "4.9",
      "text": "Wie werden auf Tatsachen beruhende Daten von persönlichen Einschätzungen unterschieden?",
      "kind": "text",
      "target": "register:tatsachen_trennung",
@@ -735,7 +1097,47 @@
        "hdsig_ji",
        "unklar"
       ]
-     }
+     },
+     "role": "fachbereich"
+    },
+    {
+     "id": "4.10",
+     "number": "4.10",
+     "text": "Bestehen zu Kapitel 4 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "fachbereich"
+    },
+    {
+     "id": "4.10.1",
+     "number": "4.10.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "4.10",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "fachbereich"
     }
    ]
   },
@@ -757,7 +1159,8 @@
      "help": "Einschließlich Datensicherungen und temporärer Dateien.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "5.2",
@@ -772,7 +1175,8 @@
      "help": "Administrative Zugriffe gesondert angeben.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "5.3",
@@ -782,25 +1186,31 @@
      "target": "register:kategorien_empfaenger",
      "reference": "Art. 30 Abs. 1 Satz 2 lit. d DSGVO; § 65 Abs. 1 HDSIG",
      "hints": [
-      "Interne Empfänger und Offenlegungen an andere Stellen unterscheiden."
+      "Interne Empfänger und Offenlegungen an andere Stellen unterscheiden.",
+      "EDSA, Leitlinien 07/2020 zu Verantwortlichem und Auftragsverarbeiter, v2.1, Rn. 90: Empfänger ist jede Stelle, der Daten offengelegt werden, auch ein Auftragsverarbeiter.",
+      "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.4: Auch Organisationseinheiten derselben Behörde können Empfänger sein; Zugriffsberechtigte nach Rollen oder Funktionen angeben, nicht namentlich."
      ],
-     "help": "Interne Empfänger und Offenlegungen an andere Stellen unterscheiden.",
+     "help": "Interne Empfänger und Offenlegungen an andere Stellen unterscheiden. EDSA, Leitlinien 07/2020 zu Verantwortlichem und Auftragsverarbeiter, v2.1, Rn. 90: Empfänger ist jede Stelle, der Daten offengelegt werden, auch ein Auftragsverarbeiter. DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.4: Auch Organisationseinheiten derselben Behörde können Empfänger sein; Zugriffsberechtigte nach Rollen oder Funktionen angeben, nicht namentlich.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "5.4",
      "number": "5.4",
-     "text": "Werden Daten an Stellen außerhalb der verantwortlichen Dienststelle übermittelt?",
+     "text": "Werden Daten an andere Stellen außerhalb der Dienststelle übermittelt, die sie für eigene Zwecke verwenden (z. B. andere Behörden, Gerichte)?",
      "kind": "ja_nein_unklar",
      "target": "register:uebermittlung_extern",
-     "reference": "§ 65 Abs. 1 HDSIG (Rechtsgrundlage einschließlich Übermittlungen)",
-     "hints": [],
-     "help": "",
+     "reference": "§ 65 Abs. 1 Nr. 3 und 7 HDSIG; Art. 30 Abs. 1 Satz 2 lit. d DSGVO",
+     "hints": [
+      "Die Weitergabe an Auftragsverarbeiter (3.7.2) ist keine Übermittlung in diesem Sinn und wird hier nicht erfasst."
+     ],
+     "help": "Die Weitergabe an Auftragsverarbeiter (3.7.2) ist keine Übermittlung in diesem Sinn und wird hier nicht erfasst.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "5.4.1",
@@ -821,22 +1231,26 @@
       {
        "key": "empfaenger",
        "title": "Empfänger",
-       "required": true
+       "required": true,
+       "choices": []
       },
       {
        "key": "daten",
        "title": "Datenkategorien",
-       "required": false
+       "required": false,
+       "choices": []
       },
       {
        "key": "zweck",
        "title": "Zweck",
-       "required": false
+       "required": false,
+       "choices": []
       },
       {
        "key": "rechtsgrundlage",
        "title": "Rechtsgrundlage",
-       "required": true
+       "required": true,
+       "choices": []
       }
      ],
      "show_if": {
@@ -844,7 +1258,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "5.5",
@@ -859,7 +1274,8 @@
      "help": "Auch Telemetrie und Dienste der Softwareentwicklung angeben.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "5.6",
@@ -869,12 +1285,15 @@
      "target": "register:drittlandtransfer",
      "reference": "Art. 30 Abs. 1 Satz 2 lit. e, Art. 44 bis 49 DSGVO; §§ 73 bis 76 HDSIG",
      "hints": [
-      "Die Angabe „Server in der EU“ genügt nicht, wenn Support- oder Wartungszugriffe aus einem Drittland möglich sind."
+      "Die Angabe „Server in der EU“ genügt nicht, wenn Support- oder Wartungszugriffe aus einem Drittland möglich sind.",
+      "EDSA, Leitlinien 05/2021 zu Art. 3 und Kapitel V DSGVO, v2.0, Beispiel 11: Ein Fernzugriff aus einem Drittland ist eine Übermittlung, auch wenn Daten nur angezeigt werden (z. B. Support).",
+      "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.4: Zum Drittlandbezug ist stets eine Aussage zu treffen, auch „keine Übermittlung vorgesehen“."
      ],
-     "help": "Die Angabe „Server in der EU“ genügt nicht, wenn Support- oder Wartungszugriffe aus einem Drittland möglich sind.",
+     "help": "Die Angabe „Server in der EU“ genügt nicht, wenn Support- oder Wartungszugriffe aus einem Drittland möglich sind. EDSA, Leitlinien 05/2021 zu Art. 3 und Kapitel V DSGVO, v2.0, Beispiel 11: Ein Fernzugriff aus einem Drittland ist eine Übermittlung, auch wenn Daten nur angezeigt werden (z. B. Support). DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.4: Zum Drittlandbezug ist stets eine Aussage zu treffen, auch „keine Übermittlung vorgesehen“.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "5.6.1",
@@ -895,7 +1314,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "it_betrieb"
     },
     {
      "id": "5.6.2",
@@ -914,7 +1334,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "5.7",
@@ -929,7 +1350,47 @@
      "help": "Bezeichnung, Datum und Ablageort angeben; die Dokumente selbst werden als Nachweis hinterlegt.",
      "required": false,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
+    },
+    {
+     "id": "5.8",
+     "number": "5.8",
+     "text": "Bestehen zu Kapitel 5 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "it_betrieb"
+    },
+    {
+     "id": "5.8.1",
+     "number": "5.8.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "5.8",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "it_betrieb"
     }
    ]
   },
@@ -941,43 +1402,51 @@
     {
      "id": "6.1",
      "number": "6.1",
-     "text": "Kann für jede Datenkategorie eine Lösch- oder Überprüfungsfrist angegeben werden?",
-     "kind": "ja_nein_unklar",
-     "target": "register:frist_bestimmt",
-     "reference": "Art. 5 Abs. 1 lit. e, Art. 30 Abs. 1 Satz 2 lit. f DSGVO; § 65 Abs. 1 HDSIG",
+     "text": "Lösch- oder Überprüfungsfristen je Datenkategorie:",
+     "kind": "tabelle",
+     "target": "register:speicherdauer",
+     "reference": "Art. 5 Abs. 1 lit. e, Art. 30 Abs. 1 Satz 2 lit. f DSGVO; § 65 Abs. 1 Nr. 8, § 70 Abs. 4 HDSIG",
      "hints": [
-      "Das Gesetz verlangt die Angabe „wenn möglich“. Ohne konkrete Frist sind Begründung und Prüfstelle anzugeben; der Punkt bleibt als offene Aufgabe bestehen."
+      "Je Datenkategorie eine Zeile, z. B. „Verfahrensakte: 5 Jahre nach rechtskräftigem Abschluss“.",
+      "Das Gesetz verlangt die Angabe „wenn möglich“. Fehlt die Frist, sind Begründung und klärende Stelle anzugeben; die Zeile bleibt als offene Aufgabe bestehen.",
+      "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.6: Ein allgemeiner Verweis auf Aufbewahrungspflichten genügt nicht; die Fristen sind je Datenkategorie präzise anzugeben."
      ],
-     "help": "Das Gesetz verlangt die Angabe „wenn möglich“. Ohne konkrete Frist sind Begründung und Prüfstelle anzugeben; der Punkt bleibt als offene Aufgabe bestehen.",
+     "help": "Je Datenkategorie eine Zeile, z. B. „Verfahrensakte: 5 Jahre nach rechtskräftigem Abschluss“. Das Gesetz verlangt die Angabe „wenn möglich“. Fehlt die Frist, sind Begründung und klärende Stelle anzugeben; die Zeile bleibt als offene Aufgabe bestehen. DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.6: Ein allgemeiner Verweis auf Aufbewahrungspflichten genügt nicht; die Fristen sind je Datenkategorie präzise anzugeben.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "columns": [
+      {
+       "key": "kategorie",
+       "title": "Datenkategorie",
+       "required": true,
+       "choices": []
+      },
+      {
+       "key": "frist",
+       "title": "Frist und auslösendes Ereignis",
+       "required": false,
+       "choices": []
+      },
+      {
+       "key": "begruendung",
+       "title": "Begründung, falls noch keine Frist",
+       "required": false,
+       "choices": []
+      },
+      {
+       "key": "pruefstelle",
+       "title": "Stelle, die die Frist klärt",
+       "required": false,
+       "choices": []
+      }
+     ],
+     "role": "fachbereich"
     },
     {
      "id": "6.1.1",
      "number": "6.1.1",
-     "text": "Fristen je Datenkategorie und auslösendes Ereignis:",
-     "kind": "text",
-     "target": "register:speicherdauer",
-     "reference": "",
-     "hints": [
-      "Je Datenkategorie Frist und auslösendes Ereignis angeben (z. B. „Verfahrensakte: 5 Jahre nach rechtskräftigem Abschluss“)."
-     ],
-     "help": "Je Datenkategorie Frist und auslösendes Ereignis angeben (z. B. „Verfahrensakte: 5 Jahre nach rechtskräftigem Abschluss“).",
-     "required": true,
-     "na_allowed": false,
-     "justify_values": [],
-     "show_if": {
-      "question": "6.1",
-      "in": [
-       "ja"
-      ]
-     }
-    },
-    {
-     "id": "6.1.2",
-     "number": "6.1.2",
-     "text": "Grundlage der Fristen:",
+     "text": "Vorschriften oder Regelungen, aus denen sich die Fristen ergeben:",
      "kind": "text",
      "target": "register:loeschfrist_rechtsgrundlage",
      "reference": "",
@@ -988,54 +1457,7 @@
      "required": true,
      "na_allowed": false,
      "justify_values": [],
-     "show_if": {
-      "question": "6.1",
-      "in": [
-       "ja"
-      ]
-     }
-    },
-    {
-     "id": "6.1.3",
-     "number": "6.1.3",
-     "text": "Begründung, warum noch keine Frist angegeben werden kann:",
-     "kind": "text",
-     "target": "register:speicherdauer_begruendung",
-     "reference": "",
-     "hints": [
-      "Die Begründung macht nachvollziehbar, warum die Frist noch offen ist."
-     ],
-     "help": "Die Begründung macht nachvollziehbar, warum die Frist noch offen ist.",
-     "required": true,
-     "na_allowed": false,
-     "justify_values": [],
-     "show_if": {
-      "question": "6.1",
-      "in": [
-       "nein"
-      ]
-     }
-    },
-    {
-     "id": "6.1.4",
-     "number": "6.1.4",
-     "text": "Stelle, die die Frist klärt:",
-     "kind": "text",
-     "target": "register:speicherdauer_pruefstelle",
-     "reference": "",
-     "hints": [
-      "Der Punkt bleibt als offene Aufgabe bestehen, bis die Frist feststeht."
-     ],
-     "help": "Der Punkt bleibt als offene Aufgabe bestehen, bis die Frist feststeht.",
-     "required": true,
-     "na_allowed": false,
-     "justify_values": [],
-     "show_if": {
-      "question": "6.1",
-      "in": [
-       "nein"
-      ]
-     }
+     "role": "recht"
     },
     {
      "id": "6.2",
@@ -1050,7 +1472,8 @@
      "help": "Konflikte zwischen Löschung und Aufbewahrung sowie die Übergabe an das Archiv angeben.",
      "required": false,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "6.3",
@@ -1063,7 +1486,8 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "6.4",
@@ -1072,11 +1496,14 @@
      "kind": "text",
      "target": "register:information",
      "reference": "Art. 13, 14 DSGVO; §§ 50 ff. HDSIG",
-     "hints": [],
-     "help": "",
+     "hints": [
+      "DSK, Kurzpapier Nr. 10 Informationspflichten (Stand 16.01.2018), S. 3: Bei Erhebung bei der betroffenen Person ist zum Zeitpunkt der Erhebung zu informieren, sonst innerhalb angemessener Frist, höchstens eines Monats."
+     ],
+     "help": "DSK, Kurzpapier Nr. 10 Informationspflichten (Stand 16.01.2018), S. 3: Bei Erhebung bei der betroffenen Person ist zum Zeitpunkt der Erhebung zu informieren, sonst innerhalb angemessener Frist, höchstens eines Monats.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "6.5",
@@ -1085,11 +1512,14 @@
      "kind": "text",
      "target": "register:betroffenenrechte",
      "reference": "Art. 12, 15 bis 18 DSGVO; §§ 50 bis 54 HDSIG",
-     "hints": [],
-     "help": "",
+     "hints": [
+      "EDSA, Leitlinien 01/2022 zum Auskunftsrecht, v2.1, Zusammenfassung: Auskunft unverzüglich, spätestens binnen eines Monats; Verlängerung um zwei Monate nur mit Begründung gegenüber der betroffenen Person."
+     ],
+     "help": "EDSA, Leitlinien 01/2022 zum Auskunftsrecht, v2.1, Zusammenfassung: Auskunft unverzüglich, spätestens binnen eines Monats; Verlängerung um zwei Monate nur mit Begründung gegenüber der betroffenen Person.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "6.6",
@@ -1097,12 +1527,13 @@
      "text": "Sollen Rechte der betroffenen Personen beschränkt werden?",
      "kind": "ja_nein_unklar",
      "target": "register:beschraenkung",
-     "reference": "Art. 23 DSGVO; § 70 HDSIG",
+     "reference": "Art. 23 DSGVO mit den Vorschriften des Zweiten Teils HDSIG; §§ 51, 52 HDSIG",
      "hints": [],
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "6.6.1",
@@ -1112,9 +1543,10 @@
      "target": "register:beschraenkungen",
      "reference": "",
      "hints": [
-      "Eine pauschale Beschränkung (z. B. „Ordnungswidrigkeitenverfahren: keine Auskunft“) genügt nicht."
+      "Eine pauschale Beschränkung (z. B. „Ordnungswidrigkeitenverfahren: keine Auskunft“) genügt nicht.",
+      "Im Dritten Teil HDSIG sind die Gründe für ein Absehen von der Auskunft zu dokumentieren (§ 52 Abs. 8 HDSIG); über das Absehen von der Benachrichtigung entscheidet die Leitung (§ 51 HDSIG)."
      ],
-     "help": "Eine pauschale Beschränkung (z. B. „Ordnungswidrigkeitenverfahren: keine Auskunft“) genügt nicht.",
+     "help": "Eine pauschale Beschränkung (z. B. „Ordnungswidrigkeitenverfahren: keine Auskunft“) genügt nicht. Im Dritten Teil HDSIG sind die Gründe für ein Absehen von der Auskunft zu dokumentieren (§ 52 Abs. 8 HDSIG); über das Absehen von der Benachrichtigung entscheidet die Leitung (§ 51 HDSIG).",
      "required": true,
      "na_allowed": false,
      "justify_values": [],
@@ -1123,7 +1555,47 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
+    },
+    {
+     "id": "6.7",
+     "number": "6.7",
+     "text": "Bestehen zu Kapitel 6 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "fachbereich"
+    },
+    {
+     "id": "6.7.1",
+     "number": "6.7.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "6.7",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "fachbereich"
     }
    ]
   },
@@ -1145,7 +1617,8 @@
      "help": "Schäden aus Sicht der betroffenen Personen beschreiben, nicht aus Sicht der Dienststelle.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "7.2",
@@ -1158,7 +1631,8 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "7.3",
@@ -1168,12 +1642,14 @@
      "target": "register:tom_bestimmt",
      "reference": "Art. 30 Abs. 1 Satz 2 lit. g, Art. 32 Abs. 1 DSGVO; § 59 HDSIG",
      "hints": [
-      "Auch diese Angabe verlangt das Gesetz „wenn möglich“."
+      "Auch diese Angabe verlangt das Gesetz „wenn möglich“.",
+      "DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.7: Trotz „wenn möglich“ ist die allgemeine Beschreibung der Regelfall; die vollständige Darstellung gehört in das Sicherheitskonzept (z. B. nach Standard-Datenschutzmodell oder BSI-IT-Grundschutz)."
      ],
-     "help": "Auch diese Angabe verlangt das Gesetz „wenn möglich“.",
+     "help": "Auch diese Angabe verlangt das Gesetz „wenn möglich“. DSK, Hinweise zum Verzeichnis von Verarbeitungstätigkeiten (Stand 02/2018), Abschn. 6.7: Trotz „wenn möglich“ ist die allgemeine Beschreibung der Regelfall; die vollständige Darstellung gehört in das Sicherheitskonzept (z. B. nach Standard-Datenschutzmodell oder BSI-IT-Grundschutz).",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "7.3.1",
@@ -1194,7 +1670,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "it_betrieb"
     },
     {
      "id": "7.3.2",
@@ -1215,7 +1692,8 @@
       "in": [
        "nein"
       ]
-     }
+     },
+     "role": "it_betrieb"
     },
     {
      "id": "7.3.3",
@@ -1236,7 +1714,8 @@
       "in": [
        "nein"
       ]
-     }
+     },
+     "role": "it_betrieb"
     },
     {
      "id": "7.4",
@@ -1252,7 +1731,8 @@
      "help": "Im Dritten Teil HDSIG sind insbesondere Erhebung, Veränderung, Abfrage, Offenlegung, Kombination und Löschung zu protokollieren. Die Änderungshistorie des Verzeichnisses ersetzt diese Protokollierung nicht.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "7.5",
@@ -1265,36 +1745,64 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "7.6",
      "number": "7.6",
-     "text": "Umsetzungsstand der Schutzmaßnahmen insgesamt:",
-     "kind": "umsetzung",
-     "target": "register:massnahmen_stand",
-     "reference": "",
+     "text": "Stelle, die Verletzungen des Schutzes personenbezogener Daten bewertet und die erforderlichen Meldungen veranlasst:",
+     "kind": "text",
+     "target": "register:vorfallmeldung",
+     "reference": "Art. 33, 34 DSGVO; § 60 HDSIG",
      "hints": [
-      "Der Stand je Maßnahme wird in der Maßnahmenliste geführt.",
-      "Geplante Maßnahmen gelten nicht als wirksam."
+      "EDSA, Leitlinien 9/2022 zur Meldung von Datenschutzverletzungen, v2.0, Rn. 31: Die 72-Stunden-Frist beginnt, sobald mit hinreichender Sicherheit feststeht, dass personenbezogene Daten betroffen sind; auch nicht meldepflichtige Verletzungen sind zu dokumentieren.",
+      "HBDI, Meldung von Datenschutzpannen bei der Polizei (Stand 31.03.2023): Die Meldepflicht nach § 60 HDSIG trifft auch Bußgeldstellen und Kommunen bei der Verfolgung von Ordnungswidrigkeiten."
      ],
-     "help": "Der Stand je Maßnahme wird in der Maßnahmenliste geführt. Geplante Maßnahmen gelten nicht als wirksam.",
+     "help": "EDSA, Leitlinien 9/2022 zur Meldung von Datenschutzverletzungen, v2.0, Rn. 31: Die 72-Stunden-Frist beginnt, sobald mit hinreichender Sicherheit feststeht, dass personenbezogene Daten betroffen sind; auch nicht meldepflichtige Verletzungen sind zu dokumentieren. HBDI, Meldung von Datenschutzpannen bei der Polizei (Stand 31.03.2023): Die Meldepflicht nach § 60 HDSIG trifft auch Bußgeldstellen und Kommunen bei der Verfolgung von Ordnungswidrigkeiten.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "7.7",
      "number": "7.7",
-     "text": "Stelle, die Verletzungen des Schutzes personenbezogener Daten bewertet und die erforderlichen Meldungen veranlasst:",
+     "text": "Bestehen zu Kapitel 7 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "it_betrieb"
+    },
+    {
+     "id": "7.7.1",
+     "number": "7.7.1",
+     "text": "Offene Punkte und zuständige Stelle:",
      "kind": "text",
-     "target": "register:vorfallmeldung",
-     "reference": "Art. 33, 34 DSGVO",
+     "target": "",
+     "reference": "",
      "hints": [],
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "show_if": {
+      "question": "7.7",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "it_betrieb"
     }
    ]
   },
@@ -1311,34 +1819,36 @@
      "target": "register:testdaten",
      "reference": "Erwägungsgrund 26 DSGVO",
      "hints": [
-      "Pseudonymisierte Daten sind personenbezogene Daten; sie gelten nicht als anonym."
+      "Pseudonymisierte Daten sind personenbezogene Daten; sie gelten nicht als anonym.",
+      "EDSA, Leitlinien 01/2025 zur Pseudonymisierung (Konsultationsfassung), Rn. 22: Pseudonymisierte Daten bleiben personenbezogen, auch wenn die Zuordnungsinformationen bei einer anderen Stelle liegen."
      ],
-     "help": "Pseudonymisierte Daten sind personenbezogene Daten; sie gelten nicht als anonym.",
+     "help": "Pseudonymisierte Daten sind personenbezogene Daten; sie gelten nicht als anonym. EDSA, Leitlinien 01/2025 zur Pseudonymisierung (Konsultationsfassung), Rn. 22: Pseudonymisierte Daten bleiben personenbezogen, auch wenn die Zuordnungsinformationen bei einer anderen Stelle liegen.",
      "required": true,
      "na_allowed": false,
      "justify_values": [],
      "choices": [
       {
+       "key": "keine",
+       "title": "keine Testdaten"
+      },
+      {
        "key": "synthetisch",
-       "title": "synthetisch"
+       "title": "ausschließlich synthetische Daten"
       },
       {
        "key": "anonymisiert",
-       "title": "anonymisiert"
+       "title": "anonymisierte Daten"
       },
       {
        "key": "pseudonymisiert",
-       "title": "pseudonymisiert"
+       "title": "pseudonymisierte Daten (personenbezogen)"
       },
       {
        "key": "echt",
-       "title": "echte Daten"
-      },
-      {
-       "key": "keine",
-       "title": "keine Testdaten"
+       "title": "Echtdaten (personenbezogen)"
       }
-     ]
+     ],
+     "role": "it_betrieb"
     },
     {
      "id": "8.2",
@@ -1353,7 +1863,8 @@
      "help": "Insbesondere Zugänge, Schnittstellen, Datensicherungen und Protokolle.",
      "required": false,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "8.3",
@@ -1391,7 +1902,8 @@
        "key": "mehrere",
        "title": "in mehreren der genannten Bereiche"
       }
-     ]
+     ],
+     "role": "it_betrieb"
     },
     {
      "id": "8.3.1",
@@ -1415,7 +1927,8 @@
        "bewertung",
        "mehrere"
       ]
-     }
+     },
+     "role": "it_betrieb"
     },
     {
      "id": "8.4",
@@ -1427,12 +1940,14 @@
      "hints": [
       "Profiling liegt vor, wenn persönliche Aspekte einer Person automatisiert bewertet werden, insbesondere um Verhalten, Zuverlässigkeit oder Leistung zu analysieren oder vorherzusagen.",
       "Eine Sortierung von Vorgängen ohne Bewertung der Person ist kein Profiling.",
-      "Im Profil Dritter Teil HDSIG ist die Angabe Pflicht."
+      "Im Profil Dritter Teil HDSIG ist die Angabe Pflicht.",
+      "Art.-29-Gruppe, WP251 rev.01 (vom EDSA bestätigt), Abschn. II.A und II.B: Profiling setzt eine automatisierte Bewertung persönlicher Aspekte voraus; eine ausschließlich automatisierte Entscheidung ergeht ohne menschliche Beteiligung und ist davon zu unterscheiden."
      ],
-     "help": "Profiling liegt vor, wenn persönliche Aspekte einer Person automatisiert bewertet werden, insbesondere um Verhalten, Zuverlässigkeit oder Leistung zu analysieren oder vorherzusagen. Eine Sortierung von Vorgängen ohne Bewertung der Person ist kein Profiling. Im Profil Dritter Teil HDSIG ist die Angabe Pflicht.",
+     "help": "Profiling liegt vor, wenn persönliche Aspekte einer Person automatisiert bewertet werden, insbesondere um Verhalten, Zuverlässigkeit oder Leistung zu analysieren oder vorherzusagen. Eine Sortierung von Vorgängen ohne Bewertung der Person ist kein Profiling. Im Profil Dritter Teil HDSIG ist die Angabe Pflicht. Art.-29-Gruppe, WP251 rev.01 (vom EDSA bestätigt), Abschn. II.A und II.B: Profiling setzt eine automatisierte Bewertung persönlicher Aspekte voraus; eine ausschließlich automatisierte Entscheidung ergeht ohne menschliche Beteiligung und ist davon zu unterscheiden.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "8.4.1",
@@ -1453,7 +1968,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "fachbereich"
     },
     {
      "id": "8.5",
@@ -1468,7 +1984,8 @@
      "help": "Veröffentlichter Quellcode ist nicht per se datenschutzwidrig; Konfigurationen, Verfahrensunterlagen und Metadaten der Versionsverwaltung sind gesondert zu prüfen.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "it_betrieb"
     },
     {
      "id": "8.5.1",
@@ -1489,7 +2006,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "it_betrieb"
     },
     {
      "id": "8.5.2",
@@ -1510,44 +2028,111 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "it_betrieb"
+    },
+    {
+     "id": "8.6",
+     "number": "8.6",
+     "text": "Bestehen zu Kapitel 8 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "it_betrieb"
+    },
+    {
+     "id": "8.6.1",
+     "number": "8.6.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "8.6",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "it_betrieb"
     }
    ]
   },
   {
    "id": "W09",
    "title": "9 Vorprüfung zur Datenschutz-Folgenabschätzung",
-   "goal": "Begründete Vorprüfung nach Art. 35 DSGVO bzw. § 62 HDSIG. Die Kriterien 9.2 stammen aus dem gewählten Regelprofil.",
+   "goal": "Begründete Vorprüfung nach Art. 35 DSGVO bzw. § 62 HDSIG. Die Kriterien 9.1.x stammen aus dem gewählten Regelprofil.",
    "questions": [
     {
-     "id": "9.1",
-     "number": "9.1",
-     "text": "Einschlägige gesetzliche oder aufsichtsbehördliche Fallgruppe:",
-     "kind": "text",
-     "target": "register:dsfa_fallgruppe",
-     "reference": "Art. 35 Abs. 3 und 4 DSGVO; § 62 Abs. 1 HDSIG",
-     "hints": [
-      "„Noch nicht geprüft“ ist eine zulässige Angabe."
-     ],
-     "help": "„Noch nicht geprüft“ ist eine zulässige Angabe.",
-     "required": false,
-     "na_allowed": false,
-     "justify_values": []
-    },
-    {
-     "id": "9.3",
-     "number": "9.3",
+     "id": "9.2",
+     "number": "9.2",
      "text": "Bezug auf eine bestehende Folgenabschätzung oder eine einschlägige Ausnahme:",
      "kind": "text",
      "target": "register:dsfa_bezug",
      "reference": "",
      "hints": [
-      "Fundstelle, Reichweite und Abweichungen angeben."
+      "Fundstelle, Reichweite und Abweichungen angeben.",
+      "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+      "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
      ],
-     "help": "Fundstelle, Reichweite und Abweichungen angeben.",
+     "help": "Fundstelle, Reichweite und Abweichungen angeben. Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
      "required": false,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
+    },
+    {
+     "id": "9.3",
+     "number": "9.3",
+     "text": "Bestehen zu Kapitel 9 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "9.3.1",
+     "number": "9.3.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "9.3",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "recht"
     }
    ]
   },
@@ -1574,7 +2159,8 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
      "id": "10.2",
@@ -1587,7 +2173,8 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "10.3",
@@ -1600,7 +2187,8 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "10.4",
@@ -1610,12 +2198,14 @@
      "target": "assessment:data_subject_view",
      "reference": "Art. 35 Abs. 9 DSGVO",
      "hints": [
-      "Wurde kein Standpunkt eingeholt, sind die Gründe anzugeben."
+      "Wurde kein Standpunkt eingeholt, sind die Gründe anzugeben.",
+      "DSK, Kurzpapier Nr. 5 Datenschutz-Folgenabschätzung (Stand 17.12.2018), S. 1–3: Der Standpunkt der Betroffenen kann z. B. über Gremien der Mitbestimmung eingeholt werden; die oder der Datenschutzbeauftragte berät."
      ],
-     "help": "Wurde kein Standpunkt eingeholt, sind die Gründe anzugeben.",
+     "help": "Wurde kein Standpunkt eingeholt, sind die Gründe anzugeben. DSK, Kurzpapier Nr. 5 Datenschutz-Folgenabschätzung (Stand 17.12.2018), S. 1–3: Der Standpunkt der Betroffenen kann z. B. über Gremien der Mitbestimmung eingeholt werden; die oder der Datenschutzbeauftragte berät.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "10.5",
@@ -1628,7 +2218,47 @@
      "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
+    },
+    {
+     "id": "10.6",
+     "number": "10.6",
+     "text": "Bestehen zu Kapitel 10 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "10.6.1",
+     "number": "10.6.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "10.6",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "recht"
     }
    ]
   },
@@ -1650,13 +2280,14 @@
      "help": "Ob eine Konsultation erforderlich ist, ergibt sich aus der Bewertung (Status „Konsultation“).",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "recht"
     },
     {
      "id": "11.1.1",
      "number": "11.1.1",
      "text": "Datum der Einleitung der Konsultation:",
-     "kind": "text",
+     "kind": "datum",
      "target": "register:konsultation_eingeleitet_am",
      "reference": "",
      "hints": [
@@ -1671,7 +2302,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "11.1.2",
@@ -1692,7 +2324,8 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "11.1.3",
@@ -1713,22 +2346,100 @@
       "in": [
        "ja"
       ]
-     }
+     },
+     "role": "recht"
     },
     {
      "id": "11.2",
      "number": "11.2",
-     "text": "Sind fachliche Einwände, widersprüchliche Angaben und fehlende Nachweise geklärt?",
+     "text": "Sind alle fachlichen Einwände geklärt?",
      "kind": "ja_nein_unklar",
      "target": "register:einwaende_geklaert",
      "reference": "",
-     "hints": [
-      "Offene Punkte werden in der Prüfliste geführt."
-     ],
-     "help": "Offene Punkte werden in der Prüfliste geführt.",
+     "hints": [],
+     "help": "",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "task_if": [
+      "nein"
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "11.3",
+     "number": "11.3",
+     "text": "Sind widersprüchliche Angaben bereinigt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:widersprueche_geklaert",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "nein"
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "11.4",
+     "number": "11.4",
+     "text": "Liegen alle erforderlichen Nachweise vor?",
+     "kind": "ja_nein_unklar",
+     "target": "register:nachweise_vollstaendig",
+     "reference": "",
+     "hints": [
+      "Fehlende Nachweise werden in der Prüfliste geführt."
+     ],
+     "help": "Fehlende Nachweise werden in der Prüfliste geführt.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "nein"
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "11.5",
+     "number": "11.5",
+     "text": "Bestehen zu Kapitel 11 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "recht"
+    },
+    {
+     "id": "11.5.1",
+     "number": "11.5.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "11.5",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "recht"
     }
    ]
   },
@@ -1740,7 +2451,24 @@
     {
      "id": "12.1",
      "number": "12.1",
-     "text": "Sind die Angaben vollständig, aktuell und von der fachlich zuständigen Stelle bestätigt?",
+     "text": "Sind die Angaben vollständig und aktuell?",
+     "kind": "ja_nein_unklar",
+     "target": "register:angaben_vollstaendig",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "nein"
+     ],
+     "role": "fachbereich"
+    },
+    {
+     "id": "12.2",
+     "number": "12.2",
+     "text": "Hat die fachlich zuständige Stelle die Angaben bestätigt?",
      "kind": "ja_nein_unklar",
      "target": "register:angaben_bestaetigt",
      "reference": "",
@@ -1750,14 +2478,32 @@
      "help": "Mit der Beantwortung wird der Bearbeitungsstand dokumentiert; die Freigabe erfolgt gesondert im Vier-Augen-Prinzip.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "task_if": [
+      "nein"
+     ],
+     "role": "fachbereich"
     },
     {
-     "id": "12.2",
-     "number": "12.2",
-     "text": "Stelle, die Verzeichnis, Folgenabschätzung, Verträge und Maßnahmen im Betrieb aktuell hält, und ihre Vertretung:",
+     "id": "12.3",
+     "number": "12.3",
+     "text": "Stelle, die Verzeichnis, Folgenabschätzung, Verträge und Maßnahmen im Betrieb aktuell hält:",
      "kind": "text",
      "target": "register:pflege_zustaendigkeit",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "role": "fachbereich"
+    },
+    {
+     "id": "12.4",
+     "number": "12.4",
+     "text": "Vertretung dieser Stelle:",
+     "kind": "text",
+     "target": "register:pflege_vertretung",
      "reference": "",
      "hints": [
       "Die Zuständigkeit darf nicht an eine einzelne Person ohne Vertretung gebunden sein."
@@ -1765,11 +2511,12 @@
      "help": "Die Zuständigkeit darf nicht an eine einzelne Person ohne Vertretung gebunden sein.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
     },
     {
-     "id": "12.3",
-     "number": "12.3",
+     "id": "12.5",
+     "number": "12.5",
      "text": "Verfahren bei Änderungen, Störungen, Außerbetriebnahme und Aufbewahrung der Dokumentation:",
      "kind": "text",
      "target": "register:lebenszyklus",
@@ -1780,7 +2527,47 @@
      "help": "Relevante Änderungen (neuer Zweck, neuer Empfänger, neue Technik) lösen eine erneute Prüfung aus; eine frühere Freigabe gilt nicht weiter.",
      "required": true,
      "na_allowed": false,
-     "justify_values": []
+     "justify_values": [],
+     "role": "fachbereich"
+    },
+    {
+     "id": "12.6",
+     "number": "12.6",
+     "text": "Bestehen zu Kapitel 12 noch offene Punkte?",
+     "kind": "ja_nein_unklar",
+     "target": "",
+     "reference": "",
+     "hints": [
+      "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind."
+     ],
+     "help": "Offene Punkte bleiben als Aufgabe bestehen, bis sie erledigt sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "task_if": [
+      "ja"
+     ],
+     "role": "fachbereich"
+    },
+    {
+     "id": "12.6.1",
+     "number": "12.6.1",
+     "text": "Offene Punkte und zuständige Stelle:",
+     "kind": "text",
+     "target": "",
+     "reference": "",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "12.6",
+      "in": [
+       "ja"
+      ]
+     },
+     "role": "fachbereich"
     }
    ]
   }

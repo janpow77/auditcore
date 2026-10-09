@@ -1,7 +1,7 @@
 # Abgleich mit dem Prüfkatalog VVT/DSFA
 
 Stand: 08.10.2026, Paketversion 0.6.0, Profile `auditcore.dsgvo` und `auditcore.hdsig_ji` 2026.10.4,
-Fragenkatalog `wizard-2026.10.2`, Checkliste `checklist-2026.10.1`.
+Fragenkatalog `wizard-2026.10.3`, Checkliste `checklist-2026.10.1`.
 
 Grundlage ist der Prüfkatalog für eine Python-Bibliothek zu VVT und DSFA. Er ist eine
 Arbeitsgrundlage und weder eine Codeprüfung noch eine Freigabe. Die Befunde unten betreffen nur
@@ -81,7 +81,7 @@ Abnahmetests liegen in `tests/test_pruefkatalog_*.py`, die Oberflächentests in
 
 | ID | Befund | Umsetzung, Grenze |
 |---|---|---|
-| GUI-01 | erfüllt | Jede Frage hat Hinweise als Aufzählung und, wo einschlägig, eine Fundstelle (Katalog 2026.10.2, Test `test_katalog_ist_ein_nummerierter_baum_mit_fundstellen`). Die Fundstellen sind vor der Freigabe gegen die amtlichen Fassungen zu prüfen. |
+| GUI-01 | erfüllt | Jede Frage hat Hinweise als Aufzählung, eine zuständige Stelle und, wo einschlägig, eine Fundstelle (Katalog 2026.10.3, Tests `test_katalog_ist_ein_nummerierter_baum_mit_fundstellen`, `test_jede_frage_nennt_eine_zustaendige_stelle`). HDSIG-Fundstellen sind am Gesetzeswortlaut geprüft; Auslegungshinweise nennen die Leitlinie von EDSA, DSK oder HBDI mit Randnummer bzw. Seite (`sources` im Katalog). Nicht amtlich belegt und deshalb als offen gekennzeichnet: Einordnung von Ordnungswidrigkeiten unter Art. 10 DSGVO (4.5). |
 | GUI-02 | erfüllt | keine Vorbelegung kritischer Fragen |
 | GUI-03 | erfüllt | bedingte Fragen; Antworten zu ausgeblendeten Fragen wirken nicht mehr und werden angezeigt |
 | GUI-04 | erfüllt | „Unklar“ wird Aufgabe |

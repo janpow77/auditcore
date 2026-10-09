@@ -8,6 +8,8 @@ export const fresh = fixture.fresh as unknown as WorkspaceOverview
 export const suggested = fixture.suggested as unknown as WorkspaceOverview
 export const free = fixture.free as unknown as WorkspaceOverview
 export const table = fixture.table as unknown as WorkspaceOverview
+export const providers = fixture.providers as unknown as WorkspaceOverview
+export const consultation = fixture.consultation as unknown as WorkspaceOverview
 
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T

@@ -87,6 +87,9 @@
 .fa-assistant__question--depth-1 { margin-left: 1.5rem; border-left: 3px solid var(--fa-color-accent); }
 .fa-assistant__question--depth-2 { margin-left: 3rem; border-left: 3px solid var(--fa-color-accent); }
 .fa-assistant__number { font-variant-numeric: tabular-nums; margin-right: var(--fa-space-1); }
+.fa-assistant__role { display: inline-block; margin-left: var(--fa-space-1); border-radius: var(--fa-radius-sm); padding: 0 var(--fa-space-1); font-size: var(--fa-font-size-xs); background: var(--fa-color-surface-sunken); }
+.fa-assistant__role--it_betrieb { background: var(--fa-color-accent-soft); }
+.fa-assistant__role--recht { background: var(--fa-color-warning-soft); }
 .fa-assistant__hints ul { margin: var(--fa-space-1) 0; padding-left: 1.2rem; }
 .fa-assistant__table { width: 100%; border-collapse: collapse; margin: var(--fa-space-2) 0; }
 .fa-assistant__table th, .fa-assistant__table td { border: 1px solid var(--fa-color-border); padding: var(--fa-space-1); text-align: left; }

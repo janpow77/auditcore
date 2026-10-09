@@ -55,8 +55,8 @@ def _revision(world: Kat) -> int | None:
 
 
 YES = {
-    "1.7", "3.7", "3.7.2", "5.4", "6.1", "7.3", "W09:gesamt_01_sonstiges_hohes_risiko",
-    "11.2", "12.1",
+    "1.7", "3.7", "5.4", "7.3", "W09:gesamt_01_sonstiges_hohes_risiko",
+    "11.2", "11.3", "11.4", "12.1", "12.2",
 }  # fmt: skip
 
 
@@ -67,8 +67,13 @@ def _value(question: dict[str, Any]) -> str:
         return TEXT
     if question["kind"] == "zahl":
         return "1200"
+    if question["kind"] == "datum":
+        return "2026-10-01"
     if question["kind"] == "tabelle":
-        row = {c["key"]: f"{c['title']} (synthetisch)" for c in question["columns"]}
+        row = {
+            c["key"]: c["choices"][0] if c["choices"] else f"{c['title']} (synthetisch)"
+            for c in question["columns"]
+        }
         return json.dumps([row], ensure_ascii=False)
     if question["choices"]:
         preferred = {"verantwortlicher", "hdsig_ji", "produktion", "synthetisch", "keine"}
