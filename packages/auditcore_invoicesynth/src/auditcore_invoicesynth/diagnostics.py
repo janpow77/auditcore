@@ -1,4 +1,4 @@
-"""Diagnosesätze (nur Bewertung, nie Training): T2-gemischt und T2b.
+"""Diagnosesätze (nur Bewertung, nie Training): T2-gemischt, T2b und T2c.
 
 * ``test_layout_holdout_shuffled`` (T2-gemischt): Vorlagen und Schrift des
   Layout-Holdouts T2, aber Kopfdaten-Reihenfolge je Beleg gemischt und
@@ -7,6 +7,10 @@
   Positionen liest.
 * ``test_layout_holdout_b`` (T2b): eigene Vorlage ``holdout_b_tabelle`` und
   eigene Schrift ``URW Gothic``, beide in keinem anderen Satz.
+* ``test_layout_holdout_c`` (T2c): zwei eigene Vorlagen (``holdout_c_brief``,
+  ``holdout_c_balken``) und eigene Schrift ``C059``, in keinem anderen Satz.
+  Versiegelter Unbekannt-Test: T2/T2b gelten ab Stufe 7 als bekannt, T2c wird
+  erst zur Abschlussbewertung von Stufe 7 angesehen.
 
 ``build_diagnostics`` schreibt nur diese Sätze in ein eigenes Verzeichnis mit
 eigenem Manifest im Format der übrigen Datensätze; ``verify`` und
@@ -24,14 +28,19 @@ from pathlib import Path
 from auditcore_common.hashing import sha256_file
 
 from auditcore_invoicesynth import dataset as ds
-from auditcore_invoicesynth.fonts import DIAGNOSTIC_FONT_FAMILIES, FontSet
-from auditcore_invoicesynth.layouts import DIAGNOSTIC_LAYOUTS, HOLDOUT_LAYOUTS
+from auditcore_invoicesynth.fonts import (
+    HOLDOUT_B_FONT_FAMILIES,
+    HOLDOUT_C_FONT_FAMILIES,
+    FontSet,
+)
+from auditcore_invoicesynth.layouts import HOLDOUT_B_LAYOUTS, HOLDOUT_C_LAYOUTS, HOLDOUT_LAYOUTS
 from auditcore_invoicesynth.plan import SampleSpec, SynthConfig, plan_dataset, sample_seed
 from auditcore_invoicesynth.variety import choose_variety, variety_rng
 
 SHUFFLED = "test_layout_holdout_shuffled"
 HOLDOUT_B = "test_layout_holdout_b"
-SET_ALIASES = {"shuffled": SHUFFLED, "holdout_b": HOLDOUT_B}
+HOLDOUT_C = "test_layout_holdout_c"
+SET_ALIASES = {"shuffled": SHUFFLED, "holdout_b": HOLDOUT_B, "holdout_c": HOLDOUT_C}
 
 
 @dataclass(frozen=True)
@@ -50,10 +59,16 @@ DIAGNOSTIC_SETS: dict[str, DiagnosticSet] = {
         "T2-Vorlagen und -Schrift, Kopfdaten-Reihenfolge gemischt, Lieferdatum teils weggelassen",
     ),
     HOLDOUT_B: DiagnosticSet(
-        DIAGNOSTIC_LAYOUTS,
-        DIAGNOSTIC_FONT_FAMILIES,
+        HOLDOUT_B_LAYOUTS,
+        HOLDOUT_B_FONT_FAMILIES,
         False,
         "Neue Vorlage und Schrift, in keinem Trainings-, Validierungs- oder T1/T2-Satz",
+    ),
+    HOLDOUT_C: DiagnosticSet(
+        HOLDOUT_C_LAYOUTS,
+        HOLDOUT_C_FONT_FAMILIES,
+        False,
+        "Versiegelter Unbekannt-Test: eigene Vorlagen und Schrift, in keinem anderen Satz",
     ),
 }
 
