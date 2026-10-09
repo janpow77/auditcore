@@ -121,6 +121,7 @@ def _check_block(block: Block, checker: Checker, bindings: Bindings, where: str)
     elif isinstance(block, (BulletList, Table)):
         _check_listing(block, checker, bindings, where)
     elif isinstance(block, Fields):
+        checker.text(block.empty or "", bindings, where)
         for row in block.rows:
             checker.text(row.label, bindings, where)
             checker.text(row.value, bindings, where)

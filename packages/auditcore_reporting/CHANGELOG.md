@@ -2,6 +2,43 @@
 
 Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
+## 0.4.0 – unveröffentlicht
+
+Lücken aus Issue #235 (Umstellung der Fachberichte von regulierung). Alle
+Erweiterungen sind abschaltbar und standardmäßig aus: die eingebauten
+Vorlagen `vermerk` und `pruefbericht` rendern byte-gleich (Golden-Hashes
+unverändert, `tests/test_templates_options.py`).
+
+- Tabellen ohne Zeilen: neuer Schlüssel `"header_if_empty": true` am Block
+  `table` zeichnet die Kopfzeile auch ohne Zeilen, danach folgt der Text aus
+  `empty`. Standard bleibt `false` (bisher: nur der Leertext), damit
+  bestehende Vorlagen unverändert bleiben und ein leerer Tabellenkopf nur dort
+  erscheint, wo er fachlich gewollt ist.
+- Leere Felder: neuer Schlüssel `"empty"` am Block `fields` (z. B. `"—"`).
+  Ist er gesetzt, bleiben Zeilen mit leerem Wert samt Bezeichnung stehen und
+  zeigen diesen Text (Platzhalter werden wie überall gegen den Datenvertrag
+  geprüft); ohne ihn entfallen sie wie bisher.
+- Dokumenteigenschaften: `render(..., options=RenderOptions(author=…,
+  title=…, created=…))` setzt in DOCX `dc:creator`, `cp:lastModifiedBy`,
+  `dc:title`, `dcterms:created`/`modified` (UTC), im PDF Author, Title,
+  CreationDate/ModDate und im HTML `<title>`, `meta author` und
+  `meta dcterms.created`. Eine Erstellzeit erscheint nur, wenn der Aufrufer
+  sie übergibt (Zeitzone Pflicht) – die Ausgabe bleibt deterministisch.
+  Word-Vorlagen (`docx=`) behalten die Eigenschaften ihrer Datei und weisen
+  Optionen mit `TemplateError` ab.
+- Neues Modul `format_de` mit `format_eur` (auch als
+  `auditcore_reporting.format_eur`): Python-Umsetzung des Vertrags
+  `format-money` (`contracts/common-cases/format-money.json`) – Komma,
+  Tausenderpunkt, geschütztes Leerzeichen U+00A0 vor „€“, kaufmännische
+  Rundung (half-up) auf dem Dezimalwert, Ersatzwert „—“ bei leer/ungültig;
+  alle Vertragsfälle laufen in `tests/test_format_de.py`. Ziel des Katalogs
+  bleibt `auditcore_common.format_de`; die Funktion liegt vorerst hier, weil
+  eine neue `auditcore_common`-Version die exakten Pins aller Pakete
+  nachziehen müsste. Der Filter `eur` der Vorlagen bleibt unverändert
+  (normales Leerzeichen, Golden-Hashes).
+- Paketstand 0.4.0; `auditcore_dataprotection` 0.5.3 pinnt
+  `auditcore_reporting[excel]==0.4.0`.
+
 ## 0.3.1 – 2026-10-03
 
 - Neues Modul `auditcore_reporting.templates`: versionierte Berichtsvorlagen

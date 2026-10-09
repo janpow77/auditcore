@@ -81,6 +81,8 @@ class Table:
     var: str = "zeile"
     condition: Condition | None = None
     empty_text: str = ""
+    #: Draw the header row even without rows (followed by ``empty_text``).
+    header_if_empty: bool = False
 
 
 @dataclass(frozen=True)
@@ -93,10 +95,15 @@ class Field:
 
 @dataclass(frozen=True)
 class Fields:
-    """Two-column key data (Aktenzeichen, Datum, Betreff …); empty values are skipped."""
+    """Two-column key data (Aktenzeichen, Datum, Betreff …).
+
+    Empty values are skipped together with their label unless ``empty`` is set;
+    then the row stays and shows ``empty`` (for example ``"—"``) as its value.
+    """
 
     rows: tuple[Field, ...]
     condition: Condition | None = None
+    empty: str | None = None
 
 
 @dataclass(frozen=True)

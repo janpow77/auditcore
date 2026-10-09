@@ -76,10 +76,11 @@ assert get_profile_format("flowlib-v2", "Stundensatz") == '#,##0.00 "EUR"'
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_reporting.__all__` (10):
+Öffentliche Namen aus `auditcore_reporting.__all__` (11):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
+| `format_eur` | Funktion | ``1.234,50 €`` (U+00A0 before "€"), half-up rounded; ``empty`` for empty/invalid input. | `format_de` |
 | `get_number_format` | Funktion | DE: Excel-Zahlenformat anhand der unveränderten Flowlib-Heuristik auswählen. | `formats` |
 | `PROFILE_IDS` | Konstante | – | `profiles` |
 | `get_profile_format` | Funktion | Return a profile's format without modifying values or guessing locale. | `profiles` |
@@ -95,6 +96,7 @@ assert get_profile_format("flowlib-v2", "Stundensatz") == '#,##0.00 "EUR"'
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_reporting.format_de` | German amount display after the shared contract ``format-money``. |
 | `auditcore_reporting.formats` | Excel-Zahlenformate / Excel format selection preserving Flowlib behavior. |
 | `auditcore_reporting.formats_v2` | Excel number formats of profile ``flowlib-v2`` (successor of ``flowlib-legacy-v1``). |
 | `auditcore_reporting.profiles` | Explicit format profiles; the original Flowlib selector remains unchanged. |
@@ -209,6 +211,30 @@ assert result.content[:2] == b"PK" and result.template_version == "1.0.0"
 assert render(report, report.sample, "docx").content == result.content
 assert "mit_feststellungen" in result.text_blocks
 ```
+
+Leere Inhalte und Dokumenteigenschaften (ab 0.4.0, standardmäßig aus):
+`"header_if_empty": true` am Block `table` zeichnet die Kopfzeile auch ohne
+Zeilen; `"empty": "—"` am Block `fields` lässt Zeilen mit leerem Wert stehen
+und zeigt den Ersatztext. `render(..., options=RenderOptions(author=…,
+title=…, created=…))` schreibt Autor, Titel und Erstellzeit (Zeitzone
+Pflicht, UTC) in DOCX-Kerneigenschaften, PDF-Info und HTML-Meta; ohne
+Optionen bleibt die Ausgabe byte-gleich.
+
+```python
+from datetime import UTC, datetime
+
+from auditcore_reporting import format_eur
+from auditcore_reporting.templates import RenderOptions, builtin_registry, render
+
+memo = builtin_registry().get("vermerk")
+options = RenderOptions(author="Prüfbehörde", created=datetime(2026, 10, 4, tzinfo=UTC))
+assert render(memo, memo.sample, "docx", options=options).content[:2] == b"PK"
+assert format_eur(1234.5) == "1.234,50 €" and format_eur(None) == "—"
+```
+
+`format_eur` (Modul `format_de`) setzt den gemeinsamen Vertrag
+`format-money` um (geschütztes Leerzeichen vor „€“, kaufmännische Rundung,
+„—“ bei leer); der Vorlagenfilter `eur` bleibt unverändert.
 
 Spezifikation der Vorlagen: Invarianten I14–I18 in
 [docs/spezifikation.md](docs/spezifikation.md).
