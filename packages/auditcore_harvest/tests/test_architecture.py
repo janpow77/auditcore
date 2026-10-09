@@ -7,6 +7,7 @@ No app bindings; ``auditcore_common`` is the shared stdlib-only helper package
 from __future__ import annotations
 
 import ast
+import subprocess
 import sys
 from pathlib import Path
 
@@ -33,6 +34,16 @@ def test_runtime_imports_are_stdlib_or_common_only() -> None:
                 )
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 assert node.func.id not in FORBIDDEN_CALLS, f"{path.name}: {node.func.id}"
+
+
+def test_import_loads_no_network_modules() -> None:
+    """Source packages forbid socket/ssl after import; the cookie session loads them lazily."""
+    code = (
+        "import sys, auditcore_harvest; "
+        "bad = {'socket', 'ssl', 'http.client', 'http.cookiejar', 'urllib.request'} "
+        "& set(sys.modules); assert not bad, bad"
+    )
+    subprocess.run([sys.executable, "-I", "-c", code], check=True)
 
 
 def test_no_database_orm_or_tenant_concepts() -> None:

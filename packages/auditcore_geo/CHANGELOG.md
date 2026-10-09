@@ -2,6 +2,10 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #13, #16, #38, #54, #73).
 
+## 0.3.3 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_harvest==0.2.0` für den additiven Harvest-Vertrag aus Issue #236 (Statusfelder, Retry-Steuerung, Cookies, Binärnutzlast).
+
 ## 0.3.2 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,

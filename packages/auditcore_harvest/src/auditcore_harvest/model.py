@@ -14,6 +14,9 @@ from typing import Any
 
 from auditcore_common.hashing import canonical_sha256
 
+from .content import BinaryContent
+from .kinds import ErrorKind
+
 CONTRACT_VERSION = "auditcore_harvest.contract/1"
 
 #: JSON payload at the source boundary. This is the one deliberate ``Any`` of the
@@ -148,7 +151,9 @@ class HarvestRecord:
     """One source record: stable id, raw and normalized payload, provenance.
 
     ``content_hash`` covers the normalized payload and the deletion flag, so a
-    re-delivery of unchanged content is recognisable as a duplicate.
+    re-delivery of unchanged content is recognisable as a duplicate. An optional
+    binary ``content`` (document bytes with media type) is covered by its
+    SHA-256; records without ``content`` keep their previous hash.
     """
 
     source_id: str
@@ -158,22 +163,29 @@ class HarvestRecord:
     provenance: Provenance
     deleted: bool = False
     content_hash: str = ""
+    content: BinaryContent | None = None
 
     def __post_init__(self) -> None:
         if not self.record_id:
             raise ValueError("HarvestRecord braucht eine stabile Quellen-ID.")
         if not self.content_hash:
-            digest = canonical_hash({"normalized": self.normalized, "deleted": self.deleted})
-            object.__setattr__(self, "content_hash", digest)
+            basis: dict[str, JSON] = {"normalized": self.normalized, "deleted": self.deleted}
+            if self.content is not None:
+                basis["content_sha256"] = self.content.sha256
+            object.__setattr__(self, "content_hash", canonical_hash(basis))
 
     @property
     def key(self) -> tuple[str, str]:
         """Identity used for deduplication and idempotent delivery."""
         return (self.source_id, self.record_id)
 
-    def to_dict(self) -> dict[str, JSON]:
-        """JSON view (for sinks, fixtures and replay output)."""
-        return {
+    def to_dict(self, *, include_content_data: bool = True) -> dict[str, JSON]:
+        """JSON view (for sinks, fixtures and replay output).
+
+        The key ``content`` appears only for records with binary content, so the
+        view of every other record is unchanged.
+        """
+        view: dict[str, JSON] = {
             "source_id": self.source_id,
             "record_id": self.record_id,
             "content_hash": self.content_hash,
@@ -182,6 +194,9 @@ class HarvestRecord:
             "raw": self.raw,
             "provenance": self.provenance.to_dict(),
         }
+        if self.content is not None:
+            view["content"] = self.content.to_dict(include_data=include_content_data)
+        return view
 
 
 class PageStatus(StrEnum):
@@ -301,7 +316,11 @@ class RunStatus(StrEnum):
 
 @dataclass(frozen=True)
 class HarvestResult:
-    """Structured run result; counts are never inferred from an empty list."""
+    """Structured run result; counts are never inferred from an empty list.
+
+    ``http_status`` and ``error_kind`` describe the error that ended the run
+    (``None`` for a run without such an error).
+    """
 
     source_id: str
     run_id: str
@@ -321,6 +340,8 @@ class HarvestResult:
     source_exhausted: bool
     snapshot_complete: bool
     attempts: int
+    http_status: int | None = None
+    error_kind: ErrorKind | None = None
 
     def to_dict(self) -> dict[str, JSON]:
         """JSON view."""
@@ -347,6 +368,8 @@ class HarvestResult:
             "source_exhausted": self.source_exhausted,
             "snapshot_complete": self.snapshot_complete,
             "attempts": self.attempts,
+            "http_status": self.http_status,
+            "error_kind": None if self.error_kind is None else self.error_kind.value,
         }
 
 

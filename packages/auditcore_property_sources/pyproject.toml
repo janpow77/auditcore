@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_property_sources"
-version = "0.1.4"
+version = "0.1.5"
 description = "Property source profiles (Berlin/French rental portals, ZVG forced-auction notices) with harvest adapters, lifecycle and access catalog"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,8 +13,8 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = ["auditcore_common==0.2.1"]
 
 [project.optional-dependencies]
-sources = ["auditcore_harvest==0.1.4"]
-dev = ["pytest>=8", "pytest-xdist>=3.6", "pytest-timeout>=2.3", "hypothesis>=6.100", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.4"]
+sources = ["auditcore_harvest==0.2.0"]
+dev = ["pytest>=8", "pytest-xdist>=3.6", "pytest-timeout>=2.3", "hypothesis>=6.100", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.2.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

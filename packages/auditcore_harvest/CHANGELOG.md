@@ -1,5 +1,58 @@
 # Changelog
 
+## 0.2.0 – unveröffentlicht
+
+Additive Erweiterungen aus Issue #236 (Umstellung von regulierung auf
+`HarvestEngine`). Vertrag bleibt `auditcore_harvest.contract/1`; alle
+bisherigen Namen, Parameter und Standardwerte bleiben gültig. Ohne die neuen
+Optionen ist das Laufzeitverhalten unverändert.
+
+### Hinzugefügt
+- **Vertragsfelder für Status und Fehlerart:** `ErrorKind` (`network`,
+  `timeout`, `http_status`, `rate_limited`, `auth`, `parse`, `config`, `sink`,
+  `checkpoint`, `cancelled`, `limit`, `unknown`). Jeder `HarvestError` trägt
+  `kind` und `http_status` (Schlüsselwortparameter, Standard je Klasse bzw.
+  `None`); `raise_for_status` setzt beide. `HarvestResult` hat die optionalen
+  Felder `http_status` und `error_kind` des Fehlers, der den Lauf beendet hat.
+- **Konfigurierbare Statusprüfung:** `StatusPolicy` (`check`, `accept`,
+  `rate_limited`, `auth`, `retryable`, `retry_server_errors`) als optionales
+  zweites Argument von `raise_for_status`, als `HarvestEngine.status_policy`
+  und als `FetchContext.status_policy`; Adapter wenden sie mit
+  `context.check(response)` an. Die Referenzadapter nutzen `context.check`.
+- **Retry-After kappen:** `RetryPolicy.retry_after_cap` (Standard `None` =
+  bisheriges Aufgeben über `max_retry_after`). Mit Wert wird ein zu langes
+  `Retry-After` auf die Obergrenze gekürzt und erneut versucht.
+- **Binärnutzlast:** `BinaryContent(data, media_type)` und
+  `HarvestRecord.content` (auch `FetchContext.record(..., content=...)`).
+  Der `content_hash` umfasst dann die SHA-256 der Bytes; Datensätze ohne
+  Inhalt behalten Hash und `to_dict()` bytegleich. `to_dict()` nennt den
+  Inhalt unter `content` (Base64 in `data_b64`, abschaltbar mit
+  `include_content_data=False`); `BinaryContent.from_dict` prüft die Prüfsumme.
+- **Cookies über Weiterleitungen:** `SessionTransport(inner, session)` und
+  `CookieSession` folgen Weiterleitungen selbst, sammeln `Set-Cookie` aus allen
+  Zwischenantworten und senden sie bei allen Folgeabrufen der Sitzung mit
+  (303 und POST bei 301/302 werden GET; beim Ursprungswechsel entfallen
+  `Authorization`/`Cookie` des Aufrufers; höchstens `max_redirects`).
+  `Response` hat dafür `raw_headers` (wiederholte Kopfzeilen), `history`
+  (Zwischenantworten) und `header_values()`.
+- Beispiel `docs/examples/urllib_transport.py`: `follow_redirects=False`,
+  `raw_headers`, Zeitüberschreitung als `ErrorKind.TIMEOUT`.
+
+### Geändert
+- `to_dict()` von Fehlern und `HarvestResult` enthält zusätzlich
+  `http_status` und `error_kind` (additiv; bestehende Schlüssel unverändert).
+- `ReplayTransport` meldet aufgezeichnete Zeitüberschreitungen mit
+  `ErrorKind.TIMEOUT`.
+
+### Abhängige Pakete
+Neue exakte Pins `auditcore_harvest==0.2.0` mit Patch-Versionen ohne
+Verhaltensänderung: `auditcore_funding_sources` 0.1.7, `auditcore_geo` 0.3.3,
+`auditcore_legal_sources` 0.1.7, `auditcore_price_sources` 0.1.5,
+`auditcore_procurement` 0.2.6, `auditcore_property_sources` 0.1.5,
+`auditcore_registry_sources` 0.2.5; weitergereicht `auditcore_bpmn` 0.1.4
+(Pin `auditcore_legal_sources==0.1.7`) und `auditcore_risk` 0.4.1
+(Pin `auditcore_procurement==0.2.6`).
+
 ## 0.1.4 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und

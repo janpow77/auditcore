@@ -105,11 +105,38 @@ mit `retry_after` aus `Retry-After`; 401/403 → `AuthError`; 408/5xx →
 `TransportError` (wiederholbar); sonstige Nicht-2xx → `TransportError`
 (nicht wiederholbar). Weitere Klassen: `ConfigError`, `ParserError`,
 `SinkError`, `CheckpointConflict`, `Cancelled`, `LimitReached`. Jede trägt
-`code`, `retryable`, `retry_after` und `detail` (`to_dict()`). Der
-`RetryPolicy` wiederholt nur wiederholbare Fehler, begrenzt die Versuche,
+`code`, `retryable`, `retry_after`, `detail`, ab 0.2.0 außerdem
+`http_status` (bei einer erhaltenen Antwort) und `kind` (`ErrorKind`:
+`network`, `timeout`, `http_status`, `rate_limited`, `auth`, `parse`, …);
+`to_dict()` enthält beide als `http_status` und `error_kind`. Das
+`HarvestResult` nennt Status und Art des Fehlers, der den Lauf beendet hat.
+Der `RetryPolicy` wiederholt nur wiederholbare Fehler, begrenzt die Versuche,
 nutzt Backoff mit injizierbarer Zufallsquelle und bricht bei einem
-`Retry-After` über `max_retry_after` ab. Fachliche, irreversible
+`Retry-After` über `max_retry_after` ab – oder kappt ihn mit
+`retry_after_cap` (Sekunden) und wiederholt. Fachliche, irreversible
 Entscheidungen trifft kein allgemeiner Retry-Handler.
+
+Ab 0.2.0 prüfen Adapter den Status mit `context.check(response)`. Das wendet
+die `StatusPolicy` des Engines an (`HarvestEngine(status_policy=...)`), etwa
+`StatusPolicy(accept=frozenset({404}))`, wenn „nicht gefunden“ bei einer
+Quelle eine gültige Antwort ist, oder `check=False`, wenn der Adapter selbst
+entscheidet. Ohne Angabe gilt genau die obige Abbildung;
+`raise_for_status(response, policy)` bleibt direkt nutzbar.
+
+Binäre Dokumente (PDF, Bilder) trägt ein Datensatz nativ als
+`content=BinaryContent(data, media_type)` (`context.record(..., content=...)`)
+statt als Base64 im JSON. Der `content_hash` umfasst dann zusätzlich die
+SHA-256 der Bytes; Datensätze ohne `content` behalten Hash und `to_dict()`
+unverändert. Erst die JSON-Sicht `to_dict()` kodiert die Bytes (`data_b64`,
+abschaltbar mit `include_content_data=False`).
+
+Für Quellen mit Sitzungs-Cookies umschließt der Consumer seinen Transport mit
+`SessionTransport(inner)`. Der folgt Weiterleitungen selbst, sammelt
+`Set-Cookie` aus allen Zwischenantworten in einem Cookie-Jar und sendet die
+Cookies bei allen späteren Abrufen der Sitzung mit. Der innere Transport folgt
+dabei keinen Weiterleitungen (Beispiel: `UrllibTransport(follow_redirects=False)`)
+und gibt wiederholte Kopfzeilen in `Response.raw_headers` zurück. Beim Wechsel
+des Ursprungs entfallen `Authorization`- und `Cookie`-Kopfzeilen des Aufrufers.
 
 ## 5. Registrieren, aufrufen, Senke und Checkpoints
 
@@ -210,3 +237,9 @@ Geheimnisse, Fixtures, Implementierungsstatus (`SUPPORTED`, `PLANNED`,
   betroffen (sie nutzen nur `context.transport`). Consumer injizieren ihren
   Transport; Standardbibliotheks-Vorlage: `docs/examples/urllib_transport.py`.
   Alle übrigen Namen und Semantiken von Vertrag 1 bleiben unverändert.
+- 0.2.0 / Vertrag 1 (kompatibel, additiv): `http_status` und `ErrorKind` in
+  Fehlern und Ergebnis, `StatusPolicy` und `context.check`,
+  `RetryPolicy.retry_after_cap`, `BinaryContent` im Datensatz,
+  `SessionTransport`/`CookieSession`. Ohne neue Optionen ist das
+  Laufzeitverhalten unverändert; `to_dict()` von Fehlern und Ergebnis enthält
+  zwei zusätzliche Schlüssel.

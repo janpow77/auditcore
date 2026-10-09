@@ -5,12 +5,14 @@ in their family packages and depend on this core, not the other way round.
 """
 
 from .adapter import AdapterRegistry, FetchContext, SourceAdapter, require
+from .content import BinaryContent
 from .engine import CancelToken, HarvestEngine, RateLimit, RetryPolicy
 from .errors import (
     AuthError,
     Cancelled,
     CheckpointConflict,
     ConfigError,
+    ErrorKind,
     HarvestError,
     LimitReached,
     ParserError,
@@ -49,9 +51,16 @@ from .ports import (
     StateStore,
     Transport,
 )
-from .transport import FileTransport, ReplayTransport, decode_json, raise_for_status
+from .session import CookieSession, SessionTransport
+from .transport import (
+    FileTransport,
+    ReplayTransport,
+    StatusPolicy,
+    decode_json,
+    raise_for_status,
+)
 
-__version__ = "0.1.4"
+__version__ = "0.2.0"
 
 __all__ = [
     "CONTRACT_VERSION",
@@ -59,6 +68,7 @@ __all__ = [
     "AdapterRegistry",
     "AuthError",
     "AuthKind",
+    "BinaryContent",
     "Cancelled",
     "CancelToken",
     "Capabilities",
@@ -66,8 +76,10 @@ __all__ = [
     "CheckpointConflict",
     "Clock",
     "ConfigError",
+    "CookieSession",
     "CredentialProvider",
     "Cursor",
+    "ErrorKind",
     "EventSink",
     "FetchContext",
     "FileTransport",
@@ -88,6 +100,7 @@ __all__ = [
     "Response",
     "RetryPolicy",
     "RunStatus",
+    "SessionTransport",
     "Sink",
     "SinkError",
     "SinkReceipt",
@@ -96,6 +109,7 @@ __all__ = [
     "Source",
     "SourceAdapter",
     "StateStore",
+    "StatusPolicy",
     "Transport",
     "TransportError",
     "__version__",

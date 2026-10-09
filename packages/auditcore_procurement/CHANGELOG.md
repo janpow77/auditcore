@@ -1,5 +1,9 @@
 # Changelog auditcore_procurement
 
+## 0.2.6 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_harvest==0.2.0` für den additiven Harvest-Vertrag aus Issue #236 (Statusfelder, Retry-Steuerung, Cookies, Binärnutzlast).
+
 ## 0.2.5 – 2026-10-03
 
 Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 12 Invarianten (I1–I12) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`; keine Befunde. `hypothesis` im Extra `dev`.
