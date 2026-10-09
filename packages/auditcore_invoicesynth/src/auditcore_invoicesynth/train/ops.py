@@ -34,7 +34,16 @@ NVIDIA_SMI_TEMPERATURE = [
     "--format=csv,noheader,nounits",
 ]
 #: Felder, die ein Lauf gegenüber seinem Profil per Kommandozeile überschreiben darf.
-OVERRIDABLE = ("image_size", "seed", "epochs", "per_device_batch", "grad_accum", "max_steps")
+OVERRIDABLE = (
+    "image_size",
+    "seed",
+    "epochs",
+    "per_device_batch",
+    "grad_accum",
+    "max_steps",
+    "learning_rate",
+    "warmup_steps",
+)
 
 
 class InsufficientVram(RuntimeError):
