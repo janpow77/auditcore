@@ -15,6 +15,8 @@ from auditcore_documents.ooxml import (
     read_ooxml,
 )
 from auditcore_documents.pdftext import (
+    DEFAULT_MARGINS,
+    MarginRules,
     OcrCallback,
     PageSource,
     pdf_paragraphs,
@@ -47,12 +49,20 @@ def read_text_paragraphs(
     ocr_callback: OcrCallback | None = None,
     page_source: PageSource | None = None,
     limits: ReadLimits = DEFAULT_LIMITS,
+    margins: MarginRules = DEFAULT_MARGINS,
 ) -> list[tuple[str, bool]]:
-    """Alle sichtbaren Absätze mit Überschriftenkennzeichen (Fließtextsicht)."""
+    """Alle sichtbaren Absätze mit Überschriftenkennzeichen (Fließtextsicht).
+
+    ``margins`` gilt nur für PDF (Seitenränder, siehe ``MarginRules``).
+    """
     suffix = _check_input(path)
     if suffix == ".pdf":
         return pdf_paragraphs(
-            path, page_source=page_source, ocr_callback=ocr_callback, limits=limits
+            path,
+            page_source=page_source,
+            ocr_callback=ocr_callback,
+            limits=limits,
+            margins=margins,
         )
     root = read_ooxml(path, limits)
     accept_revisions(root)
@@ -66,16 +76,24 @@ def read_document(
     ocr_callback: OcrCallback | None = None,
     page_source: PageSource | None = None,
     limits: ReadLimits = DEFAULT_LIMITS,
+    margins: MarginRules = DEFAULT_MARGINS,
 ) -> tuple[str, list[CompareItem]]:
     """Dokument lesen; liefert erkannte Dokumentart und Vergleichseinheiten.
 
     Entspricht ``read_document`` des Originals einschließlich Fehlertexten.
-    PDF ist stets Fließtext; ``mode`` wird dort nicht ausgewertet.
+    PDF ist stets Fließtext; ``mode`` wird dort nicht ausgewertet. Das
+    Originalverhalten bei Seitenrändern liefert ``margins=LEGACY_MARGINS``.
     """
     suffix = _check_input(path)
     if suffix == ".pdf":
         items = text_items_from_paragraphs(
-            pdf_paragraphs(path, page_source=page_source, ocr_callback=ocr_callback, limits=limits)
+            pdf_paragraphs(
+                path,
+                page_source=page_source,
+                ocr_callback=ocr_callback,
+                limits=limits,
+                margins=margins,
+            )
         )
         if not items:
             raise ParseError(f"In {path.name} wurden keine vergleichbaren Textstellen gefunden.")

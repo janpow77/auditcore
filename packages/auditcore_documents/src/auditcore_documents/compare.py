@@ -30,7 +30,12 @@ from auditcore_documents.matching import (
     text_matches,
 )
 from auditcore_documents.model import CompareItem, ComparisonResult
-from auditcore_documents.pdftext import OcrCallback, PageSource, text_items_from_paragraphs
+from auditcore_documents.pdftext import (
+    MarginRules,
+    OcrCallback,
+    PageSource,
+    text_items_from_paragraphs,
+)
 from auditcore_documents.profiles import CompareProfile
 from auditcore_documents.reading import read_document, read_text_paragraphs
 from auditcore_documents.scoring import get_scorer
@@ -121,6 +126,7 @@ def _amendment_commands(path: Path, profile: CompareProfile, context: ReadContex
         ocr_callback=context.ocr_callback,
         page_source=context.page_source,
         limits=context.limits,
+        margins=profile.margin_rules,
     )
     if profile.amendment_reading == "all-paragraphs":
         # DC-C04: auch Absätze, die mit „§“ beginnen, sind mögliche Befehle.
@@ -147,6 +153,7 @@ def compare_article_law_files(
         ocr_callback=context.ocr_callback,
         page_source=context.page_source,
         limits=context.limits,
+        margins=profile.margin_rules,
     )
     try:
         paragraphs = base_paragraphs(items)
@@ -190,7 +197,7 @@ def _compare_article_law(
 
 
 def _read_pair(
-    old: Path, new: Path, mode: str, context: ReadContext
+    old: Path, new: Path, mode: str, context: ReadContext, margins: MarginRules
 ) -> tuple[str, list[CompareItem], list[CompareItem]]:
     """Beide Fassungen im selben Modus lesen; abweichende Dokumentarten sind ein Fehler."""
 
@@ -201,6 +208,7 @@ def _read_pair(
             ocr_callback=context.ocr_callback,
             page_source=context.page_source,
             limits=context.limits,
+            margins=margins,
         )
 
     old_mode, old_items = read(old)
@@ -248,7 +256,7 @@ def compare_files(
         raise CompareError("Unbekannter Vergleichstyp.")
     has_pdf = old.suffix.casefold() == ".pdf" or new.suffix.casefold() == ".pdf"
     effective_mode = "text" if options.mode == "auto" and has_pdf else options.mode
-    mode, old_items, new_items = _read_pair(old, new, effective_mode, context)
+    mode, old_items, new_items = _read_pair(old, new, effective_mode, context, profile.margin_rules)
     rows, counts = compare_items(
         old_items,
         new_items,

@@ -146,7 +146,7 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_documents.__all__` (56):
+Öffentliche Namen aus `auditcore_documents.__all__` (59):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -154,9 +154,11 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 | `COMMAND_PATTERNS` | Konstante | – | `article_law` |
 | `CORRECTED` | Konstante | Korrigiertes, empfohlenes Verhalten (Nutzerentscheidung D1/D2 vom 23.09.2026): Änderungsbefehle, die mit „§“ beginnen, werden gelesen (DC-C04), nach einer Einfügung wird umnummerie … | `profiles` |
 | `DEFAULT_LIMITS` | Konstante | – | `limits` |
+| `DEFAULT_MARGINS` | Konstante | Standard ab 0.6.0: nur der Rand, erstes Vorkommen bleibt; kein Inhaltsverlust. | `pdftext` |
 | `DEFAULT_SETTINGS` | Konstante | – | `settings` |
 | `LEGACY` | Konstante | Originalverhalten in der Produktionsumgebung (rapidfuzz installiert). | `profiles` |
 | `LEGACY_DIFFLIB` | Konstante | Originalverhalten ohne rapidfuzz (Rückfall auf difflib im Original). | `profiles` |
+| `LEGACY_MARGINS` | Konstante | Originalverhalten (Profile ``LEGACY``/``LEGACY_DIFFLIB``): Seitenzahlen und wiederkehrende Randzeilen werden auf der ganzen Seite und bei jedem Vorkommen entfernt. | `pdftext` |
 | `PROFILES` | Konstante | – | `profiles` |
 | `RECOMMENDED` | Konstante | Empfohlenes Profil für neue Anwendungen (D1). | `profiles` |
 | `CompareError` | Ausnahme | Ein vom Nutzer behebbarer Vergleichsfehler. | `errors` |
@@ -168,6 +170,7 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 | `DependencyError` | Ausnahme | Ein optionales Extra (lxml, pypdf, rapidfuzz, python-docx) fehlt. | `errors` |
 | `LawParagraph` | Datenklasse | – | `article_law` |
 | `LimitExceededError` | Ausnahme | Eine konfigurierte Ressourcengrenze wurde überschritten. | `errors` |
+| `MarginRules` | Datenklasse | Regeln für das Entfernen von Seitenzahlen und Kopf-/Fußzeilen. | `pdftext` |
 | `ParseError` | Ausnahme | Beschädigte, geschützte, nicht unterstützte oder unlesbare Eingabe. | `errors` |
 | `ReadContext` | Datenklasse | Umgebungsabhängige Lesebausteine; alle optional und austauschbar. | `compare` |
 | `ReadLimits` | Datenklasse | – | `limits` |
@@ -189,16 +192,16 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 | `load_settings` | Funktion | Vorgaben, überlagert von der bereinigten Datei; fehlende Datei → Vorgaben. | `settings` |
 | `mcp_tool_provider` | Funktion | Adapter für eine MCP-Werkzeugfunktion mit dem Aufrufvertrag des Originals. | `reasons` |
 | `merge_settings` | Funktion | Wirksame Einstellungen und Herkunft je Pfad (department/personal/run). | `settings` |
-| `normalise_for_match` | Funktion | Für die Zuordnung normalisieren; führende Nummerierung wird ignoriert. | `normalize` |
-| `normalise_semantic` | Funktion | Reine Zeichensetzungs- und Nummerierungsänderungen herausrechnen. | `normalize` |
-| `normalise_verbatim` | Funktion | Nur Leerraum und Groß-/Kleinschreibung vereinheitlichen. | `normalize` |
+| `normalise_for_match` | Funktion | Vergleichsschlüssel für die Zuordnung; führende Nummerierung wird ignoriert. | `normalize` |
+| `normalise_semantic` | Funktion | Vergleichsschlüssel ohne Zeichensetzung und Nummerierung (Änderungsart). | `normalize` |
+| `normalise_verbatim` | Funktion | Vergleichsschlüssel: nur Leerraum und Groß-/Kleinschreibung vereinheitlichen. | `normalize` |
 | `paragraphs_from_pdf_pages` | Funktion | Absätze aus Seiten; Satzende oder Leerzeile beendet einen Absatz. | `pdftext` |
 | `pdftotext_pages` | Funktion | ``pdftotext -layout`` (poppler-utils) als externer Prozess. | `pdftext` |
 | `pypdf_pages` | Funktion | Textextraktion mit ``pypdf`` (Extra ``pdf-text``); Fehlertexte wie im Original. | `pdftext` |
 | `rapidfuzz_token_set` | Funktion | Produktionsmaß des Originals: ``round(float(fuzz.token_set_ratio(a, b)))``. | `scoring` |
 | `read_document` | Funktion | Dokument lesen; liefert erkannte Dokumentart und Vergleichseinheiten. | `reading` |
 | `read_text_paragraphs` | Funktion | Alle sichtbaren Absätze mit Überschriftenkennzeichen (Fließtextsicht). | `reading` |
-| `remove_repeating_margins` | Funktion | Seitenzahlen und wiederkehrende Kopf-/Fußzeilen entfernen. | `pdftext` |
+| `remove_repeating_margins` | Funktion | Seitenzahlen und wiederkehrende Kopf-/Fußzeilen am Seitenrand entfernen. | `pdftext` |
 | `sanitise_settings` | Funktion | Nur bekannte Schlüssel, Werte begrenzt; ungültige Auswahlwerte → Vorgabe. | `settings` |
 | `save_settings` | Funktion | Atomar über eine temporäre Datei schreiben (wie im Original). | `settings` |
 | `synopsis_extra` | Funktion | Kopfangaben und Hinweise wie im ecohesion-Worker. | `synopsis` |
@@ -220,7 +223,7 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 | `auditcore_documents.limits` | Ressourcengrenzen beim Einlesen (im Original nicht vorhanden, DC-C03). |
 | `auditcore_documents.matching` | Deterministische Zuordnung und Einstufung der Unterschiede. |
 | `auditcore_documents.model` | Web-unabhängige Datenverträge des Dokumentvergleichs (unverändert aus dem Original). |
-| `auditcore_documents.normalize` | Normalisierung und Wortdifferenz (unverändert aus ``parsing.py`` des Originals). |
+| `auditcore_documents.normalize` | Abgleichsnormalisierung und Wortdifferenz (unverändert aus ``parsing.py`` des Originals). |
 | `auditcore_documents.ooxml` | Lesen von DOCX/DOCM (WordprocessingML) – Extra ``docx`` (lxml). |
 | `auditcore_documents.pdftext` | PDF-Text: austauschbare Seitenquelle und reine Absatzbildung. |
 | `auditcore_documents.pipeline` | Frameworkunabhängige Dokumentpipeline (aus flowinvoice ``backend/app/pipeline``). |
@@ -240,8 +243,23 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 - **Profile** (`PROFILES`, versioniert, mit Fingerprint):
   `audit_designer.document_compare` 1.1.0 (`LEGACY`, Produktionsverhalten),
   `…difflib` (`LEGACY_DIFFLIB`, Rückfall des Originals ohne rapidfuzz),
-  `auditcore.document_compare` 2026.09.2 (`CORRECTED` = `RECOMMENDED`,
-  entschieden am 2026-09-23: DC-C04 und Absatznummerierung nach Einfügung).
+  `auditcore.document_compare` 2026.10.1 (`CORRECTED` = `RECOMMENDED`,
+  entschieden am 2026-09-23: DC-C04 und Absatznummerierung nach Einfügung;
+  ab 2026.10.1 zusätzlich PDF-Seitenränder nach DC-C12).
+- **PDF-Seitenränder** (`MarginRules`, ab 0.6.0): Seitenzahlen und
+  wiederkehrende Kopf-/Fußzeilen werden nur in den ersten und letzten
+  `edge_lines` (Standard 3) nichtleeren Zeilen je Seite erkannt und
+  entfernt; Zeilen außerhalb dieses Randes bleiben immer erhalten (eine reine
+  Zahl mitten in einer Preistabelle ist Inhalt). Das erste Vorkommen einer
+  wiederkehrenden Randzeile bleibt stehen (`keep_first_occurrence=True`),
+  damit etwa ein Gültigkeitsdatum im Seitenkopf nicht verloren geht.
+  `LEGACY_MARGINS` bildet das Original ab und gilt in `LEGACY`/`LEGACY_DIFFLIB`.
+  Grenze: Eine reine Zahl, die selbst in den Randzeilen steht, gilt weiter als
+  Seitenzahl.
+- **Normalisierung** (`normalise_for_match`, `normalise_semantic`,
+  `normalise_verbatim`) erzeugt nur Vergleichsschlüssel (Kleinschreibung,
+  ohne Nummerierung bzw. Satzzeichen) für Zuordnung und Änderungsart; für
+  Extraktion, Anzeige oder Ablage den Originaltext verwenden.
 - **Standardvergleich**: Checklisten (Tabellenzeilen; stabile Kennung aus
   Inhaltssteuerelementen, dann wortgleich, dann Ähnlichkeit ≥ Schwelle) oder
   Fließtext (reihenfolgetreu, unscharfe Ersetzungsblöcke); wortgleich
@@ -367,6 +385,28 @@ from auditcore_documents.web import ExtractionEngines, ExtractionService, create
 service = ExtractionService(ExtractionEngines(tesseract=meine_tesseract_engine))
 app.mount("/api/extraction", create_extraction_app(service))
 ```
+
+### Tesseract und Rasterung (ab 0.6.0)
+
+`pl.TesseractCli` ist ein eingebauter `TesseractPort`: Er ruft das Programm
+`tesseract` (≥ 4, z. B. Debian `tesseract-ocr` und `tesseract-ocr-deu`) als
+Subprozess ohne Shell auf, liest die TSV-Ausgabe (Text je Zeile, Konfidenz als
+Mittel der Wörter) und rastert PDF vorher (Extra `ocr-raster`). Es kommt kein
+Python-Paket hinzu; ein eigener Port (etwa ein OCR-Dienst) bleibt möglich.
+Ohne Port meldet die Stufe `TESSERACT_OCR_FAILED` mit Hinweis auf
+`TesseractCli`.
+
+```python no-run
+from auditcore_documents import pipeline as pl
+
+tesseract = pl.TesseractCli(languages="deu+eng", psm=3, oem=3, timeout=120.0)
+ocr = pl.OcrStage(backend="tesseract", tesseract=tesseract, raster_dpi=300, raster_max_pages=20)
+```
+
+`raster_dpi` (72–600, Standard 200) und `raster_max_pages` (1–500, Standard
+50) gelten für den eingebauten pdfium-Rasterer; `pl.pdfium_rasterizer_for(dpi=…,
+max_pages=…)` liefert ihn auch einzeln (z. B. für `TesseractCli(rasterizer=…)`
+oder `ExtractionEngines(rasterizer=…)`).
 
 Vertrag: `docs/ui/extraction-rest.md` im Repository.
 
