@@ -221,10 +221,13 @@ STABLE_PLAN_SHA256 = {
     "v2": "c50af53aa36d592d85db17ba56bae757de849010640cb729c76515c50357d852",
     # v3 (eingeführt mit den Summenorten): Wert dieser Einführung, ab dann stabil.
     "v3": "1250705c48e1ead786d0658bc2e3329064fc8679bf84e7967bd83fdb2466852f",
+    # v4 (Stufe 7): Wert der Einführung; v1–v3 blieben dabei unverändert, obwohl der
+    # Katalog drei weitere Familien kennt (nur v4 zieht sie, mit eigener Zufallsfolge).
+    "v4": "42a03538548312e15817acde85c24a35d18c74947be4e43a0a01278d458c520d",
 }
 
 
-@pytest.mark.parametrize("variety", ["v1", "v2", "v3"])
+@pytest.mark.parametrize("variety", ["v1", "v2", "v3", "v4"])
 def test_regular_plan_hashes_unchanged(variety: str) -> None:
     counts = {
         "train": 20000,
