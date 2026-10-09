@@ -292,3 +292,54 @@ def test_signal_handlers_are_restored() -> None:
     stop.finished()
     assert signal.getsignal(signal.SIGTERM) == before
     assert threading.current_thread() is threading.main_thread() and os.getpid()
+
+
+def test_override_args_learning_rate_and_warmup() -> None:
+    config = replace(PROFILES["donut_train_janpow_ai"], learning_rate=1e-5, warmup_steps=0)
+    args = override_args(config)
+    assert args[args.index("--learning-rate") + 1] == "1e-05"
+    assert args[args.index("--warmup-steps") + 1] == "0"
+
+
+def test_cli_parses_learning_rate_and_warmup() -> None:
+    from auditcore_invoicesynth.train import cli
+
+    base = PROFILES["donut_train_janpow_ai"]
+    config = replace(base, learning_rate=1e-5, warmup_steps=50)
+    argv = ["--profile", base.profile, *override_args(config)]
+    parsed = cli.apply_overrides(base, cli._parser().parse_args(argv))
+    assert parsed == config
+    assert parsed.config_hash != base.config_hash
+    unchanged = cli.apply_overrides(base, cli._parser().parse_args(["--profile", base.profile]))
+    assert unchanged.config_hash == base.config_hash
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("learning_rate", 0.0),
+        ("learning_rate", -1e-5),
+        ("learning_rate", 2e-2),
+        ("warmup_steps", -1),
+    ],
+)
+def test_validate_rejects_bad_learning_rate_or_warmup(field: str, value: float) -> None:
+    with pytest.raises(ValueError, match=field):
+        replace(PROFILES["donut_train_janpow_ai"], **{field: value}).validate()
+
+
+def test_cli_rejects_bad_learning_rate(capsys: pytest.CaptureFixture[str]) -> None:
+    from auditcore_invoicesynth.train import cli
+
+    assert cli.main(["--profile", "cpu_smoke", "--check-vram", "--learning-rate", "0.5"]) == 2
+    assert "learning_rate" in capsys.readouterr().err
+
+
+def test_profile_config_hash_stable() -> None:
+    # Sollwerte gegen origin/main (a1c9f5c) ermittelt; neue Schalter dürfen sie nicht ändern.
+    assert PROFILES["donut_train_janpow_ai"].config_hash == (
+        "7875a8f96a294b6459683d869b6c3cba5fe5ff3b21a4e550b0c722607d0b03a7"
+    )
+    assert PROFILES["donut_train_8gb"].config_hash == (
+        "8d8cfc62b3ad35415ccc128c9155165b5c70178533d918fbea32afdd3e327852"
+    )

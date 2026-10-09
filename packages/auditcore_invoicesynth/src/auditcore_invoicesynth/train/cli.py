@@ -77,6 +77,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--image-size", help="Höhe x Breite, z. B. 1536x1152")
     parser.add_argument("--per-device-batch", type=int)
     parser.add_argument("--grad-accum", type=int)
+    parser.add_argument("--learning-rate", type=float, help="Lernrate, > 0 und ≤ 1e-2")
+    parser.add_argument("--warmup-steps", type=int, help="Warm-up-Schritte, ≥ 0")
     parser.add_argument("--stop-deadline", type=float, default=90.0, help="Sekunden nach SIGTERM")
     parser.add_argument("--stop-after-step", type=int, help="Abbruch simulieren (Test)")
     parser.add_argument("--step-delay", type=float, default=0.0)
@@ -142,6 +144,10 @@ def apply_overrides(config: TrainConfig, args: argparse.Namespace) -> TrainConfi
         seed=pick("seed", config.seed) or 0,
         per_device_batch=pick("per_device_batch", config.per_device_batch) or 0,
         grad_accum=pick("grad_accum", config.grad_accum) or 0,
+        warmup_steps=pick("warmup_steps", config.warmup_steps) or 0,
+        learning_rate=(
+            config.learning_rate if args.learning_rate is None else float(args.learning_rate)
+        ),
     )
     changed.validate()
     if min(size) < 1:
