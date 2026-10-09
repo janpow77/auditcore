@@ -22,6 +22,8 @@ Stand 2026-10-08 · erzeugt mit `tools/donut_verlauf.py` aus den Läufen auf dem
 | 4 · IBAN-Positionsvielfalt, Lauf 2 | `81c80dc8d52762ec-1` | RTX 5060 Ti | Voll | 1536×1152 | 2 × 4 | 43 | 6 | 16 368 / 16 368 | 79,5 h | 10,97 → 0,0016 |
 | 5 · Kopfdatenvielfalt (Weitertraining), Lauf 1 | `39a890114fa430a0-0` | RTX 5070 Ti | Voll | 1280×960 | 4 × 2 | 42 | 3 | 8 061 / 8 061 | 3,1 h | 0,50 → 0,0056 |
 | 5 · Kopfdatenvielfalt (Weitertraining), Lauf 2 | `58040121b93fafed-1` | RTX 5060 Ti | Voll | 1536×1152 | 2 × 4 | 43 | 3 | 8 061 / 8 061 | 7,5 h | 0,63 → 0,0029 |
+| 6 · Summenblock-Orte (Weitertraining), Lauf 1 | `e1ed67539d83a094-0` | RTX 5070 Ti | Voll | 1280×960 | 4 × 2 | 42 | 3 | 8 061 / 8 061 | 3,2 h | 0,09 → 0,0037 |
+| 6 · Summenblock-Orte (Weitertraining), Lauf 2 | `ccef8a5dd9299416-1` | RTX 5060 Ti | Voll | 1536×1152 | 2 × 4 | 43 | 3 | 8 061 / 8 061 | 7,5 h | 0,06 → 0,0029 |
 
 ![Loss-Verlauf](donut-verlauf/loss.svg)
 
@@ -107,3 +109,6 @@ Fehlt = kein Wert ausgegeben. Falsch = Wert ausgegeben, aber nicht der erwartete
 - 3 · Große Bilder, Lauf 2 (`a476eca68cb5367f-1`): bewertet, Training fertig, 5 500 von 5 500 Schritten.
 - 4 · IBAN-Positionsvielfalt, Lauf 2 (`81c80dc8d52762ec-1`): bewertet, Training fertig, 16 368 von 16 368 Schritten.
 - 5 · Kopfdatenvielfalt (Weitertraining), Lauf 2 (`58040121b93fafed-1`): bewertet, Training fertig, 8 061 von 8 061 Schritten.
+- 6 · Summenblock-Orte (Weitertraining), Lauf 2 (`ccef8a5dd9299416-1`): noch nicht bewertet, Training fertig, 8 061 von 8 061 Schritten.
+
+Ohne Bewertung: `e1ed67539d83a094-0`, `ccef8a5dd9299416-1`.
