@@ -11,7 +11,7 @@ from pathlib import Path
 import auditcore_llm_client
 
 PACKAGE = Path(auditcore_llm_client.__file__).parent
-HTTP_MODULES = {"transport.py", "sync_client.py", "async_client.py"}
+HTTP_MODULES = {"transport.py", "sync_client.py", "async_client.py", "pool.py"}
 
 
 def _imports(tree: ast.Module) -> list[str]:

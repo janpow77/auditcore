@@ -240,7 +240,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 99.24
+      "coverage_percent": 99.28
     },
     "auditcore_market_indicators": {
       "metrics": {

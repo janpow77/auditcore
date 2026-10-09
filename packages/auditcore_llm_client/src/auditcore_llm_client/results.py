@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from auditcore_llm_client.jsontypes import JsonObject
+from auditcore_llm_client.jsontypes import JsonObject, as_list, as_object, first_text
 
 
 @dataclass(frozen=True)
@@ -20,9 +20,28 @@ class ResponseTelemetry:
     capability: str = ""
 
 
+#: Reasoning fields of OpenAI-compatible servers (vLLM/DeepSeek, Ollama ``/v1``).
+_OPENAI_REASONING_FIELDS = ("reasoning_content", "reasoning")
+
+
+def _thinking_of(data: JsonObject) -> str:
+    """Reasoning field of a raw ``generate``/``chat`` answer (empty if absent)."""
+    choices = as_list(data.get("choices"))
+    if choices:
+        message = as_object(as_object(choices[0]).get("message"))
+        return first_text(*(message.get(name) for name in _OPENAI_REASONING_FIELDS))
+    message = as_object(data.get("message"))
+    return first_text((message or data).get("thinking"))
+
+
 @dataclass(frozen=True)
 class LlmResult:
-    """Answer of ``generate``/``chat``."""
+    """Answer of ``generate``/``chat``.
+
+    :attr:`thinking` exposes reasoning the gateway returned in a separate field;
+    ``content`` is never filled from it – callers opt in to that fallback via
+    :attr:`content_or_thinking`.
+    """
 
     content: str
     model: str
@@ -31,6 +50,22 @@ class LlmResult:
     latency_ms: int = 0
     raw_response: JsonObject = field(default_factory=dict)
     telemetry: ResponseTelemetry = field(default_factory=ResponseTelemetry)
+
+    @property
+    def thinking(self) -> str:
+        """Reasoning from its own answer field, read from ``raw_response``.
+
+        Ollama ``message.thinking`` (``/api/chat``) or ``thinking``
+        (``/api/generate``); OpenAI-compatible ``choices[0].message``
+        ``reasoning_content`` or ``reasoning``. Inline ``<think>`` blocks are
+        not moved here; they stay in ``content`` unless the profile strips them.
+        """
+        return _thinking_of(self.raw_response)
+
+    @property
+    def content_or_thinking(self) -> str:
+        """``content``, or :attr:`thinking` if ``content`` is blank (opt-in fallback)."""
+        return self.content if self.content.strip() else self.thinking
 
 
 @dataclass(frozen=True)
