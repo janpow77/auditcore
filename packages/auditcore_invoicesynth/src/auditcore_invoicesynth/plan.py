@@ -14,7 +14,11 @@ from datetime import date
 from random import Random
 from typing import Any
 
-from auditcore_invoicesynth.fonts import DIAGNOSTIC_FONT_FAMILIES, V2_FONT_FAMILIES
+from auditcore_invoicesynth.fonts import (
+    DIAGNOSTIC_FONT_FAMILIES,
+    V2_FONT_FAMILIES,
+    V4_FONT_FAMILIES,
+)
 from auditcore_invoicesynth.formats import AMOUNT_STYLES, CURRENCY_STYLES, DATE_STYLES
 from auditcore_invoicesynth.layouts import HOLDOUT_LAYOUTS, LAYOUTS, V2_LAYOUTS, available_layouts
 from auditcore_invoicesynth.variety import VARIETIES
@@ -165,7 +169,29 @@ def _degrade(rng: Random) -> DegradeSpec:
     )
 
 
-def _with_variety(spec: SampleSpec, config: SynthConfig) -> SampleSpec:
+V4_FONT_SALT = 0xF0_0B04
+#: Anteil der ``v4``-Belege mit einer der zusätzlichen Ziffernschriften.
+V4_FONT_SHARE = 0.30
+
+
+def _v4_font(spec: SampleSpec, v4_fonts: tuple[str, ...]) -> str:
+    """Schrift eines ``v4``-Belegs: eigene Zufallsfolge, sonst Schrift aus dem Plan."""
+    rng = Random(spec.seed ^ V4_FONT_SALT)
+    if v4_fonts and rng.random() < V4_FONT_SHARE:
+        return rng.choice(v4_fonts)
+    return spec.font_family
+
+
+def _v4_pool(config: SynthConfig, font_families: tuple[str, ...]) -> tuple[str, ...]:
+    """Verfügbare Zusatzschriften der Variante ``v4`` (nie eine Holdout-Schrift)."""
+    return tuple(
+        f for f in font_families if f in V4_FONT_FAMILIES and f not in config.holdout_font_families
+    )
+
+
+def _with_variety(
+    spec: SampleSpec, config: SynthConfig, v4_fonts: tuple[str, ...] = ()
+) -> SampleSpec:
     """Variante v2 außer im Layout-Holdout; dort bleibt T2 identisch zu v1."""
     if config.variety == "v1" or spec.split == "test_layout_holdout":
         return spec
@@ -174,7 +200,8 @@ def _with_variety(spec: SampleSpec, config: SynthConfig) -> SampleSpec:
     layout = spec.layout
     if layout not in FIXED_LAYOUTS and rng.random() < config.v2_layout_share:
         layout = rng.choice(V2_LAYOUTS)
-    return replace(spec, layout=layout, variety=config.variety, degrade=degrade)
+    font = _v4_font(spec, v4_fonts) if config.variety == "v4" else spec.font_family
+    return replace(spec, layout=layout, variety=config.variety, degrade=degrade, font_family=font)
 
 
 def _font_pools(
@@ -187,7 +214,8 @@ def _font_pools(
     font_families = tuple(
         f
         for f in font_families
-        if f not in DIAGNOSTIC_FONT_FAMILIES or f in config.holdout_font_families
+        if (f not in DIAGNOSTIC_FONT_FAMILIES or f in config.holdout_font_families)
+        and f not in V4_FONT_FAMILIES
     )
     if config.variety == "v1":
         font_families = tuple(f for f in font_families if f not in V2_FONT_FAMILIES)
@@ -257,4 +285,5 @@ def plan_dataset(config: SynthConfig, font_families: tuple[str, ...]) -> list[Sa
                     seed=rng.getrandbits(63),
                 )
             )
-    return [_with_variety(spec, config) for spec in specs]
+    v4_fonts = _v4_pool(config, font_families)
+    return [_with_variety(spec, config, v4_fonts) for spec in specs]
