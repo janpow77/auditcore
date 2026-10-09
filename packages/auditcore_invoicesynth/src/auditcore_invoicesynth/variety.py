@@ -27,11 +27,18 @@ from random import Random
 from typing import TYPE_CHECKING
 
 from auditcore_invoicesynth.labels import LABELS, Language
+from auditcore_invoicesynth.variety_v4 import (
+    FooterIds,
+    TotalHighlight,
+    TotalsOrder,
+    choose_v4,
+    v4_meta,
+)
 
 if TYPE_CHECKING:  # pragma: no cover
     from auditcore_invoicesynth.layout_model import Variant
 
-VARIETIES: tuple[str, ...] = ("v1", "v2", "v3")
+VARIETIES: tuple[str, ...] = ("v1", "v2", "v3", "v4")
 META_KEYS: tuple[str, ...] = ("invoice_number", "invoice_date", "supply_date", "due_date")
 VARIETY_SALT = 0x5EED_0B02
 V3_SALT = 0x5EED_0B03
@@ -94,6 +101,10 @@ class Variety:
     #: Ab ``v3``: Anordnung der Summen und waagerechte Kopfdatenzeile (``None`` = Vorlage).
     totals_place: str | None = None
     header_row: HeaderRow | None = None
+    #: Ab ``v4``: hervorgehobener Betrag, Summenfolge, Kennungen in der Fußzeile.
+    highlight: TotalHighlight | None = None
+    totals_order: TotalsOrder | None = None
+    footer_ids: FooterIds | None = None
 
 
 def variety_rng(seed: int) -> Random:
@@ -120,19 +131,27 @@ def choose_variety(rng: Random, *, language: Language, credit_note: bool) -> Var
 def apply_variety(
     variant: Variant, seed: int, *, credit_note: bool, variant_name: str = "v2"
 ) -> Variant:
-    """Variante ``v2`` bzw. ``v3`` auf eine fertige ``v1``-Wahl legen (eigene Zufallsfolge)."""
+    """Variante ``v2`` bis ``v4`` auf eine fertige ``v1``-Wahl legen (eigene Zufallsfolgen)."""
     rng = variety_rng(seed)
     labels = dict(variant.labels)
     for key in sorted(EXTRA_LABELS):
         options = (*LABELS[key][variant.language], *EXTRA_LABELS[key][variant.language])
         labels[key] = rng.choice(options)
     variety = choose_variety(rng, language=variant.language, credit_note=credit_note)
-    if variant_name == "v3":
+    if variant_name in ("v3", "v4"):
         v3_rng = Random(seed ^ V3_SALT)
         variety = choose_v3(v3_rng, variety)
         if labels["line_amount"] == "Gesamt":
             # „Gesamt“ über der Positionsspalte konkurriert mit dem Gesamtbetrag.
             labels["line_amount"] = v3_rng.choice(LINE_AMOUNT_LABELS)
+    if variant_name == "v4":
+        extra = choose_v4(seed, language=variant.language, credit_note=credit_note)
+        variety = replace(
+            variety,
+            highlight=extra.highlight,
+            totals_order=extra.totals_order,
+            footer_ids=extra.footer_ids,
+        )
     return replace(variant, labels=labels, variety=variety)
 
 
@@ -153,14 +172,17 @@ def choose_v3(rng: Random, variety: Variety) -> Variety:
     return replace(variety, totals_place=totals_place, header_row=header_row)
 
 
-def variety_meta(variety: Variety | None) -> dict[str, object]:
-    """Metadaten der ``v3``-Zusätze je Beleg (nur für ``v3``-Datensätze geschrieben)."""
-    if variety is None:
+def variety_meta(variety: Variety | None, name: str = "v3") -> dict[str, object]:
+    """Metadaten der Zusätze ab ``v3`` je Beleg (für ``v2`` leer)."""
+    if variety is None or name not in ("v3", "v4"):
         return {}
-    return {
+    meta: dict[str, object] = {
         "totals_place": variety.totals_place or "template",
         "header_row": variety.header_row is not None,
     }
+    if name == "v4":
+        meta.update(v4_meta(variety.highlight, variety.totals_order, variety.footer_ids))
+    return meta
 
 
 def due_text(variant: Variant, due: str, invoice_date: date, due_date: date) -> str:
