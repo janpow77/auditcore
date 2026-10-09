@@ -1,5 +1,11 @@
 # Changelog auditcore_dataprotection
 
+## 0.5.3 – unveröffentlicht
+
+- Pin des Extras `excel` auf `auditcore_reporting[excel]==0.4.0` nachgezogen
+  (neue Paketversion von auditcore_reporting, Issue #235). Keine
+  Verhaltensänderung.
+
 ## 0.5.2 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,

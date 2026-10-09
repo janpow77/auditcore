@@ -76,10 +76,11 @@ assert get_profile_format("flowlib-v2", "Stundensatz") == '#,##0.00 "EUR"'
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_reporting.__all__` (10):
+Öffentliche Namen aus `auditcore_reporting.__all__` (11):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
+| `format_eur` | Funktion | ``1.234,50 €`` (U+00A0 before "€"), half-up rounded; ``empty`` for empty/invalid input. | `format_de` |
 | `get_number_format` | Funktion | DE: Excel-Zahlenformat anhand der unveränderten Flowlib-Heuristik auswählen. | `formats` |
 | `PROFILE_IDS` | Konstante | – | `profiles` |
 | `get_profile_format` | Funktion | Return a profile's format without modifying values or guessing locale. | `profiles` |
@@ -95,6 +96,7 @@ assert get_profile_format("flowlib-v2", "Stundensatz") == '#,##0.00 "EUR"'
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_reporting.format_de` | German amount display after the shared contract ``format-money``. |
 | `auditcore_reporting.formats` | Excel-Zahlenformate / Excel format selection preserving Flowlib behavior. |
 | `auditcore_reporting.formats_v2` | Excel number formats of profile ``flowlib-v2`` (successor of ``flowlib-legacy-v1``). |
 | `auditcore_reporting.profiles` | Explicit format profiles; the original Flowlib selector remains unchanged. |
@@ -196,8 +198,9 @@ Textbausteinen. Ausgabe deterministisch: gleiche Eingaben, gleiche Bytes
 (feste ZIP-Zeitstempel, reportlab `invariant`). DOCX und HTML entstehen ohne
 Fremdpakete; PDF braucht `[pdf]`. Die Gestaltung ist ein austauschbares
 `DesignProfile` (Schrift, Farben, Ränder, Kopf- und Fußzeile); mitgeliefert
-ist nur `neutral-v1`. Logos und Briefköpfe gehören in die Word-Vorlage der
-Anwendung. Mitgelieferte neutrale Vorlagen: `vermerk` und `pruefbericht`
+ist nur `neutral-v1`. Briefköpfe gehören in die Word-Vorlage der
+Anwendung; Wappen und Logos kann der Block `image` aus übergebenen bytes
+einsetzen. Mitgelieferte neutrale Vorlagen: `vermerk` und `pruefbericht`
 (ESI-Fonds, Art. 74/77 VO (EU) 2021/1060).
 
 ```python
@@ -209,6 +212,112 @@ assert result.content[:2] == b"PK" and result.template_version == "1.0.0"
 assert render(report, report.sample, "docx").content == result.content
 assert "mit_feststellungen" in result.text_blocks
 ```
+
+Leere Inhalte und Dokumenteigenschaften (ab 0.4.0, standardmäßig aus):
+`"header_if_empty": true` am Block `table` zeichnet die Kopfzeile auch ohne
+Zeilen; `"empty": "—"` am Block `fields` lässt Zeilen mit leerem Wert stehen
+und zeigt den Ersatztext. `render(..., options=RenderOptions(author=…,
+title=…, created=…))` schreibt Autor, Titel und Erstellzeit (Zeitzone
+Pflicht, UTC) in DOCX-Kerneigenschaften, PDF-Info und HTML-Meta; ohne
+Optionen bleibt die Ausgabe byte-gleich.
+
+```python
+from datetime import UTC, datetime
+
+from auditcore_reporting import format_eur
+from auditcore_reporting.templates import RenderOptions, builtin_registry, render
+
+memo = builtin_registry().get("vermerk")
+options = RenderOptions(author="Prüfbehörde", created=datetime(2026, 10, 4, tzinfo=UTC))
+assert render(memo, memo.sample, "docx", options=options).content[:2] == b"PK"
+assert format_eur(1234.5) == "1.234,50\u00a0€" and format_eur(None) == "—"
+```
+
+Seitenlayout, Tabellen und Schriften (ab 0.4.0): `"orientation":
+"landscape"` in der Vorlage oder im `DesignProfile` (Vorlage geht vor);
+Tabellenspalten mit `width` (relativ), `bold` und `fill` (Farbe oder Regeln
+mit `if`), Tabellen mit `borders` (`grid`, `horizontal`, `none`),
+`header_fill`, `stripe` und `row_fill`. Für Zeichen außerhalb von WinAnsi
+(☐, ☒, Ω …) nimmt das PDF eine TrueType-Schrift der Anwendung auf
+(`PdfFont`, bytes; das Paket liefert keine Schriftdateien):
+
+```python
+from auditcore_reporting.templates import define_template, render
+
+schema = {
+    "type": "object",
+    "properties": {
+        "zeilen": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"name": {"type": "string"}, "neu": {"type": "boolean"}},
+            },
+        }
+    },
+}
+table = {
+    "type": "table",
+    "source": "zeilen",
+    "as": "z",
+    "borders": "horizontal",
+    "row_fill": [{"if": "z.neu", "color": "FFF2CC", "bold": True}],
+    "columns": [{"header": "Name", "cell": "{{ z.name }}", "width": 3}],
+}
+quer = define_template(
+    {
+        "id": "liste",
+        "version": "1.0.0",
+        "title": "Liste",
+        "orientation": "landscape",
+        "schema": schema,
+        "blocks": [table],
+    }
+)
+html = render(quer, {"zeilen": [{"name": "A", "neu": True}]}, "html").content.decode()
+assert "@page{size:A4 landscape}" in html and "background:#FFF2CC" in html
+# PDF mit eigener Schrift: DesignProfile(id="amt", pdf_font="Amt",
+#     pdf_fonts=(PdfFont("Amt", regular_ttf_bytes, bold=bold_ttf_bytes),))
+```
+
+Bilder, Sprungmarken und Inhaltsverzeichnis (ab 0.4.0): `{"type": "image",
+"image": "wappen", "width_cm": 2.5}` setzt ein `ReportImage` (PNG/JPEG als
+bytes aus `RenderOptions.images` oder `DesignProfile.images`) ein,
+`{"type": "image", "source": "pfad"}` ein Base64-Bild aus den Daten.
+`"anchor"` an Überschriften und Abschnitten, `"link"` an Absätzen,
+`{"type": "toc"}` und `"outline": true` ergeben Sprünge, ein
+Inhaltsverzeichnis (PDF mit Seitenzahlen) und PDF-Lesezeichen:
+
+```python
+import base64
+
+from auditcore_reporting.templates import RenderOptions, ReportImage, define_template, render
+
+pixel = base64.b64decode(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+)
+akte = define_template(
+    {
+        "id": "akte",
+        "version": "1.0.0",
+        "title": "Akte",
+        "outline": True,
+        "schema": {"type": "object", "properties": {}},
+        "blocks": [
+            {"type": "toc", "levels": 1},
+            {"type": "paragraph", "text": "Zur Anlage", "link": "anlage"},
+            {"type": "heading", "text": "Anlage", "anchor": "anlage"},
+            {"type": "image", "image": "wappen", "width_cm": 2},
+        ],
+    }
+)
+html = render(akte, {}, "html", options=RenderOptions(images=(ReportImage("wappen", pixel),)))
+assert '<a href="#anlage">Zur Anlage</a>' in html.content.decode()
+```
+
+`format_eur` (Modul `format_de`) setzt den gemeinsamen Vertrag
+`format-money` um (geschütztes Leerzeichen vor „€“, kaufmännische Rundung,
+„—“ bei leer); der Vorlagenfilter `eur` bleibt unverändert.
 
 Spezifikation der Vorlagen: Invarianten I14–I18 in
 [docs/spezifikation.md](docs/spezifikation.md).

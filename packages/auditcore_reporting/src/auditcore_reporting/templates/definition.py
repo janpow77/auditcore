@@ -10,9 +10,10 @@ from typing import cast
 from auditcore_common.frozen import freeze
 from auditcore_common.hashing import canonical_sha256
 
-from .blocks import condition_of, list_of, mapping_of, parse_blocks, text_of
+from .blocks import condition_of, flag_of, list_of, mapping_of, parse_blocks, text_of
 from .checker import Bindings, Checker
 from .conditions import Condition, condition_paths
+from .design import ORIENTATIONS
 from .errors import TemplateError
 from .model import (
     FORMATS,
@@ -20,14 +21,17 @@ from .model import (
     Block,
     BlockRef,
     BulletList,
+    Contents,
     Fields,
     Heading,
+    Image,
     Paragraph,
     ReportTemplate,
     Section,
     Table,
     TextBlock,
 )
+from .navigation import check_navigation
 from .placeholders import PLACEHOLDER
 from .schema import check_schema, validate
 
@@ -36,7 +40,7 @@ VERSION = re.compile(r"(0|[1-9]\d{0,3})\.(0|[1-9]\d{0,4})\.(0|[1-9]\d{0,5})")
 _BLOCK_ID = re.compile(r"[A-Za-z_][A-Za-z0-9_-]{0,63}")
 _KEYS = frozenset(
     {"id", "version", "name", "title", "description", "status", "schema", "conditions",
-     "text_blocks", "blocks", "sample", "formats"}
+     "text_blocks", "blocks", "sample", "formats", "orientation", "outline"}
 )  # fmt: skip
 
 
@@ -97,6 +101,10 @@ def _check_listing(
     texts = [block.item] if isinstance(block, BulletList) else [c.cell for c in block.columns]
     for text in texts:
         checker.text(text, inner, where)
+    if isinstance(block, Table):
+        rules = [*block.row_fills, *(fill for c in block.columns for fill in c.fills)]
+        for fill in rules:
+            checker.condition(fill.condition, inner, where)
 
 
 def _check_section(block: Section, checker: Checker, bindings: Bindings, where: str) -> None:
@@ -121,9 +129,21 @@ def _check_block(block: Block, checker: Checker, bindings: Bindings, where: str)
     elif isinstance(block, (BulletList, Table)):
         _check_listing(block, checker, bindings, where)
     elif isinstance(block, Fields):
+        checker.text(block.empty or "", bindings, where)
         for row in block.rows:
             checker.text(row.label, bindings, where)
             checker.text(row.value, bindings, where)
+    elif isinstance(block, Image):
+        _check_image(block, checker, bindings, where)
+    elif isinstance(block, Contents):
+        checker.text(block.title, bindings, where)
+
+
+def _check_image(block: Image, checker: Checker, bindings: Bindings, where: str) -> None:
+    checker.text(block.alt, bindings, where)
+    kind = checker.path(block.source, bindings, where).get("type") if block.source else "string"
+    if kind != "string" and not (isinstance(kind, (list, tuple)) and "string" in kind):
+        raise TemplateError(f"{where}: Bildquelle {block.source!r} muss Text (Base64) sein.")
 
 
 def _name(data: Mapping[str, object]) -> str:
@@ -133,6 +153,20 @@ def _name(data: Mapping[str, object]) -> str:
         raise TemplateError("name: Anzeigename ohne Platzhalter.")
     title = PLACEHOLDER.sub("", text_of(data, "title", "Vorlage"))
     return name.strip() or " ".join(title.split()).strip(" –-") or text_of(data, "id", "Vorlage")
+
+
+def _outline(data: Mapping[str, object], docx: bytes | None) -> bool:
+    outline = flag_of(data, "outline", "Vorlage")
+    if outline and docx is not None:
+        raise TemplateError("outline: nicht bei Word-Vorlagen.")
+    return outline
+
+
+def _orientation(data: Mapping[str, object], docx: bytes | None) -> str:
+    orientation = text_of(data, "orientation", "Vorlage", "")
+    if orientation and (orientation not in ORIENTATIONS or docx is not None):
+        raise TemplateError(f"orientation: {', '.join(ORIENTATIONS)}; nicht bei Word-Vorlagen.")
+    return orientation
 
 
 def _formats(value: object, docx: bytes | None) -> tuple[str, ...]:
@@ -198,6 +232,8 @@ def define_template(
         _frozen(data),
         docx,
         _name(data),
+        _orientation(data, docx),
+        _outline(data, docx),
     )
 
 
@@ -206,6 +242,7 @@ def _body(data: Mapping[str, object], docx: bytes | None, checker: Checker) -> t
         blocks = parse_blocks(data.get("blocks"), "blocks")
         for index, block in enumerate(blocks):
             _check_block(block, checker, {}, f"blocks[{index}]")
+        check_navigation(blocks)
         return blocks
     if "blocks" in data:
         raise TemplateError("Vorlage: 'blocks' und DOCX-Vorlage schließen sich aus.")
