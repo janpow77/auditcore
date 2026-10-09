@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_dataprotection"
-version = "0.5.2"
+version = "0.5.3"
 description = "Framework-independent records of processing activities and DPIA calculation"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -14,7 +14,7 @@ dependencies = ["auditcore_common==0.2.1"]
 
 [project.optional-dependencies]
 excel = ["openpyxl>=3.0.9,<4", "auditcore_reporting[excel]==0.3.1"]
-pdf = ["weasyprint>=60.2"]
+pdf = ["weasyprint>=60.2,!=68.0"]
 # REST interface of the VVT/DSFA UI (0.5.0): Starlette app or FastAPI router.
 web = ["starlette>=0.26.1,<2"]
 fastapi = ["fastapi>=0.92", "starlette>=0.26.1,<2"]
