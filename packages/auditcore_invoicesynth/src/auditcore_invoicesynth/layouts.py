@@ -46,6 +46,7 @@ from auditcore_invoicesynth.layout_model import LayoutSpec as LayoutSpec
 from auditcore_invoicesynth.layout_model import Variant as Variant
 from auditcore_invoicesynth.layout_model import available_layouts as available_layouts
 from auditcore_invoicesynth.layout_model import expansion as expansion
+from auditcore_invoicesynth.layout_v4 import draw_highlight, footer_ids, totals_ordered
 
 #: Summenanordnungen, die zwischen Kopfdaten und Positionstabelle stehen.
 TOTALS_BEFORE_TABLE = frozenset({"above_table", "top_box", "strip_columns"})
@@ -61,6 +62,9 @@ def effective_spec(name: str, variant: Variant) -> LayoutSpec:
         spec = replace(spec, totals=variety.totals_place)
     if variety.header_row is not None:
         spec = replace(spec, meta="header_row")
+    if variety.footer_ids is not None:
+        # v4: Kennungen und Bankverbindung nur klein in der Fußzeile.
+        spec = replace(spec, bank="footer", vat_id_place="footer")
     return spec
 
 
@@ -75,9 +79,18 @@ def _head_data(
 def _totals(
     canvas: Canvas, inv: SynthInvoice, variant: Variant, spec: LayoutSpec, y: float
 ) -> float:
+    if variant.variety is not None and variant.variety.totals_order is not None:
+        return totals_ordered(canvas, inv, variant, spec, y)
     if spec.totals == "strip_columns":
         return totals_strip_columns(canvas, inv, variant, spec, y)
     return totals(canvas, inv, variant, spec, y)
+
+
+def _footer(canvas: Canvas, inv: SynthInvoice, variant: Variant, spec: LayoutSpec) -> None:
+    if variant.variety is not None and variant.variety.footer_ids is not None:
+        footer_ids(canvas, inv, variant)
+    else:
+        footer(canvas, inv, variant, spec)
 
 
 def render_layout(canvas: Canvas, inv: SynthInvoice, variant: Variant, name: str) -> None:
@@ -93,17 +106,20 @@ def render_layout(canvas: Canvas, inv: SynthInvoice, variant: Variant, name: str
     sender_end = sender(canvas, inv, variant, spec, sender_x, 14)
     recipient_y = max(50.0, sender_end + 4)
     recipient(canvas, inv, variant, 20, recipient_y)
+    draw_highlight(canvas, inv, variant, spec, recipient_y, "recipient")
     y = _head_data(canvas, inv, variant, spec, recipient_y + 2)
+    y = draw_highlight(canvas, inv, variant, spec, y, "head")
     if spec.totals in TOTALS_BEFORE_TABLE:
         y = _totals(canvas, inv, variant, spec, max(y, 110))
         y = table(canvas, inv, variant, spec, y)
     else:
         y = table(canvas, inv, variant, spec, max(y, 120))
         y = _totals(canvas, inv, variant, spec, y)
+    y = draw_highlight(canvas, inv, variant, spec, y, "end")
     y = ensure_space(canvas, inv, variant, y, 3 * canvas.line_height() + 4)
     y = payment(canvas, inv, variant, spec, y)
     if spec.bank == "below_totals":
         y = ensure_space(canvas, inv, variant, y, 3 * canvas.line_height())
         bank_below(canvas, inv, variant, y)
-    footer(canvas, inv, variant, spec)
+    _footer(canvas, inv, variant, spec)
     page_footer(canvas, variant)
