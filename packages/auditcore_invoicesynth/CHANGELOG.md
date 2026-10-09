@@ -17,6 +17,15 @@ maßgebliche Unbekannt-Test; T2 und T2b gelten ab Stufe 7 als bekannt (ihre
 Konzepte fließen ins Training ein). T2c erst zur Abschlussbewertung von Stufe 7
 ansehen bzw. bewerten.**
 
+Training: Lernrate und Warm-up für Weitertraining einstellbar
+(`--learning-rate`, `--warmup-steps`; `OVERRIDABLE`/`override_args` geben sie
+an den FlowAgent-Job weiter). `TrainConfig.validate` verlangt
+`0 < learning_rate ≤ 1e-2` und `warmup_steps ≥ 0`. Beide Werte stecken wie
+bisher im `config_hash`, eine Wiederaufnahme mit abweichender Lernrate oder
+abweichendem Warm-up scheitert daher mit `ResumeMismatch`. Die Hashes der
+Profile ohne Schalter bleiben unverändert (Test mit festen Sollwerten). Das
+Job-Image muss für die neuen Schalter neu gebaut sein.
+
 Generatorvariante `v3` (`build --variety v3`; `v1` und `v2` bleiben bitgleich,
 Plan- und Datensatz-Hashes gegen `main` geprüft): `v2` plus, aus eigener
 Zufallsfolge je Beleg, (1) Summenorte – wie die Vorlage, unten links, umrahmter
