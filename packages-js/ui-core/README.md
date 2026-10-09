@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1223):
+Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -509,6 +509,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1223):
 | `@auditcore/ui-core` | `Projection` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `Proposal` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `QuestionKind` | Typ | – | `dataprotection/assistantTypes` |
+| `@auditcore/ui-core` | `QuestionRole` | Typ | Zuständige Stelle einer Frage; leer bei Kriterien aus dem Regelprofil. | `dataprotection/assistantTypes` |
 | `@auditcore/ui-core` | `QuestionView` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `RESIDUAL_FIELDS` | Konstante | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `ROW_STATUSES` | Konstante | – | `synopsis/types` |
@@ -1138,6 +1139,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1223):
 | `@auditcore/ui-core` | `profileStatusText` | Funktion | Sichtbarer Profilstatus („freigegeben“ …) oder der Rohwert. | `risk/controller` |
 | `@auditcore/ui-core` | `questionFieldId` | Funktion | Feldkennung einer Frage im DOM (Sprungziel der Fehlerübersicht). | `dataprotection/assistant` |
 | `@auditcore/ui-core` | `questionOptions` | Funktion | Auswahlwerte einer Frage mit Beschriftung; „nicht anwendbar“ nur, wo vorgesehen. | `dataprotection/assistant` |
+| `@auditcore/ui-core` | `questionRoleLabel` | Funktion | Kennzeichen der zuständigen Stelle („Zuständig: IT-Betrieb“); leer ohne Zuständigkeit. | `dataprotection/assistant` |
 | `@auditcore/ui-core` | `readExtrapolationAmount` | Funktion | Zahl eines Textfelds oder der Befund; leere, nicht verlangte Felder ergeben 0. | `extrapolation/model` |
 | `@auditcore/ui-core` | `readSubsample` | Funktion | Teilstichprobe für die Anfrage (`depth` 1 = Teilstichprobe der Einheit). | `extrapolation/model-subsample` |
 | `@auditcore/ui-core` | `recalculationView` | Funktion | Neuberechnung des Konfidenzniveaus; `null`, wenn nicht anwendbar (Ergebnis schlüssig usw.). | `extrapolation/view-details` |

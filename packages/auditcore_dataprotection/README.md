@@ -346,6 +346,7 @@ Markdown und CSV mit Formelschutz.
 | `auditcore_dataprotection.register_content` | Content of a register version: structure, identifiers, content checks, changes. |
 | `auditcore_dataprotection.register_html` | Self-contained, escaped HTML view of register report data. |
 | `auditcore_dataprotection.register_regime` | Regime- and role-specific register checks (profiles from 2026.10.4 on). |
+| `auditcore_dataprotection.register_tables` | Checks of table answers in the register (catalogue 2026.10.3). |
 | `auditcore_dataprotection.report_data` | Report data of assessments and registers as JSON-compatible documents. |
 | `auditcore_dataprotection.results` | Results of the DSFA calculation: issues, screening, risk and the proposal. |
 | `auditcore_dataprotection.review_package` | Review package (Prüfpaket) of one activity: what is submitted, in which state. |
