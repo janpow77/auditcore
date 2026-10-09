@@ -74,6 +74,10 @@ class TrainConfig:
                 raise ValueError(f"{name} muss ≥ 1 sein")
         if self.max_steps is not None and self.max_steps < 1:
             raise ValueError("max_steps muss ≥ 1 sein")
+        if not 0 < self.learning_rate <= 1e-2:
+            raise ValueError("learning_rate muss > 0 und ≤ 1e-2 sein")
+        if self.warmup_steps < 0:
+            raise ValueError("warmup_steps muss ≥ 0 sein")
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
