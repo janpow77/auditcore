@@ -19,6 +19,7 @@ from .model import (
     BlockRef,
     BulletList,
     Fields,
+    Fill,
     Heading,
     PageBreak,
     Paragraph,
@@ -65,11 +66,21 @@ class RList:
 
 @dataclass(frozen=True)
 class RTable:
-    """Resolved table: header, alignment per column and body rows."""
+    """Resolved table: header, alignment per column and body rows.
+
+    Layout extras are empty for a plain table: ``widths`` (relative weights per
+    column), ``fills``/``bold`` (per body cell, ``""``/``False`` = none),
+    ``borders`` and ``header_fill`` (``""`` = design profile).
+    """
 
     headers: tuple[str, ...]
     aligns: tuple[str, ...]
     rows: tuple[tuple[str, ...], ...]
+    widths: tuple[float, ...] = ()
+    fills: tuple[tuple[str, ...], ...] = ()
+    bold: tuple[tuple[bool, ...], ...] = ()
+    borders: str = "grid"
+    header_fill: str = ""
 
 
 @dataclass(frozen=True)
@@ -98,6 +109,8 @@ class ResolvedDocument:
     data_sha256: str
     nodes: tuple[Node, ...]
     text_blocks: tuple[str, ...]
+    #: Page orientation set by the template (``""`` = design profile decides).
+    orientation: str = ""
 
 
 class _Resolver:
@@ -166,23 +179,57 @@ class _Resolver:
     def listing(self, block: BulletList | Table, scope: Scope, where: str) -> None:
         entries = [scope.bind(block.var, entry) for entry in self.items(block.source, scope)]
         if not entries:
+            if isinstance(block, Table) and block.header_if_empty:
+                self.table(block, scope, entries, where)
             self.paragraphs(self.text(block.empty_text, scope, where), "")
         elif isinstance(block, BulletList):
             items = tuple(self.text(block.item, inner, where) for inner in entries)
             self.emit(RList(items), sum(map(len, items)))
         else:
-            rows = tuple(
-                tuple(self.text(c.cell, inner, where) for c in block.columns) for inner in entries
-            )
-            headers = tuple(self.text(c.header, scope, where) for c in block.columns)
-            aligns = tuple(c.align for c in block.columns)
-            self.emit(RTable(headers, aligns, rows), sum(len(cell) for row in rows for cell in row))
+            self.table(block, scope, entries, where)
+
+    def table(self, block: Table, scope: Scope, entries: list[Scope], where: str) -> None:
+        rows = tuple(
+            tuple(self.text(c.cell, inner, where) for c in block.columns) for inner in entries
+        )
+        headers = tuple(self.text(c.header, scope, where) for c in block.columns)
+        aligns = tuple(c.align for c in block.columns)
+        widths = tuple(c.width or 1.0 for c in block.columns)
+        styled = (
+            [self.cell_styles(block, i, inner) for i, inner in enumerate(entries)]
+            if block.styled
+            else []
+        )
+        node = RTable(
+            headers, aligns, rows,
+            widths if any(c.width for c in block.columns) else (),
+            tuple(tuple(color for color, _ in row) for row in styled),
+            tuple(tuple(bold for _, bold in row) for row in styled),
+            block.borders, block.header_fill,
+        )  # fmt: skip
+        self.emit(node, sum(len(cell) for row in rows for cell in row))
+
+    def first(self, fills: tuple[Fill, ...], scope: Scope) -> Fill | None:
+        return next((fill for fill in fills if self.holds(fill.condition, scope)), None)
+
+    def cell_styles(self, block: Table, index: int, scope: Scope) -> tuple[tuple[str, bool], ...]:
+        """Colour and emphasis per cell: cell rule, then row rule, then stripe."""
+        row = self.first(block.row_fills, scope) or Fill()
+        stripe = block.stripe if index % 2 == 1 else ""
+        cells = []
+        for column in block.columns:
+            cell = self.first(column.fills, scope) or Fill()
+            color = cell.color or row.color or stripe
+            cells.append((color, column.bold or cell.bold or row.bold))
+        return tuple(cells)
 
     def fields(self, block: Fields, scope: Scope, where: str) -> None:
         rows = []
         for row in block.rows:
             value = self.text(row.value, scope, where)
-            if value.strip():
+            if not value.strip() and block.empty is not None:
+                value = self.text(block.empty, scope, where)
+            if value.strip() or block.empty is not None:
                 rows.append((self.text(row.label, scope, where), value))
         if rows:
             self.emit(RFields(tuple(rows)), sum(len(label) + len(v) for label, v in rows))
@@ -232,4 +279,5 @@ def resolve(
         canonical_sha256(values),
         tuple(resolver.nodes),
         tuple(resolver.used),
+        template.orientation,
     )

@@ -10,6 +10,7 @@ from __future__ import annotations
 import io
 import zipfile
 from collections.abc import Sequence
+from datetime import datetime
 from xml.sax.saxutils import escape, quoteattr
 
 from .design import DesignProfile
@@ -114,14 +115,29 @@ def document_rels(with_header: bool) -> bytes:
     return _relationships(items)
 
 
-def core(title: str, description: str) -> bytes:
-    """``docProps/core.xml`` without timestamps (determinism)."""
+def core(title: str, description: str, author: str = "", created: datetime | None = None) -> bytes:
+    """``docProps/core.xml``; timestamps only when the caller passes ``created`` (UTC)."""
+    namespaces = ""
+    extra = ""
+    if author:
+        extra += f"<dc:creator>{text(author)}</dc:creator>"
+        extra += f"<cp:lastModifiedBy>{text(author)}</cp:lastModifiedBy>"
+    if created is not None:
+        namespaces = (
+            ' xmlns:dcterms="http://purl.org/dc/terms/"'
+            ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+        )
+        stamp = created.strftime("%Y-%m-%dT%H:%M:%SZ")
+        extra += "".join(
+            f'<dcterms:{name} xsi:type="dcterms:W3CDTF">{stamp}</dcterms:{name}>'
+            for name in ("created", "modified")
+        )
     return (
         DECLARATION
         + '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"'
-        ' xmlns:dc="http://purl.org/dc/elements/1.1/">'
+        f' xmlns:dc="http://purl.org/dc/elements/1.1/"{namespaces}>'
         f"<dc:title>{text(title)}</dc:title><dc:description>{text(description)}</dc:description>"
-        "<dc:language>de-DE</dc:language></cp:coreProperties>"
+        f"{extra}<dc:language>de-DE</dc:language></cp:coreProperties>"
     ).encode("utf-8")
 
 
