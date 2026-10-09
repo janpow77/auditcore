@@ -70,7 +70,7 @@ def _common(sub: argparse.ArgumentParser) -> None:
         "--variety",
         choices=VARIETIES,
         default="v1",
-        help="Generatorvariante; v1 = bisher (Hash stabil), v2 = Stufe 5, v3 = Summe",
+        help="Generatorvariante; v1 = bisher (Hash stabil), v2 = Stufe 5, v3/v4 = Stufe 6/7",
     )
     for split in SPLITS:
         sub.add_argument(f"--{split.replace('_', '-')}", dest=split, type=int)

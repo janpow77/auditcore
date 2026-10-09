@@ -2,6 +2,24 @@
 
 ## Unveröffentlicht
 
+Generatorvariante `v4` (`build --variety v4`; `v1`, `v2`, `v3` bleiben bitgleich,
+Plan-Hashes `3da7d6e1…`, `c50af53a…`, `1250705c…` und Datensatz-Hashes kleiner
+Probesätze gegen `main` geprüft; T2 und die Diagnosesätze unverändert): `v3` plus,
+aus eigenen Zufallsfolgen je Beleg und als Konzepte statt Nachbau von T2b,
+(1) hervorgehobener Rechnungsbetrag (rund 20 %): groß und fett, Beschriftung
+(„Rechnungsbetrag“, „Zu zahlen“, „Zahlbetrag“, „Gesamtbetrag“, „Amount due“,
+„Total due“) über oder vor dem Wert, oben rechts im Kopf, rechts neben dem
+Empfänger, mittig unter der Tabelle oder unten links im Kasten; Netto und USt
+bleiben im Summenblock; (2) gemischte Summenfolge (rund 25 %): Gesamtbetrag
+zuerst mit „davon Netto/USt“, USt vor Netto oder Gesamtbetrag in der Mitte,
+Beschriftung links vom oder über dem Wert; (3) Kennungen klein in 2–3
+Fußzeilenspalten (rund 20 %): Steuernummer, USt-IdNr., Bank, IBAN mit oder ohne
+Gruppierung und Beschriftung „IBAN“, „Konto (IBAN)“ oder „IBAN-Nr.“;
+(4) weitere Ziffernschriften Nimbus Sans, URW Bookman und P052
+(`fonts-urw-base35`, nur `v4`, rund 30 % der Belege, nie Holdout). Neue Module
+`variety_v4` und `layout_v4`; Plan-Hash `v4` (Seed 42, 20000/1000/1000/500, alle
+Katalogschriften) `42a03538…`.
+
 Diagnosesatz T2c (`test_layout_holdout_c`, `build-diagnostics --sets holdout_c`):
 versiegelter Unbekannt-Test mit zwei neuen Vorlagen (`holdout_c_brief`,
 Geschäftsbrief mit Kopfdaten im Fließtext; `holdout_c_balken`, farbiger
