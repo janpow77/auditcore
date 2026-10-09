@@ -113,7 +113,7 @@ def _diagnostics_parser(sub: argparse.ArgumentParser) -> None:
     sub.add_argument(
         "--sets",
         default="shuffled,holdout_b",
-        help="Kommaliste: shuffled (T2-gemischt), holdout_b (T2b) oder Satznamen",
+        help="Kommaliste: shuffled (T2-gemischt), holdout_b (T2b), holdout_c (T2c) oder Satznamen",
     )
     sub.add_argument("--workers", type=int, default=0, help="0 = automatisch (bis zu 16)")
 
