@@ -194,7 +194,7 @@ Anforderung enthält `docs/pruefkatalog-abgleich.md`.
 
 Fachlich bestätigt (09.10.2026): Im Dritten Teil HDSIG entscheidet allein das voraussichtlich hohe
 Risiko nach § 62 Abs. 1 HDSIG; § 64 Abs. 1 Nr. 2 HDSIG setzt ein hohes Risiko voraus und bleibt
-deshalb Muss-Kriterium (DP-E27). HUMAN_DECISION_REQUIRED bleibt für den Umgang mit dem
+deshalb Muss-Kriterium (DP-E27). Ebenfalls entschieden (09.10.2026) ist der Umgang mit dem
 Dokumentationsmodus bei fehlender DSB-Stellungnahme: Die Freigabe der DSFA-Fassung bleibt möglich,
 die Achse „DSFA-Bearbeitung“ lautet dann aber nicht „fachlich abgeschlossen“, und GATE-04 sperrt
-die Betriebsentscheidung.
+die Betriebsentscheidung. Dabei bleibt es.
