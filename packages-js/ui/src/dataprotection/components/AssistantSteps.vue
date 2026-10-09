@@ -14,7 +14,7 @@ const { t } = useI18n(dataprotectionMessages)
     <ol>
       <li v-for="(step, index) in view.steps" :key="step.id">
         <button type="button" :aria-current="step.id === view.step?.id ? 'step' : undefined" :disabled="busy || !stepReachable(view, index)" @click="emit('select', step.id)">
-          {{ index + 1 }}. {{ step.title }}
+          {{ step.title }}
           <span class="fa-assistant__badge">{{ prefixedLabel(t, 'stepStatus', step.status) }}</span>
         </button>
       </li>

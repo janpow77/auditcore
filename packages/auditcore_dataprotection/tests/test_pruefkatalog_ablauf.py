@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import socket
 from dataclasses import replace
 from datetime import UTC, datetime
@@ -53,7 +54,10 @@ def _revision(world: Kat) -> int | None:
     return None if draft is None else draft.revision
 
 
-YES = {"W01-06", "W09:gesamt_01_sonstiges_hohes_risiko", "W11-05", "W12-01"}
+YES = {
+    "1.7", "3.7", "3.7.2", "5.4", "6.1", "7.3", "W09:gesamt_01_sonstiges_hohes_risiko",
+    "11.2", "12.1",
+}  # fmt: skip
 
 
 def _value(question: dict[str, Any]) -> str:
@@ -61,6 +65,11 @@ def _value(question: dict[str, Any]) -> str:
         return "ja" if question["id"] in YES else "nein"
     if question["kind"] == KIND_TEXT:
         return TEXT
+    if question["kind"] == "zahl":
+        return "1200"
+    if question["kind"] == "tabelle":
+        row = {c["key"]: f"{c['title']} (synthetisch)" for c in question["columns"]}
+        return json.dumps([row], ensure_ascii=False)
     if question["choices"]:
         preferred = {"verantwortlicher", "hdsig_ji", "produktion", "synthetisch", "keine"}
         keys = [c["key"] for c in question["choices"]]
@@ -128,20 +137,22 @@ def _cover() -> dict[str, Any]:
 def test_wizard_unklar_wird_aufgabe_und_ausgeblendete_antworten_wirken_nicht() -> None:
     world = kat()
     activity_id = new_register(world, full_activity())
-    world.workspace.answer(TENANT, FACH, activity_id, "W05-05", "ja", expected_revision=1)
+    world.workspace.answer(TENANT, FACH, activity_id, "5.6", "ja", expected_revision=1)
     world.workspace.answer(
-        TENANT, FACH, activity_id, "W05-05a", "Dienstleister in Drittland Y", expected_revision=2
+        TENANT, FACH, activity_id, "5.6.1", "Dienstleister in Drittland Y", expected_revision=2
     )
     draft = world.register.draft(TENANT, FACH)
     assert draft is not None and draft.activities[0]["name_empfaenger_drittland"]
-    world.workspace.answer(TENANT, FACH, activity_id, "W05-05", "unklar", expected_revision=3)
+    world.workspace.answer(TENANT, FACH, activity_id, "5.6", "unklar", expected_revision=3)
     overview = world.workspace.overview(TENANT, FACH, activity_id)
     draft = world.register.draft(TENANT, FACH)
     assert draft is not None
     assert draft.activities[0]["drittlandtransfer"] is None  # unklar ≠ nein
     assert draft.activities[0]["name_empfaenger_drittland"] is None  # ausgeblendet
-    assert "W05-05a" in overview["assistent"]["hidden_answers"]
-    assert {"step": "W05", "question": "W05-05", "kind": "unklar"} in overview["assistent"]["tasks"]
+    assert "5.6.1" in overview["assistent"]["hidden_answers"]
+    assert {"step": "W05", "question": "5.6", "kind": "unklar", "number": "5.6"} in overview[
+        "assistent"
+    ]["tasks"]
 
 
 def test_t17_entwicklerrolle_ruft_betriebsentscheidung_direkt_auf() -> None:
@@ -257,7 +268,7 @@ def test_t24_neuer_empfaenger_oeffnet_pruefungen_erneut() -> None:
         expected_revision=1,
     )
     _release(world)
-    world.workspace.answer(TENANT, FACH, activity_id, "W05-03a", "Neue externe Stelle")
+    world.workspace.answer(TENANT, FACH, activity_id, "5.3", "Neue externe Stelle")
     result = world.workspace.evaluate(TENANT, FACH, activity_id)
     assert result.checklist["CHK-08"].status is ItemStatus.RECHECK
     assert "GATE-07" in {g.id for g in result.gates}
@@ -286,16 +297,16 @@ def test_t25_t26_zentrale_uebernahme_idempotent_und_konflikt() -> None:
 def test_t27_parallele_aenderung_wird_erkannt() -> None:
     world = kat()
     activity_id = new_register(world, full_activity())
-    world.workspace.answer(TENANT, FACH, activity_id, "W01-02", "A", expected_revision=1)
+    world.workspace.answer(TENANT, FACH, activity_id, "1.3", "A", expected_revision=1)
     with pytest.raises(StaleRevisionError):
-        world.workspace.answer(TENANT, FACH, activity_id, "W01-02", "B", expected_revision=1)
+        world.workspace.answer(TENANT, FACH, activity_id, "1.3", "B", expected_revision=1)
 
 
 def test_t28_stellungnahme_bleibt_an_alter_version() -> None:
     world = kat()
     activity_id = new_register(world, full_activity())
     released = _release(world)
-    world.workspace.answer(TENANT, FACH, activity_id, "W02-01", "Geänderter Zweck")
+    world.workspace.answer(TENANT, FACH, activity_id, "2.1", "Geänderter Zweck")
     result = world.workspace.evaluate(TENANT, FACH, activity_id)
     assert result.axes.documentation.value == "ueberarbeitungsbeduerftig"
     assert world.register.released(TENANT, FACH) == released  # unverändert
@@ -328,7 +339,7 @@ def test_t33_ki_vorschlag_bleibt_unbestaetigt() -> None:
         TENANT,
         FACH,
         activity_id,
-        "W02-03",
+        "2.3",
         "§ 99 Beispielgesetz (vollständig begründet)",
         origin="ki_vorschlag",
         expected_revision=1,
@@ -336,8 +347,8 @@ def test_t33_ki_vorschlag_bleibt_unbestaetigt() -> None:
     draft = world.register.draft(TENANT, FACH)
     assert draft is not None and draft.activities[0]["ermaechtigungsgrundlage"] is None
     tasks = world.workspace.overview(TENANT, FACH, activity_id)["assistent"]["tasks"]
-    assert {"step": "W02", "question": "W02-03", "kind": "unbestaetigt"} in tasks
-    world.workspace.confirm(TENANT, FACH, activity_id, "W02-03", expected_revision=2)
+    assert {"step": "W02", "question": "2.3", "kind": "unbestaetigt", "number": "2.3"} in tasks
+    world.workspace.confirm(TENANT, FACH, activity_id, "2.3", expected_revision=2)
     draft = world.register.draft(TENANT, FACH)
     assert draft is not None and draft.activities[0]["ermaechtigungsgrundlage"]
 
@@ -488,7 +499,7 @@ def test_vollstaendiger_durchlauf_bis_zur_betriebsentscheidung() -> None:
         "zentrale_uebernahme": "uebernommen",
         "betriebsentscheidung": "fuer_definierten_umfang_erteilt",
     }
-    world.workspace.answer(TENANT, FACH, activity_id, "W02-01", "Neuer Zweck")
+    world.workspace.answer(TENANT, FACH, activity_id, "2.1", "Neuer Zweck")
     later = world.workspace.evaluate(TENANT, FACH, activity_id).axes
     assert later.operation.value == "neu_zu_beurteilen"
     assert replace(decision) == decision
@@ -538,3 +549,19 @@ def test_gate02_freigegebene_fassung_mit_luecken_ist_nicht_bestaetigt() -> None:
     result = other.workspace.evaluate(TENANT, FACH, activity_id)
     assert result.axes.documentation.value == "ueberarbeitungsbeduerftig"
     assert "GATE-02" in {g.id for g in result.gates}
+
+
+def test_taetigkeit_allein_ueber_den_assistenten_vollstaendig() -> None:
+    """Ohne vorbefüllte Daten: der Assistent allein erfüllt alle Pflichtangaben."""
+    world = kat()
+    world.workspace.create_activity(TENANT, FACH, "Nur per Assistent", content_if_new=_cover())
+    activity_id = str(world.register.draft(TENANT, FACH).activities[0]["id"])  # type: ignore[union-attr]
+    world.assessments.start(TENANT, FACH, activity_id, world.profile)
+    _answer_everything(world, activity_id)
+    result = world.workspace.evaluate(TENANT, FACH, activity_id)
+    assert result.register_issues == (), result.register_issues
+    assert result.open_tasks == ()
+    saved = world.register.draft(TENANT, FACH).activities[0]  # type: ignore[union-attr]
+    assert saved["uebermittlungen"][0]["rechtsgrundlage"]
+    assert saved["anzahl_betroffene"] == 1200
+    assert saved["profiling"] is False and saved["rechtsregime"] == "hdsig_ji"

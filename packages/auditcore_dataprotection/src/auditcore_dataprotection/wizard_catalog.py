@@ -23,13 +23,17 @@ KIND_YES_NO = "ja_nein_unklar"
 KIND_TEXT = "text"
 KIND_CHOICE = "auswahl"
 KIND_IMPLEMENTATION = "umsetzung"
-KINDS = frozenset({KIND_YES_NO, KIND_TEXT, KIND_CHOICE, KIND_IMPLEMENTATION})
+KIND_NUMBER = "zahl"
+KIND_TABLE = "tabelle"
+KINDS = frozenset(
+    {KIND_YES_NO, KIND_TEXT, KIND_CHOICE, KIND_IMPLEMENTATION, KIND_NUMBER, KIND_TABLE}
+)
 
 YES, NO, UNCLEAR = "ja", "nein", "unklar"
 NOT_APPLICABLE = "nicht_anwendbar"
 IMPLEMENTATION_VALUES = ("nicht_begonnen", "geplant", "umgesetzt", "wirksam_nachgewiesen")
 
-CATALOG_FILE = "wizard-2026.10.1.json"
+CATALOG_FILE = "wizard-2026.10.2.json"
 SCREENING_STEP = "W09"
 
 _Json = Mapping[str, object]
@@ -59,6 +63,13 @@ class QuestionDef:
     show_if: Condition | None = None
     justify_values: tuple[str, ...] = ()
     reference: str = ""
+    #: Display number in the decision tree (e.g. "5.4.1") and nesting depth.
+    number: str = ""
+    depth: int = 0
+    #: Hints as bullet points; ``reference`` is the "Fundstelle".
+    hints: tuple[str, ...] = ()
+    #: Columns of a table answer: (key, title, required).
+    columns: tuple[tuple[str, str, bool], ...] = ()
 
     @property
     def allowed_values(self) -> tuple[str, ...]:
@@ -84,6 +95,10 @@ class QuestionDef:
             "choices": [{"key": k, "title": t} for k, t in self.choices],
             "justify_values": list(self.justify_values),
             "reference": self.reference,
+            "number": self.number,
+            "depth": self.depth,
+            "hints": list(self.hints),
+            "columns": [{"key": k, "title": t, "required": r} for k, t, r in self.columns],
         }
 
 
@@ -106,13 +121,20 @@ class WizardCatalog:
     source: str
     steps: tuple[StepDef, ...]
 
-    def question(self, question_id: str) -> QuestionDef:
-        """Question by id or ``ProfileError``."""
+    def find(self, question_id: str) -> QuestionDef | None:
+        """Question by id or ``None`` (answers of earlier catalogue versions)."""
         for step in self.steps:
             for question in step.questions:
                 if question.id == question_id:
                     return question
-        raise ProfileError(f"Unbekannte Frage „{question_id}“ im Assistenten.")
+        return None
+
+    def question(self, question_id: str) -> QuestionDef:
+        """Question by id or ``ProfileError``."""
+        found = self.find(question_id)
+        if found is None:
+            raise ProfileError(f"Unbekannte Frage „{question_id}“ im Assistenten.")
+        return found
 
     def step(self, step_id: str) -> StepDef:
         """Step by id or ``ProfileError``."""
@@ -163,7 +185,25 @@ def _question(raw: _Json) -> QuestionDef:
         justify_values=tuple(
             str(v) for v in cast(Sequence[object], raw.get("justify_values") or ())
         ),
+        reference=str(raw.get("reference") or ""),
+        number=str(raw.get("number") or ""),
+        hints=tuple(str(h) for h in cast(Sequence[object], raw.get("hints") or ())),
+        columns=tuple(
+            (str(c["key"]), str(c["title"]), bool(c.get("required", False)))
+            for c in cast(Sequence[_Json], raw.get("columns") or ())
+        ),
     )
+
+
+def _with_depth(questions: tuple[QuestionDef, ...]) -> tuple[QuestionDef, ...]:
+    """Nesting depth from the chain of parent questions (decision branches)."""
+    depth: dict[str, int] = {}
+    result = []
+    for q in questions:
+        parent = q.show_if.question if q.show_if is not None else None
+        depth[q.id] = depth.get(parent, -1) + 1 if parent else 0
+        result.append(replace(q, depth=depth[q.id]))
+    return tuple(result)
 
 
 def _step(raw: _Json) -> StepDef:
@@ -171,7 +211,7 @@ def _step(raw: _Json) -> StepDef:
         id=str(raw["id"]),
         title=str(raw["title"]),
         goal=str(raw.get("goal") or ""),
-        questions=tuple(_question(q) for q in cast(Sequence[_Json], raw["questions"])),
+        questions=_with_depth(tuple(_question(q) for q in cast(Sequence[_Json], raw["questions"]))),
         show_if=_condition(raw.get("show_if")),
     )
 
@@ -212,8 +252,11 @@ def catalog_for(profile: RuleProfile, base: WizardCatalog | None = None) -> Wiza
             required=True,
             na_allowed=False,
             reference=q.reference,
+            number=f"9.2.{index}",
+            depth=1,
+            hints=(q.explanation,) if q.explanation else (),
         )
-        for q in profile.questions
+        for index, q in enumerate(profile.questions, start=1)
     )
     steps = tuple(
         replace(s, questions=(*s.questions[:1], *screening, *s.questions[1:]))

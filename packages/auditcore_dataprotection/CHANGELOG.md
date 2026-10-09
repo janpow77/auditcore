@@ -11,8 +11,11 @@ Bestehende Profile, Berechnungen und Berichte älterer Fassungen sind unverände
   Begründungspflicht für „keine DSFA“, Rechtsregime und Rolle je Tätigkeit,
   Profiling und Rechtsgrundlage je Übermittlung, Verzeichnis des
   Auftragsverarbeiters.
-- Wizard (`wizard_catalog`, `wizard`): Fragen W01 bis W12 als Daten, wahlweise
-  geführt oder frei, „unklar“ als Aufgabe, Herkunft der Antworten.
+- Wizard (`wizard_catalog`, `wizard`, Katalog `wizard-2026.10.2`): Fragenbaum
+  nach dem Muster des Checklistendesigners mit Nummern, JA-/NEIN-Zweigen,
+  Hinweisen und Fundstellen (erzeugt mit `tools/build_wizard_catalog.py`);
+  Antwortarten Zahl und Tabelle (Übermittlungen mit Rechtsgrundlage);
+  wahlweise geführt oder frei, „unklar“ als Aufgabe, Herkunft der Antworten.
 - `ActivityWorkspace`: Wizard, Checkliste CHK-01 bis CHK-30, Nachweise und
   Schutzmaßnahmen auf der versionierten Verzeichnisfassung.
 - Getrennte Statusachsen (`StatusAxes`), Sperren GATE-01 bis GATE-08,

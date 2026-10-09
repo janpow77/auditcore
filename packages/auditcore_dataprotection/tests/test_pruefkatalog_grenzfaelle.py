@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, date, datetime
 from typing import Any
 
@@ -191,17 +192,17 @@ def test_assistent_prueft_werte() -> None:
         )
 
     with pytest.raises(ValidationError, match="Herkunft"):
-        answer("W01-01", "x", origin="geraten")
+        answer("1.1", "x", origin="geraten")
     with pytest.raises(ValidationError, match="nicht vorgesehen"):
-        answer("W01-01", "nicht_anwendbar")
+        answer("1.1", "nicht_anwendbar")
     with pytest.raises(ValidationError, match="zulässig"):
-        answer("W01-06", "vielleicht")
+        answer("1.7", "vielleicht")
     with pytest.raises(ValidationError, match="leer"):
-        answer("W01-01", "  ")
+        answer("1.1", "  ")
     with pytest.raises(ValidationError, match="begründen"):
-        answer("W01-06", "nein")
+        answer("1.7", "nein")
     with pytest.raises(ConflictError, match="ausgeblendet"):
-        answer("W05-05a", "Land Y")
+        answer("5.6.1", "Land Y")
     with pytest.raises(ProfileError):
         answer("W99-01", "x")
 
@@ -219,9 +220,9 @@ def test_nicht_anwendbar_braucht_im_assistenten_begruendung() -> None:
     catalog = catalog_from_dict({"version": "x", "steps": steps})
     wa = WizardAnswer("nicht_anwendbar", "", "f", "t", "bestaetigt")
     with pytest.raises(ValidationError, match="Begründung"):
-        record_answer(catalog, {}, {}, "W01-01", wa)
+        record_answer(catalog, {}, {}, "1.1", wa)
     ok = WizardAnswer("nicht_anwendbar", "trifft nicht zu", "f", "t", "bestaetigt")
-    data = record_answer(catalog, {}, {}, "W01-01", ok)
+    data = record_answer(catalog, {}, {}, "1.1", ok)
     assert data["name"] is None
 
 
@@ -231,7 +232,7 @@ def test_fragenkatalog_wird_geprueft() -> None:
         catalog_from_dict(
             {
                 "version": "1",
-                "steps": [{"id": "S", "title": "s", "questions": [{**base, "kind": "zahl"}]}],
+                "steps": [{"id": "S", "title": "s", "questions": [{**base, "kind": "datum"}]}],
             }
         )
     with pytest.raises(ProfileError, match="fehlerhaft"):
@@ -278,8 +279,8 @@ def test_navigation_und_assistentendaten() -> None:
             "antworten": {
                 "W09:gesamt_01_sonstiges_hohes_risiko": {"value": "unklar", "origin": "bestaetigt"},
                 "W09:art35_3_a": {"value": "ja", "origin": "ki_vorschlag"},
-                "W10-02": {"value": "notwendig", "origin": "bestaetigt"},
-                "W10-02a": {"value": "unklar", "origin": "bestaetigt"},
+                "10.2": {"value": "notwendig", "origin": "bestaetigt"},
+                "10.3": {"value": "unklar", "origin": "bestaetigt"},
                 "kaputt": "x",
             }
         }
@@ -317,11 +318,11 @@ def test_dsfa_fragen_im_assistenten() -> None:
     with pytest.raises(ValidationError, match="ja, nein"):
         world.workspace.answer(TENANT, FACH, activity_id, "W09:art35_3_a", "vielleicht")
     world.workspace.answer(TENANT, FACH, activity_id, "W09:art35_3_a", "ja")
-    world.workspace.answer(TENANT, FACH, activity_id, "W10-02", "Notwendig, weil …")
-    world.workspace.answer(TENANT, FACH, activity_id, "W10-02a", "Verhältnismäßig, weil …")
-    world.workspace.answer(TENANT, FACH, activity_id, "W10-07", "Standpunkt eingeholt")
+    world.workspace.answer(TENANT, FACH, activity_id, "10.2", "Notwendig, weil …")
+    world.workspace.answer(TENANT, FACH, activity_id, "10.3", "Verhältnismäßig, weil …")
+    world.workspace.answer(TENANT, FACH, activity_id, "10.4", "Standpunkt eingeholt")
     with pytest.raises(ValidationError, match="leer"):
-        world.workspace.answer(TENANT, FACH, activity_id, "W10-07", " ")
+        world.workspace.answer(TENANT, FACH, activity_id, "10.4", " ")
     current = world.assessments.get(TENANT, FACH, started.assessment_id)
     assert current.answers["art35_3_a"].value.value == "ja"
     assert current.necessity and current.proportionality and current.data_subject_view
@@ -336,7 +337,7 @@ def test_ohne_dsfa_dienst_keine_dsfa_fragen() -> None:
     world.workspace.assessment_service = None
     activity_id = new_register(world, full_activity())
     with pytest.raises(ConflictError, match="kein Dienst"):
-        world.workspace.answer(TENANT, FACH, activity_id, "W10-02", "x")
+        world.workspace.answer(TENANT, FACH, activity_id, "10.2", "x")
 
 
 def test_arbeitsbereich_ohne_verzeichnis_und_neue_taetigkeit() -> None:
@@ -478,3 +479,85 @@ def test_hilfsfunktionen() -> None:
         "transfer",
         "operation",
     }
+
+
+def test_uebermittlungen_und_zahl_ueber_den_assistenten() -> None:
+    import json as _json
+
+    world = kat()
+    activity = full_activity()
+    del activity["uebermittlungen"]
+    activity_id = new_register(world, activity)
+    with pytest.raises(ValidationError, match="Rechtsgrundlage"):
+        world.workspace.answer(TENANT, FACH, activity_id, "5.4", "ja", expected_revision=1)
+        world.workspace.answer(
+            TENANT,
+            FACH,
+            activity_id,
+            "5.4.1",
+            _json.dumps([{"empfaenger": "Amtsgericht"}]),
+            expected_revision=2,
+        )
+    rows = [
+        {
+            "empfaenger": "Amtsgericht",
+            "daten": "Verfahrensdaten",
+            "zweck": "Ahndung",
+            "rechtsgrundlage": "§ 69 OWiG",
+        }
+    ]
+    world.workspace.answer(
+        TENANT, FACH, activity_id, "5.4.1", _json.dumps(rows), expected_revision=2
+    )
+    world.workspace.answer(TENANT, FACH, activity_id, "4.6", "1200", expected_revision=3)
+    with pytest.raises(ValidationError, match="ganze Zahl"):
+        world.workspace.answer(TENANT, FACH, activity_id, "4.6", "etwa 1200", expected_revision=4)
+    saved = world.register.draft(TENANT, FACH).activities[0]  # type: ignore[union-attr]
+    assert saved["uebermittlungen"][0]["rechtsgrundlage"] == "§ 69 OWiG"
+    assert saved["anzahl_betroffene"] == 1200
+    issues = world.workspace.evaluate(TENANT, FACH, activity_id).register_issues
+    assert not any("Übermittlung" in i for i in issues)
+
+
+def test_keine_externe_uebermittlung_verlangt_keine_tabelle() -> None:
+    from auditcore_dataprotection.register_content import check_activity
+
+    activity = full_activity(uebermittlung_extern=False)
+    del activity["uebermittlungen"]
+    assert not [i for i in check_activity(activity, hdsig()) if "uebermittlungen" in i.subject]
+    activity["uebermittlung_extern"] = None
+    assert [i for i in check_activity(activity, hdsig()) if "uebermittlungen" in i.subject]
+
+
+def test_katalog_ist_ein_nummerierter_baum_mit_fundstellen() -> None:
+    catalog = catalog_for(hdsig())
+    questions = catalog.questions
+    assert all(q.number for q in questions)
+    children = [q for q in questions if q.depth > 0 and not q.id.startswith("W09:")]
+    assert children and all(q.show_if and q.show_if.question for q in children)
+    assert all(q.number.startswith(q.show_if.question + ".") for q in children if q.show_if)
+    yes_no = [q for q in questions if q.kind == "ja_nein_unklar" and not q.id.startswith("W09:")]
+    assert all(q.text.endswith("?") for q in yes_no)
+    inputs = [q for q in questions if q.kind in ("text", "zahl", "tabelle")]
+    assert all(q.text.endswith((":", "?")) for q in inputs)
+    with_reference = [q for q in questions if q.reference]
+    assert len(with_reference) >= 60
+
+
+def test_tabellen_und_zahlenwerte_werden_geprueft() -> None:
+    from auditcore_dataprotection.wizard_values import check_typed, from_register, to_register
+
+    catalog = catalog_for(hdsig())
+    table_q = catalog.question("5.4.1")
+    number_q = catalog.question("4.6")
+    for bad in ("kein json", '{"a": 1}', "[]", '[{"fremd": "x"}]', '["zeile"]',
+                '[{"empfaenger": "A"}]'):  # fmt: skip
+        with pytest.raises(ValidationError):
+            check_typed(table_q, bad)
+    with pytest.raises(ValidationError, match="höchstens"):
+        check_typed(table_q, json.dumps([{"empfaenger": "A", "rechtsgrundlage": "B"}] * 201))
+    rows = [{"empfaenger": "A", "rechtsgrundlage": "B"}]
+    assert to_register(table_q, json.dumps(rows))[0]["daten"] == ""
+    assert from_register(table_q, rows) and from_register(table_q, []) is None
+    assert from_register(number_q, 5) == "5" and from_register(number_q, True) is None
+    assert to_register(catalog.question("1.1"), "x") == "x"

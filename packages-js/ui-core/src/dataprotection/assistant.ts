@@ -256,3 +256,23 @@ export function stepReachable(view: AssistantView, index: number): boolean {
   if (view.mode === 'frei') return true
   return index < view.position || view.steps[index]?.id === view.next
 }
+
+export type TableRow = Record<string, string>
+
+/** Zeilen einer Tabellenantwort (JSON-Text des Vertrags); leere oder fehlerhafte Eingabe ergibt eine leere Zeile. */
+export function tableRows(question: AssistantQuestion, value: string): TableRow[] {
+  const empty = (): TableRow => Object.fromEntries(question.columns.map((c) => [c.key, '']))
+  try {
+    const parsed: unknown = JSON.parse(value || '[]')
+    if (Array.isArray(parsed) && parsed.length) return parsed.map((row) => ({ ...empty(), ...(row as TableRow) }))
+  } catch {
+    // ungültiger Entwurf: mit einer leeren Zeile neu beginnen
+  }
+  return [empty()]
+}
+
+/** Tabellenzeilen als Antworttext; vollständig leere Zeilen entfallen. */
+export function tableValue(rows: TableRow[]): string {
+  const filled = rows.filter((row) => Object.values(row).some((cell) => cell.trim() !== ''))
+  return filled.length ? JSON.stringify(filled) : ''
+}

@@ -33,26 +33,26 @@ describe('Datenschutz-Assistent (Kern)', () => {
   it('speichert eine Antwort mit Registerrevision und übernimmt den Serverstand', async () => {
     const { controller, port } = controllerFor()
     await controller.load()
-    controller.setDraft('W01-02', { value: 'unklar', justification: '' })
-    expect(await controller.answer('W01-02')).toBe(true)
-    expect(port.answer).toHaveBeenCalledWith(activityId, 'W01-02', 'unklar', '', fresh.register.revision)
+    controller.setDraft('1.3', { value: 'unklar', justification: '' })
+    expect(await controller.answer('1.3')).toBe(true)
+    expect(port.answer).toHaveBeenCalledWith(activityId, '1.3', 'unklar', '', fresh.register.revision)
     expect(controller.store.get().drafts).toEqual({})
     const tasks = controller.store.get().overview?.assistent.tasks ?? []
-    expect(tasks).toContainEqual({ step: 'W01', question: 'W01-02', kind: 'unklar' })
-    expect(tasks).toContainEqual({ step: 'W01', question: 'W01-03', kind: 'unbestaetigt' })
+    expect(tasks).toContainEqual({ step: 'W01', question: '1.3', kind: 'unklar', number: '1.3' })
+    expect(tasks).toContainEqual({ step: 'W01', question: '1.4', kind: 'unbestaetigt', number: '1.4' })
   })
 
   it('behält die Eingabe und meldet den Fehler an der Frage (GUI-08)', async () => {
     const answer = vi.fn(async () => {
-      throw new RestError('W01-06: die Antwort „nein“ ist zu begründen.', 422, 'validation_error')
+      throw new RestError('1.7: die Antwort „nein“ ist zu begründen.', 422, 'validation_error')
     })
     const { controller } = controllerFor(fakeAssistantPort(fresh, { answer }))
     await controller.load()
-    controller.setDraft('W01-06', { value: 'nein', justification: '' })
-    expect(await controller.answer('W01-06')).toBe(false)
+    controller.setDraft('1.7', { value: 'nein', justification: '' })
+    expect(await controller.answer('1.7')).toBe(false)
     const state = controller.store.get()
-    expect(state.fieldErrors['W01-06']).toContain('zu begründen')
-    expect(state.drafts['W01-06']).toEqual({ value: 'nein', justification: '' })
+    expect(state.fieldErrors['1.7']).toContain('zu begründen')
+    expect(state.drafts['1.7']).toEqual({ value: 'nein', justification: '' })
   })
 
   it('wechselt in den freien Modus über den Server', async () => {
@@ -66,7 +66,7 @@ describe('Datenschutz-Assistent (Kern)', () => {
   })
 
   it('bietet „unklar“ an und „nicht anwendbar“ nur, wo vorgesehen', () => {
-    const question = suggested.assistent.steps[0]!.questions.find((entry) => entry.id === 'W01-06')!
+    const question = suggested.assistent.steps[0]!.questions.find((entry) => entry.id === '1.7')!
     expect(questionOptions(t, question).map((option) => option.key)).toEqual(['ja', 'nein', 'unklar'])
   })
 })

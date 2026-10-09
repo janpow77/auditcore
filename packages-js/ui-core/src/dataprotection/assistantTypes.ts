@@ -3,7 +3,7 @@
 // zugehörigen Schreibaufrufe. Alle Werte berechnet der Server.
 
 export type AssistantMode = 'gefuehrt' | 'frei'
-export type QuestionKind = 'ja_nein_unklar' | 'text' | 'auswahl' | 'umsetzung'
+export type QuestionKind = 'ja_nein_unklar' | 'text' | 'auswahl' | 'umsetzung' | 'zahl' | 'tabelle'
 export type StepStatus = 'vollstaendig' | 'klaerung' | 'offen'
 export type TaskKind = 'unklar' | 'unbestaetigt' | 'fehlt'
 
@@ -26,6 +26,13 @@ export interface AssistantQuestion {
   choices: { key: string; title: string }[]
   justify_values: string[]
   reference: string
+  /** Nummer im Fragenbaum (z. B. „5.4.1“) und Tiefe im JA-/NEIN-Zweig. */
+  number: string
+  depth: number
+  /** Hinweise als Aufzählung; `reference` ist die Fundstelle. */
+  hints: string[]
+  /** Spalten einer Tabellenantwort. */
+  columns: { key: string; title: string; required: boolean }[]
   value: string | null
   answer: AssistantAnswer | null
 }
@@ -42,6 +49,8 @@ export interface AssistantTask {
   step: string
   question: string
   kind: TaskKind
+  /** Nummer der Frage im Fragenbaum. */
+  number: string
 }
 
 export interface AssistantState {

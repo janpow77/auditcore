@@ -79,13 +79,13 @@ def write_fixture(path: Path) -> None:
     activity_id = str(draft["content"]["taetigkeiten"][0]["id"])  # type: ignore[index]
     fresh = api.work.overview(a, activity_id)
     api.work.answer(
-        a, activity_id, {"question_id": "W01-02", "value": "unklar", "expected_revision": 1}
+        a, activity_id, {"question_id": "1.3", "value": "unklar", "expected_revision": 1}
     )
     suggested = api.work.answer(
         a,
         activity_id,
         {
-            "question_id": "W01-03",
+            "question_id": "1.4",
             "value": "Fachanwendung, E-Mail (Vorschlag)",
             "origin": "ki_vorschlag",
             "expected_revision": 2,
@@ -94,7 +94,17 @@ def write_fixture(path: Path) -> None:
     free = api.work.navigate(
         a, activity_id, {"mode": "frei", "step": "W07", "expected_revision": 3}
     )
-    data = {"activity_id": activity_id, "fresh": fresh, "suggested": suggested, "free": free}
+    api.work.navigate(a, activity_id, {"mode": "frei", "step": "W05", "expected_revision": 4})
+    table = api.work.answer(
+        a, activity_id, {"question_id": "5.4", "value": "ja", "expected_revision": 5}
+    )
+    data = {
+        "activity_id": activity_id,
+        "fresh": fresh,
+        "suggested": suggested,
+        "free": free,
+        "table": table,
+    }
     text = json.dumps(data, ensure_ascii=False, indent=1, sort_keys=True) + "\n"
     path.write_text(text, encoding="utf-8")
 

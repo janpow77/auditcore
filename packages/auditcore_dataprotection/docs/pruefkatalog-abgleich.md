@@ -1,7 +1,7 @@
 # Abgleich mit dem Prüfkatalog VVT/DSFA
 
 Stand: 08.10.2026, Paketversion 0.6.0, Profile `auditcore.dsgvo` und `auditcore.hdsig_ji` 2026.10.4,
-Fragenkatalog `wizard-2026.10.1`, Checkliste `checklist-2026.10.1`.
+Fragenkatalog `wizard-2026.10.2`, Checkliste `checklist-2026.10.1`.
 
 Grundlage ist der Prüfkatalog für eine Python-Bibliothek zu VVT und DSFA. Er ist eine
 Arbeitsgrundlage und weder eine Codeprüfung noch eine Freigabe. Die Befunde unten betreffen nur
@@ -81,7 +81,7 @@ Abnahmetests liegen in `tests/test_pruefkatalog_*.py`, die Oberflächentests in
 
 | ID | Befund | Umsetzung, Grenze |
 |---|---|---|
-| GUI-01 | erfüllt | „Warum wird das gefragt?“ mit Fundstelle je Frage |
+| GUI-01 | erfüllt | Jede Frage hat Hinweise als Aufzählung und, wo einschlägig, eine Fundstelle (Katalog 2026.10.2, Test `test_katalog_ist_ein_nummerierter_baum_mit_fundstellen`). Die Fundstellen sind vor der Freigabe gegen die amtlichen Fassungen zu prüfen. |
 | GUI-02 | erfüllt | keine Vorbelegung kritischer Fragen |
 | GUI-03 | erfüllt | bedingte Fragen; Antworten zu ausgeblendeten Fragen wirken nicht mehr und werden angezeigt |
 | GUI-04 | erfüllt | „Unklar“ wird Aufgabe |
@@ -104,7 +104,7 @@ Abnahmetests liegen in `tests/test_pruefkatalog_*.py`, die Oberflächentests in
 
 | Anforderung | Befund | Umsetzung |
 |---|---|---|
-| 7 Wizard W01 bis W12 | erfüllt | Fragenkatalog als Daten; W09 enthält die Fragen des gewählten Profils; W10 erscheint bei DSFA-Pflicht; Entscheidungen (W09-12, W11-01, W12-05) laufen über DSFA-Entscheidung, Konsultation und Betriebsentscheidung. Wahlweise geführt oder frei (`test_wizard_fuehrt_schrittweise_und_frei_wahlweise`). |
+| 7 Wizard W01 bis W12 | erfüllt | Fragenkatalog als nummerierter Entscheidungsbaum nach dem Muster des Checklistendesigners (JA-/NEIN-Zweige, Hinweise, Fundstellen; erzeugt mit `tools/build_wizard_catalog.py`). Übermittlungen werden als Tabelle mit Rechtsgrundlage, die Zahl der Betroffenen als Zahl erfasst; eine Tätigkeit lässt sich allein über den Assistenten vollständig erfassen (`test_taetigkeit_allein_ueber_den_assistenten_vollstaendig`); W09 enthält die Fragen des gewählten Profils; W10 erscheint bei DSFA-Pflicht; Entscheidungen (W09-12, W11-01, W12-05) laufen über DSFA-Entscheidung, Konsultation und Betriebsentscheidung. Wahlweise geführt oder frei (`test_wizard_fuehrt_schrittweise_und_frei_wahlweise`). |
 | 8 Checkliste CHK-01 bis CHK-30 | erfüllt | Datensätze mit Status, Zuständigkeit, Nachweis, Frist und Sperrwirkung; „nachgewiesen“ nur mit gültigem Nachweis passender Art (T-21, T-36) |
 | 8 Statusmodell der Prüfpunkte | erfüllt | alle acht Zustände; „nicht anwendbar“ mit Begründung und zweiter Person |
 | 9.1 Rollenmodell | teilweise | Berechtigungen `checklist.edit`, `operation.decide`, `central_register.*`, `export.public`; die Zuordnung zu Personen trifft die Anwendung. |

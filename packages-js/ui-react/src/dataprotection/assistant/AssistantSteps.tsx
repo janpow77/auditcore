@@ -14,7 +14,7 @@ export function AssistantSteps({ view, busy, onSelect }: { view: AssistantView; 
               disabled={busy || !stepReachable(view, index)}
               onClick={() => onSelect(step.id)}
             >
-              {index + 1}. {step.title} <span className="fa-assistant__badge">{prefixedLabel(t, 'stepStatus', step.status)}</span>
+              {step.title} <span className="fa-assistant__badge">{prefixedLabel(t, 'stepStatus', step.status)}</span>
             </button>
           </li>
         ))}

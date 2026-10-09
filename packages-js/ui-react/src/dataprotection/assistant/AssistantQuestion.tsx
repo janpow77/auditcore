@@ -6,6 +6,7 @@ import {
   type Draft,
 } from '@auditcore/ui-core'
 import { useDataProtectionText } from '../shared'
+import { AssistantTable } from './AssistantTable'
 
 export interface AssistantQuestionProps {
   question: Question
@@ -19,12 +20,14 @@ export interface AssistantQuestionProps {
 
 function Help({ question, id }: { question: Question; id: string }) {
   const { t } = useDataProtectionText()
-  if (!question.help && !question.reference) return null
+  if (!question.hints.length && !question.reference) return null
   return (
-    <details id={`${id}-help`}>
+    <details id={`${id}-help`} className="fa-assistant__hints">
       <summary>{t('whyAsked')}</summary>
-      <p>{question.help}</p>
-      {question.reference ? <p className="fa-dataprotection__muted">{t('reference', { reference: question.reference })}</p> : null}
+      <ul>
+        {question.reference ? <li>{t('reference', { reference: question.reference })}</li> : null}
+        {question.hints.map((hint, index) => <li key={index}>{hint}</li>)}
+      </ul>
     </details>
   )
 }
@@ -32,6 +35,12 @@ function Help({ question, id }: { question: Question; id: string }) {
 function Input({ question, draft, id, onChange }: { question: Question; draft: Draft; id: string; onChange: (draft: Draft) => void }) {
   const { t } = useDataProtectionText()
   const options = question.kind === 'text' ? [] : questionOptions(t, question)
+  if (question.kind === 'zahl' && !options.length) {
+    return <input id={id} type="number" min="0" step="1" inputMode="numeric" value={draft.value} aria-label={`${question.text} ${t('numberInput')}`} onChange={(event) => onChange({ ...draft, value: event.target.value })} />
+  }
+  if (question.kind === 'tabelle' && !options.length) {
+    return <AssistantTable question={question} value={draft.value} onChange={(value) => onChange({ ...draft, value })} />
+  }
   if (!options.length) {
     return <textarea id={id} value={draft.value} rows={3} aria-label={question.text} onChange={(event) => onChange({ ...draft, value: event.target.value })} />
   }
@@ -73,9 +82,9 @@ export function AssistantQuestion({ question, draft, error, busy, onChange, onSa
   const id = questionFieldId(question)
   const showReason = needsJustification(question, draft.value) || draft.justification !== ''
   return (
-    <fieldset className="fa-assistant__question" data-question={question.id} aria-describedby={`${id}-help`} aria-invalid={error ? 'true' : undefined}>
+    <fieldset className={['fa-assistant__question', question.depth ? `fa-assistant__question--depth-${Math.min(question.depth, 2)}` : ''].filter(Boolean).join(' ')} data-question={question.id} aria-describedby={`${id}-help`} aria-invalid={error ? 'true' : undefined}>
       <legend>
-        {question.text} <span className="fa-assistant__badge">{question.required ? t('requiredQuestion') : t('optionalQuestion')}</span>
+        <span className="fa-assistant__number">{question.number}</span> {question.text} <span className="fa-assistant__badge">{question.required ? t('requiredQuestion') : t('optionalQuestion')}</span>
       </legend>
       <Help question={question} id={id} />
       <Suggestion question={question} busy={busy} onConfirm={onConfirm} />

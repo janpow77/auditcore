@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1220):
+Exporte der Einstiegspunkte aus `package.json#exports` (1223):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -739,6 +739,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1220):
 | `@auditcore/ui-core` | `TableImportController` | Typ | – | `tabular/tableImport` |
 | `@auditcore/ui-core` | `TableImportData` | Schnittstelle | – | `tabular/tableImport` |
 | `@auditcore/ui-core` | `TablePreview` | Schnittstelle | – | `reporting/types` |
+| `@auditcore/ui-core` | `TableRow` | Typ | – | `dataprotection/assistant` |
 | `@auditcore/ui-core` | `TabularMessageKey` | Typ | – | `tabular/messages` |
 | `@auditcore/ui-core` | `TaskKind` | Typ | – | `dataprotection/assistantTypes` |
 | `@auditcore/ui-core` | `TemplateCatalogue` | Schnittstelle | – | `reporttemplates/types` |
@@ -1272,6 +1273,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1220):
 | `@auditcore/ui-core` | `synopsisMessages` | Konstante | Sichtbare Texte der Synopse; Begriffe wie im audit_designer und in ecohesion. | `synopsis/messages` |
 | `@auditcore/ui-core` | `synopsisPortOf` | Funktion | Der Port als Datenzugang der eingebetteten Synopse, wenn er Vergleiche laden kann. | `documents/controller` |
 | `@auditcore/ui-core` | `systemAssessmentChoices` | Funktion | Kategorien 1–4 der Systembewertung mit Konfidenzniveau (Tabelle 1, Leitfaden 3.2.1). | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `tableRows` | Funktion | Zeilen einer Tabellenantwort (JSON-Text des Vertrags); leere oder fehlerhafte Eingabe ergibt eine leere Zeile. | `dataprotection/assistant` |
+| `@auditcore/ui-core` | `tableValue` | Funktion | Tabellenzeilen als Antworttext; vollständig leere Zeilen entfallen. | `dataprotection/assistant` |
 | `@auditcore/ui-core` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
 | `@auditcore/ui-core` | `terMetrics` | Funktion | Kennzahlen der Gesamtfehlerquote in fester Reihenfolge. | `extrapolation/view` |
 | `@auditcore/ui-core` | `textBlockRows` | Funktion | – | `reporttemplates/view` |

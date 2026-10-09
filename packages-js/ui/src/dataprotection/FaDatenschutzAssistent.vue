@@ -101,7 +101,7 @@ function setMode(event: Event): void {
       <section class="fa-dataprotection__panel" :aria-label="t('tasksTitle', { count: overview.assistent.tasks.length })">
         <h3>{{ t('tasksTitle', { count: overview.assistent.tasks.length }) }}</h3>
         <ul>
-          <li v-for="task in overview.assistent.tasks" :key="task.question">{{ task.question }} – {{ prefixedLabel(t, 'task', task.kind) }}</li>
+          <li v-for="task in overview.assistent.tasks" :key="task.question">{{ task.number || task.question }} – {{ prefixedLabel(t, 'task', task.kind) }}</li>
         </ul>
       </section>
     </template>

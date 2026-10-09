@@ -357,6 +357,7 @@ Markdown und CSV mit Formelschutz.
 | `auditcore_dataprotection.web` | REST interface of the VVT and DSFA UI (``<flowaudit-vvt>``, ``<flowaudit-dsfa>``). |
 | `auditcore_dataprotection.wizard` | Guided wizard on the same versioned record as the free register editor. |
 | `auditcore_dataprotection.wizard_catalog` | Question catalogue of the guided wizard (steps W01 to W12), packaged as data. |
+| `auditcore_dataprotection.wizard_values` | Typed wizard answers: numbers and tables (e.g. transfers with legal basis). |
 | `auditcore_dataprotection.workbook_tables` | Flat tables of register and overview workbooks (no spreadsheet dependency). |
 | `auditcore_dataprotection.workspace` | Work on one activity: wizard, checklist, evidence and safeguards on one record. |
 | `auditcore_dataprotection.workspace_assessment` | Wizard answers that belong to the DPIA record (W09 screening, W10 texts). |

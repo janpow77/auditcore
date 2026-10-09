@@ -155,7 +155,7 @@ function Workspace(props: PartProps & { overview: WorkspaceOverview }) {
       {state.tab === 'status' ? <AssistantStatus axes={overview.status} gates={overview.sperren} /> : null}
       <section className="fa-dataprotection__panel" aria-label={t('tasksTitle', { count: tasks.length })}>
         <h3>{t('tasksTitle', { count: tasks.length })}</h3>
-        <ul>{tasks.map((task) => <li key={task.question}>{task.question} – {prefixedLabel(t, 'task', task.kind)}</li>)}</ul>
+        <ul>{tasks.map((task) => <li key={task.question}>{task.number || task.question} – {prefixedLabel(t, 'task', task.kind)}</li>)}</ul>
       </section>
     </>
   )

@@ -20,6 +20,8 @@ from datetime import datetime
 from .errors import ConflictError, ValidationError
 from .provenance import CONFIRMED, ORIGINS, is_confirmed
 from .wizard_catalog import (
+    KIND_NUMBER,
+    KIND_TABLE,
     KIND_TEXT,
     KIND_YES_NO,
     NO,
@@ -31,6 +33,7 @@ from .wizard_catalog import (
     StepDef,
     WizardCatalog,
 )
+from .wizard_values import check_typed, from_register, to_register
 
 MODE_GUIDED = "gefuehrt"
 MODE_FREE = "frei"
@@ -93,6 +96,8 @@ def _register_value(question: QuestionDef, activity: Mapping[str, object]) -> st
     if not question.target.startswith(_REGISTER):
         return None
     value = activity.get(question.target.removeprefix(_REGISTER))
+    if question.kind in (KIND_NUMBER, KIND_TABLE):
+        return from_register(question, value)
     if isinstance(value, bool):
         return YES if value else NO
     if isinstance(value, str) and value.strip():
@@ -158,6 +163,7 @@ def _check_value(question: QuestionDef, value: str, justification: str) -> None:
     allowed = question.allowed_values
     if allowed and value not in allowed:
         raise ValidationError(f"{question.id}: zulässig sind {', '.join(allowed)}.")
+    check_typed(question, value)
     if question.kind == KIND_TEXT and not value.strip():
         raise ValidationError(f"{question.id}: die Antwort ist leer; „unklar“ statt leer angeben.")
     if value in question.justify_values and not justification.strip():
@@ -170,7 +176,7 @@ def _register_target_value(question: QuestionDef, answer: WizardAnswer) -> objec
         return None
     if question.kind == KIND_YES_NO:
         return answer.value == YES
-    return answer.value
+    return to_register(question, answer.value)
 
 
 def _apply_targets(
@@ -180,8 +186,8 @@ def _apply_targets(
     answers = stored_answers(data)
     visible = {q.id for qs in visible_questions(catalog, data, context).values() for q in qs}
     for question_id, answer in answers.items():
-        question = catalog.question(question_id)
-        if not question.target.startswith(_REGISTER):
+        question = catalog.find(question_id)
+        if question is None or not question.target.startswith(_REGISTER):
             continue
         field = question.target.removeprefix(_REGISTER)
         if question_id in visible:
@@ -251,6 +257,10 @@ def _step_status(
     return status
 
 
+def _task(step_id: str, question: QuestionDef, kind: str) -> dict[str, str]:
+    return {"step": step_id, "question": question.id, "kind": kind, "number": question.number}
+
+
 def tasks(
     catalog: WizardCatalog, activity: Mapping[str, object], context: Mapping[str, str]
 ) -> tuple[dict[str, str], ...]:
@@ -262,11 +272,11 @@ def tasks(
         for question in questions:
             answer = answers.get(question.id)
             if answer is not None and answer.value == UNCLEAR:
-                found.append({"step": step_id, "question": question.id, "kind": "unklar"})
+                found.append(_task(step_id, question, "unklar"))
             elif answer is not None and not answer.confirmed:
-                found.append({"step": step_id, "question": question.id, "kind": "unbestaetigt"})
+                found.append(_task(step_id, question, "unbestaetigt"))
             elif question.required and question.id not in values:
-                found.append({"step": step_id, "question": question.id, "kind": "fehlt"})
+                found.append(_task(step_id, question, "fehlt"))
     return tuple(found)
 
 
@@ -379,9 +389,10 @@ def assessment_texts(catalog: WizardCatalog, activity: Mapping[str, object]) -> 
     """Confirmed DPIA texts (``assessment:<field>``) entered in the wizard."""
     result: dict[str, str] = {}
     for question_id, answer in stored_answers(activity).items():
-        question = catalog.question(question_id)
+        question = catalog.find(question_id)
         if (
-            question.target.startswith("assessment:")
+            question is not None
+            and question.target.startswith("assessment:")
             and answer.confirmed
             and answer.value not in (UNCLEAR, NOT_APPLICABLE)
         ):

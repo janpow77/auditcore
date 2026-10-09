@@ -1,0 +1,1788 @@
+{
+ "schema": "auditcore_dataprotection.wizard/1",
+ "version": "2026.10.2",
+ "source": "Prüfkatalog VVT/DSFA vom 08.10.2026, Abschnitt 7; Aufbau nach dem Checklistendesigner (Fragenbaum mit Hinweisen und Fundstellen). Arbeitsgrundlage, keine Rechtsquelle; Fundstellen vor Freigabe gegen amtliche Fassungen prüfen.",
+ "answer_values": {
+  "ja_nein_unklar": [
+   "ja",
+   "nein",
+   "unklar"
+  ]
+ },
+ "steps": [
+  {
+   "id": "W01",
+   "title": "1 Gegenstand der Verarbeitung",
+   "goal": "Erfasst wird die tatsächliche Verarbeitung, nicht die Software.",
+   "questions": [
+    {
+     "id": "1.1",
+     "number": "1.1",
+     "text": "Bezeichnung der Verarbeitungstätigkeit:",
+     "kind": "text",
+     "target": "register:name",
+     "reference": "Art. 30 Abs. 1 Satz 2 DSGVO; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Die Bezeichnung beschreibt die fachliche Tätigkeit, nicht die eingesetzte Anwendung (z. B. „Verfolgung von Ordnungswidrigkeiten nach Gesetz X“, nicht „Fachverfahren Y“).",
+      "Unterstützt eine Anwendung mehrere Tätigkeiten, ist jede Tätigkeit gesondert zu erfassen."
+     ],
+     "help": "Die Bezeichnung beschreibt die fachliche Tätigkeit, nicht die eingesetzte Anwendung (z. B. „Verfolgung von Ordnungswidrigkeiten nach Gesetz X“, nicht „Fachverfahren Y“). Unterstützt eine Anwendung mehrere Tätigkeiten, ist jede Tätigkeit gesondert zu erfassen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "1.2",
+     "number": "1.2",
+     "text": "Beschreibung des fachlichen Ablaufs:",
+     "kind": "text",
+     "target": "register:beschreibung",
+     "reference": "",
+     "hints": [
+      "Kurz in der Reihenfolge der Arbeitsschritte beschreiben: Eingang, Bearbeitung, Entscheidung, Abschluss."
+     ],
+     "help": "Kurz in der Reihenfolge der Arbeitsschritte beschreiben: Eingang, Bearbeitung, Entscheidung, Abschluss.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "1.3",
+     "number": "1.3",
+     "text": "Arbeitsschritte, die ausdrücklich nicht zu dieser Tätigkeit gehören:",
+     "kind": "text",
+     "target": "register:abgrenzung",
+     "reference": "",
+     "hints": [
+      "Die Abgrenzung verhindert, dass verschiedene Zwecke vermischt werden (z. B. allgemeine Marktbeobachtung und konkrete Verfolgung im Einzelfall)."
+     ],
+     "help": "Die Abgrenzung verhindert, dass verschiedene Zwecke vermischt werden (z. B. allgemeine Marktbeobachtung und konkrete Verfolgung im Einzelfall).",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "1.4",
+     "number": "1.4",
+     "text": "Anwendungen, Schnittstellen und manuelle Arbeitsschritte, die die Tätigkeit unterstützen:",
+     "kind": "text",
+     "target": "register:anwendungen",
+     "reference": "",
+     "hints": [
+      "Auch E-Mail, Tabellenkalkulationen und Papierakten angeben."
+     ],
+     "help": "Auch E-Mail, Tabellenkalkulationen und Papierakten angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "1.5",
+     "number": "1.5",
+     "text": "Für welche Umgebung wird die Verarbeitung beurteilt?",
+     "kind": "auswahl",
+     "target": "register:umgebung",
+     "reference": "",
+     "hints": [
+      "Eine Beurteilung der Test- oder Entwicklungsumgebung gilt nicht automatisch für den Produktivbetrieb."
+     ],
+     "help": "Eine Beurteilung der Test- oder Entwicklungsumgebung gilt nicht automatisch für den Produktivbetrieb.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "choices": [
+      {
+       "key": "entwicklung",
+       "title": "Entwicklung"
+      },
+      {
+       "key": "test",
+       "title": "Test"
+      },
+      {
+       "key": "produktion",
+       "title": "Produktion"
+      }
+     ]
+    },
+    {
+     "id": "1.6",
+     "number": "1.6",
+     "text": "Ist die Tätigkeit bereits im zentralen Verzeichnis der Dienststelle (Hausverzeichnis) erfasst?",
+     "kind": "ja_nein_unklar",
+     "target": "register:im_hausverzeichnis",
+     "reference": "",
+     "hints": [
+      "Die Frage dient der Vermeidung von Doppelerfassungen."
+     ],
+     "help": "Die Frage dient der Vermeidung von Doppelerfassungen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "1.6.1",
+     "number": "1.6.1",
+     "text": "Kennung des Eintrags im Hausverzeichnis:",
+     "kind": "text",
+     "target": "register:hausverzeichnis_referenz",
+     "reference": "",
+     "hints": [
+      "Kennung so angeben, wie sie im Hausverzeichnis geführt wird."
+     ],
+     "help": "Kennung so angeben, wie sie im Hausverzeichnis geführt wird.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "1.6",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "1.7",
+     "number": "1.7",
+     "text": "Werden personenbezogene Daten verarbeitet – einschließlich Benutzerkonten, Protokoll- und Supportdaten?",
+     "kind": "ja_nein_unklar",
+     "target": "register:personenbezug",
+     "reference": "Art. 4 Nr. 1 und 2 DSGVO",
+     "hints": [
+      "Personenbezug setzt keine Namensangabe voraus; es genügt, dass eine Person bestimmbar ist.",
+      "Auch bei synthetischen Fachdaten enthalten Benutzerkonten und Zugriffsprotokolle regelmäßig Daten der Beschäftigten.",
+      "Die Antwort „Nein“ ist zu begründen."
+     ],
+     "help": "Personenbezug setzt keine Namensangabe voraus; es genügt, dass eine Person bestimmbar ist. Auch bei synthetischen Fachdaten enthalten Benutzerkonten und Zugriffsprotokolle regelmäßig Daten der Beschäftigten. Die Antwort „Nein“ ist zu begründen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [
+      "nein"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "W02",
+   "title": "2 Zwecke, Zuständigkeit und Rechtsgrundlagen",
+   "goal": "Ohne geklärtes Rechtsregime und tragfähige Befugnis gibt es keinen positiven Abschluss; ein Entwurf bleibt speicherbar.",
+   "questions": [
+    {
+     "id": "2.1",
+     "number": "2.1",
+     "text": "Zweck bzw. Zwecke der Verarbeitung:",
+     "kind": "text",
+     "target": "register:zweck",
+     "reference": "Art. 5 Abs. 1 lit. b, Art. 30 Abs. 1 Satz 2 lit. b DSGVO; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Zwecke konkret und je Verarbeitungsschritt angeben.",
+      "Allgemeine Angaben wie „Verwaltung“ oder „Digitalisierung“ genügen nicht."
+     ],
+     "help": "Zwecke konkret und je Verarbeitungsschritt angeben. Allgemeine Angaben wie „Verwaltung“ oder „Digitalisierung“ genügen nicht.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "2.2",
+     "number": "2.2",
+     "text": "Vorschrift, die der Dienststelle die Aufgabe und Zuständigkeit zuweist:",
+     "kind": "text",
+     "target": "register:zustaendigkeitsnorm",
+     "reference": "",
+     "hints": [
+      "Norm mit Fundstelle angeben; die Prüfung obliegt der fachlich zuständigen Stelle."
+     ],
+     "help": "Norm mit Fundstelle angeben; die Prüfung obliegt der fachlich zuständigen Stelle.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "2.3",
+     "number": "2.3",
+     "text": "Rechtsgrundlage für die Erhebung, Speicherung und Nutzung der Daten:",
+     "kind": "text",
+     "target": "register:ermaechtigungsgrundlage",
+     "reference": "Art. 6 Abs. 1 und 3 DSGVO; im Dritten Teil HDSIG die fachgesetzliche Befugnis",
+     "hints": [
+      "Das Verzeichnis schafft selbst keine Befugnis zur Verarbeitung.",
+      "Übermittlungen werden gesondert unter 5.4 erfasst."
+     ],
+     "help": "Das Verzeichnis schafft selbst keine Befugnis zur Verarbeitung. Übermittlungen werden gesondert unter 5.4 erfasst.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "2.4",
+     "number": "2.4",
+     "text": "Welches Datenschutzrecht ist auf diese Tätigkeit anzuwenden?",
+     "kind": "auswahl",
+     "target": "register:rechtsregime",
+     "reference": "§ 40 HDSIG (Anwendungsbereich des Dritten Teils)",
+     "hints": [
+      "Die Einordnung erfolgt je Tätigkeit, nicht pauschal je Anwendung.",
+      "Der Dritte Teil HDSIG gilt für die Verhütung, Ermittlung, Aufdeckung, Verfolgung oder Ahndung von Straftaten und Ordnungswidrigkeiten.",
+      "„Unklar“ erzeugt eine Prüfaufgabe; ein bestätigter Abschluss ist bis zur Klärung nicht möglich."
+     ],
+     "help": "Die Einordnung erfolgt je Tätigkeit, nicht pauschal je Anwendung. Der Dritte Teil HDSIG gilt für die Verhütung, Ermittlung, Aufdeckung, Verfolgung oder Ahndung von Straftaten und Ordnungswidrigkeiten. „Unklar“ erzeugt eine Prüfaufgabe; ein bestätigter Abschluss ist bis zur Klärung nicht möglich.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "choices": [
+      {
+       "key": "dsgvo",
+       "title": "DSGVO"
+      },
+      {
+       "key": "hdsig_ji",
+       "title": "Dritter Teil HDSIG"
+      },
+      {
+       "key": "unklar",
+       "title": "Unklar – Prüfung erforderlich"
+      }
+     ]
+    },
+    {
+     "id": "2.5",
+     "number": "2.5",
+     "text": "Begründung der Einordnung:",
+     "kind": "text",
+     "target": "register:rechtsregime_begruendung",
+     "reference": "",
+     "hints": [
+      "Kurz darlegen, welcher Zweck die Einordnung trägt (z. B. Verfolgung einer Ordnungswidrigkeit im Einzelfall)."
+     ],
+     "help": "Kurz darlegen, welcher Zweck die Einordnung trägt (z. B. Verfolgung einer Ordnungswidrigkeit im Einzelfall).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "2.6",
+     "number": "2.6",
+     "text": "Werden die Daten zusätzlich für weitere Zwecke verarbeitet (z. B. Statistik, Berichterstattung, allgemeine Aufsicht)?",
+     "kind": "ja_nein_unklar",
+     "target": "register:weitere_zwecke",
+     "reference": "Art. 5 Abs. 1 lit. b, Art. 6 Abs. 4 DSGVO",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "2.6.1",
+     "number": "2.6.1",
+     "text": "Weitere Zwecke und Begründung ihrer Vereinbarkeit mit dem ursprünglichen Zweck:",
+     "kind": "text",
+     "target": "register:weitere_zwecke_beschreibung",
+     "reference": "",
+     "hints": [
+      "Ist ein weiterer Zweck nicht vereinbar, ist er als eigene Tätigkeit zu erfassen."
+     ],
+     "help": "Ist ein weiterer Zweck nicht vereinbar, ist er als eigene Tätigkeit zu erfassen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "2.6",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "2.7",
+     "number": "2.7",
+     "text": "Lässt sich der Zweck mit weniger Daten, weniger Zugriffen oder einem milderen Verfahren erreichen? Begründung:",
+     "kind": "text",
+     "target": "register:erforderlichkeit",
+     "reference": "Art. 5 Abs. 1 lit. c, Art. 25 Abs. 2 DSGVO",
+     "hints": [
+      "Geprüfte Alternativen und die Gründe ihrer Ablehnung angeben."
+     ],
+     "help": "Geprüfte Alternativen und die Gründe ihrer Ablehnung angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W03",
+   "title": "3 Verantwortlichkeiten und Beteiligte",
+   "goal": "Die oder der Datenschutzbeauftragte berät und überwacht; sie oder er ist nicht Betreiber und nicht alleinige Freigabestelle.",
+   "questions": [
+    {
+     "id": "3.1",
+     "number": "3.1",
+     "text": "In welcher Rolle handelt die Dienststelle bei dieser Tätigkeit?",
+     "kind": "auswahl",
+     "target": "register:rolle",
+     "reference": "Art. 4 Nr. 7 und 8, Art. 26, Art. 28 DSGVO",
+     "hints": [
+      "Die Rolle bestimmt die Vorlage des Verzeichnisses (Art. 30 Abs. 1 oder Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG)."
+     ],
+     "help": "Die Rolle bestimmt die Vorlage des Verzeichnisses (Art. 30 Abs. 1 oder Abs. 2 DSGVO, § 65 Abs. 1 oder 2 HDSIG).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "choices": [
+      {
+       "key": "verantwortlicher",
+       "title": "Verantwortlicher"
+      },
+      {
+       "key": "auftragsverarbeiter",
+       "title": "Auftragsverarbeiter"
+      },
+      {
+       "key": "gemeinsam_verantwortlicher",
+       "title": "Gemeinsam Verantwortlicher"
+      }
+     ]
+    },
+    {
+     "id": "3.1.1",
+     "number": "3.1.1",
+     "text": "Verantwortlicher, in dessen Auftrag verarbeitet wird:",
+     "kind": "text",
+     "target": "register:auftraggeber",
+     "reference": "Art. 30 Abs. 2 lit. a DSGVO; § 65 Abs. 2 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.1",
+      "in": [
+       "auftragsverarbeiter"
+      ]
+     }
+    },
+    {
+     "id": "3.1.2",
+     "number": "3.1.2",
+     "text": "Kategorien von Verarbeitungen, die im Auftrag durchgeführt werden:",
+     "kind": "text",
+     "target": "register:kategorien_verarbeitungen",
+     "reference": "Art. 30 Abs. 2 lit. b DSGVO; § 65 Abs. 2 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.1",
+      "in": [
+       "auftragsverarbeiter"
+      ]
+     }
+    },
+    {
+     "id": "3.2",
+     "number": "3.2",
+     "text": "Verantwortliche Stelle (Name und Kontaktdaten):",
+     "kind": "text",
+     "target": "register:verantwortliche_stelle",
+     "reference": "Art. 30 Abs. 1 Satz 2 lit. a DSGVO; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Verantwortlich ist die Dienststelle, nicht die entwickelnde Person oder das bearbeitende Referat."
+     ],
+     "help": "Verantwortlich ist die Dienststelle, nicht die entwickelnde Person oder das bearbeitende Referat.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "3.3",
+     "number": "3.3",
+     "text": "Fachlich verantwortliche Funktion:",
+     "kind": "text",
+     "target": "register:ansprechperson",
+     "reference": "",
+     "hints": [
+      "Funktion angeben, keine Privatperson."
+     ],
+     "help": "Funktion angeben, keine Privatperson.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "3.4",
+     "number": "3.4",
+     "text": "Vertretung der fachlich verantwortlichen Funktion:",
+     "kind": "text",
+     "target": "register:vertretung",
+     "reference": "",
+     "hints": [
+      "Die Vertretung stellt sicher, dass Rückfragen und Änderungen auch bei Abwesenheit bearbeitet werden."
+     ],
+     "help": "Die Vertretung stellt sicher, dass Rückfragen und Änderungen auch bei Abwesenheit bearbeitet werden.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "3.5",
+     "number": "3.5",
+     "text": "Stellen, die die Anwendung betreiben, administrieren und warten:",
+     "kind": "text",
+     "target": "register:betrieb",
+     "reference": "",
+     "hints": [
+      "Interne und externe Stellen sowie ihre Zuständigkeitsgrenzen angeben."
+     ],
+     "help": "Interne und externe Stellen sowie ihre Zuständigkeitsgrenzen angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "3.6",
+     "number": "3.6",
+     "text": "Wurde die oder der Datenschutzbeauftragte bereits eingebunden?",
+     "kind": "ja_nein_unklar",
+     "target": "register:dsb_eingebunden",
+     "reference": "Art. 38 Abs. 1 DSGVO; § 7 HDSIG",
+     "hints": [
+      "Die Einbindung soll frühzeitig erfolgen, nicht erst kurz vor Betriebsbeginn."
+     ],
+     "help": "Die Einbindung soll frühzeitig erfolgen, nicht erst kurz vor Betriebsbeginn.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "3.6.1",
+     "number": "3.6.1",
+     "text": "Datum der Einbindung und zuständige Kontaktstelle:",
+     "kind": "text",
+     "target": "register:dsb_beteiligung",
+     "reference": "",
+     "hints": [
+      "Datum und Form der Einbindung (z. B. Stellungnahme per E-Mail) angeben."
+     ],
+     "help": "Datum und Form der Einbindung (z. B. Stellungnahme per E-Mail) angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.6",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "3.7",
+     "number": "3.7",
+     "text": "Werden Dienstleister eingesetzt, die personenbezogene Daten im Auftrag verarbeiten?",
+     "kind": "ja_nein_unklar",
+     "target": "register:auftragsverarbeitung",
+     "reference": "Art. 28 DSGVO",
+     "hints": [
+      "Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich ist die weisungsgebundene Verarbeitung."
+     ],
+     "help": "Nicht jeder Dienstleister ist Auftragsverarbeiter; maßgeblich ist die weisungsgebundene Verarbeitung.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "3.7.1",
+     "number": "3.7.1",
+     "text": "Auftragsverarbeiter:",
+     "kind": "text",
+     "target": "register:auftragsverarbeiter",
+     "reference": "",
+     "hints": [
+      "Name des Dienstleisters und Gegenstand des Auftrags angeben."
+     ],
+     "help": "Name des Dienstleisters und Gegenstand des Auftrags angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.7",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "3.7.2",
+     "number": "3.7.2",
+     "text": "Liegt mit jedem Auftragsverarbeiter ein Vertrag nach Art. 28 Abs. 3 DSGVO vor?",
+     "kind": "ja_nein_unklar",
+     "target": "register:avv_besteht",
+     "reference": "Art. 28 Abs. 3 DSGVO",
+     "hints": [
+      "Ein fehlender Vertrag wird als offener Prüfpunkt geführt."
+     ],
+     "help": "Ein fehlender Vertrag wird als offener Prüfpunkt geführt.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.7",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "3.8",
+     "number": "3.8",
+     "text": "Werden die Zwecke und Mittel gemeinsam mit einer anderen Stelle festgelegt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:gemeinsame_verantwortlichkeit",
+     "reference": "Art. 26 DSGVO",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "3.8.1",
+     "number": "3.8.1",
+     "text": "Gemeinsam Verantwortliche:",
+     "kind": "text",
+     "target": "register:gemeinsame_verantwortliche",
+     "reference": "",
+     "hints": [
+      "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu hinterlegen."
+     ],
+     "help": "Die Vereinbarung nach Art. 26 Abs. 1 Satz 2 DSGVO ist als Nachweis zu hinterlegen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "3.8",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "3.9",
+     "number": "3.9",
+     "text": "Stelle, die über die Aufnahme des Betriebs entscheidet, und weitere zu beteiligende Stellen:",
+     "kind": "text",
+     "target": "register:entscheidungsstelle",
+     "reference": "",
+     "hints": [
+      "Z. B. IT-Sicherheit, Organisation, gegebenenfalls Personalvertretung."
+     ],
+     "help": "Z. B. IT-Sicherheit, Organisation, gegebenenfalls Personalvertretung.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W04",
+   "title": "4 Betroffene Personen und Daten",
+   "goal": "Erfasst werden Kategorien, keine Daten einzelner Personen.",
+   "questions": [
+    {
+     "id": "4.1",
+     "number": "4.1",
+     "text": "Kategorien betroffener Personen:",
+     "kind": "text",
+     "target": "register:kategorien_betroffene",
+     "reference": "Art. 30 Abs. 1 Satz 2 lit. c DSGVO; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Z. B. Verfahrensbetroffene, Zeuginnen und Zeugen, Hinweisgebende, Vertretungen, Beschäftigte."
+     ],
+     "help": "Z. B. Verfahrensbetroffene, Zeuginnen und Zeugen, Hinweisgebende, Vertretungen, Beschäftigte.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "4.2",
+     "number": "4.2",
+     "text": "Kategorien personenbezogener Daten:",
+     "kind": "text",
+     "target": "register:kategorien_daten",
+     "reference": "Art. 30 Abs. 1 Satz 2 lit. c DSGVO; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Keine Beispieldatensätze aus echten Fällen eintragen."
+     ],
+     "help": "Keine Beispieldatensätze aus echten Fällen eintragen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "4.3",
+     "number": "4.3",
+     "text": "Werden besondere Kategorien personenbezogener Daten verarbeitet (z. B. Gesundheitsdaten)?",
+     "kind": "ja_nein_unklar",
+     "target": "register:besondere_kategorien",
+     "reference": "Art. 9 Abs. 1 DSGVO; § 43 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "4.3.1",
+     "number": "4.3.1",
+     "text": "Welche besonderen Kategorien, und auf welche Ausnahme stützt sich die Verarbeitung?",
+     "kind": "text",
+     "target": "register:besondere_kategorien_grundlage",
+     "reference": "Art. 9 Abs. 2 DSGVO; § 43 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "4.3",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "4.4",
+     "number": "4.4",
+     "text": "Werden Daten über Straftaten, Ordnungswidrigkeiten, Verdachtsmomente oder Sanktionen verarbeitet?",
+     "kind": "ja_nein_unklar",
+     "target": "register:daten_art10",
+     "reference": "Art. 10 DSGVO; Dritter Teil HDSIG",
+     "hints": [
+      "Ist die Frage zu bejahen, ist die Einordnung unter 2.4 besonders sorgfältig zu prüfen."
+     ],
+     "help": "Ist die Frage zu bejahen, ist die Einordnung unter 2.4 besonders sorgfältig zu prüfen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "4.5",
+     "number": "4.5",
+     "text": "Herkunft der Daten:",
+     "kind": "text",
+     "target": "register:herkunft",
+     "reference": "Art. 14 Abs. 2 lit. f DSGVO",
+     "hints": [
+      "Quelle, Aktualität und Übernahmeverfahren angeben."
+     ],
+     "help": "Quelle, Aktualität und Übernahmeverfahren angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "4.6",
+     "number": "4.6",
+     "text": "Voraussichtliche Zahl der betroffenen Personen (Schätzung):",
+     "kind": "zahl",
+     "target": "register:anzahl_betroffene",
+     "reference": "",
+     "hints": [
+      "Eine Größenordnung genügt.",
+      "Die Zahl fließt in die Vorprüfung zur Datenschutz-Folgenabschätzung ein (Kriterium „umfangreiche Verarbeitung“)."
+     ],
+     "help": "Eine Größenordnung genügt. Die Zahl fließt in die Vorprüfung zur Datenschutz-Folgenabschätzung ein (Kriterium „umfangreiche Verarbeitung“).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "4.7",
+     "number": "4.7",
+     "text": "Zeitraum und räumliche Reichweite der Verarbeitung:",
+     "kind": "text",
+     "target": "register:umfang",
+     "reference": "",
+     "hints": [
+      "Z. B. „laufende Verfahren seit 2026, landesweit“."
+     ],
+     "help": "Z. B. „laufende Verfahren seit 2026, landesweit“.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "4.8",
+     "number": "4.8",
+     "text": "Wie werden auf Tatsachen beruhende Daten von persönlichen Einschätzungen unterschieden?",
+     "kind": "text",
+     "target": "register:tatsachen_trennung",
+     "reference": "Art. 7 Abs. 1 Richtlinie (EU) 2016/680",
+     "hints": [
+      "Nur im Anwendungsbereich des Dritten Teils HDSIG gefragt."
+     ],
+     "help": "Nur im Anwendungsbereich des Dritten Teils HDSIG gefragt.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "context": "regime",
+      "in": [
+       "hdsig_ji",
+       "unklar"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "W05",
+   "title": "5 Datenflüsse, Empfänger und Dienstleister",
+   "goal": "",
+   "questions": [
+    {
+     "id": "5.1",
+     "number": "5.1",
+     "text": "Orte der Erhebung, Verarbeitung, Speicherung und Sicherung:",
+     "kind": "text",
+     "target": "register:datenfluesse",
+     "reference": "",
+     "hints": [
+      "Einschließlich Datensicherungen und temporärer Dateien."
+     ],
+     "help": "Einschließlich Datensicherungen und temporärer Dateien.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "5.2",
+     "number": "5.2",
+     "text": "Zugriffsrechte der internen Rollen (Lesen, Ändern, Exportieren, Löschen):",
+     "kind": "text",
+     "target": "register:rechte_matrix",
+     "reference": "Art. 25, Art. 32 Abs. 1 DSGVO",
+     "hints": [
+      "Administrative Zugriffe gesondert angeben."
+     ],
+     "help": "Administrative Zugriffe gesondert angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "5.3",
+     "number": "5.3",
+     "text": "Kategorien von Empfängern:",
+     "kind": "text",
+     "target": "register:kategorien_empfaenger",
+     "reference": "Art. 30 Abs. 1 Satz 2 lit. d DSGVO; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Interne Empfänger und Offenlegungen an andere Stellen unterscheiden."
+     ],
+     "help": "Interne Empfänger und Offenlegungen an andere Stellen unterscheiden.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "5.4",
+     "number": "5.4",
+     "text": "Werden Daten an Stellen außerhalb der verantwortlichen Dienststelle übermittelt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:uebermittlung_extern",
+     "reference": "§ 65 Abs. 1 HDSIG (Rechtsgrundlage einschließlich Übermittlungen)",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "5.4.1",
+     "number": "5.4.1",
+     "text": "Übermittlungen:",
+     "kind": "tabelle",
+     "target": "register:uebermittlungen",
+     "reference": "§ 65 Abs. 1 HDSIG; Art. 6 Abs. 1 DSGVO",
+     "hints": [
+      "Je Empfänger eine Zeile.",
+      "Im Profil Dritter Teil HDSIG ist die Rechtsgrundlage je Übermittlung Pflichtangabe; im DSGVO-Profil wird sie für die Rechtmäßigkeitsprüfung ebenfalls verlangt."
+     ],
+     "help": "Je Empfänger eine Zeile. Im Profil Dritter Teil HDSIG ist die Rechtsgrundlage je Übermittlung Pflichtangabe; im DSGVO-Profil wird sie für die Rechtmäßigkeitsprüfung ebenfalls verlangt.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "columns": [
+      {
+       "key": "empfaenger",
+       "title": "Empfänger",
+       "required": true
+      },
+      {
+       "key": "daten",
+       "title": "Datenkategorien",
+       "required": false
+      },
+      {
+       "key": "zweck",
+       "title": "Zweck",
+       "required": false
+      },
+      {
+       "key": "rechtsgrundlage",
+       "title": "Rechtsgrundlage",
+       "required": true
+      }
+     ],
+     "show_if": {
+      "question": "5.4",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "5.5",
+     "number": "5.5",
+     "text": "Beteiligte Dienste (Hosting, Support, E-Mail, Monitoring, Fehlerberichte, Entwicklungsumgebung):",
+     "kind": "text",
+     "target": "register:dienste",
+     "reference": "",
+     "hints": [
+      "Auch Telemetrie und Dienste der Softwareentwicklung angeben."
+     ],
+     "help": "Auch Telemetrie und Dienste der Softwareentwicklung angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "5.6",
+     "number": "5.6",
+     "text": "Werden Daten in einem Drittland gespeichert oder dorthin übermittelt, oder ist ein Zugriff aus einem Drittland möglich?",
+     "kind": "ja_nein_unklar",
+     "target": "register:drittlandtransfer",
+     "reference": "Art. 30 Abs. 1 Satz 2 lit. e, Art. 44 bis 49 DSGVO; §§ 73 bis 76 HDSIG",
+     "hints": [
+      "Die Angabe „Server in der EU“ genügt nicht, wenn Support- oder Wartungszugriffe aus einem Drittland möglich sind."
+     ],
+     "help": "Die Angabe „Server in der EU“ genügt nicht, wenn Support- oder Wartungszugriffe aus einem Drittland möglich sind.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "5.6.1",
+     "number": "5.6.1",
+     "text": "Empfänger und Drittland:",
+     "kind": "text",
+     "target": "register:name_empfaenger_drittland",
+     "reference": "",
+     "hints": [
+      "Jeden Empfänger mit Land angeben; Unterauftragnehmer eingeschlossen."
+     ],
+     "help": "Jeden Empfänger mit Land angeben; Unterauftragnehmer eingeschlossen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "5.6",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "5.6.2",
+     "number": "5.6.2",
+     "text": "Garantien bzw. Rechtsgrundlage der Drittlandübermittlung:",
+     "kind": "text",
+     "target": "register:drittland_garantien",
+     "reference": "Art. 45, 46, 49 DSGVO; §§ 73 bis 76 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "5.6",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "5.7",
+     "number": "5.7",
+     "text": "Vorliegende Verträge, Weisungen und Vereinbarungen:",
+     "kind": "text",
+     "target": "register:vertraege",
+     "reference": "",
+     "hints": [
+      "Bezeichnung, Datum und Ablageort angeben; die Dokumente selbst werden als Nachweis hinterlegt."
+     ],
+     "help": "Bezeichnung, Datum und Ablageort angeben; die Dokumente selbst werden als Nachweis hinterlegt.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W06",
+   "title": "6 Speicherdauer und Rechte der betroffenen Personen",
+   "goal": "",
+   "questions": [
+    {
+     "id": "6.1",
+     "number": "6.1",
+     "text": "Kann für jede Datenkategorie eine Lösch- oder Überprüfungsfrist angegeben werden?",
+     "kind": "ja_nein_unklar",
+     "target": "register:frist_bestimmt",
+     "reference": "Art. 5 Abs. 1 lit. e, Art. 30 Abs. 1 Satz 2 lit. f DSGVO; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Das Gesetz verlangt die Angabe „wenn möglich“. Ohne konkrete Frist sind Begründung und Prüfstelle anzugeben; der Punkt bleibt als offene Aufgabe bestehen."
+     ],
+     "help": "Das Gesetz verlangt die Angabe „wenn möglich“. Ohne konkrete Frist sind Begründung und Prüfstelle anzugeben; der Punkt bleibt als offene Aufgabe bestehen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "6.1.1",
+     "number": "6.1.1",
+     "text": "Fristen je Datenkategorie und auslösendes Ereignis:",
+     "kind": "text",
+     "target": "register:speicherdauer",
+     "reference": "",
+     "hints": [
+      "Je Datenkategorie Frist und auslösendes Ereignis angeben (z. B. „Verfahrensakte: 5 Jahre nach rechtskräftigem Abschluss“)."
+     ],
+     "help": "Je Datenkategorie Frist und auslösendes Ereignis angeben (z. B. „Verfahrensakte: 5 Jahre nach rechtskräftigem Abschluss“).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "6.1",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "6.1.2",
+     "number": "6.1.2",
+     "text": "Grundlage der Fristen:",
+     "kind": "text",
+     "target": "register:loeschfrist_rechtsgrundlage",
+     "reference": "",
+     "hints": [
+      "Norm, Verwaltungsvorschrift oder Hausregelung angeben."
+     ],
+     "help": "Norm, Verwaltungsvorschrift oder Hausregelung angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "6.1",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "6.1.3",
+     "number": "6.1.3",
+     "text": "Begründung, warum noch keine Frist angegeben werden kann:",
+     "kind": "text",
+     "target": "register:speicherdauer_begruendung",
+     "reference": "",
+     "hints": [
+      "Die Begründung macht nachvollziehbar, warum die Frist noch offen ist."
+     ],
+     "help": "Die Begründung macht nachvollziehbar, warum die Frist noch offen ist.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "6.1",
+      "in": [
+       "nein"
+      ]
+     }
+    },
+    {
+     "id": "6.1.4",
+     "number": "6.1.4",
+     "text": "Stelle, die die Frist klärt:",
+     "kind": "text",
+     "target": "register:speicherdauer_pruefstelle",
+     "reference": "",
+     "hints": [
+      "Der Punkt bleibt als offene Aufgabe bestehen, bis die Frist feststeht."
+     ],
+     "help": "Der Punkt bleibt als offene Aufgabe bestehen, bis die Frist feststeht.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "6.1",
+      "in": [
+       "nein"
+      ]
+     }
+    },
+    {
+     "id": "6.2",
+     "number": "6.2",
+     "text": "Zu beachtende Aufbewahrungs-, Beweissicherungs- und Archivierungspflichten:",
+     "kind": "text",
+     "target": "register:aufbewahrung",
+     "reference": "",
+     "hints": [
+      "Konflikte zwischen Löschung und Aufbewahrung sowie die Übergabe an das Archiv angeben."
+     ],
+     "help": "Konflikte zwischen Löschung und Aufbewahrung sowie die Übergabe an das Archiv angeben.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "6.3",
+     "number": "6.3",
+     "text": "Umsetzung der Löschung in Datenbanken, Anhängen, Exporten, Zwischenspeichern und Datensicherungen:",
+     "kind": "text",
+     "target": "register:loeschkonzept",
+     "reference": "Art. 17 DSGVO",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "6.4",
+     "number": "6.4",
+     "text": "Art und Zeitpunkt der Information der betroffenen Personen:",
+     "kind": "text",
+     "target": "register:information",
+     "reference": "Art. 13, 14 DSGVO; §§ 50 ff. HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "6.5",
+     "number": "6.5",
+     "text": "Bearbeitung von Anträgen auf Auskunft, Berichtigung, Löschung und Einschränkung (Zuständigkeit, Fristen, Identitätsprüfung):",
+     "kind": "text",
+     "target": "register:betroffenenrechte",
+     "reference": "Art. 12, 15 bis 18 DSGVO; §§ 50 bis 54 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "6.6",
+     "number": "6.6",
+     "text": "Sollen Rechte der betroffenen Personen beschränkt werden?",
+     "kind": "ja_nein_unklar",
+     "target": "register:beschraenkung",
+     "reference": "Art. 23 DSGVO; § 70 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "6.6.1",
+     "number": "6.6.1",
+     "text": "Beschränkte Rechte und die Vorschrift, auf die sich die Beschränkung stützt:",
+     "kind": "text",
+     "target": "register:beschraenkungen",
+     "reference": "",
+     "hints": [
+      "Eine pauschale Beschränkung (z. B. „Ordnungswidrigkeitenverfahren: keine Auskunft“) genügt nicht."
+     ],
+     "help": "Eine pauschale Beschränkung (z. B. „Ordnungswidrigkeitenverfahren: keine Auskunft“) genügt nicht.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "6.6",
+      "in": [
+       "ja"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "W07",
+   "title": "7 Sicherheit der Verarbeitung",
+   "goal": "Nur umgesetzte und nachweislich wirksame Maßnahmen mindern das Risiko.",
+   "questions": [
+    {
+     "id": "7.1",
+     "number": "7.1",
+     "text": "Schäden, die betroffenen Personen durch Verlust, Fehlzuordnung, Offenlegung oder unzulässige Nutzung entstehen können:",
+     "kind": "text",
+     "target": "register:schadensszenarien",
+     "reference": "Art. 32 Abs. 2 DSGVO; Erwägungsgrund 75 DSGVO",
+     "hints": [
+      "Schäden aus Sicht der betroffenen Personen beschreiben, nicht aus Sicht der Dienststelle."
+     ],
+     "help": "Schäden aus Sicht der betroffenen Personen beschreiben, nicht aus Sicht der Dienststelle.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "7.2",
+     "number": "7.2",
+     "text": "Absicherung von Identitäten, Berechtigungen, privilegierten Zugriffen und Vertretungen:",
+     "kind": "text",
+     "target": "register:zugriffsschutz",
+     "reference": "Art. 32 Abs. 1 lit. b DSGVO; § 59 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "7.3",
+     "number": "7.3",
+     "text": "Kann eine allgemeine Beschreibung der technischen und organisatorischen Maßnahmen angegeben werden?",
+     "kind": "ja_nein_unklar",
+     "target": "register:tom_bestimmt",
+     "reference": "Art. 30 Abs. 1 Satz 2 lit. g, Art. 32 Abs. 1 DSGVO; § 59 HDSIG",
+     "hints": [
+      "Auch diese Angabe verlangt das Gesetz „wenn möglich“."
+     ],
+     "help": "Auch diese Angabe verlangt das Gesetz „wenn möglich“.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "7.3.1",
+     "number": "7.3.1",
+     "text": "Allgemeine Beschreibung der technischen und organisatorischen Maßnahmen:",
+     "kind": "text",
+     "target": "register:tom",
+     "reference": "",
+     "hints": [
+      "Keine Passwörter, Schlüssel oder sicherheitskritischen Details eintragen; auf das Sicherheitskonzept verweisen."
+     ],
+     "help": "Keine Passwörter, Schlüssel oder sicherheitskritischen Details eintragen; auf das Sicherheitskonzept verweisen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "7.3",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "7.3.2",
+     "number": "7.3.2",
+     "text": "Begründung, warum die Beschreibung noch nicht vorliegt:",
+     "kind": "text",
+     "target": "register:tom_begruendung",
+     "reference": "",
+     "hints": [
+      "Die Begründung macht nachvollziehbar, warum die Beschreibung noch fehlt."
+     ],
+     "help": "Die Begründung macht nachvollziehbar, warum die Beschreibung noch fehlt.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "7.3",
+      "in": [
+       "nein"
+      ]
+     }
+    },
+    {
+     "id": "7.3.3",
+     "number": "7.3.3",
+     "text": "Stelle, die die Beschreibung erstellt:",
+     "kind": "text",
+     "target": "register:tom_pruefstelle",
+     "reference": "",
+     "hints": [
+      "Der Punkt bleibt als offene Aufgabe bestehen, bis die Beschreibung vorliegt."
+     ],
+     "help": "Der Punkt bleibt als offene Aufgabe bestehen, bis die Beschreibung vorliegt.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "7.3",
+      "in": [
+       "nein"
+      ]
+     }
+    },
+    {
+     "id": "7.4",
+     "number": "7.4",
+     "text": "Protokollierte Verarbeitungsvorgänge, Zweck und Aufbewahrung der Protokolle:",
+     "kind": "text",
+     "target": "register:protokollierung",
+     "reference": "§ 71 HDSIG",
+     "hints": [
+      "Im Dritten Teil HDSIG sind insbesondere Erhebung, Veränderung, Abfrage, Offenlegung, Kombination und Löschung zu protokollieren.",
+      "Die Änderungshistorie des Verzeichnisses ersetzt diese Protokollierung nicht."
+     ],
+     "help": "Im Dritten Teil HDSIG sind insbesondere Erhebung, Veränderung, Abfrage, Offenlegung, Kombination und Löschung zu protokollieren. Die Änderungshistorie des Verzeichnisses ersetzt diese Protokollierung nicht.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "7.5",
+     "number": "7.5",
+     "text": "Organisation von Updates, Schwachstellenbehandlung, Datensicherung, Wiederherstellung und Notbetrieb:",
+     "kind": "text",
+     "target": "register:betriebssicherheit",
+     "reference": "Art. 32 Abs. 1 lit. c und d DSGVO",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "7.6",
+     "number": "7.6",
+     "text": "Umsetzungsstand der Schutzmaßnahmen insgesamt:",
+     "kind": "umsetzung",
+     "target": "register:massnahmen_stand",
+     "reference": "",
+     "hints": [
+      "Der Stand je Maßnahme wird in der Maßnahmenliste geführt.",
+      "Geplante Maßnahmen gelten nicht als wirksam."
+     ],
+     "help": "Der Stand je Maßnahme wird in der Maßnahmenliste geführt. Geplante Maßnahmen gelten nicht als wirksam.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "7.7",
+     "number": "7.7",
+     "text": "Stelle, die Verletzungen des Schutzes personenbezogener Daten bewertet und die erforderlichen Meldungen veranlasst:",
+     "kind": "text",
+     "target": "register:vorfallmeldung",
+     "reference": "Art. 33, 34 DSGVO",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W08",
+   "title": "8 Testbetrieb, KI und Veröffentlichung",
+   "goal": "",
+   "questions": [
+    {
+     "id": "8.1",
+     "number": "8.1",
+     "text": "Welche Testdaten werden verwendet?",
+     "kind": "auswahl",
+     "target": "register:testdaten",
+     "reference": "Erwägungsgrund 26 DSGVO",
+     "hints": [
+      "Pseudonymisierte Daten sind personenbezogene Daten; sie gelten nicht als anonym."
+     ],
+     "help": "Pseudonymisierte Daten sind personenbezogene Daten; sie gelten nicht als anonym.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "choices": [
+      {
+       "key": "synthetisch",
+       "title": "synthetisch"
+      },
+      {
+       "key": "anonymisiert",
+       "title": "anonymisiert"
+      },
+      {
+       "key": "pseudonymisiert",
+       "title": "pseudonymisiert"
+      },
+      {
+       "key": "echt",
+       "title": "echte Daten"
+      },
+      {
+       "key": "keine",
+       "title": "keine Testdaten"
+      }
+     ]
+    },
+    {
+     "id": "8.2",
+     "number": "8.2",
+     "text": "Maßnahmen zur Trennung von Test- und Produktivbetrieb:",
+     "kind": "text",
+     "target": "register:testtrennung",
+     "reference": "",
+     "hints": [
+      "Insbesondere Zugänge, Schnittstellen, Datensicherungen und Protokolle."
+     ],
+     "help": "Insbesondere Zugänge, Schnittstellen, Datensicherungen und Protokolle.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "8.3",
+     "number": "8.3",
+     "text": "Wird künstliche Intelligenz eingesetzt?",
+     "kind": "auswahl",
+     "target": "register:ki_einsatz",
+     "reference": "",
+     "hints": [
+      "Entwicklung, Fachverfahren und Datenschutzbewertung sind getrennte Einsatzarten mit eigenen Risiken.",
+      "Aus dem Einsatz von KI folgt nicht automatisch eine Pflicht zur Folgenabschätzung; die Bewertung erfolgt unter 9."
+     ],
+     "help": "Entwicklung, Fachverfahren und Datenschutzbewertung sind getrennte Einsatzarten mit eigenen Risiken. Aus dem Einsatz von KI folgt nicht automatisch eine Pflicht zur Folgenabschätzung; die Bewertung erfolgt unter 9.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "choices": [
+      {
+       "key": "keine",
+       "title": "nein"
+      },
+      {
+       "key": "entwicklung",
+       "title": "nur in der Softwareentwicklung"
+      },
+      {
+       "key": "fachverfahren",
+       "title": "im Fachverfahren"
+      },
+      {
+       "key": "bewertung",
+       "title": "in der Datenschutzbewertung"
+      },
+      {
+       "key": "mehrere",
+       "title": "in mehreren der genannten Bereiche"
+      }
+     ]
+    },
+    {
+     "id": "8.3.1",
+     "number": "8.3.1",
+     "text": "Daten, die KI-Dienste erhalten, und Umgang mit Eingaben, Ausgaben und Protokollen:",
+     "kind": "text",
+     "target": "register:ki_daten",
+     "reference": "",
+     "hints": [
+      "Anbieter, Speicherort und Speicherdauer sowie den Ausschluss der Nutzung für Training angeben."
+     ],
+     "help": "Anbieter, Speicherort und Speicherdauer sowie den Ausschluss der Nutzung für Training angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "8.3",
+      "in": [
+       "entwicklung",
+       "fachverfahren",
+       "bewertung",
+       "mehrere"
+      ]
+     }
+    },
+    {
+     "id": "8.4",
+     "number": "8.4",
+     "text": "Findet Profiling statt, also eine automatisierte Bewertung persönlicher Aspekte einer Person?",
+     "kind": "ja_nein_unklar",
+     "target": "register:profiling",
+     "reference": "Art. 4 Nr. 4, Art. 22 DSGVO; § 49 HDSIG; § 65 Abs. 1 HDSIG",
+     "hints": [
+      "Profiling liegt vor, wenn persönliche Aspekte einer Person automatisiert bewertet werden, insbesondere um Verhalten, Zuverlässigkeit oder Leistung zu analysieren oder vorherzusagen.",
+      "Eine Sortierung von Vorgängen ohne Bewertung der Person ist kein Profiling.",
+      "Im Profil Dritter Teil HDSIG ist die Angabe Pflicht."
+     ],
+     "help": "Profiling liegt vor, wenn persönliche Aspekte einer Person automatisiert bewertet werden, insbesondere um Verhalten, Zuverlässigkeit oder Leistung zu analysieren oder vorherzusagen. Eine Sortierung von Vorgängen ohne Bewertung der Person ist kein Profiling. Im Profil Dritter Teil HDSIG ist die Angabe Pflicht.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "8.4.1",
+     "number": "8.4.1",
+     "text": "Beschreibung des Profilings und der menschlichen Kontrolle:",
+     "kind": "text",
+     "target": "register:profiling_beschreibung",
+     "reference": "",
+     "hints": [
+      "Beschreiben, welche Merkmale bewertet werden und wie eine Person das Ergebnis prüft, bevor es Wirkung entfaltet."
+     ],
+     "help": "Beschreiben, welche Merkmale bewertet werden und wie eine Person das Ergebnis prüft, bevor es Wirkung entfaltet.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "8.4",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "8.5",
+     "number": "8.5",
+     "text": "Sollen Inhalte veröffentlicht werden (z. B. Quellcode in einem öffentlichen Repository)?",
+     "kind": "ja_nein_unklar",
+     "target": "register:veroeffentlichung_geplant",
+     "reference": "",
+     "hints": [
+      "Veröffentlichter Quellcode ist nicht per se datenschutzwidrig; Konfigurationen, Verfahrensunterlagen und Metadaten der Versionsverwaltung sind gesondert zu prüfen."
+     ],
+     "help": "Veröffentlichter Quellcode ist nicht per se datenschutzwidrig; Konfigurationen, Verfahrensunterlagen und Metadaten der Versionsverwaltung sind gesondert zu prüfen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "8.5.1",
+     "number": "8.5.1",
+     "text": "Zu veröffentlichende Inhalte:",
+     "kind": "text",
+     "target": "register:veroeffentlichung",
+     "reference": "",
+     "hints": [
+      "Quellcode, Muster, Metadaten und Verfahrensunterlagen getrennt betrachten; keine internen Konfigurationen oder Geheimnisse."
+     ],
+     "help": "Quellcode, Muster, Metadaten und Verfahrensunterlagen getrennt betrachten; keine internen Konfigurationen oder Geheimnisse.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "8.5",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "8.5.2",
+     "number": "8.5.2",
+     "text": "Stelle, die die Veröffentlichung freigegeben hat:",
+     "kind": "text",
+     "target": "register:veroeffentlichung_verantwortung",
+     "reference": "",
+     "hints": [
+      "Freigabe einschließlich Prüfung auf Geheimnisse und Lizenzrechte angeben."
+     ],
+     "help": "Freigabe einschließlich Prüfung auf Geheimnisse und Lizenzrechte angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "8.5",
+      "in": [
+       "ja"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "W09",
+   "title": "9 Vorprüfung zur Datenschutz-Folgenabschätzung",
+   "goal": "Begründete Vorprüfung nach Art. 35 DSGVO bzw. § 62 HDSIG. Die Kriterien 9.2 stammen aus dem gewählten Regelprofil.",
+   "questions": [
+    {
+     "id": "9.1",
+     "number": "9.1",
+     "text": "Einschlägige gesetzliche oder aufsichtsbehördliche Fallgruppe:",
+     "kind": "text",
+     "target": "register:dsfa_fallgruppe",
+     "reference": "Art. 35 Abs. 3 und 4 DSGVO; § 62 Abs. 1 HDSIG",
+     "hints": [
+      "„Noch nicht geprüft“ ist eine zulässige Angabe."
+     ],
+     "help": "„Noch nicht geprüft“ ist eine zulässige Angabe.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "9.3",
+     "number": "9.3",
+     "text": "Bezug auf eine bestehende Folgenabschätzung oder eine einschlägige Ausnahme:",
+     "kind": "text",
+     "target": "register:dsfa_bezug",
+     "reference": "",
+     "hints": [
+      "Fundstelle, Reichweite und Abweichungen angeben."
+     ],
+     "help": "Fundstelle, Reichweite und Abweichungen angeben.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W10",
+   "title": "10 Datenschutz-Folgenabschätzung",
+   "goal": "Nur wenn die Vorprüfung eine Pflicht ergibt oder die Folgenabschätzung freiwillig durchgeführt wird.",
+   "show_if": {
+    "context": "dsfa",
+    "in": [
+     "pflicht",
+     "freiwillig"
+    ]
+   },
+   "questions": [
+    {
+     "id": "10.1",
+     "number": "10.1",
+     "text": "Verarbeitungsvorgänge und Varianten, die die Folgenabschätzung abdeckt:",
+     "kind": "text",
+     "target": "register:dsfa_geltungsbereich",
+     "reference": "Art. 35 Abs. 1 Satz 2, Abs. 7 lit. a DSGVO",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "10.2",
+     "number": "10.2",
+     "text": "Begründung der Notwendigkeit der Verarbeitung:",
+     "kind": "text",
+     "target": "assessment:necessity",
+     "reference": "Art. 35 Abs. 7 lit. b DSGVO; § 62 Abs. 4 Nr. 2 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "10.3",
+     "number": "10.3",
+     "text": "Begründung der Verhältnismäßigkeit und verworfene Alternativen:",
+     "kind": "text",
+     "target": "assessment:proportionality",
+     "reference": "Art. 35 Abs. 7 lit. b DSGVO; § 62 Abs. 4 Nr. 2 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "10.4",
+     "number": "10.4",
+     "text": "Standpunkt der betroffenen Personen oder ihrer Vertretungen:",
+     "kind": "text",
+     "target": "assessment:data_subject_view",
+     "reference": "Art. 35 Abs. 9 DSGVO",
+     "hints": [
+      "Wurde kein Standpunkt eingeholt, sind die Gründe anzugeben."
+     ],
+     "help": "Wurde kein Standpunkt eingeholt, sind die Gründe anzugeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "10.5",
+     "number": "10.5",
+     "text": "Anlässe und Termine für die Überprüfung der Folgenabschätzung:",
+     "kind": "text",
+     "target": "register:dsfa_ueberpruefung",
+     "reference": "Art. 35 Abs. 11 DSGVO; § 62 Abs. 5 HDSIG",
+     "hints": [],
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W11",
+   "title": "11 Konsultation und fachliche Prüfung",
+   "goal": "Kein Automatismus durch Fristablauf und kein allgemeiner Knopf „trotzdem starten“.",
+   "questions": [
+    {
+     "id": "11.1",
+     "number": "11.1",
+     "text": "Wurde die Aufsichtsbehörde konsultiert?",
+     "kind": "ja_nein_unklar",
+     "target": "register:konsultiert",
+     "reference": "Art. 36 DSGVO; § 64 HDSIG",
+     "hints": [
+      "Ob eine Konsultation erforderlich ist, ergibt sich aus der Bewertung (Status „Konsultation“)."
+     ],
+     "help": "Ob eine Konsultation erforderlich ist, ergibt sich aus der Bewertung (Status „Konsultation“).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "11.1.1",
+     "number": "11.1.1",
+     "text": "Datum der Einleitung der Konsultation:",
+     "kind": "text",
+     "target": "register:konsultation_eingeleitet_am",
+     "reference": "",
+     "hints": [
+      "Bei einer laufenden Konsultation bleibt die Betriebsentscheidung gesperrt; ausgenommen ist nur der Dringlichkeitsfall nach § 64 Abs. 4 HDSIG."
+     ],
+     "help": "Bei einer laufenden Konsultation bleibt die Betriebsentscheidung gesperrt; ausgenommen ist nur der Dringlichkeitsfall nach § 64 Abs. 4 HDSIG.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "11.1",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "11.1.2",
+     "number": "11.1.2",
+     "text": "Eingereichte Unterlagen und Rückmeldungen der Aufsichtsbehörde:",
+     "kind": "text",
+     "target": "register:konsultation_unterlagen",
+     "reference": "",
+     "hints": [
+      "Unterlagen mit Version und Datum angeben."
+     ],
+     "help": "Unterlagen mit Version und Datum angeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "11.1",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "11.1.3",
+     "number": "11.1.3",
+     "text": "Noch umzusetzende Empfehlungen, Auflagen oder Einschränkungen:",
+     "kind": "text",
+     "target": "register:konsultation_massnahmen",
+     "reference": "",
+     "hints": [
+      "Jede Auflage wird als Maßnahme mit Zuständigkeit geführt."
+     ],
+     "help": "Jede Auflage wird als Maßnahme mit Zuständigkeit geführt.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": [],
+     "show_if": {
+      "question": "11.1",
+      "in": [
+       "ja"
+      ]
+     }
+    },
+    {
+     "id": "11.2",
+     "number": "11.2",
+     "text": "Sind fachliche Einwände, widersprüchliche Angaben und fehlende Nachweise geklärt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:einwaende_geklaert",
+     "reference": "",
+     "hints": [
+      "Offene Punkte werden in der Prüfliste geführt."
+     ],
+     "help": "Offene Punkte werden in der Prüfliste geführt.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W12",
+   "title": "12 Abschluss, Übernahme und Pflege",
+   "goal": "Ergebnis ist eine bestätigte Dokumentation und eine gesonderte Betriebsentscheidung, kein Konformitätszertifikat.",
+   "questions": [
+    {
+     "id": "12.1",
+     "number": "12.1",
+     "text": "Sind die Angaben vollständig, aktuell und von der fachlich zuständigen Stelle bestätigt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:angaben_bestaetigt",
+     "reference": "",
+     "hints": [
+      "Mit der Beantwortung wird der Bearbeitungsstand dokumentiert; die Freigabe erfolgt gesondert im Vier-Augen-Prinzip."
+     ],
+     "help": "Mit der Beantwortung wird der Bearbeitungsstand dokumentiert; die Freigabe erfolgt gesondert im Vier-Augen-Prinzip.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "12.2",
+     "number": "12.2",
+     "text": "Stelle, die Verzeichnis, Folgenabschätzung, Verträge und Maßnahmen im Betrieb aktuell hält, und ihre Vertretung:",
+     "kind": "text",
+     "target": "register:pflege_zustaendigkeit",
+     "reference": "",
+     "hints": [
+      "Die Zuständigkeit darf nicht an eine einzelne Person ohne Vertretung gebunden sein."
+     ],
+     "help": "Die Zuständigkeit darf nicht an eine einzelne Person ohne Vertretung gebunden sein.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "12.3",
+     "number": "12.3",
+     "text": "Verfahren bei Änderungen, Störungen, Außerbetriebnahme und Aufbewahrung der Dokumentation:",
+     "kind": "text",
+     "target": "register:lebenszyklus",
+     "reference": "",
+     "hints": [
+      "Relevante Änderungen (neuer Zweck, neuer Empfänger, neue Technik) lösen eine erneute Prüfung aus; eine frühere Freigabe gilt nicht weiter."
+     ],
+     "help": "Relevante Änderungen (neuer Zweck, neuer Empfänger, neue Technik) lösen eine erneute Prüfung aus; eine frühere Freigabe gilt nicht weiter.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  }
+ ]
+}

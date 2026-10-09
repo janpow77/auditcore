@@ -106,6 +106,8 @@ def _check_transfer_entry(index: int, entry: object, issue: Report) -> None:
 def check_transfers(activity: Mapping[str, object], issue: Report) -> None:
     """Every intended transfer names recipient and legal basis (§ 65 Abs. 1 HDSIG)."""
     entries = _transfer_entries(activity)
+    if activity.get("uebermittlung_extern") is False and not entries:
+        return  # ausdrücklich keine Übermittlung an Stellen außerhalb der Dienststelle
     has_recipients = not _blank(activity.get("name_empfaenger")) or not _blank(
         activity.get("kategorien_empfaenger")
     )

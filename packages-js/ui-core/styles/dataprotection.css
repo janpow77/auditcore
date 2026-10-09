@@ -84,3 +84,10 @@
 .fa-assistant__tabs [aria-selected="true"] { font-weight: 600; text-decoration: underline; }
 .fa-assistant__axes { display: grid; grid-template-columns: max-content 1fr; gap: var(--fa-space-1) var(--fa-space-3); margin: 0; }
 .fa-assistant__axes dt { font-weight: 600; }
+.fa-assistant__question--depth-1 { margin-left: 1.5rem; border-left: 3px solid var(--fa-color-accent); }
+.fa-assistant__question--depth-2 { margin-left: 3rem; border-left: 3px solid var(--fa-color-accent); }
+.fa-assistant__number { font-variant-numeric: tabular-nums; margin-right: var(--fa-space-1); }
+.fa-assistant__hints ul { margin: var(--fa-space-1) 0; padding-left: 1.2rem; }
+.fa-assistant__table { width: 100%; border-collapse: collapse; margin: var(--fa-space-2) 0; }
+.fa-assistant__table th, .fa-assistant__table td { border: 1px solid var(--fa-color-border); padding: var(--fa-space-1); text-align: left; }
+.fa-assistant__table input { width: 100%; font: inherit; }

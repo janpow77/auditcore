@@ -87,15 +87,15 @@ def test_assistent_und_checkliste_ueber_rest(client: TestClient) -> None:
     assert "compliant" not in str(data)
     answered = client.post(
         f"/activities/{activity_id}/answers",
-        json={"question_id": "W05-05", "value": "unklar", "expected_revision": revision_},
+        json={"question_id": "5.6", "value": "unklar", "expected_revision": revision_},
         headers=_as("fach", "fach"),
     )
     assert answered.status_code == 200, answered.text
     tasks = answered.json()["assistent"]["tasks"]
-    assert {"step": "W05", "question": "W05-05", "kind": "unklar"} in tasks
+    assert {"step": "W05", "question": "5.6", "kind": "unklar", "number": "5.6"} in tasks
     stale = client.post(
         f"/activities/{activity_id}/answers",
-        json={"question_id": "W05-05", "value": "ja", "expected_revision": revision_},
+        json={"question_id": "5.6", "value": "ja", "expected_revision": revision_},
         headers=_as("fach", "fach"),
     )
     assert stale.status_code == 409
@@ -153,7 +153,7 @@ def test_alle_arbeitsbereichs_endpunkte(client: TestClient) -> None:
     suggestion = client.post(
         f"{base}/answers",
         json={
-            "question_id": "W01-02",
+            "question_id": "1.3",
             "value": "Vorschlag",
             "origin": "vorlage",
             "expected_revision": revision_,
@@ -164,7 +164,7 @@ def test_alle_arbeitsbereichs_endpunkte(client: TestClient) -> None:
     revision_ += 1
     confirmed = client.post(
         f"{base}/answers/confirm",
-        json={"question_id": "W01-02", "expected_revision": revision_},
+        json={"question_id": "1.3", "expected_revision": revision_},
         headers=fach,
     )
     assert confirmed.status_code == 200
