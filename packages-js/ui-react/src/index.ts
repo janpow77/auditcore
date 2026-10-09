@@ -8,6 +8,7 @@ export { FlowauditTable, type FlowauditTableProps } from './table/FlowauditTable
 export { FlowauditSynopsis, type FlowauditSynopsisHandle, type FlowauditSynopsisProps } from './synopsis/FlowauditSynopsis'
 export { FlowauditVvt, type FlowauditVvtProps } from './dataprotection/FlowauditVvt'
 export { FlowauditDsfa, type FlowauditDsfaProps } from './dataprotection/FlowauditDsfa'
+export { FlowauditDatenschutzAssistent, type FlowauditDatenschutzAssistentProps } from './dataprotection/FlowauditDatenschutzAssistent'
 export { FlowauditGeoMap, type FlowauditGeoMapProps } from './geo/FlowauditGeoMap'
 export * from './risk'
 export * from './screening'

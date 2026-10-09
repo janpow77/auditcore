@@ -87,9 +87,12 @@ def test_profiles_are_packaged_data_not_code() -> None:
         "auditcore.dsgvo-2026.10.1.json",
         "auditcore.dsgvo-2026.10.2.json",
         "auditcore.dsgvo-2026.10.3.json",
+        "auditcore.dsgvo-2026.10.4.json",
         "auditcore.hdsig_ji-2026.10.1.json",
         "auditcore.hdsig_ji-2026.10.2.json",
         "auditcore.hdsig_ji-2026.10.3.json",
+        "auditcore.hdsig_ji-2026.10.4.json",
+        "auditcore.hdsig_ji-2026.10.5.json",
         "regulierung.dsgvo-2026.09.1.json",
         "regulierung.hdsig_ji-2026.09.1.json",
     ]

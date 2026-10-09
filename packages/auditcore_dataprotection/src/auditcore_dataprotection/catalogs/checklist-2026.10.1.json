@@ -1,0 +1,299 @@
+{
+ "schema": "auditcore_dataprotection.checklist/1",
+ "version": "2026.10.1",
+ "source": "Prüfkatalog VVT/DSFA vom 08.10.2026, Abschnitt 8 (Arbeitsgrundlage, keine Rechtsquelle)",
+ "items": [
+  {
+   "id": "CHK-01",
+   "area": "A",
+   "owner_role": "fachverantwortung",
+   "title": "Verarbeitung, Anwendungen und Umgebungen sind richtig abgegrenzt.",
+   "evidence_kinds": [],
+   "blocks": "GATE-02",
+   "essential": true
+  },
+  {
+   "id": "CHK-02",
+   "area": "A",
+   "owner_role": "fachverantwortung",
+   "title": "Verantwortliche Stelle und fachliche Zuständigkeit sind geklärt.",
+   "evidence_kinds": [],
+   "blocks": "GATE-01",
+   "essential": true
+  },
+  {
+   "id": "CHK-03",
+   "area": "A",
+   "owner_role": "fachverantwortung",
+   "title": "Rechtsregime und fachrechtliche Befugnisse sind nachvollziehbar geprüft.",
+   "evidence_kinds": [],
+   "blocks": "GATE-01",
+   "essential": true
+  },
+  {
+   "id": "CHK-04",
+   "area": "A",
+   "owner_role": "fachverantwortung",
+   "title": "Zwecke, Erforderlichkeit, Datenminimierung und etwaige Zweckänderungen sind bewertet.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-05",
+   "area": "B",
+   "owner_role": "erfassung",
+   "title": "Die profil- und rollenspezifischen VVT-Angaben sind vorhanden.",
+   "evidence_kinds": [],
+   "blocks": "GATE-02",
+   "essential": true
+  },
+  {
+   "id": "CHK-06",
+   "area": "B",
+   "owner_role": "erfassung",
+   "title": "Betroffenen-, Daten- und Empfängerkategorien sind vollständig.",
+   "evidence_kinds": [],
+   "blocks": "GATE-02",
+   "essential": true
+  },
+  {
+   "id": "CHK-07",
+   "area": "B",
+   "owner_role": "it_betrieb",
+   "title": "Datenflüsse einschließlich Logs, Backups, Support und Entwicklungsdiensten sind erfasst.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-08",
+   "area": "B",
+   "owner_role": "fachverantwortung",
+   "title": "Auftragsverarbeitung, gemeinsame Verantwortlichkeit und Drittlandbezug sind geprüft, soweit einschlägig.",
+   "evidence_kinds": [
+    "vertrag"
+   ],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-09",
+   "area": "B",
+   "owner_role": "zentrale_vvt_stelle",
+   "title": "Das zentrale VVT enthält nachweisbar die bestätigte Fassung.",
+   "evidence_kinds": [],
+   "blocks": "GATE-08",
+   "essential": true
+  },
+  {
+   "id": "CHK-10",
+   "area": "C",
+   "owner_role": "fachverantwortung",
+   "title": "Informationspflichten und etwaige Einschränkungen sind rechtlich eingeordnet.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-11",
+   "area": "C",
+   "owner_role": "fachverantwortung",
+   "title": "Verfahren für Betroffenenrechte sind organisatorisch geregelt und technisch unterstützt.",
+   "evidence_kinds": [
+    "konzept",
+    "test"
+   ],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-12",
+   "area": "C",
+   "owner_role": "fachverantwortung",
+   "title": "Lösch-, Überprüfungs-, Aufbewahrungs- und Archivierungsregeln sind abgestimmt.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-13",
+   "area": "C",
+   "owner_role": "it_betrieb",
+   "title": "Regeln sind auch für Anhänge, Exporte, Wiederherstellungen und Außerbetriebnahme geklärt.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-14",
+   "area": "D",
+   "owner_role": "it_betrieb",
+   "title": "Berechtigungen, Administration und Authentisierung sind geprüft.",
+   "evidence_kinds": [
+    "test",
+    "betriebsnachweis",
+    "konzept"
+   ],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-15",
+   "area": "D",
+   "owner_role": "it_betrieb",
+   "title": "Technische und organisatorische Maßnahmen sind angemessen und ihre Umsetzung nachgewiesen.",
+   "evidence_kinds": [
+    "test",
+    "betriebsnachweis",
+    "konzept"
+   ],
+   "blocks": "GATE-06",
+   "essential": true
+  },
+  {
+   "id": "CHK-16",
+   "area": "D",
+   "owner_role": "it_betrieb",
+   "title": "Fachliche Protokollierung und deren zulässige Nutzung sind geregelt.",
+   "evidence_kinds": [
+    "fachprotokoll"
+   ],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-17",
+   "area": "D",
+   "owner_role": "it_betrieb",
+   "title": "Testdaten, Testumgebung und produktive Datenflüsse sind getrennt und geprüft.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-18",
+   "area": "D",
+   "owner_role": "it_betrieb",
+   "title": "Störungs-, Wiederherstellungs- und Datenschutzvorfallverfahren sind benannt und erprobt.",
+   "evidence_kinds": [
+    "test",
+    "betriebsnachweis"
+   ],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-19",
+   "area": "D",
+   "owner_role": "fachverantwortung",
+   "title": "Öffentliche Veröffentlichung und externe Entwicklungs-/KI-Dienste sind gesondert geprüft, soweit vorgesehen.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-20",
+   "area": "E",
+   "owner_role": "fachverantwortung",
+   "title": "Die DSFA-Vorprüfung ist begründet und bestätigt.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-21",
+   "area": "E",
+   "owner_role": "fachverantwortung",
+   "title": "Eine erforderliche DSFA ist inhaltlich durchgeführt, nicht nur angelegt.",
+   "evidence_kinds": [],
+   "blocks": "GATE-03",
+   "essential": true
+  },
+  {
+   "id": "CHK-22",
+   "area": "E",
+   "owner_role": "it_betrieb",
+   "title": "Geplante Maßnahmen werden nicht als bereits wirksam behandelt.",
+   "evidence_kinds": [],
+   "blocks": "GATE-06",
+   "essential": true
+  },
+  {
+   "id": "CHK-23",
+   "area": "E",
+   "owner_role": "dsb",
+   "title": "Die erforderliche DSB-Beteiligung und der Umgang mit Hinweisen sind dokumentiert.",
+   "evidence_kinds": [
+    "stellungnahme"
+   ],
+   "blocks": "GATE-04",
+   "essential": true
+  },
+  {
+   "id": "CHK-24",
+   "area": "E",
+   "owner_role": "fachverantwortung",
+   "title": "Die Konsultationspflicht ist im richtigen Rechtsregime eigenständig geprüft.",
+   "evidence_kinds": [],
+   "blocks": "GATE-05",
+   "essential": true
+  },
+  {
+   "id": "CHK-25",
+   "area": "E",
+   "owner_role": "fachverantwortung",
+   "title": "Eine erforderliche Konsultation und die daraus folgenden Maßnahmen sind berücksichtigt.",
+   "evidence_kinds": [],
+   "blocks": "GATE-05",
+   "essential": true
+  },
+  {
+   "id": "CHK-26",
+   "area": "F",
+   "owner_role": "entscheidungsstelle",
+   "title": "Die zuständige Stelle hat über die konkrete Betriebsaufnahme entschieden.",
+   "evidence_kinds": [
+    "entscheidung"
+   ],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-27",
+   "area": "F",
+   "owner_role": "erfassung",
+   "title": "Bibliotheks-, Regel-, Dokumentations- und Anwendungsversion sind zuordenbar.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-28",
+   "area": "F",
+   "owner_role": "fachverantwortung",
+   "title": "Überprüfungsanlässe, Vertretung und Wartung sind geregelt.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": true
+  },
+  {
+   "id": "CHK-29",
+   "area": "F",
+   "owner_role": "fachverantwortung",
+   "title": "Neue Versionen oder neue Zwecke übernehmen alte Bestätigungen nicht ungeprüft.",
+   "evidence_kinds": [],
+   "blocks": "GATE-07",
+   "essential": true
+  },
+  {
+   "id": "CHK-30",
+   "area": "F",
+   "owner_role": "zentrale_vvt_stelle",
+   "title": "Die Dokumentation bleibt unabhängig von der laufenden Fachanwendung verfügbar.",
+   "evidence_kinds": [],
+   "blocks": "",
+   "essential": false
+  }
+ ]
+}

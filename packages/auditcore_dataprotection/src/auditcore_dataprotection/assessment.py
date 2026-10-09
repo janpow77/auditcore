@@ -216,6 +216,7 @@ class AssessmentService(AssessmentInvolvement, AssessmentReview):
             decision=decision,
             deviation=checked.deviation,
             deviation_justification=checked.justification if checked.deviation else None,
+            decision_justification=checked.justification or None,
             decided_by=actor.id,
             decided_at=self.clock.now(),
             conditions=checked.conditions,

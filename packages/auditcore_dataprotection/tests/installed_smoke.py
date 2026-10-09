@@ -29,7 +29,7 @@ from auditcore_dataprotection.memory import (
 def main() -> None:
     """Create a register, calculate and release a DPIA, reproduce a legacy result."""
     package = distribution("auditcore_dataprotection")
-    assert package.version == "0.5.2"
+    assert package.version == "0.6.0"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.2.1"], runtime
     assert find_spec("auditcore") is None
@@ -37,12 +37,19 @@ def main() -> None:
         ("auditcore.dsgvo", "2026.10.1"),
         ("auditcore.dsgvo", "2026.10.2"),
         ("auditcore.dsgvo", "2026.10.3"),
+        ("auditcore.dsgvo", "2026.10.4"),
         ("auditcore.hdsig_ji", "2026.10.1"),
         ("auditcore.hdsig_ji", "2026.10.2"),
         ("auditcore.hdsig_ji", "2026.10.3"),
+        ("auditcore.hdsig_ji", "2026.10.4"),
+        ("auditcore.hdsig_ji", "2026.10.5"),
         ("regulierung.dsgvo", "2026.09.1"),
         ("regulierung.hdsig_ji", "2026.09.1"),
     )
+    from auditcore_dataprotection.checklist import CATALOG
+    from auditcore_dataprotection.wizard_catalog import load_catalog
+
+    assert len(CATALOG) == 30 and load_catalog().steps[0].id == "W01"  # Paketdaten
     profile = load_profile("regulierung.dsgvo", "2026.09.1")
     assert propose(profile, {}).recommendation == "unvollstaendig"
     assert legacy.legacy_preview({}, [], "dsgvo")["empfehlung"] == "nur_schwellwert"

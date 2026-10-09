@@ -8,6 +8,7 @@ Noch nicht veröffentlicht.
 
 ## Unreleased
 
+- Neu: `FlowauditDatenschutzAssistent` (native React-Fassung von `<flowaudit-datenschutz-assistent>`, gleiche Paritätsfälle `cases-datenschutz-assistent.ts`).
 - Neu `FlowauditRunnerConsole` (native React-Fassung der Runner-Konsole, gleiches DOM wie `RunnerConsole`).
 - Neu `FlowauditAttributeSampling` (wie `AttributeSampling`).
 - `FlowauditExtrapolation`: Teilschichten und dritte Stufe, Programme bei mehreren Zeiträumen (wie Vue).

@@ -124,7 +124,7 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (281):
+Exporte der Einstiegspunkte aus `package.json#exports` (283):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -196,6 +196,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (281):
 | `@auditcore/ui-react` | `FlowauditComparisons` | Konstante | Dokumentvergleiche als native React-Komponente (Vertrag wie `<flowaudit-comparisons>`): zwei Fassungen hochladen, gespeicherte Vergleiche suchen, öffnen (eingebettete Synopse), lös … | `documents/FlowauditComparisons` |
 | `@auditcore/ui-react` | `FlowauditComparisonsHandle` | Schnittstelle | – | `documents/FlowauditComparisons` |
 | `@auditcore/ui-react` | `FlowauditComparisonsProps` | Schnittstelle | – | `documents/FlowauditComparisons` |
+| `@auditcore/ui-react` | `FlowauditDatenschutzAssistent` | Funktion | Datenschutz-Assistent als native React-Komponente (Vertrag wie `<flowaudit-datenschutz-assistent>`): auf Wunsch geführt Schritt für Schritt, sonst frei; Checkliste, getrennte Statu … | `dataprotection/FlowauditDatenschutzAssistent` |
+| `@auditcore/ui-react` | `FlowauditDatenschutzAssistentProps` | Schnittstelle | – | `dataprotection/FlowauditDatenschutzAssistent` |
 | `@auditcore/ui-react` | `FlowauditDbKanban` | Funktion | Datenbankansicht als Kanban, native React-Komponente (Vertrag wie `<flowaudit-db-kanban>`): Datensätze nach einer Auswahl-Eigenschaft gruppiert, Ablegen oder Strg+Pfeil setzt den Z … | `dbkanban/FlowauditDbKanban` |
 | `@auditcore/ui-react` | `FlowauditDbKanbanProps` | Typ | – | `dbkanban/FlowauditDbKanban` |
 | `@auditcore/ui-react` | `FlowauditDsfa` | Funktion | Datenschutz-Folgenabschätzung (Art. 35 DSGVO) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-dsfa>`: Übersicht, Schwellwertanalyse, Risiko, Vorschlag der B … | `dataprotection/FlowauditDsfa` |

@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (894):
+Exporte der Einstiegspunkte aus `package.json#exports` (912):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -161,6 +161,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `AssessmentStatus` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `AssessmentSummary` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `AssessmentView` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AssistantHooks` | Schnittstelle | – | `dataprotection/useAssistant` |
+| `@auditcore/ui` | `AssistantMode` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AssistantPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AssistantVueState` | Schnittstelle | – | `dataprotection/useAssistant` |
 | `@auditcore/ui` | `AttributeSampling` | Vue-Komponente | – | `attributes/AttributeSampling.vue` |
 | `@auditcore/ui` | `AttributesController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `AttributesData` | Re-Export | – | `@auditcore/ui-core` |
@@ -217,6 +221,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `ChartBar` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ChartBox` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ChartGeometry` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ChecklistChange` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ChecklistItemView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ChiSquareMetric` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ClientExportFormat` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ColumnCheck` | Re-Export | – | `@auditcore/ui-core` |
@@ -331,6 +337,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@auditcore/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
 | `@auditcore/ui` | `FaComparisons` | Vue-Komponente | – | `documents/FaComparisons.vue` |
+| `@auditcore/ui` | `FaDatenschutzAssistent` | Vue-Komponente | – | `dataprotection/FaDatenschutzAssistent.vue` |
 | `@auditcore/ui` | `FaDbKanban` | Vue-Komponente | – | `dbkanban/FaDbKanban.vue` |
 | `@auditcore/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
 | `@auditcore/ui` | `FaDsfa` | Vue-Komponente | – | `dataprotection/FaDsfa.vue` |
@@ -358,6 +365,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `FormatProfile` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `FreshnessStatus` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `FreshnessView` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `GateView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `GeoArea` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `GeoBusy` | Re-Export | – | `./useGeoMap` |
 | `@auditcore/ui` | `GeoCatalogue` | Re-Export | – | `@auditcore/ui-core` |
@@ -584,6 +592,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `SourceView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `SourcesView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `StateFilter` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `StatusAxes` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `StratumCount` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `StratumInput` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `StratumResult` | Re-Export | – | `@auditcore/ui-core` |
@@ -661,6 +670,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `WhenMissingColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `WorkbookPreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `WorkbookRequest` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `WorkspaceOverview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `acceptsHit` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `accountMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `accountWorkspaceElement` | Konstante | `<flowaudit-account-workspace>`: Eigenschaften `port`, `locale`; Ereignisse `item-select`, `error`. | `account/element` |
@@ -674,6 +684,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `applyTheme` | Funktion | Setzt das Farbschema am Element (Standard: Dokumentwurzel); 'system' folgt dem Betriebssystem. | `theme/theme` |
 | `@auditcore/ui` | `areasFromGeoPackage` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ariaSort` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui` | `assistantElement` | Konstante | `<flowaudit-datenschutz-assistent>`: Eigenschaften `port` (AssistantPort), `activityId`, `locale`; Ereignisse `change`, `error`. | `dataprotection/element` |
+| `@auditcore/ui` | `assistantView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `attributeSamplingElement` | Konstante | `<flowaudit-attribute-sampling>`: Eigenschaften `port`, `locale`; Ereignisse `evaluation-completed`, `error`. | `attributes/element` |
 | `@auditcore/ui` | `attributesMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `axisMaximum` | Re-Export | – | `@auditcore/ui-core` |
@@ -728,6 +740,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `coverIssues` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAccountController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAccountMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createAssistantController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createAssistantRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAttributesController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAttributesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
@@ -784,6 +798,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `displayValue` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `distribution` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `downloadText` | Re-Export | – | `./useSynopsisExport` |
+| `@auditcore/ui` | `draftOf` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `dsfaElement` | Konstante | `<flowaudit-dsfa>`: Eigenschaften `port`, `activityId`, `actor`, `editable`, `locale`; Ereignisse `assessment-change`, `error`. | `dataprotection/element` |
 | `@auditcore/ui` | `editedBy` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `emptyActivity` | Re-Export | – | `@auditcore/ui-core` |
@@ -887,6 +902,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `profileHintText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `profileStatusText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `provideLocale` | Funktion | Stellt die Sprache für alle Nachfahren bereit (App-Ebene oder Teilbaum). | `i18n/i18n` |
+| `@auditcore/ui` | `questionOptions` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `readTheme` | Funktion | Liest das explizit gesetzte Farbschema; ohne Attribut 'system'. | `theme/theme` |
 | `@auditcore/ui` | `recommendationTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `recordEntries` | Re-Export | – | `@auditcore/ui-core` |
@@ -952,6 +968,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `statusLabel` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `statusTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `stepChange` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `stepReachable` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `strataColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `strataOf` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `strataRows` | Re-Export | – | `@auditcore/ui-core` |
@@ -971,6 +988,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (894):
 | `@auditcore/ui` | `totals` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `translate` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `triggeredDataset` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `useAssistant` | Funktion | – | `dataprotection/useAssistant` |
 | `@auditcore/ui` | `useAuthToken` | Funktion | Reaktiver Zugriff auf einen `TokenStore` aus `@auditcore/common`. | `composables/useAuthToken` |
 | `@auditcore/ui` | `useBatchChecks` | Funktion | Vue-Anbindung der Bestandsprüfung aus `@auditcore/ui-core` (`createBatchchecksController`). | `batchchecks/useBatchChecks` |
 | `@auditcore/ui` | `useBenford` | Funktion | – | `benford/useBenford` |
@@ -1039,6 +1057,7 @@ Web Components:
 | `<flowaudit-batch-checks>` | `BatchChecks` | `batchchecks/element.ts` |
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
+| `<flowaudit-datenschutz-assistent>` | `FaDatenschutzAssistent` | `dataprotection/element.ts` |
 | `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
 | `<flowaudit-dsfa>` | `FaDsfa` | `dataprotection/element.ts` |
 | `<flowaudit-extraction>` | `FaExtraction` | `extraction/element.ts` |
@@ -1308,6 +1327,19 @@ Bestandsprüfung über viele Belege (Vertrag documents_batch_checks/1); Logik im
 | `comparison-removed` | `[id: string]` | – |
 | `comparison-open` | `[id: string]` | – |
 | `error` | `[error: ComparisonsError]` | – |
+
+#### `FaDatenschutzAssistent`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `AssistantPort \| null` | nein | `null` | Datenzugang, z. B. `createAssistantRestPort({ baseUrl: '/api/dataprotection' })`. |
+| `activityId` | `string` | nein | `''` | Kennung der Verarbeitungstätigkeit im Verzeichnis. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `change` | `[detail: WorkspaceOverview]` | – |
+| `error` | `[detail: DataProtectionError]` | – |
 
 #### `FaDbKanban`
 

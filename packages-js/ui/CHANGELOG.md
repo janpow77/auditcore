@@ -8,6 +8,7 @@ Noch nicht veröffentlicht.
 
 ## Unreleased
 
+- Neu: `FaDatenschutzAssistent` / `<flowaudit-datenschutz-assistent>` (Eigenschaften `port`, `activityId`, `locale`; Ereignisse `change`, `error`): führt auf Wunsch Schritt für Schritt durch die Fragen W01 bis W12, sonst freie Bearbeitung; Prüfpunkte, getrennte Status und Sperren. Composable `useAssistant`. Demo unter `#/datenschutz` (Ansicht „Assistent“).
 - Neu `RunnerConsole` / `<flowaudit-runner-console>` (Attribut `api`) mit Bereichen Status, Einstellungen, Werkzeuge, Prioritäten; eigenständiges Bündel für `auditcore_runner` per `npm run build:runner` (`runner-bundle/`).
 - Neu `AttributeSampling` / `<flowaudit-attribute-sampling>` (Leitfaden 7.9, Vertrag `POST /attributes`).
 - `ExtrapolationPanel`: Teilschichten und dritte Stufe im Teilstichproben-Editor, Spalte „Programm (optional)“ bei mehreren Zeiträumen.
