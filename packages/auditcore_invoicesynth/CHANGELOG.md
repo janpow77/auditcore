@@ -2,6 +2,21 @@
 
 ## Unveröffentlicht
 
+Diagnosesatz T2c (`test_layout_holdout_c`, `build-diagnostics --sets holdout_c`):
+versiegelter Unbekannt-Test mit zwei neuen Vorlagen (`holdout_c_brief`,
+Geschäftsbrief mit Kopfdaten im Fließtext; `holdout_c_balken`, farbiger
+Seitenbalken) – Gesamtbetrag anders platziert als in allen übrigen Vorlagen –
+und eigener Schrift C059 (`fonts-urw-base35`, AGPL-3.0 mit Schrift-Ausnahme).
+Vorlagen und Schrift kommen in keinem `build`-Plan und keinem anderen
+Diagnosesatz vor (Tests). Plan- und Datensatz-Hashes von v1/v2/v3 sowie der
+Diagnosesatz T2-gemischt + T2b (Seed 42, je 500: `997a04c1104f073d…`) bleiben
+gleich; die Standardauswahl von `build-diagnostics` bleibt T2-gemischt + T2b.
+Der volle Satz (Seed 42, 500 Belege) ist gebaut und mit seinem Hash in
+`docs/donut-verlauf/holdout-c.json` festgehalten. **T2c ist ab jetzt der
+maßgebliche Unbekannt-Test; T2 und T2b gelten ab Stufe 7 als bekannt (ihre
+Konzepte fließen ins Training ein). T2c erst zur Abschlussbewertung von Stufe 7
+ansehen bzw. bewerten.**
+
 Generatorvariante `v3` (`build --variety v3`; `v1` und `v2` bleiben bitgleich,
 Plan- und Datensatz-Hashes gegen `main` geprüft): `v2` plus, aus eigener
 Zufallsfolge je Beleg, (1) Summenorte – wie die Vorlage, unten links, umrahmter
