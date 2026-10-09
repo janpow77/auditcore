@@ -127,10 +127,21 @@ LAYOUTS: dict[str, LayoutSpec] = {
         table_lines=False,
         scale=0.95,
     ),
+    # Diagnosesatz T2c (nur ``build-diagnostics``, versiegelter Unbekannt-Test ab Stufe 7).
+    # Gezeichnet von :mod:`layout_holdout_c`; die Felder hier dienen nur Maßstab und Doku.
+    "holdout_c_brief": LayoutSpec(
+        header="letterhead", meta="prose", totals="list_mid", bank="prose", table_lines=False
+    ),
+    "holdout_c_balken": LayoutSpec(
+        header="sidebar", meta="sidebar", totals="sidebar", bank="sidebar", scale=0.95
+    ),
 }
 HOLDOUT_LAYOUTS: tuple[str, ...] = ("holdout_kompakt", "holdout_briefkopf")
 V2_LAYOUTS: tuple[str, ...] = ("kopf_zeile", "kopf_kasten")
-DIAGNOSTIC_LAYOUTS: tuple[str, ...] = ("holdout_b_tabelle",)
+HOLDOUT_B_LAYOUTS: tuple[str, ...] = ("holdout_b_tabelle",)
+HOLDOUT_C_LAYOUTS: tuple[str, ...] = ("holdout_c_brief", "holdout_c_balken")
+#: Alle Vorlagen, die nur in Diagnosesätzen vorkommen (T2b und T2c).
+DIAGNOSTIC_LAYOUTS: tuple[str, ...] = (*HOLDOUT_B_LAYOUTS, *HOLDOUT_C_LAYOUTS)
 TRAINING_LAYOUTS: tuple[str, ...] = tuple(
     n for n in LAYOUTS if n not in HOLDOUT_LAYOUTS and n not in DIAGNOSTIC_LAYOUTS
 )
@@ -139,7 +150,7 @@ TRAINING_LAYOUTS: tuple[str, ...] = tuple(
 def available_layouts(variety: str) -> tuple[str, ...]:
     """Vorlagen einer Generatorvariante; ``v1`` kennt die Vorlagen aus ``v2`` nicht.
 
-    Die Diagnosevorlagen (T2b) gehören zu keiner Variante.
+    Die Diagnosevorlagen (T2b, T2c) gehören zu keiner Variante.
     """
     return tuple(
         n

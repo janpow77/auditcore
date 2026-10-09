@@ -1,5 +1,5 @@
-"""Sechzehn Belegvorlagen (dreizehn fürs Training, zwei für den Layout-Holdout T2,
-eine nur für den Diagnosesatz T2b).
+"""Achtzehn Belegvorlagen (dreizehn fürs Training, zwei für den Layout-Holdout T2,
+eine nur für den Diagnosesatz T2b, zwei nur für den Diagnosesatz T2c).
 
 Die Vorlagen ``kopf_zeile`` und ``kopf_kasten`` nutzen erst die Generatorvarianten
 ``v2``/``v3``; ``v3`` legt zusätzlich je Beleg Summenort und waagerechte Kopfdaten
@@ -28,10 +28,13 @@ from auditcore_invoicesynth.layout_head import (
     recipient,
     sender,
 )
+from auditcore_invoicesynth.layout_holdout_c import render_holdout_c
 from auditcore_invoicesynth.layout_model import BLACK as BLACK
 from auditcore_invoicesynth.layout_model import DIAGNOSTIC_LAYOUTS as DIAGNOSTIC_LAYOUTS
 from auditcore_invoicesynth.layout_model import FOOTER_TOP as FOOTER_TOP
 from auditcore_invoicesynth.layout_model import GRAY as GRAY
+from auditcore_invoicesynth.layout_model import HOLDOUT_B_LAYOUTS as HOLDOUT_B_LAYOUTS
+from auditcore_invoicesynth.layout_model import HOLDOUT_C_LAYOUTS as HOLDOUT_C_LAYOUTS
 from auditcore_invoicesynth.layout_model import HOLDOUT_LAYOUTS as HOLDOUT_LAYOUTS
 from auditcore_invoicesynth.layout_model import LAYOUTS as LAYOUTS
 from auditcore_invoicesynth.layout_model import PAGE_BOTTOM as PAGE_BOTTOM
@@ -79,6 +82,9 @@ def _totals(
 
 def render_layout(canvas: Canvas, inv: SynthInvoice, variant: Variant, name: str) -> None:
     """Beleg vollständig auf die Zeichenfläche bringen (Seitenwechsel inklusive)."""
+    if name in HOLDOUT_C_LAYOUTS:
+        render_holdout_c(canvas, inv, variant, name)
+        return
     spec = effective_spec(name, variant)
     markers(canvas)
     if spec.band:
