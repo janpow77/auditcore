@@ -1,0 +1,991 @@
+{
+ "schema": "auditcore_dataprotection.wizard/1",
+ "version": "2026.10.1",
+ "source": "Prüfkatalog VVT/DSFA vom 08.10.2026, Abschnitt 7 (Arbeitsgrundlage, keine Rechtsquelle)",
+ "answer_values": {
+  "ja_nein_unklar": [
+   "ja",
+   "nein",
+   "unklar"
+  ],
+  "umsetzung": [
+   "nicht_begonnen",
+   "geplant",
+   "umgesetzt",
+   "wirksam_nachgewiesen"
+  ]
+ },
+ "steps": [
+  {
+   "id": "W01",
+   "title": "Verarbeitung und Anwendungsgrenzen beschreiben",
+   "goal": "Nicht bloß die Software, sondern die tatsächliche Verarbeitung erfassen.",
+   "questions": [
+    {
+     "id": "W01-01",
+     "text": "Wie heißt die Verarbeitungstätigkeit und welchen fachlichen Ablauf umfasst sie?",
+     "kind": "text",
+     "target": "register:name",
+     "help": "Der Titel bezeichnet die Tätigkeit, nicht die Anwendung. Beispiel: „Verfolgung von Ordnungswidrigkeiten nach Fachgesetz X“.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W01-02",
+     "text": "Welche Arbeitsschritte gehören ausdrücklich nicht dazu?",
+     "kind": "text",
+     "target": "register:abgrenzung",
+     "help": "Die Abgrenzung verhindert, dass etwa allgemeine Marktbeobachtung und konkrete Verfolgung vermischt werden.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W01-03",
+     "text": "Welche Anwendungen, Schnittstellen und manuellen Arbeitsschritte unterstützen die Tätigkeit?",
+     "kind": "text",
+     "target": "register:anwendungen",
+     "help": "Auch E-Mail, Tabellen und Papierakte gehören dazu. Eine Anwendung kann mehrere Tätigkeiten unterstützen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W01-04",
+     "text": "Gibt es bereits einen zugehörigen Eintrag im Hausverzeichnis? Wenn ja, mit welcher Kennung?",
+     "kind": "text",
+     "target": "register:hausverzeichnis_referenz",
+     "help": "Verhindert Dubletten im zentralen Verzeichnis.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W01-05",
+     "text": "Welche Umgebung wird beurteilt?",
+     "kind": "auswahl",
+     "target": "register:umgebung",
+     "help": "Eine Bewertung der Testumgebung gilt nicht automatisch für die Produktion.",
+     "required": true,
+     "na_allowed": false,
+     "choices": [
+      {
+       "key": "entwicklung",
+       "title": "Entwicklung"
+      },
+      {
+       "key": "test",
+       "title": "Test"
+      },
+      {
+       "key": "produktion",
+       "title": "Produktion"
+      }
+     ],
+     "justify_values": []
+    },
+    {
+     "id": "W01-06",
+     "text": "Werden personenbezogene Daten verarbeitet – auch in Konten, Logs oder Supportvorgängen?",
+     "kind": "ja_nein_unklar",
+     "target": "register:personenbezug",
+     "help": "Auch bei synthetischen Fachdaten können Benutzerkonten und Zugriffsprotokolle Personenbezug haben. Ein „Nein“ ist zu begründen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": [
+      "nein"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "W02",
+   "title": "Zwecke, Zuständigkeit und Rechtsgrundlagen klären",
+   "goal": "Ohne geklärtes Rechtsprofil und tragfähige Befugnis keine positive Abschlussbewertung; ein Entwurf bleibt speicherbar.",
+   "questions": [
+    {
+     "id": "W02-01",
+     "text": "Welcher konkrete Zweck wird mit jedem Verarbeitungsschritt verfolgt?",
+     "kind": "text",
+     "target": "register:zweck",
+     "help": "Konkrete Zwecke statt „Verwaltung“ oder „Digitalisierung“ (Art. 30 Abs. 1 lit. b DSGVO, § 65 HDSIG).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W02-02",
+     "text": "Welche Vorschrift weist der Stelle die fachliche Aufgabe und Zuständigkeit zu?",
+     "kind": "text",
+     "target": "register:zustaendigkeitsnorm",
+     "help": "Norm und Fundstelle; die Prüfung übernimmt die fachlich zuständige Stelle.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W02-03",
+     "text": "Welche Vorschriften erlauben die jeweilige Erhebung, Nutzung, Speicherung und Übermittlung?",
+     "kind": "text",
+     "target": "register:ermaechtigungsgrundlage",
+     "help": "Ein Verzeichniseintrag schafft selbst keine Verarbeitungsbefugnis.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W02-04",
+     "text": "Welches Datenschutzregime gilt für diese Verarbeitung?",
+     "kind": "auswahl",
+     "target": "register:rechtsregime",
+     "help": "DSGVO oder Dritter Teil HDSIG wird je Tätigkeit bestimmt, nicht pauschal je Anwendung. „Unklar“ erzeugt eine Prüfaufgabe.",
+     "required": true,
+     "na_allowed": false,
+     "choices": [
+      {
+       "key": "dsgvo",
+       "title": "DSGVO"
+      },
+      {
+       "key": "hdsig_ji",
+       "title": "Dritter Teil HDSIG"
+      },
+      {
+       "key": "unklar",
+       "title": "Unklar – Prüfung erforderlich"
+      }
+     ],
+     "justify_values": []
+    },
+    {
+     "id": "W02-04a",
+     "text": "Warum gilt dieses Regime?",
+     "kind": "text",
+     "target": "register:rechtsregime_begruendung",
+     "help": "Begründung und Prüfergebnis.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W02-05",
+     "text": "Werden Daten zu weiteren Zwecken genutzt, etwa Statistik, Berichterstattung oder allgemeine Aufsicht?",
+     "kind": "ja_nein_unklar",
+     "target": "register:weitere_zwecke",
+     "help": "Bei „Ja“ ist eine Zweckänderung oder eine weitere Tätigkeit zu prüfen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W02-05a",
+     "text": "Welche weiteren Zwecke sind das?",
+     "kind": "text",
+     "target": "register:weitere_zwecke_beschreibung",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "question": "W02-05",
+      "in": [
+       "ja"
+      ]
+     },
+     "justify_values": []
+    },
+    {
+     "id": "W02-06",
+     "text": "Könnte der Zweck mit weniger Daten, weniger Zugriffen oder einem weniger eingriffsintensiven Verfahren erreicht werden?",
+     "kind": "text",
+     "target": "register:erforderlichkeit",
+     "help": "Alternativen und Erforderlichkeitsbegründung.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W03",
+   "title": "Verantwortlichkeiten und Beteiligte festlegen",
+   "goal": "Der oder die DSB wird nicht als Betreiber oder alleinige Freigabestelle vorbelegt (§ 7 HDSIG).",
+   "questions": [
+    {
+     "id": "W03-00",
+     "text": "In welcher Rolle handelt die Stelle für diese Tätigkeit?",
+     "kind": "auswahl",
+     "target": "register:rolle",
+     "help": "Die Rolle bestimmt die Vorlage: Verzeichnis des Verantwortlichen oder des Auftragsverarbeiters.",
+     "required": true,
+     "na_allowed": false,
+     "choices": [
+      {
+       "key": "verantwortlicher",
+       "title": "Verantwortlicher"
+      },
+      {
+       "key": "auftragsverarbeiter",
+       "title": "Auftragsverarbeiter"
+      },
+      {
+       "key": "gemeinsam_verantwortlicher",
+       "title": "Gemeinsam Verantwortlicher"
+      }
+     ],
+     "justify_values": []
+    },
+    {
+     "id": "W03-01",
+     "text": "Welche Stelle ist datenschutzrechtlich verantwortlich?",
+     "kind": "text",
+     "target": "register:verantwortliche_stelle",
+     "help": "Name und Kontaktdaten; verantwortlich ist nicht automatisch die entwickelnde Person oder das Referat.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W03-01a",
+     "text": "Für welchen Verantwortlichen wird im Auftrag verarbeitet?",
+     "kind": "text",
+     "target": "register:auftraggeber",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "question": "W03-00",
+      "in": [
+       "auftragsverarbeiter"
+      ]
+     },
+     "justify_values": []
+    },
+    {
+     "id": "W03-01b",
+     "text": "Welche Kategorien von Verarbeitungen werden im Auftrag durchgeführt?",
+     "kind": "text",
+     "target": "register:kategorien_verarbeitungen",
+     "help": "Art. 30 Abs. 2 lit. b DSGVO, § 65 Abs. 2 HDSIG.",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "question": "W03-00",
+      "in": [
+       "auftragsverarbeiter"
+      ]
+     },
+     "justify_values": []
+    },
+    {
+     "id": "W03-02",
+     "text": "Wer trägt intern die fachliche Verantwortung und wer vertritt diese Person?",
+     "kind": "text",
+     "target": "register:ansprechperson",
+     "help": "Funktion, Kontakt, Vertretung.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W03-03",
+     "text": "Wer betreibt, administriert und wartet die Anwendung?",
+     "kind": "text",
+     "target": "register:betrieb",
+     "help": "Interne und externe Rollen sowie Zuständigkeitsgrenzen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W03-04",
+     "text": "Welche DSB-Kontaktstelle ist zuständig und wann wurde sie eingebunden?",
+     "kind": "text",
+     "target": "register:dsb_beteiligung",
+     "help": "Kontakt und Beteiligungsnachweis.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W03-05",
+     "text": "Handeln andere Stellen als Auftragsverarbeiter, gemeinsam Verantwortliche oder eigenständige Empfänger?",
+     "kind": "text",
+     "target": "register:auftragsverarbeiter",
+     "help": "Aus „Dienstleister“ folgt nicht ungeprüft eine Auftragsverarbeitung.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W03-06",
+     "text": "Wer darf die interne Betriebsentscheidung treffen und welche weiteren Stellen sind zu beteiligen?",
+     "kind": "text",
+     "target": "register:entscheidungsstelle",
+     "help": "IT-Sicherheit, Organisation und gegebenenfalls Personalvertretung.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W04",
+   "title": "Personen, Daten und Herkunft erfassen",
+   "goal": "Datenkatalog ohne individuelle Falldaten.",
+   "questions": [
+    {
+     "id": "W04-01",
+     "text": "Welche Personengruppen sind betroffen?",
+     "kind": "text",
+     "target": "register:kategorien_betroffene",
+     "help": "Etwa Verfahrensbetroffene, Zeugen, Hinweisgebende, Vertretungen, Beschäftigte.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W04-02",
+     "text": "Welche Datenkategorien werden für welche Zwecke benötigt?",
+     "kind": "text",
+     "target": "register:kategorien_daten",
+     "help": "Keine Beispieldatensätze aus echten Fällen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W04-03",
+     "text": "Werden besondere Datenkategorien verarbeitet?",
+     "kind": "ja_nein_unklar",
+     "target": "register:besondere_kategorien",
+     "help": "Rechtsprofilbezogen einordnen; nicht automatisch alles Art. 9 DSGVO zuordnen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W04-03a",
+     "text": "Werden Daten über Vorwürfe, Verstöße oder Sanktionen verarbeitet?",
+     "kind": "ja_nein_unklar",
+     "target": "register:daten_art10",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W04-04",
+     "text": "Woher stammen die Daten und wie wird ihre Verlässlichkeit bewertet?",
+     "kind": "text",
+     "target": "register:herkunft",
+     "help": "Quelle, Aktualität und Übernahmeverfahren.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W04-05",
+     "text": "Wie viele Personen sind voraussichtlich betroffen?",
+     "kind": "text",
+     "target": "register:umfang",
+     "help": "Größenordnung mit Begründung, Zeitraum und räumlicher Reichweite.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W04-06",
+     "text": "Wie werden Tatsachen, Verdachtsmomente und persönliche Einschätzungen auseinandergehalten?",
+     "kind": "text",
+     "target": "register:tatsachen_trennung",
+     "help": "Im Dritten Teil HDSIG besonders relevant.",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "context": "regime",
+      "in": [
+       "hdsig_ji",
+       "unklar"
+      ]
+     },
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W05",
+   "title": "Datenflüsse, Empfänger und Dienstleister abbilden",
+   "goal": "",
+   "questions": [
+    {
+     "id": "W05-01",
+     "text": "Wo werden die Daten erhoben, verarbeitet, gespeichert und gesichert?",
+     "kind": "text",
+     "target": "register:datenfluesse",
+     "help": "Einschließlich Backups und temporärer Dateien.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W05-02",
+     "text": "Welche internen Rollen dürfen welche Daten lesen, ändern, exportieren oder löschen?",
+     "kind": "text",
+     "target": "register:rechte_matrix",
+     "help": "Administration getrennt betrachten.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W05-03",
+     "text": "Welche Kategorien von Empfängern erhalten Daten?",
+     "kind": "text",
+     "target": "register:kategorien_empfaenger",
+     "help": "Interne Zugriffe und externe Offenlegungen differenziert dokumentieren.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W05-03a",
+     "text": "Welche externen Stellen erhalten welche Daten zu welchem Zweck und auf welcher Rechtsgrundlage?",
+     "kind": "text",
+     "target": "register:name_empfaenger",
+     "help": "Jede Übermittlung braucht eine Rechtsgrundlage (§ 65 Abs. 1 HDSIG).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W05-04",
+     "text": "Welche Hosting-, Support-, Monitoring-, E-Mail- oder sonstigen Dienste sind beteiligt?",
+     "kind": "text",
+     "target": "register:dienste",
+     "help": "Auch Telemetrie, Fehlermeldungsdienste und Buildumgebung.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W05-05",
+     "text": "Finden Speicherungen, Zugriffe oder Übermittlungen mit Drittlandbezug statt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:drittlandtransfer",
+     "help": "„EU-Server“ allein genügt nicht; Supportzugriffe zählen mit.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W05-05a",
+     "text": "Welche Empfänger in welchen Drittländern?",
+     "kind": "text",
+     "target": "register:name_empfaenger_drittland",
+     "help": "Im HDSIG-Profil sind §§ 73 bis 76 maßgeblich.",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "question": "W05-05",
+      "in": [
+       "ja"
+      ]
+     },
+     "justify_values": []
+    },
+    {
+     "id": "W05-05b",
+     "text": "Welche Garantien oder Rechtsgrundlagen tragen die Übermittlung?",
+     "kind": "text",
+     "target": "register:drittland_garantien",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "question": "W05-05",
+      "in": [
+       "ja"
+      ]
+     },
+     "justify_values": []
+    },
+    {
+     "id": "W05-06",
+     "text": "Welche erforderlichen Verträge, Weisungen und Verantwortungsvereinbarungen liegen vor?",
+     "kind": "text",
+     "target": "register:vertraege",
+     "help": "Eine fehlende Vereinbarung wird Aufgabe.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W06",
+   "title": "Speicherdauer und Rechte betroffener Personen regeln",
+   "goal": "",
+   "questions": [
+    {
+     "id": "W06-01",
+     "text": "Welche Lösch- oder Überprüfungsfrist gilt je Datenkategorie und welcher Vorgang startet sie?",
+     "kind": "text",
+     "target": "register:speicherdauer",
+     "help": "„Wenn möglich“ ist kein Freibrief: ohne konkrete Frist sind Begründung und Prüfstelle anzugeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W06-01a",
+     "text": "Auf welcher Grundlage beruht die Frist?",
+     "kind": "text",
+     "target": "register:loeschfrist_rechtsgrundlage",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W06-02",
+     "text": "Welche Aufbewahrungs-, Beweissicherungs- oder Archivierungspflichten sind zu berücksichtigen?",
+     "kind": "text",
+     "target": "register:aufbewahrung",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W06-03",
+     "text": "Wie werden Löschungen in Datenbanken, Anhängen, Exporten, Caches und Sicherungen berücksichtigt?",
+     "kind": "text",
+     "target": "register:loeschkonzept",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W06-04",
+     "text": "Wie und wann werden betroffene Personen über die Verarbeitung informiert?",
+     "kind": "text",
+     "target": "register:information",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W06-05",
+     "text": "Wie werden Auskunft, Berichtigung, Löschung und Einschränkung bearbeitet?",
+     "kind": "text",
+     "target": "register:betroffenenrechte",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W06-06",
+     "text": "Welche Beschränkungen von Betroffenenrechten sollen gelten und auf welche Vorschrift stützen sie sich?",
+     "kind": "text",
+     "target": "register:beschraenkungen",
+     "help": "Keine pauschale Angabe „OWi-Verfahren: keine Auskunft“; im HDSIG §§ 50 bis 54 und 70.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W07",
+   "title": "Sicherheit und wirksame Schutzmaßnahmen nachweisen",
+   "goal": "Geplante Maßnahmen werden nicht als wirksam behandelt.",
+   "questions": [
+    {
+     "id": "W07-01",
+     "text": "Welche Schäden könnten betroffenen Personen durch Verlust, Fehlzuordnung, Offenlegung oder unzulässige Nutzung entstehen?",
+     "kind": "text",
+     "target": "register:schadensszenarien",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W07-02",
+     "text": "Wie werden Identitäten, Berechtigungen, privilegierte Zugriffe und Vertretungen abgesichert?",
+     "kind": "text",
+     "target": "register:zugriffsschutz",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W07-03",
+     "text": "Allgemeine Beschreibung der technischen und organisatorischen Maßnahmen",
+     "kind": "text",
+     "target": "register:tom",
+     "help": "Keine Schlüsselwerte oder Passwörter eingeben.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W07-04",
+     "text": "Welche Verarbeitungsvorgänge werden mit welchem Zweck und welcher Aufbewahrung protokolliert?",
+     "kind": "text",
+     "target": "register:protokollierung",
+     "help": "Ein Änderungsprotokoll des Verzeichnisses ersetzt die Fachprotokollierung nach § 71 HDSIG nicht.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W07-05",
+     "text": "Wie sind Patchen, Schwachstellenbehandlung, Backup, Wiederherstellung und Notbetrieb organisiert?",
+     "kind": "text",
+     "target": "register:betriebssicherheit",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W07-06",
+     "text": "Wie ist der Umsetzungsstand der Schutzmaßnahmen insgesamt?",
+     "kind": "umsetzung",
+     "target": "register:massnahmen_stand",
+     "help": "Eigener Stand je Maßnahme in der Maßnahmenliste; geplante Wirkung zählt nicht als nachgewiesen.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W07-07",
+     "text": "Wer erkennt und bewertet Datenschutzverletzungen und veranlasst Meldungen?",
+     "kind": "text",
+     "target": "register:vorfallmeldung",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W08",
+   "title": "Testbetrieb, KI und Veröffentlichung prüfen",
+   "goal": "",
+   "questions": [
+    {
+     "id": "W08-01",
+     "text": "Welche Testdaten werden verwendet?",
+     "kind": "auswahl",
+     "target": "register:testdaten",
+     "help": "Pseudonymisierte Kopien echter Fälle sind personenbezogen.",
+     "required": true,
+     "na_allowed": false,
+     "choices": [
+      {
+       "key": "synthetisch",
+       "title": "synthetisch"
+      },
+      {
+       "key": "anonymisiert",
+       "title": "anonymisiert"
+      },
+      {
+       "key": "pseudonymisiert",
+       "title": "pseudonymisiert"
+      },
+      {
+       "key": "echt",
+       "title": "echt"
+      },
+      {
+       "key": "keine",
+       "title": "keine Testdaten"
+      }
+     ],
+     "justify_values": []
+    },
+    {
+     "id": "W08-02",
+     "text": "Wie werden Test und Produktion getrennt und unbeabsichtigte Echtdatenimporte vermieden?",
+     "kind": "text",
+     "target": "register:testtrennung",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W08-03",
+     "text": "Wird KI eingesetzt?",
+     "kind": "auswahl",
+     "target": "register:ki_einsatz",
+     "help": "Drei Einsatzarten getrennt erfassen.",
+     "required": true,
+     "na_allowed": false,
+     "choices": [
+      {
+       "key": "keine",
+       "title": "keine KI"
+      },
+      {
+       "key": "entwicklung",
+       "title": "nur Entwicklung"
+      },
+      {
+       "key": "fachverfahren",
+       "title": "im Fachverfahren"
+      },
+      {
+       "key": "bewertung",
+       "title": "in der Datenschutzbewertung"
+      },
+      {
+       "key": "mehrere",
+       "title": "mehrere Einsatzarten"
+      }
+     ],
+     "justify_values": []
+    },
+    {
+     "id": "W08-04",
+     "text": "Welche Daten erhalten KI-Dienste und was geschieht mit Prompts, Ausgaben, Protokollen und Trainingsdaten?",
+     "kind": "text",
+     "target": "register:ki_daten",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "question": "W08-03",
+      "in": [
+       "entwicklung",
+       "fachverfahren",
+       "bewertung",
+       "mehrere"
+      ]
+     },
+     "justify_values": []
+    },
+    {
+     "id": "W08-05",
+     "text": "Findet Profiling statt: werden Personen bewertet, Fälle priorisiert oder Profile erzeugt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:profiling",
+     "help": "Im HDSIG-Profil ausdrückliche Pflichtangabe (§ 65 Abs. 1 HDSIG).",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W08-05a",
+     "text": "Beschreiben Sie das Profiling und die menschliche Kontrolle.",
+     "kind": "text",
+     "target": "register:profiling_beschreibung",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "show_if": {
+      "question": "W08-05",
+      "in": [
+       "ja"
+      ]
+     },
+     "justify_values": []
+    },
+    {
+     "id": "W08-06",
+     "text": "Welche Inhalte sollen auf GitHub oder in anderen öffentlichen Quellen erscheinen?",
+     "kind": "text",
+     "target": "register:veroeffentlichung",
+     "help": "Code, Muster, Metadaten und Verfahrensunterlagen getrennt auswählen.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W08-07",
+     "text": "Wer hat Veröffentlichung, Lizenzierung und Prüfung auf Geheimnisse verantwortet?",
+     "kind": "text",
+     "target": "register:veroeffentlichung_verantwortung",
+     "help": "",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W09",
+   "title": "DSFA-Erforderlichkeit begründet beurteilen",
+   "goal": "Eine nachvollziehbare Vorprüfung, kein Punktespiel. Die Fragen der Schwellwertanalyse kommen aus dem gewählten Regelprofil.",
+   "questions": [
+    {
+     "id": "W09-01",
+     "text": "Welche gesetzliche oder aufsichtsbehördliche Fallgruppe ist einschlägig?",
+     "kind": "text",
+     "target": "register:dsfa_fallgruppe",
+     "help": "Quelle, Version und Geltungsbereich; „noch nicht geprüft“ ist zulässig.",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W09-11",
+     "text": "Gibt es eine bestehende DSFA oder eine einschlägige Ausnahme?",
+     "kind": "text",
+     "target": "register:dsfa_bezug",
+     "help": "Fundstelle, Reichweite, Abweichungen.",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W10",
+   "title": "Datenschutz-Folgenabschätzung durchführen",
+   "goal": "Nur wenn eine DSFA erforderlich ist oder freiwillig durchgeführt wird.",
+   "questions": [
+    {
+     "id": "W10-01",
+     "text": "Welche Verarbeitungsvorgänge und Varianten deckt diese DSFA genau ab?",
+     "kind": "text",
+     "target": "register:dsfa_geltungsbereich",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W10-02",
+     "text": "Warum ist die Verarbeitung notwendig?",
+     "kind": "text",
+     "target": "assessment:necessity",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W10-02a",
+     "text": "Warum ist sie verhältnismäßig und welche Alternativen wurden verworfen?",
+     "kind": "text",
+     "target": "assessment:proportionality",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W10-07",
+     "text": "Wurde eine Beteiligung betroffener Personen oder ihrer Vertreter geprüft?",
+     "kind": "text",
+     "target": "assessment:data_subject_view",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W10-08",
+     "text": "Wann und bei welchen Änderungen muss die DSFA überprüft werden?",
+     "kind": "text",
+     "target": "register:dsfa_ueberpruefung",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ],
+   "show_if": {
+    "context": "dsfa",
+    "in": [
+     "pflicht",
+     "freiwillig"
+    ]
+   }
+  },
+  {
+   "id": "W11",
+   "title": "Konsultation und fachliche Prüfung abschließen",
+   "goal": "Kein Automatismus durch Fristablauf; kein allgemeiner Knopf „trotzdem starten“.",
+   "questions": [
+    {
+     "id": "W11-03",
+     "text": "Welche Unterlagen wurden wann eingereicht und welche Rückmeldungen liegen vor?",
+     "kind": "text",
+     "target": "register:konsultation_unterlagen",
+     "help": "",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W11-04",
+     "text": "Welche Empfehlungen, Maßnahmen oder Einschränkungen müssen noch umgesetzt werden?",
+     "kind": "text",
+     "target": "register:konsultation_massnahmen",
+     "help": "",
+     "required": false,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W11-05",
+     "text": "Sind fachliche Einwände, widersprüchliche Angaben oder fehlende Nachweise geklärt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:einwaende_geklaert",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  },
+  {
+   "id": "W12",
+   "title": "Dokumentation übernehmen und Betrieb entscheiden",
+   "goal": "Ergebnis ist kein Compliance-Zertifikat, sondern Dokumentation und eine getrennte Betriebsentscheidung.",
+   "questions": [
+    {
+     "id": "W12-01",
+     "text": "Sind die Angaben vollständig, aktuell und durch die fachlich zuständige Stelle bestätigt?",
+     "kind": "ja_nein_unklar",
+     "target": "register:angaben_bestaetigt",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W12-06",
+     "text": "Wer hält VVT, DSFA, Verträge und Maßnahmen während des Betriebs aktuell?",
+     "kind": "text",
+     "target": "register:pflege_zustaendigkeit",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    },
+    {
+     "id": "W12-07",
+     "text": "Wie erfolgen Änderungen, Störungen, Außerbetriebnahme und Aufbewahrung der Dokumentation?",
+     "kind": "text",
+     "target": "register:lebenszyklus",
+     "help": "",
+     "required": true,
+     "na_allowed": false,
+     "justify_values": []
+    }
+   ]
+  }
+ ]
+}

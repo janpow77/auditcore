@@ -89,6 +89,7 @@ class _Tally:
     unknown: list[str] = field(default_factory=list)
     fria_yes: bool = False
     fria_open: bool = False
+    grounds: list[str] = field(default_factory=list)
     trace: list[dict[str, object]] = field(default_factory=list)
 
     def count(self, question: Question, answer: Answer | None) -> None:
@@ -107,6 +108,8 @@ class _Tally:
                 "reference": question.reference,
             }
         )
+        if question.consultation_ground and question.consultation_ground not in self.grounds:
+            self.grounds.append(question.consultation_ground)
         if question.effect == EFFECT_HARD:
             self.hard.append(question.key)
         elif question.effect == EFFECT_POINT:
@@ -152,4 +155,5 @@ def screen(profile: RuleProfile, answers: Mapping[str, object]) -> ScreeningResu
         unknown=tuple(tally.unknown),
         reasoning=reasoning,
         trace=tuple(tally.trace),
+        consultation_grounds=tuple(tally.grounds),
     )

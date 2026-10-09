@@ -1,5 +1,28 @@
 # Changelog auditcore_dataprotection
 
+## 0.6.0 – 2026-10-08 – Prüfkatalog VVT/DSFA
+
+Umsetzung des Prüfkatalogs für VVT und DSFA (Abgleich je Anforderung:
+`docs/pruefkatalog-abgleich.md`, Verhaltensänderungen DP-E19 bis DP-E25).
+Bestehende Profile, Berechnungen und Berichte älterer Fassungen sind unverändert.
+
+- Profile `auditcore.dsgvo` und `auditcore.hdsig_ji` 2026.10.4: eigener
+  Konsultationstatbestand § 64 Abs. 1 Nr. 2 HDSIG, offene Gesamtbetrachtung,
+  Begründungspflicht für „keine DSFA“, Rechtsregime und Rolle je Tätigkeit,
+  Profiling und Rechtsgrundlage je Übermittlung, Verzeichnis des
+  Auftragsverarbeiters.
+- Wizard (`wizard_catalog`, `wizard`): Fragen W01 bis W12 als Daten, wahlweise
+  geführt oder frei, „unklar“ als Aufgabe, Herkunft der Antworten.
+- `ActivityWorkspace`: Wizard, Checkliste CHK-01 bis CHK-30, Nachweise und
+  Schutzmaßnahmen auf der versionierten Verzeichnisfassung.
+- Getrennte Statusachsen (`StatusAxes`), Sperren GATE-01 bis GATE-08,
+  Betriebsentscheidung (`OperationService`, Berechtigung `operation.decide`),
+  zentrale Übernahme (`CentralRegisterService`, idempotent), Prüfpaket,
+  öffentliches Muster.
+- REST: `/activities/...`, `/register/transfer`, `/register/public-pattern`.
+- Neue Berechtigungen: `checklist.edit`, `central_register.transfer`,
+  `central_register.confirm`, `operation.decide`, `export.public`.
+
 ## 0.5.2 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,

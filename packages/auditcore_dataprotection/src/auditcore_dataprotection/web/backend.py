@@ -15,7 +15,10 @@ from datetime import UTC, datetime
 from typing import Protocol, runtime_checkable
 
 from ..assessment import AssessmentService
+from ..central_register import CentralRegisterPort, CentralRegisterService, TransferRepository
 from ..memory import InMemoryAssessmentRepository, InMemoryRegisterRepository, ListAuditSink
+from ..operation import OperationService
+from ..operation_model import OperationRepository
 from ..ports import (
     AssessmentRepository,
     AuditSink,
@@ -26,6 +29,7 @@ from ..ports import (
 )
 from ..register import RegisterService
 from ..rules import RuleProfile
+from ..workspace import ActivityWorkspace
 
 
 @runtime_checkable
@@ -80,6 +84,9 @@ class Backend:
     profile: RuleProfile
     registers: RegisterService
     assessments: AssessmentService
+    workspace: ActivityWorkspace | None = None
+    operations: OperationService | None = None
+    central: CentralRegisterService | None = None
 
 
 def create_backend(
@@ -89,8 +96,16 @@ def create_backend(
     *,
     clock: Clock | None = None,
     ids: IdFactory | None = None,
+    transfers: TransferRepository | None = None,
+    decisions: OperationRepository | None = None,
+    central_port: CentralRegisterPort | None = None,
 ) -> Backend:
-    """Library services over the consumer's storage and authorizer."""
+    """Library services over the consumer's storage and authorizer.
+
+    ``transfers`` and ``decisions`` enable the central register takeover and the
+    operational decision; ``central_port`` is the explicitly configured
+    connection to the central register (no hidden network access).
+    """
     active_clock = clock or SystemClock()
     active_ids = ids or UuidIds()
     registers = RegisterService(
@@ -99,4 +114,28 @@ def create_backend(
     assessments = AssessmentService(
         storage.assessments, storage.registers, authorizer, storage.audit, active_clock, active_ids
     )
-    return Backend(profile=profile, registers=registers, assessments=assessments)
+    workspace = ActivityWorkspace(
+        registers,
+        storage.assessments,
+        authorizer,
+        active_clock,
+        profile,
+        transfers,
+        decisions,
+        assessments,
+    )
+    operations = (
+        None
+        if decisions is None
+        else OperationService(
+            workspace, decisions, authorizer, storage.audit, active_clock, active_ids
+        )
+    )
+    central = (
+        None
+        if transfers is None
+        else CentralRegisterService(
+            transfers, authorizer, storage.audit, active_clock, central_port
+        )
+    )
+    return Backend(profile, registers, assessments, workspace, operations, central)

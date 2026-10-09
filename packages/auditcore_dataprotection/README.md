@@ -227,10 +227,11 @@ Markdown und CSV mit Formelschutz.
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_dataprotection.__all__` (38):
+Öffentliche Namen aus `auditcore_dataprotection.__all__` (64):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
+| `ActivityWorkspace` | Datenklasse | Service for the wizard and the persistent checklist of activities. | `workspace` |
 | `Actor` | Datenklasse | Authenticated person as established by the consumer application. | `model` |
 | `Answer` | Datenklasse | Answer of the responsible department with its justification. | `answers` |
 | `AnswerValue` | Aufzählung | Explicit three-valued answer; ``UNKNOWN`` is never treated as ``NO``. | `answers` |
@@ -239,41 +240,67 @@ Markdown und CSV mit Formelschutz.
 | `AssessmentStatus` | Aufzählung | Status of an assessment version. | `model` |
 | `AuditEvent` | Datenklasse | Attributable change; persisted by the consumer's audit trail. | `model` |
 | `AuthorizationError` | Ausnahme | The authorizer port denied the operation (403). | `errors` |
+| `CentralRegisterPort` | Protokoll | Explicitly configured connection to the central register. | `central_register` |
+| `CentralRegisterService` | Datenklasse | Exports, transfers and confirmations of released register versions. | `central_register` |
+| `CentralRegisterUnavailable` | Ausnahme | The central register cannot be reached; nothing in operation is switched off. | `central_register` |
+| `ChecklistItem` | Datenklasse | State of one checklist item inside a register version. | `checklist` |
 | `ConflictError` | Ausnahme | The requested transition is not allowed in the current state (409). | `errors` |
 | `DataProtectionError` | Ausnahme | Base class; ``code`` is stable and machine readable. | `errors` |
+| `DecisionRequest` | Datenklasse | What the competent body decides on. | `operation` |
+| `Evaluation` | Datenklasse | Result of :func:`evaluate`. | `evaluation` |
+| `Evidence` | Datenklasse | Reference to a protected document that proves something. | `evidence` |
+| `EvidenceKind` | Aufzählung | Kinds of evidence; the kind decides which checklist item it can prove. | `evidence` |
 | `FourEyesViolation` | Ausnahme | The releasing person also edited the version or gave the DPO statement (403). | `errors` |
+| `GateFinding` | Datenklasse | A gate that applies, with role and next step. | `gates` |
+| `ItemStatus` | Aufzählung | Status model of one checklist item. | `checklist` |
 | `LockedVersionError` | Ausnahme | A released version is immutable; a new version must be created. | `errors` |
 | `NotFoundError` | Ausnahme | The entity does not exist within the given tenant (maps to 404). | `errors` |
+| `OperationRepository` | Protokoll | Tenant-scoped storage of operational decisions (append-only). | `operation_model` |
+| `OperationService` | Datenklasse | Records version-bound operational decisions after the backend gates. | `operation` |
+| `OperationalDecision` | Datenklasse | Decision of the competent body on one version, environment and scope. | `operation_model` |
 | `Permission` | Aufzählung | Operations the authorizer port must allow for an actor and tenant. | `model` |
 | `ProfileError` | Ausnahme | A rule profile is missing, malformed or does not contain a key. | `errors` |
 | `Proposal` | Datenklasse | Reasoned recommendation; ``recommendation`` is one of the profile decisions or ``unvollstaendig``. | `results` |
+| `Receipt` | Datenklasse | Answer of the central register. | `central_register` |
 | `RegisterService` | Datenklasse | Create, edit, version and release registers inside a tenant. | `register` |
 | `RegisterStatus` | Aufzählung | Status of a register version. | `model` |
 | `RegisterVersion` | Datenklasse | One version of a record of processing activities (Art. 30 GDPR). | `model` |
 | `ReviewItem` | Datenklasse | A released assessment whose activity changed or disappeared (Art. 35 Abs. 11). | `model` |
 | `RuleProfile` | Datenklasse | Immutable, explicitly selected rule profile. | `profile_model` |
+| `Safeguard` | Datenklasse | A measure with its state, the risks it addresses and its evidence. | `evidence` |
+| `SafeguardState` | Aufzählung | Implementation state of one safeguard. | `evidence` |
 | `Scenario` | Datenklasse | Risk scenario of one protection dimension, gross and optionally explicit net. | `answers` |
 | `StaleRevisionError` | Ausnahme | Optimistic concurrency check failed; reload and retry. | `errors` |
+| `StatusAxes` | Datenklasse | The six axes; there is deliberately no overall "compliant" value. | `status` |
 | `TenantMismatchError` | Ausnahme | An object of another tenant was presented; treated like not found by consumers. | `errors` |
+| `TransferRecord` | Datenklasse | State of one register version towards the central register. | `central_register` |
+| `TransferRepository` | Protokoll | Tenant-scoped storage of transfer records. | `central_register` |
+| `Transition` | Datenklasse | Requested change of one item. | `checklist` |
+| `UrgentStart` | Datenklasse | Narrow exception of § 64 Abs. 4 HDSIG: start after the consultation was initiated. | `operation_model` |
 | `ValidationError` | Ausnahme | Input does not satisfy the contract (maps to 400/422). | `errors` |
+| `WizardCatalog` | Datenklasse | Steps in order; question ids are unique across all steps. | `wizard_catalog` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `assess_risk` | Funktion | Gross = severity × likelihood; net after capped measure reductions or explicit values. | `risk` |
 | `available_profiles` | Funktion | Packaged ``(id, version)`` pairs, sorted; no profile is a hidden default. | `profile_loader` |
+| `catalog_for` | Funktion | Catalogue with the screening questions of the profile inserted into W09. | `wizard_catalog` |
 | `check_activity` | Funktion | Content check of one activity against Art. 30 Abs. 1 GDPR fields. | `register_content` |
 | `check_register` | Funktion | Cover sheet (Art. 30 Abs. 1 lit. a) plus every activity. | `register_content` |
 | `finalize_consultation` | Funktion | Final consultation notice after the final assessment (DP-C21). | `calculation` |
+| `load_catalog` | Funktion | The packaged catalogue. | `wizard_catalog` |
 | `load_profile` | Funktion | Load an explicitly named packaged profile version. | `profile_loader` |
 | `normalize_content` | Funktion | Validate structure and types and persist a stable identifier per activity. | `register_content` |
 | `parse_answers` | Funktion | Validate answers keyed by question. | `answers` |
 | `parse_scenarios` | Funktion | Validate risk scenarios strictly against the profile scale and catalogues. | `answers` |
 | `prefill_from_activity` | Funktion | Suggest answers from register data (Art. 9/10 data, number of persons, transfers). | `prefill` |
 | `propose` | Funktion | Combine screening and risk into a reasoned, traceable recommendation. | `calculation` |
+| `review_package` | Funktion | Register entry, screening, DPIA, gates, checklist and statements of one activity. | `review_package` |
 | `screen` | Funktion | Evaluate hard triggers, EDSA points and the FRIA marker in profile order. | `screening` |
 
 Öffentliche Module:
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_dataprotection.access` | Server-side permission check shared by the services of this package. |
 | `auditcore_dataprotection.answers` | Survey input of a DPIA: answers and risk scenarios, validated at the boundary. |
 | `auditcore_dataprotection.assessment` | DPIA workflow: create from an activity version, edit, decide, involve the DPO, release. |
 | `auditcore_dataprotection.assessment_checks` | Release checks of a DPIA version, in checking order. |
@@ -284,10 +311,17 @@ Markdown und CSV mit Formelschutz.
 | `auditcore_dataprotection.assessment_involvement` | DPO involvement and prior consultation of a DPIA version. |
 | `auditcore_dataprotection.assessment_review` | Review after register changes, reassessment and the overview of a register. |
 | `auditcore_dataprotection.calculation` | DSFA calculation: threshold analysis, gross/net risk and a reasoned proposal. |
+| `auditcore_dataprotection.catalogs` | – |
+| `auditcore_dataprotection.central_register` | Transfer of a released register version to the central register (Hausverzeichnis). |
+| `auditcore_dataprotection.change_impact` | Consequences of a change: which checks must be done again (GUI-14, LIB-17, T-24). |
+| `auditcore_dataprotection.checklist` | Persistent checklist (CHK-01 to CHK-30) with status, owner, evidence and due date. |
 | `auditcore_dataprotection.edpb` | DPIA documentation aligned with the EDPB template (2026, version 1.0). |
 | `auditcore_dataprotection.errors` | Error contract. Consumers map ``code`` to their own HTTP or UI responses. |
+| `auditcore_dataprotection.evaluation` | Evaluation of one activity: status axes, gates, checklist and open work. |
+| `auditcore_dataprotection.evidence` | Evidence and safeguards: what is proven, what is only planned. |
 | `auditcore_dataprotection.excel` | Optional Excel output (``pip install 'auditcore_dataprotection[excel]'``). |
 | `auditcore_dataprotection.export` | Report data and dependency-free renderers (JSON, HTML). |
+| `auditcore_dataprotection.gates` | Gate rules GATE-01 to GATE-08, evaluated in the backend. |
 | `auditcore_dataprotection.hashing` | Canonical JSON digests that bind results to exact profile and register content. |
 | `auditcore_dataprotection.html_common` | Escaping and styles shared by the HTML views of reports. |
 | `auditcore_dataprotection.legacy` | Behavior-compatible adapter for the source application ``regulierung``. |
@@ -295,7 +329,10 @@ Markdown und CSV mit Formelschutz.
 | `auditcore_dataprotection.legacy_report` | Legacy-exact HTML report of ``regulierung@a5d48ea`` (``export.baue_bericht_html``). |
 | `auditcore_dataprotection.legacy_scoring` | Legacy-exact screening, risk, proposal and prefill of ``regulierung@a5d48ea``. |
 | `auditcore_dataprotection.memory` | In-memory reference adapters for tests and simple single-process consumers. |
+| `auditcore_dataprotection.memory_records` | In-memory reference adapters for transfers, operational decisions and the central register. |
 | `auditcore_dataprotection.model` | Immutable records, actors, permissions and audit events. |
+| `auditcore_dataprotection.operation` | Service for the operational decision on one released register version. |
+| `auditcore_dataprotection.operation_model` | Operational decision: a separate, version-bound act of the competent body. |
 | `auditcore_dataprotection.pdf` | Optional PDF output via WeasyPrint (``pip install 'auditcore_dataprotection[pdf]'``). |
 | `auditcore_dataprotection.ports` | Interfaces the consumer application implements. |
 | `auditcore_dataprotection.prefill` | Suggested screening answers from register data; never stored automatically. |
@@ -303,16 +340,26 @@ Markdown und CSV mit Formelschutz.
 | `auditcore_dataprotection.profile_model` | Rule profile model: schema constants, catalogue records and :class:`RuleProfile`. |
 | `auditcore_dataprotection.profile_sections` | Sections of rule profile documents: primitives and the schema 2 (EDPB) parts. |
 | `auditcore_dataprotection.profiles` | – |
+| `auditcore_dataprotection.provenance` | Origin of an entry: confirmed by a person, imported, template or AI suggestion. |
+| `auditcore_dataprotection.publication` | Export profiles and the public-export guard (catalogue 10.3, T-22). |
 | `auditcore_dataprotection.register` | Records of processing activities: versions, drafts and four-eyes release. |
 | `auditcore_dataprotection.register_content` | Content of a register version: structure, identifiers, content checks, changes. |
 | `auditcore_dataprotection.register_html` | Self-contained, escaped HTML view of register report data. |
+| `auditcore_dataprotection.register_regime` | Regime- and role-specific register checks (profiles from 2026.10.4 on). |
 | `auditcore_dataprotection.report_data` | Report data of assessments and registers as JSON-compatible documents. |
 | `auditcore_dataprotection.results` | Results of the DSFA calculation: issues, screening, risk and the proposal. |
+| `auditcore_dataprotection.review_package` | Review package (Prüfpaket) of one activity: what is submitted, in which state. |
 | `auditcore_dataprotection.risk` | Risk assessment: gross risk, capped measure effects, explicit residual values. |
 | `auditcore_dataprotection.rules` | Versioned, source-bound rule profiles for screening, risk and workflow. |
+| `auditcore_dataprotection.scope` | Scope of an activity: personal data in test operation and duplicate hints. |
 | `auditcore_dataprotection.screening` | Threshold analysis: hard triggers, EDPB points and the FRIA marker. |
+| `auditcore_dataprotection.status` | Separate status axes instead of a single ``compliant`` flag (catalogue 9.2). |
 | `auditcore_dataprotection.web` | REST interface of the VVT and DSFA UI (``<flowaudit-vvt>``, ``<flowaudit-dsfa>``). |
+| `auditcore_dataprotection.wizard` | Guided wizard on the same versioned record as the free register editor. |
+| `auditcore_dataprotection.wizard_catalog` | Question catalogue of the guided wizard (steps W01 to W12), packaged as data. |
 | `auditcore_dataprotection.workbook_tables` | Flat tables of register and overview workbooks (no spreadsheet dependency). |
+| `auditcore_dataprotection.workspace` | Work on one activity: wizard, checklist, evidence and safeguards on one record. |
+| `auditcore_dataprotection.workspace_assessment` | Wizard answers that belong to the DPIA record (W09 screening, W10 texts). |
 <!-- api-overview:end -->
 
 Bausteine:

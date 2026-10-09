@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from types import MappingProxyType
-from typing import Any
+from typing import Any, TypedDict, cast
 
 from auditcore_common.hashing import canonical_sha256
 from auditcore_common.profiles import load_packaged_profile, packaged_profile_ids
@@ -18,6 +18,7 @@ from auditcore_common.profiles import load_packaged_profile, packaged_profile_id
 from .errors import ProfileError
 from .profile_model import (
     CONSULTATION_TIMING_FINAL,
+    DECISION_REJECTED,
     DECISIONS,
     EFFECTS,
     PROFILE_SCHEMA_EDPB,
@@ -61,6 +62,7 @@ def _questions(items: Any) -> tuple[Question, ...]:
             effect=q["effect"],
             explanation=q["explanation"],
             prefill=q["prefill"],
+            consultation_ground=q.get("consultation_ground"),
         )
         for q in items
     )
@@ -137,6 +139,50 @@ def _validate(
     require(set(recommendation["texts"]) == set(DECISIONS), "Empfehlungstexte unvollständig.")
 
 
+class _Extensions(TypedDict):
+    justification_required_for: frozenset[str]
+    register_regime_checks: bool
+    processor_columns: tuple[tuple[str, str], ...]
+
+
+_Doc = Mapping[str, object]
+
+
+def _section(data: _Doc, *path: str) -> _Doc:
+    current: object = data
+    for key in path:
+        current = cast(_Doc, current)[key]
+    return cast(_Doc, current)
+
+
+def _entries(section: _Doc, key: str) -> list[_Doc]:
+    return list(cast(list[_Doc], section.get(key) or []))
+
+
+def _checklist_extensions(data: _Doc) -> _Extensions:
+    """Optional sections of profiles from 2026.10.4 on; absent in older profiles."""
+    workflow = _section(data, "workflow")
+    register = _section(data, "register")
+    raw_required = cast(list[object], workflow.get("justification_required_for") or [])
+    required = frozenset(str(k) for k in raw_required)
+    require(
+        required <= {*DECISIONS, DECISION_REJECTED},
+        "Unbekannte Entscheidung mit Begründungspflicht.",
+    )
+    recommendation = _section(data, "recommendation")
+    grounds = {str(g["key"]) for g in _entries(recommendation, "consultation_grounds")}
+    questions = _entries(_section(data, "screening"), "questions")
+    linked = {q.get("consultation_ground") for q in questions} - {None}
+    require(linked <= grounds, "Frage verweist auf einen unbekannten Konsultationsgrund.")
+    return {
+        "justification_required_for": required,
+        "register_regime_checks": bool(register.get("regime_checks", False)),
+        "processor_columns": tuple(
+            (str(c["key"]), str(c["title"])) for c in _entries(register, "processor_columns")
+        ),
+    }
+
+
 def _build_profile(data: Mapping[str, Any]) -> RuleProfile:
     """Validate and build; ``KeyError``/``TypeError`` of missing sections pass through."""
     require(data["schema"] in PROFILE_SCHEMAS, "Unbekanntes Profilschema.")
@@ -193,6 +239,7 @@ def _build_profile(data: Mapping[str, Any]) -> RuleProfile:
         source=frozen(data["source"]),
         fingerprint=fingerprint(data),
         consultation_notice=_consultation_notice(recommendation),
+        **_checklist_extensions(data),
         **(edpb_fields(data, measures) if data["schema"] == PROFILE_SCHEMA_EDPB else {}),
     )
 

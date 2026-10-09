@@ -16,7 +16,7 @@ from .calculation import finalize_consultation
 from .edpb import parse_action_plan, parse_dossier, parse_measure_status, reject_edpb_fields
 from .errors import ConflictError, ValidationError
 from .model import Assessment, AssessmentStatus
-from .rules import RECOMMENDATION_INCOMPLETE, RuleProfile
+from .rules import RECOMMENDATION_INCOMPLETE, RECOMMENDATION_SCREENING_ONLY, RuleProfile
 
 #: Sentinel for omitted keyword arguments. Typed ``Any`` so it can be the default
 #: of parameters of any type (``answers: Mapping[str, Any] = UNSET``).
@@ -321,4 +321,24 @@ def check_decision(
     refuse_open_issues(current, rules)
     deviation = decision != recommendation
     reason = checked_justification(justification, deviation, rules)
+    if decision in rules.justification_required_for:
+        _require_own_justification(current, rules, decision, reason)
     return CheckedDecision(condition_list, deviation, reason, complete)
+
+
+def _require_own_justification(
+    current: Assessment, rules: RuleProfile, decision: str, reason: str
+) -> None:
+    """LIB-10: a negative DPIA decision never rests on a point total alone."""
+    screening = current.proposal.get("screening") or {}
+    if decision == RECOMMENDATION_SCREENING_ONLY and not screening.get("complete"):
+        raise ConflictError(
+            "Ohne vollständige Schwellwertanalyse kann nicht entschieden werden, dass keine "
+            "Folgenabschätzung erforderlich ist; offene oder unklare Antworten sind zu klären."
+        )
+    if len(reason) < rules.min_justification_length:
+        raise ValidationError(
+            "Diese Entscheidung braucht eine eigene, auf die konkrete Verarbeitung bezogene "
+            f"Begründung von mindestens {rules.min_justification_length} Zeichen; eine "
+            "Punktsumme allein trägt sie nicht."
+        )

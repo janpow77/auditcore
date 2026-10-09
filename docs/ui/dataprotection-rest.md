@@ -89,6 +89,30 @@ Alle Fehler: `{"error": {"code": "…", "message": "…"}}` mit deutscher Meldun
 Antworten und Kennungen sind JSON mit ISO-Zeitstempeln. Die Oberfläche liest
 `revision` und schickt sie beim Schreiben zurück (optimistische Sperre).
 
+### Arbeitsbereich: Assistent, Prüfpunkte, Sperren (ab Paket 0.6.0)
+
+Für `<flowaudit-datenschutz-assistent>` (Vue) und `FlowauditDatenschutzAssistent` (React), Port
+`createAssistantRestPort`. Jede Änderung antwortet mit der neu berechneten Übersicht.
+`expected_revision` ist die Revision des Verzeichnisentwurfs (`register.revision`, ohne offenen
+Entwurf `null`). Bei Fragen der Schwellwertanalyse (`W09:…`) und DSFA-Texten (`assessment:…`)
+gilt die Revision der Folgenabschätzung (`folgenabschaetzung.revision`).
+
+| Methode, Pfad | Körper | Antwort |
+|---|---|---|
+| `POST /activities` | `{name, expected_revision?}` | Übersicht der neuen Tätigkeit (201); der Assistent beginnt geführt bei W01 |
+| `GET /activities/{id}/workspace` | – | Übersicht: `assistent` (Modus, Schritte, Fragen mit Wert und Herkunft, Aufgaben, ausgeblendete Antworten), `status` (sechs Achsen), `sperren` (GATE-01 bis GATE-08 mit Grund, Rolle, nächstem Schritt), `pruefpunkte` (CHK-01 bis CHK-30), `verzeichnisbefunde`, `offene_aufgaben`, `hinweise`, `folgenabschaetzung` |
+| `POST /activities/{id}/answers` | `{question_id, value, justification?, origin?, expected_revision}` | `origin` = `bestaetigt` (Standard), `importiert`, `vorlage`, `ki_vorschlag`; Vorschläge wirken erst nach Bestätigung |
+| `POST /activities/{id}/answers/confirm` | `{question_id, expected_revision}` | Vorschlag übernommen |
+| `POST /activities/{id}/navigate` | `{mode: gefuehrt\|frei, step, expected_revision}` | Geführt nur einen Schritt vor oder zurück zu besuchten Schritten (sonst 409) |
+| `POST /activities/{id}/checklist/{item}` | `{status, justification?, evidence_ids?, owner?, due?, objection?, expected_revision}` | `nachgewiesen` nur mit gültigem Nachweis passender Art (422); `nicht_anwendbar` mit Begründung |
+| `POST /activities/{id}/checklist/{item}/confirm` | `{expected_revision}` | Bestätigung von „nicht anwendbar“ durch eine zweite Person |
+| `POST /activities/{id}/records` | `{evidence?, safeguards?, expected_revision}` | Nachweise und Schutzmaßnahmen |
+| `POST /activities/{id}/operation` | `{outcome, environment, application_version?, scope, justification, conditions?, urgent?}` | Betriebsentscheidung; Recht `operation.decide` (403), positive Entscheidung nur ohne Sperre (409) |
+| `GET /activities/{id}/review-package` | – | Prüfpaket mit Stand, Status, Sperren, Tätigkeit, Prüfpunkten und DSFA-Bericht |
+| `POST /register/transfer` | `{}` | Übertragung der freigegebenen Fassung an das zentrale Verzeichnis; idempotent |
+| `POST /register/transfer/confirm` | `{key, central_id, proof}` | Übernahme bestätigen (Recht `central_register.confirm`) |
+| `POST /register/public-pattern` | `{}` | nur die Struktur ohne Inhalte (Recht `export.public`) |
+
 ## CSV
 
 Trenner `;`, UTF-8 mit BOM, Zeilenende CRLF, Präfix `'` vor Texten, die mit

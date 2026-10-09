@@ -40,6 +40,26 @@ Legende: ✅ übernommen · ➕ neu/erweitert · ⚠ bewusst anders · ⏳ nicht
 | Freigabe (Vier-Augen), Neubewertung, Fassungen | gleich; offene Punkte werden mit der Freigabe dokumentiert | ✅ |
 | Bericht als PDF | Bericht als Druckansicht (HTML der Bibliothek) und Markdown | ⚠ PDF über Druckdialog oder `auditcore_dataprotection.pdf` |
 
+## Datenschutz-Assistent (Prüfkatalog VVT/DSFA)
+
+➕ `<flowaudit-datenschutz-assistent>` / `FaDatenschutzAssistent` (Vue) und
+`FlowauditDatenschutzAssistent` (React), Kern `createAssistantController` in `@auditcore/ui-core`,
+REST `auditcore_dataprotection.web` 0.6.0 (Arbeitsbereich). Der Assistent ist optional: Im Modus
+„geführt“ geht es Schritt für Schritt (vorwärts nur zum nächsten Schritt), im Modus „frei“ ist
+jeder Schritt erreichbar. Beide Modi schreiben in denselben versionierten Verzeichniseintrag wie
+`<flowaudit-vvt>`; Fragen der Schwellwertanalyse und DSFA-Texte gehen direkt in die
+Folgenabschätzung.
+
+| Bereich | Stand |
+|---|---|
+| Schritte W01 bis W12 mit Status als Text, Fortschritt, Fokus auf die Schrittüberschrift beim Wechsel | ➕ |
+| Fragen mit „Warum wird das gefragt?“, Fundstelle, ja/nein/unklar, „nicht anwendbar“ nur mit Begründung | ➕ |
+| Fehlerübersicht mit Sprung zur Frage, Eingabe bleibt erhalten | ➕ |
+| Vorschläge (Import, Vorlage, KI) als unbestätigt mit „Vorschlag prüfen und übernehmen“ | ➕ |
+| Reiter „Prüfpunkte“ (CHK-01 bis CHK-30) und „Status und Sperren“ (sechs Achsen, GATE-01 bis GATE-08) | ➕ |
+| Paritätsfälle `cases-datenschutz-assistent.ts`, Browsertest nur mit Tastatur und axe | ➕ |
+| Rollenfilter der Aufgaben, Versionsvergleich, Nachweisablage | ⏳ (siehe `packages/auditcore_dataprotection/docs/pruefkatalog-abgleich.md`) |
+
 ## Querschnitt
 
 Deutsche Texte mit echten Umlauten (Englisch teilweise), Dark Mode über

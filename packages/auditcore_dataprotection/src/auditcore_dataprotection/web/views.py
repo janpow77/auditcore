@@ -206,6 +206,7 @@ def _lifecycle(assessment: Assessment) -> JsonObject:
             "decision": assessment.decision,
             "deviation": assessment.deviation,
             "deviation_justification": assessment.deviation_justification,
+            "decision_justification": assessment.decision_justification,
             "conditions": list(assessment.conditions),
             "decided_by": assessment.decided_by,
             "decided_at": assessment.decided_at,

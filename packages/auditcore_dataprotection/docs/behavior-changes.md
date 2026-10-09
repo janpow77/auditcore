@@ -164,3 +164,31 @@ unverändert.
 | DP-E16 | Für die DSB genügt die dokumentierte Einholung: `record_dpo_request` (bei wem, Datum, erfasst von). Fehlt sie oder fehlt die Stellungnahme, steht das als offener Punkt im Bericht. Eine inhaltliche Änderung setzt die Einholung wie die Stellungnahme zurück. |
 | DP-E17 | `decide` ist auch bei unvollständiger Erhebung möglich; fehlende Abweichungsbegründung und fehlende Bedingungen werden offene Punkte. Die Konsultationshinweise werden erst bei vollständiger Bewertung endgültig. |
 | DP-E18 | Unverändert sperren Rechteprüfung, Mandantenbindung, Revision, Vier-Augen-Prinzip und dass die DSB nicht selbst freigibt; Eingaben werden weiterhin auf Form und Typ geprüft. |
+
+## Profilfassung 2026.10.4: Prüfkatalog VVT/DSFA
+
+Grundlage ist der Prüfkatalog für eine Python-Bibliothek zu VVT und DSFA (Stand 08.10.2026). Er ist
+eine Arbeitsgrundlage, keine Rechtsquelle. Neu sind `auditcore.dsgvo` und `auditcore.hdsig_ji`
+in der Fassung 2026.10.4. Alle älteren Fassungen, `regulierung.*` und `legacy` verhalten sich
+unverändert, weil die neuen Abschnitte im Profil optional sind
+(`test_aeltere_profile_bleiben_unveraendert`, Replay unverändert).
+
+| ID | Änderung |
+|---|---|
+| DP-E19 | `§ 64 Abs. 1 Satz 1 Nr. 2 HDSIG` ist eine eigene Frage (`hdsig_64_1_nr2_form`) mit dem Konsultationsgrund `form_hochriskant`. Ist die Frage bejaht, wird die Konsultation unabhängig vom Restrisiko endgültig `erforderlich`, solange die Verarbeitung nicht verworfen wird. Der Hinweis nennt den Tatbestand (T-14). |
+| DP-E20 | Neue offene Gesamtbetrachtung `gesamt_01_sonstiges_hohes_risiko` als Muss-Kriterium in beiden Profilen. Ein einzelnes gewichtiges Merkmal genügt; wenige bejahte Standardmerkmale beweisen kein niedriges Risiko (T-09). Folge: Eine vollständig verneinte Erhebung älterer Profile ist in 2026.10.4 erst mit Antwort auf diese Frage vollständig. |
+| DP-E21 | `workflow.justification_required_for: ["nur_schwellwert"]`: „Keine Folgenabschätzung erforderlich“ verlangt auch bei Übernahme des Vorschlags eine eigene Begründung von mindestens `min_justification_length` Zeichen. Bei unvollständiger Schwellwertanalyse ist die Entscheidung nicht möglich, auch im Dokumentationsmodus nicht (LIB-10, LIB-12, T-10). Gespeichert wird `Assessment.decision_justification`. |
+| DP-E22 | `register.regime_checks`: Jede Tätigkeit nennt `rechtsregime` (`dsgvo`, `hdsig_ji`, `unklar`) und `rolle`. Ein fehlendes, unklares oder vom Profil abweichendes Regime sperrt. Profiling wird immer abgefragt, im HDSIG-Profil sperrend. Für jede Übermittlung sind Empfänger und Rechtsgrundlage in `uebermittlungen` anzugeben (§ 65 Abs. 1 HDSIG; im DSGVO-Profil Produktanforderung). Speicherdauer und TOM lassen statt einer konkreten Angabe Begründung und Prüfstelle zu; das bleibt eine offene, nicht sperrende Aufgabe (T-01, T-02, T-04, T-05). |
+| DP-E23 | Rolle `auftragsverarbeiter`: eigene Pflichtfelder nach Art. 30 Abs. 2 DSGVO und § 65 Abs. 2 HDSIG (`auftraggeber`, `kategorien_verarbeitungen`, `tom`, Drittlandangabe) statt des Formulars des Verantwortlichen (T-06). |
+| DP-E24 | Die Empfehlungstexte `freigabe` und `freigabe_mit_auflagen` sprechen von der Freigabe der Dokumentation und stellen klar, dass über den Betrieb gesondert entschieden wird. |
+| DP-E25 | Listen im Verzeichnisexport (HTML, XLSX) werden lesbar ausgegeben; eine Übermittlung erscheint als „Empfänger – Rechtsgrundlage“ statt als Rohdarstellung. Das gilt für alle Profile, ändert aber nur Listenfelder, die die älteren Profile nicht verwenden. |
+
+Neu und unabhängig von der Profilfassung sind Arbeitsbereich, Wizard, Checkliste, getrennte Status,
+Sperren, Nachweise, Betriebsentscheidung und zentrale Übernahme. Den Abgleich mit dem Prüfkatalog je
+Anforderung enthält `docs/pruefkatalog-abgleich.md`.
+
+HUMAN_DECISION_REQUIRED: Ob § 64 Abs. 1 Nr. 2 HDSIG zugleich ein Muss-Kriterium der DSFA ist (so
+umgesetzt: Wirkung `hart`), ist fachlich zu bestätigen. Dasselbe gilt für den Umgang mit dem
+Dokumentationsmodus bei fehlender DSB-Stellungnahme: Die Freigabe der DSFA-Fassung bleibt möglich,
+die Achse „DSFA-Bearbeitung“ lautet dann aber nicht „fachlich abgeschlossen“, und GATE-04 sperrt
+die Betriebsentscheidung.

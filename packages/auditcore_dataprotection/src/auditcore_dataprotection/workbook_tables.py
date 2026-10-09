@@ -10,6 +10,8 @@ from collections.abc import Mapping, Sequence
 from datetime import date, datetime
 from typing import Any
 
+from .register_regime import item_text
+
 MAX_ROWS = 100_000
 
 #: Value of one worksheet cell as the reporting renderer accepts it.
@@ -36,7 +38,7 @@ def cell_value(value: object) -> CellValue:
     if value is None or isinstance(value, (str, int, float, date)):
         return value
     if isinstance(value, (list, tuple)):
-        return ", ".join(str(v) for v in value)
+        return ", ".join(item_text(v) for v in value)
     return str(value)
 
 

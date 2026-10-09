@@ -1,4 +1,5 @@
 import { defineMessages, type Translate } from '../i18n'
+import { assistantDe, assistantEn } from './assistantMessages'
 
 /** Texte von `<flowaudit-vvt>` und `<flowaudit-dsfa>`. */
 export const dataprotectionMessages = defineMessages({
@@ -166,8 +167,10 @@ export const dataprotectionMessages = defineMessages({
     reportHtml: 'Bericht (Druckansicht)',
     reportMarkdown: 'Bericht (Markdown)',
     colDecision: 'Entscheidung',
+    ...assistantDe,
   },
   en: {
+    ...assistantEn,
     vvtTitle: 'Record of processing activities',
     vvtNorm: 'Art. 30 GDPR',
     dsfaTitle: 'Data protection impact assessment',

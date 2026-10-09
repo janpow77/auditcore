@@ -16,7 +16,7 @@ every name importable from its original place.
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -196,18 +196,28 @@ class _ProposalBuilder:
         rule = self.profile.consultation_notice
         if rule is not None:
             # DP-C21: before the final assessment at most a preliminary notice.
-            preliminary = recommendation == RECOMMENDATION_CONSULTATION
+            by_ground = (
+                bool(self.screening.consultation_grounds)
+                and recommendation != RECOMMENDATION_INCOMPLETE
+            )
+            preliminary = recommendation == RECOMMENDATION_CONSULTATION or by_ground
+            notice_text = rule.preliminary_text
+            if by_ground and recommendation != RECOMMENDATION_CONSULTATION:
+                grounds = self.screening.consultation_grounds
+                notice_text = "Vorläufiger Hinweis: " + _ground_text(self.profile, grounds)
             notice = {
                 "timing": rule.timing,
                 "final": False,
                 "status": NOTICE_PRELIMINARY if preliminary else NOTICE_NONE,
-                "text": rule.preliminary_text if preliminary else "",
+                "text": notice_text if preliminary else "",
                 "legal_basis": rule.legal_basis,
             }
             if preliminary:
-                text = rule.preliminary_text
+                text = notice_text
             consultation = False
             self.trace.append({"step": "consultation_notice", "status": notice["status"]})
+        else:
+            consultation = consultation or bool(self.screening.consultation_grounds)
         return Proposal(
             profile=self.profile.reference,
             regime=self.profile.regime,
@@ -291,6 +301,19 @@ def propose(
     )
 
 
+def _ground_text(profile: RuleProfile, grounds: Sequence[str]) -> str:
+    """Final notice for grounds that apply independently of the residual risk."""
+    named = "; ".join(
+        f"{profile.consultation_grounds[g][0]} ({profile.consultation_grounds[g][1]})"
+        for g in grounds
+        if g in profile.consultation_grounds
+    )
+    return (
+        "Unabhängig vom verbleibenden Risiko ist vor Beginn der Verarbeitung die "
+        f"Aufsichtsbehörde zu konsultieren, weil folgender Tatbestand erfüllt ist: {named}."
+    )
+
+
 def finalize_consultation(
     profile: RuleProfile, proposal: Mapping[str, Any], decision: str
 ) -> dict[str, Any]:
@@ -311,10 +334,12 @@ def finalize_consultation(
             "Ein endgültiger Konsultationshinweis setzt eine vollständige Bewertung voraus."
         )
     high = proposal.get("recommendation") == RECOMMENDATION_CONSULTATION
-    required = high and decision != DECISION_REJECTED
+    grounds = list((proposal.get("screening") or {}).get("consultation_grounds") or ())
+    required = (high or bool(grounds)) and decision != DECISION_REJECTED
     if required:
-        status, text = NOTICE_REQUIRED, rule.final_text
-        result["recommendation_text"] = rule.final_text
+        text = rule.final_text if high else _ground_text(profile, grounds)
+        status = NOTICE_REQUIRED
+        result["recommendation_text"] = text
     elif high:
         status, text = NOTICE_NOT_REQUIRED, rule.rejected_text
     else:
@@ -327,6 +352,7 @@ def finalize_consultation(
         "text": text,
         "legal_basis": rule.legal_basis,
         "net_risk_high": high,
+        **({"grounds": grounds} if grounds else {}),
         "decision": decision,
     }
     result["trace"] = [

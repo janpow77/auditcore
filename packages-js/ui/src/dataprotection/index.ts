@@ -1,6 +1,8 @@
 export { default as FaVvt } from './FaVvt.vue'
 export { default as FaDsfa } from './FaDsfa.vue'
-export { dsfaElement, vvtElement } from './element'
+export { default as FaDatenschutzAssistent } from './FaDatenschutzAssistent.vue'
+export { assistantElement, dsfaElement, vvtElement } from './element'
+export { useAssistant, type AssistantHooks, type AssistantVueState } from './useAssistant'
 export { useVvt, type VvtExport, type VvtExportFormat, type VvtHooks, type VvtState } from './useVvt'
 export { useDsfa, type DsfaHooks, type DsfaState, type DsfaStep } from './useDsfa'
 /** Kern (Vertrag dataprotection_ui/1, View-Logik, Zustandsautomaten, Exporte) aus `@auditcore/ui-core`. */
@@ -9,6 +11,19 @@ export {
   type DataProtectionKey,
   type DataProtectionTranslate,
   createDataProtectionRestPort,
+  createAssistantRestPort,
+  createAssistantController,
+  assistantView,
+  draftOf,
+  questionOptions,
+  stepReachable,
+  type AssistantPort,
+  type AssistantMode,
+  type WorkspaceOverview,
+  type StatusAxes,
+  type GateView,
+  type ChecklistItemView,
+  type ChecklistChange,
   DATAPROTECTION_CONTRACT,
   dataprotectionError,
   type DataProtectionError,

@@ -8,8 +8,9 @@ import { synopsisCases } from '../../ui-core/test/parity/cases-synopsis'
 import { tableCases } from '../../ui-core/test/parity/cases-table'
 import { buttonCases, textFieldCases } from '../../ui-core/test/parity/cases-base'
 import { vvtCases } from '../../ui-core/test/parity/cases-vvt'
+import { assistantCases } from '../../ui-core/test/parity/cases-datenschutz-assistent'
 import { checkExpectation } from '../../ui-core/test/parity/expect'
-import { FaButton, FaSynopsis, FaTable, FaTextField, FaVvt } from '../src'
+import { FaButton, FaDatenschutzAssistent, FaSynopsis, FaTable, FaTextField, FaVvt } from '../src'
 
 afterEach(() => {
   document.body.innerHTML = ''
@@ -31,5 +32,6 @@ function suite<P extends object>(title: string, component: Component, cases: Rea
 suite('Paritätsfälle Synopse (Vue)', FaSynopsis, synopsisCases)
 suite('Paritätsfälle Tabelle (Vue)', FaTable, tableCases)
 suite('Paritätsfälle VVT (Vue)', FaVvt, vvtCases)
+suite('Paritätsfälle Datenschutz-Assistent (Vue)', FaDatenschutzAssistent, assistantCases)
 suite('Paritätsfälle Schaltfläche (Vue)', FaButton, buttonCases)
 suite('Paritätsfälle Eingabefeld (Vue)', FaTextField, textFieldCases)

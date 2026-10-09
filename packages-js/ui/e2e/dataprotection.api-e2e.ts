@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 
 const SCREENSHOTS = process.env.FA_SCREENSHOTS
@@ -99,5 +100,36 @@ test('DSFA: Schwellwertanalyse, Risiko mit Vorschau der Bibliothek, Entscheidung
   await dsfa.getByRole('button', { name: 'Öffnen: Vorhabenprüfung mit Stichprobe' }).click()
   await expect(dsfa.getByTestId('dsfa-head')).toContainText('freigegeben')
   await shot(page, 'dataprotection-6-dsfa-dunkel')
+  expect(errors).toEqual([])
+})
+
+test('Assistent: geführt nur per Tastatur, „unklar“ wird Aufgabe, freier Modus, axe ohne Befund', async ({ page }) => {
+  const errors = await openPage(page)
+  await page.getByTestId('dp-view').selectOption('assistent')
+  const assistant = page.getByTestId('assistant')
+  await expect(assistant.getByRole('heading', { name: 'Datenschutz-Assistent' })).toBeVisible()
+  await expect(assistant).toContainText('Schritt 1 von')
+  const first = assistant.locator('fieldset.fa-assistant__question').filter({ hasText: 'Welche Arbeitsschritte gehören ausdrücklich nicht dazu?' })
+  await first.getByRole('textbox').focus()
+  await page.keyboard.type('unklar ist noch die Abgrenzung zur Marktbeobachtung')
+  await page.keyboard.press('Tab')
+  await page.keyboard.press('Enter')
+  await expect(assistant.locator('.fa-dataprotection__live')).toContainText('Gespeichert')
+  const personal = assistant.locator('fieldset.fa-assistant__question').filter({ hasText: 'Werden personenbezogene Daten verarbeitet' })
+  await personal.getByLabel('Unklar').check()
+  await personal.getByRole('button', { name: 'Antwort speichern' }).press('Enter')
+  await expect(assistant).toContainText('W01-06 – unklar – zu klären')
+  await assistant.getByRole('button', { name: 'Weiter' }).press('Enter')
+  await expect(assistant.getByRole('heading', { level: 3, name: /Schritt 2 von/ })).toBeFocused()
+  await assistant.getByLabel('Bearbeitungsweise').selectOption('frei')
+  await expect(assistant.locator('.fa-assistant__steps button:disabled')).toHaveCount(0)
+  await assistant.getByRole('tab', { name: 'Status und Sperren' }).click()
+  await expect(assistant.getByTestId('assistant-status')).toContainText('keinen Gesamtstatus')
+  for (const tab of ['Assistent', 'Prüfpunkte', 'Status und Sperren']) {
+    await assistant.getByRole('tab', { name: tab }).click()
+    const result = await new AxeBuilder({ page }).include('[data-testid="assistant"]').analyze()
+    expect(result.violations).toEqual([])
+  }
+  await shot(page, 'dataprotection-assistant')
   expect(errors).toEqual([])
 })

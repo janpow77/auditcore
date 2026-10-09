@@ -83,6 +83,9 @@ class Question:
     effect: str
     explanation: str
     prefill: str | None
+    #: Key of a consultation ground this question establishes on its own,
+    #: independent of the residual risk (e.g. § 64 Abs. 1 Nr. 2 HDSIG).
+    consultation_ground: str | None = None
 
 
 @dataclass(frozen=True)
@@ -211,6 +214,12 @@ class RuleProfile:
     band_recommendations: Mapping[str, str] = field(default_factory=dict)
     release_mode: str = RELEASE_BLOCKING
     consultation_notice: ConsultationNotice | None = None
+    #: Decisions that need an individual justification even without deviation
+    #: from the proposal (e.g. "no DPIA required" must never rest on points alone).
+    justification_required_for: frozenset[str] = frozenset()
+    #: Regime- and role-specific register checks (§ 65 HDSIG, Art. 30 Abs. 2 DSGVO).
+    register_regime_checks: bool = False
+    processor_columns: tuple[tuple[str, str], ...] = ()
 
     @property
     def documentation_mode(self) -> bool:

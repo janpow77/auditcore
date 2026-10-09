@@ -19,6 +19,7 @@ from .errors import NotFoundError, ValidationError
 from .legacy_admin import legacy_activities_with_identifiers
 from .model import RegisterVersion
 from .ports import IdFactory
+from .register_regime import IF_POSSIBLE, check_regime_activity, extra_type_errors
 from .results import Issue
 from .rules import RuleProfile
 
@@ -107,6 +108,8 @@ def _check_activity_types(activity: Mapping[str, object], index: int) -> None:
             raise ValidationError(
                 f"{where}: Feld '{name}' muss Ja/Nein (True/False) oder leer sein, war: {value!r}."
             )
+    for message in extra_type_errors(activity):
+        raise ValidationError(f"{where}: {message}")
     for name in COUNT_FIELDS:
         value = activity.get(name)
         if value is not None and not _is_count(value):
@@ -202,9 +205,14 @@ _Report = Callable[..., None]
 
 
 def _check_required_text(
-    activity: Mapping[str, object], columns: Mapping[str, str], issue: _Report
+    activity: Mapping[str, object],
+    columns: Mapping[str, str],
+    issue: _Report,
+    skip: tuple[str, ...] = (),
 ) -> None:
     for field in REQUIRED_TEXT:
+        if field in skip:
+            continue
         if _blank(activity.get(field)):
             issue("missing_field", field, f"„{columns.get(field, field)}“ fehlt")
 
@@ -269,7 +277,12 @@ def check_activity(activity: Mapping[str, object], profile: RuleProfile) -> tupl
         suffix = f" ({reference})" if reference else ""
         issues.append(Issue(code, f"{message}{suffix}", blocking, f"{subject}:{field}"))
 
-    _check_required_text(activity, columns, issue)
+    if profile.register_regime_checks:
+        if check_regime_activity(activity, profile.regime, issue):
+            return tuple(issues)
+        _check_required_text(activity, columns, issue, IF_POSSIBLE)
+    else:
+        _check_required_text(activity, columns, issue)
     _check_transfer(activity, columns, issue)
     _check_processors(activity, issue)
     _check_open_flags(activity, issue)

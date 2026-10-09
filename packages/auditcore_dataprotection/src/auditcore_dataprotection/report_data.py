@@ -159,6 +159,7 @@ def _decision(assessment: Assessment, profile: RuleProfile) -> dict[str, object]
         "decision": assessment.decision,
         "deviation": assessment.deviation,
         "deviation_justification": assessment.deviation_justification,
+        "decision_justification": assessment.decision_justification,
         "decided_by": assessment.decided_by,
         "decided_at": _plain(assessment.decided_at),
     }
