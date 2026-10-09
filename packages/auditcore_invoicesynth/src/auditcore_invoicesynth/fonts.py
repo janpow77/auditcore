@@ -3,7 +3,8 @@
 Zulässig sind nur Familien mit freier Lizenz (Katalog ``FONT_CATALOG``):
 DejaVu (Bitstream-Vera-Lizenz), Liberation, Noto und Lato (SIL OFL 1.1), dazu
 URW Gothic (nur Diagnosesatz T2b) und C059 (nur T2c), beide AGPL-3.0 mit
-Schrift-Ausnahme. Die
+Schrift-Ausnahme, sowie ab Variante v4 Nimbus Sans, URW Bookman und P052
+(gleiche Lizenz, nur Training). Die
 Schriftdateien werden **nicht** mit dem Paket verteilt; der Generator sucht
 sie in Systemverzeichnissen (``fonts-dejavu-core``, ``fonts-liberation2``,
 ``fonts-noto-core``) oder lädt sie über einen injizierten Abruf mit fester
@@ -92,9 +93,32 @@ FONT_CATALOG: dict[str, FontFamilySpec] = {
         ("C059-Roman.otf",),
         ("C059-Bold.otf",),
     ),
+    # Generatorvariante v4 (Stufe 7): weitere Ziffernschriften aus fonts-urw-base35,
+    # bewusst weder URW Gothic (T2b) noch C059 (T2c) noch deren Klone.
+    "Nimbus Sans": FontFamilySpec(
+        "AGPL-3.0-with-font-exception",
+        ("fonts-urw-base35",),
+        ("NimbusSans-Regular.otf",),
+        ("NimbusSans-Bold.otf",),
+    ),
+    "URW Bookman": FontFamilySpec(
+        "AGPL-3.0-with-font-exception",
+        ("fonts-urw-base35",),
+        ("URWBookman-Light.otf",),
+        ("URWBookman-Demi.otf",),
+    ),
+    "P052": FontFamilySpec(
+        "AGPL-3.0-with-font-exception",
+        ("fonts-urw-base35",),
+        ("P052-Roman.otf",),
+        ("P052-Bold.otf",),
+    ),
 }
 # Familien, die erst die Generatorvariante v2 verwendet (v1-Pläne bleiben unverändert).
 V2_FONT_FAMILIES: tuple[str, ...] = ("Lato",)
+# Familien nur der Variante v4; der Plan zieht sie mit eigener Zufallsfolge, damit
+# Pläne von v1 bis v3 und der Layout-Holdout T2 unverändert bleiben.
+V4_FONT_FAMILIES: tuple[str, ...] = ("Nimbus Sans", "URW Bookman", "P052")
 # Familien nur für Diagnosesätze; kein Trainings-, Validierungs- oder T1/T2-Plan nutzt sie.
 HOLDOUT_B_FONT_FAMILIES: tuple[str, ...] = ("URW Gothic",)
 HOLDOUT_C_FONT_FAMILIES: tuple[str, ...] = ("C059",)
