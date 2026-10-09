@@ -61,6 +61,17 @@ Ab `--variety v3` (Summenorte, waagerechte Kopfdaten mit Beschriftung über dem
 Wert) ist T2 (holdout_kompakt) kein reiner Unbekannt-Test mehr; maßgeblich sind
 T2b und T2-gemischt.
 
+`--variety v4` (Stufe 7) ergänzt `v3` um drei Konzepte aus eigener Zufallsfolge:
+hervorgehobener Rechnungsbetrag (groß, Beschriftung über oder vor dem Wert, an
+wechselnden Orten, rund 20 %), gemischte Summenfolge (Gesamtbetrag auch zuerst,
+„davon Netto/USt“, Beschriftung über oder links vom Wert, rund 25 %) und
+Kennungen klein in 2–3 Fußzeilenspalten (rund 20 %). Rund 30 % der Belege
+nutzen zusätzlich Nimbus Sans, URW Bookman oder P052 (`fonts-urw-base35`). Pläne
+von `v1`–`v3`, der Layout-Holdout T2 und alle Diagnosesätze bleiben bitgleich.
+Vollsatz: `auditcore-invoicesynth build --variety v4 --seed 42 --train 20000
+--validation 1000 --test-synthetic 1000 --test-layout-holdout 500 --font-pins
+<pins.json> --out <ziel>`.
+
 ## Schnellstart
 
 Der Kern läuft ohne Zusatzpakete: Plan, Anreicherung, Kennungen und Ziel-JSON.
@@ -187,6 +198,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.layout_holdout_c` | Vorlagen des Diagnosesatzes T2c (versiegelter Unbekannt-Test, nie Training). |
 | `auditcore_invoicesynth.layout_model` | Belegvorlagen als Daten: Zeichenfläche, Vorlagenparameter und Formatwahl. |
 | `auditcore_invoicesynth.layout_prose` | Bausteine der T2c-Vorlagen: Fließtext mit Feldern, linienlose Positionsliste, Wendungen. |
+| `auditcore_invoicesynth.layout_v4` | Anordnungen der Generatorvariante ``v4``: Betrag hervorgehoben, Summenfolge, Fußzeile. |
 | `auditcore_invoicesynth.layouts` | Achtzehn Belegvorlagen (dreizehn fürs Training, zwei für den Layout-Holdout T2, eine nur für den Diagnosesatz T2b, zwei nur für den Diagnosesatz T2c). |
 | `auditcore_invoicesynth.plan` | Deterministischer Variantenplan und Aufteilung in Trainings-/Testsätze. |
 | `auditcore_invoicesynth.plausibility` | Plausibilitätsprüfung für die Bewertung (Plan 2a, Zusammenführung). |
@@ -194,6 +206,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.schema` | Ziel-JSON ``auditcore_invoice_v1`` (nur Kopf-/Summenfelder, Entscheidung E8). |
 | `auditcore_invoicesynth.train` | Vorbereitetes Donut-Nachtraining (Plan 2c/2c-bis, Etappe E3). |
 | `auditcore_invoicesynth.variety` | Generatorvarianten ``v2``/``v3`` (Stufe 5/6): Vielfalt von Kopfdaten und Summen. |
+| `auditcore_invoicesynth.variety_v4` | Zusätze der Generatorvariante ``v4`` (Stufe 7): Betrag, Summenfolge, Fußzeilenkennungen. |
 <!-- api-overview:end -->
 
 ## Profile und Konfiguration
