@@ -282,6 +282,7 @@ def catalog_for(profile: RuleProfile, base: WizardCatalog | None = None) -> Wiza
             role="recht",
             depth=1,
             hints=(q.explanation,) if q.explanation else (),
+            justify_values=(NO,) if q.decisive else (),
         )
         for index, q in enumerate(profile.questions, start=1)
     )

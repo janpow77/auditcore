@@ -20,6 +20,7 @@ from .profile_model import (
     CONSULTATION_TIMING_FINAL,
     DECISION_REJECTED,
     DECISIONS,
+    EFFECT_INDICATION,
     EFFECTS,
     PROFILE_SCHEMA_EDPB,
     PROFILE_SCHEMAS,
@@ -63,6 +64,7 @@ def _questions(items: Any) -> tuple[Question, ...]:
             explanation=q["explanation"],
             prefill=q["prefill"],
             consultation_ground=q.get("consultation_ground"),
+            decisive=bool(q.get("decisive", False)),
         )
         for q in items
     )
@@ -127,6 +129,12 @@ def _validate(
     require(len(keys) == len(set(keys)), "Doppelte Frageschlüssel im Profil.")
     require(all(q.effect in EFFECTS for q in questions), "Unbekannte Wirkung einer Frage.")
     require(all(q.block in block_keys for q in questions), "Frage ohne bekannten Block.")
+    decisive = [q for q in questions if q.decisive]
+    require(len(decisive) <= 1, "Höchstens eine entscheidende Frage je Profil.")
+    require(
+        bool(decisive) or all(q.effect != EFFECT_INDICATION for q in questions),
+        "Anhaltspunkte setzen eine entscheidende Frage voraus.",
+    )
     measure_keys = [m.key for m in measures]
     require(len(measure_keys) == len(set(measure_keys)), "Doppelte Maßnahmenschlüssel.")
     bounded = [b.up_to for b in bands if b.up_to is not None]

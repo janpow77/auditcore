@@ -23,7 +23,9 @@ PROFILE_SCHEMAS = frozenset({PROFILE_SCHEMA, PROFILE_SCHEMA_EDPB})
 EFFECT_HARD = "hart"
 EFFECT_POINT = "punkt"
 EFFECT_FRIA = "fria"
-EFFECTS = frozenset({EFFECT_HARD, EFFECT_POINT, EFFECT_FRIA})
+#: Indication of a likely high risk; decides nothing on its own (§ 62 Abs. 1 HDSIG).
+EFFECT_INDICATION = "anhaltspunkt"
+EFFECTS = frozenset({EFFECT_HARD, EFFECT_POINT, EFFECT_FRIA, EFFECT_INDICATION})
 
 #: Recommendation keys shared with the source application.
 RECOMMENDATION_SCREENING_ONLY = "nur_schwellwert"
@@ -86,6 +88,9 @@ class Question:
     #: Key of a consultation ground this question establishes on its own,
     #: independent of the residual risk (e.g. § 64 Abs. 1 Nr. 2 HDSIG).
     consultation_ground: str | None = None
+    #: The question that decides on the likely high risk; with indications a
+    #: "no" needs a justification (profiles from 2026.10.5 on).
+    decisive: bool = False
 
 
 @dataclass(frozen=True)

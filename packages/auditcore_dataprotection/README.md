@@ -393,7 +393,8 @@ Profile werden immer ausdrücklich gewählt (`load_profile(id, version)`), es
 gibt kein Standardprofil. Verfügbar: `regulierung.dsgvo` und
 `regulierung.hdsig_ji` 2026.09.1 (Legacy-Fassung der Quelle) sowie die
 Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji` in den Fassungen
-2026.10.1, 2026.10.2 und 2026.10.3 (empfohlen für neue Abschätzungen).
+2026.10.1 bis 2026.10.4; `auditcore.hdsig_ji` zusätzlich 2026.10.5 (empfohlen
+für neue Abschätzungen im Dritten Teil HDSIG).
 Rechtsregime (DSGVO, Dritter Teil HDSIG) bleiben getrennte Profile.
 
 ### Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji` (2026.10.1)
@@ -433,6 +434,19 @@ gespeichert und im Bericht ausgewiesen. Für die DSB genügt die dokumentierte E
 Dokumentation hinter der Vorlage zurückbleibt. Der Bericht behält seine
 Gliederung und ergänzt die neuen Angaben in den bestehenden Abschnitten. Die
 Vorlage ist noch nicht endgültig; eine Endfassung wird eine neue Profilfassung.
+
+### Profil `auditcore.hdsig_ji` 2026.10.5: Maßstab § 62 Abs. 1 HDSIG
+
+Eine Folgenabschätzung ist im Dritten Teil HDSIG nur erforderlich, wenn die
+Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten
+natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG). Regelbeispiele nach
+Art. 35 Abs. 3 DSGVO, die Liste nach Art. 35 Abs. 4 DSGVO und die Kriterien aus
+WP 248 rev.01 wirken deshalb nur als Anhaltspunkte (Wirkung `anhaltspunkt`).
+Es entscheidet die Frage `hdsig_62_1_hohes_risiko` (`decisive`); wird sie trotz
+bejahter Anhaltspunkte verneint, bleibt die Vorprüfung ohne Begründung
+unvollständig. § 64 Abs. 1 Satz 1 Nr. 2 HDSIG setzt ein hohes Risiko voraus und
+bleibt Muss-Kriterium und Konsultationsgrund. Fassung 2026.10.4 rechnet
+unverändert weiter.
 
 ### Profile 2026.10.2: Konsultationshinweis erst nach abschließender Bewertung
 

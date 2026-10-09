@@ -3,7 +3,7 @@
 ## 0.6.0 – 2026-10-08 – Prüfkatalog VVT/DSFA
 
 Umsetzung des Prüfkatalogs für VVT und DSFA (Abgleich je Anforderung:
-`docs/pruefkatalog-abgleich.md`, Verhaltensänderungen DP-E19 bis DP-E26).
+`docs/pruefkatalog-abgleich.md`, Verhaltensänderungen DP-E19 bis DP-E27).
 Bestehende Profile, Berechnungen und Berichte älterer Fassungen sind unverändert.
 
 - Profile `auditcore.dsgvo` und `auditcore.hdsig_ji` 2026.10.4: eigener
@@ -22,6 +22,10 @@ Bestehende Profile, Berechnungen und Berichte älterer Fassungen sind unverände
   Abschlussfrage „offene Punkte“ je Kapitel. HDSIG-Fundstellen am Wortlaut
   geprüft; Hinweise mit Fundstellen aus Leitlinien von EDSA, DSK und HBDI
   (Quellenliste im Katalog unter `sources`).
+- Profil `auditcore.hdsig_ji` 2026.10.5: Maßstab der Vorprüfung ist allein
+  § 62 Abs. 1 HDSIG (voraussichtlich hohes Risiko); Listen- und WP-248-Kriterien
+  sind Anhaltspunkte (neue Wirkung `anhaltspunkt`), die entscheidende Frage
+  (`decisive`) verlangt bei Verneinung trotz Anhaltspunkten eine Begründung.
 - Register: `speicherdauer` als Text oder Fristen-Tabelle; neue Tabellen
   `dienstleister` und `dienstleister_einordnung` (Auftragsverarbeiter ohne
   Vertrag als offener Befund `missing_contract`).

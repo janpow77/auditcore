@@ -50,6 +50,9 @@ Statusnamen sowie die Reihenfolge der Freigabeprüfungen und deren Meldungstexte
 2. **JI-Profil:** Das Original wendet im Dritten Teil HDSIG die harten Kriterien
    der DSGVO als „strengeren Maßstab“ an. Das ist als Quellprofil
    `regulierung.hdsig_ji` versioniert, nicht als allgemeine Rechtsauslegung.
+   **DECIDED** am 09.10.2026: Maßstab ist allein § 62 Abs. 1 HDSIG (hohes
+   Risiko); ab `auditcore.hdsig_ji` 2026.10.5 sind die DSGVO-Kriterien nur
+   Anhaltspunkte (DP-E27).
 3. **Framework-Variante:** `verwaltung-app-framework/framework/core/dsfa.py`
    hat abweichende Schlüssel, eine leere Muss-Liste, Mindestbegründung 30,
    dreistufige Restrisiken und andere Voten. Sie wurde nicht mit dem
@@ -183,13 +186,15 @@ unverändert, weil die neuen Abschnitte im Profil optional sind
 | DP-E24 | Die Empfehlungstexte `freigabe` und `freigabe_mit_auflagen` sprechen von der Freigabe der Dokumentation und stellen klar, dass über den Betrieb gesondert entschieden wird. |
 | DP-E25 | Listen im Verzeichnisexport (HTML, XLSX) werden lesbar ausgegeben; eine Übermittlung erscheint als „Empfänger – Rechtsgrundlage“ statt als Rohdarstellung. Das gilt für alle Profile, ändert aber nur Listenfelder, die die älteren Profile nicht verwenden. |
 | DP-E26 | `speicherdauer` darf eine Tabelle je Datenkategorie sein (`kategorie`, `frist`, `begruendung`, `pruefstelle`). Eine Zeile ohne Frist mit Begründung und Prüfstelle ist ein offener, nicht sperrender Punkt; ohne beides sperrt sie. Ein Text bleibt wie bisher zulässig. Neu geprüft werden die Tabellen `dienstleister` und `dienstleister_einordnung`; ein Auftragsverarbeiter mit Vertrag „fehlt“ oder „in Vorbereitung“ ergibt den nicht sperrenden Befund `missing_contract`. |
+| DP-E27 | Nur Profil `auditcore.hdsig_ji` 2026.10.5: Die Vorprüfung folgt allein § 62 Abs. 1 HDSIG. Bejahte Einträge der Liste nach Art. 35 Abs. 4 DSGVO, Regelbeispiele nach Art. 35 Abs. 3 DSGVO und WP-248-Kriterien ergeben nicht mehr „pflicht“, sondern sind Anhaltspunkte; „pflicht“ folgt aus der Bejahung eines voraussichtlich hohen Risikos (`hdsig_62_1_hohes_risiko`) oder aus § 64 Abs. 1 Satz 1 Nr. 2 HDSIG. Verneinung trotz Anhaltspunkten ohne Begründung ergibt „unvollstaendig“. Die Spur der Vorprüfung nennt die bejahten Anhaltspunkte (`indications`). Ältere Profile rechnen unverändert. |
 
 Neu und unabhängig von der Profilfassung sind Arbeitsbereich, Wizard, Checkliste, getrennte Status,
 Sperren, Nachweise, Betriebsentscheidung und zentrale Übernahme. Den Abgleich mit dem Prüfkatalog je
 Anforderung enthält `docs/pruefkatalog-abgleich.md`.
 
-HUMAN_DECISION_REQUIRED: Ob § 64 Abs. 1 Nr. 2 HDSIG zugleich ein Muss-Kriterium der DSFA ist (so
-umgesetzt: Wirkung `hart`), ist fachlich zu bestätigen. Dasselbe gilt für den Umgang mit dem
+Fachlich bestätigt (09.10.2026): Im Dritten Teil HDSIG entscheidet allein das voraussichtlich hohe
+Risiko nach § 62 Abs. 1 HDSIG; § 64 Abs. 1 Nr. 2 HDSIG setzt ein hohes Risiko voraus und bleibt
+deshalb Muss-Kriterium (DP-E27). HUMAN_DECISION_REQUIRED bleibt für den Umgang mit dem
 Dokumentationsmodus bei fehlender DSB-Stellungnahme: Die Freigabe der DSFA-Fassung bleibt möglich,
 die Achse „DSFA-Bearbeitung“ lautet dann aber nicht „fachlich abgeschlossen“, und GATE-04 sperrt
 die Betriebsentscheidung.

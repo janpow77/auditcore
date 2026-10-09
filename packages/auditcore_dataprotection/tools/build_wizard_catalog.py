@@ -1207,10 +1207,13 @@ GUIDANCE = {
         "ergeht ohne menschliche Beteiligung und ist davon zu unterscheiden."
     ],
     "9.2": [
-        f"{WP248}, S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine "
-        "Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
-        f"{HBDI_DSFA}: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht "
-        "automatisch entbehrlich.",
+        "Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes "
+        "Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 "
+        "HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte.",
+        f"Nur DSGVO – {WP248}, S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen "
+        "eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        f"Nur DSGVO – {HBDI_DSFA}: Fehlt ein Vorgang auf der Liste, ist die "
+        "Folgenabschätzung nicht automatisch entbehrlich.",
     ],
     "10.4": [
         f"{DSK_KP5}, S. 1–3: Der Standpunkt der Betroffenen kann z. B. über Gremien der "

@@ -2508,11 +2508,12 @@
        "choices": [],
        "columns": [],
        "depth": 0,
-       "help": "Fundstelle, Reichweite und Abweichungen angeben. Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
+       "help": "Fundstelle, Reichweite und Abweichungen angeben. Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte. Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
        "hints": [
         "Fundstelle, Reichweite und Abweichungen angeben.",
-        "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
-        "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
+        "Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte.",
+        "Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        "Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
        ],
        "id": "9.2",
        "justify_values": [],
@@ -6484,11 +6485,12 @@
        "choices": [],
        "columns": [],
        "depth": 0,
-       "help": "Fundstelle, Reichweite und Abweichungen angeben. Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
+       "help": "Fundstelle, Reichweite und Abweichungen angeben. Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte. Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
        "hints": [
         "Fundstelle, Reichweite und Abweichungen angeben.",
-        "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
-        "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
+        "Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte.",
+        "Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        "Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
        ],
        "id": "9.2",
        "justify_values": [],
@@ -10369,11 +10371,12 @@
        "choices": [],
        "columns": [],
        "depth": 0,
-       "help": "Fundstelle, Reichweite und Abweichungen angeben. Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
+       "help": "Fundstelle, Reichweite und Abweichungen angeben. Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte. Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
        "hints": [
         "Fundstelle, Reichweite und Abweichungen angeben.",
-        "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
-        "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
+        "Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte.",
+        "Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        "Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
        ],
        "id": "9.2",
        "justify_values": [],
@@ -14418,11 +14421,12 @@
        "choices": [],
        "columns": [],
        "depth": 0,
-       "help": "Fundstelle, Reichweite und Abweichungen angeben. Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
+       "help": "Fundstelle, Reichweite und Abweichungen angeben. Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte. Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
        "hints": [
         "Fundstelle, Reichweite und Abweichungen angeben.",
-        "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
-        "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
+        "Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte.",
+        "Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        "Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
        ],
        "id": "9.2",
        "justify_values": [],
@@ -18315,11 +18319,12 @@
        "choices": [],
        "columns": [],
        "depth": 0,
-       "help": "Fundstelle, Reichweite und Abweichungen angeben. Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
+       "help": "Fundstelle, Reichweite und Abweichungen angeben. Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte. Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
        "hints": [
         "Fundstelle, Reichweite und Abweichungen angeben.",
-        "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
-        "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
+        "Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte.",
+        "Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        "Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
        ],
        "id": "9.2",
        "justify_values": [],
@@ -22266,11 +22271,12 @@
        "choices": [],
        "columns": [],
        "depth": 0,
-       "help": "Fundstelle, Reichweite und Abweichungen angeben. Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
+       "help": "Fundstelle, Reichweite und Abweichungen angeben. Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte. Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen. Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich.",
        "hints": [
         "Fundstelle, Reichweite und Abweichungen angeben.",
-        "Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
-        "HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
+        "Im Dritten Teil HDSIG entscheidet allein, ob die Verarbeitung voraussichtlich ein hohes Risiko für die Rechte und Freiheiten natürlicher Personen zur Folge hat (§ 62 Abs. 1 HDSIG); Listen und Kriterien zur DSGVO sind dort nur Anhaltspunkte.",
+        "Nur DSGVO – Art.-29-Gruppe, WP248 rev.01 (vom EDSA bestätigt), S. 11: Sind zwei Kriterien erfüllt, ist in den meisten Fällen eine Folgenabschätzung erforderlich; im Zweifel ist sie durchzuführen.",
+        "Nur DSGVO – HBDI, Liste der Verarbeitungsvorgänge nach Art. 35 Abs. 4 DSGVO: Fehlt ein Vorgang auf der Liste, ist die Folgenabschätzung nicht automatisch entbehrlich."
        ],
        "id": "9.2",
        "justify_values": [],

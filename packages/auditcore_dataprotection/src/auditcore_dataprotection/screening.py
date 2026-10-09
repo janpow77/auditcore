@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 
 from .answers import Answer, AnswerValue, parse_answers
 from .results import ScreeningResult
-from .rules import EFFECT_FRIA, EFFECT_HARD, EFFECT_POINT, Question, RuleProfile
+from .rules import EFFECT_FRIA, EFFECT_HARD, EFFECT_INDICATION, EFFECT_POINT, Question, RuleProfile
 
 SCREENING_REQUIRED = "pflicht"
 SCREENING_NOT_REQUIRED = "keine_pflicht"
@@ -79,12 +79,48 @@ def _screening_outcome(
     )
 
 
+def _decisive_outcome(
+    profile: RuleProfile, tally: _Tally, unanswered: int, unknown: int
+) -> tuple[str, str]:
+    """Outcome under § 62 Abs. 1 HDSIG: only a likely high risk requires the assessment.
+
+    Indications (e.g. entries of the list under Art. 35 Abs. 4 DSGVO) decide
+    nothing on their own; with indications a "no" to the decisive question
+    needs a justification.
+    """
+    if tally.hard:
+        references = "; ".join(profile.question(k).reference for k in tally.hard)
+        return SCREENING_REQUIRED, (
+            "Die Datenschutz-Folgenabschätzung ist durchzuführen, weil voraussichtlich ein "
+            f"hohes Risiko für die Rechte und Freiheiten natürlicher Personen besteht "
+            f"({references})."
+        )
+    if unanswered or unknown:
+        return SCREENING_INCOMPLETE, (
+            f"Die Vorprüfung ist unvollständig: {unanswered} Fragen sind unbeantwortet und "
+            f"{unknown} als unbekannt gekennzeichnet. Eine fehlende Angabe gilt nicht als Nein."
+        )
+    if tally.indications and tally.decisive_unjustified:
+        return SCREENING_INCOMPLETE, (
+            f"Bejahte Anhaltspunkte für ein hohes Risiko: {len(tally.indications)}. Die "
+            "Verneinung eines voraussichtlich hohen Risikos ist zu begründen."
+        )
+    return SCREENING_NOT_REQUIRED, (
+        "Ein voraussichtlich hohes Risiko für die Rechte und Freiheiten natürlicher Personen "
+        f"wurde verneint (bejahte Anhaltspunkte: {len(tally.indications)}). Eine "
+        "Folgenabschätzung ist nach § 62 Abs. 1 HDSIG nicht erforderlich; das Ergebnis ist "
+        f"zu dokumentieren ({profile.norm('nachweis')})."
+    )
+
+
 @dataclass
 class _Tally:
     """Answers sorted by effect while walking the questions in profile order."""
 
     hard: list[str] = field(default_factory=list)
     points: list[str] = field(default_factory=list)
+    indications: list[str] = field(default_factory=list)
+    decisive_unjustified: bool = False
     unanswered: list[str] = field(default_factory=list)
     unknown: list[str] = field(default_factory=list)
     fria_yes: bool = False
@@ -99,6 +135,8 @@ class _Tally:
             self.fria_open = self.fria_open or question.effect == EFFECT_FRIA
             return
         if answer.value is not AnswerValue.YES:
+            if question.decisive and not answer.justification.strip():
+                self.decisive_unjustified = True
             return
         self.trace.append(
             {
@@ -116,6 +154,8 @@ class _Tally:
             self.points.append(question.key)
         elif question.effect == EFFECT_FRIA:
             self.fria_yes = True
+        elif question.effect == EFFECT_INDICATION:
+            self.indications.append(question.key)
 
     @property
     def fria(self) -> bool | None:
@@ -130,9 +170,14 @@ def screen(profile: RuleProfile, answers: Mapping[str, object]) -> ScreeningResu
     for question in profile.questions:
         tally.count(question, parsed.get(question.key))
     score = len(tally.points)
-    outcome, reasoning = _screening_outcome(
-        profile, tally.hard, score, len(tally.unanswered), len(tally.unknown)
-    )
+    if any(q.decisive for q in profile.questions):
+        outcome, reasoning = _decisive_outcome(
+            profile, tally, len(tally.unanswered), len(tally.unknown)
+        )
+    else:
+        outcome, reasoning = _screening_outcome(
+            profile, tally.hard, score, len(tally.unanswered), len(tally.unknown)
+        )
     if tally.fria_yes:
         reasoning += _FRIA_REASONING
     tally.trace.append(
@@ -144,6 +189,8 @@ def screen(profile: RuleProfile, answers: Mapping[str, object]) -> ScreeningResu
             "open": len(tally.unanswered) + len(tally.unknown),
         }
     )
+    if any(q.decisive for q in profile.questions):
+        tally.trace[-1]["indications"] = list(tally.indications)
     return ScreeningResult(
         outcome=outcome,
         points=score,

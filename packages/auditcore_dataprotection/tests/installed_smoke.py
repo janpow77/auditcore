@@ -42,6 +42,7 @@ def main() -> None:
         ("auditcore.hdsig_ji", "2026.10.2"),
         ("auditcore.hdsig_ji", "2026.10.3"),
         ("auditcore.hdsig_ji", "2026.10.4"),
+        ("auditcore.hdsig_ji", "2026.10.5"),
         ("regulierung.dsgvo", "2026.09.1"),
         ("regulierung.hdsig_ji", "2026.09.1"),
     )
