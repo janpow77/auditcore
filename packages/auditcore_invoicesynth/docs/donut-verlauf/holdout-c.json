@@ -1,0 +1,13 @@
+{
+  "satz": "test_layout_holdout_c",
+  "kurzname": "T2c",
+  "dataset_hash": "a0ff61e91cefd77a6544340aff34b5790e660d2fd69a8481d940dedbaff7b0fe",
+  "seed": 42,
+  "count": 500,
+  "dpi_choices": [150, 200, 300],
+  "base_date": "2026-01-15",
+  "verzeichnis": "~/donut/datasets/holdout-c-a0ff61e91cefd77a",
+  "befehl": "auditcore-invoicesynth build-diagnostics --sets holdout_c --seed 42 --count 500 --font-pins ~/donut/tools/font-pins.json",
+  "commit_hinweis": "gebaut mit dem Quellstand des Branches feat/invoicesynth-holdout-c (Basis origin/main a1c9f5c); Generatorcode danach unverändert, Neubau muss denselben Hash liefern",
+  "regel": "erst zur Abschlussbewertung von Stufe 7 ansehen/bewerten"
+}
