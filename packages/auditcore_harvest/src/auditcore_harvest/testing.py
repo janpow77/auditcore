@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
+from enum import StrEnum
 from typing import Any
 
 from .adapter import SourceAdapter
@@ -31,6 +32,23 @@ from .model import JSON, AuthKind, HarvestRequest, HarvestResult, RunStatus, Sna
 from .ports import Response, Transport
 
 AdapterFactory = Callable[[], SourceAdapter]
+
+
+class MalformedExpectation(StrEnum):
+    """What the ``malformed_response`` case expects from an unparsable 200 response.
+
+    * ``parser_error`` (default): the run fails with ``parser_error``.
+    * ``raw_document``: adapters that pass the raw document through (PDF,
+      HTML snapshot) must deliver the bytes unchanged, as ``content`` or as
+      the decoded ``raw`` text, and must not report success without them.
+    * ``not_applicable``: the case is reported as ``SKIPPED``.
+    """
+
+    PARSER_ERROR = "parser_error"
+    RAW_DOCUMENT = "raw_document"
+    NOT_APPLICABLE = "not_applicable"
+
+
 TransportFactory = Callable[[], Transport]
 
 
@@ -111,6 +129,7 @@ class _ContractSuite:
         credentials: Mapping[tuple[str, str], str],
         request_filters: Mapping[str, JSON],
         min_records: int,
+        malformed: MalformedExpectation = MalformedExpectation.PARSER_ERROR,
     ) -> None:
         self.factory = factory
         self.config = config
@@ -118,6 +137,7 @@ class _ContractSuite:
         self.credentials = credentials
         self.request_filters = request_filters
         self.min_records = min_records
+        self.malformed = MalformedExpectation(malformed)
         self.adapter = factory()
         self.source = self.adapter.source
         self.secrets = StaticCredentials(dict(credentials))
@@ -220,11 +240,29 @@ class _ContractSuite:
         resumed = self._run(engine, "contract-5b", sink)
         assert resumed.status is RunStatus.COMPLETE and _content(sink) == _content(self.baseline)
 
-    def malformed_response(self) -> None:
-        """An unparsable response is a parser error, not an empty result."""
-        result = self._run(_engine(GarbageTransport(), self.secrets), "contract-6", ListSink())
+    def malformed_response(self) -> str | None:
+        """An unparsable response is a parser error, not an empty result.
+
+        Raw-document adapters instead pass the bytes through unchanged.
+        """
+        if self.malformed is MalformedExpectation.NOT_APPLICABLE:
+            return "SKIPPED: vom Adapter als nicht anwendbar erklärt"
+        garbage = GarbageTransport()
+        sink = ListSink()
+        result = self._run(_engine(garbage, self.secrets), "contract-6", sink)
+        if self.malformed is MalformedExpectation.RAW_DOCUMENT:
+            assert result.status is RunStatus.COMPLETE, f"Rohdokument abgelehnt: {result.errors}"
+            text = garbage.body.decode("utf-8", errors="replace")
+            kept = [
+                r
+                for r in sink.records.values()
+                if (r.content is not None and r.content.data == garbage.body) or r.raw == text
+            ]
+            assert kept, "Rohdokument nicht unverändert übernommen"
+            return None
         assert result.status is RunStatus.FAILED, "unlesbare Antwort als Erfolg gewertet"
         assert result.errors[0]["code"] == "parser_error", result.errors
+        return None
 
     def missing_credentials(self) -> str | None:
         """Missing credentials are an authentication error."""
@@ -265,6 +303,7 @@ def check_adapter(
     credentials: Mapping[tuple[str, str], str] | None = None,
     request_filters: Mapping[str, JSON] | None = None,
     min_records: int = 1,
+    malformed: MalformedExpectation = MalformedExpectation.PARSER_ERROR,
 ) -> ContractReport:
     """Run the contract suite and return a report (never raises for adapter faults)."""
     suite = _ContractSuite(
@@ -274,6 +313,7 @@ def check_adapter(
         credentials or {},
         request_filters or {},
         min_records,
+        malformed,
     )
     report = ContractReport(suite.source.source_id)
     for name, check in suite.cases():
@@ -289,6 +329,7 @@ def assert_adapter(
     credentials: Mapping[tuple[str, str], str] | None = None,
     request_filters: Mapping[str, JSON] | None = None,
     min_records: int = 1,
+    malformed: MalformedExpectation = MalformedExpectation.PARSER_ERROR,
 ) -> ContractReport:
     """Like :func:`check_adapter` but raises ``AssertionError`` listing failed cases."""
     report = check_adapter(
@@ -298,6 +339,7 @@ def assert_adapter(
         credentials=credentials,
         request_filters=request_filters,
         min_records=min_records,
+        malformed=malformed,
     )
     if not report.passed:
         failed = {k: v for k, v in report.cases.items() if v.startswith("FAIL")}

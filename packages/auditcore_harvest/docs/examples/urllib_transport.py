@@ -3,6 +3,11 @@
 Nicht Teil der Distribution: Netzwerkzugriff ist Infrastruktur des Consumers.
 Die Klasse erfüllt das Protokoll ``auditcore_harvest.Transport`` und wird dem
 ``HarvestEngine`` injiziert.
+
+Mit ``follow_redirects=False`` folgt der Transport keinen Weiterleitungen und
+liefert jede Antwort samt aller ``Set-Cookie``-Zeilen (``raw_headers``). So
+umschlossen von ``auditcore_harvest.SessionTransport`` bleiben Cookies aus
+Weiterleitungs-Zwischenantworten für Folgeabrufe erhalten.
 """
 
 from __future__ import annotations
@@ -12,16 +17,27 @@ import urllib.parse
 import urllib.request
 from collections.abc import Mapping
 
-from auditcore_harvest import ConfigError, Response, TransportError
+from auditcore_harvest import ConfigError, ErrorKind, Response, TransportError
 
 MAX_BODY_BYTES = 50 * 1024 * 1024
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Hands every redirect response back to the caller unchanged."""
+
+    def redirect_request(self, *args: object, **kwargs: object) -> None:
+        return None
 
 
 class UrllibTransport:
     """Standard-library HTTP(S) transport with timeout and size limit."""
 
-    def __init__(self, user_agent: str = "auditcore-harvest/1.0") -> None:
+    def __init__(
+        self, user_agent: str = "auditcore-harvest/1.0", *, follow_redirects: bool = True
+    ) -> None:
         self.user_agent = user_agent
+        handlers = () if follow_redirects else (_NoRedirect(),)
+        self._opener = urllib.request.build_opener(*handlers)
 
     def request(
         self,
@@ -45,16 +61,18 @@ class UrllibTransport:
         for key, value in (headers or {}).items():
             request.add_header(key, value)
         try:
-            with urllib.request.urlopen(request, timeout=timeout) as reply:  # noqa: S310
+            with self._opener.open(request, timeout=timeout) as reply:
                 body = reply.read(MAX_BODY_BYTES + 1)
                 status = reply.status
-                reply_headers = dict(reply.headers.items())
+                lines = tuple(reply.headers.items())
                 final_url = reply.url
         except urllib.error.HTTPError as error:
             body = error.read(MAX_BODY_BYTES + 1)
-            status, reply_headers, final_url = error.code, dict(error.headers.items()), url
-        except (urllib.error.URLError, TimeoutError, OSError) as error:
+            status, lines, final_url = error.code, tuple(error.headers.items()), url
+        except TimeoutError as error:
+            raise TransportError("Zeitüberschreitung.", kind=ErrorKind.TIMEOUT) from error
+        except (urllib.error.URLError, OSError) as error:
             raise TransportError(f"Verbindung fehlgeschlagen: {type(error).__name__}") from error
         if len(body) > MAX_BODY_BYTES:
             raise TransportError("Antwort überschreitet die Größenbegrenzung.", retryable=False)
-        return Response(status, body, reply_headers, final_url)
+        return Response(status, body, dict(lines), final_url, raw_headers=lines)

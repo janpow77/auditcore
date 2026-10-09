@@ -11,6 +11,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Protocol, TypeVar, runtime_checkable
 
+from .content import BinaryContent
 from .errors import AuthError, ConfigError
 from .model import (
     JSON,
@@ -22,14 +23,19 @@ from .model import (
     Source,
     canonical_hash,
 )
-from .ports import Clock, CredentialProvider, Transport
+from .ports import Clock, CredentialProvider, Response, Transport
+from .transport import DEFAULT_STATUS_POLICY, StatusPolicy, raise_for_status
 
 T = TypeVar("T")
 
 
 @dataclass(frozen=True)
 class FetchContext:
-    """Everything an adapter may use for one page."""
+    """Everything an adapter may use for one page.
+
+    ``status_policy`` is the engine's HTTP status mapping; adapters apply it
+    with :meth:`check` instead of calling :func:`raise_for_status` directly.
+    """
 
     request: HarvestRequest
     config: Mapping[str, JSON]
@@ -38,6 +44,11 @@ class FetchContext:
     clock: Clock
     timeout: float
     page: int
+    status_policy: StatusPolicy = DEFAULT_STATUS_POLICY
+
+    def check(self, response: Response) -> Response:
+        """:func:`raise_for_status` with the engine's :class:`StatusPolicy`."""
+        return raise_for_status(response, self.status_policy)
 
     def secret(self, source_id: str, name: str) -> str:
         """Required secret from the credential provider or ``AuthError``."""
@@ -66,8 +77,12 @@ class FetchContext:
         locator: str,
         *,
         deleted: bool = False,
+        content: BinaryContent | None = None,
     ) -> HarvestRecord:
-        """Record of ``source`` from this page with provenance over ``raw``."""
+        """Record of ``source`` from this page with provenance over ``raw``.
+
+        ``content`` carries a binary document (bytes and media type) natively.
+        """
         return HarvestRecord(
             source_id=source.source_id,
             record_id=record_id,
@@ -75,6 +90,7 @@ class FetchContext:
             normalized=normalized,
             provenance=self.provenance(source, locator, raw),
             deleted=deleted,
+            content=content,
         )
 
 

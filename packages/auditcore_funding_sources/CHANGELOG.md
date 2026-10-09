@@ -1,5 +1,9 @@
 # Changelog auditcore_funding_sources
 
+## 0.1.7 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_harvest==0.2.0` für den additiven Harvest-Vertrag aus Issue #236 (Statusfelder, Retry-Steuerung, Cookies, Binärnutzlast).
+
 ## 0.1.6 – 2026-10-03
 
 Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation

@@ -133,21 +133,39 @@ ausführbar in `docs/examples/eigener_adapter.py`.
   `Sleeper`, `EventSink`. Mitgelieferte Transporte: `FileTransport`,
   `ReplayTransport`; Netzwerktransporte injiziert der Consumer (Beispiel ohne
   Zusatzpakete: `docs/examples/urllib_transport.py`).
+- Ab 0.2.0: `ErrorKind` und `http_status` in Fehlern und `HarvestResult`;
+  `StatusPolicy` (konfigurierbare Statusprüfung, `FetchContext.check`);
+  `RetryPolicy.retry_after_cap` (zu langes `Retry-After` kappen statt
+  aufgeben); `BinaryContent` (Bytes und Medientyp im `HarvestRecord`);
+  `SessionTransport`/`CookieSession` (Cookies über Weiterleitungen und
+  Folgeabrufe einer Sitzung).
+- `auditcore_harvest.aio` (ab 0.2.0): `AsyncHarvestEngine`,
+  `AsyncSourceAdapter`, `AsyncTransport`, `AsyncSessionTransport`. Ein
+  `CancelToken.cancel()` oder das Ablaufen von `max_duration_seconds` bricht
+  die laufende Anfrage sofort ab (Ergebnis `cancelled` bzw. `partial` mit
+  `limit_reached`), statt erst an deren eigener Zeitgrenze zu enden.
+- `auditcore_harvest.crawl` (ab 0.2.0): Vertrag für mehrstufige Abläufe und
+  Crawls mit wechselnder Kandidatenliste – `CrawlTask`, Stufen-Port `Stage`
+  bzw. `AsyncStage`, `StageResult`, `Frontier` (als Cursor gespeichert),
+  `CrawlLimits`, `CrawlAdapter`/`AsyncCrawlAdapter`.
 - `auditcore_harvest.testing`: wiederverwendbare Contract-Suite für Adapter
-  (`check_adapter`, `assert_adapter`).
+  (`check_adapter`, `assert_adapter`); ab 0.2.0 mit
+  `malformed=MalformedExpectation.RAW_DOCUMENT` für Rohdokument-Adapter.
 - `auditcore_harvest.reference`: ausführbare Referenzadapter (JSON-API,
   RSS/Atom).
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_harvest.__all__` (50):
+Öffentliche Namen aus `auditcore_harvest.__all__` (60):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
 | `CONTRACT_VERSION` | Konstante | – | `model` |
 | `JSON` | Konstante | JSON payload at the source boundary. This is the one deliberate ``Any`` of the contract: raw source documents are only known to be JSON-compatible, and adapters narrow them with `` … | `model` |
 | `AdapterRegistry` | Klasse | Explicit registration; no import-time discovery or plugin magic. | `adapter` |
+| `AsyncCrawlAdapter` | Klasse | Asynchronous :class:`CrawlAdapter` for :class:`~auditcore_harvest.aio.AsyncHarvestEngine`. | `crawl` |
 | `AuthError` | Ausnahme | Credentials missing, rejected or expired (never retried automatically). | `errors` |
 | `AuthKind` | Aufzählung | Credential need of a source; secrets come from the credential provider. | `model` |
+| `BinaryContent` | Datenklasse | Raw document bytes and their declared media type (``application/pdf``, ...). | `content` |
 | `Cancelled` | Ausnahme | The run was cancelled cooperatively between pages. | `errors` |
 | `CancelToken` | Datenklasse | Cooperative cancellation checked between pages and attempts. | `policies` |
 | `Capabilities` | Datenklasse | Declared adapter capabilities; ``None`` means explicitly unknown. | `model` |
@@ -155,13 +173,18 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `CheckpointConflict` | Ausnahme | The stored checkpoint changed concurrently (compare-and-set failed). | `errors` |
 | `Clock` | Protokoll | Time source for timestamps, deadlines and rate limiting. | `ports` |
 | `ConfigError` | Ausnahme | Invalid or missing adapter configuration (never retried). | `errors` |
+| `CookieSession` | Klasse | Cookie jar and redirect rules of one session, independent of the transport. | `session` |
+| `CrawlAdapter` | Klasse | Source adapter running ``stages`` over a frontier, one task per page. | `crawl` |
+| `CrawlLimits` | Datenklasse | Bounds of one crawl: depth of discovered tasks and total number of tasks. | `crawl` |
+| `CrawlTask` | Datenklasse | One unit of work: a stage name, a locator and optional JSON data. | `crawl` |
 | `CredentialProvider` | Protokoll | Supplies secrets by source and name; the core never stores or logs them. | `ports` |
 | `Cursor` | Typalias | – | `model` |
+| `ErrorKind` | Aufzählung | What went wrong, independent of the error class and its message. | `kinds` |
 | `EventSink` | Protokoll | Receives bounded, secret-free run events. | `ports` |
 | `FetchContext` | Datenklasse | Everything an adapter may use for one page. | `adapter` |
 | `FileTransport` | Klasse | Reads ``file:`` locators confined to one root directory. | `transport` |
 | `HarvestEngine` | Datenklasse | Runs any :class:`SourceAdapter` through the common flow. | `engine` |
-| `HarvestError` | Ausnahme | Base error with a stable machine-readable ``code``. | `errors` |
+| `HarvestError` | Ausnahme | Base error with a stable machine-readable ``code`` and an error ``kind``. | `errors` |
 | `HarvestRecord` | Datenklasse | One source record: stable id, raw and normalized payload, provenance. | `model` |
 | `HarvestRequest` | Datenklasse | What the consumer asks for; limits bound every run. | `model` |
 | `HarvestResult` | Datenklasse | Structured run result; counts are never inferred from an empty list. | `model` |
@@ -175,8 +198,9 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `RecordIssue` | Datenklasse | A single source item that could not be parsed; never dropped silently. | `model` |
 | `ReplayTransport` | Datenklasse | Serves recorded responses; unmatched requests are errors, not empty data. | `transport` |
 | `Response` | Datenklasse | Transport-neutral response. | `ports` |
-| `RetryPolicy` | Datenklasse | Bounded exponential backoff with jitter; honours ``Retry-After`` up to a cap. | `policies` |
+| `RetryPolicy` | Datenklasse | Bounded exponential backoff with jitter; honours ``Retry-After`` up to a limit. | `policies` |
 | `RunStatus` | Aufzählung | Overall outcome of a run. | `model` |
+| `SessionTransport` | Klasse | Transport wrapper keeping cookies across redirects and requests of one session. | `session` |
 | `Sink` | Protokoll | Receives records; must be idempotent per ``(source_id, record_id, content_hash)``. | `ports` |
 | `SinkError` | Ausnahme | The sink did not confirm the batch; the checkpoint is not advanced. | `errors` |
 | `SinkReceipt` | Datenklasse | What the sink confirmed; unknown keys in the receipt are a sink error. | `model` |
@@ -184,14 +208,16 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `SnapshotSemantics` | Aufzählung | What a complete run means for the consumer's stored inventory. | `model` |
 | `Source` | Datenklasse | Identity and declared behavior of one source profile. | `model` |
 | `SourceAdapter` | Protokoll | Contract every source adapter implements (contract version 1). | `adapter` |
+| `StageResult` | Datenklasse | What a stage produced for one task. | `crawl` |
 | `StateStore` | Protokoll | Persists checkpoints with compare-and-set semantics. | `ports` |
+| `StatusPolicy` | Datenklasse | How :func:`raise_for_status` maps HTTP status codes; the default is the contract-1 mapping. | `transport` |
 | `Transport` | Protokoll | Performs exactly one request; retries and paging belong to the engine. | `ports` |
 | `TransportError` | Ausnahme | Network, timeout or server error; retryable unless stated otherwise. | `errors` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `canonical_hash` | Funktion | SHA-256 over canonical JSON; the stable content hash of a record. | `model` |
 | `decode_json` | Funktion | Parse a JSON response body; undecodable bodies are a :class:`ParserError`. | `transport` |
 | `page_result` | Funktion | The usual page of an adapter: complete exactly when there is no next cursor. | `model` |
-| `raise_for_status` | Funktion | Map HTTP status codes to structured errors; 2xx is returned unchanged. | `transport` |
+| `raise_for_status` | Funktion | Map HTTP status codes to structured errors; passing responses are returned unchanged. | `transport` |
 | `require` | Funktion | Small helper for ``validate_config``: required key of a given type. | `adapter` |
 
 Öffentliche Module:
@@ -199,16 +225,22 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | Modul | Kurzbeschreibung |
 |---|---|
 | `auditcore_harvest.adapter` | Adapter interface: one source profile, one bounded page per call. |
+| `auditcore_harvest.aio` | Asynchronous, abortable variant of the harvest flow. |
 | `auditcore_harvest.catalog` | Versioned source catalogue (``auditcore_harvest.catalog/1``). |
 | `auditcore_harvest.catalogs` | – |
 | `auditcore_harvest.cli` | ``auditcore-harvest``: validate the source catalogue and replay adapters on fixtures. |
+| `auditcore_harvest.content` | Binary payload of a record (for example a PDF) with its media type. |
+| `auditcore_harvest.crawl` | Contract for multi-stage runs and crawls with a changing candidate list. |
 | `auditcore_harvest.engine` | The harvest flow shared by all adapters. |
 | `auditcore_harvest.errors` | Structured harvest errors; the engine decides retries from ``retryable``/``retry_after``. |
+| `auditcore_harvest.flow` | Steps of the harvest flow shared by the synchronous and the asynchronous engine. |
+| `auditcore_harvest.kinds` | Machine-readable error kinds shared by the error and result contracts. |
 | `auditcore_harvest.memory` | Reference implementations of the ports for tests, replays and simple consumers. |
 | `auditcore_harvest.model` | Versioned data contracts of the harvest core (``auditcore_harvest.contract/1``). |
 | `auditcore_harvest.policies` | Run policies of the engine: bounded retry, request pacing and cooperative cancellation. |
 | `auditcore_harvest.ports` | Ports the consumer (or a test) provides: transport, credentials, state, sink, time, events. |
 | `auditcore_harvest.reference` | Executable reference adapters used by the adapter guide and the contract tests. |
+| `auditcore_harvest.session` | Cookie session over any transport: cookies survive redirects and follow-up requests. |
 | `auditcore_harvest.testing` | Reusable adapter contract suite (contract version 1). |
 | `auditcore_harvest.transport` | Transports shipped with the core: confined local files and fixture replay. |
 <!-- api-overview:end -->
@@ -216,9 +248,13 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 ## Profile und Konfiguration
 
 `HarvestEngine` nimmt `retry` (`RetryPolicy`: `max_attempts=3`,
-`base_delay=1.0`, `max_delay=60.0`, `jitter=0.1`, `max_retry_after=300.0`),
-`rate_limit` (`RateLimit`, `min_interval_seconds=0.0`), `request_timeout=30.0`
-Sekunden, eine `EventSink` und einen seeded Zufallsgenerator entgegen.
+`base_delay=1.0`, `max_delay=60.0`, `jitter=0.1`, `max_retry_after=300.0`,
+`retry_after_cap=None`), `rate_limit` (`RateLimit`,
+`min_interval_seconds=0.0`), `request_timeout=30.0` Sekunden,
+`status_policy` (`StatusPolicy`, Standard: Abbildung von Vertrag 1), eine
+`EventSink` und einen seeded Zufallsgenerator entgegen. Mit
+`retry_after_cap=30.0` wartet ein Lauf bei `Retry-After: 600` höchstens 30 s
+und versucht es erneut, statt aufzugeben.
 Adapter deklarieren `adapter_version`, `profile_version`, Filter,
 Authentifizierung und Fähigkeiten in `Source`; die Konfiguration je Lauf prüft
 `validate_config`, ohne die Quelle anzufragen. Geheimnisse liefert nur der
@@ -261,8 +297,9 @@ Python ≥ 3.11, zur Laufzeit die Standardbibliothek und ab 0.1.2
 `auditcore_common==0.2.0` (sicheres XML, kanonische Hashes; nur
 Standardbibliothek). Optional über `[xml]` `defusedxml>=0.7.1`. Die Plattform
 `auditcore` ist keine Abhängigkeit; HTTP-Clients (`httpx`, `requests`) bringt
-der Consumer über seinen `Transport` mit. Der Kern ist synchron; asynchrone
-Consumer rufen ihn über `asyncio.to_thread` auf.
+der Consumer über seinen `Transport` mit. Neben dem synchronen
+`HarvestEngine` gibt es ab 0.2.0 `auditcore_harvest.aio.AsyncHarvestEngine`
+für asynchrone Adapter und Transporte (abbrechbar, nur Standardbibliothek).
 
 ## Sicherheit und Datenschutz
 

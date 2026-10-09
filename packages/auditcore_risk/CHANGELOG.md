@@ -1,5 +1,9 @@
 # Changelog – auditcore_risk
 
+## 0.4.1 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_procurement==0.2.6` (Extra `procurement`) für den additiven Harvest-Vertrag aus Issue #236 (Statusfelder, Retry-Steuerung, Cookies, Binärnutzlast).
+
 ## 0.4.0 – 2026-10-03 – BL_RF07/BL_RF10 in ganzen Cent, Spaltenpfad (noch nicht veröffentlicht)
 
 **Neue Profilversion `audit_designer.flowstat_belegliste` 2026.10.1
