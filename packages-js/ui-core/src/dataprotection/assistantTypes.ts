@@ -100,6 +100,7 @@ export interface ChecklistItemView {
 }
 
 export interface WorkspaceOverview {
+  taetigkeit_id: string
   register: { register_id: string; version: number; status: string; revision: number }
   profil: { id: string; version: string; fingerprint: string }
   assistent: AssistantState

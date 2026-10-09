@@ -134,6 +134,7 @@ class ActivityWorkspace:
         activity = self._activity(working, activity_id) or {}
         context = wizard_context(activity, result.assessment)
         return {
+            "taetigkeit_id": activity_id,
             "register": {
                 "register_id": working.register_id,
                 "version": working.version,

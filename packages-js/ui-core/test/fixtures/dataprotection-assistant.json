@@ -2517,6 +2517,7 @@
    "konsultation": "ungeprueft",
    "zentrale_uebernahme": "nicht_uebertragen"
   },
+  "taetigkeit_id": "demo-activity-1",
   "verzeichnisbefunde": []
  },
  "fresh": {
@@ -5024,6 +5025,7 @@
    "konsultation": "ungeprueft",
    "zentrale_uebernahme": "nicht_uebertragen"
   },
+  "taetigkeit_id": "demo-activity-1",
   "verzeichnisbefunde": []
  },
  "suggested": {
@@ -7543,6 +7545,7 @@
    "konsultation": "ungeprueft",
    "zentrale_uebernahme": "nicht_uebertragen"
   },
+  "taetigkeit_id": "demo-activity-1",
   "verzeichnisbefunde": []
  }
 }

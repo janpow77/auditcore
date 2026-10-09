@@ -142,3 +142,121 @@ def test_uebertragung_idempotent_ueber_rest(client: TestClient) -> None:
     allowed = client.post("/register/public-pattern", json={}, headers=_as("root", "admin"))
     assert allowed.status_code == 200
     assert "Beispielbehörde" not in allowed.text
+
+
+def test_alle_arbeitsbereichs_endpunkte(client: TestClient) -> None:
+    fach = _as("fach", "fach")
+    created = client.post("/activities", json={"name": "Neue Tätigkeit"}, headers=fach)
+    assert created.status_code == 201, created.text
+    activity_id, revision_ = _start_existing(created.json())
+    base = f"/activities/{activity_id}"
+    suggestion = client.post(
+        f"{base}/answers",
+        json={
+            "question_id": "W01-02",
+            "value": "Vorschlag",
+            "origin": "vorlage",
+            "expected_revision": revision_,
+        },
+        headers=fach,
+    )
+    assert suggestion.status_code == 200, suggestion.text
+    revision_ += 1
+    confirmed = client.post(
+        f"{base}/answers/confirm",
+        json={"question_id": "W01-02", "expected_revision": revision_},
+        headers=fach,
+    )
+    assert confirmed.status_code == 200
+    revision_ += 1
+    moved = client.post(
+        f"{base}/navigate",
+        json={"mode": "frei", "step": "W05", "expected_revision": revision_},
+        headers=fach,
+    )
+    assert moved.json()["assistent"]["current_step"] == "W05"
+    revision_ += 1
+    records = client.post(
+        f"{base}/records",
+        json={
+            "evidence": [{"id": "E1", "kind": "test", "reference": "Test", "version": "1"}],
+            "expected_revision": revision_,
+        },
+        headers=fach,
+    )
+    assert records.status_code == 200, records.text
+    revision_ += 1
+    bad_records = client.post(f"{base}/records", json={"evidence": "x"}, headers=fach)
+    assert bad_records.status_code == 400
+    item = client.post(
+        f"{base}/checklist/CHK-19",
+        json={
+            "status": "nicht_anwendbar",
+            "justification": "x" * 60,
+            "owner": "fach",
+            "due": "2026-12-31",
+            "objection": "",
+            "expected_revision": revision_,
+        },
+        headers=fach,
+    )
+    assert item.status_code == 200, item.text
+    revision_ += 1
+    second = client.post(
+        f"{base}/checklist/CHK-19/confirm",
+        json={"expected_revision": revision_},
+        headers=_as("zweite", "fach"),
+    )
+    assert second.status_code == 200, second.text
+    bad_status = client.post(f"{base}/checklist/CHK-19", json={"status": "fertig"}, headers=fach)
+    assert bad_status.status_code == 400
+    package = client.get(f"{base}/review-package", headers=fach)
+    assert package.status_code == 200 and package.json()["art"] == "pruefpaket"
+    confirm = client.post(
+        "/register/transfer/confirm",
+        json={"key": "x", "central_id": "1", "proof": "p"},
+        headers=_as("z", "zentral"),
+    )
+    assert confirm.status_code == 404
+    no_release = client.post("/register/transfer", json={}, headers=_as("l", "leitung"))
+    assert no_release.status_code == 409
+    no_pattern = client.post("/register/public-pattern", json={}, headers=_as("root", "admin"))
+    assert no_pattern.status_code == 422
+    urgent = client.post(
+        f"{base}/operation",
+        json={
+            "outcome": "abgelehnt",
+            "environment": "p",
+            "scope": "s",
+            "justification": "j" * 60,
+            "urgent": {
+                "justification": "x",
+                "consultation_initiated_on": "2026-01-01",
+                "follow_up": "y",
+            },
+        },
+        headers=_as("chef", "entscheidung"),
+    )
+    assert urgent.status_code == 409  # keine freigegebene Fassung
+
+
+def _start_existing(overview: dict[str, Any]) -> tuple[str, int]:
+    return str(overview["taetigkeit_id"]), int(overview["register"]["revision"])
+
+
+def test_ohne_konfiguration_klare_fehler() -> None:
+    from dataclasses import replace
+
+    backend = create_backend(hdsig(), InMemoryStorage(), RoleAuthorizer(ROLES))
+    api = DataProtectionApi(replace(backend, workspace=None))
+    who = Principal("behoerde", Actor("fach", frozenset({"behoerde"}), frozenset({"fach"})))
+    from auditcore_dataprotection.errors import ConflictError
+
+    for call in (
+        lambda: api.work.overview(who, "x"),
+        lambda: api.work.transfer(who, {}),
+        lambda: api.work.confirm_transfer(who, {"key": "k", "central_id": "c", "proof": "p"}),
+        lambda: api.work.decide(who, "x", {}),
+    ):
+        with pytest.raises(ConflictError):
+            call()
