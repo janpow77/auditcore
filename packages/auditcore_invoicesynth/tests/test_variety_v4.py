@@ -36,7 +36,7 @@ from auditcore_invoicesynth.variety_v4 import HIGHLIGHT_PLACES, TOTALS_ORDERS
 FAMILIES = ("DejaVu Sans", "DejaVu Serif", "Liberation Sans", "Lato", *V4_FONT_FAMILIES)
 COUNTS = {"train": 500, "validation": 30, "test_synthetic": 30, "test_layout_holdout": 40}
 #: Holdout-Schriften (T2, T2b, T2c) und bekannte Klone davon; nie in v4.
-FORBIDDEN_FONTS = {"URW Gothic", "TeX Gyre Adventor", "C059", "DejaVu Serif"}
+FORBIDDEN_FONTS = {"URW Gothic", "TeX Gyre Adventor", "C059", "DejaVu Serif", "IBM Plex Serif"}
 
 
 def _config(variety: str = "v4") -> SynthConfig:

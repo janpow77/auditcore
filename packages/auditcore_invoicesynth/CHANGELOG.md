@@ -2,6 +2,22 @@
 
 ## Unveröffentlicht
 
+Diagnosesatz T2d (`test_layout_holdout_d`, `build-diagnostics --sets holdout_d`):
+versiegelter Unbekannt-Test mit zwei neuen Vorlagen (`holdout_d_zahlinfo`,
+Kennungen in einer Tabelle neben dem Titel und Summen als Steuertabelle;
+`holdout_d_ueberweisung`, Fuß nach Art eines Überweisungsträgers mit
+QR-Platzhalter) – IBAN, BIC, USt-IdNr. und Gesamtbetrag an Orten, die keine
+andere Vorlage nutzt – und eigener Schrift IBM Plex Serif (SIL OFL 1.1,
+Debian `fonts-ibm-plex`). Vorlagen und Schrift kommen in keinem `build`-Plan
+und keinem anderen Diagnosesatz vor (Tests). Plan-Hashes v1–v4, Plan-Hash
+T2-gemischt + T2b (`ecf8ef57…`) und T2c (`42acfce4…`) sowie Datensatz-Hashes
+kleiner Probesätze gegen `main` unverändert; die Standardauswahl von
+`build-diagnostics` bleibt T2-gemischt + T2b. Der volle Satz (Seed 42, 500
+Belege) ist gebaut und mit seinem Hash in `docs/donut-verlauf/holdout-d.json`
+festgehalten. **T2d ist ab jetzt der maßgebliche Unbekannt-Test; T2c gilt ab
+Stufe 8 als bekannt. T2d erst zur Abschlussbewertung von Stufe 8 ansehen bzw.
+bewerten.**
+
 Generatorvariante `v4` (`build --variety v4`; `v1`, `v2`, `v3` bleiben bitgleich,
 Plan-Hashes `3da7d6e1…`, `c50af53a…`, `1250705c…` und Datensatz-Hashes kleiner
 Probesätze gegen `main` geprüft; T2 und die Diagnosesätze unverändert): `v3` plus,
