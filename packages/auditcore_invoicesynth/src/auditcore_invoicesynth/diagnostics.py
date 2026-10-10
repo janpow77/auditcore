@@ -1,4 +1,4 @@
-"""Diagnosesätze (nur Bewertung, nie Training): T2-gemischt, T2b und T2c.
+"""Diagnosesätze (nur Bewertung, nie Training): T2-gemischt, T2b, T2c und T2d.
 
 * ``test_layout_holdout_shuffled`` (T2-gemischt): Vorlagen und Schrift des
   Layout-Holdouts T2, aber Kopfdaten-Reihenfolge je Beleg gemischt und
@@ -11,6 +11,10 @@
   ``holdout_c_balken``) und eigene Schrift ``C059``, in keinem anderen Satz.
   Versiegelter Unbekannt-Test: T2/T2b gelten ab Stufe 7 als bekannt, T2c wird
   erst zur Abschlussbewertung von Stufe 7 angesehen.
+* ``test_layout_holdout_d`` (T2d): zwei eigene Vorlagen (``holdout_d_zahlinfo``,
+  ``holdout_d_ueberweisung``) und eigene Schrift ``IBM Plex Serif``, in keinem
+  anderen Satz. Versiegelter Unbekannt-Test ab Stufe 8: T2c gilt dann als
+  bekannt, T2d wird erst zur Abschlussbewertung von Stufe 8 angesehen.
 
 ``build_diagnostics`` schreibt nur diese Sätze in ein eigenes Verzeichnis mit
 eigenem Manifest im Format der übrigen Datensätze; ``verify`` und
@@ -31,16 +35,28 @@ from auditcore_invoicesynth import dataset as ds
 from auditcore_invoicesynth.fonts import (
     HOLDOUT_B_FONT_FAMILIES,
     HOLDOUT_C_FONT_FAMILIES,
+    HOLDOUT_D_FONT_FAMILIES,
     FontSet,
 )
-from auditcore_invoicesynth.layouts import HOLDOUT_B_LAYOUTS, HOLDOUT_C_LAYOUTS, HOLDOUT_LAYOUTS
+from auditcore_invoicesynth.layouts import (
+    HOLDOUT_B_LAYOUTS,
+    HOLDOUT_C_LAYOUTS,
+    HOLDOUT_D_LAYOUTS,
+    HOLDOUT_LAYOUTS,
+)
 from auditcore_invoicesynth.plan import SampleSpec, SynthConfig, plan_dataset, sample_seed
 from auditcore_invoicesynth.variety import choose_variety, variety_rng
 
 SHUFFLED = "test_layout_holdout_shuffled"
 HOLDOUT_B = "test_layout_holdout_b"
 HOLDOUT_C = "test_layout_holdout_c"
-SET_ALIASES = {"shuffled": SHUFFLED, "holdout_b": HOLDOUT_B, "holdout_c": HOLDOUT_C}
+HOLDOUT_D = "test_layout_holdout_d"
+SET_ALIASES = {
+    "shuffled": SHUFFLED,
+    "holdout_b": HOLDOUT_B,
+    "holdout_c": HOLDOUT_C,
+    "holdout_d": HOLDOUT_D,
+}
 
 
 @dataclass(frozen=True)
@@ -69,6 +85,13 @@ DIAGNOSTIC_SETS: dict[str, DiagnosticSet] = {
         HOLDOUT_C_FONT_FAMILIES,
         False,
         "Versiegelter Unbekannt-Test: eigene Vorlagen und Schrift, in keinem anderen Satz",
+    ),
+    HOLDOUT_D: DiagnosticSet(
+        HOLDOUT_D_LAYOUTS,
+        HOLDOUT_D_FONT_FAMILIES,
+        False,
+        "Versiegelter Unbekannt-Test ab Stufe 8: eigene Vorlagen und Schrift, "
+        "in keinem anderen Satz",
     ),
 }
 
