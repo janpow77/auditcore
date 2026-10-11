@@ -66,3 +66,31 @@
 @media (prefers-reduced-motion: reduce) {
   .fa-dataprotection * { transition: none !important; }
 }
+/* Datenschutz-Assistent: Status immer als Text, nie nur über Farbe (GUI-10). */
+.fa-assistant__layout { display: grid; grid-template-columns: minmax(12rem, 16rem) 1fr; gap: var(--fa-space-4); }
+@media (max-width: 48rem) { .fa-assistant__layout { grid-template-columns: 1fr; } }
+.fa-assistant__steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--fa-space-1); }
+.fa-assistant__steps button { width: 100%; text-align: left; background: none; border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-sm); padding: var(--fa-space-2); color: var(--fa-color-text); font: inherit; cursor: pointer; }
+.fa-assistant__steps button[aria-current="step"] { border-color: var(--fa-color-accent); border-width: 2px; font-weight: 600; }
+.fa-assistant__steps button:disabled { cursor: default; opacity: 0.75; }
+.fa-assistant button:focus-visible, .fa-assistant input:focus-visible, .fa-assistant select:focus-visible, .fa-assistant textarea:focus-visible, .fa-assistant a:focus-visible { outline: 3px solid var(--fa-color-accent); outline-offset: 2px; }
+.fa-assistant__question { border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-sm); padding: var(--fa-space-3); margin: 0 0 var(--fa-space-3); }
+.fa-assistant__question legend { font-weight: 600; padding: 0 var(--fa-space-1); }
+.fa-assistant__question textarea, .fa-assistant__question select { width: 100%; font: inherit; }
+.fa-assistant__choices { display: flex; flex-wrap: wrap; gap: var(--fa-space-2) var(--fa-space-4); margin: var(--fa-space-2) 0; }
+.fa-assistant__badge { display: inline-block; border: 1px solid currentColor; border-radius: var(--fa-radius-sm); padding: 0 var(--fa-space-1); font-size: var(--fa-font-size-xs); }
+.fa-assistant__nav { display: flex; gap: var(--fa-space-2); justify-content: space-between; flex-wrap: wrap; }
+.fa-assistant__tabs { display: flex; gap: var(--fa-space-2); margin-bottom: var(--fa-space-3); }
+.fa-assistant__tabs [aria-selected="true"] { font-weight: 600; text-decoration: underline; }
+.fa-assistant__axes { display: grid; grid-template-columns: max-content 1fr; gap: var(--fa-space-1) var(--fa-space-3); margin: 0; }
+.fa-assistant__axes dt { font-weight: 600; }
+.fa-assistant__question--depth-1 { margin-left: 1.5rem; border-left: 3px solid var(--fa-color-accent); }
+.fa-assistant__question--depth-2 { margin-left: 3rem; border-left: 3px solid var(--fa-color-accent); }
+.fa-assistant__number { font-variant-numeric: tabular-nums; margin-right: var(--fa-space-1); }
+.fa-assistant__role { display: inline-block; margin-left: var(--fa-space-1); border-radius: var(--fa-radius-sm); padding: 0 var(--fa-space-1); font-size: var(--fa-font-size-xs); background: var(--fa-color-surface-sunken); }
+.fa-assistant__role--it_betrieb { background: var(--fa-color-accent-soft); }
+.fa-assistant__role--recht { background: var(--fa-color-warning-soft); }
+.fa-assistant__hints ul { margin: var(--fa-space-1) 0; padding-left: 1.2rem; }
+.fa-assistant__table { width: 100%; border-collapse: collapse; margin: var(--fa-space-2) 0; }
+.fa-assistant__table th, .fa-assistant__table td { border: 1px solid var(--fa-color-border); padding: var(--fa-space-1); text-align: left; }
+.fa-assistant__table input { width: 100%; font: inherit; }
