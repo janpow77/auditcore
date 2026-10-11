@@ -1,6 +1,6 @@
 # Changelog auditcore_invoicesynth
 
-## Unveröffentlicht
+## 0.3.0 – 2026-10-11
 
 Diagnosesatz T2d (`test_layout_holdout_d`, `build-diagnostics --sets holdout_d`):
 versiegelter Unbekannt-Test mit zwei neuen Vorlagen (`holdout_d_zahlinfo`,

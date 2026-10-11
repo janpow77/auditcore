@@ -1,5 +1,9 @@
 # Changelog – @auditcore/bpmn-vue
 
+## 0.5.1 – 2026-10-11
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.4.0 angehoben; keine Änderung am Paket selbst.
+
 ## 0.5.0 – 2026-10-07
 
 - **Ordnerübersicht in voller Breite mit drei Ansichten** (`GroupOverview`):
