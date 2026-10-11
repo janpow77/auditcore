@@ -1,6 +1,6 @@
 # Spezifikation auditcore_dataprotection
 
-Stand: 26.09.2026, Paketversion 0.5.1. Charakterisierung: 241 Einzelfälle und
+Stand: 08.10.2026, Paketversion 0.6.0 (Prüfkatalog: `docs/pruefkatalog-abgleich.md`). Charakterisierung: 241 Einzelfälle und
 65 Ablaufschritte der Quellanwendung regulierung@`a5d48ea`
 (`tests/fixtures/regulierung_legacy_observed.json`, Replay in
 `tests/test_legacy_replay.py`, Exporte in `tests/test_legacy_exports.py`);
@@ -32,6 +32,9 @@ Profile sind charakterisiertes Softwareverhalten, keine rechtliche Prüfung.
 | Folgenabschätzung | `AssessmentService`: `start`, `update`, `decide`, `record_dpo_request`, `record_dpo_statement`, `release`, `open_points`, `review_required`, `overview` | wie oben | `Assessment` | über die Ports |
 | Ausgabe | `export.assessment_report`, `render_assessment_html`, `register_report`, `render_register_html`, XLSX (Extra `excel`, über `auditcore_reporting`), PDF (Extra `pdf`) | Fassungen und Profil | HTML, XLSX-Bytes, PDF-Bytes | keine |
 | REST | `auditcore_dataprotection.web` (Extras `web`/`fastapi`) | JSON | JSON; Fehler mit stabilem `code` | über die Ports |
+| Arbeitsbereich | `ActivityWorkspace(registers, assessments, authorizer, clock, profile, transfers?, decisions?, assessment_service?)`: `overview`, `evaluate`, `create_activity`, `answer`, `confirm`, `navigate`, `update_item`, `confirm_item`, `set_records` | Mandant, Person, Tätigkeit, erwartete Revision | Übersicht bzw. `RegisterVersion`; `Evaluation` mit `StatusAxes` und Sperren | über `RegisterService.save_draft` (Rechte, Revision, Protokoll) |
+| Betriebsentscheidung | `OperationService.decide(tenant, actor, DecisionRequest)` | Ergebnis, Umgebung, Umfang, Begründung, optional Dringlichkeitsfall | `OperationalDecision`, gebunden an Fassung und Inhaltshash | Port `OperationRepository`, Protokoll |
+| Zentrale Übernahme | `CentralRegisterService`: `mark_exported`, `transfer`, `confirm_takeover` | freigegebene Fassung | `TransferRecord` | Ports `TransferRepository`, `CentralRegisterPort` |
 | Referenzadapter | `memory` (In-Memory-Ablage, Rollen, Protokoll, feste Uhr, fortlaufende Kennungen) | – | für Tests und Beispiele | keine |
 
 ## Invarianten
@@ -49,6 +52,13 @@ Profile sind charakterisiertes Softwareverhalten, keine rechtliche Prüfung.
 | I9 | Vier-Augen-Prinzip: wer einen Entwurf bearbeitet hat (auch in früheren Revisionen), darf ihn nicht freigeben; eine andere berechtigte Person darf es. Freigaben sind mandantengebunden. | `test_i9_vier_augen_wer_bearbeitet_hat_gibt_nicht_frei` |
 | I10 | Speichern und Freigeben verlangen die aktuelle Revision (optimistische Sperre); eine veraltete Revision wird abgewiesen, eine gültige erhöht die Revision derselben Fassung. | `test_i10_veraltete_revision_wird_abgewiesen` |
 
+| I11 | Ab Profilfassung 2026.10.4 begründet § 64 Abs. 1 Nr. 2 HDSIG die Konsultation unabhängig vom Restrisiko; nur das Verwerfen der Verarbeitung hebt sie auf. | `test_t14_paragraf_64_nr_2_eigenstaendig_trotz_niedrigem_restrisiko` |
+| I12 | „Keine Folgenabschätzung erforderlich“ (2026.10.4) verlangt eine vollständige Schwellwertanalyse und eine eigene Begründung. | `test_t10_keine_dsfa_ohne_eigene_begruendung_abgelehnt`, `test_t10_keine_dsfa_bei_unklarer_vorpruefung_unmoeglich` |
+| I13 | „Unklar“ und unbestätigte Vorschläge schreiben keinen Wert in das Verzeichnis; Antworten zu ausgeblendeten Fragen wirken nicht. | `test_wizard_unklar_wird_aufgabe_und_ausgeblendete_antworten_wirken_nicht`, `test_t33_ki_vorschlag_bleibt_unbestaetigt` |
+| I14 | Eine positive Betriebsentscheidung ist nur ohne Sperre möglich und gilt nur für die entschiedene Fassung. | `test_t15_kein_allgemeiner_override_waehrend_konsultation`, `test_vollstaendiger_durchlauf_bis_zur_betriebsentscheidung` |
+| I15 | Dieselbe Fassung wird höchstens einmal übertragen; „übernommen“ setzt eine zentrale Kennung voraus. | `test_t25_t26_zentrale_uebernahme_idempotent_und_konflikt` |
+| I16 | „Nachgewiesen“ setzt einen erreichbaren, geprüften, gültigen Nachweis passender Art voraus; geplante Maßnahmen senken das nachgewiesene Restrisiko nicht. | `test_t21_vvt_historie_ersetzt_keine_fachprotokollierung`, `test_t36_veralteter_nachweis_nicht_gruen`, `test_t12_geplante_massnahme_nicht_als_wirksam` |
+
 ## Fehlerfälle
 
 Alle Fehler erben von `DataProtectionError` und tragen einen stabilen `code`,
@@ -65,6 +75,7 @@ den die Anwendung auf HTTP- oder Oberflächenantworten abbildet:
 | `StaleRevisionError` | `stale_revision` | erwartete Revision veraltet |
 | `LockedVersionError` | `version_locked` | freigegebene Fassung soll geändert werden |
 | `FourEyesViolation` | `vier_augen_verletzt` | Bearbeiter, Entscheider oder DSB will freigeben |
+| `CentralRegisterUnavailable` | `central_register_unavailable` | zentrales Verzeichnis nicht erreichbar; Stand unverändert, später nachführen |
 
 Blockierende Prüfhinweise (`Issue(blocking=True)`) sind kein Fehler: sie stehen
 im Vorschlag und sperren – je nach Profilfassung – Entscheidung bzw. Freigabe
