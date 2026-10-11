@@ -1,5 +1,9 @@
 # Changelog – auditcore_bpmn
 
+## 0.1.4 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_legal_sources==0.1.7` (Extra `legal`) für den additiven Harvest-Vertrag aus Issue #236 (Statusfelder, Retry-Steuerung, Cookies, Binärnutzlast).
+
 ## 0.1.3 – 2026-10-03
 
 - Zitaterkennung (Befunde B1/B2 der Spezifikation behoben): gebeugte

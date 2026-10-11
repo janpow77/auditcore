@@ -15,28 +15,77 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .errors import ConfigError, ParserError, RateLimitError, TransportError
+from .errors import AuthError, ConfigError, ParserError, RateLimitError, TransportError
+from .kinds import ErrorKind
 from .model import JSON
 from .ports import Response
 
 MAX_BODY_BYTES = 50 * 1024 * 1024
 
 
-def raise_for_status(response: Response) -> Response:
-    """Map HTTP status codes to structured errors; 2xx is returned unchanged."""
-    if response.status == 429:
-        retry = response.header("Retry-After")
-        seconds = float(retry) if retry and retry.strip().isdigit() else None
-        raise RateLimitError("Quelle meldet Rate-Limit (HTTP 429).", retry_after=seconds)
-    if response.status in (401, 403):
-        from .errors import AuthError
+@dataclass(frozen=True)
+class StatusPolicy:
+    """How :func:`raise_for_status` maps HTTP status codes; the default is the contract-1 mapping.
 
-        raise AuthError(f"Zugriff verweigert (HTTP {response.status}).")
-    if 500 <= response.status < 600 or response.status == 408:
-        raise TransportError(f"Serverfehler HTTP {response.status}.")
-    if not 200 <= response.status < 300:
-        raise TransportError(f"Unerwarteter Status HTTP {response.status}.", retryable=False)
-    return response
+    * ``check=False`` returns every response unchanged (the adapter decides).
+    * ``accept`` lists further statuses returned unchanged (for example ``404``
+      for a source where "not found" is a valid answer).
+    * ``rate_limited``, ``auth`` and ``retryable`` select the error class;
+      ``retry_server_errors`` treats every 5xx as retryable.
+    """
+
+    check: bool = True
+    accept: frozenset[int] = frozenset()
+    rate_limited: frozenset[int] = frozenset({429})
+    auth: frozenset[int] = frozenset({401, 403})
+    retryable: frozenset[int] = frozenset({408})
+    retry_server_errors: bool = True
+
+    def passes(self, status: int) -> bool:
+        """True if a response with ``status`` is returned unchanged."""
+        return not self.check or 200 <= status < 300 or status in self.accept
+
+    def is_retryable(self, status: int) -> bool:
+        """True for statuses that end in a retryable ``TransportError``."""
+        return status in self.retryable or (self.retry_server_errors and 500 <= status < 600)
+
+
+DEFAULT_STATUS_POLICY = StatusPolicy()
+
+
+def _retry_after(response: Response) -> float | None:
+    """``Retry-After`` in whole seconds; HTTP dates and garbage give ``None``."""
+    value = response.header("Retry-After")
+    return float(value) if value and value.strip().isdigit() else None
+
+
+def raise_for_status(response: Response, policy: StatusPolicy | None = None) -> Response:
+    """Map HTTP status codes to structured errors; passing responses are returned unchanged.
+
+    Every raised error carries ``http_status`` and an :class:`ErrorKind`.
+    """
+    rules = policy or DEFAULT_STATUS_POLICY
+    status = response.status
+    if rules.passes(status):
+        return response
+    if status in rules.rate_limited:
+        raise RateLimitError(
+            f"Quelle meldet Rate-Limit (HTTP {status}).",
+            retry_after=_retry_after(response),
+            http_status=status,
+        )
+    if status in rules.auth:
+        raise AuthError(f"Zugriff verweigert (HTTP {status}).", http_status=status)
+    if rules.is_retryable(status):
+        raise TransportError(
+            f"Serverfehler HTTP {status}.", http_status=status, kind=ErrorKind.HTTP_STATUS
+        )
+    raise TransportError(
+        f"Unerwarteter Status HTTP {status}.",
+        retryable=False,
+        http_status=status,
+        kind=ErrorKind.HTTP_STATUS,
+    )
 
 
 def decode_json(body: bytes, message: str = "Antwort ist kein JSON.") -> JSON:
@@ -134,7 +183,7 @@ class ReplayTransport:
             self._used.add(index)
             reply = exchange["response"]
             if reply.get("raise") == "timeout":
-                raise TransportError("Zeitüberschreitung (aufgezeichnet).")
+                raise TransportError("Zeitüberschreitung (aufgezeichnet).", kind=ErrorKind.TIMEOUT)
             if "body_json" in reply:
                 body = json.dumps(reply["body_json"], ensure_ascii=False).encode("utf-8")
             elif "body_b64" in reply:
