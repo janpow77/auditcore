@@ -14,7 +14,7 @@ const { t } = useI18n(dataprotectionMessages)
     <dl class="fa-assistant__axes">
       <template v-for="(value, key) in axes" :key="key">
         <dt>{{ prefixedLabel(t, 'axis', String(key)) }}</dt>
-        <dd>{{ axisValueLabel(value) }}</dd>
+        <dd>{{ axisValueLabel(t, value) }}</dd>
       </template>
     </dl>
     <h3>{{ t('gatesTitle') }}</h3>
