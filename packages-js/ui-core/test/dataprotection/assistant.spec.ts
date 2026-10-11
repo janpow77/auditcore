@@ -2,6 +2,7 @@ import { RestError } from '@auditcore/common'
 import { describe, expect, it, vi } from 'vitest'
 import {
   assistantView,
+  axisValueLabel,
   createAssistantController,
   createAssistantRestPort,
   dataprotectionMessages,
@@ -18,6 +19,13 @@ function controllerFor(port = fakeAssistantPort()) {
 }
 
 describe('Datenschutz-Assistent (Kern)', () => {
+  it('beschriftet Statuswerte mit Umlauten und fällt sonst auf den Wert zurück', () => {
+    expect(axisValueLabel(t, 'ueberarbeitungsbeduerftig')).toBe('überarbeitungsbedürftig')
+    expect(axisValueLabel(t, 'nicht_uebertragen')).toBe('nicht übertragen')
+    expect(axisValueLabel(t, 'fuer_definierten_umfang_erteilt')).toBe('für definierten Umfang erteilt')
+    expect(axisValueLabel(t, 'neuer_wert')).toBe('neuer wert')
+  })
+
   it('startet geführt bei W01 und kennt den nächsten Schritt', async () => {
     const { controller } = controllerFor()
     await controller.load()
