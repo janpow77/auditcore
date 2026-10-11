@@ -30,7 +30,7 @@ from .model import (
     Source,
     page_result,
 )
-from .transport import decode_json, raise_for_status
+from .transport import decode_json
 
 Normalizer = Callable[[Mapping[str, JSON]], Mapping[str, JSON]]
 FeedItem = tuple[str, dict[str, str]]
@@ -75,7 +75,7 @@ class JsonApiAdapter:
         if self.api_key_param:
             secret_params[self.api_key_param] = context.secret(self.source.source_id, "api_key")
         url = str(context.config["url"])
-        response = raise_for_status(
+        response = context.check(
             context.transport.request("GET", url, params=secret_params, timeout=context.timeout)
         )
         payload = decode_json(response.body)
@@ -224,7 +224,7 @@ class FeedAdapter:
     def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Fetch and parse the whole feed."""
         url = str(context.config["url"])
-        response = raise_for_status(context.transport.request("GET", url, timeout=context.timeout))
+        response = context.check(context.transport.request("GET", url, timeout=context.timeout))
         items = _feed_items(_parse_feed(response.text()))
         records: list[HarvestRecord] = []
         issues: list[RecordIssue] = []

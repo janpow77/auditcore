@@ -15,12 +15,20 @@ from .model import JSON, Checkpoint, HarvestRecord, SinkReceipt
 
 @dataclass(frozen=True)
 class Response:
-    """Transport-neutral response."""
+    """Transport-neutral response.
+
+    ``raw_headers`` optionally keeps repeated header lines (several
+    ``Set-Cookie``) that a plain mapping would merge; ``history`` holds the
+    intermediate responses of redirects the transport followed itself, oldest
+    first, so their cookies are not lost.
+    """
 
     status: int
     body: bytes
     headers: Mapping[str, str] = field(default_factory=dict)
     url: str = ""
+    raw_headers: tuple[tuple[str, str], ...] = ()
+    history: tuple[Response, ...] = ()
 
     def header(self, name: str) -> str | None:
         """Case-insensitive header lookup."""
@@ -29,6 +37,14 @@ class Response:
             if key.lower() == wanted:
                 return value
         return None
+
+    def header_values(self, name: str) -> tuple[str, ...]:
+        """All values of a header, from ``raw_headers`` if given, else from ``headers``."""
+        wanted = name.lower()
+        if self.raw_headers:
+            return tuple(value for key, value in self.raw_headers if key.lower() == wanted)
+        single = self.header(name)
+        return () if single is None else (single,)
 
     def text(self, encoding: str = "utf-8") -> str:
         """Decoded body; undecodable bytes are replaced, never raise."""

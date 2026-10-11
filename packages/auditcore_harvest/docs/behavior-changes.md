@@ -37,5 +37,7 @@ einem vollständigen Lauf von Anfang an anwendet.
 - **HUMAN_DECISION_REQUIRED:** Ob Quellen mit harter Ergebnisbegrenzung (DIP-
   Schlagwortsuche) künftig vollständig paginiert werden sollen, ist eine
   fachliche Frage des jeweiligen Quellenprofils (Umfang, Abrufkosten).
-- Der Kern ist synchron. Asynchrone Consumer rufen ihn über einen Thread
-  (`asyncio.to_thread`) auf; ein asynchroner Engine ist nicht Teil von Vertrag 1.
+- Ab 0.2.0 gibt es neben dem synchronen Engine `auditcore_harvest.aio`
+  (`AsyncHarvestEngine`) mit Abbruch laufender Anfragen über `CancelToken`
+  und die Laufzeitgrenze; der Ablauf (Prüfungen, Senke, Checkpoints) ist
+  derselbe Code (`auditcore_harvest.flow`). Vertrag 1 bleibt unverändert.

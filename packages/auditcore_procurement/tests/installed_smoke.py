@@ -20,7 +20,7 @@ from auditcore_procurement.ted import dump_records
 def main() -> None:
     """Normalise, import, check and precheck with the installed pure core."""
     package = distribution("auditcore_procurement")
-    assert package.version == "0.2.5"
+    assert package.version == "0.2.6"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.2.1"], runtime
     assert find_spec("auditcore") is None

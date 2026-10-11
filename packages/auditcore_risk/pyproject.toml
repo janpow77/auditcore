@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_risk"
-version = "0.4.0"
+version = "0.4.1"
 description = "Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags), record-wise or vectorised over columns"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -20,7 +20,7 @@ dependencies = [
 [project.optional-dependencies]
 fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.5"]
 pandas = ["pandas>=2.1"]
-procurement = ["auditcore_procurement==0.2.5"]
+procurement = ["auditcore_procurement==0.2.6"]
 web = ["starlette>=0.26.1"]
 fastapi = ["fastapi>=0.92"]
 dev = [
@@ -32,7 +32,7 @@ dev = [
     "build>=1.2",
     "pandas>=2.1",
     "auditcore_entity_matching[fuzzy]==0.2.5",
-    "auditcore_procurement==0.2.5",
+    "auditcore_procurement==0.2.6",
     "starlette>=0.26.1",
     "fastapi>=0.92",
     "httpx>=0.23.3",

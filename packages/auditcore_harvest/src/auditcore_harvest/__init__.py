@@ -2,15 +2,20 @@
 
 Public API of contract version 1 (``CONTRACT_VERSION``). Source adapters live
 in their family packages and depend on this core, not the other way round.
+The asynchronous, abortable engine lives in :mod:`auditcore_harvest.aio`
+(imported explicitly, because it loads :mod:`asyncio`).
 """
 
 from .adapter import AdapterRegistry, FetchContext, SourceAdapter, require
+from .content import BinaryContent
+from .crawl import AsyncCrawlAdapter, CrawlAdapter, CrawlLimits, CrawlTask, StageResult
 from .engine import CancelToken, HarvestEngine, RateLimit, RetryPolicy
 from .errors import (
     AuthError,
     Cancelled,
     CheckpointConflict,
     ConfigError,
+    ErrorKind,
     HarvestError,
     LimitReached,
     ParserError,
@@ -49,16 +54,25 @@ from .ports import (
     StateStore,
     Transport,
 )
-from .transport import FileTransport, ReplayTransport, decode_json, raise_for_status
+from .session import CookieSession, SessionTransport
+from .transport import (
+    FileTransport,
+    ReplayTransport,
+    StatusPolicy,
+    decode_json,
+    raise_for_status,
+)
 
-__version__ = "0.1.4"
+__version__ = "0.2.0"
 
 __all__ = [
     "CONTRACT_VERSION",
     "JSON",
     "AdapterRegistry",
+    "AsyncCrawlAdapter",
     "AuthError",
     "AuthKind",
+    "BinaryContent",
     "Cancelled",
     "CancelToken",
     "Capabilities",
@@ -66,8 +80,13 @@ __all__ = [
     "CheckpointConflict",
     "Clock",
     "ConfigError",
+    "CookieSession",
+    "CrawlAdapter",
+    "CrawlLimits",
+    "CrawlTask",
     "CredentialProvider",
     "Cursor",
+    "ErrorKind",
     "EventSink",
     "FetchContext",
     "FileTransport",
@@ -88,6 +107,7 @@ __all__ = [
     "Response",
     "RetryPolicy",
     "RunStatus",
+    "SessionTransport",
     "Sink",
     "SinkError",
     "SinkReceipt",
@@ -95,7 +115,9 @@ __all__ = [
     "SnapshotSemantics",
     "Source",
     "SourceAdapter",
+    "StageResult",
     "StateStore",
+    "StatusPolicy",
     "Transport",
     "TransportError",
     "__version__",

@@ -105,11 +105,38 @@ mit `retry_after` aus `Retry-After`; 401/403 → `AuthError`; 408/5xx →
 `TransportError` (wiederholbar); sonstige Nicht-2xx → `TransportError`
 (nicht wiederholbar). Weitere Klassen: `ConfigError`, `ParserError`,
 `SinkError`, `CheckpointConflict`, `Cancelled`, `LimitReached`. Jede trägt
-`code`, `retryable`, `retry_after` und `detail` (`to_dict()`). Der
-`RetryPolicy` wiederholt nur wiederholbare Fehler, begrenzt die Versuche,
+`code`, `retryable`, `retry_after`, `detail`, ab 0.2.0 außerdem
+`http_status` (bei einer erhaltenen Antwort) und `kind` (`ErrorKind`:
+`network`, `timeout`, `http_status`, `rate_limited`, `auth`, `parse`, …);
+`to_dict()` enthält beide als `http_status` und `error_kind`. Das
+`HarvestResult` nennt Status und Art des Fehlers, der den Lauf beendet hat.
+Der `RetryPolicy` wiederholt nur wiederholbare Fehler, begrenzt die Versuche,
 nutzt Backoff mit injizierbarer Zufallsquelle und bricht bei einem
-`Retry-After` über `max_retry_after` ab. Fachliche, irreversible
+`Retry-After` über `max_retry_after` ab – oder kappt ihn mit
+`retry_after_cap` (Sekunden) und wiederholt. Fachliche, irreversible
 Entscheidungen trifft kein allgemeiner Retry-Handler.
+
+Ab 0.2.0 prüfen Adapter den Status mit `context.check(response)`. Das wendet
+die `StatusPolicy` des Engines an (`HarvestEngine(status_policy=...)`), etwa
+`StatusPolicy(accept=frozenset({404}))`, wenn „nicht gefunden“ bei einer
+Quelle eine gültige Antwort ist, oder `check=False`, wenn der Adapter selbst
+entscheidet. Ohne Angabe gilt genau die obige Abbildung;
+`raise_for_status(response, policy)` bleibt direkt nutzbar.
+
+Binäre Dokumente (PDF, Bilder) trägt ein Datensatz nativ als
+`content=BinaryContent(data, media_type)` (`context.record(..., content=...)`)
+statt als Base64 im JSON. Der `content_hash` umfasst dann zusätzlich die
+SHA-256 der Bytes; Datensätze ohne `content` behalten Hash und `to_dict()`
+unverändert. Erst die JSON-Sicht `to_dict()` kodiert die Bytes (`data_b64`,
+abschaltbar mit `include_content_data=False`).
+
+Für Quellen mit Sitzungs-Cookies umschließt der Consumer seinen Transport mit
+`SessionTransport(inner)`. Der folgt Weiterleitungen selbst, sammelt
+`Set-Cookie` aus allen Zwischenantworten in einem Cookie-Jar und sendet die
+Cookies bei allen späteren Abrufen der Sitzung mit. Der innere Transport folgt
+dabei keinen Weiterleitungen (Beispiel: `UrllibTransport(follow_redirects=False)`)
+und gibt wiederholte Kopfzeilen in `Response.raw_headers` zurück. Beim Wechsel
+des Ursprungs entfallen `Authorization`- und `Cookie`-Kopfzeilen des Aufrufers.
 
 ## 5. Registrieren, aufrufen, Senke und Checkpoints
 
@@ -187,6 +214,57 @@ Originalantworten im Format
 Geheimnisparameter (`apikey`, `token`, …) werden beim Abgleich ignoriert und
 gehören nie in eine Fixture.
 
+Adapter, die nur das Rohdokument liefern (etwa ein PDF als `BinaryContent`),
+können eine unlesbare Antwort nicht als `parser_error` erkennen. Für sie gilt
+`malformed=MalformedExpectation.RAW_DOCUMENT`: der Fall verlangt dann einen
+vollständigen Lauf, der die gelieferten Bytes unverändert als `content` (oder
+als dekodierten `raw`-Text) übergibt. `MalformedExpectation.NOT_APPLICABLE`
+meldet den Fall als `SKIPPED`; Standard bleibt `PARSER_ERROR`.
+
+## 7. Asynchrone Adapter und Abbruch
+
+`auditcore_harvest.aio.AsyncHarvestEngine` führt `AsyncSourceAdapter` durch
+denselben Ablauf. Der Adapter ruft `await context.fetch("GET", url)` auf
+(asynchroner Transport mit der Anfragezeitgrenze des Engines) und prüft den
+Status wie gewohnt mit `context.check(...)`. Unterschiede zum synchronen
+Engine:
+
+- `CancelToken.cancel()` (auch aus einem anderen Thread) bricht eine laufende
+  Anfrage sofort ab; Ergebnis `cancelled`.
+- Läuft `HarvestRequest.max_duration_seconds` während einer Anfrage oder einer
+  Wartezeit ab, wird sie abgebrochen; Ergebnis `partial` mit `limit_reached`.
+- Wird die aufrufende Task abgebrochen (`task.cancel()`), endet die laufende
+  Anfrage ebenfalls, und `CancelledError` wird nach asyncio-Konvention
+  weitergereicht.
+
+In allen Fällen bleibt der Checkpoint bei der letzten bestätigten Seite.
+`AsyncSessionTransport` ist das asynchrone Gegenstück zu `SessionTransport`.
+
+## 8. Mehrstufige Abläufe und Crawls
+
+Abläufe wie „Übersichtsseite lesen, Unterseiten suchen, Dokumente holen“
+beschreibt `auditcore_harvest.crawl`. Jede Stufe ist eine Funktion
+`(context, task) -> StageResult(records, issues, discovered)`; neu gefundene
+`CrawlTask`s (Stufe, Lokator, Tiefe, Daten) erweitern die Kandidatenliste
+(`Frontier`). Die Liste wird als Cursor im Checkpoint gespeichert: jeder
+Engine-Schritt bearbeitet genau eine Aufgabe, Wiederanlauf und
+Wiederholungen funktionieren wie bei jeder Seitenfolge. Doppelte Kandidaten
+(gleiche Stufe und gleicher Lokator) werden nur einmal bearbeitet; über
+`CrawlLimits(max_depth, max_tasks)` hinaus verworfene Kandidaten erscheinen
+als `RecordIssue` (Lauf `partial`), nie stillschweigend.
+
+```python
+from auditcore_harvest import CrawlAdapter, CrawlTask, StageResult
+
+adapter = CrawlAdapter(
+    source,
+    seeds=lambda config: [CrawlTask("index", str(config["url"]))],
+    stages={"index": index_stage, "document": document_stage},
+)
+```
+
+Für `AsyncHarvestEngine` gibt es `AsyncCrawlAdapter` mit asynchronen Stufen.
+
 ## Quellenkatalog
 
 `auditcore_harvest.catalog` validiert den versionierten Katalog
@@ -210,3 +288,11 @@ Geheimnisse, Fixtures, Implementierungsstatus (`SUPPORTED`, `PLANNED`,
   betroffen (sie nutzen nur `context.transport`). Consumer injizieren ihren
   Transport; Standardbibliotheks-Vorlage: `docs/examples/urllib_transport.py`.
   Alle übrigen Namen und Semantiken von Vertrag 1 bleiben unverändert.
+- 0.2.0 / Vertrag 1 (kompatibel, additiv): `http_status` und `ErrorKind` in
+  Fehlern und Ergebnis, `StatusPolicy` und `context.check`,
+  `RetryPolicy.retry_after_cap`, `BinaryContent` im Datensatz,
+  `SessionTransport`/`CookieSession`. Ohne neue Optionen ist das
+  Laufzeitverhalten unverändert; `to_dict()` von Fehlern und Ergebnis enthält
+  zwei zusätzliche Schlüssel. Außerdem `auditcore_harvest.aio`
+  (asynchroner, abbrechbarer Engine), `auditcore_harvest.crawl` (mehrstufige
+  Abläufe) und `MalformedExpectation` in der Contract-Suite.
