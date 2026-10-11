@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from html import escape
 
+from .register_regime import item_text
+
 
 def text(value: object, empty: str = "–") -> str:
     """Escaped display text; empty values as ``empty``, flags as Ja/Nein, lists joined."""
@@ -14,7 +16,7 @@ def text(value: object, empty: str = "–") -> str:
     if value is False:
         return "Nein"
     if isinstance(value, (list, tuple)):
-        return escape(", ".join(str(v) for v in value)) or escape(empty)
+        return escape(", ".join(item_text(v) for v in value)) or escape(empty)
     return escape(str(value))
 
 
