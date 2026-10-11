@@ -252,8 +252,8 @@ export function questionFieldId(question: { id: string }): string {
 }
 
 /** Beschriftung eines Statuswerts (Unterstriche als Leerzeichen, falls kein Text hinterlegt). */
-export function axisValueLabel(value: string): string {
-  return value.replace(/_/g, ' ')
+export function axisValueLabel(t: DataProtectionTranslate, value: string): string {
+  return prefixedLabel(t, 'axisValue', value, value.replace(/_/g, ' '))
 }
 
 /** Geführt: zurück zu jedem früheren Schritt, vorwärts nur zum nächsten; frei: jeder Schritt. */
