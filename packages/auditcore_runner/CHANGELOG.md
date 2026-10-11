@@ -1,6 +1,6 @@
 # Changelog – auditcore_runner
 
-## Unreleased
+## 0.1.1 – 2026-10-11
 
 - Nichts geprüft ist rot: Ein JUnit-Bericht ohne ausgeführten Testfall (fehlt,
   leer oder alles übersprungen) ergibt Status und Befund `nichts_geprueft` mit

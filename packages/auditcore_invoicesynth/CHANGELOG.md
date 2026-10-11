@@ -1,6 +1,6 @@
 # Changelog auditcore_invoicesynth
 
-## Unveröffentlicht
+## 0.3.0 – 2026-10-11
 
 Generatorvariante `v4` (`build --variety v4`; `v1`, `v2`, `v3` bleiben bitgleich,
 Plan-Hashes `3da7d6e1…`, `c50af53a…`, `1250705c…` und Datensatz-Hashes kleiner
