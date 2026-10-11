@@ -33,6 +33,7 @@ from .contract import (
 )
 from .export import EXPORT_FORMATS, ExportFile, assessment_export, register_export
 from .views import assessment_view, overview_view, profile_view, register_state, version_view
+from .workspace_api import WorkspaceApi
 
 _SURVEY_FIELDS = (
     "answers",
@@ -90,6 +91,8 @@ class DataProtectionApi:
     def __init__(self, backend: Backend) -> None:
         self.backend = backend
         self.profile = backend.profile
+        #: Wizard, checklist, operational decision and central register.
+        self.work = WorkspaceApi(backend)
 
     # ------------------------------------------------------------ profile
 

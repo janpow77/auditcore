@@ -32,6 +32,11 @@ class Permission(StrEnum):
     ASSESSMENT_DECIDE = "assessment.decide"
     ASSESSMENT_DPO_STATEMENT = "assessment.dpo_statement"
     ASSESSMENT_RELEASE = "assessment.release"
+    CHECKLIST_EDIT = "checklist.edit"
+    CENTRAL_REGISTER_TRANSFER = "central_register.transfer"
+    CENTRAL_REGISTER_CONFIRM = "central_register.confirm"
+    OPERATION_DECIDE = "operation.decide"
+    EXPORT_PUBLIC = "export.public"
 
 
 @dataclass(frozen=True)
@@ -163,6 +168,8 @@ class Assessment:
     dpo_requested_by: str | None = None
     dpo_requested_at: datetime | None = None
     release_open_points: tuple[str, ...] = ()
+    #: Own justification of the decision (required for some decisions, LIB-10).
+    decision_justification: str | None = None
 
     @property
     def locked(self) -> bool:

@@ -46,6 +46,9 @@ class ScreeningResult:
     unknown: tuple[str, ...]
     reasoning: str
     trace: tuple[Mapping[str, object], ...]
+    #: Consultation grounds established by an answer alone (e.g. § 64 Abs. 1
+    #: Nr. 2 HDSIG); independent of the residual risk.
+    consultation_grounds: tuple[str, ...] = ()
 
     @property
     def complete(self) -> bool:
@@ -65,6 +68,11 @@ class ScreeningResult:
             "unknown": list(self.unknown),
             "complete": self.complete,
             "reasoning": self.reasoning,
+            **(
+                {"consultation_grounds": list(self.consultation_grounds)}
+                if self.consultation_grounds
+                else {}
+            ),
         }
 
 

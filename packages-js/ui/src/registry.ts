@@ -3,7 +3,7 @@ import { benfordElement } from './benford/element'
 import { extrapolationElement } from './extrapolation/element'
 import { reportExportElement } from './reporting/element'
 import { identifierCheckElement } from './identifiers/element'
-import { dsfaElement, vvtElement } from './dataprotection/element'
+import { assistantElement, dsfaElement, vvtElement } from './dataprotection/element'
 import { comparisonsElement } from './documents/element'
 import { extractionElement } from './extraction/element'
 import { geoMapElement } from './geo/element'
@@ -25,4 +25,4 @@ import { accountWorkspaceElement } from './account/element'
  * Alle Web Components von @auditcore/ui. Neue Komponenten tragen hier ihre
  * `ElementDefinition` ein (siehe docs/ui/beitragen.md).
  */
-export const ELEMENTS: readonly ElementDefinition[] = [tableElement, samplingElement, benfordElement, extrapolationElement, kanbanBoardElement, kanbanBoardListElement, dbKanbanElement, screeningReviewElement, riskFlagsElement, synopsisElement, comparisonsElement, extractionElement, vvtElement, dsfaElement, geoMapElement, identifierCheckElement, reportExportElement, sampleSizePlannerElement, batchChecksElement, reportTemplatesElement, attributeSamplingElement, runnerConsoleElement, accountWorkspaceElement]
+export const ELEMENTS: readonly ElementDefinition[] = [tableElement, samplingElement, benfordElement, extrapolationElement, kanbanBoardElement, kanbanBoardListElement, dbKanbanElement, screeningReviewElement, riskFlagsElement, synopsisElement, comparisonsElement, extractionElement, vvtElement, dsfaElement, assistantElement, geoMapElement, identifierCheckElement, reportExportElement, sampleSizePlannerElement, batchChecksElement, reportTemplatesElement, attributeSamplingElement, runnerConsoleElement, accountWorkspaceElement]
