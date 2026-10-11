@@ -17,7 +17,7 @@ from auditcore_runner.werkzeuge import Finding, Registry, deduplicate, to_sarif
 
 def main() -> None:
     package = distribution("auditcore_runner")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     assert [r for r in package.requires or [] if "extra ==" not in r] == []
     assert find_spec("auditcore") is None
     data = files("auditcore_runner").joinpath("data")
