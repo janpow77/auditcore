@@ -10,7 +10,7 @@ export function AssistantStatus({ axes, gates }: { axes: StatusAxes; gates: Gate
       <dl className="fa-assistant__axes">
         {Object.entries(axes).map(([key, value]) => [
           <dt key={`${key}-t`}>{prefixedLabel(t, 'axis', key)}</dt>,
-          <dd key={`${key}-d`}>{axisValueLabel(value)}</dd>,
+          <dd key={`${key}-d`}>{axisValueLabel(t, value)}</dd>,
         ])}
       </dl>
       <h3>{t('gatesTitle')}</h3>
