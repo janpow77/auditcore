@@ -1,5 +1,44 @@
 # Changelog auditcore_dataprotection
 
+## 0.6.0 – 2026-10-08 – Prüfkatalog VVT/DSFA
+
+Umsetzung des Prüfkatalogs für VVT und DSFA (Abgleich je Anforderung:
+`docs/pruefkatalog-abgleich.md`, Verhaltensänderungen DP-E19 bis DP-E27).
+Bestehende Profile, Berechnungen und Berichte älterer Fassungen sind unverändert.
+
+- Profile `auditcore.dsgvo` und `auditcore.hdsig_ji` 2026.10.4: eigener
+  Konsultationstatbestand § 64 Abs. 1 Nr. 2 HDSIG, offene Gesamtbetrachtung,
+  Begründungspflicht für „keine DSFA“, Rechtsregime und Rolle je Tätigkeit,
+  Profiling und Rechtsgrundlage je Übermittlung, Verzeichnis des
+  Auftragsverarbeiters.
+- Wizard (`wizard_catalog`, `wizard`, Katalog `wizard-2026.10.3`): Fragenbaum
+  nach dem Muster des Checklistendesigners mit Nummern, JA-/NEIN-Zweigen,
+  Hinweisen und Fundstellen (erzeugt mit `tools/build_wizard_catalog.py`);
+  Antwortarten Zahl, Datum und Tabelle (auch mit Auswahlspalten); wahlweise
+  geführt oder frei, „unklar“ als Aufgabe, Herkunft der Antworten.
+- Katalog 2026.10.3: Zuständigkeit je Frage (Fachbereich, IT-Betrieb,
+  Recht/Datenschutz), Tatsachen vor der rechtlichen Einordnung (Dienstleister
+  3.7.1/3.7.2), Mehrfachfragen getrennt, Fristen je Datenkategorie (6.1),
+  Abschlussfrage „offene Punkte“ je Kapitel. HDSIG-Fundstellen am Wortlaut
+  geprüft; Hinweise mit Fundstellen aus Leitlinien von EDSA, DSK und HBDI
+  (Quellenliste im Katalog unter `sources`).
+- Profil `auditcore.hdsig_ji` 2026.10.5: Maßstab der Vorprüfung ist allein
+  § 62 Abs. 1 HDSIG (voraussichtlich hohes Risiko); Listen- und WP-248-Kriterien
+  sind Anhaltspunkte (neue Wirkung `anhaltspunkt`), die entscheidende Frage
+  (`decisive`) verlangt bei Verneinung trotz Anhaltspunkten eine Begründung.
+- Register: `speicherdauer` als Text oder Fristen-Tabelle; neue Tabellen
+  `dienstleister` und `dienstleister_einordnung` (Auftragsverarbeiter ohne
+  Vertrag als offener Befund `missing_contract`).
+- `ActivityWorkspace`: Wizard, Checkliste CHK-01 bis CHK-30, Nachweise und
+  Schutzmaßnahmen auf der versionierten Verzeichnisfassung.
+- Getrennte Statusachsen (`StatusAxes`), Sperren GATE-01 bis GATE-08,
+  Betriebsentscheidung (`OperationService`, Berechtigung `operation.decide`),
+  zentrale Übernahme (`CentralRegisterService`, idempotent), Prüfpaket,
+  öffentliches Muster.
+- REST: `/activities/...`, `/register/transfer`, `/register/public-pattern`.
+- Neue Berechtigungen: `checklist.edit`, `central_register.transfer`,
+  `central_register.confirm`, `operation.decide`, `export.public`.
+
 ## 0.5.2 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
