@@ -6,7 +6,7 @@ Native Konten-/Mandantenoberfläche mit gemeinsamer Vue-Paritätsprüfung.
 Noch nicht veröffentlicht.
 
 
-## Unreleased
+## 1.3.0 – 2026-10-11
 
 - Neu: `FlowauditDatenschutzAssistent` (native React-Fassung von `<flowaudit-datenschutz-assistent>`, gleiche Paritätsfälle `cases-datenschutz-assistent.ts`).
 - Neu `FlowauditRunnerConsole` (native React-Fassung der Runner-Konsole, gleiches DOM wie `RunnerConsole`).

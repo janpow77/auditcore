@@ -25,7 +25,7 @@ from auditcore_invoicesynth.plan import plan_dataset
 def main() -> None:
     """Core contract of the installed package without the render extra."""
     package = distribution("auditcore_invoicesynth")
-    assert package.version == "0.2.1"
+    assert package.version == "0.3.0"
     assert [r for r in package.requires or [] if "extra ==" not in r] == [
         "auditcore_common==0.2.1",
         "auditcore_invoicegenerator==0.2.4",

@@ -1,6 +1,6 @@
 {
   "name": "@auditcore/layout",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Wiederverwendbare Seitenlayouts, Anmeldung und Exportaktionen für FlowAudit",
   "license": "MIT",
   "repository": {
@@ -25,7 +25,7 @@
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "test": "vitest run"
   },
-  "dependencies": { "@auditcore/ui": "0.4.0" },
+  "dependencies": { "@auditcore/ui": "0.5.0" },
   "peerDependencies": { "vue": "^3.5.0" },
   "devDependencies": { "@vitejs/plugin-vue": "^6.0.9", "vite": "^8.3.2", "vite-plugin-dts": "^5.1.1", "vue": "^3.5.43", "vue-tsc": "^3.3.11", "vitest": "^4.1.11", "happy-dom": "^20.14.5", "@vue/test-utils": "^2.5.1" },
   "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" }

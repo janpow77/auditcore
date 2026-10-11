@@ -6,7 +6,7 @@ Gemeinsamer Kontenformularvertrag, Controller, REST-Port, Styles und Bildlogik.
 Noch nicht veröffentlicht.
 
 
-## Unreleased
+## 0.4.0 – 2026-10-11
 
 - Datenschutz-Assistent: Statuswerte der Ansicht „Status und Sperren“ erscheinen als ausgeschriebene Texte mit Umlauten (`axisValue_*`, `axisValueLabel(t, value)`); unbekannte Werte wie bisher mit Leerzeichen statt Unterstrichen.
 - Neu: Datenschutz-Assistent im Kern `dataprotection`: `createAssistantController` (geführter oder freier Modus, Antworten mit Revision, Fehler je Frage, Prüfpunkte), `createAssistantRestPort` auf die Arbeitsbereichs-Endpunkte von `auditcore_dataprotection.web` 0.6.0, `assistantView`, `questionOptions`, `stepReachable`, Texte und Stil in `styles/dataprotection.css` (`docs/ui/dataprotection-paritaet.md`).
