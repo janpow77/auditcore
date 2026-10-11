@@ -191,6 +191,97 @@ class _Handlers:
         return await self._action(request, who, self.api.export_assessment)
 
 
+class _WorkHandlers:
+    """Handlers of the wizard, checklist, decision and central register."""
+
+    def __init__(self, base: _Handlers) -> None:
+        self.base = base
+        self.work = base.api.work
+
+    def _id(self, request: Request) -> str:
+        return str(request.path_params["activity_id"])
+
+    async def create(self, request: Request, who: Principal) -> Answer:
+        """New activity; the wizard starts in guided mode."""
+        return await self.base._with_body(request, self.work.create, who)
+
+    async def overview(self, request: Request, who: Principal) -> Answer:
+        """Wizard, checklist, status axes and gates of an activity."""
+        return await self.base._call(self.work.overview, who, self._id(request))
+
+    async def package(self, request: Request, who: Principal) -> Answer:
+        """Review package of an activity."""
+        return await self.base._call(self.work.package, who, self._id(request))
+
+    async def _act(self, request: Request, who: Principal, function: Call) -> Answer:
+        return await self.base._with_body(request, function, who, self._id(request))
+
+    async def answer(self, request: Request, who: Principal) -> Answer:
+        """Store a wizard answer."""
+        return await self._act(request, who, self.work.answer)
+
+    async def confirm(self, request: Request, who: Principal) -> Answer:
+        """Adopt a suggestion."""
+        return await self._act(request, who, self.work.confirm)
+
+    async def navigate(self, request: Request, who: Principal) -> Answer:
+        """Guided or free mode, step."""
+        return await self._act(request, who, self.work.navigate)
+
+    async def records(self, request: Request, who: Principal) -> Answer:
+        """Evidence and safeguards."""
+        return await self._act(request, who, self.work.records)
+
+    async def decide(self, request: Request, who: Principal) -> Answer:
+        """Operational decision."""
+        return await self._act(request, who, self.work.decide)
+
+    async def item(self, request: Request, who: Principal) -> Answer:
+        """Change a checklist item."""
+        item = str(request.path_params["item_id"])
+        return await self.base._with_body(request, self.work.item, who, self._id(request), item)
+
+    async def confirm_item(self, request: Request, who: Principal) -> Answer:
+        """Second person confirms "nicht anwendbar"."""
+        item = str(request.path_params["item_id"])
+        return await self.base._with_body(
+            request, self.work.confirm_item, who, self._id(request), item
+        )
+
+    async def transfer(self, request: Request, who: Principal) -> Answer:
+        """Transfer the released register version."""
+        return await self.base._with_body(request, self.work.transfer, who)
+
+    async def confirm_transfer(self, request: Request, who: Principal) -> Answer:
+        """Confirm the takeover in the central register."""
+        return await self.base._with_body(request, self.work.confirm_transfer, who)
+
+    async def public_pattern(self, request: Request, who: Principal) -> Answer:
+        """Abstract public pattern of the released register."""
+        return await self.base._call(self.work.public_pattern, who)
+
+
+def workspace_table(w: _WorkHandlers) -> list[tuple[str, str, Handler, int]]:
+    """Routes of the wizard and the work list."""
+    one = "/activities/{activity_id}"
+    item = f"{one}/checklist/{{item_id}}"
+    return [
+        ("/activities", "POST", w.create, 201),
+        (f"{one}/workspace", "GET", w.overview, 200),
+        (f"{one}/review-package", "GET", w.package, 200),
+        (f"{one}/answers", "POST", w.answer, 200),
+        (f"{one}/answers/confirm", "POST", w.confirm, 200),
+        (f"{one}/navigate", "POST", w.navigate, 200),
+        (f"{one}/records", "POST", w.records, 200),
+        (f"{one}/operation", "POST", w.decide, 200),
+        (item, "POST", w.item, 200),
+        (f"{item}/confirm", "POST", w.confirm_item, 200),
+        ("/register/transfer", "POST", w.transfer, 200),
+        ("/register/transfer/confirm", "POST", w.confirm_transfer, 200),
+        ("/register/public-pattern", "POST", w.public_pattern, 200),
+    ]
+
+
 def endpoints(
     api: DataProtectionApi, identify: Identify, max_body_bytes: int = MAX_BODY_BYTES
 ) -> list[tuple[str, str, Endpoint]]:
@@ -214,6 +305,7 @@ def endpoints(
         (f"{one}/release", "POST", h.release, 200),
         (f"{one}/reassess", "POST", h.reassess, 201),
         (f"{one}/export", "POST", h.export_assessment, 200),
+        *workspace_table(_WorkHandlers(h)),
     ]
     return [(path, method, _endpoint(fn, identify, status)) for path, method, fn, status in table]
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FaDsfa, FaVvt, createDataProtectionRestPort } from '@auditcore/ui'
+import { FaDatenschutzAssistent, FaDsfa, FaVvt, createAssistantRestPort, createDataProtectionRestPort } from '@auditcore/ui'
 
 // Nur Demo: Die Person kommt aus dem Kopf X-Demo-Actor; eine Anwendung nimmt Mandant und Person aus ihrer Sitzung.
 const actors = [
@@ -8,8 +8,9 @@ const actors = [
   { id: 'daten-b', name: 'Bernd B. Muster (gibt frei)' },
 ] as const
 const actor = ref<string>(actors[0].id)
-const view = ref<'vvt' | 'dsfa'>('vvt')
+const view = ref<'vvt' | 'dsfa' | 'assistent'>('vvt')
 const port = computed(() => createDataProtectionRestPort({ baseUrl: '/api/dataprotection', headers: { 'X-Demo-Actor': actor.value } }))
+const assistantPort = computed(() => createAssistantRestPort({ baseUrl: '/api/dataprotection', headers: { 'X-Demo-Actor': actor.value } }))
 const last = ref('')
 
 function report(name: string, detail: unknown): void {
@@ -36,6 +37,7 @@ function report(name: string, detail: unknown): void {
       <select v-model="view" data-testid="dp-view">
         <option value="vvt">Verzeichnis (Art. 30)</option>
         <option value="dsfa">Folgenabschätzung (Art. 35)</option>
+        <option value="assistent">Assistent (geführt oder frei)</option>
       </select>
     </label>
   </div>
@@ -47,6 +49,7 @@ function report(name: string, detail: unknown): void {
     @draft-saved="report('draft-saved', $event)"
     @released="report('released', $event)"
   />
+  <FaDatenschutzAssistent v-else-if="view === 'assistent'" :key="`assistent-${actor}`" :port="assistantPort" activity-id="pruefung" @change="report('change', { status: $event.status })" />
   <FaDsfa v-else :key="`dsfa-${actor}`" :port="port" :actor="actor" @assessment-change="report('assessment-change', $event)" />
   <p class="demo-event" aria-live="polite">{{ last }}</p>
 </template>
