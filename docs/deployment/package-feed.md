@@ -1,6 +1,43 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Pre-release v0.8.1](https://github.com/janpow77/auditcore/releases/tag/v0.8.1)**
+**Aktuell: [Pre-release v0.12.0](https://github.com/janpow77/auditcore/releases/tag/v0.12.0)**
+mit 36 Python-Bibliotheken, 10 npm-Paketen und 240 Release-Dateien mit signierten Prüfsummen.
+Neu ist der Datenschutz-Assistent: `auditcore_dataprotection` 0.6.0 mit dem
+Fragenkatalog 2026.10.3 und dem Regelprofil `auditcore.hdsig_ji` 2026.10.5
+sowie die Oberfläche in `@auditcore/ui-core` 0.4.0, `@auditcore/ui` 0.5.0 und
+`@auditcore/ui-react` 1.3.0. Ebenfalls neu sind `auditcore_invoicesynth` 0.3.0
+und `auditcore_runner` 0.1.1. `@auditcore/bpmn-react` 0.5.1,
+`@auditcore/bpmn-vue` 0.5.1 und `@auditcore/layout` 0.1.1 tragen nur die
+angehobene Bindung an `ui-core` beziehungsweise `ui`. Alle übrigen Pakete sind
+gegenüber v0.11.0 unverändert.
+
+Die Versionen und Prüfsummen stehen im
+[Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.12.0/preview-manifest.json)
+und in den signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.12.0/SHA256SUMS).
+Der bestehende Signaturschlüssel bleibt unverändert:
+`E427F95CC37CBFD0876314CA0D1580A6CAE37327`.
+
+```bash
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.12.0/requirements-auditcore_dataprotection.txt
+# oder über den Paketindex
+python -m pip install auditcore-dataprotection==0.6.0 --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+Vor der Veröffentlichung am 12.10.2026 bestanden Paketbau, selektive
+pip-Installation mit Funktionsprüfung und Entfernung, APT-Installation, Upgrade
+und Entfernung sowie die PDF-/Excel-Ausgabe (284 Prüfschritte); Prüfsummen und
+Signatur der 240 Dateien wurden vor dem Hochladen geprüft. Ein anonymer
+Installationsnachweis gegen den öffentlichen Pfad liegt für v0.12.0 nicht vor.
+Die geänderten npm-Versionen sind auf npmjs.org noch nicht veröffentlicht
+(Probelauf des Workflows `npm-publish` am 12.10.2026: acht Pakete zur
+Veröffentlichung vorgesehen, `common` und `kanban-core` bereits vorhanden);
+bis dahin gelten die Tarball-URLs des Releases.
+Der Bibliotheksrelease stellt produktive Anwendungen nicht automatisch um.
+
+## Historischer Stand v0.8.1
+
+**[Pre-release v0.8.1](https://github.com/janpow77/auditcore/releases/tag/v0.8.1)**
 mit 35 Python-Bibliotheken, 10 npm-Paketen und 234 Release-Dateien mit signierten Prüfsummen.
 Neu ist `auditcore_tyfindings` 0.2.0: Standardprofil `efre.tof_2021_2027`
 2026.10.2 mit den deutschen Kategoriebezeichnungen (`kategorie_de`, Fassung der
