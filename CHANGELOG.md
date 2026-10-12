@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Release v0.12.0 (12.10.2026) veröffentlicht und in `docs/deployment/package-feed.md`
+  als aktueller Stand dokumentiert: `auditcore_dataprotection` 0.6.0 mit dem
+  Datenschutz-Assistenten, `auditcore_invoicesynth` 0.3.0, `auditcore_runner` 0.1.1,
+  `@auditcore/ui-core` 0.4.0, `@auditcore/ui` 0.5.0, `@auditcore/ui-react` 1.3.0.
 - `auditcore_invoicesynth` (unveröffentlicht): Generatorvariante `v2` für die
   Donut-Trainingsrunde „Stufe 5“ (`--variety v2`, Standard bleibt `v1`).
   Anlass: Fehleranalyse auf dem Layout-Holdout T2 (Fälligkeit 180× als
