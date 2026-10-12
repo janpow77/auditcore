@@ -29,10 +29,11 @@ pip-Installation mit Funktionsprüfung und Entfernung, APT-Installation, Upgrade
 und Entfernung sowie die PDF-/Excel-Ausgabe (284 Prüfschritte); Prüfsummen und
 Signatur der 240 Dateien wurden vor dem Hochladen geprüft. Ein anonymer
 Installationsnachweis gegen den öffentlichen Pfad liegt für v0.12.0 nicht vor.
-Die geänderten npm-Versionen sind auf npmjs.org noch nicht veröffentlicht
-(Probelauf des Workflows `npm-publish` am 12.10.2026: acht Pakete zur
-Veröffentlichung vorgesehen, `common` und `kanban-core` bereits vorhanden);
-bis dahin gelten die Tarball-URLs des Releases.
+Die npm-Tarballs des Releases sind seit dem 12.10.2026 auf npmjs.org
+veröffentlicht (Workflow `npm-publish`: acht Pakete veröffentlicht, `common`
+0.1.1 und `kanban-core` 0.2.1 waren bereits vorhanden). Seit diesem Tag ist
+die Repository-Variable `NPM_PUBLISH_ENABLED` gesetzt; künftige Releases
+veröffentlichen ihre npm-Pakete damit ohne manuellen Start.
 Der Bibliotheksrelease stellt produktive Anwendungen nicht automatisch um.
 
 ## Historischer Stand v0.8.1
