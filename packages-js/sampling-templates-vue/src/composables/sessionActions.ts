@@ -1,0 +1,117 @@
+/**
+ * Aktionen auf Schichttabellen und Listenblättern: Schichten hinzufügen und
+ * entfernen, Einheiten anlegen, entfernen, einfügen und ihre Summen in das
+ * Methodenblatt übernehmen. Jede Aktion schreibt einen neuen Arbeitsstand.
+ */
+import {
+  MAX_LIST_ROWS,
+  MAX_STRATA,
+  STRATA_COLUMNS,
+  applySubsamples,
+  cellsOf,
+  defaultInputs,
+  inputFields,
+  listRows,
+  parsePastedRows,
+  type CellMap,
+  type CellValue,
+  type SheetId,
+  type Translate,
+  type WorkspaceState,
+} from '@auditcore/sampling-templates-core'
+import { computed, ref, type ComputedRef, type Ref } from 'vue'
+import { ownInputs, type SessionView } from './sessionView'
+
+/** Schichten, die ein geschichtetes Blatt zu Beginn zeigt. */
+const INITIAL_STRATA = 3
+
+export interface SheetActions {
+  strataCount: ComputedRef<number>
+  addStratum: () => void
+  removeStratum: () => void
+  addUnit: () => void
+  removeUnit: (index: number) => void
+  pasteUnits: (text: string) => void
+  transferSubsamples: () => void
+}
+
+export interface ActionContext {
+  view: SessionView
+  selectedUnit: Ref<number>
+  /** Schreibt die Eingaben eines Blatts und kennzeichnet den Arbeitsstand als geändert. */
+  write: (sheet: SheetId, inputs: WorkspaceState['sheets'][SheetId]) => void
+  state: () => WorkspaceState
+  t: Translate
+  say: (text: string) => void
+  notify: (tone: 'info' | 'warning', text: string) => void
+}
+
+function useStrata(context: ActionContext): Pick<SheetActions, 'strataCount' | 'addStratum' | 'removeStratum'> {
+  const chosen = ref<Record<SheetId, number>>({})
+  const { view } = context
+  const sheetId = (): SheetId => view.currentSheet.value?.id ?? ''
+  const strataCount = computed(() => (view.hasStrata.value ? Math.min(MAX_STRATA, Math.max(view.usedStrata.value, chosen.value[sheetId()] ?? INITIAL_STRATA)) : 0))
+  const choose = (count: number): void => {
+    chosen.value = { ...chosen.value, [sheetId()]: count }
+  }
+  return {
+    strataCount,
+    addStratum: () => choose(Math.min(MAX_STRATA, strataCount.value + 1)),
+    /** Entfernt die letzte Schicht samt ihren Eingaben. */
+    removeStratum() {
+      const sheet = view.currentSheet.value
+      if (!sheet || strataCount.value <= 1) return
+      const column = STRATA_COLUMNS[strataCount.value - 1]!
+      const inputs: Record<string, CellValue> = { ...ownInputs(context.state(), sheet.id) }
+      const cells = inputFields(sheet.definition).filter((field) => field.columns).flatMap(cellsOf)
+      for (const cell of cells.filter((address) => address.replace(/\d+$/, '') === column)) delete inputs[cell]
+      choose(strataCount.value - 1)
+      context.write(sheet.id, inputs)
+    },
+  }
+}
+
+function useUnits(context: ActionContext): Pick<SheetActions, 'addUnit' | 'removeUnit' | 'pasteUnits' | 'transferSubsamples'> {
+  const { view, selectedUnit, t } = context
+  const rows = (): readonly CellMap[] => (view.currentSheet.value ? listRows(context.state(), view.currentSheet.value.id) : [])
+  const append = (added: readonly CellMap[]): void => {
+    const sheet = view.currentSheet.value
+    if (!sheet || added.length === 0) return
+    const next = [...rows(), ...added].slice(0, MAX_LIST_ROWS)
+    context.write(sheet.id, next)
+    selectedUnit.value = next.length - 1
+  }
+  return {
+    addUnit: () => append(view.currentSheet.value ? [defaultInputs(view.currentSheet.value.definition)] : []),
+    removeUnit(index) {
+      const sheet = view.currentSheet.value
+      if (!sheet) return
+      context.write(sheet.id, rows().filter((_, position) => position !== index))
+      selectedUnit.value = Math.max(0, Math.min(selectedUnit.value, rows().length - 1))
+    },
+    pasteUnits(text) {
+      const sheet = view.currentSheet.value
+      if (!sheet) return
+      const pasted = parsePastedRows(text, sheet.definition, MAX_LIST_ROWS - rows().length)
+      append(pasted.rows)
+      context.say(t('listPasted', { count: pasted.rows.length }))
+      if (pasted.rejected) context.notify('warning', t('listPasteRejected', { count: pasted.rejected }))
+      if (pasted.dropped) context.notify('warning', t('listPasteDropped', { count: pasted.dropped, max: MAX_LIST_ROWS }))
+    },
+    /** Summen der Einheiten in die gekennzeichneten Felder des gewählten Methodenblatts schreiben. */
+    transferSubsamples() {
+      const sheet = view.currentSheet.value
+      const method = view.activeSheet.value
+      const totals = sheet?.totals?.(rows(), view.context.value)
+      if (!method || !totals) return
+      const result = applySubsamples(method, ownInputs(context.state(), method.id), totals)
+      if (result.applied.length === 0) return context.notify('info', t('listTransferNone'))
+      context.write(method.id, result.inputs)
+      context.say(t('listTransferred', { number: method.definition.number, fields: result.applied.map((field) => field.cell).join(', ') }))
+    },
+  }
+}
+
+export function useSheetActions(context: ActionContext): SheetActions {
+  return { ...useStrata(context), ...useUnits(context) }
+}

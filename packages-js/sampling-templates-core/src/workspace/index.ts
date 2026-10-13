@@ -1,0 +1,7 @@
+export * from './types'
+export { canonicalInputs, checksumOf, sha256Fallback } from './canonical'
+export { computeWorkspace, computedCells, listRows } from './compute'
+export { exportFileName, fileStem, workspaceFileName } from './filenames'
+export { MIGRATIONS, migrate, type Migration, type Migrations } from './migrate'
+export { openWorkspace, type OpenOptions } from './open'
+export { cleanInputs, saveWorkspace, type SaveOptions, type SavedWorkspace } from './save'

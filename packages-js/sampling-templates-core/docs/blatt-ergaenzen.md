@@ -1,0 +1,412 @@
+# Ein Blatt ergänzen
+
+Anleitung für das Nachbauen weiterer Blätter der Vorlage. Sie ist so
+geschrieben, dass eine Blattgruppe ohne Rückfrage gebaut werden kann. Es gilt:
+**Vorlage vor Auftragsbeschreibung vor eigenen Annahmen.** Keine Formel raten,
+keine Rundung, Schwelle oder Rechenreihenfolge ändern.
+
+## Was vorhanden ist
+
+| Blatt | Art | Muster für |
+|---|---|---|
+| `02_Grundgesamtheit` | Ableitung der Grundgesamtheit | Blätter ohne Stichprobe, Lieferant für Verknüpfungen |
+| `03_MUS_1Z` | statistisch, ein Zeitraum, ungeschichtet | alle Methodenblätter |
+| `04_MUS_1Z_S` | statistisch, ein Zeitraum, geschichtet | Schichtzeilen |
+| `17_Unterstichprobe` | Liste je Stichprobeneinheit | Listenblätter |
+
+Gemeinsam vorhanden: Excel-Semantik (`src/excel`), Schichthelfer
+(`src/model/strata.ts`, Erläuterung in
+[schichten-und-listen.md](schichten-und-listen.md)), Listenmechanik
+(`src/model/list.ts`), die in den Blättern 03–12 wortgleichen Formeln
+(`src/sheets/shared/statistical.ts`), Kontextfluss zwischen den Blättern,
+Schichttabelle und Liste in der Oberfläche, englische Arbeitsübersetzung je
+Blatt (`texts.en.ts`).
+
+Die vier Blattgruppen:
+
+| Gruppe | Blätter | eigene gemeinsame Datei |
+|---|---|---|
+| A – MUS | 05, 06, 07 (04 ist fertig) | `src/sheets/shared/mus.ts` |
+| B – SRS | 08, 09, 10, 11, 12 | `src/sheets/shared/srs.ts` |
+| C – nichtstatistisch | 13, 14, 15, 16 | `src/sheets/shared/nonstatistical.ts` |
+| D – Altvorlagen | X1, X1a, X2, X3, X4 | `src/sheets/shared/legacy.ts` |
+
+Die Blätter 18 (Gesamtfehlerquote) und 20 (Bericht) folgen nach den Gruppen.
+
+## Wer was ändert
+
+Alle Gruppen arbeiten im selben Arbeitsverzeichnis. Zu jedem Blatt gehört
+dieser Satz Dateien – **und nur er wird geändert**:
+
+| Datei | Inhalt |
+|---|---|
+| `src/sheets/<Blatt>/index.ts` | `export const sheet = defineSheet({ … })` (ersetzt den Platzhalter `plannedSheet`) |
+| `src/sheets/<Blatt>/definition.ts` | Methodendefinition |
+| `src/sheets/<Blatt>/compute.ts` | Rechenkern |
+| `src/sheets/<Blatt>/deviations.ts` | begründete Abweichungen |
+| `src/sheets/<Blatt>/texts.en.ts` | englische Arbeitsübersetzung (optional, Muster Blatt 03) |
+| `src/sheets/<Blatt>/*.ts` | **weitere Module nach Bedarf** – ein Blatt mit vielen Formeln teilt Definition und Rechenkern auf (`definition-strata.ts`, `compute-periods.ts` …), damit jede Datei unter 400 Zeilen bleibt |
+| `src/sheets/shared/<gruppe>.ts` | Formeln, die mehrere Blätter **der eigenen Gruppe** teilen (Tabelle oben); jede Gruppe ändert nur ihre Datei |
+| `test/cases/<Blatt>.json` | Testfälle (Eingaben) |
+| `test/cases/<Blatt>.<name>.json` | weitere Fallsätze, z. B. `.zufall` (optional) |
+| `test/golden/<Blatt>[.<name>].golden.json` | erwartete Werte, nur mit dem Werkzeug erzeugt |
+| `test/<blatt>.spec.ts` | eigene Tests des Blatts (optional) |
+
+`<Blatt>` ist der Blattname der Vorlage (`05_MUS_2Z`).
+
+**Nicht ändern:** `src/sheets/registry.ts` (kennt alle Blätter bereits),
+`src/sheets/shared/statistical.ts`, `src/sheets/01_Parameter`, die fertigen
+Blätter 02, 03, 04, 17, `src/excel`, `src/model`, `src/workspace`, `src/view`,
+`src/xlsx`, `src/catalog`, `src/format`, `src/i18n`, `styles/`, die
+allgemeinen Tests (`test/golden.ts`, `golden.spec.ts`, `deviations.spec.ts`,
+`catalog.spec.ts`, `docs.spec.ts`, `sheets.ts` …), `test/fixtures`, das
+Vue-Paket, `eslint.config.mjs`, `package.json`, `package-lock.json`. Die
+allgemeinen Tests erfassen ein Blatt von selbst, sobald es verfügbar ist.
+
+**Nicht erzeugen:** `docs/abgleich.md` und die Tabelle in
+`docs/abweichungen.md` (`npm run docs:write`) sowie `README.md`,
+`CHANGELOG.md`, `PROVENANCE.md`. Das zieht die zusammenführende Stelle am Ende
+einmal nach; sonst überschreiben sich die Gruppen gegenseitig. Fehlt in einem
+gemeinsamen Baustein etwas, steht es im Abschlussbericht der Gruppe – nicht
+selbst einbauen.
+
+**Platzhalter erst ersetzen, wenn das Blatt übersetzt und abgleicht.** Solange
+`index.ts` `plannedSheet(...)` exportiert, sehen die anderen Gruppen ein
+unverändertes Register. Ein halbfertiges `defineSheet` lässt die allgemeinen
+Tests aller Gruppen scheitern.
+
+## Vorlage bereitstellen
+
+Die Arbeitsmappe und `vorlage_zellen.json` liegen nicht im Repository.
+
+```sh
+export AUDITCORE_SAMPLING_TEMPLATES_DIR=/pfad/zum/materialordner/referenz
+```
+
+Alternativ beide Dateien nach `packages-js/sampling-templates-core/.vorlage/`
+kopieren (von git ausgeschlossen). Niemals in einen versionierten Pfad legen.
+Für die Golden-Erzeugung braucht es LibreOffice (`soffice`) und `openpyxl`.
+
+## Schritte
+
+Alle Befehle aus dem Verzeichnis `packages-js/sampling-templates-core`.
+
+### 1. Formeln lesen
+
+Im Materialordner `referenz/formeln/<Blatt>.md`: Zelle, Art (eingabe,
+verknuepfung, formel, ergebnis), Formel, Format, Auswahlliste.
+
+### 2. Definition erzeugen und prüfen
+
+```sh
+node scripts/generate-definition.mjs 05_MUS_2Z > "$TMPDIR/05.ts"
+```
+
+Der Entwurf nennt ein Feld je Zeile; Schichtzeilen tragen
+`columns: STRATA_COLUMNS` und `total: 'C<Zeile>'`. Nach `definition.ts`
+übernehmen und von Hand prüfen:
+
+- `alias`: englischer, sprechender Name je Zelle, eindeutig im Blatt; gleiche
+  Größen heißen wie in Blatt 03 bzw. 04 (`sampleSize`, `bookValue`).
+- `label` und `hint` wörtlich aus der Vorlage (Spalte B; Fundstelle in
+  Spalte D, bei geschichteten Blättern K). Steht in der Bezeichnung eine
+  Formel, wandert sie nach `formula`.
+- `kind` wie die Art der Vorlage, `type` nach Zahlenformat; Prüfhinweise
+  haben `type: 'check'`.
+- `list` für Auswahllisten aus Blatt 01, `default` für Vorgaben, `link` für
+  Verknüpfungen.
+- `interpretation: true`, wo die Hinweisspalte der Vorlage einen Punkt als
+  Auslegung kennzeichnet (Blatt 00, Zeile 52).
+- `subsample: 'highValueErrors' | 'errorRateSum' | 'errorSum' | 'bookValueSum'`
+  an den Eingaben, in die Summen aus Blatt 17 übernommen werden.
+- `summary`: Hauptgröße, Kennzahlen und Skala der Ergebnisspalte.
+- Die Zellen M/N der Ergebnisübersicht gehören nicht in die Definition.
+
+### 3. Rechenkern schreiben
+
+`compute(inputs, context)` beginnt mit
+`resolveInputs(definition, inputs, context)` und weist jede Formelzelle einmal
+zu, in Blattreihenfolge, gegliedert nach Abschnitten (Funktionen höchstens 60
+Zeilen, Komplexität höchstens 10).
+
+| Vorlage | Rechenkern |
+|---|---|
+| `=IFERROR(A*B;"")` | `c.X = guard(() => required(c.A) * required(c.B))` |
+| `IFERROR(D51/D9;1)` innerhalb einer Formel | `ifError(() => divide(required(c.D51), required(c.D9)), 1)` |
+| `N(A)` | `n(c.A)` |
+| `ROUNDUP(x;0)` | `roundUp(x)` |
+| `A/B` | `divide(a, b)` |
+| `A-B`, `A+B` zwischen Beträgen, deren Ergebnis verglichen oder geteilt wird | `minus(a, b)`, `plus(a, b)` |
+| `SQRT(x)` | `squareRoot(x)` |
+| `A>B`, `A>=B`, `A<B`, `A<=B`, `A=B`, `A<>B` (Zahlen) | `gt`, `ge`, `lt`, `le`, `eq`, `ne` |
+| `A="Ja"` (Text) | `sameText(c.A, 'Ja')` |
+| `A=2` (Auswahl mit Zahlenwert) | `sameNumber(c.A, 2)` |
+| `LEFT($C$28;8)="Standard"` | `sameText(left(c.C28, 8), 'Standard')` |
+| `IF(A="";"";…)` | `isBlank(c.A) ? null : …` bzw. `isNumber` |
+| `SUM(D9:J9)` | `sumRow(c, 9)` (Schichtzeile) bzw. `sum([...])` |
+| `MAX(a;b)`, `MIN(a;b)` mit Zahlen | `Math.max`, `Math.min` |
+| `MAX(D9:J9)`, `MIN(…)`, `COUNT(…)` über Bereiche | `max`, `min`, `count` – sie übergehen Leer- und Textwerte wie Excel |
+
+Regeln, die der Abgleich nicht von selbst erzwingt:
+
+- **Vergleiche nur über die Helfer.** Die Tabellenkalkulation vergleicht mit
+  Toleranz (zwei Werte, die sich um weniger als 2⁻⁴⁸ relativ unterscheiden,
+  gelten als gleich); `>`, `<`, `>=`, `<=` und `===` gegen Zahlen sind in
+  `src/sheets` deshalb per Lint-Regel gesperrt. Schwellen wie „≤ 2 %“ oder
+  „TE > AE“ fallen sonst bei glatten Werten anders aus als in der Vorlage.
+- **Aufrunden nur mit `roundUp`.** Es bildet das gemessene Verhalten nach
+  (Kürzen auf zwölf signifikante Stellen, dann aufrunden). Die
+  Schichtverteilung `ROUNDUP(D9/C9·C33)` trifft besonders oft glatte Werte.
+- **Differenzen mit `minus`**, wenn das Ergebnis verglichen, geteilt oder
+  aufgerundet wird: Die Tabellenkalkulation setzt die Differenz fast gleicher
+  Werte auf 0.
+- **`MAX`/`MIN` mit einer leeren Zelle als Argument:** Als Einzelargument
+  zählt die leere Zelle 0 (`Math.max(n(c.A), 30)`), in einem Bereich wird sie
+  übergangen (`max([...])`). Ein Text als Einzelargument ist ein Fehlerwert:
+  `required(c.A)` innerhalb von `guard`.
+- **Ein Text ist im Größenvergleich größer als jede Zahl.** Hängt eine Formel
+  davon ab (Würdigung mit leerer oberer Fehlergrenze), steht es als Kommentar
+  im Rechenkern; Muster `assessment` in `shared/statistical.ts`.
+- Rechenreihenfolge wie in der Formel (Gleitkomma ist nicht assoziativ).
+  Prüfhinweistexte wortgleich, mit ✔/⚠/✖.
+- Methodenblätter füllen die Ergebnisübersicht N3–N11.
+- Keine Abkürzungen über andere Blätter: Was von außen kommt, steht im
+  Kontext (`context.sheets['02_Grundgesamtheit']?.C51`).
+
+**Wortgleiche Formeln nicht abschreiben.** Für die Blätter 03–12 liegen in
+`shared/statistical.ts`: `checkConfidence`, `checkMateriality`,
+`checkTolerableError`, `computedSampleSize`, `isSizePending`,
+`limitedSampleSize`, `appliedSampleSize`, `checkMinimumUnits`,
+`checkIteration`, `lowerErrorLimit`, `assessment`. Vor der Verwendung die
+Formel der eigenen Zelle gegen die Funktion lesen; weicht sie ab (anderer
+Text, andere Bedingung), gehört die Variante in die Datei der eigenen Gruppe,
+nicht in `statistical.ts`.
+
+### 4. Schichtzeilen (Blätter 06, 09, 11, 14, 16, X3)
+
+Muster ist `04_MUS_1Z_S/compute.ts`. Eine Schichtzeile hat je Schicht eine
+Zelle `<Spalte><Zeile>`; die Spalten der Vorlage sind D–J (`TEMPLATE_STRATA`),
+die Webfassung führt die 8. bis 20. Schicht unter AA–AM (`EXTRA_STRATA`),
+zusammen `STRATA_COLUMNS`. Die Vorlage hat zu AA–AM keine Zellen; Golden deckt
+D–J ab, die Erweiterung prüft `test/strata.spec.ts` am Muster von Blatt 04
+(eigener Test je geschichtetem Blatt: dieselben Werte in Spalte D und in
+Spalte AA ergeben dieselben Ergebnisse).
+
+```ts
+import { countRow, fillRow, rowValues, stratumCell as at, sumRow } from '../../model/strata'
+
+// =IF(D9="";"";IFERROR(ROUNDUP(D9/$C$9*$C$33;0);""))  – je Schichtspalte
+const used = (column: string): boolean => !isBlank(c[at(column, 9)])
+fillRow(c, 35, (column) => (used(column) ? guard(() => roundUp(divide(required(c[at(column, 9)]), required(c.C9)) * required(c.C33))) : null))
+
+// =SUM(D9:J9)  – Summe über alle Schichtspalten
+c.C9 = sumRow(c, 9)
+
+// =COUNT(D46:J46)
+const filled = countRow(c, 46)
+```
+
+- **Leere Schichtspalte:** `IF(D9="";"";…)` → `null`; die Spalte erscheint in
+  der Oberfläche nicht. Hilfszeilen, in denen die Vorlage für die leere Spalte
+  0 liefert (Zeile 52 in Blatt 04), liefern auch hier 0.
+- **Summen, die vom Stichprobenumfang abhängen**, bleiben offen, solange der
+  Umfang offen ist (`const total = (row) => (pending ? null : sumRow(c, row))`);
+  die Summe über leere Zellen wäre 0, eine scheinbare Zahl.
+- **Definition:** `columns: STRATA_COLUMNS`, `total: 'C<Zeile>'`; die
+  Summenzelle ist kein eigenes Feld.
+- **Abweichungen** je Zeile mit Spaltenmuster, nicht je Zelle von Hand:
+  `TEMPLATE_STRATA.map((column) => stratumCell(column, 25))`; die erzeugte
+  Tabelle fasst sie zu `D25–J25` zusammen.
+
+### 5. Mehrere Zeiträume (05, 06, 07, 10, 11, 12, X4)
+
+- Jeder Zeitraum hat eigene Zellen; die Definition bildet sie als eigene
+  Abschnitte ab (Überschriften der Vorlage).
+- **Neuberechnung des Stichprobenumfangs:** Die Vorlage verzweigt über die
+  Auswahl in Blatt 01 (`LEFT(…;8)="Standard"` gegen „global“). Beide Zweige
+  bauen und mit je eigenen Fällen abgleichen.
+- **Negativer Nenner:** Die Prüfung der Vorlage (Text mit ✖) wortgleich
+  übernehmen; Folgezellen liefern dann, was die Vorlage liefert (`""` bzw.
+  den Fehlerwert über `guard`).
+- **Erhöhung bei begrenztem Umfang** und jede andere Stelle, die die
+  Hinweisspalte als Auslegung kennzeichnet: `interpretation: true`.
+- Gemeinsame Formeln der Zeiträume liegen in der Datei der eigenen Gruppe und
+  nehmen die Zellen als Argumente, wie `computedSampleSize`.
+- Die Ergebnisübersicht N3–N11 fasst die Zeiträume so zusammen, wie die
+  Vorlage es in M/N tut.
+
+### 6. Fehlende Angaben
+
+Die Webfassung zeigt nie einen anderen Wert als die Vorlage, höchstens keinen.
+
+- **„Angabe fehlt“ (Regel):** Rechnet die Vorlage mit einer leeren Zelle als 0
+  weiter, verlangt der Rechenkern die Angabe (`required`) und liefert `null`.
+  Dafür kommt eine Zeile nach `deviations.ts`:
+
+  ```ts
+  { cell: 'C16', whenEmpty: ['C7', 'C14'], template: '0,00 € (leere Zelle zählt als 0)', reason: 'Der zulässige Fehler setzt Buchwert und Wesentlichkeitsschwelle voraus.' }
+  ```
+
+  `whenEmpty` nennt **genau** die Eingaben, deren Fehlen die Abweichung
+  auslöst – nicht vorsorglich mehr. Der Abgleich lässt eine Abweichung nur
+  zu, wenn die Webfassung `null` liefert, eine der genannten Eingaben leer ist
+  **und die Gegenprobe stimmt**: Mit 0 an Stelle der leeren Eingaben muss der
+  Rechenkern den Wert der Vorlage liefern. Eine falsche Formel lässt sich so
+  nicht hinter „Angabe fehlt“ verstecken. Eingaben anderer Blätter heißen
+  `'02_Grundgesamtheit!C51'`. `check: 'none'` schaltet die Gegenprobe nur ab,
+  wo die Vorlage keinen Rechenwert zeigt, sondern einen Text aus einem
+  Textvergleich (Blatt 04, Zeile 41); jede Verwendung im Abschlussbericht
+  nennen.
+- **„Keine Angabe, daher mit 0 berechnet“ (Standardabweichung der
+  Stichprobe):** Fehlt die Standardabweichung der Fehlerquoten bzw. Fehler in
+  der Stichprobe (Blatt 03: C39; Blatt 04: Zeile 47 je Schicht), rechnet die
+  Webfassung wie die Vorlage mit 0 (`n(...)` bzw. Beitrag 0) und zeigt die
+  Werte. Das Blatt meldet die betroffenen Zellen über `zeroAssumed`:
+
+  ```ts
+  function zeroAssumed(results: CellMap): ZeroAssumption[] {
+    if (!isBlank(results.C39) || !isNumber(results.C43)) return []
+    return [{ input: 'C39', cells: ['C43', 'C46', 'C47', 'C48', 'C51', 'C52'] }]
+  }
+  ```
+
+  `input` ist die fehlende Eingabe, `cells` sind alle Zellen, deren Wert davon
+  abhängt (Genauigkeit, Fehlergrenzen, Würdigung; bei Schichten die Zelle der
+  Schicht und die Gesamtwerte). Die Oberfläche setzt daran den Hinweis der
+  Webfassung „Keine Angabe, daher mit 0 berechnet.“, stellt die Würdigung
+  nicht uneingeschränkt grün dar und schreibt den Hinweis in Export und
+  Arbeitsstand. Das gilt für die entsprechenden Zellen jedes Blatts:
+  Standardabweichung der Stichprobe je Schicht und je Zeitraum. Für jede
+  solche Eingabe einen Fall „alles ausgefüllt außer …“ anlegen und in
+  `test/<blatt>.spec.ts` prüfen, dass `zeroAssumed` sie meldet.
+- Alle anderen Eingaben bleiben bei „Angabe fehlt“.
+
+### 7. Werte aus anderen Blättern
+
+- **Blatt 02 → Methodenblatt.** Die Verknüpfungen (BV, N) stehen als
+  `kind: 'link'` mit `link: { sheet: '02_Grundgesamtheit', cell: 'C51' }` in
+  der Definition. `resolveInputs` nimmt den eigenen (überschriebenen) Wert,
+  sonst den aus `context.sheets['02_Grundgesamtheit']`. Ein leeres Blatt 02
+  liefert keinen Wert, nicht 0.
+- **Methodenblatt → Blatt 18.** Jedes Methodenblatt füllt N3–N11; Blatt 18
+  liest sie aus `context.method` (`summaryOf`), nicht über `INDIRECT`.
+- **Blatt 17 → Methodenblatt.** Per Knopf in die Eingaben mit `subsample`;
+  das ist eine Eingabe dort, keine Verknüpfung.
+
+### 8. Altvorlagen X1–X4
+
+Der Generator liefert hier nur ein Gerüst, weil die Blätter keine farblich
+gekennzeichneten Eingaben haben. Eingaben sind die leeren Zellen, auf die
+Formeln verweisen; diese Ableitung im Kopf von `definition.ts` festhalten
+(Zelle, verweisende Formeln). Bezeichnungen aus der Nachbarzelle der Vorlage;
+fehlt eine, steht das im Abschlussbericht statt einer erfundenen Bezeichnung.
+Fundstellen der Vorlage von 2017 unverändert übernehmen und als solche
+belassen.
+
+### 9. Fälle anlegen
+
+`test/cases/<Blatt>.json`: Liste aus `{ "name": …, "inputs": { "C7": … } }`.
+`"C24": null` leert eine Vorgabe; `"02_Grundgesamtheit!C25": 1000` schreibt in
+ein anderes Blatt, der Abgleich rechnet dieses Blatt dann mit. Werte erfinden,
+nie echte Prüfdaten.
+
+| Blattart | Mindestabdeckung |
+|---|---|
+| alle | Standardfall; leeres Formular; je Pflichteingabe ein Fall „alles ausgefüllt außer …“; Werte genau auf jeder Schwelle (2 %, TE = AE, Konfidenzeckwerte) und knapp daneben; ein Fall mit Verknüpfung aus Blatt 02 und einer mit überschriebener Verknüpfung |
+| statistisch (03–12) | jede Zuverlässigkeitsstufe und Testart; TE ≤ AE; begrenzter Umfang zulässig, unzulässig, mit Art. 83; rechnerischer Umfang genau auf einer ganzen Zahl; systembedingte und anomale Fehler; fehlende Standardabweichung der Stichprobe |
+| MUS | weniger als drei Einheiten in der Zufallsschicht; Iteration; hochwertige Einheiten mit und ohne Fehler |
+| geschichtet | eine, drei und sieben Schichten; leere Schicht zwischen belegten; Schichtumfänge, die beim Aufrunden die Summe über den Gesamtumfang heben; fehlende Angabe in nur einer Schicht |
+| mehrere Zeiträume | Standard- und globale Neuberechnung; negativer Nenner; Zeitraum ohne Fehler; nur der erste Zeitraum ausgefüllt |
+| nichtstatistisch (13–16) | N < 300; Mindesterfassung nach Anzahl und nach Ausgaben genau erreicht und knapp verfehlt; Prüfung der Gesamtfehlerquote |
+| Altvorlagen | jede Verzweigung der Formeln mindestens einmal in jedem Zweig |
+
+Mindestens 12 Fälle je Blatt, dazu der **Zufallsabgleich**: Der Abgleich
+erklärt leere Zellen großzügig, deshalb braucht jedes Blatt mindestens 100
+zufällig erzeugte, **vollständig ausgefüllte** Belegungen als eigenen Fallsatz
+`test/cases/<Blatt>.zufall.json` (mit festem Startwert erzeugt, Werte im
+fachlich möglichen Bereich, Auswahlfelder über alle Einträge). Für diese
+Fälle muss jede Zelle ohne Abweichung stimmen.
+
+### 10. Golden erzeugen
+
+```sh
+python3 scripts/golden_recalc.py test/cases/05_MUS_2Z.json test/golden/05_MUS_2Z.golden.json
+python3 scripts/golden_recalc.py test/cases/05_MUS_2Z.zufall.json test/golden/05_MUS_2Z.zufall.golden.json
+```
+
+Das Werkzeug schreibt die Eingaben in eine Kopie der Vorlage, lässt
+LibreOffice neu rechnen und liest alle Formelzellen aus. Es arbeitet in einem
+eigenen Verzeichnis mit eigenem LibreOffice-Profil; mehrere Läufe gleichzeitig
+sind möglich. Golden-Dateien nie von Hand ändern.
+
+### 11. Abgleichen
+
+```sh
+SAMPLING_TEMPLATES_SHEET=05_MUS_2Z SAMPLING_TEMPLATES_SKIP_DOCS=1 npx vitest run
+SAMPLING_TEMPLATES_SHEET=05_MUS_2Z SAMPLING_TEMPLATES_REPORT="$TMPDIR/05.txt" npx vitest run test/golden.spec.ts
+```
+
+- `SAMPLING_TEMPLATES_SHEET` beschränkt Golden- und Abweichungstests auf das
+  eigene Blatt (mehrere mit Komma), damit halbfertige Blätter anderer Gruppen
+  nicht stören.
+- `SAMPLING_TEMPLATES_SKIP_DOCS=1` überspringt die Prüfung der erzeugten
+  Nachweise (sie werden erst am Ende neu erzeugt).
+- `SAMPLING_TEMPLATES_REPORT` schreibt jede abweichende Zelle mit Fall,
+  Wert der Vorlage und Wert der Webfassung in eine Datei.
+
+Für vollständige Belegungen muss jede Zelle stimmen (Zellen mit
+Ganzzahlformat exakt, übrige auf 1e-9 relativ). Liefert der Rechenkern einen
+**anderen Wert** als die Vorlage, ist der Rechenkern falsch – nie eine
+Abweichung dafür eintragen.
+
+### 12. Beispielwerte, Hinweise, Übersetzung
+
+- `sample`: erfundene Beispielwerte, die ein vollständiges Ergebnis ergeben.
+- `webHints`: Hinweise der Webfassung, wenn das Blatt welche braucht; sie
+  verändern kein Ergebnis und nutzen die Vergleichshelfer.
+- `texts.en.ts`: englische Arbeitsübersetzung der Bezeichnungen, Fundstellen
+  und Prüfhinweise (Muster Blatt 03). Gespeicherte Werte bleiben deutsch.
+  Ohne die Datei erscheint das Blatt auch in der englischen Oberfläche
+  deutsch; das ist zulässig und steht dann im Abschlussbericht.
+
+### 13. Im Browser ansehen
+
+```sh
+npm run demo -w @auditcore/sampling-templates-vue -- --port <eigener Port>
+```
+
+Blatt wählen, Beispielwerte laden, Speichern → Neu → Öffnen, Excel-Export
+öffnen. Die Browsertests (`e2e/`) gehören dem Fundament und bleiben
+unverändert; sie laufen mit festem Blattbestand.
+
+## Fertig heißt
+
+- [ ] `index.ts` meldet das Blatt mit `defineSheet` an; sonst nur Dateien des
+      Blatts und der eigenen Gruppe geändert (`git status` ansehen).
+- [ ] Jede Formelzelle des Blatts wird berechnet; jede Zelle der Definition
+      kommt im Ergebnis vor, jeder Alias ist eindeutig.
+- [ ] Fälle mit der Mindestabdeckung der Blattart und mindestens 100
+      Zufallsbelegungen; 0 unbegründete Abweichungen; in den vollständigen
+      Belegungen 0 Abweichungen überhaupt.
+- [ ] Jede Zeile in `deviations.ts` ist durch einen Fall belegt, nennt genau
+      die auslösenden Eingaben und besteht die Gegenprobe; `check: 'none'`
+      nur mit Begründung.
+- [ ] Standardabweichung der Stichprobe: `zeroAssumed` meldet jede fehlende
+      Eingabe, mit Test.
+- [ ] Geschichtete Blätter: Test, dass Spalte AA wie Spalte D rechnet.
+- [ ] Bezeichnungen, Fundstellen und Prüfhinweise wortgleich; Punkte der
+      Auslegung gekennzeichnet.
+- [ ] Beispielwerte erfunden; keine Dateien der Vorlage im Repository
+      (`git status` zeigt weder `.xlsx` noch `vorlage_zellen.json`).
+- [ ] `npx eslint packages-js/sampling-templates-core` (aus der Wurzel),
+      `npx tsc --noEmit -p tsconfig.json` und die Tests des eigenen Blatts
+      grün: Dateien höchstens 400 Zeilen, Funktionen höchstens 60,
+      Komplexität höchstens 10, kein `any`, keine rohen Vergleiche.
+- [ ] Im Browser angesehen.
+- [ ] Abschlussbericht: Abgleichszahlen je Blatt (Fälle, Zellen, gleich,
+      begründet, unbegründet), Liste der Eingaben mit „Angabe fehlt“ und
+      ihrer Folge, Verwendungen von `check: 'none'`, fehlende gemeinsame
+      Bausteine, offene Auslegungsfragen.
+
+Nicht Aufgabe der Gruppe: committen, pushen, veröffentlichen, erzeugte
+Nachweise und Paketdokumente fortschreiben.
