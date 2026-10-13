@@ -1,0 +1,225 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v7",
+  "id": "V7",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Abzüge und Korrekturen",
+  "purpose": "Feststellungen und Korrekturen, die den Unterschied zwischen Zahlungsantrag und Rechnungslegung erklären: Herausnahmen und unmittelbare Abzüge.",
+  "legal_basis": "VO (EU) 2021/1060, Art. 98 Abs. 3 Buchst. b, Abs. 6 und 7, Art. 103",
+  "sources": [
+    "Tabellen nach dem Vorlagenvorschlag vom 13.10.2026 (V7); kein amtliches Formular."
+  ],
+  "open_points": [
+    "Wiedereinziehungen werden nicht erzeugt: ihre Anbindung an die Anlagen der Rechnungslegung ist nicht belegt.",
+    "Feststellungsarten und Kürzungsgründe sind neutrale Platzhalter; Kataloge werden nicht nachgebildet.",
+    "Meldepflichtig ab einem Anteil der Union von 10 000 EUR (Anhang XII Abschnitt 1.2 VO (EU) 2021/1060)."
+  ],
+  "tables": [
+    {
+      "name": "Korrekturen",
+      "title": "Korrekturen",
+      "source": "corrections",
+      "columns": [
+        {
+          "header": "Kennung",
+          "kind": "text",
+          "field": "correction_id"
+        },
+        {
+          "header": "Art",
+          "kind": "text",
+          "field": "kind"
+        },
+        {
+          "header": "Auslöser",
+          "kind": "text",
+          "field": "trigger"
+        },
+        {
+          "header": "infolge von Prüfungen",
+          "kind": "bool",
+          "field": "audit_based"
+        },
+        {
+          "header": "Vorhaben",
+          "kind": "text",
+          "field": "operation_id"
+        },
+        {
+          "header": "Mittelabruf",
+          "kind": "text",
+          "field": "claim_id"
+        },
+        {
+          "header": "Beleg",
+          "kind": "int",
+          "field": "receipt_no"
+        },
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "Betrag gesamt",
+          "kind": "amount",
+          "field": "amount",
+          "sum": true
+        },
+        {
+          "header": "Betrag öffentlich",
+          "kind": "amount",
+          "field": "public_amount",
+          "sum": true
+        },
+        {
+          "header": "Status",
+          "kind": "text",
+          "field": "status"
+        },
+        {
+          "header": "Datum der Entdeckung",
+          "kind": "date",
+          "field": "detection_date"
+        },
+        {
+          "header": "Datum endgültig",
+          "kind": "date",
+          "field": "final_date"
+        },
+        {
+          "header": "Zahlungsantrag der Herausnahme",
+          "kind": "text",
+          "field": "application_no"
+        },
+        {
+          "header": "Geschäftsjahr der Erklärung (endet 30.06.)",
+          "kind": "int",
+          "field": "declaration_year"
+        },
+        {
+          "header": "Abzug nach Art. 98 Abs. 6",
+          "kind": "text",
+          "field": "deduction_type"
+        },
+        {
+          "header": "Zuordnung zur Anlage",
+          "kind": "text",
+          "field": "annex"
+        }
+      ],
+      "total_row": "bottom"
+    },
+    {
+      "name": "Feststellungen",
+      "title": "Feststellungen",
+      "source": "findings",
+      "columns": [
+        {
+          "header": "Feststellung",
+          "kind": "text",
+          "field": "finding_id"
+        },
+        {
+          "header": "Korrektur",
+          "kind": "text",
+          "field": "correction_id"
+        },
+        {
+          "header": "Herkunft der Prüfung",
+          "kind": "text",
+          "field": "origin"
+        },
+        {
+          "header": "Vorhaben",
+          "kind": "text",
+          "field": "operation_id"
+        },
+        {
+          "header": "Mittelabruf",
+          "kind": "text",
+          "field": "claim_id"
+        },
+        {
+          "header": "Beleg",
+          "kind": "int",
+          "field": "receipt_no"
+        },
+        {
+          "header": "Sachverhalt",
+          "kind": "text",
+          "field": "facts"
+        },
+        {
+          "header": "Betrag",
+          "kind": "amount",
+          "field": "amount",
+          "sum": true
+        },
+        {
+          "header": "Anteil der Union",
+          "kind": "amount",
+          "field": "eu_amount",
+          "sum": true
+        },
+        {
+          "header": "Typ",
+          "kind": "text",
+          "field": "finding_type"
+        },
+        {
+          "header": "Feststellungsart",
+          "kind": "text",
+          "field": "reason",
+          "note": "Neutraler Platzhalter, kein Katalog."
+        },
+        {
+          "header": "Methode",
+          "kind": "text",
+          "field": "method"
+        },
+        {
+          "header": "Pauschalsatz",
+          "kind": "rate",
+          "field": "flat_rate",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Rechtsgrundlage",
+          "kind": "text",
+          "field": "legal_basis",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Zuordnung zur Anlage",
+          "kind": "text",
+          "field": "annex"
+        },
+        {
+          "header": "meldepflichtig",
+          "kind": "bool",
+          "field": "reportable"
+        },
+        {
+          "header": "Meldekennung",
+          "kind": "text",
+          "field": "report_id",
+          "note": "Bleibt leer."
+        }
+      ],
+      "total_row": "bottom"
+    }
+  ],
+  "content_hash": "1af6881e0c2800cfefe77eef7bd4661ef53a61e5a7d69f7bc687e5abdca9d729",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"
+  }
+}

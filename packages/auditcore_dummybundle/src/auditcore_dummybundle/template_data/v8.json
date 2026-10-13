@@ -1,0 +1,364 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v8",
+  "id": "V8",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Liste der Vorhaben (Art. 49 Abs. 3)",
+  "purpose": "Veröffentlichungsliste der ausgewählten Vorhaben mit 27 Spalten.",
+  "legal_basis": "VO (EU) 2021/1060, Art. 49 Abs. 3 Buchst. a–n",
+  "sources": [
+    "Spalten nach dem Vorlagenvorschlag vom 13.10.2026 (V8)."
+  ],
+  "open_points": [
+    "Wertebereiche der Spalten Hierarchie, Art des Vorhabens, Rolle und Rechtlicher Status sind nicht belegt; die Spalten bleiben leer.",
+    "Der Interventionsbereich ist eine dreistellige Kennung ohne fachliche Zuordnung."
+  ],
+  "tables": [
+    {
+      "name": "Liste der Vorhaben",
+      "title": "Liste der Vorhaben",
+      "source": "operations",
+      "columns": [
+        {
+          "header": "Programm",
+          "kind": "text",
+          "field": "programme",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "Synthetisches Programm EFRE"
+            }
+          }
+        },
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Priorität 1",
+                  "weight": 3
+                },
+                {
+                  "value": "Priorität 2",
+                  "weight": 2
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Spezifisches Ziel",
+          "kind": "text",
+          "field": "specific_objective",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "Spezifisches Ziel (Platzhalter)"
+            }
+          }
+        },
+        {
+          "header": "Vorhaben ID",
+          "kind": "text",
+          "field": "operation_id",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "SYN-{JJJJ}-{NNNN}"
+            }
+          }
+        },
+        {
+          "header": "Hierarchie",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Strategische Bedeutung",
+          "kind": "bool",
+          "field": "strategic",
+          "free": {
+            "type": "boolean",
+            "params": {
+              "probability": "0.05"
+            }
+          }
+        },
+        {
+          "header": "Art des Vorhabens",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Zweck und Errungenschaften",
+          "kind": "text",
+          "field": "summary",
+          "free": {
+            "type": "text",
+            "params": {
+              "min_parts": 2,
+              "max_parts": 4
+            }
+          }
+        },
+        {
+          "header": "Name des Vorhabens",
+          "kind": "text",
+          "field": "title",
+          "free": {
+            "type": "text",
+            "params": {
+              "min_parts": 1,
+              "max_parts": 2
+            }
+          }
+        },
+        {
+          "header": "Beschreibung",
+          "kind": "text",
+          "field": "summary",
+          "free": {
+            "type": "text",
+            "params": {
+              "min_parts": 2,
+              "max_parts": 4
+            }
+          }
+        },
+        {
+          "header": "Anfangsdatum",
+          "kind": "date",
+          "field": "period_start",
+          "free": {
+            "type": "date",
+            "params": {}
+          }
+        },
+        {
+          "header": "Abschlussdatum",
+          "kind": "date",
+          "field": "period_end",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Anfangsdatum",
+              "min_days": 365,
+              "max_days": 1095
+            }
+          }
+        },
+        {
+          "header": "Vorhaben ohne festen Standort",
+          "kind": "text",
+          "const": "Nein",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "Nein"
+            }
+          }
+        },
+        {
+          "header": "Standortindikator",
+          "kind": "text",
+          "field": "site_address",
+          "free": {
+            "type": "address",
+            "params": {
+              "part": "full"
+            }
+          }
+        },
+        {
+          "header": "Land",
+          "kind": "text",
+          "field": "country_name",
+          "free": {
+            "type": "address",
+            "params": {
+              "part": "country"
+            }
+          }
+        },
+        {
+          "header": "Interventionsbereich",
+          "kind": "text",
+          "field": "intervention_field",
+          "note": "Dreistellige Kennung ohne fachliche Zuordnung.",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "{ZZZ}"
+            }
+          }
+        },
+        {
+          "header": "Politisches Ziel",
+          "kind": "text",
+          "field": "policy_objective",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Politisches Ziel 1",
+                  "weight": 2
+                },
+                {
+                  "value": "Politisches Ziel 2",
+                  "weight": 2
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Förderfähige Gesamtkosten",
+          "kind": "amount",
+          "field": "eligible_approved",
+          "sum": true,
+          "free": {
+            "type": "amount",
+            "params": {
+              "min": "50000.00",
+              "max": "2000000.00",
+              "distribution": "skewed"
+            }
+          }
+        },
+        {
+          "header": "EU-Fonds",
+          "kind": "text",
+          "field": "fund",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "EFRE"
+            }
+          }
+        },
+        {
+          "header": "EU-Beitrag",
+          "kind": "amount",
+          "field": "eu_funds",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Förderfähige Gesamtkosten"
+              ],
+              "rate": "0.40"
+            }
+          }
+        },
+        {
+          "header": "Kofinanzierungssatz der EU",
+          "kind": "rate",
+          "field": "eu_rate",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "0.40"
+            }
+          }
+        },
+        {
+          "header": "Anzahl der Begünstigten",
+          "kind": "int",
+          "const": "1",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "1"
+            }
+          }
+        },
+        {
+          "header": "ID",
+          "kind": "text",
+          "field": "beneficiary_id",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "BEN-{NNNNN}"
+            }
+          }
+        },
+        {
+          "header": "Name des Auftragnehmers",
+          "kind": "text",
+          "note": "Bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Name des Begünstigten",
+          "kind": "text",
+          "field": "beneficiary_name",
+          "free": {
+            "type": "company",
+            "params": {}
+          }
+        },
+        {
+          "header": "Rolle",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Rechtlicher Status",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        }
+      ],
+      "total_row": "bottom",
+      "free_start": true
+    }
+  ],
+  "content_hash": "6869c0300832e61aaf29d14aee533a034fae665c4102c77aa4cb6c3d3373ad3f",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"
+  }
+}
