@@ -9,6 +9,7 @@ import MethodBar from './components/MethodBar.vue'
 import MethodPicker from './components/MethodPicker.vue'
 import ImportPreview from './components/ImportPreview.vue'
 import NoticeList from './components/NoticeList.vue'
+import ReportView from './components/ReportView.vue'
 import ResultPanel from './components/ResultPanel.vue'
 import SheetForm from './components/SheetForm.vue'
 import UnitList from './components/UnitList.vue'
@@ -66,7 +67,7 @@ const files = useFileActions(session, {
   onExported: (name) => emit('exported', name),
 })
 const draft = useLocalDraft(session, { enabled: () => props.localDraft, key: () => props.draftKey, hasInitialState: () => props.initialState !== undefined, sheets: () => props.sheets, t })
-const { workspace, meta, notices, pickerOpen, flash, step, activeSheet, currentSheet, sections, summary, guide, strataCount, listView, selectedUnit, pasteColumns } = session
+const { workspace, meta, notices, pickerOpen, flash, step, activeSheet, currentSheet, sections, summary, guide, strataCount, listView, selectedUnit, pasteColumns, report } = session
 const shownFamilies = computed(() => localizeFamilies(props.families, locale.value))
 /** Die Verfahrensauswahl steht im Schritt „Verfahren“, solange kein Verfahren gewählt ist oder es gewechselt wird. */
 const choosing = computed(() => step.value === 'method' && (pickerOpen.value || activeSheet.value === null))
@@ -108,6 +109,9 @@ function onMenu(action: MenuAction): void {
   else if (action === 'sample') guarded(session.loadSample)
   else draft.clear()
 }
+
+/** Bericht drucken bzw. als PDF sichern: der Druckdialog des Browsers; das Druck-Stylesheet zeigt nur die Berichtsseite. */
+const print = (): void => window.print()
 
 function onFileChosen(event: Event): void {
   const input = event.target as HTMLInputElement
@@ -170,7 +174,8 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
         @paste="session.pasteUnits"
         @transfer="session.transferSubsamples"
       />
-      <div v-if="summary" class="fa-st__main">
+      <ReportView v-if="report" :report="report" :t="t" @update="session.setInput" @print="print" />
+      <div v-else-if="summary" class="fa-st__main">
         <SheetForm
           :key="`${currentSheet.id}-${selectedUnit}-${revision}`"
           :sections="sections"

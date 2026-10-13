@@ -170,7 +170,7 @@ describe.each(LEGACY)('Altvorlage $sheet.id', ({ sheet, notice, mandatory, prima
     expect(localized.compute(sheet.sample.inputs, context)).toEqual(results)
     expect(localized.definition.title).not.toBe(sheet.definition.title)
     const rows = buildSections(localized, sheet.sample.inputs, results, context, createTranslate(undefined, 'en'))[0]?.rows
-    expect(rows?.[0]?.display).toContain('Not a ready-to-use method')
+    expect(rows?.[0]?.display).toContain('Not an off-the-shelf sampling methodology')
     expect(rows?.[1]?.label).toBe(sheet.definition.sections[0]?.fields[1]?.label)
   })
 })

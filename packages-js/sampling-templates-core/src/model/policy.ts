@@ -36,6 +36,13 @@ export const MISSING_POLICY: MissingPolicy = {
   withoutBasis: 'open',
 }
 
+/** Anzeige der Vorlage und Begründung für die Hochrechnung der Zufallsschicht ohne Fehlersumme (Abweichung `withoutBasis`). */
+export const PROJECTION_WITHOUT_ERRORS = {
+  template: '0,00 € (die Fehlersumme der Stichprobe fehlt; N(…) zählt sie als 0)',
+  reason: 'Ohne Fehlersumme der Stichprobe gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus.',
+  kind: 'withoutBasis',
+} as const
+
 /** Variante „wie die Vorlage“: jede fehlende Angabe mit 0 gerechnet und ausgewiesen, Prüfhinweise wie in der Vorlage. */
 export const TEMPLATE_POLICY: MissingPolicy = {
   requiredInput: 'zero',
@@ -66,4 +73,12 @@ export function policyOf(context: Pick<SheetContext, 'policy'> | undefined): Mis
  */
 export function unfounded(context: Pick<SheetContext, 'policy'> | undefined, shown: CellValue): CellValue {
   return policyOf(context).withoutBasis === 'template' ? shown : null
+}
+
+/**
+ * Hochrechnung der Zufallsschicht: Ist keine Fehlersumme eingetragen (`entered`),
+ * rechnet die Vorlage mit `N(…)` = 0 und zeigt 0 € – ein Wert ohne Grundlage.
+ */
+export function projectionWithoutErrors(context: Pick<SheetContext, 'policy'> | undefined, entered: boolean, projected: CellValue): CellValue {
+  return entered ? projected : unfounded(context, projected)
 }

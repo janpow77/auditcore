@@ -268,7 +268,7 @@ test('englische Arbeitsübersetzung ist gekennzeichnet; gespeicherte Werte bleib
   await page.getByRole('button', { name: /Sheet 03/ }).click()
   await menu2(page, 'Working file', 'Load example values')
   await expect(page.locator('[data-result="primary"]')).toHaveText(/^92\s+units$/)
-  await expect(page.locator('[data-cell="C13"]')).toContainText('✔ medium: value between the corner values')
+  await expect(page.locator('[data-cell="C13"]')).toContainText('✔ average: value between the two minimum levels')
   await expect(page.locator('[data-translation-note]')).toContainText('Working translation')
   await accessible(page)
   await shot(page, '16_englisch')

@@ -4,6 +4,8 @@
  * (--fa-*) gelesen; Hell und Dunkel ergeben sich aus den Token. Die Breite richtet
  * sich nach dem Behälter (Container-Abfragen), nicht nach dem Fenster.
  */
+@import './report.css';
+
 .fa-st {
   container: fa-st / inline-size;
   position: relative;

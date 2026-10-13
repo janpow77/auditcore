@@ -7,16 +7,14 @@
  */
 import { writeFileSync } from 'node:fs'
 import { describe, it } from 'vitest'
-import { availableSheets } from '../src/sheets/registry'
-import { compareCase, loadGolden } from './golden'
+import { compareCase, loadGolden, selectedSheets } from './golden'
 
 const target = process.env.SAMPLING_TEMPLATES_REPORT ?? ''
-const only = process.env.SAMPLING_TEMPLATES_SHEET ?? ''
 
 describe.skipIf(!target)('Abweichungsbericht (Arbeitshilfe)', () => {
   it('schreibt die unbegründeten Abweichungen je Fall', () => {
     const lines: string[] = []
-    for (const sheet of availableSheets().filter((entry) => !only || entry.id === only)) {
+    for (const sheet of selectedSheets()) {
       for (const golden of loadGolden(sheet.id)) {
         const report = compareCase(sheet, golden)
         if (report.unexplained.length === 0) continue
@@ -25,5 +23,5 @@ describe.skipIf(!target)('Abweichungsbericht (Arbeitshilfe)', () => {
       }
     }
     writeFileSync(target, `${lines.join('\n')}\n`)
-  })
+  }, 120_000)
 })

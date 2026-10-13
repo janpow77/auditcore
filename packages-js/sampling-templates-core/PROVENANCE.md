@@ -14,17 +14,26 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 
 | Inhalt | Ort | Umfang in 0.1.0 |
 |---|---|---|
-| Rechenwege (Formeln als TypeScript, Zelle für Zelle) | `src/sheets/<Blatt>/compute.ts`, `src/sheets/shared/statistical.ts` | Blätter 02, 03, 04, 17 |
-| Bezeichnungen (Spalte B), Fundstellen (Spalte D bzw. K), Abschnittstitel, Zahlenformate, Vorgaben | `src/sheets/<Blatt>/definition.ts` | Blätter 02, 03, 04, 17, wörtlich; Bezeichnungen mit Formel in Bezeichnung und Kurzformel getrennt |
-| Prüfhinweistexte (✔/⚠/✖), wortgleich | `src/sheets/<Blatt>/compute.ts`, `src/sheets/shared/statistical.ts` | Blätter 02, 03, 04, 17 |
-| Englische Arbeitsübersetzung dieser Texte (eigene Übersetzung, als solche gekennzeichnet) | `src/sheets/<Blatt>/texts.en.ts`, `src/catalog/texts.en.ts` | Blätter 01–03, Katalog |
+| Rechenwege (Formeln als TypeScript, Zelle für Zelle) | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter: 02–18, 20, X1–X4 |
+| Bezeichnungen (Spalte B), Fundstellen und Hinweise (Spalte D bzw. K), Abschnittstitel, Zahlenformate, Vorgaben | `src/sheets/<Blatt>/definition*.ts` | alle Blätter, wörtlich; Bezeichnungen mit Formel in Bezeichnung und Kurzformel getrennt. Altvorlagen: englischer Wortlaut der Vorlage von 2017 |
+| Prüfhinweistexte (✔/⚠/✖), wortgleich | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter |
+| Texte und Aufbau der Druckfassung (Blatt 20), einschließlich der festen Angaben zu Programm und Behörde | `src/sheets/20_Druck_KOM/` | vollständig |
+| Tabelle der Zuverlässigkeitsfaktoren (Blatt X1a), 574 Zellen | `src/sheets/X1a_RF_2017/table.ts` | vollständig |
+| Englische Arbeitsübersetzung dieser Texte (eigene Übersetzung, als solche gekennzeichnet) | `src/sheets/<Blatt>/texts.en.ts`, `src/catalog/texts.en.ts` | alle Blätter, Katalog |
 | z-Werte und Auswahllisten aus Blatt 01 | `src/sheets/01_Parameter/index.ts` | vollständig (z-Werte aus Anhang I DelVO) |
 | Blattnamen, Inhaltsangaben, Rechtsgrundlagen und Bezug zur Vorlage 2017 aus Blatt 00; Hinweis zu drei Zeiträumen geschichtet | `src/catalog/catalog.ts`, `src/sheets/registry.ts` | alle 23 Blätter |
-| Erwartete Werte der Formelzellen (Zahlen, Prüfhinweistexte) | `test/golden/*.golden.json` | 262 Fälle, 11.313 Zellen (Blätter 02, 03, 04, 17) |
+| Erwartete Werte der Formelzellen (Zahlen, Prüfhinweistexte) aus der Neuberechnung der Vorlage | `test/golden/*.golden.json` | alle Blätter; Umfang in `docs/abgleich.md` |
 | Statistik der verwendeten Excel-Funktionen | `docs/excel-funktionen.md` | Anzahl je Funktion |
 
-Nicht enthalten: die Arbeitsmappe selbst, der Wortlaut der Formeln, Hinweis-
-und Erläuterungstexte anderer Blätter, das Layout.
+Damit wären bei einer Veröffentlichung dieses Stands im Repository versioniert:
+die Rechenwege aller Blätter, sämtliche Bezeichnungen, Fundstellen, Hinweise
+und Prüfhinweistexte der Vorlage, der Text der Druckfassung, die Tabelle X1a
+und die aus der Vorlage errechneten Sollwerte – also der fachliche Gehalt der
+Vorlage vollständig, nur nicht die Arbeitsmappe als Datei.
+
+Nicht enthalten: die Arbeitsmappe selbst, der Wortlaut der Formeln als
+Excel-Formeln, die Erläuterungstexte der Blätter 00 und 19, die Bilder und
+das Zellenlayout.
 
 Beispielwerte (`sample`) und alle Testfälle sind erfunden und stammen aus
 keiner Prüfung.
@@ -40,8 +49,12 @@ zugelassen, wenn die Webfassung keinen Wert zeigt, die Abweichung als Datum
 erklärt ist, eine der genannten Eingaben leer ist und die Gegenprobe mit 0
 den Wert der Vorlage ergibt.
 
-158 der 198 Fälle des Blatts 03 stammen aus einer unabhängigen Prüfung des
-Fundaments (`test/cases/03_MUS_1Z.pruefer.json`). Vergleiche und Aufrunden
+Je Blatt gibt es benannte Fälle (Verzweigungen, Schwellen, Teilbelegungen) und
+mindestens 100 zufällige vollständige Belegungen mit festem Startwert
+(`scripts/random-cases.mjs`). 158 Fälle des Blatts 03 stammen aus einer
+unabhängigen Prüfung des Fundaments (`test/cases/03_MUS_1Z.pruefer.json`).
+Geprüft sind zwei Richtlinien für fehlende Angaben: die geltende (0
+unbegründete Abweichungen) und „wie die Vorlage“ (0 Abweichungen). Vergleiche und Aufrunden
 sind an LibreOffice gemessen (`scripts/measure_semantics.py`,
 `test/fixtures/libreoffice-semantik.json`: 451 Vergleiche, 81 Rundungen);
 Microsoft Excel ist nicht gegengeprüft. Blatt 03 stimmt zusätzlich in 500

@@ -1,6 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 02_Grundgesamtheit (nicht amtlich).
- * Maßgeblich ist der deutsche Wortlaut der Vorlage in `definition.ts` und `compute.ts`.
+ * Englische Fassung zu Blatt 02_Grundgesamtheit.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import type { SheetTexts } from '../../model/texts'
 
@@ -12,7 +13,7 @@ export const en: SheetTexts = {
     A: { title: 'Coverage and reference period' },
     B: { title: 'Reconciliation with the last payment application of the accounting year', reference: 'Art. 3(1)' },
     C: { title: 'Data records', reference: 'Art. 2(15) and (16); Art. 3(4)' },
-    D: { title: 'Derivation of the population to be audited', reference: 'Art. 3(3)–(5)' },
+    D: { title: 'Derivation of the audit population', reference: 'Art. 3(3)–(5)' },
     E: { title: 'Single audit arrangements', reference: 'Art. 80(3) of Regulation (EU) 2021/1060; Art. 3(6), first subparagraph, point (b) DR' },
     F: { title: 'Adjusted population for sample selection', reference: 'Art. 3(6)' },
     G: { title: 'Negative population', reference: 'Art. 2(15); recital 5' },
@@ -29,7 +30,7 @@ export const en: SheetTexts = {
     C17: { label: 'Difference SFC2021 less own data' },
     C18: { label: 'Explanation of the difference' },
     C19: { label: 'Check of reconciliation with the payment application' },
-    C20: { label: 'Flat-rate financing of technical assistance (Art. 36(5) of Regulation (EU) 2021/1060)', hint: 'Not at the level of data records; not part of the adjusted population (Art. 3(6), first subparagraph, point (a)); the error rate applies to it under Art. 8(5).' },
+    C20: { label: 'Flat-rate financing for technical assistance (Art. 36(5) of Regulation (EU) 2021/1060)', hint: 'Not at the level of data records; not part of the adjusted population (Art. 3(6), first subparagraph, point (a)); the error rate applies to it under Art. 8(5).' },
     C21: { label: 'Flat rate for technical assistance included in the total amount according to SFC2021 (Yes/No)', hint: 'In SFC2021 the flat rate is normally added to the eligible expenditure (column A) and is then not included.' },
     C22: { label: 'Amount attributable to data records (SFC2021, less any flat rate for technical assistance included)' },
     C23: { label: 'Number of data records in total' },
@@ -48,7 +49,7 @@ export const en: SheetTexts = {
     C36: { label: 'Re-included expenditure already contained in the data records (Yes/No)', hint: '“Yes”: for information only, no double counting; “No”: amount and number are added.' },
     C37: { label: 'Book value before application of Art. 80 (positive population without the flat rate for technical assistance) (BV)' },
     C38: { label: 'Number of sampling units before application of Art. 80 (N)' },
-    C39: { label: 'Population to be audited (Art. 3(5)) including the flat rate for technical assistance (BV)', hint: 'Reference value of the total error rate (Art. 3(5); Art. 8(1) and (5)).' },
+    C39: { label: 'Audit population (Art. 3(5)) including the flat rate for technical assistance (BV)', hint: 'Reference value of the total error rate (Art. 3(5); Art. 8(1) and (5)).' },
     C40: { label: 'Threshold of total eligible costs under Art. 80(3)', hint: 'ERDF and CF EUR 400 000, ESF+ EUR 350 000, EMFAF, AMIF, ISF and BMVI EUR 200 000.' },
     C41: { label: 'Operations below the threshold that have already been audited: number of operations', hint: 'At most one audit before submission of the accounts with the final expenditure of the completed operation.' },
     C42: { label: '… of which sampling units concerned', hint: 'If the sampling unit is the payment claim of the beneficiary, this number differs from the number of operations.' },
@@ -58,7 +59,7 @@ export const en: SheetTexts = {
     C46: { label: '… book value of the sampling units concerned' },
     C47: { label: 'Sum of sampling units that cannot be audited under Art. 80(3) (number)' },
     C48: { label: 'Sum of sampling units that cannot be audited under Art. 80(3) (book value)' },
-    C49: { label: 'Treatment of units that cannot be audited under Art. 80(3) (exclusion / replacement)', hint: 'Professional judgement (recital 7); also applies where exceptionally no supporting documents are available (Art. 3(6), third subparagraph). Projection under Annex III (sheet 18).' },
+    C49: { label: 'Treatment of units that cannot be audited under Art. 80(3) (exclusion / replacement)', hint: 'Professional judgement (recital 7); also applies where exceptionally no supporting documents are available (Art. 3(6), third subparagraph). Extrapolation under Annex III (sheet 18).' },
     C50: { label: 'Check of treatment' },
     C51: { label: 'Book value of the adjusted population (BV)' },
     C52: { label: 'Number of units of the adjusted population (N)' },
@@ -72,7 +73,7 @@ export const en: SheetTexts = {
     primary: 'Book value of the adjusted population (BV)',
     rows: {
       C52: 'Units of the adjusted population (N)',
-      C39: 'Population to be audited incl. technical assistance flat rate',
+      C39: 'Audit population incl. technical assistance flat rate',
       C37: 'Book value before application of Art. 80',
       C38: 'Units before application of Art. 80',
       C48: 'Not auditable under Art. 80(3) (book value)',

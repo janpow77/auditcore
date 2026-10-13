@@ -5,6 +5,7 @@ import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { webHints } from './hints'
+import { en } from './texts.en'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -27,4 +28,4 @@ const sample: CellMap = {
   G21: 'endgültig',
 }
 
-export const sheet = defineSheet({ id: '20_Druck_KOM', definition, compute, sample: { inputs: sample }, deviations, webHints })
+export const sheet = defineSheet({ id: '20_Druck_KOM', definition, compute, sample: { inputs: sample }, deviations, webHints, translations: { en } })

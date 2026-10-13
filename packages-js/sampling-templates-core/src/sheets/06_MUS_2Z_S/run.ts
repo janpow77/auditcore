@@ -47,7 +47,7 @@ export function createRun(c: Cells, pending: Pending, context: SheetContext): Ru
  */
 export function relevantInputs(c: Cells): string {
   const idle = STRATA_COLUMNS.filter((column) => !occupied(c, column))
-  if (idle.length === 0) return JSON.stringify(c)
+  if (!idle.length) return JSON.stringify(c)
   const relevant: Cells = { ...c }
   for (const column of idle) for (const row of OWN_ROWS) relevant[at(column, row)] = null
   return JSON.stringify(relevant)

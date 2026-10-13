@@ -108,7 +108,20 @@ export function caseInputs(sheet: AvailableSheet, golden: GoldenCase): CellMap {
 }
 
 /** Rechnet das Blatt noch einmal, wobei die genannten leeren Eingaben wie in der Vorlage als 0 zählen. */
+/** Gegenrechnungen je Fall: Viele abweichende Zellen eines Falls teilen dieselbe Menge leerer Eingaben bzw. denselben Lauf „wie die Vorlage“. */
+const zeroRuns = new WeakMap<GoldenCase, Map<string, CellMap>>()
+const templateRuns = new WeakMap<GoldenCase, CellMap>()
+
 function withZeros(sheet: AvailableSheet, golden: GoldenCase, references: readonly string[], all: Record<string, CellMap>): CellMap {
+  const runs = zeroRuns.get(golden) ?? new Map<string, CellMap>()
+  zeroRuns.set(golden, runs)
+  const key = references.join('|')
+  const run = runs.get(key) ?? computeWithZeroInputs(sheet, golden, references, all)
+  runs.set(key, run)
+  return run
+}
+
+function computeWithZeroInputs(sheet: AvailableSheet, golden: GoldenCase, references: readonly string[], all: Record<string, CellMap>): CellMap {
   const own = Object.fromEntries(references.filter((reference) => !reference.includes('!')).map((cell) => [cell, 0]))
   const sheets: Record<string, CellMap> = { ...all }
   for (const reference of references.filter((entry) => entry.includes('!'))) {
@@ -121,6 +134,12 @@ function withZeros(sheet: AvailableSheet, golden: GoldenCase, references: readon
 
 /** Rechnet das Blatt unter der Richtlinie „wie die Vorlage“ (`TEMPLATE_POLICY`). */
 function likeTemplate(sheet: AvailableSheet, golden: GoldenCase, all: Record<string, CellMap>): CellMap {
+  const run = templateRuns.get(golden) ?? computeLikeTemplate(sheet, golden, all)
+  templateRuns.set(golden, run)
+  return run
+}
+
+function computeLikeTemplate(sheet: AvailableSheet, golden: GoldenCase, all: Record<string, CellMap>): CellMap {
   // Blatt 18 und 20 bauen auf Blatt 02 und dem Methodenblatt auf: Die Gegenprobe rechnet den ganzen Arbeitsstand wie die Vorlage.
   if (METHOD_CHOICE[sheet.id]) return caseWorkspace(sheet, golden, TEMPLATE_POLICY)[sheet.id] ?? {}
   const inputs = sheet.definition.layout === 'list' ? { ...defaultInputs(sheet.definition), ...(golden.eingaben as CellMap) } : caseInputs(sheet, golden)

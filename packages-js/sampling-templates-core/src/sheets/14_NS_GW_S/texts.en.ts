@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 14_NS_GW_S (nicht amtlich). Maßgeblich
- * ist der deutsche Wortlaut der Vorlage in `definition.ts` und im Rechenkern.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 (Art. 2, 5–8,
+ * Englische Fassung zu Blatt 14_NS_GW_S.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 (Art. 2, 5–8,
  * Anhang II): extrapolated error, exhaustive/random stratum, high value units,
  * interval of selection, sampling precision, audit population.
  */
@@ -43,7 +43,7 @@ export const en: SheetTexts = {
     C30: { label: 'Delimited systemic errors (amount)', hint: 'Art. 2(20), (21); Art. 8(1) DR.' },
     C31: { label: 'Uncorrected anomalous errors (amount)', hint: 'Art. 2(20), (21); Art. 8(1) DR.' },
     C32: { label: 'Extrapolated random error rate', formula: 'EE / BV' },
-    C33: { label: 'Total error rate', formula: '(EE + systemic + uncorrected anomalous errors) / BV', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
+    C33: { label: 'Total error rate', formula: '(EE + delimited systemic + uncorrected anomalous errors) / BV', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C34: { label: 'Materiality threshold', hint: 'Annex I point 1 DR.' },
     C35: { label: 'Assessment against the materiality threshold', hint: 'For non-statistical sampling, sampling precision and upper error limit are not calculated (Art. 8(2)).' },
   },

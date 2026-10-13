@@ -5,6 +5,7 @@
  * Formel der gleichnamigen Zelle der Vorlage nach.
  */
 import { divide, guard, isNumber, minus, n, plus, required } from '../../excel/index'
+import { projectionWithoutErrors } from '../../model/policy'
 import { resolveInputs } from '../../model/sheet'
 import type { CellMap, Cells, SheetContext } from '../../model/types'
 import { assessment, checkAdmissibility, checkCoverage, fillSummary, minimumCoverage, projectedError, projectedErrorRate, totalErrorRate } from '../shared/nonstatistical'
@@ -21,9 +22,9 @@ function sample(c: Cells): void {
 }
 
 /** Abschnitt K: Hochrechnung mit Verhältnisschätzung, Fehlerquoten und Würdigung (C20–C28). */
-function projection(c: Cells): void {
+function projection(c: Cells, context: SheetContext): void {
   c.C20 = n(c.C19)
-  c.C21 = guard(() => divide(required(c.C12) * n(c.C18), required(c.C17)))
+  c.C21 = projectionWithoutErrors(context, isNumber(c.C18), guard(() => divide(required(c.C12) * n(c.C18), required(c.C17))))
   c.C22 = projectedError(isNumber(c.C18) ? 1 : 0, c.C20, c.C21)
   c.C25 = projectedErrorRate(c.C22, c.C7)
   c.C26 = totalErrorRate(c.C22, c.C23, c.C24, c.C7)
@@ -34,7 +35,7 @@ function projection(c: Cells): void {
 export function compute(inputs: CellMap, context: SheetContext): CellMap {
   const c = resolveInputs(definition, inputs, context)
   sample(c)
-  projection(c)
+  projection(c, context)
   fillSummary(c, { method: 'Nichtstatistisch, gleiche Wahrscheinlichkeit', bookValue: 'C7', projectedError: 'C22', exhaustiveError: 'C20', systemicErrors: 'C23', anomalousErrors: 'C24', sampleSize: 'C14', totalErrorRate: 'C26' })
   return c
 }

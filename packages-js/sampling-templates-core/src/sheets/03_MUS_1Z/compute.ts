@@ -5,6 +5,7 @@
  * Schwellen und Rechenreihenfolge sind unverändert.
  */
 import { divide, guard, isNumber, minus, n, required, squareRoot } from '../../excel/index'
+import { projectionWithoutErrors } from '../../model/policy'
 import { resolveInputs } from '../../model/sheet'
 import type { CellMap, Cells, SheetContext } from '../../model/types'
 import { zValue } from '../01_Parameter/index'
@@ -58,9 +59,9 @@ function selection(c: Cells): void {
 }
 
 /** Abschnitt M: Hochrechnung, Genauigkeit und Fehlergrenzen (C40–C51). */
-function projection(c: Cells): void {
+function projection(c: Cells, context: SheetContext): void {
   c.C40 = n(c.C37)
-  c.C41 = guard(() => required(c.C34) * n(c.C38))
+  c.C41 = projectionWithoutErrors(context, isNumber(c.C38), guard(() => required(c.C34) * n(c.C38)))
   c.C42 = isNumber(c.C38) ? guard(() => n(c.C40) + required(c.C41)) : null
   c.C43 = guard(() => divide(required(c.C12) * required(c.C31), squareRoot(required(c.C32))) * n(c.C39))
   c.C46 = guard(() => required(c.C42) + required(c.C43) + n(c.C44) + n(c.C45))
@@ -90,7 +91,7 @@ export function compute(inputs: CellMap, context: SheetContext): CellMap {
   parameters(c, context)
   sampleSize(c)
   selection(c)
-  projection(c)
+  projection(c, context)
   c.C52 = assessment(c.C50, c.C51, c.C14)
   summary(c)
   return c

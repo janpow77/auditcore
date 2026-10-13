@@ -5,13 +5,14 @@
  * anzuwendender Umfang eines neu berechneten Zeitraums. Die Größen (Buchwerte
  * bei MUS, Anzahl der Einheiten bei der Zufallsstichprobe) kommen als Argumente.
  *
- * Dazu `computeTwice`: Die Blätter verzweigen an Stellen, an denen die Vorlage
+ * Dazu `computeBesideTemplate`: Die Blätter verzweigen an Stellen, an denen die Vorlage
  * einen leeren Zwischenwert übergeht (`MAX` über einen Bezug, `ISNUMBER`, `SUM`).
  * Dort muss der Rechenkern wissen, ob ein Zwischenwert leer ist, weil auch die
  * Vorlage keinen zeigt, oder weil eine Angabe fehlt.
  */
 import { divide, guard, isBlank, isNumber, left, minus, required, roundUp, sameText, squareRoot } from '../../excel/index'
-import type { CellAddress, CellValue, Cells } from '../../model/types'
+import { TEMPLATE_POLICY } from '../../model/policy'
+import type { CellAddress, CellValue, Cells, SheetContext } from '../../model/types'
 
 type Value = CellValue | undefined
 
@@ -26,23 +27,29 @@ export const NOT_APPLICABLE = '✖ nicht anwendbar (Nenner ≤ 0)'
 export type Pending = (cell: CellAddress) => boolean
 
 /**
- * Rechnet ein Blatt zweimal. Zuerst wie die Vorlage: Die genannten Eingaben
- * zählen leer als 0. Dann mit den Eingaben, wie sie sind; fehlt dabei ein Wert,
- * den der erste Lauf hat, ist die Zelle offen („Angabe fehlt“) und `pending`
- * meldet das den Formeln, die einen leeren Wert sonst übergingen. Ergebnis ist
- * der zweite Lauf. Ist keine der genannten Eingaben leer, genügt ein Lauf.
+ * Rechnet ein Blatt mit dem Kontext des Aufrufs und, sobald eine Formel danach
+ * fragt, ein zweites Mal vollständig wie die Vorlage: Die genannten
+ * Pflichteingaben zählen leer als 0, und Werte ohne Grundlage (`unfounded`,
+ * `totalRow`) erscheinen so, wie die Vorlage sie zeigt (`TEMPLATE_POLICY`).
+ * Fehlt im Lauf des Aufrufs ein Wert, den der Lauf „wie die Vorlage“ hat, ist
+ * die Zelle offen – gleich, ob eine Angabe fehlt oder der Wert keine Grundlage
+ * hat – und `pending` meldet das den Formeln, die einen leeren Bezug sonst
+ * übergingen (`MAX`, `ISNUMBER`, `SUM`). Sie bleiben dann offen, statt einen
+ * anderen Wert zu zeigen als die Vorlage. Bei vollständiger Belegung fragt keine
+ * Formel nach einer leeren Zelle; dann bleibt es bei einem Lauf.
  */
-export function computeTwice(inputs: Cells, requiredInputs: readonly CellAddress[], evaluate: (c: Cells, pending: Pending) => void): Cells {
-  const cells: Cells = { ...inputs }
-  const missing = requiredInputs.filter((cell) => isBlank(inputs[cell]))
-  if (!missing.length) {
-    evaluate(cells, () => false)
-    return cells
+export function computeBesideTemplate(inputs: Cells, requiredInputs: readonly CellAddress[], context: SheetContext, evaluate: (c: Cells, pending: Pending, context: SheetContext) => void): Cells {
+  let template: Cells | undefined
+  const likeTemplate = (): Cells => {
+    if (!template) {
+      template = { ...inputs }
+      for (const cell of requiredInputs) if (isBlank(inputs[cell])) template[cell] = 0
+      evaluate(template, () => false, { ...context, policy: TEMPLATE_POLICY })
+    }
+    return template
   }
-  const template: Cells = { ...inputs }
-  for (const cell of missing) template[cell] = 0
-  evaluate(template, () => false)
-  evaluate(cells, (cell) => isBlank(cells[cell]) && !isBlank(template[cell]))
+  const cells: Cells = { ...inputs }
+  evaluate(cells, (cell) => isBlank(cells[cell]) && !isBlank(likeTemplate()[cell]), context)
   return cells
 }
 

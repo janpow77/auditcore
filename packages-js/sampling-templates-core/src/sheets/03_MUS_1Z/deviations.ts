@@ -4,6 +4,7 @@
  * einen anderen Wert als die Vorlage. Jede Zeile ist durch mindestens einen
  * Golden-Fall belegt (test/deviations.spec.ts); Übersicht: docs/abweichungen.md.
  */
+import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'
 import type { CellAddress, Deviation } from '../../model/types'
 
 function entries(cells: readonly CellAddress[], whenEmpty: readonly CellAddress[], template: string, reason: string): Deviation[] {
@@ -28,4 +29,5 @@ export const deviations: readonly Deviation[] = [
     SIZE,
   ),
   ...entries(['C32', 'C33', 'C48', 'C49', 'C50', 'C51', 'C52', 'N11'], ['C17', 'C20'], 'Wert auf Grundlage des mit AE = 0 bzw. σ_r = 0 berechneten Umfangs', SIZE),
+  { cell: 'C41', whenEmpty: ['C38'], ...PROJECTION_WITHOUT_ERRORS },
 ]

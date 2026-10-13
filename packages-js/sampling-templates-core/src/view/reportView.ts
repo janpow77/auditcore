@@ -79,18 +79,6 @@ export interface ReportPage {
   labels: { report: string; print: string; hints: string }
 }
 
-/** Texte der Berichtsansicht, die `i18n/messages.ts` noch nicht führt, mit deutschem Wortlaut als Rückfall. */
-const REPORT_TEXTS = { reportPrint: 'Drucken / als PDF sichern' } as const
-
-function reportText(t: Translate, key: keyof typeof REPORT_TEXTS): string {
-  try {
-    const text = (t as (key: string) => string | undefined)(key)
-    return text && text !== key ? text : REPORT_TEXTS[key]
-  } catch {
-    return REPORT_TEXTS[key]
-  }
-}
-
 /** Tag 0 der Tabellenkalkulation (30.12.1899) für Datumswerte, die als Zahl vorliegen. */
 const SERIAL_EPOCH = Date.UTC(1899, 11, 30)
 const DAY = 86400000
@@ -238,6 +226,6 @@ export function buildReport(sheet: AvailableSheet, inputs: CellMap, results: Cel
     hints: hintsOf(sheet, inputs, results, context, t, sheets),
     notes: [t('disclaimer'), t('templateStatus')],
     footer: translated(scope, REPORT_LAYOUT.footer),
-    labels: { report: t('stepReport'), print: reportText(t, 'reportPrint'), hints: t('webHint') },
+    labels: { report: t('stepReport'), print: t('reportPrint'), hints: t('webHint') },
   }
 }

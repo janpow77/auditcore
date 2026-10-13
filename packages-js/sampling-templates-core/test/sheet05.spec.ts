@@ -209,6 +209,6 @@ describe('Blatt 05_MUS_2Z', () => {
     expect([...produced].filter((value) => !texts?.values?.[value])).toEqual([])
     const hints = [sample({ C47: 0.9 }), sample({ C47: 0.9, C26: GLOBAL }), sample({ C13: 0.95, C9: 10 }), sample({ C13: null, C30: 'Ja' })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts?.webHints ?? {})))
-    expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – two periods, non-stratified')
+    expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – two sampling periods, non-stratified')
   })
 })

@@ -5,8 +5,9 @@ import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { webHints } from './hints'
+import { en } from './texts.en'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. Die übrigen Größen kommen aus Blatt 02 und dem gewählten Verfahren. */
 const sample: CellMap = { C20: 'Nein', C29: 0.02 }
 
-export const sheet = defineSheet({ id: '18_GFQ_AnhIII', definition, compute, sample: { inputs: sample }, deviations, webHints })
+export const sheet = defineSheet({ id: '18_GFQ_AnhIII', definition, compute, sample: { inputs: sample }, deviations, webHints, translations: { en } })

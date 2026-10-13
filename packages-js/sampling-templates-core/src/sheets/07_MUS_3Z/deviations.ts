@@ -15,6 +15,7 @@
  * Standardneuberechnung –, zeigt sie in C75 bzw. C109 nur die Untergrenzen. In
  * beiden Fällen rechnet sie damit weiter. Übersicht: docs/abweichungen.md.
  */
+import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'
 import type { CellAddress, Deviation } from '../../model/types'
 
 function entries(cells: readonly CellAddress[], whenEmpty: readonly CellAddress[], template: string, reason: string): Deviation[] {
@@ -130,4 +131,4 @@ const withoutBasis: Deviation[] = [
   ...AFTER_THIRD.map((cell): Deviation => ({ cell, whenEmpty: ['C75', 'C109'], template: AFTER_BOUNDS_TEMPLATE, reason: AFTER_BOUNDS, kind: 'withoutBasis' })),
 ]
 
-export const deviations: readonly Deviation[] = [...sizes, ...second, ...third, ...withoutBasis]
+export const deviations: readonly Deviation[] = [...sizes, ...second, ...third, ...withoutBasis, { cell: 'C127', whenEmpty: ['C49', 'C88', 'C122'], ...PROJECTION_WITHOUT_ERRORS }]

@@ -344,6 +344,18 @@ zufällig erzeugte, **vollständig ausgefüllte** Belegungen als eigenen Fallsat
 fachlich möglichen Bereich, Auswahlfelder über alle Einträge). Für diese
 Fälle muss jede Zelle ohne Abweichung stimmen.
 
+```sh
+node scripts/random-cases.mjs --liste                 # Blätter mit Startwert und Anzahl
+node scripts/random-cases.mjs 05_MUS_2Z               # schreibt test/cases/05_MUS_2Z.zufall.json
+node scripts/random-cases.mjs 05_MUS_2Z --anzahl 100 --start 2026101305 --ziel "$TMPDIR/05.json"
+```
+
+Die Belegung eines Blatts steht in `scripts/random-cases/sheets/` (je
+Blattgruppe eine Datei), der Zufallsgenerator mit Startwert und die Hilfen für
+Beträge, Anteile, Auswahlwerte und Schichten in `scripts/random-cases/core.mjs`.
+Mit dem hinterlegten Startwert entsteht dieselbe Datei wieder; wer die
+Belegung ändert, erzeugt danach die Golden-Datei neu.
+
 ### 10. Golden erzeugen
 
 ```sh
@@ -429,3 +441,17 @@ unverändert; sie laufen mit festem Blattbestand.
 
 Nicht Aufgabe der Gruppe: committen, pushen, veröffentlichen, erzeugte
 Nachweise und Paketdokumente fortschreiben.
+
+## Zusammenführen
+
+Wer die Arbeit mehrerer Gruppen zusammenführt, prüft den Gesamtstand und
+erzeugt die Nachweise:
+
+```sh
+SAMPLING_TEMPLATES_SKIP_DOCS=1 npx vitest run                       # alle Blätter: Abgleich, Richtlinie, Abweichungen
+npm run docs:write -w @auditcore/sampling-templates-core            # docs/abgleich.md, Tabelle in docs/abweichungen.md
+```
+
+Danach `README.md`, `CHANGELOG.md` und `PROVENANCE.md` fortschreiben
+(Abgleichszahlen aus `docs/abgleich.md`) und die Prüfungen der Repo-Wurzel
+ausführen.

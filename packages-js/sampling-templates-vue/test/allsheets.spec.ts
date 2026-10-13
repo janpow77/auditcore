@@ -135,7 +135,8 @@ describe('Unterstichproben in einem geschichteten Verfahren', () => {
     await wrapper.get('[data-action="unit-add"]').trigger('click')
     for (const [cell, value] of [['C5', 'V-2'], ['C6', '100.000,00'], ['C10', '10'], ['C11', '50.000,00'], ['C12', '500,00']] as const) await input(wrapper, cell).setValue(value)
     await settle()
-    expect(wrapper.get('[data-unassigned]').text()).toContain('1 Einheiten ohne Schicht')
+    // Die Beispielwerte bringen eine Einheit ohne Schichtnummer mit; dazu kommt V-2.
+    expect(wrapper.get('[data-unassigned]').text()).toContain('2 Einheiten ohne Schicht')
     await wrapper.get('[data-action="unit-transfer"]').trigger('click')
     expect(wrapper.get('[data-flash]').text()).toBe('Übernommen in Blatt 04: E46.')
     await wrapper.get('[data-step="method"]').trigger('click')

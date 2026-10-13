@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { isBlank } from '../src/excel/index'
-import { createTranslate } from '../src/i18n/messages'
+import { createTranslate, type Translate } from '../src/i18n/messages'
 import { defaultInputs } from '../src/model/definition'
 import { evaluateSheet } from '../src/model/evaluate'
 import { TEMPLATE_POLICY } from '../src/model/policy'
@@ -191,12 +191,11 @@ describe('Blatt 20: Berichtsansicht', () => {
     expect(cell).toMatchObject({ cell: 'F11', text: 'Angabe fehlt', missing: true })
   })
 
-  it('fehlende Texte der Oberfläche fallen auf den deutschen Wortlaut zurück, vorhandene werden verwendet', () => {
+  it('die Schaltfläche zum Drucken trägt den Text der Oberfläche, deutsch und englisch', () => {
     const state = workspace()
     const results = computeWorkspace(state)
-    const custom = (key: string): string => (key === 'reportPrint' ? 'Print' : key)
-    expect(buildReport(sheet, state.sheets[sheet.id] as CellMap, results[sheet.id]!, contextFor(sheet.id, state, results), custom as never).labels.print).toBe('Print')
-    const echo = (key: string): string => key
-    expect(buildReport(sheet, state.sheets[sheet.id] as CellMap, results[sheet.id]!, contextFor(sheet.id, state, results), echo as never).labels.print).toBe('Drucken / als PDF sichern')
+    const report = (t: Translate) => buildReport(sheet, state.sheets[sheet.id] as CellMap, results[sheet.id]!, contextFor(sheet.id, state, results), t)
+    expect(report(createTranslate()).labels.print).toBe('Drucken / als PDF sichern')
+    expect(report(createTranslate(undefined, 'en')).labels.print).toBe('Print / save as PDF')
   })
 })

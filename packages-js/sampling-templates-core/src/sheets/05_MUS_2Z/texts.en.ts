@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 05_MUS_2Z (nicht amtlich). Maßgeblich
- * ist der deutsche Wortlaut der Vorlage in `definition.ts` und `compute.ts`.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 („DR“).
+ * Englische Fassung zu Blatt 05_MUS_2Z.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, INCREASE_INTERPRETATION_EN, VALUES_EN, findingsEn, periodExceedsEn, selectionEn } from '../shared/mus'
@@ -9,7 +9,7 @@ import { HINTS_EN, INCREASE_INTERPRETATION_EN, VALUES_EN, findingsEn, periodExce
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 
 export const en: SheetTexts = {
-  title: 'MUS standard approach – two periods, non-stratified',
+  title: 'MUS standard approach – two sampling periods, non-stratified',
   shortTitle: 'MUS, 2 periods',
   legalBasis: 'Art. 4(1); Art. 5(1)(a), (5) to (7); Art. 8; Annex I; Annex II point 1.2 of Delegated Regulation (EU) 2023/67',
   sections: {

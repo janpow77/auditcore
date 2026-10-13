@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 04_MUS_1Z_S (nicht amtlich). Maßgeblich
- * ist der deutsche Wortlaut der Vorlage in `definition.ts` und `compute.ts`.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 („DR“).
+ * Englische Fassung zu Blatt 04_MUS_1Z_S.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, VALUES_EN } from '../shared/mus'
@@ -9,7 +9,7 @@ import { HINTS_EN, VALUES_EN } from '../shared/mus'
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 
 export const en: SheetTexts = {
-  title: 'MUS standard approach – one period, stratified',
+  title: 'MUS standard approach – one sampling period, stratified',
   shortTitle: 'MUS, 1 period, stratified',
   legalBasis: 'Art. 4(2) and (3); Art. 5(1)(a), (2), (4), (5) and (7); Art. 8; Annex I; Annex II point 1.1 of Delegated Regulation (EU) 2023/67',
   sections: {
@@ -25,9 +25,9 @@ export const en: SheetTexts = {
     C5: { label: 'Accounting year' },
     C6: { label: 'Sampling unit (e.g. operation, declaration of expenditure, payment claim)' },
     C7: { label: 'Stratification criterion (e.g. programme, Fund, intermediate body, risk)', hint: 'Art. 4(2) DR.' },
-    D9: { label: 'Book value per stratum (BV_h)', hint: 'Sum = adjusted audit population (reconciliation with sheet 02 below).' },
+    D9: { label: 'Book value per stratum (BV_h)', hint: 'Sum = adjusted population (reconciliation with sheet 02 below).' },
     D10: { label: 'Number of sampling units per stratum (N_h)' },
-    C11: { label: 'Difference from the adjusted audit population in sheet 02' },
+    C11: { label: 'Difference from the adjusted population in sheet 02' },
     C12: { label: 'Reliability of the management and control system (high / average / low)', hint: 'Annex I point 2: evaluation taking into account the results of system audits, so that the combined level of assurance is high.' },
     C13: { label: 'Confidence level', hint: 'Annex I point 2: high ≥ 60 %, low ≥ 90 %; selection from sheet 01.' },
     C14: { label: 'Type of testing (bilateral / unilateral)', hint: 'Annex I point 3; Art. 2(17) and (18) DR.' },

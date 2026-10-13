@@ -5,6 +5,7 @@
  * Schwellen und Rechenreihenfolge sind unverändert.
  */
 import { divide, guard, isBlank, isNumber, minus, n, required, roundUp, squareRoot } from '../../excel/index'
+import { projectionWithoutErrors } from '../../model/policy'
 import { resolveInputs } from '../../model/sheet'
 import type { CellAddress, CellMap, Cells, SheetContext } from '../../model/types'
 import { zValue } from '../01_Parameter/index'
@@ -140,10 +141,10 @@ function finalSizes(c: Cells, run: Run): void {
  * Standardabweichung der Stichprobe eines Zeitraums (C50, C89, C123), rechnet die
  * Webfassung wie die Vorlage mit 0 und weist das aus (`zeroAssumed`).
  */
-function projection(c: Cells): void {
+function projection(c: Cells, context: SheetContext): void {
   const term = (bookValue: CellAddress, units: CellAddress, power: number): number => divide(required(c[bookValue]) ** power, required(c[units]))
   c.C126 = n(c.C48) + n(c.C87) + n(c.C121)
-  c.C127 = guard(() => term('C42', 'C124', 1) * n(c.C49) + term('C81', 'C125', 1) * n(c.C88) + term('C115', 'C116', 1) * n(c.C122))
+  c.C127 = projectionWithoutErrors(context, [c.C49, c.C88, c.C122].some(isNumber), guard(() => term('C42', 'C124', 1) * n(c.C49) + term('C81', 'C125', 1) * n(c.C88) + term('C115', 'C116', 1) * n(c.C122)))
   c.C128 = [c.C49, c.C88, c.C122].some(isNumber) ? guard(() => required(c.C126) + required(c.C127)) : null
   c.C129 = guard(() => required(c.C16) * squareRoot(term('C42', 'C124', 2) * n(c.C50) ** 2 + term('C81', 'C125', 2) * n(c.C89) ** 2 + term('C115', 'C116', 2) * n(c.C123) ** 2))
 }
@@ -161,7 +162,7 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   selection(c, 112, c.C90, c.C109)
   c.C124 = guard(() => minus(required(c.C107), n(c.C40)))
   c.C125 = guard(() => minus(required(c.C108), n(c.C79)))
-  projection(c)
+  projection(c, context)
   errorLimits(c, 128, c.C15, c.C94, c.C18)
   summary(c, 'MUS-Standardansatz, 3 Zeiträume', 128, c.C94, c.C126, () => required(c.C107) + required(c.C108) + required(c.C109))
 }

@@ -4,6 +4,7 @@
  * einen anderen Wert als die Vorlage. Jede Zeile ist durch mindestens einen
  * Golden-Fall belegt (test/deviations.spec.ts); Übersicht: docs/abweichungen.md.
  */
+import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'
 import type { CellAddress, Deviation } from '../../model/types'
 
 function entries(cells: readonly CellAddress[], whenEmpty: readonly CellAddress[], template: string, reason: string): Deviation[] {
@@ -24,4 +25,5 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C16'], ['C8', 'C13'], 'Prüfhinweis auf der Grundlage von 0 Einheiten der Grundgesamtheit bzw. der Zufallsstichprobe', 'Die Prüfung der Mindesterfassung setzt die Anzahl der Stichprobeneinheiten und den Umfang der Zufallsstichprobe voraus.'),
   ...entries(['C21', 'C22', 'N5'], ['C7'], 'Hochrechnung mit dem negativen Buchwert der Zufallsschicht (0 € abzüglich umfassende Schicht) bzw. 0 €', BOOK_VALUE),
   ...entries(['C28'], ['C27'], 'Würdigung gegen eine Schwelle von 0 %', 'Die Würdigung setzt die Wesentlichkeitsschwelle voraus.'),
+  { cell: 'C21', whenEmpty: ['C18'], ...PROJECTION_WITHOUT_ERRORS },
 ]

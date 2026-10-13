@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 06_MUS_2Z_S (nicht amtlich). Maßgeblich
- * ist der deutsche Wortlaut der Vorlage in `definition.ts` und im Rechenkern.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 („DR“).
+ * Englische Fassung zu Blatt 06_MUS_2Z_S.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import { STRATA_COLUMNS } from '../../model/strata'
 import type { FieldTexts, SheetTexts } from '../../model/texts'
@@ -33,7 +33,7 @@ function perStratum(id: string, text: string): Record<string, string> {
 }
 
 export const en: SheetTexts = {
-  title: 'MUS standard approach – two periods, stratified',
+  title: 'MUS standard approach – two sampling periods, stratified',
   shortTitle: 'MUS, 2 periods, stratified',
   legalBasis: 'Art. 4; Art. 5(1)(a), (5) to (7); Art. 8; Annex I; Annex II point 1.2 (stratified) of Delegated Regulation (EU) 2023/67',
   sections: {

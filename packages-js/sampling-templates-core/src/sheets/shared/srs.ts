@@ -6,35 +6,13 @@
  * `statistical.ts` und wird hier nur verwendet.
  */
 import { divide, ge, guard, ifError, isBlank, isNumber, le, minus, n, required, roundUp } from '../../excel/index'
-import { TEMPLATE_POLICY, unfounded } from '../../model/policy'
+import { unfounded } from '../../model/policy'
 import { STRATA_COLUMNS, stratumCell, sumRow, totalRow } from '../../model/strata'
 import type { CellAddress, CellValue, Cells, SheetContext } from '../../model/types'
 import { NOT_APPLICABLE, allocate, appliedPeriodSize, type Pending } from './periods'
 import { assessment, lowerErrorLimit } from './statistical'
 
-export { INCREASE_INTERPRETATION, NOT_APPLICABLE, allocate, globalComputedSize, recalculationOf, share, weightedDeviation, type Pending, type Recalculation } from './periods'
-
-/**
- * Rechnet ein Blatt zweimal, wie `computeTwice` (`periods.ts`), der erste Lauf
- * aber in jedem Fall genau wie die Vorlage: Die genannten Pflichteingaben
- * zählen leer als 0, und Werte ohne Grundlage (`unfounded`, `totalRow`) stehen
- * dort wie in der Vorlage. Der zweite Lauf rechnet mit den Eingaben, wie sie
- * sind, und mit dem Kontext des Aufrufers; er ist das Ergebnis. `pending`
- * meldet ihm jede Zelle, die er offen lässt, während die Vorlage dort einen
- * Wert zeigt – gleich, ob eine Angabe fehlt oder der Wert keine Grundlage hat.
- * Formeln, die einen leeren Bezug übergehen (`MAX`, `ISNUMBER`, `SUM`), bleiben
- * dann offen, statt einen anderen Wert zu zeigen als die Vorlage.
- *
- * `inputs` sind die aufgelösten Eingaben (`resolveInputs`, also ein eigenes
- * Objekt des Aufrufs); der zweite Lauf schreibt seine Ergebnisse dort hinein.
- */
-export function computeBesideTemplate(inputs: Cells, requiredInputs: readonly CellAddress[], context: SheetContext, evaluate: (c: Cells, pending: Pending, context: SheetContext) => void): Cells {
-  const template: Cells = { ...inputs }
-  for (const cell of requiredInputs) if (isBlank(inputs[cell])) template[cell] = 0
-  evaluate(template, () => false, { ...context, policy: TEMPLATE_POLICY })
-  evaluate(inputs, (cell) => isBlank(inputs[cell]) && !isBlank(template[cell]), context)
-  return inputs
-}
+export { INCREASE_INTERPRETATION, NOT_APPLICABLE, allocate, computeBesideTemplate, globalComputedSize, recalculationOf, share, weightedDeviation, type Pending, type Recalculation } from './periods'
 
 /** Zelle in Spalte C. */
 const at = (row: number): CellAddress => `C${row}`

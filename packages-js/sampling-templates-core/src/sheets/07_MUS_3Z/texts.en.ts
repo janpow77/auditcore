@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 07_MUS_3Z (nicht amtlich). Maßgeblich
- * ist der deutsche Wortlaut der Vorlage in `definition.ts` und `compute.ts`.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 („DR“).
+ * Englische Fassung zu Blatt 07_MUS_3Z.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, INCREASE_INTERPRETATION_EN, VALUES_EN, findingsEn, periodExceedsEn, selectionEn } from '../shared/mus'
@@ -13,7 +13,7 @@ const negativeDenominator = (period: number): string =>
   `Denominator of the standard recalculation is not positive: the standard approach yields no sample size for period ${period} (the template then shows only the minimum sizes). Choose the global recalculation`
 
 export const en: SheetTexts = {
-  title: 'MUS standard approach – three periods, non-stratified',
+  title: 'MUS standard approach – three sampling periods, non-stratified',
   shortTitle: 'MUS, 3 periods',
   legalBasis: 'Art. 4(1); Art. 5(1)(a), (5) to (7); Art. 8; Annex I; Annex II point 1.3 of Delegated Regulation (EU) 2023/67',
   sections: {

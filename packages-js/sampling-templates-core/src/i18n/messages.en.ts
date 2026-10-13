@@ -1,6 +1,7 @@
 /**
- * Englische Texte der Oberfläche: Arbeitsübersetzung, nicht amtlich. Maßgeblich
- * bleibt der deutsche Wortlaut; fehlende Schlüssel fallen auf Deutsch zurück.
+ * Englische Texte der Oberfläche; fehlende Schlüssel fallen auf Deutsch zurück.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67.
  */
 import type { MessageKey } from './messages'
 
@@ -15,7 +16,7 @@ export const en: Readonly<Partial<Record<MessageKey, string>>> = {
   periods1: '1 period',
   periods2: '2 periods',
   periods3: '3 periods',
-  unstratified: 'not stratified',
+  unstratified: 'non-stratified',
   stratified: 'stratified',
   sheetNumber: 'Sheet {number}',
   notAvailable: 'not yet available',
@@ -30,13 +31,15 @@ export const en: Readonly<Partial<Record<MessageKey, string>>> = {
   steps: 'Work steps',
   stepPopulation: 'Population',
   stepMethod: 'Method',
-  stepSubsamples: 'Sub-samples',
+  stepSubsamples: 'Subsamples',
   stepTotalErrorRate: 'Total error rate',
   reportPrint: 'Print / save as PDF',
   stepReport: 'Report',
   menu: 'Working file',
   menuOpen: 'Open …',
+  menuOpenHint: '.json · .xlsx',
   menuSave: 'Save working file',
+  menuSaveHint: '.json',
   menuNew: 'New (empty form)',
   menuSample: 'Load example values',
   menuClearDraft: 'Delete local draft',
@@ -54,6 +57,7 @@ export const en: Readonly<Partial<Record<MessageKey, string>>> = {
   discardText: 'The working file contains changes that have not been saved as a file. If you continue, they will be lost.',
   choose: '– please select –',
   percentPlaceholder: 'in %',
+  percentSuffix: '(%)',
   linked: 'pre-filled from sheet {sheet}',
   overridden: 'pre-filled value overwritten',
   missing: 'input missing',
@@ -174,17 +178,17 @@ export const en: Readonly<Partial<Record<MessageKey, string>>> = {
   listPasteRejected: '{count} cells could not be read and remain empty.',
   listPasteDropped: '{count} lines above the maximum of {max} units were not taken over.',
   listTotals: 'Totals for the method sheet',
-  listTotalsNote: 'Assigning units to the high-value stratum or the random stratum and adding them up is an aid of the web version; the template provides for manual transfer (Art. 8(3)).',
+  listTotalsNote: 'Assigning units to the high value stratum or the random stratum and adding them up is an aid of the web version; the template provides for manual transfer (Art. 8(3)).',
   listUnassigned: '{count} units without a stratum or period are not transferred to the chosen method (fields “number of the stratum” and “sampling period”).',
   listIncomplete: '{count} units without a determinable error are not included in the totals.',
   listTransfer: 'Transfer totals to sheet {number}',
-  listTransferNone: 'The chosen method sheet does not take totals from the sub-samples.',
+  listTransferNone: 'The chosen method sheet does not take totals from the subsamples.',
   listTransferred: 'Transferred to sheet {number}: {fields}.',
-  totalHighValueErrors: 'Errors of the high-value units (ΣE_e)',
+  totalHighValueErrors: 'Errors of the high value units (ΣE_e)',
   totalErrorRateSum: 'Sum of error rates of the random stratum (Σ E_i/BV_i)',
   totalErrorSum: 'Sum of errors of the random stratum',
   totalBookValueSum: 'Sum of book values of the random stratum',
-  subsampleTarget: 'takes the total from the sub-samples (sheet 17)',
+  subsampleTarget: 'takes the total from the subsamples (sheet 17)',
   guide: 'Guide from the population',
   guideEmpty: 'Once the population (sheet 02) has been filled in, the notes of the template on the adjusted population appear here. The web version does not recommend a method.',
   guideUnits: 'Adjusted population: {units} units, {bookValue}.',

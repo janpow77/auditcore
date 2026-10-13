@@ -104,11 +104,12 @@ der Anwendung legt dafür ein eigenes Teilpaket an.
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (33):
+Exporte der Einstiegspunkte aus `package.json#exports` (35):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@auditcore/sampling-templates-vue` | `CellControl` | Vue-Komponente | – | `components/CellControl.vue` |
+| `@auditcore/sampling-templates-vue` | `DataTableDialog` | Vue-Komponente | – | `components/DataTableDialog.vue` |
 | `@auditcore/sampling-templates-vue` | `ErrorGauge` | Vue-Komponente | – | `components/ErrorGauge.vue` |
 | `@auditcore/sampling-templates-vue` | `FileActionOptions` | Schnittstelle | – | `composables/useFileActions` |
 | `@auditcore/sampling-templates-vue` | `FileActions` | Schnittstelle | – | `composables/useFileActions` |
@@ -122,6 +123,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (33):
 | `@auditcore/sampling-templates-vue` | `MethodPicker` | Vue-Komponente | – | `components/MethodPicker.vue` |
 | `@auditcore/sampling-templates-vue` | `NoticeList` | Vue-Komponente | – | `components/NoticeList.vue` |
 | `@auditcore/sampling-templates-vue` | `NoticeTone` | Typ | – | `composables/useSamplingSession` |
+| `@auditcore/sampling-templates-vue` | `ReportView` | Vue-Komponente | – | `components/ReportView.vue` |
 | `@auditcore/sampling-templates-vue` | `ResultPanel` | Vue-Komponente | – | `components/ResultPanel.vue` |
 | `@auditcore/sampling-templates-vue` | `SamplingCalculator` | Vue-Komponente | – | `SamplingCalculator.vue` |
 | `@auditcore/sampling-templates-vue` | `SamplingSession` | Schnittstelle | – | `composables/useSamplingSession` |
@@ -158,6 +160,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (33):
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `update` | `[cell: CellAddress, value: CellValue]` | – |
+
+#### `DataTableDialog`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `table` | `DataTable \| null` | ja | – | – |
+| `t` | `Translate` | ja | – | – |
+| `locale` | `Locale` | nein | – | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `close` | `[]` | – |
 
 #### `ErrorGauge`
 
@@ -205,6 +219,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (33):
 |---|---|---|
 | `change` | `[]` | – |
 | `step` | `[id: WorkflowStep['id']]` | – |
+| `table` | `[sheet: string]` | – |
 
 #### `MethodGuide`
 
@@ -226,6 +241,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (33):
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `select` | `[sheet: string]` | – |
+| `table` | `[sheet: string]` | – |
 
 #### `NoticeList`
 
@@ -239,6 +255,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (33):
 |---|---|---|
 | `dismiss` | `[id: number]` | – |
 | `clear` | `[]` | – |
+
+#### `ReportView`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `report` | `ReportPage` | ja | – | – |
+| `t` | `Translate` | ja | – | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `update` | `[cell: CellAddress, value: CellValue]` | – |
+| `print` | `[]` | – |
 
 #### `ResultPanel`
 
@@ -336,10 +364,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (33):
 | `variant` | `Variant` | ja | – | – |
 | `available` | `boolean` | ja | – | – |
 | `t` | `Translate` | ja | – | – |
+| `table` | `boolean` | nein | `false` | – |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `select` | `[sheet: string]` | – |
+| `table` | `[sheet: string]` | – |
 
 #### `WorkspaceMenu`
 
@@ -368,8 +398,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (33):
 | `initialState` | leer | Arbeitsstand beim Start |
 
 Englisch ist eine gekennzeichnete Arbeitsübersetzung: Texte der Oberfläche
-vollständig, Bezeichnungen, Fundstellen und Prüfhinweise für die Blätter
-01–03; maßgeblich ist der deutsche Wortlaut der Vorlage. Gespeicherte Werte
+und Bezeichnungen, Fundstellen und Prüfhinweise aller Blätter, Fachbegriffe
+nach der englischen Fassung der DelVO (EU) 2023/67; maßgeblich ist der deutsche
+Wortlaut der Vorlage. Gespeicherte Werte
 bleiben deutsch.
 
 In der Fußzeile stehen immer der Hinweis des Fachrahmens und der Stand der
@@ -441,15 +472,15 @@ prüft Hell und Dunkel mit axe-core; die Demo zeigt ein Beispiel unter
 Neu geschrieben. Aufbau des Rechenblatts (Formular links, mitlaufende
 Ergebnisspalte, Prüfhinweise als Marken) nach dem Gestaltungsprototyp des
 Ausgangsmaterials; dessen Drehtrommel und Farbsystem wurden nicht übernommen.
-Geprüft mit 38 Komponententests und 15 Browsertests (Chromium, gebaute Demo mit
-`Content-Security-Policy: default-src 'self'`): Beispielwerte ergeben die
-Größen des Prototyps (Stichprobenumfang 92, Auswahlintervall 480.681,82 €,
-extrapolierter Fehler 316.422,73 €, Gesamtfehlerquote 0,652 %, obere
-Fehlergrenze 1,086 %), Rundlauf Speichern → Neu → Öffnen, Excel-Export →
-Öffnen, Prüfsummenhinweis, Kontextfluss aus Blatt 02, Schichttabelle,
-Unterstichproben, Vorschau der ausgefüllten Vorlage, fehlende Angaben, keine
-Anfrage an fremde Hosts, Hell/Dunkel, Tokens einer Anwendung, 390 px ohne
-waagerechtes Scrollen, axe-core (WCAG 2.1 A/AA) ohne Verstöße.
+Geprüft mit 69 Komponententests und 31 Browsertests (Chromium, gebaute Demo mit
+`Content-Security-Policy: default-src 'self'`): jedes Verfahren wählbar und
+mit Beispielwerten gerechnet, Rundlauf Speichern → Neu → Öffnen, Excel-Export
+→ Öffnen, Prüfsummenhinweis, Kontextfluss aus Blatt 02, Schichttabelle (auch
+der Altvorlage X3), Unterstichproben mit Übernahme je Schicht,
+Gesamtfehlerquote, Bericht mit Druckansicht auf einer A4-Seite, Datentabelle
+X1a, Vorschau der ausgefüllten Vorlage, fehlende Angaben, keine Anfrage an
+fremde Hosts, Tokens einer Anwendung; je Blattart hell und dunkel, 1280 px und
+390 px ohne waagerechtes Scrollen, axe-core (WCAG 2.1 A/AA) ohne Verstöße.
 
 ## Abhängigkeiten
 

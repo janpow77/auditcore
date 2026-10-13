@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 13_NS_GW (nicht amtlich). Maßgeblich
- * ist der deutsche Wortlaut der Vorlage in `definition.ts` und im Rechenkern.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 (Art. 2, 5–8,
+ * Englische Fassung zu Blatt 13_NS_GW.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 (Art. 2, 5–8,
  * Anhang II): extrapolated error, exhaustive/random stratum, high value units,
  * interval of selection, sampling precision, audit population.
  */
@@ -9,7 +9,7 @@ import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, VALUES_EN } from '../shared/nonstatistical'
 
 export const en: SheetTexts = {
-  title: 'Non-statistical sampling – selection with equal probability, not stratified',
+  title: 'Non-statistical sampling – selection with equal probability, non-stratified',
   shortTitle: 'Non-statistical, equal probability',
   legalBasis: 'Art. 6(1)(b), (2) and (3); Art. 8(2); Annex II point 2.1 (ratio estimation) of Delegated Regulation (EU) 2023/67',
   sections: {
@@ -22,7 +22,7 @@ export const en: SheetTexts = {
     C4: { label: 'Programme(s) / CCI', hint: 'Art. 3(1) and (2) DR.' },
     C5: { label: 'Accounting year' },
     C6: { label: 'Sampling unit (e.g. operation, declaration of expenditure, payment claim)' },
-    C7: { label: 'Book value of the adjusted audit population (BV)', hint: 'Pre-filled from sheet 02.' },
+    C7: { label: 'Book value of the adjusted population (BV)', hint: 'Pre-filled from sheet 02.' },
     C8: { label: 'Number of sampling units (N)', hint: 'Pre-filled from sheet 02.' },
     C9: { label: 'Admissibility of non-statistical sampling (N < 300)' },
     C10: { label: 'Book value of the exhaustive stratum (optional) (BV_e)', hint: 'Art. 6(1), third subparagraph; Art. 5(3).' },
@@ -41,7 +41,7 @@ export const en: SheetTexts = {
     C23: { label: 'Delimited systemic errors (amount)', hint: 'Art. 2(20), (21); Art. 8(1) DR.' },
     C24: { label: 'Uncorrected anomalous errors (amount)', hint: 'Art. 2(20), (21); Art. 8(1) DR.' },
     C25: { label: 'Extrapolated random error rate', formula: 'EE / BV' },
-    C26: { label: 'Total error rate', formula: '(EE + systemic + uncorrected anomalous errors) / BV', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
+    C26: { label: 'Total error rate', formula: '(EE + delimited systemic + uncorrected anomalous errors) / BV', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C27: { label: 'Materiality threshold', hint: 'Annex I point 1 DR.' },
     C28: { label: 'Assessment against the materiality threshold', hint: 'For non-statistical sampling, sampling precision and upper error limit are not calculated (Art. 8(2)).' },
   },

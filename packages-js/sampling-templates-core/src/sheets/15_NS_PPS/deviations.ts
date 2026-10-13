@@ -4,6 +4,7 @@
  * einen anderen Wert als die Vorlage. Jede Zeile ist durch mindestens einen
  * Golden-Fall belegt (test/deviations.spec.ts); Übersicht: docs/abweichungen.md.
  */
+import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'
 import type { CellAddress, Deviation } from '../../model/types'
 
 function entries(cells: readonly CellAddress[], whenEmpty: readonly CellAddress[], template: string, reason: string): Deviation[] {
@@ -28,4 +29,5 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C19', 'C25', 'C26', 'N5'], ['C7', 'C10'], 'Wert auf Grundlage des mit 0 gerechneten Buchwerts bzw. Stichprobenumfangs (auch negative Beträge)', 'Auswahlintervall und Hochrechnung setzen Buchwert der Grundgesamtheit und Stichprobenumfang voraus.'),
   ...entries(['C29', 'C30', 'N11'], ['C10'], 'Fehlerquote auf Grundlage des mit n = 0 gerechneten (negativen) Auswahlintervalls', SIZE),
   ...entries(['C32'], ['C10', 'C31'], 'Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage des mit n = 0 gerechneten Auswahlintervalls', 'Die Würdigung setzt die Wesentlichkeitsschwelle und den Stichprobenumfang voraus.'),
+  { cell: 'C25', whenEmpty: ['C23'], ...PROJECTION_WITHOUT_ERRORS },
 ]

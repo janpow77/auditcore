@@ -15,6 +15,7 @@
  * zeigt sie in C67 nur die Untergrenzen. In beiden Fällen rechnet sie damit
  * weiter. Übersicht: docs/abweichungen.md.
  */
+import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'
 import type { CellAddress, Deviation } from '../../model/types'
 
 function entries(cells: readonly CellAddress[], whenEmpty: readonly CellAddress[], template: string, reason: string): Deviation[] {
@@ -94,4 +95,5 @@ export const deviations: readonly Deviation[] = [
     'Ohne die Angaben zum Gesamtumfang und zur Neuberechnung für Zeitraum 2 sind die endgültigen Umfänge nicht bestimmt; Auswahl, Hochrechnung und Würdigung bleiben offen.',
   ),
   ...withoutBasis,
+  { cell: 'C84', whenEmpty: ['C46', 'C81'], ...PROJECTION_WITHOUT_ERRORS },
 ]

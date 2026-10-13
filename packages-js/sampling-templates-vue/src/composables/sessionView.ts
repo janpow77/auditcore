@@ -6,6 +6,7 @@
 import {
   buildGuide,
   buildListView,
+  buildReport,
   buildSections,
   buildSummary,
   computeWorkspace,
@@ -24,6 +25,7 @@ import {
   type CellMap,
   type GuideView,
   type ListView,
+  type ReportPage,
   type SectionView,
   type SheetContext,
   type SheetId,
@@ -56,6 +58,7 @@ export interface SessionView {
   usedStrata: ComputedRef<number>
   hasStrata: ComputedRef<boolean>
   listView: ComputedRef<ListView | null>
+  report: ComputedRef<ReportPage | null>
   pasteColumns: ComputedRef<string>
   find: (id: SheetId | null) => AvailableSheet | null
 }
@@ -65,6 +68,9 @@ export function ownInputs(state: WorkspaceState, id: SheetId): CellMap {
   const inputs = state.sheets[id]
   return inputs && !Array.isArray(inputs) ? (inputs as CellMap) : {}
 }
+
+/** Blatt der Druckfassung; es wird als Berichtsseite gezeigt, nicht als Formular. */
+const REPORT_SHEET = '20_Druck_KOM'
 
 const isList = (sheet: AvailableSheet | null): boolean => sheet?.definition.layout === 'list'
 
@@ -101,6 +107,8 @@ export function useSessionView(workspace: ShallowRef<WorkspaceState>, step: Ref<
       const sheet = currentSheet.value
       return sheet && isList(sheet) ? buildListView(sheet, listRows(workspace.value, sheet.id), activeSheet.value, context.value, options.t) : null
     }),
+    /** Berichtsseite (Blatt 20), solange der Schritt „Bericht“ angezeigt wird. */
+    report: computed(() => (form.value && form.value.sheet.id === REPORT_SHEET ? buildReport(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t, options.sheets()) : null)),
     pasteColumns: computed(() => (currentSheet.value ? pasteColumns(currentSheet.value.definition).map((field) => `${field.label} (${field.cell})`).join('; ') : '')),
   }
 }

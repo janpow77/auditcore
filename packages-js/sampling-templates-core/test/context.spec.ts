@@ -81,7 +81,7 @@ describe('Arbeitsübersetzung Englisch', () => {
 
   it('die Oberflächentexte sind vollständig übersetzt', () => {
     const missing = Object.keys(samplingTemplatesMessages.de).filter((key) => !(key in samplingTemplatesMessages.en))
-    expect(missing).toEqual(['menuOpenHint', 'menuSaveHint', 'percentSuffix'])
+    expect(missing).toEqual([])
     expect(Object.keys(samplingTemplatesMessages.en).filter((key) => !(key in samplingTemplatesMessages.de))).toEqual([])
   })
 
@@ -107,15 +107,15 @@ describe('Arbeitsübersetzung Englisch', () => {
     const results = localized.compute(method.sample.inputs, createContext())
     expect(results).toEqual(method.compute(method.sample.inputs, createContext()))
     const rows = buildSections(localized, method.sample.inputs, results, createContext(), en).flatMap((section) => [...section.rows])
-    expect(rows.find((row) => row.cell === 'C27')).toMatchObject({ label: 'Sample size to be applied (at least 30; limited where applicable)', display: '92' })
-    expect(rows.find((row) => row.cell === 'C13')).toMatchObject({ display: '✔ medium: value between the corner values', value: '✔ mittel: Wert zwischen den Eckwerten' })
-    expect(rows.find((row) => row.cell === 'C9')?.options.map((option) => [option.value, option.label])).toEqual([['hoch', 'high'], ['mittel', 'medium'], ['gering', 'low']])
+    expect(rows.find((row) => row.cell === 'C27')).toMatchObject({ label: 'Sample size to be applied (at least 30; capped where applicable)', display: '92' })
+    expect(rows.find((row) => row.cell === 'C13')).toMatchObject({ display: '✔ average: value between the two minimum levels', value: '✔ mittel: Wert zwischen den Eckwerten' })
+    expect(rows.find((row) => row.cell === 'C9')?.options.map((option) => [option.value, option.label])).toEqual([['hoch', 'high'], ['mittel', 'average'], ['gering', 'low']])
     expect(nbsp(rows.find((row) => row.cell === 'C10')?.options.at(-1)?.label ?? '')).toBe('95 % (outside Annex I)')
     const summary = buildSummary(localized, method.sample.inputs, results, createContext(), en)
     expect(summary).toMatchObject({ primaryLabel: 'Sample size to be applied', primaryUnit: 'units' })
-    expect(summary.hints[0]?.text).toBe('✔ medium: value between the corner values')
+    expect(summary.hints[0]?.text).toBe('✔ average: value between the two minimum levels')
     expect(localizeSheet(method, 'de')).toBe(method)
-    expect(localizeSheet(stratified, 'en', SHARED_TEXTS.en).definition.title).toBe(stratified.definition.title)
+    expect(localizeSheet(stratified, 'en', SHARED_TEXTS.en).definition.title).toBe('MUS standard approach – one sampling period, stratified')
   })
 
   it('der Wegweiser und der Katalog folgen der Sprache', () => {
@@ -124,7 +124,7 @@ describe('Arbeitsübersetzung Englisch', () => {
     expect(guide.items.map((item) => item.text)).toEqual([
       '✔ fewer than 300 units: non-statistical method admissible (Art. 79(2) of Regulation (EU) 2021/1060)',
       'Minimum coverage for a non-statistical method (10 % of units): 26 (Art. 6(2) DR.)',
-      'Limited sample size: 50 units for programmes in category 1 or 2 without Art. 83 (Art. 5(7)); 30 units under Art. 83.',
+      'Capped sample size: 50 sampling units for programmes assessed in category 1 or 2 without Art. 83 (Art. 5(7)); 30 sampling units under Art. 83.',
     ])
     const families = localizeFamilies(FAMILIES, 'en')
     expect(families[0]).toMatchObject({ id: 'mus', name: 'MUS standard approach' })

@@ -9,44 +9,17 @@
  * Neuberechnung), liegt in `periods.ts` und wird hier weitergereicht.
  */
 import { divide, ge, guard, ifError, isBlank, isNumber, le, minus, n, required, roundUp } from '../../excel/index'
-import { TEMPLATE_POLICY, unfounded } from '../../model/policy'
+import { unfounded } from '../../model/policy'
 import type { ZeroAssumption } from '../../model/sheet'
 import type { FieldTexts } from '../../model/texts'
 import type { CellAddress, CellMap, CellValue, Cells, SheetContext, WebHint } from '../../model/types'
-import { NOT_APPLICABLE, type Pending, appliedPeriodSize as periodSize } from './periods'
+import { NOT_APPLICABLE, appliedPeriodSize as periodSize } from './periods'
 import { appliedSampleSize, assessment, checkIteration, checkMinimumUnits, lowerErrorLimit } from './statistical'
 
 type Value = CellValue | undefined
 
-export { INCREASE_INTERPRETATION, NOT_APPLICABLE, globalComputedSize, share, weightedDeviation, type Pending } from './periods'
+export { INCREASE_INTERPRETATION, NOT_APPLICABLE, computeBesideTemplate as computeTwice, globalComputedSize, share, weightedDeviation, type Pending } from './periods'
 export { recalculationOf as approachOf, type Recalculation as Approach } from './periods'
-
-/**
- * Rechnet ein Blatt mit dem Kontext des Aufrufs und, sobald eine Formel danach
- * fragt, ein zweites Mal vollständig wie die Vorlage: Die genannten Eingaben
- * zählen leer als 0, und Werte ohne Grundlage (`unfounded`, `totalRow`) erscheinen
- * so, wie die Vorlage sie zeigt. Fehlt im Lauf des Aufrufs ein Wert, den der Lauf
- * „wie die Vorlage“ hat, ist die Zelle offen und `pending` meldet das den Formeln,
- * die einen leeren Wert sonst übergingen (`MAX` über einen Bezug, `ISNUMBER`,
- * `SUM`). Anders als `computeTwice` in `periods.ts` erkennt `pending` so auch
- * Zellen, die nur deshalb leer sind, weil ein Wert ohne Grundlage entfällt. Bei
- * vollständiger Belegung fragt keine Formel nach einer leeren Zelle; dann bleibt
- * es bei einem Lauf.
- */
-export function computeTwice(inputs: Cells, requiredInputs: readonly CellAddress[], context: SheetContext, evaluate: (c: Cells, pending: Pending, context: SheetContext) => void): Cells {
-  let template: Cells | undefined
-  const likeTemplate = (): Cells => {
-    if (!template) {
-      template = { ...inputs }
-      for (const cell of requiredInputs) if (isBlank(inputs[cell])) template[cell] = 0
-      evaluate(template, () => false, { ...context, policy: TEMPLATE_POLICY })
-    }
-    return template
-  }
-  const cells: Cells = { ...inputs }
-  evaluate(cells, (cell) => isBlank(cells[cell]) && !isBlank(likeTemplate()[cell]), context)
-  return cells
-}
 
 /** Laufende Nummer je Objekt (Parameter, Richtlinie) als Teil des Schlüssels in `remembered`; die Objekte selbst werden nicht gelesen. */
 const identities = new WeakMap<object, number>()
@@ -285,14 +258,14 @@ export const INCREASE_INTERPRETATION_EN =
 export const HINTS_EN = {
   'confidence-outside-annex': 'Confidence level 95 % is outside the table in Annex I',
   'limited-size-open': 'Capped sample size selected, but the calculated total sample size is not determined: the total sample size to be applied remains open',
-  'size-exceeds-population': 'Sample size exceeds the number of sampling units of the population',
-  'strata-sum-exceeds-size': 'Sum of the rounded-up sample sizes per stratum is larger than the sample size to be applied',
+  'size-exceeds-population': 'Sample size exceeds the number of units of the population',
+  'strata-sum-exceeds-size': 'Sum of the rounded-up stratum sample sizes is larger than the sample size to be applied',
   'strata-beyond-template': 'More than seven strata: the template provides seven columns; strata 8 to 20 are an extension of the web version',
 } as const
 
 /** Hinweis „Stichprobenumfang übersteigt die Anzahl der Einheiten“ je Zeitraum (`size-exceeds-population-<n>`). */
 export function periodExceedsEn(period: number): string {
-  return `Sample size for period ${period} exceeds the number of sampling units of the period`
+  return `Sample size for period ${period} exceeds the number of units of the period`
 }
 
 /** Englische Arbeitsübersetzung zur Auswahl eines Zeitraums: neun Zeilen ab `row` (Grenzwert bis Prüfung Iteration), wie `selection`. */

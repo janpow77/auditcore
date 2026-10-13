@@ -221,10 +221,10 @@ export type { DataTable, DataTableColumn } from '../../model/table'
 
 /** Englische Arbeitsübersetzung der Texte, die alle Altvorlagen teilen (nicht amtlich). */
 export const LEGACY_NOTICE_EN =
-  'Legacy template 2014–2020 (version of 30 June 2017), computationally unchanged (only error values for empty inputs are suppressed). Not a ready-to-use method within the meaning of Delegated Regulation (EU) 2023/67. To be applied only as an own method under Art. 79 of Regulation (EU) 2021/1060 (recital 15 of the Delegated Regulation) with a methodological justification; z values two-sided only, error limit without systemic and anomalous errors.'
+  'Legacy template 2014–2020 (version of 30 June 2017), computationally unchanged (only error values for empty inputs are suppressed). Not an off-the-shelf sampling methodology within the meaning of Delegated Regulation (EU) 2023/67. To be applied only as an own method under Art. 79 of Regulation (EU) 2021/1060 (recital 15 of the Delegated Regulation) with a methodological justification; z values for bilateral testing only, error limit without systemic and anomalous errors.'
 
 const WEB_HINTS_EN: Readonly<Record<string, string>> = {
-  'size-exceeds-population': 'Sample size exceeds the number of units in the population',
+  'size-exceeds-population': 'Sample size exceeds the number of units of the population',
   'tolerable-error-not-above-anticipated': 'TE ≤ AE: the legacy template does not check this; the sample size shown is not reliable',
   'below-three-units': 'Fewer than three sampling units (footnote of the legacy template: minimum of 3)',
 }

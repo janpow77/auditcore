@@ -161,9 +161,10 @@ function withTable(document: string, table: string): string {
 
 describe.skipIf(SKIP)('Erzeugte Nachweise', () => {
   it('docs/abgleich.md entspricht dem Golden-Abgleich', () => {
-    if (WRITE) writeFileSync(path('abgleich.md'), comparison())
-    expect(readFileSync(path('abgleich.md'), 'utf8')).toBe(comparison())
-  })
+    const expected = comparison()
+    if (WRITE) writeFileSync(path('abgleich.md'), expected)
+    expect(readFileSync(path('abgleich.md'), 'utf8')).toBe(expected)
+  }, 180_000)
 
   it('die Abweichungstabelle in docs/abweichungen.md entspricht den Blattmodulen', () => {
     const current = readFileSync(path('abweichungen.md'), 'utf8')

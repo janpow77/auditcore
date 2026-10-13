@@ -12,7 +12,11 @@ import type { CellValue } from '../model/types'
 /** Fehlerwert einer Formel (`#DIV/0!`, `#WERT!`, `#NV`); `guard` macht daraus `null`. */
 export class FormulaError extends Error {
   constructor(message = 'Fehlerwert') {
+    // Ein Fehlerwert ist Teil der normalen Rechnung (leere Pflichteingabe); die Aufrufkette braucht niemand, sie zu erfassen kostet aber Zeit.
+    const limit = Error.stackTraceLimit
+    Error.stackTraceLimit = 0
     super(message)
+    Error.stackTraceLimit = limit
     this.name = 'FormulaError'
   }
 }

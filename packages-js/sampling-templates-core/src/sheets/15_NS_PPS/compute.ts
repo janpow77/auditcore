@@ -5,6 +5,7 @@
  * der Vorlage nach.
  */
 import { divide, guard, isNumber, minus, n, required } from '../../excel/index'
+import { projectionWithoutErrors } from '../../model/policy'
 import { resolveInputs } from '../../model/sheet'
 import type { CellMap, Cells, SheetContext } from '../../model/types'
 import { assessment, checkAdmissibility, checkCoverage, fillSummary, minimumCoverage, projectedError, projectedErrorRate, totalErrorRate } from '../shared/nonstatistical'
@@ -26,9 +27,9 @@ function sample(c: Cells): void {
 }
 
 /** Abschnitt K: Hochrechnung, Fehlerquoten und Würdigung (C24–C32). */
-function projection(c: Cells): void {
+function projection(c: Cells, context: SheetContext): void {
   c.C24 = n(c.C22)
-  c.C25 = guard(() => required(c.C19) * n(c.C23))
+  c.C25 = projectionWithoutErrors(context, isNumber(c.C23), guard(() => required(c.C19) * n(c.C23)))
   c.C26 = projectedError(isNumber(c.C23) ? 1 : 0, c.C24, c.C25)
   c.C29 = projectedErrorRate(c.C26, c.C7)
   c.C30 = totalErrorRate(c.C26, c.C27, c.C28, c.C7)
@@ -39,7 +40,7 @@ function projection(c: Cells): void {
 export function compute(inputs: CellMap, context: SheetContext): CellMap {
   const c = resolveInputs(definition, inputs, context)
   sample(c)
-  projection(c)
+  projection(c, context)
   fillSummary(c, { method: 'Nichtstatistisch, PPS', bookValue: 'C7', projectedError: 'C26', exhaustiveError: 'C24', systemicErrors: 'C27', anomalousErrors: 'C28', sampleSize: 'C10', totalErrorRate: 'C30' })
   return c
 }

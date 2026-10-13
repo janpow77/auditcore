@@ -5,6 +5,7 @@
  * Schwellen und Rechenreihenfolge sind unverändert.
  */
 import { divide, guard, isBlank, isNumber, minus, n, required, roundUp, squareRoot } from '../../excel/index'
+import { projectionWithoutErrors } from '../../model/policy'
 import { resolveInputs } from '../../model/sheet'
 import type { CellAddress, CellMap, Cells, SheetContext } from '../../model/types'
 import { zValue } from '../01_Parameter/index'
@@ -104,9 +105,9 @@ function finalSizes(c: Cells, pending: Pending, limit: number | null, context: S
  * Standardabweichung der Stichprobe eines Zeitraums (C47, C82), rechnet die
  * Webfassung wie die Vorlage mit 0 und weist das aus (`zeroAssumed`).
  */
-function projection(c: Cells): void {
+function projection(c: Cells, context: SheetContext): void {
   c.C83 = n(c.C45) + n(c.C80)
-  c.C84 = guard(() => divide(required(c.C39), required(c.C79)) * n(c.C46) + divide(required(c.C73), required(c.C74)) * n(c.C81))
+  c.C84 = projectionWithoutErrors(context, isNumber(c.C46) || isNumber(c.C81), guard(() => divide(required(c.C39), required(c.C79)) * n(c.C46) + divide(required(c.C73), required(c.C74)) * n(c.C81)))
   c.C85 = isNumber(c.C46) || isNumber(c.C81) ? guard(() => required(c.C83) + required(c.C84)) : null
   c.C86 = guard(
     () => required(c.C15) * squareRoot(divide(required(c.C39) ** 2, required(c.C79)) * n(c.C47) ** 2 + divide(required(c.C73) ** 2, required(c.C74)) * n(c.C82) ** 2),
@@ -122,7 +123,7 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   finalSizes(c, pending, limit, context)
   selection(c, 70, c.C48, c.C67)
   c.C79 = guard(() => minus(required(c.C66), n(c.C37)))
-  projection(c)
+  projection(c, context)
   errorLimits(c, 85, c.C14, c.C52, c.C17)
   summary(c, 'MUS-Standardansatz, 2 Zeiträume', 85, c.C52, c.C83, () => required(c.C66) + required(c.C67))
 }

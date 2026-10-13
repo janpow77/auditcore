@@ -6,6 +6,7 @@ import type { CellMap, WebHint } from '../../model/types'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
+import { en } from './texts.en'
 
 /** Erfundene Beispielwerte mit drei Schichten; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -70,4 +71,4 @@ function zeroAssumed(results: CellMap): ZeroAssumption[] {
   return [...deviation, ...errorSum]
 }
 
-export const sheet = defineSheet({ id: '04_MUS_1Z_S', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed })
+export const sheet = defineSheet({ id: '04_MUS_1Z_S', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed, translations: { en } })

@@ -132,6 +132,17 @@ function applyReported(sheet: AvailableSheet, base: CellMap, cells: Cells, polic
  * Pflichteingaben ohnehin offen bleiben (`lacking` ist dann unvollständig).
  */
 export function evaluateSheet(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, notes = true): SheetEvaluation {
+  // Anzeige, Hinweise und Ergebnisspalte fragen nacheinander mit denselben Objekten; die letzte Auswertung je Blatt bleibt stehen.
+  const last = lastEvaluation.get(sheet)
+  if (last && last.inputs === inputs && last.context === context && (last.notes || !notes)) return last.evaluation
+  const evaluation = evaluate(sheet, inputs, context, notes)
+  lastEvaluation.set(sheet, { inputs, context, notes, evaluation })
+  return evaluation
+}
+
+const lastEvaluation = new WeakMap<AvailableSheet, { inputs: CellMap; context: SheetContext; notes: boolean; evaluation: SheetEvaluation }>()
+
+function evaluate(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, notes: boolean): SheetEvaluation {
   const policy = policyOf(context)
   const base = sheet.compute(inputs, context)
   const cells: Cells = { ...base }

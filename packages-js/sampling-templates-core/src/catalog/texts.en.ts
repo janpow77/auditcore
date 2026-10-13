@@ -1,4 +1,8 @@
-/** Englische Arbeitsübersetzung des Katalogs (nicht amtlich): Familien nach Kennung, Varianten nach Blatt. */
+/**
+ * Englische Fassung des Katalogs: Familien nach Kennung, Varianten nach Blatt.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67.
+ */
 export interface CatalogTexts {
   families: Readonly<Record<string, { name?: string; reference?: string; notice?: string }>>
   variants: Readonly<Record<string, { name?: string; reference?: string; template2017?: string }>>
@@ -17,7 +21,7 @@ export const en: CatalogTexts = {
     other: {
       name: 'Other methods under Art. 79',
       reference: ONLY_79,
-      notice: 'Not a ready-to-use method of Delegated Regulation (EU) 2023/67. The 2017 templates may only be applied with a methodological justification (recital 15).',
+      notice: 'Not an off-the-shelf sampling methodology of Delegated Regulation (EU) 2023/67. The 2017 templates may only be applied with a methodological justification (recital 15).',
     },
   },
   variants: {

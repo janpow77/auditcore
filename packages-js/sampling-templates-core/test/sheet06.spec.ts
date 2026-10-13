@@ -294,7 +294,7 @@ describe('Blatt 06_MUS_2Z_S', () => {
     const hints = cases.flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts?.webHints ?? {})))
     expect(texts?.webHints?.['no-planned-size-20']).toMatch(/^Stratum 20: /)
-    expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – two periods, stratified')
+    expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – two sampling periods, stratified')
   })
 })
 
@@ -305,6 +305,6 @@ describe('Blatt 04_MUS_1Z_S: englische Arbeitsübersetzung (noch nicht am Blatt 
     for (const column of STRATA_COLUMNS.slice(3, 8)) Object.assign(inputs, { [`${column}9`]: 1000000, [`${column}24`]: 0.1 })
     const hints = sheet04.webHints?.(inputs, sheet04.compute(inputs, context), context) ?? []
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts04.webHints ?? {})))
-    expect(localizeSheet({ ...sheet04, translations: { en: texts04 } }, 'en').definition.title).toBe('MUS standard approach – one period, stratified')
+    expect(localizeSheet({ ...sheet04, translations: { en: texts04 } }, 'en').definition.title).toBe('MUS standard approach – one sampling period, stratified')
   })
 })

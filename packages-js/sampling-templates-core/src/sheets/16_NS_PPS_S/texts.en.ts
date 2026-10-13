@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 16_NS_PPS_S (nicht amtlich). Maßgeblich
- * ist der deutsche Wortlaut der Vorlage in `definition.ts` und im Rechenkern.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 (Art. 2, 5–8,
+ * Englische Fassung zu Blatt 16_NS_PPS_S.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 (Art. 2, 5–8,
  * Anhang II): extrapolated error, exhaustive/random stratum, high value units,
  * interval of selection, sampling precision, audit population.
  */
@@ -30,28 +30,28 @@ export const en: SheetTexts = {
     D15: { label: 'Sample size per stratum' },
     C16: { label: 'Minimum coverage 10 % of the sampling units (rounded up)', hint: 'Art. 79(2) of Regulation (EU) 2021/1060; Art. 6(2) DR: units of exhaustive strata are included. Where the method is changed under Art. 6(3), the minimum size refers to the whole accounting year.' },
     C17: { label: 'Check of minimum coverage' },
-    D18: { label: 'Cut-off per stratum (BV/n)' },
+    D18: { label: 'Cut-off value per stratum (BV/n)' },
     D19: { label: 'Number of high value units (n_eh)' },
     D20: { label: 'Book value of the high value units (BV_eh)' },
     D21: { label: 'Book value of the random stratum (BV_hs)' },
     D22: { label: 'Random units to be selected (n_hs)' },
     D23: { label: 'Interval of selection (SI_h)' },
-    D25: { label: 'Sum of errors in high value units (ΣE_eh)' },
-    D26: { label: 'Sum of error rates of the random stratum (Σ E/BV)' },
+    D25: { label: 'Sum of the errors in high value units (ΣE_eh)' },
+    D26: { label: 'Sum of the error rates of the random stratum (Σ E/BV)' },
     D28: { label: 'Extrapolated error per stratum (EE_h)' },
     C29: { label: 'Error of the exhaustive strata (EE_e)' },
     C30: { label: 'Extrapolated error EE' },
     C31: { label: 'Delimited systemic errors (amount)', hint: 'Art. 2(20), (21); Art. 8(1) DR.' },
     C32: { label: 'Uncorrected anomalous errors (amount)', hint: 'Art. 2(20), (21); Art. 8(1) DR.' },
     C33: { label: 'Extrapolated random error rate', formula: 'EE / BV' },
-    C34: { label: 'Total error rate', formula: '(EE + systemic + uncorrected anomalous errors) / BV', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
+    C34: { label: 'Total error rate', formula: '(EE + delimited systemic + uncorrected anomalous errors) / BV', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C35: { label: 'Materiality threshold', hint: 'Annex I point 1 DR.' },
     C36: { label: 'Assessment against the materiality threshold', hint: 'For non-statistical sampling, sampling precision and upper error limit are not calculated (Art. 8(2)).' },
   },
   summary: {
     primary: 'Total error rate (sheet-related)',
     unit: '',
-    rows: { C11: 'Units of the population (N)', C15: 'Sum of the stratum sample sizes n_h', C16: 'Minimum coverage (10 %)', C19: 'of which high value', C22: 'Random strata n_hs', C30: 'Extrapolated error EE', C33: 'Extrapolated random error rate' },
+    rows: { C11: 'Units of the population (N)', C15: 'Sum of the sample sizes per stratum n_h', C16: 'Minimum coverage (10 %)', C19: 'of which high value', C22: 'Random strata n_hs', C30: 'Extrapolated error EE', C33: 'Extrapolated random error rate' },
   },
   values: { ...VALUES_EN, 'Nichtstatistisch, PPS, geschichtet': 'Non-statistical, PPS, stratified' },
   webHints: {

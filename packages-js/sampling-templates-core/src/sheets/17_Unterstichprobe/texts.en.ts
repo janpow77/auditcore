@@ -1,7 +1,7 @@
 /**
- * Englische Arbeitsübersetzung zu Blatt 17_Unterstichprobe (nicht amtlich).
- * Maßgeblich ist der deutsche Wortlaut der Vorlage in `definition.ts`.
- * Fachbegriffe folgen der englischen Fassung der DelVO (EU) 2023/67 (Art. 2
+ * Englische Fassung zu Blatt 17_Unterstichprobe.
+ * Vermerk: nicht amtliche Arbeitsübersetzung; maßgeblich ist der deutsche Wortlaut der Vorlage.
+ * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 (Art. 2
  * Nr. 12 und 13, Art. 7, Art. 8 Abs. 3): subsampling, subsampling unit,
  * subsample, high value subsampling units, interval of selection, error
  * extrapolated to the sampling unit.
