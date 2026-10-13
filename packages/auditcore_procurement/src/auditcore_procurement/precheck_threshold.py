@@ -7,6 +7,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
+from .eu_thresholds import check_eu_threshold
 from .precheck_common import (
     FAIL,
     PASS,
@@ -151,34 +152,11 @@ def _strict_verdict(
     )
 
 
-def check_threshold(
-    profile: PrecheckProfile,
-    estimated_value: Decimal | None,
-    service_type: str,
-    threshold_tier: str | None,
-    mode: str = "legacy",
-    *,
-    reference_date: date | None = None,
-    year: int | None = None,
-    authority_type: str | None = None,
+def _legacy_threshold(
+    profile: PrecheckProfile, estimated_value: Decimal, category: str, threshold_tier: str | None
 ) -> CheckResult:
-    """Tier from the estimated value.
-
-    ``legacy``: inclusive maxima of the source table in profile order.
-    ``strict``: national tiers from the profile, then the EU threshold of the
-    period of ``reference_date``/``year`` (schema 2 profiles only).
-    """
-    name = "Schwellenwert-Klassifikation"
-    if is_missing(estimated_value, mode):
-        return result(
-            "precheck_threshold", name, WARNING, "Kein geschaetzter Auftragswert angegeben."
-        )
-    assert estimated_value is not None
-    category = category_of(profile, service_type)
-    if mode == "strict":
-        return _strict_threshold(
-            profile, estimated_value, category, threshold_tier, reference_date, year, authority_type
-        )
+    """Source behaviour: first tier whose inclusive maximum covers the value."""
+    name = _THRESHOLD_CHECK[1]
     calculated = (
         next(
             (
@@ -207,3 +185,70 @@ def check_threshold(
         f"Schwellenwert korrekt: {calculated} ({estimated_value} EUR).",
         calculated_tier=calculated,
     )
+
+
+def _regime_request(
+    regime: str | None, contract_type: str | None, mode: str, threshold_tier: str | None
+) -> bool:
+    """Whether the EU-only evaluation of a regime is requested (validated)."""
+    if regime is None and contract_type is None:
+        return False
+    if regime is None or contract_type is None or mode != "strict" or threshold_tier:
+        raise ValueError(
+            "regime und contract_type gehören zusammen, gelten nur in mode='strict' "
+            "und nicht zusammen mit threshold_tier (nationale Stufenprüfung)."
+        )
+    return True
+
+
+def check_threshold(
+    profile: PrecheckProfile,
+    estimated_value: Decimal | None,
+    service_type: str,
+    threshold_tier: str | None,
+    mode: str = "legacy",
+    *,
+    reference_date: date | None = None,
+    year: int | None = None,
+    authority_type: str | None = None,
+    regime: str | None = None,
+    contract_type: str | None = None,
+) -> CheckResult:
+    """Tier from the estimated value.
+
+    ``legacy``: inclusive maxima of the source table in profile order.
+    ``strict``: national tiers from the profile, then the EU threshold of the
+    period of ``reference_date``/``year`` (profiles from schema 2).
+
+    With ``regime`` and ``contract_type`` (``strict``, profiles from schema 3)
+    only the EU threshold of that regime is evaluated, see
+    :func:`auditcore_procurement.eu_thresholds.check_eu_threshold`;
+    ``service_type`` is then not used and national tiers are left out.
+
+    Raises:
+        ValueError: ``regime`` without ``contract_type`` (or the reverse), with
+            ``mode="legacy"`` or together with a recorded ``threshold_tier``.
+    """
+    name = "Schwellenwert-Klassifikation"
+    by_regime = _regime_request(regime, contract_type, mode, threshold_tier)
+    if is_missing(estimated_value, mode):
+        return result(
+            "precheck_threshold", name, WARNING, "Kein geschaetzter Auftragswert angegeben."
+        )
+    assert estimated_value is not None
+    if by_regime:
+        return check_eu_threshold(
+            profile,
+            estimated_value,
+            regime=str(regime),
+            contract_type=str(contract_type),
+            authority_type=authority_type,
+            reference_date=reference_date,
+            year=year,
+        )
+    category = category_of(profile, service_type)
+    if mode == "strict":
+        return _strict_threshold(
+            profile, estimated_value, category, threshold_tier, reference_date, year, authority_type
+        )
+    return _legacy_threshold(profile, estimated_value, category, threshold_tier)

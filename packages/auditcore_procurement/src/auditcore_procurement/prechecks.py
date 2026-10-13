@@ -10,11 +10,14 @@ procurement case, it only reports rule results.
 
 Profiles with schema 2 (``procurement.hvtg`` 2026.09.2: 2024–2027; 2026.09.3:
 2014–2027) hold the EU thresholds per validity period with their official
-source. In ``strict`` mode the EU threshold is selected by the date of the
-measure/notice (``reference_date``) or an explicit ``year``; a missing period
-yields ``REVIEW_REQUIRED``, never a fallback to another period. National tiers
-remain application rules (REVIEW_REQUIRED). ``legacy`` mode keeps the source
-table unchanged.
+source; schema 3 (2026.10.1) adds the thresholds of all EU regimes (utilities,
+concessions, defence, social and other specific services), queried without the
+national part through ``check_eu_threshold``/``eu_catalogue``. In ``strict``
+mode the EU threshold is selected by the date of the measure/notice
+(``reference_date``) or an explicit ``year``; a missing period yields
+``REVIEW_REQUIRED``, never a fallback to another period. National tiers remain
+application rules (REVIEW_REQUIRED). ``legacy`` mode keeps the source table
+unchanged.
 """
 
 from __future__ import annotations
@@ -24,6 +27,7 @@ from datetime import UTC, date, datetime
 from decimal import Decimal
 from typing import Any
 
+from .eu_thresholds import RegimeThreshold, check_eu_threshold, eu_catalogue, eu_regime_threshold
 from .precheck_common import (
     FAIL,
     MODES,
@@ -70,16 +74,20 @@ __all__ = [
     "EuThreshold",
     "PrecheckProfile",
     "ProfileError",
+    "RegimeThreshold",
     "ThresholdPeriod",
     "ThresholdUnavailable",
     "Tier",
+    "check_eu_threshold",
     "check_minimum_bids",
     "check_procedure",
     "check_required_documents",
     "check_threshold",
     "check_value_deviation",
+    "eu_catalogue",
     "eu_period",
     "eu_period_for_year",
+    "eu_regime_threshold",
     "eu_threshold",
     "load_profile",
     "profile_from_dict",
