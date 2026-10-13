@@ -1,57 +1,37 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
-import type { ChecklistChange, ChecklistItemView, ChecklistStatus } from '@auditcore/ui-core'
+import { computed, ref } from 'vue'
+import { checklistBranchIds, checklistProgress, checklistTree, toggleChecklistNode, type ChecklistChange, type ChecklistItemView } from '@auditcore/ui-core'
 import { useI18n } from '../../i18n'
-import { dataprotectionMessages, prefixedLabel } from '../core'
+import { dataprotectionMessages } from '../core'
+import AssistantChecklistNode from './AssistantChecklistNode.vue'
 
 const emit = defineEmits<{ change: [itemId: string, change: ChecklistChange] }>()
+const props = defineProps<{ items: ChecklistItemView[]; busy: boolean }>()
 const { t } = useI18n(dataprotectionMessages)
 
-const STATUSES: ChecklistStatus[] = ['offen', 'in_bearbeitung', 'zur_pruefung', 'nachgewiesen', 'klaerungsbedarf', 'nicht_erfuellt', 'nicht_anwendbar', 'erneut_zu_pruefen']
-interface Edit { status: ChecklistStatus; justification: string; evidence: string }
-const props = defineProps<{ items: ChecklistItemView[]; busy: boolean }>()
-const edits = reactive<Record<string, Edit>>({})
+const tree = computed(() => checklistTree(props.items))
+const progress = computed(() => checklistProgress(tree.value))
+// Bereiche sind anfangs offen, Prüfpunkte zu; der Zustand übersteht neue Serverstände.
+const expanded = ref<ReadonlySet<string>>(new Set(checklistBranchIds(tree.value)))
 
-// Eingaben je Prüfpunkt; ein neuer Serverstand setzt sie zurück.
-watch(() => props.items, (items) => {
-  for (const item of items) edits[item.id] = { status: item.status, justification: item.justification, evidence: item.evidence_ids.join(', ') }
-}, { immediate: true })
-
-function edit(item: ChecklistItemView): Edit {
-  return edits[item.id] ?? { status: item.status, justification: '', evidence: '' }
-}
-
-function save(item: ChecklistItemView): void {
-  const current = edit(item)
-  const evidence = current.evidence.split(',').map((entry) => entry.trim()).filter(Boolean)
-  emit('change', item.id, { status: current.status, justification: current.justification, evidence_ids: evidence })
+function toggle(id: string): void {
+  expanded.value = toggleChecklistNode(expanded.value, id)
 }
 </script>
 
 <template>
-  <section class="fa-dataprotection__panel" data-testid="assistant-checklist" aria-labelledby="fa-assistant-checklist">
-    <h3 id="fa-assistant-checklist">{{ t('checklistTitle') }}</h3>
-    <table class="fa-dataprotection__table">
-      <tbody>
-        <tr v-for="item in items" :key="item.id" :data-item="item.id">
-          <th scope="row">{{ item.id }}</th>
-          <td>
-            {{ item.titel }}
-            <span v-if="item.sperrt" class="fa-assistant__badge">{{ t('itemBlocks', { gate: item.sperrt }) }}</span>
-            <br /><span class="fa-dataprotection__muted">{{ prefixedLabel(t, 'item', item.status) }} · {{ item.zustaendig }}</span>
-          </td>
-          <td>
-            <label>{{ t('checklistStatus', { id: item.id }) }}
-              <select v-model="edit(item).status">
-                <option v-for="status in STATUSES" :key="status" :value="status">{{ prefixedLabel(t, 'item', status) }}</option>
-              </select>
-            </label>
-            <label>{{ t('evidenceIds') }} <input v-model="edit(item).evidence" type="text" /></label>
-            <label>{{ t('answerJustification') }} <textarea v-model="edit(item).justification" rows="2"></textarea></label>
-            <button type="button" :disabled="busy" @click="save(item)">{{ t('saveItem') }}</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <section class="fa-dataprotection__panel fa-checklist" data-testid="assistant-checklist" aria-labelledby="fa-assistant-checklist">
+    <div class="fa-dataprotection__bar fa-checklist__head">
+      <h3 id="fa-assistant-checklist">{{ t('checklistTitle') }}</h3>
+      <span class="fa-dataprotection__muted">{{ t('checklistProgress', { settled: progress.settled, total: progress.total }) }}</span>
+      <span v-if="progress.attention" class="fa-checklist__status fa-checklist__status--attention">{{ t('checklistAttention', { count: progress.attention }) }}</span>
+      <div class="fa-dataprotection__actions">
+        <button type="button" @click="expanded = new Set(checklistBranchIds(tree))">{{ t('checklistExpandAll') }}</button>
+        <button type="button" @click="expanded = new Set()">{{ t('checklistCollapseAll') }}</button>
+      </div>
+    </div>
+    <ul class="fa-checklist__tree">
+      <AssistantChecklistNode v-for="node in tree" :key="node.id" :node="node" :expanded="expanded" :busy="busy" @toggle="toggle" @change="(id, change) => emit('change', id, change)" />
+    </ul>
   </section>
 </template>
