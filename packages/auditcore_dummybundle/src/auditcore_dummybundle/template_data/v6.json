@@ -1,0 +1,324 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v6",
+  "id": "V6",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Rechnungslegung (Anhang XXIV, Anlagen 1–7)",
+  "purpose": "Amtliche Anlagen der Rechnungslegung samt Abstimmung zum abschließenden Zahlungsantrag, in der Variante ohne Regionenkategorien.",
+  "legal_basis": "VO (EU) 2021/1060, Art. 98 Abs. 1 Buchst. a und Anhang XXIV",
+  "sources": [
+    "Verordnung (EU) 2021/1060, ABl. L 231 vom 30.6.2021, S. 159, deutsche Fassung; abgerufen am 13.10.2026 über http://publications.europa.eu/resource/celex/32021R1060 (Ursprungsfassung, nicht konsolidiert; SHA-256 des Abrufs d0031a9d7fd4d2e28ebc45e806331f7b2be3e4b34b76293cefbeae8242724ceb)",
+    "Titel der Anlagen 1–7 und Wortlaut der Spalten aus Anhang XXIV übernommen; Fußnotenzeichen entfernt, Gruppenköpfe dem Spaltenkopf vorangestellt."
+  ],
+  "open_points": [
+    "Anlage 3 (Finanzinstrumente) und Anlage 7 (Vorschüsse bei staatlichen Beihilfen) enthalten nur Nullbeträge: das Bündel erzeugt keine solchen Fälle.",
+    "Anlage 5: nicht erfüllte grundlegende Voraussetzungen kommen im Bündel nicht vor (Nullbeträge); die Spalten (D) und (E) entsprechen nach Fußnote 7 der Anlage 1.",
+    "Anlage 6 gilt nur für AMIF, ISF und BMVI und bleibt für die wählbaren Fonds ohne Zeilen.",
+    "Die Aufteilung der Spalte (G) in G1 bis G3 nach der Methodennote der Kommission steht nicht im Anhang und wird nicht erzeugt.",
+    "Einreichungsdatum ist der 15. Februar nach Ende des Geschäftsjahres (Art. 98 Abs. 1).",
+    "Konsolidierte Fassung und Berichtigungen der Verordnung sind nicht abgeglichen."
+  ],
+  "tables": [
+    {
+      "name": "RL Kopf",
+      "title": "Rechnungslegung – Kopfangaben",
+      "source": "accounts_head",
+      "columns": [
+        {
+          "header": "Betroffener Fonds",
+          "kind": "text",
+          "field": "fund"
+        },
+        {
+          "header": "Aktenzeichen der Kommission (CCI-Nr.)",
+          "kind": "text",
+          "field": "cci",
+          "note": "Erfundene Kennung mit dem nicht vergebenen Ländercode XX."
+        },
+        {
+          "header": "Bezeichnung des Programms",
+          "kind": "text",
+          "field": "programme"
+        },
+        {
+          "header": "Beschluss der Kommission",
+          "kind": "text",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Datum des Beschlusses der Kommission",
+          "kind": "date",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Version der Rechnungslegung",
+          "kind": "text",
+          "field": "version"
+        },
+        {
+          "header": "Datum der Einreichung der Rechnungslegung",
+          "kind": "date",
+          "field": "submission_date"
+        },
+        {
+          "header": "Nationales Aktenzeichen (optional)",
+          "kind": "text",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Geschäftsjahr vom",
+          "kind": "date",
+          "field": "accounting_year_from"
+        },
+        {
+          "header": "Geschäftsjahr bis",
+          "kind": "date",
+          "field": "accounting_year_to"
+        }
+      ]
+    },
+    {
+      "name": "RL Anlage 1",
+      "title": "Anlage 1: Beträge, die in den Rechnungsführungssystemen des Aufgabenbereichs „Rechnungsführung“ verbucht wurden – Artikel 98 Absatz 3 Buchstabe a",
+      "source": "accounts_annex1",
+      "columns": [
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Gesamtbetrag der förderfähigen Ausgaben, die in den Rechnungsführungssystemen der den Aufgabenbereich „Rechnungsführung“ übernehmenden Stelle verbucht wurden und in den Zahlungsanträgen für das Geschäftsjahr gemäß Artikel 98 Absatz 3 Buchstabe a enthalten sind",
+          "kind": "amount",
+          "field": "eligible"
+        },
+        {
+          "header": "(B) Betrag der technischen Hilfe gemäß Artikel 91 Absatz 3 Buchstabe b",
+          "kind": "amount",
+          "field": "technical_assistance",
+          "note": "Berechnung nicht belegt; bleibt leer."
+        },
+        {
+          "header": "(C) Gesamtbetrag des geleisteten oder zu leistenden entsprechenden öffentlichen Beitrags gemäß Artikel 98 Absatz 3 Buchstabe a",
+          "kind": "amount",
+          "field": "public"
+        }
+      ]
+    },
+    {
+      "name": "RL Anlage 2",
+      "title": "Anlage 2: Während des Geschäftsjahres herausgenommene Beträge – Artikel 98 Absatz 3 Buchstabe b und Artikel 98 Absatz 7",
+      "source": "accounts_annex2",
+      "columns": [
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Herausnahmen: Gesamtbetrag an Ausgaben in den Zahlungsanträgen",
+          "kind": "amount",
+          "field": "withdrawn"
+        },
+        {
+          "header": "(B) Herausnahmen: Entsprechender öffentlicher Beitrag",
+          "kind": "amount",
+          "field": "withdrawn_public"
+        }
+      ]
+    },
+    {
+      "name": "RL Anlage 3",
+      "title": "Anlage 3: Beträge der Programmbeiträge, die an Finanzinstrumente gezahlt wurden (kumulativ ab Programmbeginn) – Artikel 98 Absatz 3 Buchstabe c",
+      "source": "accounts_annex3",
+      "columns": [
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Betrag, der im ersten Zahlungsantrag aufgeführt wurde und an das Finanzinstrument ausbezahlt wurde, im Einklang mit Artikel 92 (höchstens 30 % der Programmbeiträge insgesamt für das [die] Finanzinstrument[e] im Rahmen der entsprechenden Finanzierungsvereinbarung): Gesamtbetrag der an Finanzinstrumente gezahlten Programmbeiträge",
+          "kind": "amount",
+          "field": "paid"
+        },
+        {
+          "header": "(B) Betrag, der im ersten Zahlungsantrag aufgeführt wurde und an das Finanzinstrument ausbezahlt wurde, im Einklang mit Artikel 92 (höchstens 30 % der Programmbeiträge insgesamt für das [die] Finanzinstrument[e] im Rahmen der entsprechenden Finanzierungsvereinbarung): Gesamtbetrag des entsprechenden öffentlichen Beitrags",
+          "kind": "amount",
+          "field": "paid_public"
+        },
+        {
+          "header": "(C) Entsprechender verbuchter Betrag nach Artikel 92 Absatz 3: Gesamtbetrag der Programmbeiträge gemäß Artikel 92 Absatz 2 Buchstabe b",
+          "kind": "amount",
+          "field": "booked"
+        },
+        {
+          "header": "(D) Entsprechender verbuchter Betrag nach Artikel 92 Absatz 3: Gesamtbetrag des entsprechenden öffentlichen Beitrags",
+          "kind": "amount",
+          "field": "booked_public"
+        }
+      ]
+    },
+    {
+      "name": "RL Anlage 4",
+      "title": "Anlage 4: Abstimmung der Ausgaben – Artikel 98 Absatz 3 Buchstabe d und Artikel 98 Absatz 7",
+      "source": "accounts_annex4",
+      "columns": [
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Förderfähiger Gesamtbetrag an Ausgaben in den an die Kommission übermittelten Zahlungsanträgen: Gesamtbetrag der förderfähigen Ausgaben, die den Begünstigten entstanden sind und für die Durchführung von Vorhaben im Zusammenhang mit den spezifischen Zielen, für die die grundlegenden Voraussetzungen erfüllt sind, oder mit Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen, getätigt wurden, wie im System der für den Aufgabenbereich „Rechnungsführung“ zuständigen Stelle verbucht",
+          "kind": "amount",
+          "field": "declared"
+        },
+        {
+          "header": "(B) Förderfähiger Gesamtbetrag an Ausgaben in den an die Kommission übermittelten Zahlungsanträgen: Gesamtbetrag des geleisteten oder zu leistenden öffentlichen Beitrags bei der Durchführung von Vorhaben im Zusammenhang mit den spezifischen Zielen, für die die grundlegenden Voraussetzungen erfüllt sind, oder mit Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen, wie im System der für den Aufgabenbereich „Rechnungsführung“ zuständigen Stelle verbucht",
+          "kind": "amount",
+          "field": "declared_public"
+        },
+        {
+          "header": "(C) Im Einklang mit Artikel 98 der Verordnung geltend gemachte Ausgaben: Gesamtbetrag der förderfähigen Ausgaben, die in den Rechnungsführungssystemen des Aufgabenbereichs „Rechnungsführung“ verbucht wurden und in den der Kommission vorgelegten Zahlungsanträgen enthalten sind im Zusammenhang mit den spezifischen Zielen, für die die grundlegenden Voraussetzungen erfüllt sind, oder mit Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen",
+          "kind": "amount",
+          "field": "accounts"
+        },
+        {
+          "header": "(D) Im Einklang mit Artikel 98 der Verordnung geltend gemachte Ausgaben: Gesamtbetrag des bei der Durchführung von Vorhaben geleisteten oder zu leistenden entsprechenden öffentlichen Beitrags im Zusammenhang mit den spezifischen Zielen, für die die grundlegenden Voraussetzungen erfüllt sind, oder mit Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen",
+          "kind": "amount",
+          "field": "accounts_public"
+        },
+        {
+          "header": "(E = A - C) Differenz",
+          "kind": "amount",
+          "field": "difference"
+        },
+        {
+          "header": "(F = B - D) Differenz",
+          "kind": "amount",
+          "field": "difference_public"
+        },
+        {
+          "header": "(G) Bemerkungen (bei Differenz für jede Art von Abzug gemäß Artikel 98 Absatz 6 Pflichtfeld)",
+          "kind": "text",
+          "field": "remarks"
+        }
+      ]
+    },
+    {
+      "name": "RL Anlage 5",
+      "title": "Anlage 5: Angaben zu Ausgaben im Zusammenhang mit spezifischen Zielen, für die die grundlegenden Voraussetzungen nicht erfüllt sind (kumulativ ab Beginn des Programmplanungszeitraums)",
+      "source": "accounts_annex5",
+      "columns": [
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Berechnungsgrundlage (öffentlich oder insgesamt)",
+          "kind": "text",
+          "field": "basis"
+        },
+        {
+          "header": "(B) Betrag der von den Begünstigten getätigten und bei der Durchführung von Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit nicht erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6, mit Ausnahme von Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen: insgesamt",
+          "kind": "amount",
+          "field": "unmet"
+        },
+        {
+          "header": "(C) Betrag der von den Begünstigten getätigten und bei der Durchführung von Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit nicht erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6, mit Ausnahme von Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen: öffentlich",
+          "kind": "amount",
+          "field": "unmet_public"
+        },
+        {
+          "header": "(D) Betrag der von den Begünstigten getätigten und bei der Durchführung von Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6 oder als Beitrag zur Erfüllung der grundlegenden Voraussetzungen: insgesamt",
+          "kind": "amount",
+          "field": "met"
+        },
+        {
+          "header": "(E) Betrag der von den Begünstigten getätigten und bei der Durchführung von Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6 oder als Beitrag zur Erfüllung der grundlegenden Voraussetzungen: öffentlich",
+          "kind": "amount",
+          "field": "met_public"
+        }
+      ]
+    },
+    {
+      "name": "RL Anlage 6",
+      "title": "Anlage 6: Angaben zu Ausgaben im Zusammenhang mit spezifischen Zielen, für die die grundlegenden Voraussetzungen nicht erfüllt sind (kumulativ ab Beginn des Programmplanungszeitraums), für den AMIF, den ISF und das BMVI",
+      "source": "accounts_annex6",
+      "columns": [
+        {
+          "header": "Spezifisches Ziel",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Berechnungsgrundlage (öffentlich oder insgesamt)",
+          "kind": "text",
+          "field": "basis"
+        },
+        {
+          "header": "(B) Betrag der von den Begünstigten getätigten und bei der Durchführung von Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit nicht erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6, mit Ausnahme von Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen: insgesamt",
+          "kind": "amount",
+          "field": "unmet"
+        },
+        {
+          "header": "(C) Betrag der von den Begünstigten getätigten und bei der Durchführung von Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit nicht erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6, mit Ausnahme von Vorhaben, die zur Erfüllung der grundlegenden Voraussetzungen beitragen: öffentlich",
+          "kind": "amount",
+          "field": "unmet_public"
+        },
+        {
+          "header": "(D) Betrag der von den Begünstigten getätigten und bei der Durchführung der Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6 oder als Beitrag zur Erfüllung der grundlegenden Voraussetzungen: insgesamt",
+          "kind": "amount",
+          "field": "met"
+        },
+        {
+          "header": "(E) Betrag der von den Begünstigten getätigten und bei der Durchführung der Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a oder c oder Unionsbeitrag gemäß Artikel 91 Absatz 4 im Zusammenhang mit erfüllten grundlegenden Voraussetzungen im Sinne von Artikel 15 Absatz 5 oder 6 oder als Beitrag zur Erfüllung der grundlegenden Voraussetzungen: öffentlich",
+          "kind": "amount",
+          "field": "met_public"
+        }
+      ]
+    },
+    {
+      "name": "RL Anlage 7",
+      "title": "Anlage 7: Im Rahmen staatlicher Beihilfen gezahlte Vorschüsse gemäß Artikel 91 Absatz 5 (kumulativ ab Programmbeginn)",
+      "source": "accounts_annex7",
+      "columns": [
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Gesamtbetrag der Vorschusszahlungen",
+          "kind": "amount",
+          "field": "advances"
+        },
+        {
+          "header": "(B) Durch Ausgaben der Begünstigten binnen drei Jahren nach dem Jahr der Zahlung des Vorschusses gedeckter Betrag",
+          "kind": "amount",
+          "field": "covered"
+        },
+        {
+          "header": "(C) Betrag, der nicht durch Ausgaben der Begünstigten gedeckt ist und für den der Dreijahreszeitraum noch nicht abgelaufen ist",
+          "kind": "amount",
+          "field": "uncovered"
+        }
+      ]
+    }
+  ],
+  "content_hash": "c9ed679b121e21480fd88fd62aa812d6d021a448d60ca6bdc019eef21efca269",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py",
+    "third_party": "Titel, Kopffelder und Spaltenköpfe aus den Anhängen XXIII und XXIV der Verordnung (EU) 2021/1060 sind Unionsrecht; die Freigabe erstreckt sich nicht auf sie."
+  }
+}

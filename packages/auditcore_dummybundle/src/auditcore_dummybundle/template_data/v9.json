@@ -1,0 +1,335 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v9",
+  "id": "V9",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Grundgesamtheit (Art. 79)",
+  "purpose": "Liste der Stichprobeneinheiten eines Geschäftsjahres mit den Beträgen, an denen Auswahl und Hochrechnung hängen (22 Spalten).",
+  "legal_basis": "VO (EU) 2021/1060, Art. 79 (Vorhabenprüfungen, Stichprobe)",
+  "sources": [
+    "Spalten nach dem Vorlagenvorschlag vom 13.10.2026 (V9)."
+  ],
+  "open_points": [
+    "Erzeugt wird die Grundgesamtheit; Stichprobenparameter und gezogene Einheiten gehören zu auditcore_sampling und werden hier nicht nachgebaut.",
+    "Herausnahmen stehen als negative Einheiten in der Liste, damit die Summe der bescheinigten Ausgaben der Spalte (B) des abschließenden Zahlungsantrags entspricht.",
+    "Der Wertebereich der Spalte „Ergebnis der Verwaltungsüberprüfung“ ist nicht belegt.",
+    "Die fünfte Spalte heißt hier „Vorhaben-Nr.“; die Bezeichnung eines Buchhaltungssystems wird nicht nachgebildet."
+  ],
+  "tables": [
+    {
+      "name": "Grundgesamtheit",
+      "title": "Grundgesamtheit der Stichprobeneinheiten",
+      "source": "population",
+      "columns": [
+        {
+          "header": "Lfd. Nr.",
+          "kind": "text",
+          "note": "Im Aufbau vorgesehen, bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Zahlungsantrags-Nr.",
+          "kind": "text",
+          "field": "application_no",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "ZA-{JJJJ}-01"
+            }
+          }
+        },
+        {
+          "header": "Datum des Zahlungsantrags",
+          "kind": "date",
+          "field": "application_submission_date",
+          "free": {
+            "type": "date",
+            "params": {}
+          }
+        },
+        {
+          "header": "AE-Nr.",
+          "kind": "text",
+          "field": "unit_id",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "AE-{NNNNN}"
+            }
+          }
+        },
+        {
+          "header": "Vorhaben-Nr.",
+          "kind": "text",
+          "field": "operation_id",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "SYN-{JJJJ}-{ZZZZ}"
+            }
+          }
+        },
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Priorität 1",
+                  "weight": 3
+                },
+                {
+                  "value": "Priorität 2",
+                  "weight": 2
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Spezifisches Ziel",
+          "kind": "text",
+          "field": "specific_objective",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "Spezifisches Ziel (Platzhalter)"
+            }
+          }
+        },
+        {
+          "header": "Förderprogrammgruppe",
+          "kind": "text",
+          "field": "programme_group",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "FPG-A",
+                  "weight": 1
+                },
+                {
+                  "value": "FPG-B",
+                  "weight": 1
+                },
+                {
+                  "value": "FPG-C",
+                  "weight": 1
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "NUTS-3 Code",
+          "kind": "text",
+          "field": "nuts3",
+          "free": {
+            "type": "nuts",
+            "params": {}
+          }
+        },
+        {
+          "header": "Kurzbezeichnung des Projekts",
+          "kind": "text",
+          "field": "title",
+          "free": {
+            "type": "text",
+            "params": {
+              "min_parts": 1,
+              "max_parts": 2
+            }
+          }
+        },
+        {
+          "header": "Name des Begünstigten",
+          "kind": "text",
+          "field": "beneficiary_name",
+          "free": {
+            "type": "company",
+            "params": {}
+          }
+        },
+        {
+          "header": "Antrag vom",
+          "kind": "date",
+          "field": "operation_application_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Datum des Zahlungsantrags",
+              "min_days": -900,
+              "max_days": -400
+            }
+          }
+        },
+        {
+          "header": "Zuwendungsbescheid vom",
+          "kind": "date",
+          "field": "approval_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Antrag vom",
+              "min_days": 30,
+              "max_days": 180
+            }
+          }
+        },
+        {
+          "header": "Mittelabruf vom",
+          "kind": "date",
+          "field": "claim_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Datum des Zahlungsantrags",
+              "min_days": -120,
+              "max_days": -40
+            }
+          }
+        },
+        {
+          "header": "Erklärte Ausgaben Begünstigter",
+          "kind": "amount",
+          "field": "declared",
+          "sum": true,
+          "free": {
+            "type": "amount",
+            "params": {
+              "min": "5000.00",
+              "max": "250000.00",
+              "distribution": "skewed"
+            }
+          }
+        },
+        {
+          "header": "Beantragte öffentl. Ausgaben",
+          "kind": "amount",
+          "field": "declared_public",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Erklärte Ausgaben Begünstigter"
+              ],
+              "rate": "0.75"
+            }
+          }
+        },
+        {
+          "header": "Ergebnis der Verwaltungsüberprüfung",
+          "kind": "text",
+          "field": "verification_result",
+          "note": "Wertebereich nicht belegt; „-“ steht für keine Angabe.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "-"
+            }
+          }
+        },
+        {
+          "header": "Bescheinigte ff. Ausgaben",
+          "kind": "amount",
+          "field": "certified",
+          "sum": true,
+          "free": {
+            "type": "amount_factor",
+            "params": {
+              "field": "Erklärte Ausgaben Begünstigter",
+              "min_factor": "0.90",
+              "max_factor": "1.00"
+            }
+          }
+        },
+        {
+          "header": "Bescheinigte ff. öffentl. Ausgaben",
+          "kind": "amount",
+          "field": "certified_public",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Bescheinigte ff. Ausgaben"
+              ],
+              "rate": "0.75"
+            }
+          }
+        },
+        {
+          "header": "Zugrundeliegende Auszahlungen vom",
+          "kind": "date",
+          "field": "payment_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Mittelabruf vom",
+              "min_days": 5,
+              "max_days": 40
+            }
+          }
+        },
+        {
+          "header": "Ausgezahlte EFRE-Mittel",
+          "kind": "amount",
+          "field": "paid_eu",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Bescheinigte ff. Ausgaben"
+              ],
+              "rate": "0.40"
+            }
+          }
+        },
+        {
+          "header": "Ausgezahlter öffentlicher Beitrag",
+          "kind": "amount",
+          "field": "paid_public",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Bescheinigte ff. Ausgaben"
+              ],
+              "rate": "0.75"
+            }
+          }
+        }
+      ],
+      "total_row": "bottom",
+      "free_start": true
+    }
+  ],
+  "content_hash": "b87b0a1317d855ef104ea2a15838ccfb9a497c34853c3a6d387550dcce0a6c82",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"
+  }
+}
