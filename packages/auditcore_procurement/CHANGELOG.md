@@ -1,6 +1,6 @@
 # Changelog auditcore_procurement
 
-## Unveröffentlicht
+## 0.3.0 – 2026-10-13
 
 EU-Schwellenwerte vollständig: Profil `procurement.hvtg 2026.10.1` (Schema 3,
 `CURRENT_PROFILE`) führt neben der Jahrestabelle der Vorprüfung den Block
