@@ -1,0 +1,168 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v5",
+  "id": "V5",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Zahlungsantrag an die Kommission (Anhang XXIII)",
+  "purpose": "Amtliches Muster des Zahlungsantrags je Priorität mit den Spalten (A)–(E), in der Variante ohne Regionenkategorien.",
+  "legal_basis": "VO (EU) 2021/1060, Art. 91 Abs. 3 und Anhang XXIII",
+  "sources": [
+    "Verordnung (EU) 2021/1060, ABl. L 231 vom 30.6.2021, S. 159, deutsche Fassung; abgerufen am 13.10.2026 über http://publications.europa.eu/resource/celex/32021R1060 (Ursprungsfassung, nicht konsolidiert; SHA-256 des Abrufs d0031a9d7fd4d2e28ebc45e806331f7b2be3e4b34b76293cefbeae8242724ceb)",
+    "Wortlaut der Kopffelder und der Spalten (A)–(E) der Tabelle ohne Regionenkategorien aus Anhang XXIII übernommen; Fußnotenzeichen entfernt."
+  ],
+  "open_points": [
+    "Ob die Beträge je Zahlungsantrag für das Geschäftsjahr aufgelaufen auszuweisen sind, regelt die Verordnung nicht wörtlich; das Bündel weist (B) und (E) aufgelaufen aus (Art. 91 Abs. 1 UAbs. 2, Art. 98 Abs. 3 Buchst. a) und den Zeitraumbetrag als Rechenhilfe.",
+    "Die Anlagen 1 bis 4 zu Anhang XXIII (kumulativ ab Programmbeginn) werden nicht erzeugt; das Bündel kennt nur ein Geschäftsjahr.",
+    "Spalte (D) technische Hilfe bleibt leer, weil die Berechnung nicht belegt ist; Spalte (C) gilt nur bei Erstattung nach Art. 94 oder 95.",
+    "Konsolidierte Fassung und Berichtigungen der Verordnung sind nicht abgeglichen.",
+    "Zahlungsanträge tragen als Einreichungsdatum das Ende des Zeitraums nach Art. 91 Abs. 1; ein Mittelabruf zählt zu dem Antrag, dessen Stichtag seine Auszahlung abdeckt."
+  ],
+  "tables": [
+    {
+      "name": "ZA Kopf",
+      "title": "Zahlungsantrag – Kopfangaben",
+      "source": "payment_applications",
+      "columns": [
+        {
+          "header": "Betroffener Fonds",
+          "kind": "text",
+          "field": "fund"
+        },
+        {
+          "header": "Aktenzeichen der Kommission (CCI-Nr.)",
+          "kind": "text",
+          "field": "cci",
+          "note": "Erfundene Kennung mit dem nicht vergebenen Ländercode XX."
+        },
+        {
+          "header": "Bezeichnung des Programms",
+          "kind": "text",
+          "field": "programme"
+        },
+        {
+          "header": "Beschluss der Kommission",
+          "kind": "text",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Datum des Beschlusses der Kommission",
+          "kind": "date",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Nummer des Zahlungsantrags",
+          "kind": "text",
+          "field": "application_no"
+        },
+        {
+          "header": "Datum der Einreichung des Zahlungsantrags",
+          "kind": "date",
+          "field": "submission_date"
+        },
+        {
+          "header": "Nationales Aktenzeichen (optional)",
+          "kind": "text",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Geschäftsjahr vom",
+          "kind": "date",
+          "field": "accounting_year_from"
+        },
+        {
+          "header": "Geschäftsjahr bis",
+          "kind": "date",
+          "field": "accounting_year_to"
+        },
+        {
+          "header": "Rechenhilfe: abschließender Zahlungsantrag",
+          "kind": "bool",
+          "field": "final",
+          "note": "Nicht Teil des amtlichen Musters."
+        }
+      ],
+      "row_kinds": [
+        "total"
+      ]
+    },
+    {
+      "name": "ZA Ausgaben",
+      "title": "Ausgaben aufgeschlüsselt nach Priorität und gegebenenfalls nach Regionenkategorie wie von der den Aufgabenbereich „Rechnungsführung“ übernehmenden Stelle verbucht",
+      "source": "payment_applications",
+      "columns": [
+        {
+          "header": "Nummer des Zahlungsantrags",
+          "kind": "text",
+          "field": "application_no"
+        },
+        {
+          "header": "Priorität",
+          "kind": "text",
+          "field": "priority"
+        },
+        {
+          "header": "(A) Berechnungsgrundlage (öffentlich oder insgesamt)",
+          "kind": "text",
+          "field": "basis"
+        },
+        {
+          "header": "(B) Gesamtbetrag der von den Begünstigten getätigten und bei der Durchführung von Vorhaben gezahlten förderfähigen Ausgaben gemäß Artikel 91 Absatz 3 Buchstabe a und Artikel 91 Absatz 4 Buchstabe c",
+          "kind": "amount",
+          "field": "eligible_cumulative"
+        },
+        {
+          "header": "(C) Gesamtbetrag des Unionsbeitrags gemäß Artikel 91 Absatz 4 Buchstaben a und b",
+          "kind": "amount",
+          "field": "union_contribution",
+          "note": "Nur bei Erstattung nach Art. 94 oder 95; bleibt leer."
+        },
+        {
+          "header": "(D) Betrag der technischen Hilfe gemäß Artikel 91 Absatz 3 Buchstabe b",
+          "kind": "amount",
+          "field": "technical_assistance",
+          "note": "Berechnung nicht belegt; bleibt leer."
+        },
+        {
+          "header": "(E) Gesamtbetrag des geleisteten oder zu leistenden öffentlichen Beitrags gemäß Artikel 91 Absatz 3 Buchstabe c",
+          "kind": "amount",
+          "field": "public_cumulative"
+        },
+        {
+          "header": "Rechenhilfe: Mittelabrufe im Zeitraum",
+          "kind": "amount",
+          "field": "claims_period",
+          "note": "Nicht Teil des amtlichen Musters."
+        },
+        {
+          "header": "Rechenhilfe: Herausnahmen im Zeitraum",
+          "kind": "amount",
+          "field": "withdrawn_period",
+          "note": "Nicht Teil des amtlichen Musters."
+        },
+        {
+          "header": "Rechenhilfe: Rundungsrest öffentlicher Beitrag",
+          "kind": "amount",
+          "field": "rounding_difference",
+          "note": "(E) minus (B) × öffentlicher Anteil; nicht Teil des amtlichen Musters."
+        }
+      ],
+      "row_kinds": [
+        "priority",
+        "total"
+      ]
+    }
+  ],
+  "content_hash": "3981df4fc0bedabb0241cda5abfe110ac71481ad40fe77429738494d684555e1",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py",
+    "third_party": "Titel, Kopffelder und Spaltenköpfe aus den Anhängen XXIII und XXIV der Verordnung (EU) 2021/1060 sind Unionsrecht; die Freigabe erstreckt sich nicht auf sie."
+  }
+}
