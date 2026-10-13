@@ -4,4 +4,4 @@ export { computeWorkspace, computedCells, contextFor, listRows } from './compute
 export { exportFileName, fileStem, workspaceFileName } from './filenames'
 export { MIGRATIONS, migrate, type Migration, type Migrations } from './migrate'
 export { openWorkspace, type OpenOptions } from './open'
-export { cleanInputs, saveWorkspace, type SaveOptions, type SavedWorkspace } from './save'
+export { cleanInputs, saveWorkspace, workspaceChecksum, type SaveOptions, type SavedWorkspace } from './save'

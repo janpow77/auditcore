@@ -10,7 +10,7 @@ import type { SheetTexts } from '../../model/texts'
 const negativeDenominator = Object.fromEntries(
   STRATA_COLUMNS.map((_, index) => [
     `negative-denominator-${index + 1}`,
-    `Stratum ${index + 1}: denominator of the standard recalculation is not positive – no sample size results for period 2, and the precision then contains no contribution from this stratum`,
+    `Stratum ${index + 1}: denominator of the standard recalculation is not positive – no sample size results for period 2. Total sample, precision and assessment then contain – as in the template – no contribution from this stratum and are not reliable; check the inputs of the recalculation or choose another approach`,
   ]),
 )
 

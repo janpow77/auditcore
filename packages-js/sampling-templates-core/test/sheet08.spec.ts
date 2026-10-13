@@ -1,19 +1,28 @@
 import { describe, expect, it } from 'vitest'
+import { createTranslate } from '../src/i18n/messages'
 import { cellsOf, defaultInputs, fieldsOf, inputFields, named } from '../src/model/definition'
 import { evaluateSheet } from '../src/model/evaluate'
 import { TEMPLATE_POLICY } from '../src/model/policy'
 import { SUMMARY_CELLS, createContext, summaryOf } from '../src/model/sheet'
 import { subsampleTargets } from '../src/model/list'
-import type { CellValue, WebHint } from '../src/model/types'
+import type { CellMap, CellValue, WebHint } from '../src/model/types'
 import { en as shared } from '../src/sheets/01_Parameter/texts.en'
 import { sheet } from '../src/sheets/08_SRS_1Z/index'
 import { en } from '../src/sheets/08_SRS_1Z/texts.en'
+import { isQualified, limitationsOf } from '../src/view/limits'
 import { caseInputs, loadGolden } from './golden'
 
 const context = createContext()
 const sample = sheet.sample.inputs
 /** Variante „wie die Vorlage“: Werte ohne Grundlage stehen wie in der Vorlage. */
 const likeTemplate = createContext({ policy: TEMPLATE_POLICY })
+const t = createTranslate()
+
+/** Hinweis „wie in der Vorlage gezeigt, obwohl die Grundlage fehlt“ zu den Eingaben – in Warnfarbe, die Würdigung ist dann nicht uneingeschränkt grün. */
+function withoutBasisHint(inputs: CellMap): { tone?: string; qualified: boolean } {
+  const limitations = limitationsOf(sheet, inputs, evaluateSheet(sheet, inputs, context).cells, context, t)
+  return { tone: limitations.find((entry) => entry.kind === 'withoutBasis')?.tone, qualified: isQualified(limitations) }
+}
 
 describe('Blatt 08_SRS_1Z', () => {
   it('Beispielwerte ergeben ein vollständiges Ergebnis', () => {
@@ -135,18 +144,29 @@ describe('Blatt 08_SRS_1Z: Richtlinie für fehlende Angaben', () => {
     expect(current.lacking.size).toBe(0)
   })
 
-  it('Wert ohne Grundlage (withoutBasis): ohne Fehlersumme keine Hochrechnung 0 €; die Vorlage zeigt sie', () => {
+  it('Wert ohne Grundlage (withoutBasis): Hochrechnung 0 € ohne Fehlersumme wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
     const inputs = { ...sample, C37: null }
+    // Alle Pflichteingaben liegen vor: Die Webfassung zeigt, was die Vorlage zeigt, und weist den Wert aus.
     const current = evaluateSheet(sheet, inputs, context)
-    expect([current.cells.C42, current.cells.C43, current.cells.C51, current.cells.C53, current.cells.N5]).toEqual([null, null, null, null, null])
+    expect(current.complete).toBe(true)
+    expect([current.cells.C42, current.cells.C43, current.cells.C51, current.cells.C53, current.cells.N5]).toEqual([0, null, null, null, null])
+    expect(current.withoutBasis).toEqual(['C42'])
     // Die Genauigkeit hängt nicht an der Fehlersumme.
     expect(current.cells.C44).toBeCloseTo(167792.49, 2)
     expect(current.lacking.size).toBe(0)
     expect(current.assumed).toEqual([])
-    const shown = evaluateSheet(sheet, inputs, likeTemplate).cells
-    expect([shown.C42, shown.C43]).toEqual([0, null])
+    expect(current.cells).toEqual(evaluateSheet(sheet, inputs, likeTemplate).cells)
+    expect(withoutBasisHint(inputs)).toEqual({ tone: 'warning', qualified: true })
+    // Fehlt dazu eine Pflichteingabe (voraussichtliche Standardabweichung), bleibt der Wert ohne Grundlage offen.
+    const incomplete = evaluateSheet(sheet, { ...inputs, C25: null }, context)
+    expect(incomplete.complete).toBe(false)
+    expect([incomplete.cells.C42, incomplete.cells.C43]).toEqual([null, null])
+    expect(incomplete.withoutBasis).toEqual([])
+    expect(incomplete.lacking.has('C42')).toBe(false)
+    expect(withoutBasisHint({ ...inputs, C25: null }).tone).toBeUndefined()
     // Eine eingetragene Fehlersumme 0 ist ein Prüfergebnis.
     expect(sheet.compute({ ...sample, C37: 0 }, context)).toMatchObject({ C42: 0, C43: 18400 })
+    expect(evaluateSheet(sheet, { ...sample, C37: 0 }, context).withoutBasis).toEqual([])
   })
 })
 

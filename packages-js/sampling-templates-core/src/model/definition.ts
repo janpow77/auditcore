@@ -53,6 +53,14 @@ export interface FieldDefinition {
    * Übernahme aus den Unterstichproben zu: Übernommen werden nur Einheiten dieses Zeitraums.
    */
   period?: number
+  /**
+   * Freiwillige Eingabe: Leer heißt „gibt es nicht“ (z. B. keine systembedingten
+   * Fehler). `true`: für sich freiwillig. Ein Name: Die Felder mit demselben Namen
+   * gehören zusammen (z. B. Anzahl, Buchwert und Fehler der hochwertigen
+   * Einheiten) – leer dürfen sie nur gemeinsam sein. Alle anderen Eingaben sind
+   * Pflicht, sobald ein gezeigtes Ergebnis von ihnen abhängt (`model/dependence.ts`).
+   */
+  optional?: true | string
 }
 
 /**

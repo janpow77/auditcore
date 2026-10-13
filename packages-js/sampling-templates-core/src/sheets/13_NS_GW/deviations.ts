@@ -1,7 +1,10 @@
 /**
  * Begründete Abweichungen des Blatts 13 vom Verhalten der Vorlage bei leeren
- * Eingaben. In allen Fällen zeigt die Webfassung „Angabe fehlt“ (`null`), nie
- * einen anderen Wert als die Vorlage. Jede Zeile ist durch mindestens einen
+ * Eingaben. Fehlt eine Pflichteingabe, zeigt die Webfassung „Angabe fehlt“
+ * (`null`), nie einen anderen Wert als die Vorlage. Der Wert ohne Grundlage
+ * (`withoutBasis`, Hochrechnung ohne Fehlersumme) bleibt nur offen, solange eine
+ * Pflichteingabe fehlt; bei vollständigen Eingaben zeigt ihn die Webfassung wie
+ * die Vorlage mit Hinweis in Warnfarbe. Jede Zeile ist durch mindestens einen
  * Golden-Fall belegt (test/deviations.spec.ts); Übersicht: docs/abweichungen.md.
  */
 import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'

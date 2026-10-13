@@ -82,22 +82,32 @@ def write_cases(template: Path, cases: list[Case], directory: Path) -> list[Path
     return files
 
 
+#: LibreOffice wandelt in einem Aufruf nur eine begrenzte Zahl von Dateien um (gemessen: 246).
+BATCH = 200
+
+
 def recalculate(files: list[Path], directory: Path) -> Path:
-    """Recalculate all workbooks headless; own profile so that parallel runs do not collide."""
+    """Recalculate all workbooks headless in batches; own profile against collisions."""
     output = directory / "out"
     profile = (directory / "profile").as_uri()
-    command = [
-        "soffice",
-        f"-env:UserInstallation={profile}",
-        "--headless",
-        "--calc",
-        "--convert-to",
-        CONVERT,
-        "--outdir",
-        str(output),
-        *[str(path) for path in files],
-    ]
-    subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  # noqa: S603
+    for start in range(0, len(files), BATCH):
+        batch = files[start : start + BATCH]
+        command = [
+            "soffice",
+            f"-env:UserInstallation={profile}",
+            "--headless",
+            "--calc",
+            "--convert-to",
+            CONVERT,
+            "--outdir",
+            str(output),
+            *[str(path) for path in batch],
+        ]
+        subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  # noqa: S603
+        missing = [path.name for path in batch if not (output / path.name).exists()]
+        if missing:
+            message = f"LibreOffice hat {len(missing)} Datei(en) nicht umgewandelt: {missing[0]} …"
+            raise SystemExit(message)
     return output
 
 

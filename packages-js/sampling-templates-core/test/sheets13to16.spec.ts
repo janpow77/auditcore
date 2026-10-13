@@ -272,22 +272,6 @@ describe.each([
     expect(like.assumed.find((entry) => entry.input === size)).toMatchObject({ kind: 'requiredInput' })
   })
 
-  it('Fallart withoutBasis: Summen ohne Summanden und ihre Folgezellen bleiben offen, wie die Vorlage zeigen sie 0 bzw. „✔“', () => {
-    const empty = Object.fromEntries(rows.flatMap((row) => STRATA_COLUMNS.map((column) => [`${column}${row}`, null])))
-    const current = evaluate(sheet, empty)
-    const totals = fieldsOf(sheet.definition).flatMap((field) => (field.total ? [field.total] : []))
-    const { populationSize, checkAdmissibility: admissibility, minimumCoverage: minimum, checkCoverage: coverage } = named(sheet.definition, current.cells)
-    expect(totals.map((cell) => current.cells[cell])).toEqual(totals.map(() => null))
-    expect([populationSize, admissibility, minimum, coverage, current.cells.N4, current.cells.N5, current.cells.N10, current.cells.N11]).toEqual([null, null, null, null, null, null, null, null])
-    // Kein „Angabe fehlt“: Es fehlt keine einzelne Eingabe, die Summe hat keine Grundlage.
-    expect([...current.lacking.keys()]).toEqual([])
-    const like = evaluate(sheet, empty, template)
-    expect(totals.map((cell) => like.cells[cell])).toEqual(totals.map(() => 0))
-    const shown = named(sheet.definition, like.cells)
-    expect([shown.checkAdmissibility, shown.minimumCoverage, like.cells.N10]).toEqual(['✔ N < 300: zulässig (Art. 79 Abs. 2 VO (EU) 2021/1060; Art. 6 Abs. 1)', sheet === sheet14 ? 1 : 0, sheet === sheet14 ? 4 : 0])
-    expect(String(shown.checkCoverage)).toMatch(/^✔ /)
-  })
-
   it('Hinweise der Webfassung zu den Schichten nennen die Schichtnummer und verändern kein Ergebnis', () => {
     const ignored = { ...sheet.sample.inputs, [`E${key}`]: null }
     expect(hintIds(sheet, ignored)).toContain('stratum-ignored-2')
@@ -300,6 +284,7 @@ describe.each([
   })
 })
 
+/** Werte der Vorlage ohne Grundlage, negative Ergebnisse und ihre Hinweise: `sheets13to16.limits.spec.ts`. */
 describe('Blatt 14 und 16: einzelne Schichten', () => {
   it('Blatt 14: fehlt der Buchwert einer belegten Schicht, bleiben Summe und Fehlerquote offen', () => {
     const results = run(sheet14, { E12: null })
@@ -312,15 +297,6 @@ describe('Blatt 14 und 16: einzelne Schichten', () => {
     expect(results.E27).toBeNull()
     expect(results.C27).toBeCloseTo((results.D27 as number) + (results.F27 as number), 6)
     expect(hintIds(sheet14, { ...sheet14.sample.inputs, E24: null })).toContain('stratum-not-projected-2')
-  })
-
-  it('Blatt 14: ist keine belegte Schicht hochrechenbar, bleiben Summe, EE und Fehlerquote offen (die Vorlage rechnet mit 0 €)', () => {
-    const changes = { D24: null, E24: null, F24: null }
-    const current = evaluate(sheet14, changes)
-    expect([current.cells.D27, current.cells.C27, current.cells.C29, current.cells.C33, current.cells.C35, current.cells.N5, current.cells.N11]).toEqual([null, null, null, null, null, null, null])
-    expect(hintIds(sheet14, { ...sheet14.sample.inputs, ...changes })).toEqual(['strata-sum-exceeds-size'])
-    const like = evaluate(sheet14, changes, template)
-    expect([like.cells.C27, like.cells.C29, like.cells.C35]).toEqual([0, 1200, '✔ Gesamtfehlerquote unter der Wesentlichkeitsschwelle'])
   })
 
   it('Blatt 14: Aufrundung je Schicht hebt die Summe über den Umfang', () => {
@@ -337,25 +313,9 @@ describe('Blatt 14 und 16: einzelne Schichten', () => {
     expect(hintIds(sheet16, inputs)).toContain('stratum-not-projected-3')
   })
 
-  it('Blatt 16: ist keine belegte Schicht hochrechenbar, bleiben Summe, EE und Fehlerquote offen (die Vorlage rechnet mit 0 €)', () => {
-    const inputs = { C13: 22, C35: 0.02, D9: 4230000, D10: 180, D19: 22, D20: 4230000, D25: 2400, D26: 0.05 }
-    const current = evaluateSheet(sheet16, inputs, context)
-    expect([current.cells.D22, current.cells.D28, current.cells.C28, current.cells.C30, current.cells.C34, current.cells.C36, current.cells.N5, current.cells.N11]).toEqual([0, null, null, null, null, null, null, null])
-    expect(current.cells.C29).toBe(2400)
-    const like = evaluateSheet(sheet16, inputs, template)
-    expect([like.cells.C28, like.cells.C30, like.cells.C34, like.cells.C36]).toEqual([0, 0, 0, '✔ Gesamtfehlerquote unter der Wesentlichkeitsschwelle'])
-  })
-
-  it('Blatt 16: ohne Anzahl der Einheiten bleiben N und seine Summe offen, der Buchwert nicht', () => {
+  it('Blatt 16, Rechenkern ohne Anzahl der Einheiten: N und seine Summe sind ohne Grundlage (offen, solange eine Eingabe fehlt), der Buchwert nicht', () => {
     const results = run(sheet16, { D10: null, E10: null, F10: null })
     expect([results.C10, results.C11, results.C12, results.C16, results.C17]).toEqual([null, null, null, null, null])
     expect(results.C34).toBeGreaterThan(0)
-  })
-
-  it('Blatt 16: ohne Fehler hochwertiger Einheiten in einer Schicht bleiben ihre Summe, EE_e und N6 offen; EE ist davon unberührt', () => {
-    const current = evaluate(sheet16, { D25: null, E25: null, F25: null })
-    expect([current.cells.C25, current.cells.C29, current.cells.N6]).toEqual([null, null, null])
-    expect(current.cells.C30).toBeGreaterThan(0)
-    expect(evaluate(sheet16, { D25: null, E25: null, F25: null }, template).cells).toMatchObject({ C25: 0, C29: 0, N6: 0 })
   })
 })

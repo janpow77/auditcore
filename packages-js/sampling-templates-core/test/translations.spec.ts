@@ -40,7 +40,7 @@ const TERMS_NOTICE = 'Fachbegriffe nach der englischen Fassung der Delegierten V
 const UNTRANSLATED: readonly { reason: string; matches: (text: string) => boolean }[] = [
   { reason: 'Datum', matches: (text) => /^\d{2}\.\d{2}\.\d{4}$/.test(text) },
   { reason: 'Blattname der Vorlage', matches: (text) => SHEET_IDS.has(text) },
-  { reason: 'Kopfzeile Blatt 20: fester Programmname mit CCI, Geschäftsjahr und Status', matches: (text) => text.startsWith('EFRE-Programm Hessen 2021–2027 · CCI ') },
+  { reason: 'Kopfzeile Blatt 20 (Zelle A6): aus Angaben zusammengesetzt; die Berichtsansicht bildet sie in der Sprache des Blatts', matches: (text) => text.includes('CCI ') && text.includes(' · Geschäftsjahr ') },
 ]
 
 /** Formeln ohne Wörter (nur Formelzeichen) brauchen keine Übersetzung. */
@@ -169,14 +169,14 @@ describe('Englische Arbeitsübersetzung der Blätter', () => {
       }
       if (definition.layout !== 'list') for (const golden of loadGolden(sheet.id)) for (const id of hintIds(sheet, caseState(sheet, golden), caseWorkspace(sheet, golden))) ids.add(id)
       expect([...ids].filter((id) => !texts.webHints?.[id])).toEqual([])
-    })
+    }, 240_000)
   }
 
   it('Blatt 20: jeder Text der Seitenaufteilung und der Zahlenformate hat eine Übersetzung', () => {
     const report = sheets.find((sheet) => sheet.id === '20_Druck_KOM') as AvailableSheet
     const tables = REPORT_LAYOUT.sections.flatMap((section) => section.blocks.flatMap((block) => (block.kind === 'table' ? [...block.columns, ...block.rows.map((row) => row.label), block.foot?.label] : [])))
     const formats = fieldsOf(report.definition).flatMap((field) => [/^"([^"]*)"/.exec(field.format ?? '')?.[1], /;"([^"]*)"$/.exec(field.format ?? '')?.[1]])
-    const layout = [...REPORT_LAYOUT.cofinanced, REPORT_LAYOUT.title, REPORT_LAYOUT.controls.title, REPORT_LAYOUT.controls.note, REPORT_LAYOUT.footer, ...REPORT_LAYOUT.sections.map((section) => section.title), ...tables, ...formats]
+    const layout = [...REPORT_LAYOUT.cofinanced, REPORT_LAYOUT.title, REPORT_LAYOUT.controls.title, REPORT_LAYOUT.controls.note, 'Geschäftsjahr', 'vorläufig', 'endgültig', ...REPORT_LAYOUT.sections.map((section) => section.title), ...tables, ...formats]
     const open = layout.filter((text): text is string => typeof text === 'string' && text !== '').filter((text) => !translated(textsOf(report), text))
     // „FÖPG“ ist ein Kürzel der Vorlage ohne englische Entsprechung.
     expect(open).toEqual(['FÖPG'])

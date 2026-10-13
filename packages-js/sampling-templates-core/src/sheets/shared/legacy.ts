@@ -20,7 +20,9 @@
  * betrifft, ist `sampleDeviation` (X2: C15, X3: Zeile 21, X4: C35); die
  * Fehlersumme einer Schicht bzw. eines Zeitraums neben einer eingetragenen ist
  * `partialErrorSum` (X3: Zeile 19, X4: C21/C34); eine Summe über Schichten
- * ohne Wert samt Folgezellen ist `withoutBasis` (X3: D23–D25).
+ * ohne Wert samt Folgezellen ist `withoutBasis` (X3: D23–D25) – offen, solange
+ * eine Pflichteingabe fehlt; bei vollständigen Eingaben wie die Vorlage mit
+ * Hinweis in Warnfarbe.
  */
 import { FormulaError, eq, guard, gt, isBlank, isNumber, le, lt, required } from '../../excel/index'
 import type { ZeroAssumption } from '../../model/sheet'
@@ -143,6 +145,8 @@ export function deviationRows(cells: readonly CellAddress[], whenEmpty: readonly
  * Abweichungen der Fallart „Wert ohne Grundlage“: Die Vorlage zeigt an `cells`
  * einen Wert, obwohl die Größe in `whenEmpty` fehlt (Summe über Schichten ohne
  * Wert und was darauf aufbaut); der Rechenkern gibt ihn über `totalRow` zurück.
+ * Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei
+ * vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis.
  */
 export function unfoundedRows(cells: readonly CellAddress[], whenEmpty: readonly CellAddress[], template: string, reason: string): Deviation[] {
   return cells.map((cell) => ({ cell, whenEmpty, template, reason, kind: 'withoutBasis' }))
@@ -180,7 +184,8 @@ export function sizeExceedsPopulation(size: CellValue | undefined, units: CellVa
 /**
  * Hinweis der Webfassung: Der zulässige Fehler ist nicht größer als der
  * voraussichtliche (X1: mal Erweiterungsfaktor). Die Altvorlagen prüfen das
- * nicht; sie zeigen dann keinen oder einen nicht belastbaren Umfang.
+ * nicht; sie zeigen dann keinen oder einen nicht belastbaren Umfang und rechnen
+ * damit weiter. Die Webfassung zeigt dieselben Werte und weist sie aus.
  */
 export function tolerableNotAboveAnticipated(tolerable: CellValue | undefined, anticipated: CellValue | undefined, text: string, id = 'tolerable-error-not-above-anticipated'): WebHint[] {
   if (!isNumber(tolerable) || !isNumber(anticipated) || !gt(tolerable, 0) || !le(tolerable, anticipated)) return []
@@ -188,7 +193,7 @@ export function tolerableNotAboveAnticipated(tolerable: CellValue | undefined, a
 }
 
 /** Wortlaut des Hinweises „TE ≤ AE“ der Blätter X2 und X3. */
-export const TOLERABLE_HINT = 'TE ≤ AE: Die Altvorlage prüft das nicht; der ausgewiesene Stichprobenumfang ist nicht belastbar'
+export const TOLERABLE_HINT = 'TE ≤ AE: Die Altvorlage prüft das nicht. Stichprobenumfang und Folgegrößen sind, soweit wie in der Vorlage gezeigt, nicht belastbar; bitte die erwartete Fehlerquote prüfen'
 
 /** Hinweis der Webfassung: weniger als drei Stichprobeneinheiten (Fußnote der Altvorlagen X3 und X4). */
 export function belowThreeUnits(sizes: readonly (CellValue | undefined)[], text: string): WebHint[] {
@@ -225,7 +230,7 @@ export const LEGACY_NOTICE_EN =
 
 const WEB_HINTS_EN: Readonly<Record<string, string>> = {
   'size-exceeds-population': 'Sample size exceeds the number of units of the population',
-  'tolerable-error-not-above-anticipated': 'TE ≤ AE: the legacy template does not check this; the sample size shown is not reliable',
+  'tolerable-error-not-above-anticipated': 'TE ≤ AE: the legacy template does not check this. The sample size and the values derived from it are, as far as shown as in the template, not reliable; please check the anticipated error rate',
   'below-three-units': 'Fewer than three sampling units (footnote of the legacy template: minimum of 3)',
 }
 

@@ -43,8 +43,12 @@ function report(state: WorkspaceState) {
 describe('Blatt 20: Rechenkern', () => {
   it('Kopf, Kennzahlen aus Blatt 02, dem aktiven Verfahren und Blatt 18', () => {
     const c = compute({ J4: '13.10.2026', J6: 5300000 })
-    expect(c.A6).toBe('EFRE-Programm Hessen 2021–2027 · CCI 2021DE16RFPR000 · Geschäftsjahr 2025/2026 · vorläufig')
-    expect(compute({ J5: null }).A6).toBe('EFRE-Programm Hessen 2021–2027 · CCI 2021DE16RFPR000 · Geschäftsjahr 2025/2026')
+    // Ohne Bezeichnung des Programms beginnt die Kopfzeile mit der CCI-Nummer; ein fester Programmname steht nirgends.
+    expect(c.A6).toBe('CCI 2021DE16RFPR000 · Geschäftsjahr 2025/2026 · vorläufig')
+    expect(compute({ J5: null }).A6).toBe('CCI 2021DE16RFPR000 · Geschäftsjahr 2025/2026')
+    expect(compute({ W4: 'Programm Musterland' }).A6).toBe('Programm Musterland · CCI 2021DE16RFPR000 · Geschäftsjahr 2025/2026 · vorläufig')
+    expect(compute({ W5: 'Prüfbehörde Musterland', W7: 'Musterstadt' }).W8).toBe('Prüfbehörde Musterland, Musterstadt')
+    expect(c.W8).toBeNull()
     expect(c).toMatchObject({ G6: '13.10.2026', F11: 432, G11: 10200000, F12: 420, G12: 10000000, F13: 12, G13: 0, F14: 60, G14: 5300000, D15: 'Einfaches Zufallsstichprobenverfahren, 1 Zeitraum' })
     expect(c).toMatchObject({ G32: 0.0126, G33: 120000, G34: 60000, G35: 0.0186, G36: 128520, A37: 'Die Gesamtfehlerquote liegt unter der Wesentlichkeitsschwelle.' })
     expect(compute({}, context({ C29: 0.01 })).A37).toBe('Die Gesamtfehlerquote liegt über der Wesentlichkeitsschwelle.')
@@ -72,7 +76,7 @@ describe('Blatt 20: Rechenkern', () => {
     // Buchwert 0: Die Vorlage zeigt #DIV/0!, die Webfassung keinen Wert und einen Hinweis.
     const zero = compute({ C20: 0, D20: 100 })
     expect(zero.E20).toBeNull()
-    expect(sheet.webHints?.({}, zero, context()).map((hint) => hint.id)).toEqual(['fixed-programme', 'case-book-value-zero'])
+    expect(sheet.webHints?.({}, zero, context()).map((hint) => hint.id)).toEqual(['own-header', 'case-book-value-zero'])
   })
 
   it('Restfehlerquote nach der Logik der Kommissionsvorlage und Finanzkorrektur bis 2 %', () => {
@@ -96,8 +100,8 @@ describe('Blatt 20: Rechenkern', () => {
   it('leeres Formular zeigt nur feste Texte der Vorlage, die Vorgabe und die freiwilligen Größen', () => {
     const results = computeWorkspace({ ...emptyWorkspace(), sheets: { [population.id]: defaultInputs(population.definition), [total.id]: defaultInputs(total.definition), [sheet.id]: defaults } })
     const shown = Object.fromEntries(Object.entries(results[sheet.id]!).filter(([, value]) => !isBlank(value)))
-    // A6: Kopfzeile mit dem festen Programmnamen; F13/G13: negative Grundgesamtheit (leer = keine); F28: fester Text; J5: Vorgabe.
-    expect(shown).toEqual({ A6: 'EFRE-Programm Hessen 2021–2027 · CCI  · Geschäftsjahr  · vorläufig', F13: 0, G13: 0, F28: 'davon vorläufig: ', J5: 'vorläufig' })
+    // A6: Kopfzeile ohne Programm, CCI und Geschäftsjahr; F13/G13: negative Grundgesamtheit (leer = keine); F28: fester Text; J5: Vorgabe.
+    expect(shown).toEqual({ A6: 'CCI  · Geschäftsjahr  · vorläufig', F13: 0, G13: 0, F28: 'davon vorläufig: ', J5: 'vorläufig' })
   })
 
   it('Pflichteingaben anderer Blätter: Angabe fehlt mit Nennung; wie die Vorlage mit 0 gerechnet', () => {
@@ -112,9 +116,13 @@ describe('Blatt 20: Rechenkern', () => {
     expect(template.assumed.map((entry) => entry.input)).toEqual(['02_Grundgesamtheit!C23', '02_Grundgesamtheit!C16', '18_GFQ_AnhIII!C29'])
   })
 
-  it('Wert ohne Grundlage: Ist Blatt 18 offen, übernimmt der Bericht weder Zahl noch „nicht berechnet“', () => {
-    const ctx = context({ C24: null, C25: null, C26: null, C27: null, C28: null })
-    expect(evaluateSheet(sheet, defaults, ctx).cells).toMatchObject({ G32: null, G33: null, G34: null, G35: null, G36: null, A37: null, G42: null, G43: null })
+  it('Wert ohne Grundlage: Ist Blatt 18 offen, weil dort eine Angabe fehlt, übernimmt der Bericht weder Zahl noch „nicht berechnet“; sind alle Angaben da, zeigt er wie die Vorlage „nicht berechnet“', () => {
+    const open = { C24: null, C25: null, C26: null, C27: null, C28: null }
+    // `sourceIncomplete`: Blatt 18 oder dem Verfahren fehlt eine Pflichteingabe (setzt `contextFor` im Arbeitsstand).
+    expect(evaluateSheet(sheet, defaults, { ...context(open), sourceIncomplete: true }).cells).toMatchObject({ G32: null, G33: null, G34: null, G35: null, G36: null, A37: null, G42: null, G43: null })
+    const complete = evaluateSheet(sheet, defaults, context(open))
+    expect(complete.cells).toMatchObject({ G32: null, G33: null, G34: 'nicht berechnet', G35: 'nicht berechnet' })
+    expect(complete.withoutBasis).toEqual(expect.arrayContaining(['G34', 'G35']))
     expect(sheet.compute(defaults, context({ C25: null, C28: null }, {}, TEMPLATE_POLICY))).toMatchObject({ G34: 'nicht berechnet', G35: 'nicht berechnet' })
   })
 })
@@ -124,14 +132,14 @@ describe('Blatt 20: Berichtsansicht', () => {
 
   it('liefert die Druckseite als Daten: Kopf, vier Abschnitte, Tabellen, Freitexte, Fußzeile', () => {
     const page = report(workspace())
-    expect(page).toMatchObject({ title: 'Vorhabenprüfungen – Stichprobe und Ergebnisse', cofinanced: ['Kofinanziert von der', 'Europäischen Union'], asOf: 'Stand 13.10.2026', footer: 'EFRE-Prüfbehörde, Referat Z 6, HMWVW, Wiesbaden' })
-    expect(page.subtitle).toBe('EFRE-Programm Hessen 2021–2027 · CCI 2021DE16RFPR000 · Geschäftsjahr 01.07.2025–30.06.2026 · vorläufig')
+    expect(page).toMatchObject({ title: 'Vorhabenprüfungen – Stichprobe und Ergebnisse', cofinanced: ['Kofinanziert von der', 'Europäischen Union'], asOf: 'Stand 13.10.2026', footer: 'Prüfbehörde Musterland (Beispiel), Referat Beispiel, Musterstadt', footerPlaceholder: '', programmePlaceholder: '' })
+    expect(page.subtitle).toBe('Beispielprogramm EFRE Musterland 2021–2027 · CCI 2021DE16RFPR000 · Geschäftsjahr 01.07.2025–30.06.2026 · vorläufig')
     expect(page.sections.map((section) => section.title)).toEqual(['1. Grundgesamtheit und Stichprobe', '2. Ergebnisse der Vorhabenprüfungen', '3. Hochrechnung und Gesamtfehlerquote', '4. Restfehlerquote und weiteres Vorgehen'])
     expect(page.sections.map((section) => section.blocks.map((block) => block.kind))).toEqual([['text', 'table'], ['text', 'table'], ['text', 'table', 'statement'], ['table', 'text']])
     expect(page.labels).toEqual({ report: 'Bericht', print: 'Drucken / als PDF sichern', hints: 'Hinweis der Webfassung' })
     expect(page.notes).toEqual([t('disclaimer'), t('templateStatus')])
     expect(page.controls.title).toBe('Steuerfelder (werden nicht gedruckt)')
-    expect(page.controls.fields.map((field) => `${field.cell} ${field.label} ${field.control}`)).toEqual(['J4 Stand text', 'J5 Status text', 'J6 Geprüfte Ausgaben der Stichprobe number', 'J7 Beträge nach Artikel 98 Absatz 6 (E) number', 'J8 Finanzkorrekturen (H) number'])
+    expect(page.controls.fields.map((field) => `${field.cell} ${field.label} ${field.control}`)).toEqual(['W4 Bezeichnung des Programms (Kopfzeile) text', 'W5 Prüfbehörde (Fußzeile) text', 'W6 Organisationseinheit (Fußzeile, freiwillig) text', 'W7 Ort (Fußzeile, freiwillig) text', 'J4 Stand text', 'J5 Status text', 'J6 Geprüfte Ausgaben der Stichprobe number', 'J7 Beträge nach Artikel 98 Absatz 6 (E) number', 'J8 Finanzkorrekturen (H) number'])
   })
 
   it('Tabellen: Spaltenköpfe, Zeilenbeschriftungen und Werte im Zahlenformat der Vorlage', () => {
@@ -173,16 +181,19 @@ describe('Blatt 20: Berichtsansicht', () => {
 
   it('Hinweise auf dem Ausdruck: jede mit 0 gerechnete Eingabe des Verfahrens, Hinweise zu Blatt 18; Hinweise zu Blatt 20 nur am Bildschirm', () => {
     const complete = report(workspace())
-    expect(complete.hints).toEqual([expect.objectContaining({ id: 'fixed-programme', printed: false })])
+    // Die Auslegung der Vorlage in Blatt 18 (C24) reist mit auf den Ausdruck; der Hinweis zu Kopf- und Fußzeile steht nur am Bildschirm.
+    expect(complete.hints).toEqual([expect.objectContaining({ id: '18_GFQ_AnhIII-interpretation-C24', printed: true, tone: 'neutral' }), expect.objectContaining({ id: 'own-header', printed: false })])
+    // Hinweise in Warnfarbe auf dem Ausdruck (die Auslegung der Vorlage ist neutral und steht immer dabei).
+    const warned = (hint: { printed: boolean; tone: string }): boolean => hint.printed && hint.tone === 'warning'
     const page = report(workspace({ [mus.id]: { ...mus.sample.inputs, C39: null } }))
-    expect(page.hints.filter((hint) => hint.printed)).toEqual([
+    expect(page.hints.filter(warned)).toEqual([
       { id: '03_MUS_1Z-zero-C39', tone: 'warning', printed: true, text: `Blatt 03: Keine Angabe, daher mit 0 berechnet: ${mus.definition.sections.flatMap((section) => [...section.fields]).find((field) => field.cell === 'C39')!.label} (C39)` },
     ])
     const none = report(workspace({}, null))
-    expect(none.hints.filter((hint) => hint.printed).map((hint) => hint.id)).toEqual(['18_GFQ_AnhIII-no-method'])
-    expect(none.hints.find((hint) => hint.printed)!.text).toMatch(/^Blatt 18: Kein Verfahren gewählt/)
+    expect(none.hints.filter(warned).map((hint) => hint.id)).toEqual(['18_GFQ_AnhIII-no-method'])
+    expect(none.hints.find(warned)!.text).toMatch(/^Blatt 18: Kein Verfahren gewählt/)
     const legacy = report(workspace({}, 'X2_DiffSch_2017'))
-    expect(legacy.hints.filter((hint) => hint.printed).map((hint) => hint.id)).toEqual(['18_GFQ_AnhIII-method-without-summary'])
+    expect(legacy.hints.filter(warned).map((hint) => hint.id)).toEqual(['X2_DiffSch_2017-legacy', '18_GFQ_AnhIII-method-without-summary'])
   })
 
   it('„Angabe fehlt“ steht in der Zelle, wenn die Vorlage dort mit 0 gerechnet hätte', () => {

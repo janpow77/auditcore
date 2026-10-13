@@ -10,7 +10,7 @@ Prüfbehörde gibt ein, lädt Ergebnisse herunter und speichert ihren Arbeitssta
 als Datei; es gibt keinen Server, keine Anmeldung und keine Netzanfragen.
 Gerechnet wird in
 [`@auditcore/sampling-templates-core`](../sampling-templates-core/README.md).
-Stand 0.1.0: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
+Stand 0.1.1: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
 Zufallsstichprobenverfahren, nichtstatistische Verfahren, Altvorlagen von
 2017), dazu die Arbeitsschritte Grundgesamtheit, Unterstichproben,
 Gesamtfehlerquote und Bericht (Druckfassung auf einer A4-Seite). Eine
@@ -30,10 +30,10 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.0.tgz
+npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.1.tgz
 ```
 
-Version 0.1.0 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
+Version 0.1.1 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
 und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
@@ -97,19 +97,20 @@ Methodendefinition), `ResultPanel`/`ErrorGauge`, `WorkspaceMenu`, `NoticeList`,
 `useFileActions`, `useLocalDraft`, `useUnloadGuard`, `useFileDrop`,
 `useAnnouncer`.
 
-Der Excel-Austausch (`@auditcore/sampling-templates-core/xlsx`) wird erst
+Der Excel-Austausch (`@auditcore/sampling-templates-core/workbook`; der Einstieg heißt bewusst nicht „xlsx“, damit Bündelregeln für SheetJS ihn nicht erfassen) wird erst
 geladen, wenn exportiert oder eine `.xlsx`-Datei geöffnet wird; der Bündler
 der Anwendung legt dafür ein eigenes Teilpaket an.
 
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (35):
+Exporte der Einstiegspunkte aus `package.json#exports` (36):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@auditcore/sampling-templates-vue` | `CellControl` | Vue-Komponente | – | `components/CellControl.vue` |
 | `@auditcore/sampling-templates-vue` | `DataTableDialog` | Vue-Komponente | – | `components/DataTableDialog.vue` |
+| `@auditcore/sampling-templates-vue` | `DraftMode` | Typ | Stufe des Zwischenstands im Web Storage: `off` – nichts wird abgelegt; `session` – nur für diese Sitzung (`sessionStorage`); `device` – auf diesem Gerät behalten (`localStorage`). | `types` |
 | `@auditcore/sampling-templates-vue` | `ErrorGauge` | Vue-Komponente | – | `components/ErrorGauge.vue` |
 | `@auditcore/sampling-templates-vue` | `FileActionOptions` | Schnittstelle | – | `composables/useFileActions` |
 | `@auditcore/sampling-templates-vue` | `FileActions` | Schnittstelle | – | `composables/useFileActions` |
@@ -262,6 +263,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (35):
 |---|---|---|---|---|
 | `report` | `ReportPage` | ja | – | – |
 | `t` | `Translate` | ja | – | – |
+| `checksum` | `string` | nein | `''` | – |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
@@ -283,7 +285,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (35):
 | `families` | `readonly Family[]` | nein | `() => FAMILIES` | Verfahrensfamilien der Auswahl (Standard: Katalog nach Blatt 00). |
 | `locale` | `Locale` | nein | `undefined` | – |
 | `messages` | `{ de?: Partial<Record<MessageKey, string>>; en?: Partial<Record<MessageKey, string>> }` | nein | `undefined` | Überschriebene bzw. englische Texte der Oberfläche. |
-| `localDraft` | `boolean` | nein | `false` | Lokalen Entwurf im Web Storage dieses Browsers halten; die Anwendung schaltet ihn bewusst ein. |
+| `draft` | `DraftMode` | nein | `'off'` | Zwischenstand im Web Storage dieses Browsers: `off` (Vorgabe), `session` (nur diese Sitzung) oder `device` (auf diesem Gerät behalten). |
+| `localDraft` | `boolean` | nein | `false` | Veraltet: `true` entspricht `draft="device"`. |
 | `draftKey` | `string` | nein | `'entwurf'` | Schlüssel des lokalen Entwurfs; je Anwendung verschieden wählen. |
 | `guardUnload` | `boolean` | nein | `true` | Browser-Warnung bei ungespeicherten Änderungen. |
 | `initialState` | `WorkspaceState` | nein | `undefined` | – |
@@ -297,6 +300,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (35):
 | `saved` | `[fileName: string]` | – |
 | `opened` | `[fileName: string]` | – |
 | `exported` | `[fileName: string]` | – |
+| `draft` | `[status: { mode: DraftMode; stored: boolean }]` | – |
+| `dirty` | `[dirty: boolean]` | – |
 
 #### `SheetField`
 
@@ -387,7 +392,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (35):
 
 | Prop | Standard | Bedeutung |
 |---|---|---|
-| `localDraft` | `false` | Entwurf im Web Storage dieses Browsers; die Anwendung schaltet ihn bewusst ein. Ohne ihn wird nichts abgelegt und der Menüpunkt entfällt. Ein übergebener `initialState` geht dem Entwurf vor |
+| `draft` | `'off'` | Zwischenstand im Web Storage dieses Browsers: `'off'` (nichts wird abgelegt, der Menüpunkt entfällt), `'session'` (nur diese Sitzung, `sessionStorage`) oder `'device'` (auf diesem Gerät behalten, `localStorage`). Beim Wechsel der Stufe zieht der Zwischenstand um, bei `'off'` und bei „Neu“ werden beide Ablagen geleert. Ein übergebener `initialState` geht dem Zwischenstand vor. Die frühere Prop `localDraft` entspricht `draft="device"` |
+| Slot `draft`, Ereignis `draft` | – | Den Umschalter „auf diesem Gerät behalten“ bietet die Anwendung an: Der Slot (in der Fußzeile, Props `mode`, `stored`, `clear`) nimmt ihn auf, das Ereignis meldet `{ mode, stored }`, sobald ein Zwischenstand abgelegt oder entfernt ist |
 | `draftKey` | `entwurf` | Schlüssel des Entwurfs (`auditcore-sampling-templates:<draftKey>`), je Anwendung verschieden wählen |
 | `guardUnload` | `true` | Browser-Warnung beim Verlassen mit ungespeicherten Änderungen |
 | `locale`, `messages` | Deutsch | Sprache (`de`, `en`) und überschriebene Texte (`{ de: {…}, en: {…} }`, Schlüssel `MessageKey` des Kerns); ohne `locale` gilt die von `@auditcore/ui` bereitgestellte Sprache |
@@ -402,6 +408,47 @@ und Bezeichnungen, Fundstellen und Prüfhinweise aller Blätter, Fachbegriffe
 nach der englischen Fassung der DelVO (EU) 2023/67; maßgeblich ist der deutsche
 Wortlaut der Vorlage. Gespeicherte Werte
 bleiben deutsch.
+
+**Methoden der Komponente** (über `ref`): `loadSample(blatt?)` lädt die
+Beispielwerte – mit Blattname (z. B. `'03_MUS_1Z'`) öffnet es dieses Verfahren,
+ohne Angabe bleiben gewähltes Verfahren und Arbeitsschritt stehen; `reset()`
+leert das Formular und den Zwischenstand; `open(file)`, `save()`,
+`exportResult()`, `clearDraft()`; `state` ist der Arbeitsstand; `isDirty()`
+und der reaktive Wert `dirty` sagen, ob es ungesicherte Änderungen gibt.
+
+**Routenwächter der Anwendung:** Die Komponente warnt selbst nur beim
+Schließen oder Neuladen der Seite (`beforeunload`). Verlässt die Nutzerin den
+Rechner über die Navigation der Anwendung, fragt die Anwendung nach – mit dem
+Ereignis `dirty` oder der Methode `isDirty()`:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
+import { SamplingCalculator } from '@auditcore/sampling-templates-vue'
+
+const dirty = ref(false)
+onBeforeRouteLeave(() => !dirty.value || window.confirm('Der Arbeitsstand enthält ungespeicherte Änderungen. Seite trotzdem verlassen?'))
+</script>
+
+<template>
+  <SamplingCalculator @dirty="dirty = $event" />
+</template>
+```
+
+```vue
+<SamplingCalculator ref="calculator" :draft="keep ? 'device' : 'session'">
+  <template #draft="{ stored }">
+    <label><input v-model="keep" type="checkbox" /> auf diesem Gerät behalten</label>
+    <span v-if="stored">Zwischenstand abgelegt</span>
+  </template>
+</SamplingCalculator>
+```
+
+**Bericht:** Kopf- und Fußzeile nennen das Programm und die Prüfbehörde, die
+im Schritt „Bericht“ bei den Steuerfeldern angegeben sind; das Paket enthält
+keinen festen Namen. Die Druckseite ist als benannte Seite (`@page
+fa-st-report`) gesetzt und ändert den Druck anderer Seiten der Anwendung nicht.
 
 In der Fußzeile stehen immer der Hinweis des Fachrahmens und der Stand der
 Vorlage (Arbeitsentwurf, Fassung 4, Stand Oktober 2026, keine amtliche
@@ -484,7 +531,7 @@ fremde Hosts, Tokens einer Anwendung; je Blattart hell und dunkel, 1280 px und
 
 ## Abhängigkeiten
 
-`@auditcore/sampling-templates-core@0.1.0` (Rechenkerne, Arbeitsstand, Stile),
+`@auditcore/sampling-templates-core@0.1.1` (Rechenkerne, Arbeitsstand, Stile),
 `@auditcore/ui` ab 0.4.0 (`FaButton`, `FaBadge`, `FaDialog`, Sprache),
 `@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.1`
 (Download, Web Storage, Zeitsteuerung); Peer `vue@^3.5.0`. Verwendet werden nur
@@ -497,9 +544,9 @@ Keine Netzwerkzugriffe (`fetch`, CDN, Telemetrie) – der Browsertest prüft es.
 Alle Ausgaben laufen über Vue-Templates (maskiert, kein `v-html`); die Demo
 läuft unter `default-src 'self'`. Dateien werden vom Kern streng geprüft,
 bevor sie übernommen werden. Gespeichert wird nur, was die Nutzerin oder der
-Nutzer als Datei speichert. Der lokale Entwurf ist ausgeschaltet, solange die
-Anwendung ihn nicht einschaltet; dann hält er den Arbeitsstand im Web Storage
-dieses Browsers (über das Menü löschbar, in der Oberfläche als Bequemlichkeit
+Nutzer als Datei speichert. Der Zwischenstand ist ausgeschaltet, solange die
+Anwendung keine Stufe wählt (`draft`); dann hält er den Arbeitsstand für die
+Sitzung oder auf dem Gerät im Web Storage dieses Browsers (über das Menü löschbar, in der Oberfläche als Bequemlichkeit
 bezeichnet). Die Eingaben können Angaben
 zu Programmen und Vorhaben enthalten; die Anwendung entscheidet, ob der
 Entwurf auf gemeinsam genutzten Rechnern zulässig ist.

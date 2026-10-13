@@ -69,6 +69,14 @@ function stored(state: WorkspaceState, sheets: readonly SheetModule[], t: Transl
   return { ergebnisse, hinweise }
 }
 
+/**
+ * Prüfsumme der Eingaben eines Arbeitsstands – dieselbe, die die Arbeitsstandsdatei
+ * und der Excel-Export tragen. Damit lässt sich ein Ausdruck einem Arbeitsstand zuordnen.
+ */
+export function workspaceChecksum(state: WorkspaceState): Promise<string> {
+  return checksumOf(canonicalInputs({ kopf: { ...state.header }, aktiveMethode: state.activeMethod, blaetter: cleanInputs(state.sheets) }))
+}
+
 /** Arbeitsstandsdatei mit Prüfsumme über die kanonisch sortierten Eingaben erzeugen. */
 export async function saveWorkspace(state: WorkspaceState, options: SaveOptions = {}): Promise<SavedWorkspace> {
   const sheets = options.sheets ?? SHEETS

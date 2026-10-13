@@ -30,6 +30,8 @@ export interface SheetActions {
   strataCount: ComputedRef<number>
   addStratum: () => void
   removeStratum: () => void
+  /** Trägt die letzte Schicht Eingaben? Dann fragt die Oberfläche vor dem Entfernen nach. */
+  lastStratumFilled: ComputedRef<boolean>
   addUnit: () => void
   removeUnit: (index: number) => void
   pasteUnits: (text: string) => void
@@ -47,7 +49,7 @@ export interface ActionContext {
   notify: (tone: 'info' | 'warning', text: string) => void
 }
 
-function useStrata(context: ActionContext): Pick<SheetActions, 'strataCount' | 'addStratum' | 'removeStratum'> {
+function useStrata(context: ActionContext): Pick<SheetActions, 'strataCount' | 'addStratum' | 'removeStratum' | 'lastStratumFilled'> {
   const chosen = ref<Record<SheetId, number>>({})
   const { view } = context
   const sheetId = (): SheetId => view.currentSheet.value?.id ?? ''
@@ -55,18 +57,28 @@ function useStrata(context: ActionContext): Pick<SheetActions, 'strataCount' | '
   const choose = (count: number): void => {
     chosen.value = { ...chosen.value, [sheetId()]: count }
   }
+  /** Eingabezellen der letzten Schicht des angezeigten Blatts. */
+  const lastCells = (): string[] => {
+    const sheet = view.currentSheet.value
+    const column = sheet ? strataColumnsOf(sheet.definition)[strataCount.value - 1] : undefined
+    if (!sheet || !column) return []
+    return inputFields(sheet.definition).filter((field) => field.columns).flatMap(cellsOf).filter((address) => address.replace(/\d+$/, '') === column)
+  }
   return {
     strataCount,
     addStratum: () => choose(Math.min(MAX_STRATA, strataCount.value + 1)),
+    lastStratumFilled: computed(() => {
+      const sheet = view.currentSheet.value
+      const inputs = sheet ? ownInputs(context.state(), sheet.id) : {}
+      return lastCells().some((cell) => inputs[cell] !== null && inputs[cell] !== undefined && inputs[cell] !== '')
+    }),
     /** Entfernt die letzte Schicht samt ihren Eingaben. */
     removeStratum() {
       const sheet = view.currentSheet.value
-      if (!sheet || strataCount.value <= 1) return
-      const column = strataColumnsOf(sheet.definition)[strataCount.value - 1]
-      if (!column) return
+      const cells = lastCells()
+      if (!sheet || strataCount.value <= 1 || cells.length === 0) return
       const inputs: Record<string, CellValue> = { ...ownInputs(context.state(), sheet.id) }
-      const cells = inputFields(sheet.definition).filter((field) => field.columns).flatMap(cellsOf)
-      for (const cell of cells.filter((address) => address.replace(/\d+$/, '') === column)) delete inputs[cell]
+      for (const cell of cells) delete inputs[cell]
       choose(strataCount.value - 1)
       context.write(sheet.id, inputs)
     },

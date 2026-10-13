@@ -14,6 +14,8 @@ import { CASE_ROWS, definition } from './definition'
 
 const POPULATION_SHEET = '02_Grundgesamtheit'
 const TOTAL_ERROR_RATE_SHEET = '18_GFQ_AnhIII'
+/** Zelle „Programm(e) / CCI“ in allen Methodenblättern. */
+const PROGRAMME_CELL = 'C4'
 
 /** Feste Werte der Formel in G43: „Wesentlichkeitsschwelle von 2 %“ und der Teiler 0,98. */
 const MATERIALITY = 0.02
@@ -32,11 +34,28 @@ const linked = (sheet: CellMap, cell: string): CellValue => sheet[cell] ?? null
 /** Eigene Eingabe, wie sie die Druckseite zeigt: `=IF($J$6="";"";$J$6)`. */
 const shown = (value: CellValue | undefined): CellValue => (isBlank(value) ? null : value)
 
-/** Kopf der Seite: Programm, CCI, Geschäftsjahr und Status (A6), Stand (G6). */
-function head(c: Cells, population: CellMap): void {
-  // Der Programmname steht fest in der Formel der Vorlage; die Vorlage ist auf dieses Programm festgelegt.
-  c.A6 = `EFRE-Programm Hessen 2021–2027 · CCI ${left(population.C9, 15)} · Geschäftsjahr ${text(population.C12)}${isBlank(c.J5) ? '' : ` · ${text(c.J5)}`}`
+/** Teile der Kopfzeile nach dem Programm, wie die Vorlage sie verkettet: CCI, Geschäftsjahr und – wenn gesetzt – der Status. */
+export function headTail(cci: CellValue | undefined, accountingYear: CellValue | undefined, status: CellValue | undefined): string {
+  return `CCI ${left(cci, 15)} · Geschäftsjahr ${text(accountingYear)}${isBlank(status) ? '' : ` · ${text(status)}`}`
+}
+
+/** Programm vor der Kopfzeile mit dem Trenner der Vorlage; ohne Bezeichnung entfällt beides. */
+export const headLead = (programme: CellValue | undefined): string => (isBlank(programme) ? '' : `${text(programme)} · `)
+
+/**
+ * Kopf und Fuß der Seite: Programm, CCI, Geschäftsjahr und Status (A6), Stand
+ * (G6), Fußzeile (W8). Die Vorlage nennt in A6 und in der Fußzeile fest ein
+ * Programm und eine Prüfbehörde; die Webfassung setzt die Angaben der
+ * Prüfbehörde ein (W4–W7) – eine bewusste Abweichung (docs/abweichungen.md).
+ * Ohne eigene Bezeichnung gilt „Programm(e) / CCI“ des übernommenen Verfahrens.
+ */
+function head(c: Cells, population: CellMap, context: SheetContext): void {
+  const adopted = context.sheets[TOTAL_ERROR_RATE_SHEET]?.C4
+  if (isBlank(c.W4)) c.W4 = typeof adopted === 'string' ? (context.sheets[adopted]?.[PROGRAMME_CELL] ?? null) : null
+  c.A6 = `${headLead(c.W4)}${headTail(population.C9, population.C12, c.J5)}`
   c.G6 = shown(c.J4)
+  const footer = [c.W5, c.W6, c.W7].filter((part) => !isBlank(part)).map(text)
+  c.W8 = footer.length ? footer.join(', ') : null
 }
 
 /** Abschnitt 1: Grundgesamtheit aus Blatt 02 (F11–G13). */
@@ -122,7 +141,7 @@ function residual(c: Cells, context: SheetContext): void {
 export function compute(inputs: CellMap, context: SheetContext): CellMap {
   const c = resolveInputs(definition, inputs, context)
   const sheet02 = context.sheets[POPULATION_SHEET] ?? {}
-  head(c, sheet02)
+  head(c, sheet02, context)
   population(c, sheet02)
   sample(c, context)
   cases(c)

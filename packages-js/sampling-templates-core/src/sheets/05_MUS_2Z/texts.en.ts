@@ -113,7 +113,7 @@ export const en: SheetTexts = {
     'size-exceeds-population-1': periodExceedsEn(1),
     'size-exceeds-population-2': periodExceedsEn(2),
     'negative-denominator':
-      'Denominator of the standard recalculation is not positive: the standard approach yields no sample size for period 2 (the template then shows only the minimum sizes: at least 3, topped up to 30). Choose the global recalculation',
+      'Denominator of the standard recalculation is not positive: the standard approach yields no sample size for period 2. Where all required inputs are present, the web version shows, like the template, only the minimum size of 3 or the top-up to 30 and continues to calculate with it; the result is not reliable. Recommended: global recalculation',
     'confidence-outside-annex': HINTS_EN['confidence-outside-annex'],
   },
 }

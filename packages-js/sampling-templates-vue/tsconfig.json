@@ -7,7 +7,7 @@
     "jsx": "preserve",
     "paths": {
       "@auditcore/sampling-templates-core": ["../sampling-templates-core/src/index.ts"],
-      "@auditcore/sampling-templates-core/xlsx": ["../sampling-templates-core/src/xlsx/index.ts"],
+      "@auditcore/sampling-templates-core/workbook": ["../sampling-templates-core/src/xlsx/index.ts"],
       "@auditcore/ui": ["../ui/src/index.ts"],
       "@auditcore/ui-core": ["../ui-core/src/index.ts"],
       "@auditcore/kanban-core": ["../kanban-core/src/index.ts"],

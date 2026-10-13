@@ -11,7 +11,7 @@ import SheetField from './SheetField.vue'
  * nicht gedruckt werden. `report` ist das Ergebnis von `buildReport`. Gedruckt
  * wird über das Ereignis `print`; die einbindende Komponente ruft `window.print()`.
  */
-const props = defineProps<{ report: ReportPage; t: Translate }>()
+const props = withDefaults(defineProps<{ report: ReportPage; t: Translate; /** Prüfsumme der Eingaben des Arbeitsstands (wie in Datei und Export). */ checksum?: string }>(), { checksum: '' })
 const emit = defineEmits<{ update: [cell: CellAddress, value: CellValue]; print: [] }>()
 
 const id = useId('fa-st-report')
@@ -47,7 +47,7 @@ function onText(cell: CellAddress, event: Event): void {
           </p>
           <h3 :id="`${id}-title`" class="fa-st__report-title">{{ report.title }}</h3>
           <div class="fa-st__report-sub">
-            <p data-report-subtitle>{{ report.subtitle }}</p>
+            <p data-report-subtitle><span v-if="report.programmePlaceholder" class="fa-st__report-screen fa-st__report-placeholder" data-report-programme-missing>{{ report.programmePlaceholder }} · </span>{{ report.subtitle }}</p>
             <p v-if="report.asOf" data-report-as-of>{{ report.asOf }}</p>
           </div>
         </header>
@@ -62,10 +62,10 @@ function onText(cell: CellAddress, event: Event): void {
                 spellcheck="true"
                 :value="block.text"
                 :placeholder="block.placeholder"
-                :aria-label="section.title"
+                :aria-labelledby="`${id}-s${section.id}`"
                 @input="onText(block.field.cell, $event)"
               ></textarea>
-              <p class="fa-st__report-print" :class="{ 'fa-st__report-placeholder': !block.text }">{{ block.text || block.placeholder }}</p>
+              <p class="fa-st__report-print" :class="{ 'fa-st__report-blank': !block.text }">{{ block.text }}</p>
             </div>
             <p v-else-if="block.kind === 'statement'" class="fa-st__report-statement" data-report-statement>{{ block.text }}</p>
             <table v-else class="fa-st__report-table" :class="{ 'fa-st__report-table--figures': block.columns.length === 0 }">
@@ -102,8 +102,15 @@ function onText(cell: CellAddress, event: Event): void {
             <li v-for="hint in printedHints" :key="hint.id">{{ hint.text }}</li>
           </ul>
           <p v-for="note in report.notes" :key="note">{{ note }}</p>
+          <p class="fa-st__report-identity" data-report-identity>
+            <span v-for="entry in report.identity" :key="entry.label">{{ entry.label }}: {{ entry.value }}</span>
+            <span v-if="checksum" data-report-checksum>{{ report.checksumLabel }}: {{ checksum }}</span>
+          </p>
         </section>
-        <footer class="fa-st__report-footer">{{ report.footer }}</footer>
+        <footer class="fa-st__report-footer" data-report-footer>
+          <template v-if="report.footer">{{ report.footer }}</template>
+          <span v-else class="fa-st__report-screen fa-st__report-placeholder" data-report-authority-missing>{{ report.footerPlaceholder }}</span>
+        </footer>
       </article>
 
       <aside class="fa-st__card fa-st__report-controls" :aria-labelledby="`${id}-controls`" data-report-controls>

@@ -168,7 +168,7 @@ describe('Liste im Arbeitsstand und im Excel-Austausch', () => {
 
   it('Export: eigenes Blatt mit einer Zeile je Einheit', async () => {
     const workbook = readWorkbook((await exportWorkbook(state)).data)
-    expect(workbook.sheetNames).toEqual(['Ergebnis', sheet.id, '_Arbeitsstand'])
+    expect(workbook.sheetNames).toEqual(['Ergebnis', sheet.id, '18_GFQ_AnhIII', '20_Druck_KOM', '_Arbeitsstand'])
     const values = [...workbook.cells(sheet.id).values()].map((cell) => cell.value)
     expect(values).toEqual(expect.arrayContaining(['A', 'B', 'C', 'D', 250000, 'hochwertige Einheit']))
     expect(values.some((value) => typeof value === 'number' && Math.abs(value - 3750) < 1e-6)).toBe(true)
@@ -191,7 +191,7 @@ describe('Liste im Arbeitsstand und im Excel-Austausch', () => {
       { name: '18_GFQ_AnhIII', rows: chosen },
     ])
     const imported = importWorkbook(workbook)
-    expect(imported).toMatchObject({ kind: 'template', filled: [sheet.id], method: method.id })
+    expect(imported).toMatchObject({ kind: 'template', filled: [sheet.id, '18_GFQ_AnhIII'], method: method.id })
     if (imported.kind !== 'template') throw new Error('Vorlage erwartet')
     expect((imported.sheets[sheet.id] as readonly CellMap[]).map((row) => [row.C5, row.C6])).toEqual([['V-1', 100000], ['V-2', 200000]])
     const unknown = importWorkbook(writeWorkbook([{ name: sheet.id, rows: unit('V-1', 1) }, { name: '18_GFQ_AnhIII', rows: [[], [], [], [null, null, { value: 'kein Blatt' }]] }]))

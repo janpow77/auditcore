@@ -1,7 +1,9 @@
 /**
  * Begründete Abweichungen des Blatts X4 vom Verhalten der Vorlage bei leeren
- * Eingaben. Die Altvorlage rechnet mit jeder leeren Zelle als 0 weiter; die
- * Webfassung zeigt „Angabe fehlt“ (`null`), nie einen anderen Wert. Jede Zeile
+ * Eingaben. Die Altvorlage rechnet mit jeder leeren Zelle als 0 weiter; fehlt
+ * eine Pflichteingabe, zeigt die Webfassung „Angabe fehlt“ (`null`), nie einen
+ * anderen Wert. Sind alle Pflichteingaben vorhanden, zeigt sie, was die Vorlage
+ * zeigt – fragwürdige Ergebnisse mit Hinweis in Warnfarbe. Jede Zeile
  * nennt genau die Eingaben, deren Fehlen die Vorlage einen Wert zeigen lässt,
  * und ist durch einen Golden-Fall belegt (test/deviations.spec.ts).
  *

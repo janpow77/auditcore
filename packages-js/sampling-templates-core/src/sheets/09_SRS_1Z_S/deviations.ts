@@ -1,11 +1,16 @@
 /**
  * Begründete Abweichungen des Blatts 09 bei leeren Eingaben. Wie in den
  * Blättern 04 und 08 zeigt die Webfassung „Angabe fehlt“, wo die Vorlage mit 0
- * weiterrechnet, und lässt Werte ohne Grundlage offen (`kind: 'withoutBasis'`):
+ * weiterrechnet. Dazu die Werte ohne Grundlage (`kind: 'withoutBasis'`):
  * Summen über Schichtzeilen ohne Summanden samt allem, was auf ihnen aufbaut,
- * den Prüfhinweis „✔ ≥ 3“ ohne Umfang je Schicht und die Hochrechnung 0, solange
+ * der Prüfhinweis „✔ ≥ 3“ ohne Umfang je Schicht und die Hochrechnung 0, solange
  * keine Schicht eine Fehlersumme trägt. Geführt über alle Schichtspalten des
  * Blatts (D–J der Vorlage und AA–AM der Webfassung).
+ *
+ * Werte ohne Grundlage lässt die Webfassung offen, solange eine Pflichteingabe
+ * fehlt; bei vollständigen Pflichteingaben zeigt sie sie wie die Vorlage und
+ * weist sie mit einem Hinweis in Warnfarbe aus (`evaluateSheet`, Hinweis
+ * `without-basis`); die Würdigung ist dann nicht uneingeschränkt grün.
  */
 import { STRATA_COLUMNS, stratumCell } from '../../model/strata'
 import type { Deviation } from '../../model/types'
@@ -37,7 +42,7 @@ const NO_ERROR_SUM = 'Solange keine Schicht eine Fehlersumme trägt, gibt es nic
 /** Summenzellen mit der Schichtzeile, deren Werte sie summieren (Hilfszeilen 29 und 50: die Anzahl der Einheiten). */
 const TOTALS: readonly (readonly [cell: string, row: number])[] = [['C12', 12], ['C13', 13], ['C29', 12], ['C41', 41], ['C45', 45], ['C46', 46], ['C50', 12]]
 
-/** Werte ohne Grundlage (`unfounded`, `totalRow`): Die Webfassung zeigt sie nach der geltenden Richtlinie nicht. */
+/** Werte ohne Grundlage (`unfounded`, `totalRow`): offen, solange eine Pflichteingabe fehlt; bei vollständigen Pflichteingaben wie die Vorlage mit Hinweis. */
 const withoutBasis: readonly Deviation[] = [
   ...TOTALS.flatMap(([cell, cells]) => entries([cell], row(cells), '0 (Summe über Schichten ohne Wert)', EMPTY_TOTAL, 'withoutBasis')),
   ...entries(['C14', 'N4', 'C15', 'C23', 'C25'], ['C13'], 'Wert auf Grundlage einer Summe der Buchwerte von 0 € (nur die umfassende Schicht)', ON_TOTAL, 'withoutBasis'),
@@ -54,7 +59,8 @@ const withoutBasis: readonly Deviation[] = [
 ]
 
 export const deviations: readonly Deviation[] = [
-  ...entries(['C15'], ['02_Grundgesamtheit!C51'], 'Buchwert der Grundgesamtheit abzüglich 0 € (leeres Blatt 02)', 'Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen.'),
+  // Der Abgleich mit Blatt 02 betrifft nur diese Zelle, nicht das Ergebnis: Das Blatt gilt auch ohne Blatt 02 als vollständig ausgefüllt (`local`).
+  ...entries(['C15'], ['02_Grundgesamtheit!C51'], 'Buchwert der Grundgesamtheit abzüglich 0 € (leeres Blatt 02)', 'Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen.').map((entry) => ({ ...entry, local: true })),
   ...entries(['C23'], ['C21'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus.'),
   ...entries(['C25'], ['C24'], '0,00 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus.'),
   ...perStratum(29, 28, '0 (σ_eh einer belegten Schicht zählt als 0)', SIGMA_REASON),

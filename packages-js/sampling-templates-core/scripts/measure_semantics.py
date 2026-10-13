@@ -131,5 +131,6 @@ def main() -> None:
     TARGET.write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(f"Messwerte geschrieben nach {TARGET}")
 
+
 if __name__ == "__main__":
     main()

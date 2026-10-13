@@ -103,7 +103,8 @@ describe('Als 0 gerechnete fehlende Angaben', () => {
     const all = rows(inputs)
     const note = 'Keine Angabe, daher mit 0 berechnet: Standardabweichung der Fehlerquoten in der Stichprobe der Zufallsschicht (s_r) (C39)'
     expect(all.filter((row) => row.zeroNote).map((row) => row.cell)).toEqual(['C43', 'C46', 'C47', 'C48', 'C51', 'C52'])
-    expect(all.find((row) => row.cell === 'C52')).toMatchObject({ zeroNote: note, tone: 'success' })
+    // Die Würdigung ist bestanden, steht aber nicht uneingeschränkt grün da: Ein Hinweis in Warnfarbe schränkt das Ergebnis ein.
+    expect(all.find((row) => row.cell === 'C52')).toMatchObject({ zeroNote: note, tone: 'warning' })
     const hints = buildSummary(sheet, inputs, results, context, t).hints
     expect(hints.find((hint) => hint.id === 'zero-C39')).toEqual({ id: 'zero-C39', tone: 'warning', source: 'web', text: note })
     expect(hints.findIndex((hint) => hint.id === 'zero-C39')).toBe(hints.findIndex((hint) => hint.id === 'C52') + 1)

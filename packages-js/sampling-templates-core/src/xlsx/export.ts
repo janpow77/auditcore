@@ -8,7 +8,7 @@ import { formatDateTime } from '@auditcore/common'
 import { isBlank } from '../excel/index'
 import { formatFieldValue } from '../format/numbers'
 import { createTranslate, type MessageKey, type Translate } from '../i18n/messages'
-import { cellsOf, fieldsOf, type FieldDefinition, strataColumnsOf } from '../model/definition'
+import { cellsOf, fieldsOf, inputFields, type FieldDefinition, strataColumnsOf } from '../model/definition'
 import { createContext, type AvailableSheet, type SheetModule } from '../model/sheet'
 import type { CellMap, CellValue, SheetContext } from '../model/types'
 import { SHEETS } from '../sheets/registry'
@@ -60,7 +60,26 @@ function valueCell(field: FieldDefinition, value: CellValue): WorkbookCell | nul
   return { value: formatFieldValue(field, value), style: { ...base, wrap: true } }
 }
 
-function headerRows(sheet: AvailableSheet, file: WorkspaceFile, t: Translate): (WorkbookCell | null)[][] {
+/** Blätter, die ihr Ergebnis aus dem gewählten Verfahren beziehen; sie gehören zum Export, sobald ein Verfahren gewählt ist. */
+const METHOD_READERS: readonly string[] = ['18_GFQ_AnhIII', '20_Druck_KOM']
+
+/** Bearbeitet: Mindestens eine Eingabe weicht von den Vorgaben der Vorlage ab. Ein Blatt nur mit Vorgaben („✔ ≤ 2 %“) gehört nicht in den Export. */
+function isEdited(sheet: AvailableSheet, inputs: CellMap): boolean {
+  return inputFields(sheet.definition).some((field) => cellsOf(field).some((cell) => !isBlank(inputs[cell]) && inputs[cell] !== (field.default ?? null)))
+}
+
+/** Gehört das Blatt in den Export? Das gewählte Verfahren, Blatt 18 und der Bericht dazu, sonst nur bearbeitete Blätter. */
+function belongs(sheet: AvailableSheet, state: WorkspaceState, inputs: CellMap): boolean {
+  if (sheet.id === state.activeMethod) return true
+  return (METHOD_READERS.includes(sheet.id) && state.activeMethod !== null) || isEdited(sheet, inputs)
+}
+
+/** Verfahrensblatt, das nicht das gewählte Verfahren ist: Sein Ergebnis fließt nicht in Blatt 18 und den Bericht ein. */
+function isOtherMethod(sheet: AvailableSheet, state: WorkspaceState): boolean {
+  return sheet.definition.summary.gauge !== undefined && !METHOD_READERS.includes(sheet.id) && sheet.id !== state.activeMethod
+}
+
+function headerRows(sheet: AvailableSheet, file: WorkspaceFile, t: Translate, other = false): (WorkbookCell | null)[][] {
   const { definition } = sheet
   const pairs: [MessageKey, string][] = [
     ['exportMethod', definition.title],
@@ -72,7 +91,8 @@ function headerRows(sheet: AvailableSheet, file: WorkspaceFile, t: Translate): (
     ['exportEngine', file.rechenkern],
     ['exportChecksum', file.pruefsumme],
   ]
-  return [[text(t('title'), { bold: true })], ...pairs.map(([key, value]) => [text(t(key), { bold: true }), text(value)]), [text(t('disclaimer'))], [text(t('templateStatus'))], []]
+  const note = other ? [[text(t('exportNotActive'), { bold: true })]] : []
+  return [[text(t('title'), { bold: true })], ...pairs.map(([key, value]) => [text(t(key), { bold: true }), text(value)]), ...note, [text(t('disclaimer'))], [text(t('templateStatus'))], []]
 }
 
 /** Zellbezug einer Zeile: einzelne Zelle oder der Bereich der belegten Schichtspalten. */
@@ -108,7 +128,7 @@ function strataCount(sheet: AvailableSheet, inputs: CellMap): number {
   return rows.length ? Math.max(1, usedStrata(inputs, rows, strataColumnsOf(sheet.definition))) : 0
 }
 
-function resultSheet(name: string, sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, file: WorkspaceFile, t: Translate): WorkbookSheet {
+function resultSheet(name: string, sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, file: WorkspaceFile, t: Translate, other = false): WorkbookSheet {
   const columns: MessageKey[] = ['columnSection', 'columnLabel', 'columnValue', 'columnKind', 'columnReference', 'columnCell']
   const strata = strataCount(sheet, inputs)
   const strataHead = Array.from({ length: strata }, (_, index) => text(t('stratum', { number: index + 1 }), HEAD))
@@ -119,7 +139,7 @@ function resultSheet(name: string, sheet: AvailableSheet, inputs: CellMap, resul
   return {
     name,
     widths: [...WIDTHS, ...strataHead.map(() => 18)],
-    rows: [...headerRows(sheet, file, t), [...columns.map((key) => text(t(key), HEAD)), ...strataHead], ...fieldRows(sheet, results, strata, t), ...beyond, ...webHints],
+    rows: [...headerRows(sheet, file, t, other), [...columns.map((key) => text(t(key), HEAD)), ...strataHead], ...fieldRows(sheet, results, strata, t), ...beyond, ...webHints],
   }
 }
 
@@ -159,7 +179,11 @@ function resultSheets(state: WorkspaceState, sheets: readonly SheetModule[], fil
   return pages
 }
 
-/** Seite eines Blatts oder `null`, wenn es nicht bearbeitet ist. */
+/**
+ * Seite eines Blatts oder `null`, wenn es nicht bearbeitet ist. Exportiert werden
+ * das gewählte Verfahren, Blatt 18 und der Bericht dazu und jedes weitere Blatt
+ * mit eigenen Eingaben; ein anderes Verfahrensblatt ist im Kopf als solches gekennzeichnet.
+ */
 function pageOf(sheet: AvailableSheet, state: WorkspaceState, results: Readonly<Record<string, CellMap>>, file: WorkspaceFile, t: Translate): WorkbookSheet | null {
   const active = sheet.id === state.activeMethod
   const computed = results[sheet.id]
@@ -168,8 +192,10 @@ function pageOf(sheet: AvailableSheet, state: WorkspaceState, results: Readonly<
     return rows.length > 0 ? listSheet(sheet, rows, file, t) : null
   }
   const inputs = state.sheets[sheet.id]
-  if (!computed || Array.isArray(inputs) || (!active && !inputs)) return null
-  return resultSheet(active ? t('exportSheet') : sheet.id, sheet, (inputs as CellMap | undefined) ?? {}, computed, contextFor(sheet.id, state, results), file, t)
+  if (!computed || Array.isArray(inputs)) return null
+  const own = (inputs as CellMap | undefined) ?? {}
+  if (!belongs(sheet, state, own)) return null
+  return resultSheet(active ? t('exportSheet') : sheet.id, sheet, own, computed, contextFor(sheet.id, state, results), file, t, isOtherMethod(sheet, state))
 }
 
 /** Exportiert das Ergebnis des aktiven Verfahrens und aller weiteren bearbeiteten Blätter. */

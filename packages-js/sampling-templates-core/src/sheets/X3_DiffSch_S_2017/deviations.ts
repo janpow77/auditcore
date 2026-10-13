@@ -1,7 +1,8 @@
 /**
  * Begründete Abweichungen des Blatts X3 vom Verhalten der Vorlage bei leeren
- * Eingaben. Die Altvorlage rechnet mit jeder leeren Zelle als 0 weiter; die
- * Webfassung zeigt „Angabe fehlt“ (`null`), nie einen anderen Wert. Für eine
+ * Eingaben. Die Altvorlage rechnet mit jeder leeren Zelle als 0 weiter; fehlt
+ * eine Pflichteingabe, zeigt die Webfassung „Angabe fehlt“ (`null`), nie einen
+ * anderen Wert. Für eine
  * belegte Schicht (Buchwert, Umfang oder σ der Planung eingetragen) sind alle
  * drei Angaben Pflicht, für die Hochrechnung auch der Fehler der Stichprobe –
  * solange keine belegte Schicht einen trägt. Die Abweichungen gelten für alle
@@ -16,7 +17,10 @@
  *
  * Ohne Grundlage (`withoutBasis`): Trägt keine Schicht einen hochgerechneten
  * Fehler (Zeile 22) – leeres Formular oder kein Stichprobenumfang, etwa bei
- * TE = AE –, zeigt die Vorlage als Summe 0 und rechnet damit weiter.
+ * TE = AE –, zeigt die Vorlage als Summe 0 und rechnet damit weiter. Die
+ * Webfassung lässt diese Werte offen, solange eine Pflichteingabe fehlt; bei
+ * vollständigen Eingaben (TE = AE) zeigt sie sie wie die Vorlage mit Hinweis in
+ * Warnfarbe.
  */
 import { stratumCell } from '../../model/strata'
 import type { Deviation } from '../../model/types'
@@ -29,6 +33,8 @@ const BOOK_VALUES = row(6)
 const UNITS = row(7)
 const DEVIATIONS = row(8)
 const SIZE_INPUTS = ['D9', 'D11', ...BOOK_VALUES, ...UNITS, ...DEVIATIONS]
+/** Geltende Regel für Werte ohne Grundlage: offen nur, solange eine Pflichteingabe fehlt. */
+const WITHOUT_BASIS = 'Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe.'
 const STRATUM = 'Zu einer belegten Schicht gehören Buchwert, Umfang und Standardabweichung; fehlt eine Angabe, sind die Summen des Blatts nicht bestimmt.'
 const SIZE = 'Ohne Konfidenzniveau, erwartete Fehlerquote und die Angaben jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen.'
 
@@ -45,11 +51,11 @@ export const deviations: readonly Deviation[] = [
     'Hochrechnung mit einem Stichprobenfehler von 0 € bzw. auf Grundlage des mit 0 berechneten Umfangs',
     'Die Hochrechnung setzt den Stichprobenumfang und den Fehler der Stichprobe mindestens einer belegten Schicht voraus.',
   ),
-  ...unfoundedRows(['D23'], row(22), '0 € (Summe über Schichten ohne hochgerechneten Fehler)', 'Trägt keine Schicht einen hochgerechneten Fehler, gibt es nichts zu summieren; eine Summe von 0 € sähe wie ein Ergebnis aus.'),
+  ...unfoundedRows(['D23'], row(22), '0 € (Summe über Schichten ohne hochgerechneten Fehler)', `Trägt keine Schicht einen hochgerechneten Fehler, gibt es nichts zu summieren; eine Summe von 0 € sähe wie ein Ergebnis aus. ${WITHOUT_BASIS}`),
   ...unfoundedRows(
     ['D24', 'D25'],
     ['D23'],
     'Fehlerquote 0 % bzw. berichtigter Buchwert in Höhe des Buchwerts, gerechnet mit einem hochgerechneten Fehler von 0 €',
-    'Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt.',
+    `Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. ${WITHOUT_BASIS}`,
   ),
 ]

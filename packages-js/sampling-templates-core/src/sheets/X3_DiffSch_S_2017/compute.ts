@@ -11,8 +11,10 @@
  * Umfang 0 (Zeile 17) und sonst keinen Wert – die Webfassung ebenso.
  *
  * Fehlende Angaben (`model/policy.ts`): Die Summen D1, D3 und D23 zeigen in der
- * Vorlage 0, wenn keine Schicht einen Wert trägt; die Webfassung lässt sie
- * offen (`totalRow`), und alles, was darauf aufbaut, ebenso. Der Fehler der
+ * Vorlage 0, wenn keine Schicht einen Wert trägt (`totalRow`). Die Webfassung
+ * lässt sie und alles, was darauf aufbaut, offen, solange eine Pflichteingabe
+ * fehlt; bei vollständigen Eingaben (etwa TE = AE: kein Stichprobenumfang)
+ * zeigt sie sie wie die Vorlage mit Hinweis. Der Fehler der
  * Stichprobe (Zeile 19) ist Pflichtangabe, solange keine belegte Schicht einen
  * trägt; trägt eine Schicht einen, zählt der fehlende einer anderen wie in der
  * Vorlage 0 und wird ausgewiesen (`zeroAssumed`, `partialErrorSum`).
@@ -50,7 +52,7 @@ interface Strata {
   cellsOf: (line: number) => CellAddress[]
   /** Summe einer Zeile über alle Schichtspalten; Zellen ohne Wert zählen nicht. */
   total: (line: number) => number
-  /** Angezeigte Summe einer Zeile: offen, wenn keine Schicht einen Wert trägt (die Vorlage zeigt dann 0). */
+  /** Angezeigte Summe einer Zeile: ohne Grundlage, wenn keine Schicht einen Wert trägt (die Vorlage zeigt dann 0; offen, solange eine Pflichteingabe fehlt). */
   shown: (line: number) => CellValue
   /** Trägt mindestens eine belegte Schicht einen Fehler der Stichprobe (Zeile 19)? */
   errorsGiven: boolean

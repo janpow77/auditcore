@@ -130,10 +130,14 @@ export const en: SheetTexts = {
     'limited-size-open': HINTS_EN['limited-size-open'],
     'strata-sum-exceeds-size': HINTS_EN['strata-sum-exceeds-size'],
     ...perStratum('size-exceeds-population-2', 'sample size for period 2 exceeds the number of units of the stratum'),
-    ...perStratum('no-planned-size', 'without a forecast for period 2 there is no planned sample size; with this approach the sample size of the stratum for period 2 remains open'),
-    'negative-denominator': 'Denominator of the standard recalculation is not positive: the standard approach yields no sample size per stratum for period 2. Choose the global recalculation',
+    ...perStratum(
+      'no-planned-size',
+      'without a forecast for period 2 there is no planned sample size on which this approach builds. Where all required inputs are present, the web version shows, like the template, the minimum size of 3 as the sample size of the stratum for period 2 and continues to calculate with it; the result is not reliable',
+    ),
+    'negative-denominator':
+      'Denominator of the standard recalculation is not positive: the standard approach yields no sample size per stratum for period 2. Where all required inputs are present, the web version shows, like the template, a sample size of 0 for period 2 and the check “✔ ≥ 3” without any units and continues to calculate with them; the result is not reliable. Recommended: global recalculation',
     'second-period-empty':
-      'No actual book value has been entered for period 2: recalculation, extrapolation and total error rate remain open (the template continues to calculate with period 1 alone)',
+      'No actual book value has been entered for period 2: the template continues to calculate with period 1 alone. Where all required inputs are present, the web version shows the same values; recalculation, extrapolation and total error rate are then not reliable. Where a required input is missing, they remain open',
     'confidence-outside-annex': HINTS_EN['confidence-outside-annex'],
     'strata-beyond-template': HINTS_EN['strata-beyond-template'],
   },

@@ -8,10 +8,11 @@ import { formatFieldValue } from '../format/numbers'
 import type { Translate } from '../i18n/messages'
 import { cellsOf, fieldsOf, findField, inputFields, type FieldDefinition, type SummaryDefinition } from '../model/definition'
 import { evaluateSheet } from '../model/evaluate'
-import type { AvailableSheet } from '../model/sheet'
+import type { AvailableSheet, SheetModule } from '../model/sheet'
+import { SHEETS } from '../sheets/registry'
 import { translateValue } from '../model/texts'
 import type { CellMap, CellValue, SheetContext, Tone } from '../model/types'
-import { inputName } from './sheetView'
+import { carriedLimitations, inputName, isQualified, limitationsOf, type Limitation } from './limits'
 
 export interface HintView {
   id: string
@@ -91,19 +92,32 @@ function strataHints(sheet: AvailableSheet, field: FieldDefinition, results: Cel
   return problems.map((entry) => ({ id: entry.cell, text: `${t('stratum', { number: entry.index + 1 })}: ${text(entry.value)}`, tone: toneOf(entry.value), source: 'template' }))
 }
 
-/** Prüfhinweise der Vorlage in Blattreihenfolge, danach die Hinweise der Webfassung. */
-export function buildHints(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate): HintView[] {
+/**
+ * Prüfhinweise der Vorlage in Blattreihenfolge, danach die Hinweise der
+ * Webfassung: mit 0 gerechnete Eingaben, Werte ohne Grundlage, eigene Hinweise
+ * und – in Blatt 18 und im Bericht – die Einschränkungen des gewählten
+ * Verfahrens. Schränkt ein Hinweis in Warnfarbe das Ergebnis ein, erscheint ein
+ * bestandener Befund der Würdigung nicht uneingeschränkt grün.
+ */
+export function buildHints(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate, sheets: readonly SheetModule[] = SHEETS): HintView[] {
+  const own = limitationsOf(sheet, inputs, results, context, t)
+  const carried = carriedLimitations(sheet, context, t, sheets)
+  const qualified = isQualified([...own, ...carried])
+  const unfounded = new Set(evaluateSheet(sheet, inputs, context).withoutBasis)
   const template = fieldsOf(sheet.definition)
     .filter((field) => field.type === 'check')
     .flatMap((field): HintView[] => {
       if (field.columns) return strataHints(sheet, field, results, t)
       const value = results[field.cell]
-      return isBlank(value) ? [] : [{ id: field.cell, text: translateValue(sheet.texts, String(value)), tone: toneOf(value), source: 'template' }]
+      if (isBlank(value)) return []
+      const text = translateValue(sheet.texts, String(value))
+      // Nicht uneingeschränkt grün: die Würdigung, sobald ein Hinweis in Warnfarbe das Ergebnis einschränkt, und jeder bestandene Prüfhinweis ohne Grundlage.
+      const caveat = toneOf(value) === 'success' && ((qualified && field.alias === 'assessment') || unfounded.has(field.cell))
+      return [{ id: field.cell, text: caveat ? `${text} – ${t('qualifiedNote')}` : text, tone: caveat ? 'warning' : toneOf(value), source: 'template' }]
     })
+  const limiting = (entries: readonly Limitation[]): HintView[] => entries.filter((entry) => entry.kind !== 'warning' && entry.kind !== 'interpretation').map((entry) => ({ id: entry.id, text: entry.text, tone: entry.tone, source: 'web' }))
   const web = (sheet.webHints?.(inputs, results, context) ?? []).map((hint): HintView => ({ ...hint, text: sheet.texts?.webHints?.[hint.id] ?? hint.text, source: 'web' }))
-  // Als 0 gerechnete fehlende Eingaben: in Warnfarbe neben den Prüfhinweisen der Vorlage.
-  const assumed = evaluateSheet(sheet, inputs, context).assumed.map((entry): HintView => ({ id: `zero-${entry.input}`, tone: 'warning', source: 'web', text: t('zeroAssumedInput', { input: inputName(sheet, entry.input) }) }))
-  return [...template, ...assumed, ...web]
+  return [...template, ...limiting(own), ...web, ...carried.map((entry): HintView => ({ id: entry.id, text: entry.text, tone: entry.tone, source: 'web' }))]
 }
 
 /** Warum die Hauptgröße fehlt: Text der Vorlage („TE ≤ AE“) oder die fehlenden Eingaben. */
@@ -143,6 +157,7 @@ export function buildSummary(sheet: AvailableSheet, inputs: CellMap, results: Ce
       return { label: row.label, value: rowField ? formatFieldValue(rowField, results[row.cell]) : '', strong: row.strong ?? false }
     }),
     gauge: gaugeOf(sheet, results, t),
-    hints: empty ? [] : buildHints(sheet, inputs, results, context, t),
+    // Leeres Formular: keine Prüfhinweise der Vorlage. Ist ein Verfahren gewählt (Blatt 18, Bericht), bleiben die Hinweise der Webfassung in Warnfarbe – etwa, dass aus einer Altvorlage nichts übernommen wird.
+    hints: buildHints(sheet, inputs, results, context, t).filter((hint) => !empty || (context.method !== undefined && hint.source === 'web' && hint.tone !== 'neutral' && hint.tone !== 'success')),
   }
 }

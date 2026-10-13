@@ -3,21 +3,24 @@
  * Druckseite als Daten – Kopf, Abschnitte mit Freitexten, Tabellen und
  * Kennzahlen, Fußzeile – und die Hinweise, die auf dem Ausdruck stehen müssen.
  * Rein und ohne Framework; die Oberfläche stellt nur dar. Die Texte der Seite
- * stammen wörtlich aus der Vorlage (`sheets/20_Druck_KOM`).
+ * stammen wörtlich aus der Vorlage (`sheets/20_Druck_KOM`); nur Programm und
+ * Prüfbehörde in Kopf- und Fußzeile sind Angaben der Prüfbehörde.
  */
 import { formatPercent } from '@auditcore/common'
-import { isBlank, isNumber } from '../excel/index'
+import { isBlank, isNumber, left } from '../excel/index'
 import { formatFieldValue } from '../format/numbers'
 import type { Translate } from '../i18n/messages'
 import { findField, type FieldDefinition } from '../model/definition'
 import { evaluateSheet } from '../model/evaluate'
-import { createContext, type AvailableSheet, type SheetModule } from '../model/sheet'
+import type { AvailableSheet, SheetModule } from '../model/sheet'
 import { translateValue } from '../model/texts'
 import type { CellAddress, CellMap, CellValue, SheetContext, Tone } from '../model/types'
 import { PLACEHOLDERS } from '../sheets/20_Druck_KOM/definition'
 import { REPORT_LAYOUT, type ReportBlockLayout, type ReportRowLayout } from '../sheets/20_Druck_KOM/layout'
-import { SHEETS, findAvailableSheet } from '../sheets/registry'
-import { buildSections, inputName, type RowView } from './sheetView'
+import { SHEETS } from '../sheets/registry'
+import { ENGINE_VERSION, LEGAL_STATE, TEMPLATE_NAME } from '../workspace/types'
+import { carriedLimitations } from './limits'
+import { buildSections, type RowView } from './sheetView'
 
 /** Zelle einer Tabelle des Berichts. */
 export interface ReportCell {
@@ -65,8 +68,10 @@ export interface ReportPage {
   title: string
   /** Zeilen neben dem Emblem („Kofinanziert von der“ / „Europäischen Union“). */
   cofinanced: readonly string[]
-  /** Programm, CCI, Geschäftsjahr und Status. */
+  /** Programm, CCI, Geschäftsjahr und Status in der Sprache des Blatts. */
   subtitle: string
+  /** Platzhalter für die Bezeichnung des Programms, solange sie fehlt; nur am Bildschirm, nie im Druck. */
+  programmePlaceholder: string
   /** „Stand …“ oder leer. */
   asOf: string
   sections: readonly ReportSection[]
@@ -75,7 +80,18 @@ export interface ReportPage {
   hints: readonly ReportHint[]
   /** Einordnung und Stand der Vorlage; stehen auf dem Ausdruck. */
   notes: readonly string[]
+  /**
+   * Zuordnung des Ausdrucks zu einem Arbeitsstand, wie im Kopf des Excel-Exports:
+   * Vorlage, Rechtsstand und Fassung des Rechenkerns. Die Prüfsumme der Eingaben
+   * ergänzt die Oberfläche (sie wird asynchron gebildet).
+   */
+  identity: readonly { label: string; value: string }[]
+  /** Beschriftung der Prüfsumme der Eingaben. */
+  checksumLabel: string
+  /** Prüfbehörde, Organisationseinheit und Ort nach den Angaben der Prüfbehörde; leer, solange sie fehlen. */
   footer: string
+  /** Platzhalter für die Fußzeile, solange die Prüfbehörde fehlt; nur am Bildschirm, nie im Druck. */
+  footerPlaceholder: string
   labels: { report: string; print: string; hints: string }
 }
 
@@ -155,46 +171,37 @@ function blockOf(scope: Scope, layout: ReportBlockLayout, key: string): ReportBl
   return { kind: 'table', key, columns, rows, foot: layout.foot ? rowOf(scope, layout.foot, `${key}-foot`) : null }
 }
 
-/** Blatt, dessen Hinweise auf den Ausdruck gehören, mit dem Kontext, in dem es gerechnet ist. */
-interface Source {
-  sheet: AvailableSheet
-  context: SheetContext
-  /** Hinweise der Webfassung des Blatts mitdrucken (Blatt 18); beim Verfahren nur die mit 0 gerechneten Eingaben. */
-  webHints: boolean
-}
-
-/** Das in Blatt 18 übernommene Verfahren und Blatt 18 selbst. */
-function sources(context: SheetContext, sheets: readonly SheetModule[]): Source[] {
-  const base = createContext({ parameters: context.parameters, sheets: context.sheets, policy: context.policy })
-  const total = findAvailableSheet('18_GFQ_AnhIII', sheets)
-  const adopted = total ? context.sheets[total.id]?.C4 : null
-  const method = typeof adopted === 'string' ? findAvailableSheet(adopted, sheets) : undefined
-  return [...(method ? [{ sheet: method, context: base, webHints: false }] : []), ...(total ? [{ sheet: total, context: { ...base, method: context.method }, webHints: true }] : [])]
-}
-
-/** Hinweise eines liefernden Blatts: jede mit 0 gerechnete Eingabe und – bei Blatt 18 – die Hinweise der Webfassung. */
-function sourceHints(source: Source, cells: CellMap, t: Translate): ReportHint[] {
-  const prefix = t('sheetNumber', { number: source.sheet.definition.number })
-  const zero = evaluateSheet(source.sheet, cells, source.context).assumed.map((entry): ReportHint => ({
-    id: `${source.sheet.id}-zero-${entry.input}`,
-    tone: 'warning',
-    printed: true,
-    text: `${prefix}: ${t('zeroAssumedInput', { input: inputName(source.sheet, entry.input) })}`,
-  }))
-  const web = source.webHints ? (source.sheet.webHints?.(cells, cells, source.context) ?? []) : []
-  return [...zero, ...web.map((hint): ReportHint => ({ id: `${source.sheet.id}-${hint.id}`, tone: hint.tone, printed: true, text: `${prefix}: ${hint.text}` }))]
-}
-
 /**
- * Hinweise zum Bericht: gedruckt werden die Hinweise des Verfahrens und des
- * Blatts 18, nur am Bildschirm stehen die Hinweise der Webfassung zu Blatt 20.
- * Die liefernden Blätter rechnen dafür auf ihren Zellwerten aus dem Kontext;
- * diese enthalten die Eingaben.
+ * Hinweise zum Bericht. Gedruckt wird alles, was die Aussagekraft des
+ * Ergebnisses einschränkt: die Einschränkungen des gewählten Verfahrens und des
+ * Blatts 18 (mit 0 gerechnete Eingaben, Werte ohne Grundlage, Hinweise in
+ * Warnfarbe, Auslegungen der Vorlage, Altvorlage) und die eigenen Warnhinweise
+ * des Berichts. Nur am Bildschirm stehen die übrigen Hinweise zu Blatt 20.
  */
 function hintsOf(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate, sheets: readonly SheetModule[]): ReportHint[] {
-  const printed = sources(context, sheets).flatMap((source) => sourceHints(source, context.sheets[source.sheet.id] ?? {}, t))
-  const own = (sheet.webHints?.(inputs, results, context) ?? []).map((hint): ReportHint => ({ ...hint, text: sheet.texts?.webHints?.[hint.id] ?? hint.text, printed: false }))
-  return [...printed, ...own]
+  const carried = carriedLimitations(sheet, context, t, sheets).map((entry): ReportHint => ({ id: entry.id, tone: entry.tone, printed: true, text: entry.text }))
+  const own = (sheet.webHints?.(inputs, results, context) ?? []).map((hint): ReportHint => ({ ...hint, text: sheet.texts?.webHints?.[hint.id] ?? hint.text, printed: hint.tone === 'warning' || hint.tone === 'danger' }))
+  return [...carried, ...own]
+}
+
+/** Platzhalter am Bildschirm, solange die Angabe fehlt. */
+const placeholder = (value: CellValue | undefined, text: string): string => (isBlank(value) ? text : '')
+
+const PROGRAMME = 'W4'
+const POPULATION_SHEET = '02_Grundgesamtheit'
+/** Zeichen der CCI-Nummer, die die Vorlage in die Kopfzeile übernimmt (`LEFT(…;15)`). */
+const CCI_LENGTH = 15
+
+/**
+ * Kopfzeile: Programm · CCI · Geschäftsjahr · Status. Dieselben Teile wie in
+ * Zelle A6, hier in der Sprache des Blatts; das Programm ist die Angabe der
+ * Prüfbehörde, kein fester Text.
+ */
+function subtitleOf(scope: Scope, context: SheetContext): string {
+  const population = context.sheets[POPULATION_SHEET] ?? {}
+  const word = (value: CellValue | undefined): string => (isBlank(value) ? '' : translated(scope, String(value)))
+  const parts = [word(scope.results[PROGRAMME]), `CCI ${left(population.C9, CCI_LENGTH)}`, `${translated(scope, 'Geschäftsjahr')} ${word(population.C12)}`, word(scope.results.J5)]
+  return parts.filter(Boolean).join(' · ')
 }
 
 /**
@@ -211,7 +218,8 @@ export function buildReport(sheet: AvailableSheet, inputs: CellMap, results: Cel
   return {
     title: sheet.definition.title,
     cofinanced: REPORT_LAYOUT.cofinanced.map((line) => translated(scope, line)),
-    subtitle: formatValue(sheet, undefined, results[REPORT_LAYOUT.subtitle] ?? null),
+    subtitle: subtitleOf(scope, context),
+    programmePlaceholder: placeholder(results[PROGRAMME], t('reportProgrammeMissing')),
     asOf: isBlank(asOf) ? '' : `${translated(scope, prefix)}${dateText(asOf)}`,
     sections: REPORT_LAYOUT.sections.map((section) => ({
       id: section.id,
@@ -221,11 +229,18 @@ export function buildReport(sheet: AvailableSheet, inputs: CellMap, results: Cel
     controls: {
       title: translated(scope, REPORT_LAYOUT.controls.title),
       note: translated(scope, REPORT_LAYOUT.controls.note),
-      fields: REPORT_LAYOUT.controls.cells.flatMap((cell) => rows.get(cell) ?? []),
+      fields: [...REPORT_LAYOUT.identity, ...REPORT_LAYOUT.controls.cells].flatMap((cell) => rows.get(cell) ?? []),
     },
     hints: hintsOf(sheet, inputs, results, context, t, sheets),
     notes: [t('disclaimer'), t('templateStatus')],
-    footer: translated(scope, REPORT_LAYOUT.footer),
+    identity: [
+      { label: t('exportTemplate'), value: TEMPLATE_NAME },
+      { label: t('exportLegalState'), value: LEGAL_STATE },
+      { label: t('exportEngine'), value: ENGINE_VERSION },
+    ],
+    checksumLabel: t('exportChecksum'),
+    footer: formatValue(sheet, undefined, results[REPORT_LAYOUT.footer] ?? null),
+    footerPlaceholder: placeholder(results[REPORT_LAYOUT.footer], t('reportAuthorityMissing')),
     labels: { report: t('stepReport'), print: t('reportPrint'), hints: t('webHint') },
   }
 }

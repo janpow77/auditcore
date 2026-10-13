@@ -42,6 +42,10 @@ const sample: CellMap = {
   C94: 0, C95: 0,
 }
 
+/** Hinweistext zum nicht positiven Nenner; die Werte stehen bei vollständigen Pflichteingaben wie in der Vorlage (Hinweis `without-basis`). */
+const NEGATIVE_DENOMINATOR =
+  'Nenner der Standardneuberechnung ist nicht positiv – für Zeitraum 2 ergibt sich kein Umfang. Gesamtstichprobe, Genauigkeit und Würdigung enthalten dann – wie in der Vorlage – keinen Beitrag dieser Schicht und sind nicht belastbar; Eingaben der Neuberechnung prüfen oder einen anderen Ansatz wählen'
+
 /**
  * Nenner der Standardneuberechnung nicht positiv: je in Zeitraum 2 belegter
  * Schicht ein Hinweis mit eigener Kennung (`negative-denominator-<Schicht>`).
@@ -51,7 +55,7 @@ function negativeDenominator(results: CellMap): WebHint[] {
   return STRATA_COLUMNS.flatMap((column, index): WebHint[] => {
     if (!used(results, column, UNITS.period2)) return []
     const stratum = index + 1
-    return [{ id: `negative-denominator-${stratum}`, tone: 'warning', text: `Schicht ${stratum}: Nenner der Standardneuberechnung ist nicht positiv – für Zeitraum 2 ergibt sich kein Umfang, die Genauigkeit enthält dann keinen Beitrag dieser Schicht` }]
+    return [{ id: `negative-denominator-${stratum}`, tone: 'warning', text: `Schicht ${stratum}: ${NEGATIVE_DENOMINATOR}` }]
   })
 }
 

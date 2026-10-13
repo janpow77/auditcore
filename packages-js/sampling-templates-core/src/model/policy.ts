@@ -25,7 +25,18 @@ import type { CellValue, MissingPolicy, SheetContext } from './types'
  * - `withoutBasis` – die Vorlage zeigt einen Wert ohne Grundlage: einen
  *   bestandenen Prüfhinweis („✔“), obwohl die geprüfte Größe fehlt, oder die
  *   Summe 0 über eine Schichtzeile, in der keine Schicht einen Wert trägt.
- *   Die Webfassung zeigt ihn nicht.
+ *   Verbindliche Regel (Entscheidung nach der Gesamtabnahme): Sind alle
+ *   Pflichteingaben vorhanden, zeigt die Webfassung IMMER, was die Vorlage zeigt
+ *   – auch diesen Wert –, kennzeichnet ihn mit einem Hinweis in Warnfarbe und
+ *   stellt eine bestandene Würdigung nicht uneingeschränkt grün dar; unterdrückt
+ *   wird nichts. Offen (`'open'`) bleibt der Wert ausschließlich, solange eine
+ *   Pflichteingabe FEHLT. Das gilt einheitlich für alle Blätter (`evaluateSheet`).
+ *
+ * Pflichteingaben sind die Eingaben, die ein Blatt in seinen begründeten
+ * Abweichungen als Auslöser nennt. Daneben gibt es stille Lücken
+ * (`model/dependence.ts`): leere, nicht freiwillige Eingaben, von denen ein
+ * gezeigtes Ergebnis abhängt, ohne dass die Vorlage es zeigt. Die Webfassung
+ * rechnet dort wie die Vorlage und weist die Eingabe in Warnfarbe aus.
  *
  * Zum Umstellen genügt es, hier einen Wert zu ändern; kein Blatt wird angefasst.
  */

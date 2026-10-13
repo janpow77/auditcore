@@ -69,6 +69,8 @@ for (const theme of ['light', 'dark'] as const) {
     await loadSample(page)
     await page.getByRole('button', { name: 'Grundgesamtheit' }).click()
     await loadSampleFor(page)
+    // Beispielwerte laden lässt den gewählten Arbeitsschritt stehen.
+    await expect(page.locator('[data-sheet-view="02_Grundgesamtheit"]')).toBeVisible()
     await page.getByRole('button', { name: 'Gesamtfehlerquote' }).click()
     await expect(page.locator('[data-sheet-view="18_GFQ_AnhIII"]')).toBeVisible()
     await expect(page.locator('[data-cell="C4"]')).toContainText('03_MUS_1Z')
@@ -94,6 +96,15 @@ for (const theme of ['light', 'dark'] as const) {
     await expect(page.locator('[data-action="print"]')).toBeHidden()
     await expect(page.locator('.fa-st__bar')).toBeHidden()
     await expect(page.locator('.fa-st__report-controls')).toBeHidden()
+    // Kopf- und Fußzeile nennen die (erfundenen) Angaben der Beispielwerte, keine feste Behörde.
+    await expect(page.locator('[data-report-subtitle]')).toContainText('Beispielprogramm EFRE Musterland 2021–2027 · CCI')
+    await expect(page.locator('[data-report-footer]')).toHaveText('Prüfbehörde Musterland (Beispiel), Referat Beispiel, Musterstadt')
+    // Leere Freitexte: kein Platzhalter in eckigen Klammern im Druck.
+    await expect(page.locator('[data-cell="A9"] textarea')).toBeHidden()
+    expect(await page.locator('[data-cell="A9"] .fa-st__report-print').innerText()).toBe('')
+    // Die Seitengröße hängt an einer benannten Seite; eine unbenannte @page-Regel gibt es nicht.
+    const pageRules = await page.evaluate(() => [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]).flatMap((rule) => (rule instanceof CSSMediaRule ? [...rule.cssRules] : [rule])).filter((rule) => rule instanceof CSSPageRule).map((rule) => (rule as CSSPageRule).selectorText))
+    expect(pageRules).toEqual(['fa-st-report'])
     const pdf = await page.pdf({ format: 'A4', preferCSSPageSize: true }).catch(() => null)
     if (pdf) expect((pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) ?? []).length).toBe(1)
     await shot(page, `33_bericht_druck_${theme}`)
@@ -138,6 +149,7 @@ test('Altvorlage X3: „Letzte Schicht entfernen“ lässt die Eingaben der übr
   const second = await page.locator('[data-cell="F6"] input').inputValue()
   expect(first).not.toBe('')
   await page.locator('[data-action="strata-remove"]').first().click()
+  await page.locator('[data-action="discard"]').click()
   await expect(page.locator('[data-cell="G6"]')).toHaveCount(0)
   expect(await page.locator('[data-cell="E6"] input').inputValue()).toBe(first)
   expect(await page.locator('[data-cell="F6"] input').inputValue()).toBe(second)
@@ -155,4 +167,34 @@ test('alle Verfahren sind wählbar; nur X1a ist eine Datentabelle', async ({ pag
   }
   expect(tiles).toBe(19)
   await expect(page.locator('[data-step-follows]')).toHaveCount(0)
+})
+
+test('Bericht ohne Angaben zu Programm und Prüfbehörde: Platzhalter am Bildschirm, im Druck leer', async ({ page }) => {
+  await choose(page, '03_MUS_1Z', 'light')
+  await page.getByRole('button', { name: 'Bericht' }).click()
+  await expect(page.locator('[data-report-programme-missing]')).toBeVisible()
+  await expect(page.locator('[data-report-authority-missing]')).toContainText('Prüfbehörde')
+  await accessible(page)
+  await shot(page, '37_bericht_ohne_angaben')
+  await page.emulateMedia({ media: 'print' })
+  await expect(page.locator('[data-report-programme-missing]')).toBeHidden()
+  await expect(page.locator('[data-report-authority-missing]')).toBeHidden()
+  expect((await page.locator('[data-report-footer]').innerText()).trim()).toBe('')
+  await shot(page, '37_bericht_ohne_angaben_druck')
+  await page.emulateMedia({ media: 'screen' })
+  await page.locator('[data-cell="W5"] input').fill('Prüfbehörde Musterland')
+  await page.locator('[data-cell="W5"] input').blur()
+  await expect(page.locator('[data-report-footer]')).toHaveText('Prüfbehörde Musterland')
+})
+
+test('englisch: Kopf- und Fußzeile des Berichts folgen der Sprache', async ({ page }) => {
+  await page.goto('/?entwurf=0&sprache=en')
+  await page.locator('[data-sheet="03_MUS_1Z"]').click()
+  await page.getByRole('button', { name: 'Working file' }).click()
+  await page.getByRole('menuitem').filter({ hasText: 'Load example values' }).click()
+  await page.locator('[data-step="report"]').click()
+  await expect(page.locator('[data-report-subtitle]')).toContainText('Accounting year')
+  await expect(page.locator('[data-report-subtitle]')).toContainText('preliminary')
+  await expect(page.locator('[data-report-subtitle]')).not.toContainText('Geschäftsjahr')
+  await shot(page, '38_bericht_englisch')
 })

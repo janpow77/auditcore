@@ -1,6 +1,8 @@
 /**
- * Begründete Abweichungen des Blatts 06. In allen Fällen zeigt die Webfassung
- * keinen Wert (`null`), nie einen anderen Wert als die Vorlage.
+ * Begründete Abweichungen des Blatts 06. Die Webfassung zeigt nie einen anderen
+ * Wert als die Vorlage; wo sie abweicht, zeigt sie keinen Wert (`null`) – und
+ * das nur, solange eine Pflichteingabe fehlt. Sind alle Pflichteingaben
+ * vorhanden, zeigt sie jeden Wert wie die Vorlage.
  *
  * Pflichteingaben (ohne `kind`): Wesentlichkeitsschwelle, voraussichtliche
  * Fehlerquote und die Standardabweichungen einer belegten Schicht (Zeilen 24, 25
@@ -11,7 +13,10 @@
  * Schichtzeile, in der keine Schicht einen Wert trägt, und alles, was auf dieser
  * 0 aufbaut; der bestandene Prüfhinweis „✔ ≥ 3“ ohne Einheiten der Zufallsschicht;
  * die Untergrenze 3 ohne Planumfang. `whenEmpty` nennt dort die leere Summe bzw.
- * die leere Schichtzelle. Geführt sind alle Schichtspalten des Blatts (D–J und
+ * die leere Schichtzelle. Die Webfassung lässt diese Werte offen, solange eine
+ * Pflichteingabe fehlt; bei vollständigen Pflichteingaben zeigt sie sie wie die
+ * Vorlage und weist sie mit einem Hinweis in Warnfarbe aus (`evaluateSheet`,
+ * Hinweis `without-basis`). Geführt sind alle Schichtspalten des Blatts (D–J und
  * AA–AM); belegt ist jede Zeile in mindestens einer Spalte der Vorlage.
  */
 import { STRATA_COLUMNS, stratumCell } from '../../model/strata'

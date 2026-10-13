@@ -76,7 +76,8 @@ describe('Ergebnisexport', () => {
     const exported = await exportWorkbook(state, { now })
     expect(exported.fileName).toBe('Stichprobe_03_MUS_1Z_2025_2026_Ergebnis.xlsx')
     const workbook = readWorkbook(exported.data)
-    expect(workbook.sheetNames).toEqual(['Ergebnis', WORKSPACE_SHEET])
+    // Zum gewählten Verfahren gehören Blatt 18 und der Bericht; unbearbeitete Blätter stehen nicht im Export.
+    expect(workbook.sheetNames).toEqual(['Ergebnis', '18_GFQ_AnhIII', '20_Druck_KOM', WORKSPACE_SHEET])
     const cells = workbook.cells('Ergebnis')
     const column = (letter: string): unknown[] => [...cells.entries()].filter(([address]) => address.startsWith(letter)).map(([, cell]) => cell.value)
     expect(column('A')).toContain('Rechtsgrundlage')
@@ -87,7 +88,7 @@ describe('Ergebnisexport', () => {
     expect(column('C')).toEqual(expect.arrayContaining([92, 48500000, 'mittel', 0.7, '✔ TE > AE']))
     expect(column('D')).toEqual(expect.arrayContaining(['Eingabe', 'Verknüpfung', 'Formel', 'Ergebnis', 'Prüfhinweis']))
     expect(column('F')).toContain('C27')
-    expect(partOf(exported.data, 'xl/workbook.xml')).toContain(`name="${WORKSPACE_SHEET}" sheetId="2" state="hidden"`)
+    expect(partOf(exported.data, 'xl/workbook.xml')).toContain(`name="${WORKSPACE_SHEET}" sheetId="4" state="hidden"`)
   })
 
   it('Rundlauf Export → Öffnen ergibt denselben Arbeitsstand ohne Hinweise', async () => {
@@ -191,7 +192,8 @@ describe('Leser gegen fremde und beschädigte Mappen', () => {
   })
 
   it('nicht geschlossene Elemente kosten lineare Zeit', () => {
-    const open = (count: number): string => `<worksheet><sheetData><row r="1">${'<c r="A1" t="inlineStr"><is><t>'.repeat(count)}`
+    // Die inneren Elemente bleiben offen; das Blatt selbst ist geschlossen (ein abgeschnittenes Blatt ist ein Lesefehler).
+    const open = (count: number): string => `<worksheet><sheetData><row r="1">${'<c r="A1" t="inlineStr"><is><t>'.repeat(count)}</worksheet>`
     const measure = (count: number): number => {
       const data = rawWorkbook(open(count), 'T', `<sst>${'<si><t>'.repeat(count)}`)
       const start = performance.now()
@@ -284,12 +286,12 @@ describe('Import der ausgefüllten Vorlage: nichts wird stillschweigend verworfe
     const filled = `${base}${text('C9', 'mittel')}${text('C11', 'zweiseitig')}${text('C23', 'Nein')}${text('C24', 'Nein')}`
     const imported = importWorkbook(wrap(`${filled}${number('C27', 92)}${number('C21', 92)}${number('C16', 970000)}${text('C19', '✔ TE &gt; AE')}`))
     if (imported.kind !== 'template') throw new Error('keine Vorlage')
-    expect(imported.cached['03_MUS_1Z']).toMatchObject({ C27: 92, C16: 970000, C19: '✔ TE > AE', C42: null })
+    expect(imported.cached['03_MUS_1Z']).toEqual({ C27: 92, C21: 92, C16: 970000, C19: '✔ TE > AE' })
     const candidate: WorkspaceState = { ...emptyWorkspace(), activeMethod: '03_MUS_1Z', sheets: imported.sheets }
     expect(compareWithWorkbook(candidate, imported.cached).filter((entry) => ['C27', 'C21', 'C16', 'C19'].includes(entry.cell))).toEqual([])
     const wrong = importWorkbook(wrap(`${filled}${number('C27', 30)}`))
     if (wrong.kind !== 'template') throw new Error('keine Vorlage')
-    expect(compareWithWorkbook({ ...candidate, sheets: wrong.sheets }, wrong.cached)).toContainEqual({ sheet: '03_MUS_1Z', cell: 'C27', label: 'Anzuwendender Stichprobenumfang (mind. 30; ggf. begrenzt)', workbook: 30, computed: 92 })
+    expect(compareWithWorkbook({ ...candidate, sheets: wrong.sheets }, wrong.cached)).toContainEqual({ sheet: '03_MUS_1Z', cell: 'C27', label: 'Anzuwendender Stichprobenumfang (mind. 30; ggf. begrenzt)', workbook: 30, computed: 92, kind: 'value', explained: false })
   })
 })
 

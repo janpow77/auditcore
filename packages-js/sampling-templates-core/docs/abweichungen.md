@@ -6,8 +6,15 @@ ausgefüllte Blätter stimmen alle Formelzellen mit der Vorlage überein
 ([abgleich.md](abgleich.md)). Abweichungen gibt es nur an den hier genannten
 Stellen. Es gilt durchgehend:
 
-> Die Webfassung zeigt nie einen anderen Wert als die Vorlage. Sie zeigt an
-> manchen Stellen **keinen** Wert, wo die Vorlage einen zeigt.
+> Die Webfassung zeigt nie einen anderen Wert als die Vorlage. Sind alle
+> Pflichteingaben vorhanden, zeigt sie **immer**, was die Vorlage zeigt. Nur
+> solange eine Eingabe fehlt, zeigt sie an manchen Stellen **keinen** Wert, wo
+> die Vorlage einen zeigt.
+
+Einzige Ausnahme im Wert: Kopf- und Fußzeile des Berichts (Nr. 12). Fragwürdige
+Ergebnisse der Vorlage unterdrückt die Webfassung nicht; sie zeigt sie mit
+einem Hinweis in Warnfarbe, und eine bestandene Würdigung steht dann nicht
+uneingeschränkt grün da (Nr. 13).
 
 ## 1. Fehlende Angaben: die Richtlinie und ihre zwei Varianten
 
@@ -27,15 +34,33 @@ anhand dieser Tabelle. Zum Umstellen wird dort ein Wert geändert, kein Blatt.
 | `requiredInput` | Eine Pflichteingabe fehlt, die Vorlage rechnet mit 0 weiter (Buchwert, Anzahl, Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung, Umfänge, Angaben der Planung und der Neuberechnung). | `missing`: „Angabe fehlt“, die fehlende Eingabe wird genannt | `zero`: wie die Vorlage mit 0 gerechnet, an jedem betroffenen Wert „Keine Angabe, daher mit 0 berechnet.“ |
 | `sampleDeviation` | Die Standardabweichung der Stichprobe (s_r, s_q, s der Differenzen) fehlt in der Auswertung; ohne sie ist nur die Genauigkeit 0. | `zero` (vom Auftraggeber entschieden) | `missing` |
 | `partialErrorSum` | Die Fehlersumme bzw. Summe der Fehlerquoten einer von mehreren belegten Schichten oder eines von mehreren Zeiträumen fehlt, eine andere ist eingetragen; die Vorlage zeigt ein Ergebnis. | `zero`, ausgewiesen wie oben | `missing` |
-| `withoutBasis` | Die Vorlage zeigt einen Wert ohne Grundlage: einen bestandenen Prüfhinweis („✔“), obwohl die geprüfte Größe fehlt, oder die Summe 0 über Schichten ohne Wert samt allem, was darauf aufbaut. | `open`: kein Wert | `template`: wie die Vorlage |
+| `withoutBasis` | Die Vorlage zeigt einen Wert ohne Grundlage: einen bestandenen Prüfhinweis („✔“), obwohl die geprüfte Größe fehlt, die Summe 0 über Schichten ohne Wert samt allem, was darauf aufbaut, oder die Untergrenze 3 als Umfang, wenn die Standardneuberechnung nicht anwendbar ist. | `open`, **aber nur, solange eine Pflichteingabe fehlt**; sind alle Pflichteingaben vorhanden, wie die Vorlage mit Hinweis in Warnfarbe | `template`: immer wie die Vorlage |
 
-Nicht ausgewiesen wird, was die Vorlage ausdrücklich als freiwillige Angabe
-mit `N(…)` liest und was fachlich „keine“ bedeutet: Fehler der hochwertigen
-bzw. umfassenden Schicht, abgegrenzte systembedingte und nicht berichtigte
-anomale Fehler. Sie zählen wie in der Vorlage 0.
+**Verbindliche Regel zu `withoutBasis`** (Entscheidung des Auftraggebers nach
+der Gesamtabnahme): Sind alle Pflichteingaben vorhanden, zeigt die Webfassung
+immer, was die Vorlage zeigt – einheitlich in allen Blättern, auch in 05, 06,
+07, 10, 11 und 12 bei nicht anwendbarer Standardneuberechnung und in den
+geschichteten Blättern bei „TE ≤ AE“. Die so gezeigten Zellen führt
+`evaluateSheet` in `withoutBasis`; die Ergebnisspalte nennt sie im Hinweis
+„Wie in der Vorlage gezeigt, obwohl die Grundlage fehlt: … Das Ergebnis ist
+nicht belastbar“, und die Würdigung trägt den Zusatz „Nicht uneingeschränkt:
+siehe Hinweise der Webfassung“. Offen bleibt ein Wert ohne Grundlage
+ausschließlich, solange eine Pflichteingabe fehlt. Pflichteingaben sind die
+Eingaben, die das Blatt in der Tabelle unten als Auslöser einer Abweichung
+der Fallart `requiredInput` nennt (bei Schichtzeilen nur für belegte
+Schichten); der Abgleich mit einem leeren Blatt 02 zählt nicht dazu. Geprüft
+ist die Regel als Eigenschaft über alle Blätter (`test/properties.spec.ts`):
+In keiner vollständigen Zufallsbelegung ist eine Zelle offen, die in der
+Vorlage einen Wert hat.
 
-**Folgen der beiden Grundsatzvarianten** (die Entscheidung des Auftraggebers
-steht aus):
+Nicht ausgewiesen wird, was fachlich „keine“ bedeutet: abgegrenzte
+systembedingte und nicht berichtigte anomale Fehler sowie die Angaben der
+hochwertigen Einheiten bzw. der umfassenden Schicht, solange dort gar nichts
+eingetragen ist. Sie zählen wie in der Vorlage 0. Ist die Schicht dagegen
+erklärt (Anzahl oder Buchwert eingetragen) und fehlt ihre Fehlersumme, weist
+die Webfassung das aus (Nr. 13).
+
+**Folgen der beiden Grundsatzvarianten** für fehlende Pflichteingaben:
 
 - *Geltend („Angabe fehlt“):* Ein unvollständiges Blatt zeigt keine
   Scheinergebnisse; die Ergebnisspalte nennt, welche Eingabe fehlt. Dafür
@@ -62,12 +87,17 @@ Was die Blätter dafür tun:
   meldet Eingabe und betroffene Zellen über `zeroAssumed`.
 - Wert ohne Grundlage: Der Rechenkern gibt den Wert der Vorlage über
   `unfounded(context, wert)` bzw. `totalRow(…)` zurück; die Zelle steht mit
-  `kind: 'withoutBasis'` in den Abweichungen. Gegenprobe: Unter
-  `TEMPLATE_POLICY` liefert der Rechenkern den Wert der Vorlage.
+  `kind: 'withoutBasis'` in den Abweichungen. `evaluateSheet` rechnet bei
+  vollständigen Pflichteingaben mit dem Wert der Vorlage und kennzeichnet ihn,
+  sonst bleibt er offen. Gegenprobe: Unter `TEMPLATE_POLICY` liefert der
+  Rechenkern den Wert der Vorlage.
 
 Jede Zeile der folgenden Tabelle ist durch mindestens einen Golden-Fall belegt
-(`test/deviations.spec.ts`); bei Schichtzeilen genügt der Beleg in einer
-Schichtspalte, die Abweichung gilt für alle bis zu 20 Schichten.
+(`test/deviations.spec.ts`): entweder bleibt die Zelle in einem Fall begründet
+offen, oder – bei Werten ohne Grundlage – ein Fall zeigt sie bei vollständigen
+Pflichteingaben wie die Vorlage. Bei Schichtzeilen genügt der Beleg in einer
+Schichtspalte, die Abweichung gilt für alle bis zu 20 Schichten. In der
+Spalte „Webfassung zeigt“ steht, was gilt, solange eine Eingabe fehlt.
 
 Wo die Vorlage bei fehlenden Angaben `""` zeigt, liefert die Webfassung
 ebenfalls `null`; das ist keine Abweichung.
@@ -82,6 +112,7 @@ ebenfalls `null`; das ist keine Abweichung.
 | C22, C30 | C16 | Betrag bzw. Differenz auf Grundlage von 0 € | Angabe fehlt | Ohne den Betrag laut SFC2021 bzw. laut Datenbestand gibt es nichts abzustimmen; eine Differenz gegen 0 wäre irreführend. |
 | C37, C39, C51 | C25 | 0 € bzw. nur die TH-Pauschale | Angabe fehlt | Ohne die Datensätze mit positivem Wert ist die Grundgesamtheit unbekannt, nicht null. |
 | C38, C52 | C24 | 0 Einheiten | Angabe fehlt | Ohne die Datensätze mit positivem Wert ist die Grundgesamtheit unbekannt, nicht null. |
+| C53, C54 | C24 | Prüfhinweis und Mindestumfang auf Grundlage von 0 Einheiten abzüglich der Abzüge (bei vorhandenen Abzügen eine negative Anzahl, z. B. „✔ weniger als 300 Einheiten“ und Mindestumfang −1) | Angabe fehlt | Ohne die Datensätze mit positivem Wert ist die Grundgesamtheit unbekannt, nicht null. |
 
 ### 03_MUS_1Z
 
@@ -246,8 +277,8 @@ ebenfalls `null`; das ist keine Abweichung.
 | C65, C66, C67 | C8, C9, C21, C24, C25, C26, C51, C53, C55, C56 | Wert auf Grundlage von BV = 0 bzw. σ_r = 0 für die Zeiträume 2 und 3 (z. B. Umfang 0 oder 3) | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
 | C68 | C7, C24, C51, C53, C55, C56 | Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
 | C69, C70, C72, C73 | C7, C18, C21, C24, C51, C53, C55, C56 | Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30) | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
-| C71, C75, C76, C77, C78, C82, C83, C84 | C7, C8, C9, C21, C24, C25, C26, C51, C53, C55, C56 | Wert auf Grundlage von BV = 0 bzw. σ_r = 0 für die Zeiträume 2 und 3 (z. B. Umfang 0 oder 3) | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
-| C106 | C7, C8, C9, C21, C24, C25, C26, C51, C53, C55, C56, C90 | Planumfang mal Faktor 1 bzw. mal dem Faktor allein aus dem Verhältnis der Anzahlen (ein leerer Buchwert zählt als 0) | Angabe fehlt | Der Faktor der Unterschätzung vergleicht den Ist-Buchwert des Zeitraums mit seiner Prognose; ohne beide ist die Erhöhung nicht bestimmt. |
+| C71, C75, C76, C77, C78, C82, C83, C84 | C7, C8, C9, C21, C24, C25, C26, C18, C51, C53, C55, C56 | Wert auf Grundlage von BV = 0 bzw. σ_r = 0 für die Zeiträume 2 und 3 (z. B. Umfang 0 oder 3) | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
+| C106 | C7, C8, C9, C21, C24, C25, C26, C18, C51, C53, C55, C56, C90 | Planumfang mal Faktor 1 bzw. mal dem Faktor allein aus dem Verhältnis der Anzahlen (ein leerer Buchwert zählt als 0) | Angabe fehlt | Der Faktor der Unterschätzung vergleicht den Ist-Buchwert des Zeitraums mit seiner Prognose; ohne beide ist die Erhöhung nicht bestimmt. |
 | C81 | C51 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
 | C94, N4 | C7, C51, C90 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
 | C95 | C7, C18, C51, C90 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der zulässige Fehler des Geschäftsjahres setzt die Ist-Buchwerte und die Wesentlichkeitsschwelle voraus. |
@@ -257,9 +288,8 @@ ebenfalls `null`; das ist keine Abweichung.
 | C99 | C8, C9, C21, C24, C25, C26, C51, C53, C55, C56, C90, C92 | Wert auf Grundlage von BV₃ = 0 bzw. σ_r3 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
 | C100 | C7, C24, C51, C55, C90, C92 | Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
 | C101, C102, C105 | C7, C18, C21, C24, C51, C55, C90, C92 | Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
-| C104 | C7, C8, C9, C21, C24, C25, C26, C18, C51, C53, C55, C56, C90, C92 | Wert auf Grundlage von BV₃ = 0 bzw. σ_r3 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
+| C104, C103, C107, C108, C109, C110, C111, C112, C116, C117, C118, C124, C125, C127, C128, C129, C132, C133, C134, C135, C136, C137, C138, N5, N7, N10, N11 | C7, C8, C9, C21, C24, C25, C26, C18, C51, C53, C55, C56, C90, C92 | Wert auf Grundlage von BV₃ = 0 bzw. σ_r3 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
 | C115 | C90 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
-| C103, C107, C108, C109, C110, C111, C112, C116, C117, C118, C124, C125, C127, C128, C129, C132, C133, C134, C135, C136, C137, C138, N5, N7, N10, N11 | C7, C8, C9, C21, C24, C25, C26, C51, C53, C55, C56, C90, C92 | Wert auf Grundlage von BV₃ = 0 bzw. σ_r3 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
 | C35 | C29 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
 | C70 | C69 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
 | C102 | C101 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
@@ -466,19 +496,19 @@ ebenfalls `null`; das ist keine Abweichung.
 
 | Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
 |---|---|---|---|---|
-| C11 | D11–J11, AA11–AM11 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C12 | D12–J12, AA12–AM12 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C18 | D18–J18, AA18–AM18 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C24 | D24–J24, AA24–AM24 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C25 | D25–J25, AA25–AM25 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C27 | D11–J11, AA11–AM11, D27–J27, AA27–AM27 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C13, N4 | C12 | nur der Buchwert der umfassenden Schicht bzw. 0 € (Summe der Buchwerte ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C14 | C11 | nur die Einheiten der umfassenden Schicht bzw. 0 (Summe der Einheiten ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C15 | C11 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C20 | C11 | 10 % der Einheiten der umfassenden Schicht bzw. 0 | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C19, N10 | C18 | nur die Einheiten der umfassenden Schicht bzw. 0 (Summe der Schichtumfänge ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C21 | C19, C20 | Prüfhinweis auf der Grundlage einer Gesamtstichprobe bzw. einer Mindesterfassung, zu der keine Schicht beiträgt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C29, C32, C33, C35, N5, N11 | C27 | Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers der Zufallsschichten von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C11 | D11–J11, AA11–AM11 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C12 | D12–J12, AA12–AM12 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C18 | D18–J18, AA18–AM18 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C24 | D24–J24, AA24–AM24 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C25 | D25–J25, AA25–AM25 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C27 | D11–J11, AA11–AM11, D27–J27, AA27–AM27 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C13, N4 | C12 | nur der Buchwert der umfassenden Schicht bzw. 0 € (Summe der Buchwerte ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C14 | C11 | nur die Einheiten der umfassenden Schicht bzw. 0 (Summe der Einheiten ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C15 | C11 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C20 | C11 | 10 % der Einheiten der umfassenden Schicht bzw. 0 | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C19, N10 | C18 | nur die Einheiten der umfassenden Schicht bzw. 0 (Summe der Schichtumfänge ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C21 | C19, C20 | Prüfhinweis auf der Grundlage einer Gesamtstichprobe bzw. einer Mindesterfassung, zu der keine Schicht beiträgt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C29, C32, C33, C35, N5, N11 | C27 | Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers der Zufallsschichten von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
 | D18–J18, AA18–AM18 | C16 | 1 je belegter Schicht (Mindestwert der Formel bei n = 0) | Angabe fehlt | Ohne Umfang der Zufallsstichprobe ist die Aufteilung auf die Schichten nicht bestimmt. |
 | C18, C19, N10 | C16 | Anzahl der belegten Schichten (je Schicht 1), zuzüglich der umfassenden Schicht | Angabe fehlt | Ohne Umfang der Zufallsstichprobe ist die Aufteilung auf die Schichten nicht bestimmt. |
 | C21 | C16 | Prüfhinweis auf der Grundlage von einer Einheit je belegter Schicht | Angabe fehlt | Die Prüfung der Mindesterfassung setzt den Umfang der Zufallsstichprobe voraus. |
@@ -510,24 +540,24 @@ ebenfalls `null`; das ist keine Abweichung.
 
 | Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
 |---|---|---|---|---|
-| C9 | D9–J9, AA9–AM9 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C10 | D10–J10, AA10–AM10 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C15 | D15–J15, AA15–AM15 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C19 | D19–J19, AA19–AM19 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C20 | D20–J20, AA20–AM20 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C21 | D21–J21, AA21–AM21 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C22 | D22–J22, AA22–AM22 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C25 | D25–J25, AA25–AM25 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C26 | D26–J26, AA26–AM26 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| C28 | D9–J9, AA9–AM9, D28–J28, AA28–AM28 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
-| N4 | C9 | 0 € (Summe der Buchwerte ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C11 | C10 | 0 (Summe der Einheiten ohne Angabe in einer Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C12 | C10 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C16 | C10 | 0 (10 % von 0 Einheiten) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C17 | C15, C16 | Prüfhinweis auf der Grundlage einer Summe der Schichtumfänge bzw. einer Mindesterfassung, zu der keine Schicht beiträgt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| N10 | C15 | 0 (Summe der Schichtumfänge ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C29, N6 | C25 | 0 € (Summe der Fehler hochwertiger Einheiten ohne Angabe in einer Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
-| C30, C33, C34, C36, N5, N11 | C28 | Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C9 | D9–J9, AA9–AM9 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C10 | D10–J10, AA10–AM10 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C15 | D15–J15, AA15–AM15 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C19 | D19–J19, AA19–AM19 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C20 | D20–J20, AA20–AM20 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C21 | D21–J21, AA21–AM21 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C22 | D22–J22, AA22–AM22 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C25 | D25–J25, AA25–AM25 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C26 | D26–J26, AA26–AM26 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C28 | D9–J9, AA9–AM9, D28–J28, AA28–AM28 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| N4 | C9 | 0 € (Summe der Buchwerte ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C11 | C10 | 0 (Summe der Einheiten ohne Angabe in einer Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C12 | C10 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C16 | C10 | 0 (10 % von 0 Einheiten) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C17 | C15, C16 | Prüfhinweis auf der Grundlage einer Summe der Schichtumfänge bzw. einer Mindesterfassung, zu der keine Schicht beiträgt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| N10 | C15 | 0 (Summe der Schichtumfänge ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C29, N6 | C25 | 0 € (Summe der Fehler hochwertiger Einheiten ohne Angabe in einer Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C30, C33, C34, C36, N5, N11 | C28 | Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
 | D15–J15, AA15–AM15, D18–J18, AA18–AM18, D22–J22, AA22–AM22, D23–J23, AA23–AM23, D28–J28, AA28–AM28 | C13 | Wert auf Grundlage von einer Einheit je belegter Schicht (Mindestwert der Formel bei n = 0) | Angabe fehlt | Ohne Stichprobenumfang sind die Aufteilung auf die Schichten, die Zufallsschichten und die Auswahlintervalle nicht bestimmt; alle Folgegrößen bleiben offen. |
 | C15, C22, C28, C30, C33, C34, N5, N10, N11 | C13 | Wert auf Grundlage von einer Einheit je belegter Schicht (Mindestwert der Formel bei n = 0) | Angabe fehlt | Ohne Stichprobenumfang sind die Aufteilung auf die Schichten, die Zufallsschichten und die Auswahlintervalle nicht bestimmt; alle Folgegrößen bleiben offen. |
 | C17 | C13 | Prüfhinweis auf der Grundlage von einer Einheit je belegter Schicht | Angabe fehlt | Die Prüfung der Mindesterfassung setzt den Stichprobenumfang voraus. |
@@ -538,6 +568,7 @@ ebenfalls `null`; das ist keine Abweichung.
 | Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
 |---|---|---|---|---|
 | C13, C16, C20, C22 | C6 | Wert auf Grundlage eines Buchwerts von 0 € | Angabe fehlt | Ohne Buchwert der Stichprobeneinheit lässt sich nichts hochrechnen; die Vorlage rechnet mit 0 € weiter. |
+| C20, C22, C23 | C15 | Wert auf Grundlage eines Umfangs von 0 (bei vorhandenen hochwertigen Einheiten negativ) | Angabe fehlt | Ohne Umfang der Unterstichprobe gibt es kein Auswahlintervall; mit 0 abzüglich der hochwertigen Einheiten entstünden ein negatives Intervall und ein negativer Fehler. |
 
 ### 18_GFQ_AnhIII
 
@@ -614,8 +645,8 @@ ebenfalls `null`; das ist keine Abweichung.
 | D12 | D11, E6–K6, AA6–AM6 | 0 € bzw. Wert ohne den Buchwert der Schicht mit fehlender Angabe | Angabe fehlt | Der voraussichtliche Fehler setzt die erwartete Fehlerquote und den Buchwert jeder belegten Schicht voraus. |
 | D15, D26, D27, E17–K17, AA17–AM17 | D9, D11, E6–K6, AA6–AM6, E7–K7, AA7–AM7, E8–K8, AA8–AM8 | Wert auf Grundlage des mit 0 berechneten Umfangs (mindestens 30) | Angabe fehlt | Ohne Konfidenzniveau, erwartete Fehlerquote und die Angaben jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
 | D23, D24, D25, D28, D29, E20–K20, AA20–AM20, E22–K22, AA22–AM22 | D9, D11, E6–K6, AA6–AM6, E7–K7, AA7–AM7, E8–K8, AA8–AM8, E19–K19, AA19–AM19 | Hochrechnung mit einem Stichprobenfehler von 0 € bzw. auf Grundlage des mit 0 berechneten Umfangs | Angabe fehlt | Die Hochrechnung setzt den Stichprobenumfang und den Fehler der Stichprobe mindestens einer belegten Schicht voraus. |
-| D23 | E22–K22, AA22–AM22 | 0 € (Summe über Schichten ohne hochgerechneten Fehler) | kein Wert | Trägt keine Schicht einen hochgerechneten Fehler, gibt es nichts zu summieren; eine Summe von 0 € sähe wie ein Ergebnis aus. |
-| D24, D25 | D23 | Fehlerquote 0 % bzw. berichtigter Buchwert in Höhe des Buchwerts, gerechnet mit einem hochgerechneten Fehler von 0 € | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D23 | E22–K22, AA22–AM22 | 0 € (Summe über Schichten ohne hochgerechneten Fehler) | kein Wert | Trägt keine Schicht einen hochgerechneten Fehler, gibt es nichts zu summieren; eine Summe von 0 € sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| D24, D25 | D23 | Fehlerquote 0 % bzw. berichtigter Buchwert in Höhe des Buchwerts, gerechnet mit einem hochgerechneten Fehler von 0 € | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
 
 ### X4_DiffSch_2Z_2017
 
@@ -658,15 +689,40 @@ Rundungen in `test/fixtures/libreoffice-semantik.json`) gilt:
 - **Differenzen** fast gleicher Werte ergeben 0 (`excel.minus`, `excel.plus`).
 - **`ROUNDUP`** kürzt den Wert zuerst auf zwölf signifikante Stellen und
   rundet dann von null weg auf. 100,00000000000004 bleibt 100;
-  100,000000001 wird 101. `excel.roundUp` bildet das nach; die frühere
-  Schwelle von einem Milliardstel ist entfallen.
+  100,000000001 wird 101. Das gilt auch oberhalb von zwölf ganzzahligen
+  Stellen: Aus 369.792.900.021.303 wird 369.792.900.021.000 (Abnahme, Blatt
+  03 C21). `excel.roundUp` bildet das nach.
+- **`SUMME`** über einen Bereich summiert mit Fehlerausgleich
+  (Kahan-Neumaier); `excel.sum` tut dasselbe. Ohne ihn weicht die Summe über
+  mehrere Schichten um eine Stelle der letzten Ziffer ab, was eine Würdigung
+  genau an der Schwelle kippen kann (Abnahme, Blatt 09 C62). Einzelne
+  Additionen (`A1+B1`) rechnen wie in der Vorlage ohne Ausgleich.
 
 Die Messwerte sind Bestandteil der Tests (`test/excel.spec.ts`). Der
 Golden-Abgleich vergleicht Zellen mit Ganzzahlformat exakt, die übrigen auf
-1e-9 relativ.
+1e-9 relativ; bei Eurobeträgen gilt zusätzlich ein Unterschied bis 10⁻⁶ € als
+gleich (Rauschen aus einer Auslöschung in Blatt 20 G43, angezeigt wird in
+beiden Fällen 0,00 €).
 
-**Offen:** Gemessen ist LibreOffice, mit dem auch die Sollwerte entstehen.
-Microsoft Excel ist nicht gegengeprüft. Excel rundet bei der Anzeige und in
+**Grenzen des geprüften Zahlenbereichs:**
+
+- Stichprobenumfänge ab 10¹⁵ Einheiten entstehen nur, wenn TE und AE bis auf
+  Rundungsrauschen gleich sind. Dort streuen Vorlage und Webfassung um bis zu
+  einige 10⁻⁵ relativ. Die Webfassung zeigt den Wert und weist ihn mit „…
+  außerhalb des geprüften Zahlenbereichs … nicht belastbar“ in Warnfarbe aus;
+  der Abgleich vergleicht dort nur die Größenordnung.
+- Liegt eine Quote genau auf der Vergleichstoleranz und trägt der Fall eine
+  Eingabe mit 16 oder 17 geltenden Stellen, kann die Würdigung von der
+  Neuberechnung mit LibreOffice abweichen (zwei Prüfsonden der Abnahme: Blatt
+  06 C99, Blatt 12 C138). Ursache ist die letzte Stelle der eingelesenen
+  Eingabe: Mit der um eine Stelle der letzten Ziffer verschobenen Eingabe
+  zeigt die Webfassung in beiden Fällen den Text der Vorlage. Über die
+  Oberfläche lassen sich solche Zahlen nicht eingeben; der Abgleich führt die
+  Zellen getrennt als „Toleranzkante“ und prüft die Erklärung je Zelle.
+
+**Offen:** Gemessen ist LibreOffice 24.2, mit dem auch alle Sollwerte
+entstehen. Eine Gegenprobe mit Microsoft Excel steht aus; das steht auch in
+der Fußzeile der Oberfläche und im Kopf von [abgleich.md](abgleich.md). Excel rundet bei der Anzeige und in
 Vergleichen ebenfalls auf 15 Stellen, die genauen Grenzen können abweichen;
 betroffen wären nur Werte, die sich erst jenseits der zwölften Stelle von
 einer Schwelle oder ganzen Zahl unterscheiden.
@@ -684,16 +740,18 @@ begrenzten Umfang; die Webfassung folgt ihr.
 ## 5. Schichtzeilen
 
 Die Summe über eine Schichtzeile, in der keine Schicht einen Wert trägt, ist
-in der Vorlage 0. Die Webfassung zeigt dort nach der geltenden Richtlinie
-keinen Wert (`withoutBasis`) – auch nicht in den Zellen, die auf dieser 0
+in der Vorlage 0. Solange eine Pflichteingabe fehlt, zeigt die Webfassung
+dort keinen Wert (`withoutBasis`) – auch nicht in den Zellen, die auf dieser 0
 aufbauen (Abgleich mit Blatt 02, zulässiger Fehler, Hochrechnung, Würdigung,
 Ergebnisübersicht). Summen, die vom Stichprobenumfang abhängen, bleiben offen,
-solange der Umfang offen ist.
+solange der Umfang wegen einer fehlenden Angabe offen ist.
 
 Der Prüfhinweis „mindestens drei Einheiten je (Zufalls-)Schicht“ lautet in
 der Vorlage „✔ ≥ 3“, wenn es keinen Umfang je Schicht gibt (leere Textzelle,
-im Vergleich größer als jede Zahl). Die Webfassung zeigt ihn dann in allen
-geschichteten Blättern einheitlich nicht (`checkStratumUnits`).
+im Vergleich größer als jede Zahl). Fehlt eine Pflichteingabe, zeigt die
+Webfassung ihn in allen geschichteten Blättern einheitlich nicht
+(`checkStratumUnits`); sind alle Pflichteingaben vorhanden (etwa bei „TE ≤
+AE“), zeigt sie ihn wie die Vorlage und weist ihn als Wert ohne Grundlage aus.
 
 Die 8. bis 20. Schicht (Spalten AA–AM) gibt es in der Vorlage nicht; siehe
 [schichten-und-listen.md](schichten-und-listen.md). Die Altvorlage X3 führt
@@ -707,9 +765,12 @@ Liste. Die Zuordnung der Einheiten zum Methodenblatt (Zellen W5–W10:
 Zufallsschicht oder hochwertige Einheit, maßgebliche Variante, Nummer der
 Schicht, Stichprobenzeitraum) und die Summenbildung sind Hinweise der
 Webfassung; der Rechenkern je Einheit folgt der Vorlage. Die Summen werden
-per Schaltfläche in die Eingaben des gewählten Verfahrens übernommen – bei
-geschichteten Verfahren je Schicht, bei mehreren Zeiträumen je Zeitraum.
-Einheiten ohne die dafür nötige Angabe werden nicht übernommen und genannt.
+per Schaltfläche in die Eingaben des gewählten Verfahrens übernommen. Die
+Übernahme gibt es für die Blätter 03, 04, 08, 13 und 15 – in Blatt 04 je
+Schicht; Einheiten ohne die dafür nötige Schichtnummer werden nicht
+übernommen und genannt. Die übrigen Blätter (05–07, 09–12, 14, 16) nehmen
+keine Summen auf; dort sind sie von Hand einzutragen. Die Hinweise an den
+Feldern W9 und W10 und die Meldung der Oberfläche sagen genau das.
 
 ## 7. Darstellung
 
@@ -727,7 +788,7 @@ Webfassung „Keine Angabe, daher mit 0 berechnet.“ (englisch „Not provided,
 therefore calculated with 0.“). Die Würdigung erscheint mit dem Wortlaut der
 Vorlage, daneben in Warnfarbe der Hinweis; sie ist nicht uneingeschränkt grün.
 Derselbe Hinweis steht in der Ergebnisspalte, im Excel-Export, im Arbeitsstand
-(`hinweise`) und im Bericht. Ebenso behandelt wird die fehlende Fehlersumme
+(`hinweise`), in Blatt 18 und im Bericht (Nr. 13). Ebenso behandelt wird die fehlende Fehlersumme
 einer von mehreren belegten Schichten bzw. eines von mehreren Zeiträumen
 (`partialErrorSum`). Das ist keine Abweichung im Wert, sondern eine
 Kennzeichnung; die Fallarten stehen in Abschnitt 1.
@@ -736,14 +797,32 @@ Kennzeichnung; die Fallarten stehen in Abschnitt 1.
 
 Die Webfassung liest die Eingabezellen aller Blätter der ausgefüllten Vorlage
 und nennt, welche Blätter Werte enthielten. Kopien des Blatts 17 werden zu
-weiteren Stichprobeneinheiten; das in Blatt 18 gewählte Methodenblatt wird
-das aktive Verfahren. Jeder Wert,
-den sie nicht oder umgedeutet übernimmt (abweichende Schreibweise einer
-Auswahl, Zahl als Text, Datum, überschriebene Verknüpfung, unbekannter
-Auswahlwert), erscheint vor der Übernahme in einer Vorschau mit Blatt, Zelle,
-gefundenem Wert und Grund. Enthält die Datei Rechenwerte, werden die
-Ergebnisse der Webfassung dagegen verglichen und Abweichungen genannt.
-Übernommen wird erst nach Bestätigung.
+weiteren Stichprobeneinheiten – auch unter freiem Namen, erkannt am Titel des
+Blatts und in der Vorschau genannt; das in Blatt 18 gewählte Methodenblatt
+wird das aktive Verfahren, und Blatt 18 gilt damit als ausgefüllt. Vor der
+Übernahme zeigt eine Vorschau:
+
+- **Umgedeutete und nicht übernommene Werte** mit Blatt, Zelle, gefundenem
+  Wert und Grund (abweichende Schreibweise einer Auswahl, Zahl als Text,
+  überschriebene Verknüpfung, unbekannter Auswahlwert). Ein Datum, das als
+  Tageszahl in der Zelle steht (Blatt 20 „Stand“), wird als Datum übernommen.
+- **Hinweise zur Mappe:** Zahlen in Schichtzeilen außerhalb der sieben
+  Schichtspalten (z. B. eine selbst angelegte Spalte K) werden nicht gelesen
+  und genannt; ist in Blatt 18 der Mappe kein Methodenblatt gewählt, sagt die
+  Vorschau, welches Verfahren die Webfassung als aktiv annimmt; eine in der
+  Mappe gelöschte Vorgabe (z. B. die Wesentlichkeitsschwelle) übernimmt die
+  Webfassung als leere Zelle, statt die Vorgabe wieder einzusetzen.
+- **Gegenprobe gegen die Rechenwerte der Mappe** für alle ausgefüllten Blätter
+  und immer auch für Blatt 18 und den Bericht, einschließlich der Summenzellen
+  und der Ergebnisübersicht N3–N11, in beide Richtungen: anderer Wert, „Mappe
+  mit Wert, Webfassung ohne“ und „Mappe leer, Webfassung mit Wert“.
+  Begründete Fälle („Angabe fehlt“, die Vorlage rechnet mit 0) stehen getrennt
+  in einer zugeklappten Liste, damit echte Unterschiede auffallen. Verglichen
+  werden nur Zellen, die es in der Mappe gibt; eine nie berechnete Datei
+  enthält keine Rechenwerte und wird nicht verglichen.
+
+Ein abgeschnittenes oder übergroßes Blatt ist ein Lesefehler; die Datei wird
+abgelehnt, nicht teilweise gelesen. Übernommen wird erst nach Bestätigung.
 
 ## 10. Prüfsumme des Arbeitsstands
 
@@ -767,16 +846,110 @@ wo es der Einordnung dient, einen Hinweis der Webfassung in Warnfarbe:
   bleibt; fehlt die Genauigkeit nur wegen einer fehlenden Angabe, bleibt die
   Würdigung offen.
 - **Nicht positiver Nenner der Standardneuberechnung** (05–07, 10–12): Der
-  Text „✖ nicht anwendbar (Nenner ≤ 0)“ steht wie in der Vorlage; die
-  Untergrenzen (3 bzw. Auffüllung auf 30) und die Auswertung rechnen wie die
-  Vorlage weiter, dazu ein Hinweis.
+  Text „✖ nicht anwendbar (Nenner ≤ 0)“ steht wie in der Vorlage; sind alle
+  Pflichteingaben vorhanden, zeigen alle sechs Blätter einheitlich die
+  Untergrenzen (3 bzw. Auffüllung auf 30) und die Auswertung wie die Vorlage,
+  dazu Hinweise in Warnfarbe (Empfehlung: globale Neuberechnung).
 - **Negative oder unbegrenzte Umfänge der Altvorlagen** (X1–X4) und der
   **nicht positive Anpassungsfaktor in Blatt 18**: wie die Vorlage, mit Hinweis.
 - **Hilfszeilen je Schicht**, die für unbelegte Schichten 0 tragen (z. B.
   Blatt 04 Zeilen 25 und 52, Blatt 14 Zeile 27): wie die Vorlage.
-- **Freiwillige Einzelbeträge** aus `N(…)` (Fehler der hochwertigen bzw.
-  umfassenden Schicht, systembedingte und anomale Fehler, in Blatt 20 die
-  Beträge nach Art. 98 Abs. 6 und die Finanzkorrekturen): 0 ohne Ausweis.
+- **Freiwillige Einzelbeträge** aus `N(…)` (systembedingte und anomale
+  Fehler, in Blatt 20 die Beträge nach Art. 98 Abs. 6 und die
+  Finanzkorrekturen): 0 ohne Ausweis. Für die Fehler der hochwertigen bzw.
+  umfassenden Schicht gilt das nur, solange die Schicht gar nicht erklärt ist
+  (Nr. 13).
+- **Negative Ergebnisse** (mehr hochwertige Einheiten als Stichprobenumfang,
+  negative Gesamt- oder Restfehlerquote): wie die Vorlage, mit Hinweis in
+  Warnfarbe (Nr. 13).
 
 Eine Zusammenstellung dieser und weiterer Auffälligkeiten der Vorlage für den
 Auftraggeber liegt außerhalb des Repositorys.
+
+## 12. Bericht: Programm und Prüfbehörde sind Angaben, kein fester Text
+
+Die Vorlage nennt in Blatt 20 fest ein bestimmtes Programm (Kopfzeile, Zelle
+A6) und eine bestimmte Prüfbehörde (Fußzeile der Druckseite). Die Webfassung
+wird von Prüfbehörden verschiedener Programme und Mitgliedstaaten benutzt;
+ein Bericht mit fremder Behörde im Fuß wäre dort falsch. Sie weicht deshalb
+**bewusst im Wert** von der Vorlage ab:
+
+- **Kopfzeile:** „Bezeichnung des Programms · CCI … · Geschäftsjahr … ·
+  Status“. Die Bezeichnung gibt die Prüfbehörde bei den Steuerfeldern an (Zelle
+  W4, in der Vorlage unbelegt); ohne Angabe gilt „Programm(e) / CCI“ des
+  gewählten Verfahrens, sonst beginnt die Zeile mit der CCI-Nummer. Der Teil ab
+  „CCI“ ist wie in der Vorlage.
+- **Fußzeile:** Prüfbehörde, Organisationseinheit und Ort aus den Angaben W5–W7.
+  Ohne Angabe bleibt die Fußzeile im Druck leer.
+- Fehlende Angaben zeigt die Bildschirmansicht als Platzhalter in eckigen
+  Klammern; er wird nicht gedruckt. Kopf- und Fußzeile folgen der gewählten
+  Sprache; die Angaben selbst bleiben, wie sie eingegeben sind.
+- Die Angaben stehen im Arbeitsstand und im Excel-Export. Beim Import der
+  ausgefüllten Vorlage bleiben sie leer, weil die Vorlage sie nicht kennt.
+- Am Bericht steht dazu der Hinweis der Webfassung (`own-header`); im
+  Abgleich ist Zelle A6 als bewusst anders gebildet geführt (`adapted` im
+  Blattmodul): Verglichen wird der Teil ab „CCI“.
+
+Das ausgelieferte Paket enthält keinen festen Namen einer Behörde oder eines
+Programms, auch nicht in den Beispielwerten (`test/neutral.spec.ts`).
+
+Ebenfalls anders als in der Vorlage: Leere Freitextfelder des Berichts werden
+nicht mit ihrem Platzhaltertext in eckigen Klammern gedruckt, sondern bleiben
+im Druck leer; der Platzhalter steht nur am Bildschirm.
+
+## 13. Einschränkungen eines Ergebnisses: Hinweise in Warnfarbe
+
+An keiner dieser Stellen weicht ein Wert von der Vorlage ab. Die Webfassung
+sagt aber dazu, wenn ein gezeigtes Ergebnis nicht belastbar ist
+(`src/view/limits.ts`):
+
+| Art | Wann | Hinweis |
+|---|---|---|
+| mit 0 gerechnet | Standardabweichung der Stichprobe oder Fehlersumme einer von mehreren Schichten fehlt (Nr. 8) | „Keine Angabe, daher mit 0 berechnet: …“ |
+| stille Lücke | Eine nicht freiwillige Eingabe ist leer, die Vorlage rechnet ohne sie weiter, und ein gezeigtes Ergebnis hängt von ihr ab – etwa Buchwert, Anzahl oder Summe der Buchwerte der Stichprobe einer belegten Schicht, der Ist-Wert eines Zeitraums, das Konfidenzniveau oder die Fehlersumme einer erklärten hochwertigen bzw. umfassenden Schicht | „Angabe fehlt: Schicht n: … (Zelle). Die Vorlage rechnet ohne sie weiter; das Ergebnis hängt aber von ihr ab und ist so nicht belastbar. Trifft 0 zu, bitte 0 eintragen“ |
+| ohne Grundlage | Wert der Vorlage ohne Grundlage bei vollständigen Pflichteingaben (Nr. 1) | „Wie in der Vorlage gezeigt, obwohl die Grundlage fehlt: …“ |
+| negatives Ergebnis | Eine berechnete Anzahl, ein Auswahlintervall, der extrapolierte Fehler oder eine Fehlerquote ist negativ | „Mehr hochwertige Einheiten als Stichprobenumfang: Die Zufallsschicht ist negativ …“ und „Negativer Wert wie in der Vorlage: …“ |
+| Zahlenbereich | Stichprobenumfang ab 10¹⁵ (Nr. 3) | „… außerhalb des geprüften Zahlenbereichs …“ |
+| Hinweis des Blatts | Hinweise der Webfassung in Warnfarbe (`webHints`) | Text des Blatts |
+| Auslegung, Altvorlage | wie bisher | „Auslegung der Vorlage – …“, Hinweis der Altvorlage |
+
+**Stille Lücken** ermittelt `src/model/dependence.ts` einheitlich für alle
+Blätter durch Nachrechnen: Das Blatt wird mit Probewerten an der Stelle der
+leeren Eingabe noch einmal gerechnet; ändert sich eine Ergebniszelle
+(extrapolierter Fehler, Fehlerquote, obere Fehlergrenze, Stichprobenumfang),
+hängt sie davon ab. Bei Schichtzeilen zählen nur belegte Schichten. Freiwillig
+sind systembedingte und anomale Fehler, die aktualisierte voraussichtliche
+Fehlerquote („leer = Wert aus I“) und – jeweils als Gruppe, die nur gemeinsam
+leer sein darf – die Angaben der hochwertigen Einheiten bzw. der umfassenden
+Schicht je Zeitraum und Schicht; in Blatt 02 und im Bericht sind die
+freiwilligen Angaben in der Definition gekennzeichnet (`optional`). Die Regel
+ist als Eigenschaft geprüft (`test/properties.spec.ts`): Für jede Einzellücke
+der Abnahme, die in der Vorlage ein Ergebnis ändert, ist dieses Ergebnis in
+der Webfassung offen oder trägt einen Hinweis in Warnfarbe.
+
+**Die Hinweise reisen mit.** Blatt 18 führt die Einschränkungen des Blatts 02
+und des gewählten Verfahrens mit der Blattnummer davor („Blatt 03: …“), der
+Bericht zusätzlich die des Blatts 18 – am Bildschirm, im Druck und auf jedem
+Blatt des Excel-Exports; im Arbeitsstand stehen sie unter `hinweise`. Ist eine
+Altvorlage das gewählte Verfahren, steht der Hinweis in Blatt 18 auch bei
+sonst leerem Formular. Schränkt ein Hinweis in Warnfarbe das Ergebnis ein,
+erscheint eine bestandene Würdigung („✔“) mit dem Zusatz „Nicht
+uneingeschränkt: siehe Hinweise der Webfassung“ und in Warnfarbe statt grün.
+Je Hinweisart gibt es einen Durchstich Verfahren → Blatt 18 → Bericht → Export
+(`test/limits.spec.ts`).
+
+## 14. Bericht: Zuordnung zum Arbeitsstand
+
+Der Bericht trägt am Bildschirm und im Druck – wie der Kopf des Excel-Exports
+– die Vorlage, den Rechtsstand, die Fassung des Rechenkerns und die Prüfsumme
+der Eingaben. Damit lässt sich ein Ausdruck einem Arbeitsstand zuordnen. Die
+Vorlage kennt diese Zeile nicht.
+
+## 15. Excel-Export: nur bearbeitete Blätter
+
+Exportiert werden das gewählte Verfahren (Blatt „Ergebnis“), Blatt 18 und der
+Bericht dazu und jedes weitere Blatt, in dem mindestens eine Eingabe von den
+Vorgaben der Vorlage abweicht. Ein Blatt nur mit Vorgaben („✔ ≤ 2 %“) steht
+nicht im Export. Ein anderes, früher bearbeitetes Verfahrensblatt trägt im
+Kopf den Satz „Nicht das gewählte Verfahren: Dieses Blatt fließt nicht in
+Blatt 18 und den Bericht ein.“

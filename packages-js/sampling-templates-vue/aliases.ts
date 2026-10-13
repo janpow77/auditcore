@@ -9,7 +9,7 @@ const path = (relative: string): string => fileURLToPath(new URL(relative, impor
 
 export const sourceAliases = [
   { find: /^@auditcore\/sampling-templates-core\/style\.css$/, replacement: path('../sampling-templates-core/styles/sampling-templates.css') },
-  { find: /^@auditcore\/sampling-templates-core\/xlsx$/, replacement: path('../sampling-templates-core/src/xlsx/index.ts') },
+  { find: /^@auditcore\/sampling-templates-core\/workbook$/, replacement: path('../sampling-templates-core/src/xlsx/index.ts') },
   { find: /^@auditcore\/sampling-templates-core$/, replacement: path('../sampling-templates-core/src/index.ts') },
   { find: /^@auditcore\/ui-core\/style\.css$/, replacement: path('../ui-core/styles/index.css') },
   { find: /^@auditcore\/ui-core\/styles\/(.*)$/, replacement: path('../ui-core/styles/$1') },

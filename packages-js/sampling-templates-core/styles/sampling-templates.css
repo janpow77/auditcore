@@ -214,6 +214,8 @@
 .fa-st__note { margin-top: var(--fa-space-1); font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); text-align: right; overflow-wrap: anywhere; }
 .fa-st__note--warning { padding: var(--fa-space-1) var(--fa-space-2); border-radius: var(--fa-radius-sm); background: var(--fa-color-warning-soft); color: var(--fa-color-text); text-align: left; }
 .fa-st__import { display: flex; flex-direction: column; gap: var(--fa-space-3); }
+.fa-st__import-notes { list-style: none; margin: 0; padding: 0; }
+.fa-st__import-explained summary { cursor: pointer; color: var(--fa-color-text-muted); margin-bottom: var(--fa-space-2); }
 .fa-st .fa-st__pill { position: relative; border-radius: var(--fa-radius); padding: var(--fa-space-1) var(--fa-space-2); font-weight: 500; line-height: 1.35; white-space: normal; text-align: left; }
 
 /* Schichttabelle und Liste der Einheiten: eigener waagerechter Rollbereich */

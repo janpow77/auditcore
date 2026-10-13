@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createTranslate } from '../src/i18n/messages'
 import { cellsOf, defaultInputs, fieldsOf, findField, inputFields, named } from '../src/model/definition'
+import { evaluateSheet } from '../src/model/evaluate'
 import { TEMPLATE_POLICY } from '../src/model/policy'
 import { subsampleTargets } from '../src/model/list'
 import { SUMMARY_CELLS, createContext, summaryOf } from '../src/model/sheet'
@@ -8,6 +9,7 @@ import { STRATA_COLUMNS } from '../src/model/strata'
 import type { CellValue } from '../src/model/types'
 import { sheet } from '../src/sheets/11_SRS_2Z_S/index'
 import { INCREASE_INTERPRETATION } from '../src/sheets/shared/srs'
+import { isQualified, limitationsOf } from '../src/view/limits'
 import { strataRows } from '../src/view/sheetView'
 import { buildSummary } from '../src/view/summaryView'
 
@@ -156,7 +158,7 @@ describe('Blatt 11_SRS_2Z_S: Schichten', () => {
     expect(second.G89).toBeCloseTo(16000, 6)
     // Keine Neuberechnung: MAX(3; leere Textzelle) = 3; Erhöhung: Rechnung mit der leeren Textzelle ist ein Fehlerwert.
     expect(run({ G57: 35, G58: 3200000, G59: 11800, C33: NONE }).G77).toBe(3)
-    // Der Prüfhinweis ohne Umfang ist ein Wert ohne Grundlage: Die Vorlage zeigt „✔ ≥ 3“, die Webfassung nichts.
+    // Der Prüfhinweis ohne Umfang ist ein Wert ohne Grundlage: Die Vorlage zeigt „✔ ≥ 3“; der Rechenkern lässt ihn offen (hier fehlen die Angaben der Schicht für Zeitraum 1).
     const increase: Inputs = { G57: 35, G58: 3200000, G59: 11800, C33: INCREASE }
     expect([run(increase).G77, run(increase).G79]).toEqual([null, null])
     expect(template(increase).G79).toBe('✔ ≥ 3')
@@ -170,11 +172,16 @@ describe('Blatt 11_SRS_2Z_S: Schichten', () => {
     expect(summary.hints).toContainEqual(expect.objectContaining({ id: 'G46', text: 'Schicht 4: ✖ < 3', tone: 'danger' }))
   })
 
-  it('ohne Umfang zeigt die Vorlage „✔ ≥ 3“ und die Summe 0 – Werte ohne Grundlage; fehlt nur eine Angabe, bleibt alles offen', () => {
+  it('ohne Umfang zeigt die Vorlage „✔ ≥ 3“ und die Summe 0 – Werte ohne Grundlage, bei vollständigen Pflichteingaben ebenso gezeigt und ausgewiesen; fehlt eine Angabe, bleibt alles offen', () => {
+    // Der Rechenkern lässt Werte ohne Grundlage offen; `evaluateSheet` zeigt sie bei vollständigen Pflichteingaben wie die Vorlage.
     const none = run({ C25: 0.025 })
     expect([none.C34, none.C42, none.D44, none.C44, none.D46]).toEqual(['TE ≤ AE', null, null, null, null])
     const shown = template({ C25: 0.025 })
     expect([shown.C34, shown.C42, shown.D44, shown.C44, shown.D46]).toEqual(['TE ≤ AE', null, null, 0, '✔ ≥ 3'])
+    const evaluation = evaluateSheet(sheet, { ...sample, C25: 0.025 }, context)
+    expect(evaluation.complete).toBe(true)
+    expect(evaluation.cells).toEqual(shown)
+    expect(evaluation.withoutBasis).toEqual(expect.arrayContaining(['C44', 'D46']))
     const open = run({ C25: null })
     expect([open.C34, open.C42, open.D44, open.C44, open.D46, open.D79]).toEqual(nulls(6))
   })
@@ -228,7 +235,21 @@ describe('Blatt 11_SRS_2Z_S: Neuberechnung für Zeitraum 2', () => {
     expect([shown.D79, shown.E79, shown.F79]).toEqual(['✔ ≥ 3', '✔ ≥ 3', '✔ ≥ 3'])
     expect([shown.D90, shown.C90, shown.C93]).toEqual([null, 0, 0])
     expect(shown.C96).toBe(shown.C92)
-    // Die Webfassung zeigt sie nicht.
+    // Alle Pflichteingaben liegen vor: Die Webfassung zeigt dieselben Werte, weist sie als Werte ohne Grundlage aus (Warnfarbe) und nennt je Schicht den Nenner.
+    const inputs = { ...sample, ...NEGATIVE }
+    const evaluation = evaluateSheet(sheet, inputs, context)
+    expect(evaluation.complete).toBe(true)
+    expect(evaluation.cells).toEqual(shown)
+    expect(evaluation.withoutBasis).toEqual(expect.arrayContaining(['D79', 'C77', 'C80', 'C93', 'C102']))
+    const limitations = limitationsOf(sheet, inputs, evaluation.cells, context, t)
+    expect(limitations.filter((entry) => entry.tone === 'warning').map((entry) => entry.id)).toEqual(['without-basis', 'strata-sum-exceeds-size', 'negative-denominator-1', 'negative-denominator-2', 'negative-denominator-3'])
+    expect(isQualified(limitations)).toBe(true)
+    // Fehlt dazu eine Pflichteingabe (σ Zeitraum 2 einer belegten Schicht), bleiben sie offen.
+    const incomplete = evaluateSheet(sheet, { ...inputs, E30: null }, context)
+    expect(incomplete.complete).toBe(false)
+    expect([incomplete.cells.C77, incomplete.cells.C80, incomplete.cells.D79, incomplete.cells.C93, incomplete.cells.C102]).toEqual(nulls(5))
+    expect(incomplete.withoutBasis).toEqual([])
+    // Der Rechenkern selbst lässt Werte ohne Grundlage offen.
     expect([results.D77, results.E77, results.F77, results.C77, results.C80, results.C81]).toEqual(nulls(6))
     expect(results.C78).toBe(28)
     expect([results.D79, results.E79, results.F79, results.D90, results.C90, results.C93, results.C96, results.C102]).toEqual(nulls(8))

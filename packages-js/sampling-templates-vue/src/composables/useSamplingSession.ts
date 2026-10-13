@@ -63,7 +63,7 @@ export interface SamplingSession extends Messages, Omit<SessionView, 'find' | 'c
   setStep: (step: StepId) => void
   setInput: (cell: CellAddress, value: CellValue) => void
   reset: () => void
-  loadSample: () => void
+  loadSample: (method?: SheetId) => void
   replace: (state: WorkspaceState, meta: SessionMeta, notices?: readonly Omit<SessionNotice, 'id'>[]) => void
   markSaved: (fileName: string) => void
 }
@@ -158,20 +158,22 @@ export function useSamplingSession(options: SessionOptions): SamplingSession {
     write(sheet.id, rows)
   }
 
-  function replace(state: WorkspaceState, next: SessionMeta, added: readonly Omit<SessionNotice, 'id'>[] = []): void {
+  /** `keepStep`: Der angezeigte Arbeitsschritt bleibt stehen (Neu, Beispielwerte); sonst zeigt die Ansicht das Verfahren. */
+  function replace(state: WorkspaceState, next: SessionMeta, added: readonly Omit<SessionNotice, 'id'>[] = [], keepStep = false): void {
     workspace.value = withDefaults(state, sheets())
     meta.value = next
     messages.set(added)
     selectedUnit.value = 0
-    step.value = 'method'
+    if (!keepStep) step.value = 'method'
     pickerOpen.value = find(state.activeMethod) === null
   }
 
   /** Neu: leere Formulare mit den Vorgaben der Vorlage; das gewählte Verfahren bleibt. */
-  const reset = (): void => replace({ ...emptyWorkspace(), activeMethod: view.activeSheet.value?.id ?? null }, { fileName: null, dirty: false, sample: false })
+  const reset = (): void => replace({ ...emptyWorkspace(), activeMethod: view.activeSheet.value?.id ?? null }, { fileName: null, dirty: false, sample: false }, [], true)
 
-  /** Beispielwerte laden; ohne gewähltes Verfahren das erste Methodenblatt mit Rechenkern. */
-  const loadSample = (): void => replace(sampleState(view.activeSheet.value ?? firstMethod(sheets()), sheets()), { fileName: null, dirty: false, sample: true })
+  /** Beispielwerte laden; mit `method` das genannte Verfahren öffnen, sonst bleiben Verfahren und Arbeitsschritt stehen. */
+  const loadSample = (method?: SheetId): void =>
+    replace(sampleState((method ? find(method) : null) ?? view.activeSheet.value ?? firstMethod(sheets()), sheets()), { fileName: null, dirty: false, sample: true }, [], method === undefined)
 
   const actions = useSheetActions({ view: { ...view, find, context, usedStrata: _used }, selectedUnit, write, state: () => workspace.value, t: options.t, say: messages.say, notify: messages.notify })
   const { set: _set, ...shared } = messages

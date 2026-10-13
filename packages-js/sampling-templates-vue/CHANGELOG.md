@@ -1,5 +1,24 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.1 – 2026-10-13
+
+Auflagen der unabhängigen Gesamtabnahme (noch nicht veröffentlicht).
+
+- Ungesicherte Änderungen für den Routenwächter der Anwendung: Ereignis
+  `dirty`, Methode `isDirty()` und der reaktive Wert `dirty` (über `ref`).
+- Bericht mit Vorlage, Rechtsstand, Fassung des Rechenkerns und Prüfsumme der
+  Eingaben, am Bildschirm und im Druck; der Druck verwendet die benannte Seite
+  `fa-st-report`.
+- Hinweise in Warnfarbe aus dem Verfahren stehen auch in Blatt 18 und im
+  Bericht; eine bestandene Würdigung ist dann nicht uneingeschränkt grün.
+- Importvorschau: Hinweise zur Mappe, echte Unterschiede getrennt von
+  begründet offenen Zellen, „leer“ für Zellen ohne Wert in der Mappe.
+- „Letzte Schicht entfernen“ fragt nach, wenn die Schicht Eingaben trägt.
+- Zwischenstand in drei Stufen (`draft`: `off`, `session`, `device`), Slot und
+  Ereignis `draft`.
+- Fußzeile nennt die Prüfgrundlage (LibreOffice 24.2; Gegenprobe mit Microsoft
+  Excel steht aus).
+
 ## 0.1.0 – 2026-10-13
 
 Erste Fassung (noch nicht veröffentlicht).
@@ -25,7 +44,8 @@ Erste Fassung (noch nicht veröffentlicht).
 - Fehlende Angaben werden benannt; mit 0 berechnete Werte sind als Hinweis der
   Webfassung gekennzeichnet; das leere Formular zeigt „noch keine Angaben“.
   Dateiaktionen melden Fehler sichtbar.
-- Einbindung: Props `locale` (de, en), `localDraft` (Standard aus),
-  `filePrefix`, `dataMark` und Slot `mark`; Hinweis des Fachrahmens und Stand
+- Einbindung: Props `locale` (de, en), `draft` (`off`, `session`, `device`;
+  Standard `off`) mit Slot und Ereignis `draft`, `filePrefix`, `dataMark` und
+  Slot `mark`; Methode `loadSample(blatt?)`; Hinweis des Fachrahmens und Stand
   der Vorlage in der Fußzeile.
 - Bausteine und Composables einzeln exportiert.

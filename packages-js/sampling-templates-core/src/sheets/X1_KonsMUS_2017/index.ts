@@ -16,7 +16,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   const { C8: anticipated, C6: expansion } = results
   const expanded = isNumber(anticipated) && isNumber(expansion) ? anticipated * expansion : null
   return [
-    ...tolerableNotAboveAnticipated(results.C10, expanded, 'TE ≤ AE × EF: Die Altvorlage prüft das nicht; der ausgewiesene Stichprobenumfang ist nicht belastbar'),
+    ...tolerableNotAboveAnticipated(results.C10, expanded, 'TE ≤ AE × EF: Die Altvorlage prüft das nicht. Stichprobenumfang und Folgegrößen sind, soweit wie in der Vorlage gezeigt, nicht belastbar; bitte die erwartete Fehlerquote prüfen'),
     ...sizeExceedsPopulation(results.C11, results.C3),
   ]
 }

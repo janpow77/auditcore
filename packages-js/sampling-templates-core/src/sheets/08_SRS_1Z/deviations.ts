@@ -1,10 +1,15 @@
 /**
  * Begründete Abweichungen des Blatts 08 vom Verhalten der Vorlage bei leeren
- * Eingaben. In allen Fällen zeigt die Webfassung „Angabe fehlt“ (`null`), nie
- * einen anderen Wert als die Vorlage. Dazu ein Wert ohne Grundlage
+ * Eingaben. Fehlt eine Pflichteingabe, zeigt die Webfassung „Angabe fehlt“
+ * (`null`), nie einen anderen Wert als die Vorlage. Dazu ein Wert ohne Grundlage
  * (`kind: 'withoutBasis'`): die Hochrechnung 0 der Zufallsschicht ohne
  * Fehlersumme. Jede Zeile ist durch mindestens einen Golden-Fall belegt
  * (test/deviations.spec.ts).
+ *
+ * Werte ohne Grundlage lässt die Webfassung offen, solange eine Pflichteingabe
+ * fehlt; bei vollständigen Pflichteingaben zeigt sie sie wie die Vorlage und
+ * weist sie mit einem Hinweis in Warnfarbe aus (`evaluateSheet`, Hinweis
+ * `without-basis`); die Würdigung ist dann nicht uneingeschränkt grün.
  */
 import type { CellAddress, Deviation } from '../../model/types'
 

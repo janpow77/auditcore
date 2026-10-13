@@ -9,10 +9,12 @@ import { parseDecimal } from '@auditcore/common'
 import { eq, isBlank, isNumber, sameText } from '../excel/index'
 import { fieldOptions } from '../format/numbers'
 import { cellsOf, defaultInputs, fieldsOf, inputFields, type FieldDefinition } from '../model/definition'
-import { createContext, type AvailableSheet, type SheetModule } from '../model/sheet'
+import { SUMMARY_CELLS, createContext, type AvailableSheet, type SheetModule } from '../model/sheet'
 import type { CellAddress, CellMap, CellValue, Parameters, SheetId } from '../model/types'
+import { TEMPLATE_STRATA } from '../model/strata'
 import { SHEETS } from '../sheets/registry'
 import { WORKSPACE_SHEET } from './export'
+import { clearedDefaults, listCopies, unreadStrataCells, type ImportNote } from './importNotes'
 import { readWorkbook, type ReadWorkbook, type WorkbookCellValue } from './reader'
 
 /** Warum ein Wert der Mappe nicht unverändert übernommen wurde. */
@@ -23,8 +25,10 @@ export type ImportReason =
   | 'number-from-text'
   /** Zelle trägt eine eigene Formel; ihr berechneter Wert wurde übernommen. */
   | 'formula-value'
-  /** Zahl in einem Textfeld (z. B. ein Datum); als Text übernommen. */
+  /** Zahl in einem Textfeld; als Text übernommen. */
   | 'number-as-text'
+  /** Datum als laufende Tageszahl der Tabellenkalkulation; als Datum `TT.MM.JJJJ` übernommen. */
+  | 'date-from-serial'
   /** Wert steht nicht in der Auswahlliste; nicht übernommen. */
   | 'not-in-list'
   /** Keine lesbare Zahl; nicht übernommen. */
@@ -59,6 +63,8 @@ export type WorkbookImport =
       pending: readonly SheetId[]
       /** Umgedeutete und nicht übernommene Werte. */
       issues: readonly ImportIssue[]
+      /** Weitere Hinweise: ungelesene Schichtdaten, kein Methodenblatt gewählt, gelöschte Vorgaben, Kopien des Blatts 17. */
+      notes: readonly ImportNote[]
       /** Zuletzt berechnete Werte der Formelzellen der Mappe, für den Vergleich mit der Webfassung. */
       cached: Record<SheetId, CellMap>
       /** In Blatt 18 der Mappe gewähltes Methodenblatt (Zelle C4), wenn es ein Blatt mit Rechenkern nennt. */
@@ -102,8 +108,20 @@ function readNumber(raw: number | string): Read {
 /** Wert passend zum Feld lesen. */
 function readValue(field: FieldDefinition, raw: number | string, parameters: Parameters): Read {
   if (field.list || field.options) return readChoice(field, raw, parameters)
-  if (field.type === 'text') return typeof raw === 'number' ? { value: String(raw), reason: 'number-as-text' } : { value: raw }
+  if (field.type === 'text') return typeof raw === 'number' ? readNumberInText(field, raw) : { value: raw }
   return readNumber(raw)
+}
+
+/** Tag 0 der Tabellenkalkulation (30.12.1899). */
+const SERIAL_EPOCH = Date.UTC(1899, 11, 30)
+const DAY = 86400000
+
+/** Zahl in einem Textfeld: Trägt das Feld ein Datumsformat, ist sie die laufende Tageszahl eines Datums. */
+function readNumberInText(field: FieldDefinition, raw: number): Read {
+  if (!/yyyy/i.test(field.format ?? '')) return { value: String(raw), reason: 'number-as-text' }
+  const date = new Date(SERIAL_EPOCH + Math.round(raw) * DAY)
+  const two = (value: number): string => String(value).padStart(2, '0')
+  return { value: `${two(date.getUTCDate())}.${two(date.getUTCMonth() + 1)}.${date.getUTCFullYear()}`, reason: 'date-from-serial' }
 }
 
 /** Trägt die Verknüpfungszelle noch die Formel der Vorlage (`='02_Grundgesamtheit'!$C$51`)? */
@@ -155,17 +173,58 @@ class TemplateReader {
     }
     return { inputs, filled, cached: cachedResults(sheet, cells) }
   }
+
+  /**
+   * Blattweite Hinweise und gelöschte Vorgaben: Ist das Blatt ausgefüllt und eine
+   * Vorgabe der Vorlage in der Mappe leer, übernimmt die Webfassung die leere
+   * Zelle (`null`), statt die Vorgabe wieder einzusetzen – so rechnet sie wie die Mappe.
+   */
+  notes(sheet: AvailableSheet, filled: boolean, name: string = sheet.id): { notes: ImportNote[]; cleared: CellMap } {
+    const cells = this.workbook.cells(name)
+    // Nur für ausgefüllte Blätter: Ein unberührtes Blatt der Vorlage trägt nichts, was verloren gehen könnte.
+    const unread = filled ? unreadStrataCells(sheet, cells) : []
+    const cleared = filled ? clearedDefaults(sheet, cells) : []
+    return {
+      notes: [
+        ...(unread.length ? [{ kind: 'unread-cells' as const, sheet: sheet.id, detail: unread.join(', ') }] : []),
+        ...(cleared.length ? [{ kind: 'default-cleared' as const, sheet: sheet.id, detail: cleared.join(', ') }] : []),
+      ],
+      cleared: Object.fromEntries(cleared.map((cell) => [cell, null])),
+    }
+  }
 }
 
-/** Zuletzt berechnete Werte der Formel- und Ergebniszellen eines Blatts der Mappe. */
+/**
+ * Zuletzt berechnete Werte der Formel- und Ergebniszellen eines Blatts der Mappe.
+ * Trägt das Blatt Formeln, aber keine einzige mit einem Rechenwert, ist die Datei
+ * nie berechnet worden (z. B. von einem Programm ohne Rechenkern geschrieben):
+ * Dann gibt es nichts zu vergleichen, und alle Werte sind `null`. Die Zelle mit
+ * dem gewählten Methodenblatt in Blatt 18 ist in der Mappe eine Eingabe und zählt nicht mit.
+ */
 function cachedResults(sheet: AvailableSheet, cells: ReadonlyMap<string, WorkbookCellValue>): CellMap {
   const cached: Record<string, CellValue> = {}
-  const computed = fieldsOf(sheet.definition).filter((field) => !field.web && (field.kind === 'formula' || field.kind === 'result'))
-  for (const address of computed.flatMap((field) => [...cellsOf(field), ...(field.total ? [field.total] : [])])) {
+  const formulas = [...cells.values()].filter((cell) => cell.formula)
+  const neverComputed = formulas.length > 0 && formulas.every((cell) => isBlank(cell.value))
+  for (const address of comparedCells(sheet, cells)) {
     const value = cells.get(address)?.value
-    cached[address] = typeof value === 'boolean' || value === undefined || value === '' ? null : value
+    cached[address] = neverComputed || typeof value === 'boolean' || value === undefined || value === '' ? null : value
   }
   return cached
+}
+
+/**
+ * Zellen des Blatts, die mit der Mappe verglichen werden: Formel- und
+ * Ergebniszellen (Schichtzeilen nur in den sieben Spalten der Vorlage, dazu die
+ * Summenzelle) und bei Verfahrensblättern die Ergebnisübersicht N3–N11, aus der
+ * Blatt 18 liest. Zellen, die es in der Mappe nicht gibt, entfallen – „Mappe
+ * leer“ heißt: Die Formel der Mappe ergibt nichts.
+ */
+function comparedCells(sheet: AvailableSheet, cells: ReadonlyMap<string, WorkbookCellValue>): CellAddress[] {
+  const computed = fieldsOf(sheet.definition).filter((field) => !field.web && (field.kind === 'formula' || field.kind === 'result'))
+  const summary = sheet.definition.summary.gauge && cells.has(SUMMARY_CELLS.method) ? Object.values(SUMMARY_CELLS) : []
+  const templateCells = (field: FieldDefinition): CellAddress[] => (field.columns ? cellsOf(field).slice(0, TEMPLATE_STRATA.length) : cellsOf(field))
+  const chosen = (address: CellAddress): boolean => sheet.id === TOTAL_ERROR_RATE_SHEET && address === METHOD_CELL
+  return [...computed.flatMap((field) => [...templateCells(field), ...(field.total ? [field.total] : [])]), ...summary].filter((address) => cells.has(address) && !chosen(address))
 }
 
 /** Blatt 18 der Vorlage und die Zelle, in der das Methodenblatt gewählt wird. */
@@ -184,22 +243,25 @@ function chosenMethod(workbook: ReadWorkbook, sheets: readonly SheetModule[]): S
  * (die Vorlage wird je Stichprobeneinheit kopiert, die Kopien heißen dann z. B.
  * `17_Unterstichprobe (2)`). Vorgaben der Webfelder kommen dazu.
  */
-function listUnits(reader: TemplateReader, workbook: ReadWorkbook, sheet: AvailableSheet): { rows: CellMap[]; cached: CellMap } {
-  const names = workbook.sheetNames.filter((name) => name === sheet.id || name.startsWith(`${sheet.id} `) || name.startsWith(`${sheet.id}_`) || name.startsWith(`${sheet.id}(`))
+function listUnits(reader: TemplateReader, workbook: ReadWorkbook, sheet: AvailableSheet, known: ReadonlySet<string>): { rows: CellMap[]; cached: CellMap; notes: ImportNote[] } {
+  const numbered = workbook.sheetNames.filter((name) => name === sheet.id || name.startsWith(`${sheet.id} `) || name.startsWith(`${sheet.id}_`) || name.startsWith(`${sheet.id}(`))
+  // Kopien unter freiem Namen: am Titel des Blatts erkannt und genannt.
+  const copies = listCopies(sheet, workbook.sheetNames, (name) => workbook.cells(name), new Set([...known, ...numbered]))
   const rows: CellMap[] = []
   let cached: CellMap = {}
-  for (const name of names) {
+  for (const name of [...numbered, ...copies]) {
     const read = reader.sheet(sheet, name)
     if (name === sheet.id) cached = read.cached
     if (read.filled) rows.push({ ...defaultInputs(sheet.definition), ...read.inputs })
   }
-  return { rows, cached }
+  return { rows, cached, notes: copies.map((name) => ({ kind: 'list-copy' as const, sheet: sheet.id, detail: name })) }
 }
 
 /**
  * Liest eine `.xlsx`-Datei: alle Blätter der Vorlage mit Rechenkern. `filled`
- * nennt die Blätter, die mehr als die Vorgaben enthielten; Blätter ohne
- * Rechenkern stehen unter `pending` und werden nicht gelesen.
+ * nennt die Blätter, die mehr als die Vorgaben enthielten – Blatt 18 auch dann,
+ * wenn dort nur das Methodenblatt gewählt ist; Blätter ohne Rechenkern stehen
+ * unter `pending` und werden nicht gelesen.
  */
 export function importWorkbook(data: Uint8Array | ArrayBuffer, sheets: readonly SheetModule[] = SHEETS): WorkbookImport {
   const workbook = readWorkbook(data instanceof Uint8Array ? data : new Uint8Array(data))
@@ -207,24 +269,57 @@ export function importWorkbook(data: Uint8Array | ArrayBuffer, sheets: readonly 
   const present = sheets.filter((sheet) => workbook.sheetNames.includes(sheet.id))
   if (present.length === 0) return { kind: 'unknown' }
   const reader = new TemplateReader(workbook, createContext().parameters)
-  const inputs: Record<SheetId, CellMap | readonly CellMap[]> = {}
-  const cached: Record<SheetId, CellMap> = {}
-  const filled: SheetId[] = []
-  for (const sheet of present) {
-    if (!sheet.available) continue
-    if (sheet.definition.layout === 'list') {
-      const units = listUnits(reader, workbook, sheet)
-      inputs[sheet.id] = units.rows
-      cached[sheet.id] = units.cached
-      if (units.rows.length > 0) filled.push(sheet.id)
-      continue
-    }
-    const read = reader.sheet(sheet)
-    inputs[sheet.id] = read.inputs
-    cached[sheet.id] = read.cached
-    if (read.filled) filled.push(sheet.id)
+  const method = chosenMethod(workbook, sheets)
+  const result: Collected = { inputs: {}, cached: {}, filled: [], notes: [] }
+  const known = new Set(sheets.map((sheet) => sheet.id))
+  for (const sheet of present.filter(isAvailable)) {
+    if (sheet.definition.layout === 'list') collectList(result, reader, workbook, sheet, known)
+    else collectSheet(result, reader, sheet, sheet.id === TOTAL_ERROR_RATE_SHEET && method !== null)
   }
+  if (method === null && methodMissing(workbook, result.filled, sheets)) result.notes.push({ kind: 'method-not-chosen', sheet: TOTAL_ERROR_RATE_SHEET, detail: METHOD_CELL })
   // Blätter ohne Rechenkern; Nachschlagetabellen (X1a) enthalten keine Eingaben und zählen nicht dazu.
   const pending = present.filter((sheet) => !sheet.available && !sheet.table).map((sheet) => sheet.id)
-  return { kind: 'template', sheets: inputs, filled, pending, issues: reader.issues, cached, method: chosenMethod(workbook, sheets) }
+  return { kind: 'template', sheets: result.inputs, filled: result.filled, pending, issues: reader.issues, notes: result.notes, cached: result.cached, method }
+}
+
+interface Collected {
+  inputs: Record<SheetId, CellMap | readonly CellMap[]>
+  cached: Record<SheetId, CellMap>
+  filled: SheetId[]
+  notes: ImportNote[]
+}
+
+const isAvailable = (sheet: SheetModule): sheet is AvailableSheet => sheet.available
+
+/**
+ * Kein Methodenblatt in Blatt 18 gewählt, aber ein Verfahren ausgefüllt: Die
+ * Webfassung nimmt eines als aktiv an und zeigt in Blatt 18 Werte, wo die Mappe leer ist.
+ */
+function methodMissing(workbook: ReadWorkbook, filled: readonly SheetId[], sheets: readonly SheetModule[]): boolean {
+  return workbook.sheetNames.includes(TOTAL_ERROR_RATE_SHEET) && filled.some((id) => isMethodSheet(id, sheets))
+}
+
+/** Verfahrensblatt: ein Blatt mit Ergebnisübersicht (Skala), ausgenommen Blatt 18 selbst. */
+function isMethodSheet(id: SheetId, sheets: readonly SheetModule[]): boolean {
+  const sheet = sheets.find((entry) => entry.id === id)
+  return sheet !== undefined && sheet.available && sheet.definition.summary.gauge !== undefined && id !== TOTAL_ERROR_RATE_SHEET
+}
+
+function collectList(result: Collected, reader: TemplateReader, workbook: ReadWorkbook, sheet: AvailableSheet, known: ReadonlySet<string>): void {
+  const units = listUnits(reader, workbook, sheet, known)
+  result.inputs[sheet.id] = units.rows
+  result.cached[sheet.id] = units.cached
+  result.notes.push(...units.notes)
+  if (units.rows.length > 0) result.filled.push(sheet.id)
+}
+
+/** `chosen`: Das Blatt gilt auch ohne eigene Eingabe als ausgefüllt (Blatt 18 mit gewähltem Methodenblatt). */
+function collectSheet(result: Collected, reader: TemplateReader, sheet: AvailableSheet, chosen: boolean): void {
+  const read = reader.sheet(sheet)
+  const filled = read.filled || chosen
+  const extra = reader.notes(sheet, filled)
+  result.inputs[sheet.id] = { ...read.inputs, ...extra.cleared }
+  result.cached[sheet.id] = read.cached
+  result.notes.push(...extra.notes)
+  if (filled) result.filled.push(sheet.id)
 }

@@ -95,6 +95,12 @@ export interface SheetContext {
   method?: MethodSummary
   /** Richtlinie für fehlende Angaben; ohne Angabe gilt `MISSING_POLICY`. */
   policy?: MissingPolicy
+  /**
+   * Einem Blatt, aus dem dieses Blatt Werte bezieht (Blatt 02, das gewählte
+   * Verfahren, Blatt 18), fehlen Pflichteingaben. Dann gilt auch dieses Blatt
+   * nicht als vollständig ausgefüllt.
+   */
+  sourceIncomplete?: boolean
 }
 
 /** Behandlung einer fehlenden Angabe: Wert offen lassen oder wie die Vorlage mit 0 rechnen und das ausweisen. */
@@ -145,6 +151,12 @@ export interface Deviation {
    * Vorlage zeigt den Wert aus einem anderen Grund (z. B. Textvergleich einer leeren Zelle).
    */
   check?: 'zero' | 'none'
+  /**
+   * `true`: Die fehlende Eingabe betrifft nur diese Zelle (z. B. den Abgleich mit
+   * Blatt 02), nicht das Ergebnis des Blatts; das Blatt gilt trotzdem als
+   * vollständig ausgefüllt.
+   */
+  local?: boolean
   /**
    * Fallart der Richtlinie (`model/policy.ts`): `requiredInput` (Standard) –
    * Pflichteingabe fehlt; `withoutBasis` – die Vorlage zeigt einen Wert ohne

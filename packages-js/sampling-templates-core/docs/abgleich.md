@@ -5,43 +5,60 @@
 Je Fall werden die Eingaben in eine Kopie der Excel-Vorlage geschrieben, die Mappe wird mit LibreOffice
 neu berechnet (`scripts/golden_recalc.py`), und jede Formelzelle des Blatts wird mit dem Rechenkern verglichen:
 Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Texte wortgleich.
+Bei Eurobeträgen gilt zusätzlich ein absoluter Unterschied bis 0.000001 € als gleich (Rauschen aus einer
+Auslöschung, Blatt 20 G43). Werte ab 10¹⁵ liegen außerhalb des geprüften Zahlenbereichs: Dort wird nur die
+Größenordnung verglichen (relativ 0,001), und die Webfassung weist das Ergebnis als nicht belastbar aus.
+
+**Grenze dieses Nachweises:** Alle Sollwerte stammen aus der Neuberechnung der Vorlage mit LibreOffice 24.2.
+Eine Gegenprobe mit Microsoft Excel steht aus. Vergleichstoleranz (2⁻⁴⁸), `AUFRUNDEN` (Kürzung auf zwölf geltende
+Stellen) und die Summation mit Fehlerausgleich sind an LibreOffice gemessen; ob Excel an Schwellen und beim
+Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 - **Begründet** sind Zellen, an denen die Webfassung nach der geltenden Richtlinie für fehlende Angaben keinen Wert
-  zeigt, während die Vorlage einen zeigt ([abweichungen.md](abweichungen.md)); die Gegenprobe ist bestanden.
+  zeigt, während die Vorlage einen zeigt ([abweichungen.md](abweichungen.md)); die Gegenprobe ist bestanden. Seit der
+  Regel „bei vollständigen Pflichteingaben immer wie die Vorlage“ entstehen sie nur noch, wo eine Eingabe fehlt.
+- **Toleranzkante** sind Würdigungen, bei denen die Quote genau auf der Vergleichstoleranz liegt und der Fall eine
+  Eingabe mit 16 oder 17 geltenden Stellen trägt (Prüfsonde der Abnahme). Geprüft ist je Zelle: Mit der um höchstens
+  zwei letzte Stellen verschobenen Eingabe zeigt die Webfassung genau den Text der Vorlage. Über die Oberfläche lässt
+  sich eine solche Zahl nicht eingeben.
 - **„Wie die Vorlage“** ist dieselbe Rechnung unter der Richtlinie `TEMPLATE_POLICY` (jede fehlende Angabe mit 0
   gerechnet): Dann muss jede Zelle den Wert der Vorlage zeigen.
+- Die Fallsätze `abnahme-grund`, `abnahme-luecken` und `abnahme-schwelle` sind die 6.805 Fälle der unabhängigen
+  Gesamtabnahme (eigener Generator, Einzellücken-Matrix, Schwellen- und Ganzzahlsonden).
 
-| Blatt | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| 02_Grundgesamtheit | 21 | 399 | 375 | 24 | 0 | 0 |
-| 03_MUS_1Z | 298 | 11324 | 11114 | 210 | 0 | 0 |
-| 04_MUS_1Z_S | 127 | 15494 | 14682 | 812 | 0 | 0 |
-| 05_MUS_2Z | 179 | 11635 | 10322 | 1313 | 0 | 0 |
-| 06_MUS_2Z_S | 174 | 41238 | 38732 | 2506 | 0 | 0 |
-| 07_MUS_3Z | 193 | 17949 | 15586 | 2363 | 0 | 0 |
-| 08_SRS_1Z | 168 | 6216 | 6086 | 130 | 0 | 0 |
-| 09_SRS_1Z_S | 165 | 12705 | 12161 | 544 | 0 | 0 |
-| 10_SRS_2Z | 333 | 19980 | 17599 | 2381 | 0 | 0 |
-| 11_SRS_2Z_S | 239 | 39196 | 36231 | 2965 | 0 | 0 |
-| 12_SRS_3Z | 331 | 28466 | 24942 | 3524 | 0 | 0 |
-| 13_NS_GW | 167 | 3674 | 3616 | 58 | 0 | 0 |
-| 14_NS_GW_S | 174 | 6960 | 6779 | 181 | 0 | 0 |
-| 15_NS_PPS | 174 | 4524 | 4435 | 89 | 0 | 0 |
-| 16_NS_PPS_S | 175 | 12250 | 11992 | 258 | 0 | 0 |
-| 17_Unterstichprobe | 16 | 96 | 92 | 4 | 0 | 0 |
-| 18_GFQ_AnhIII | 181 | 3982 | 3917 | 65 | 0 | 0 |
-| 20_Druck_KOM | 80 | 2640 | 2607 | 33 | 0 | 0 |
-| X1_KonsMUS_2017 | 124 | 1612 | 1555 | 57 | 0 | 0 |
-| X2_DiffSch_2017 | 128 | 1664 | 1596 | 68 | 0 | 0 |
-| X3_DiffSch_S_2017 | 138 | 4968 | 4723 | 245 | 0 | 0 |
-| X4_DiffSch_2Z_2017 | 141 | 2820 | 2670 | 150 | 0 | 0 |
-| **Summe** | 3726 | 249792 | 231812 | 17980 | 0 | 0 |
+| Blatt | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 02_Grundgesamtheit | 159 | 3021 | 2948 | 73 | 0 | 0 | 0 |
+| 03_MUS_1Z | 783 | 29754 | 29446 | 308 | 0 | 0 | 0 |
+| 04_MUS_1Z_S | 381 | 46482 | 45466 | 1016 | 0 | 0 | 0 |
+| 05_MUS_2Z | 541 | 35165 | 33223 | 1942 | 0 | 0 | 0 |
+| 06_MUS_2Z_S | 635 | 150495 | 147167 | 3327 | 1 | 0 | 0 |
+| 07_MUS_3Z | 612 | 56916 | 52646 | 4270 | 0 | 0 | 0 |
+| 08_SRS_1Z | 660 | 24420 | 24210 | 210 | 0 | 0 | 0 |
+| 09_SRS_1Z_S | 421 | 32417 | 31639 | 778 | 0 | 0 | 0 |
+| 10_SRS_2Z | 714 | 42840 | 39426 | 3414 | 0 | 0 | 0 |
+| 11_SRS_2Z_S | 724 | 118736 | 115100 | 3636 | 0 | 0 | 0 |
+| 12_SRS_3Z | 785 | 67510 | 61572 | 5937 | 1 | 0 | 0 |
+| 13_NS_GW | 399 | 8778 | 8661 | 117 | 0 | 0 | 0 |
+| 14_NS_GW_S | 410 | 16400 | 16099 | 301 | 0 | 0 | 0 |
+| 15_NS_PPS | 406 | 10556 | 10334 | 222 | 0 | 0 | 0 |
+| 16_NS_PPS_S | 412 | 28840 | 28192 | 648 | 0 | 0 | 0 |
+| 17_Unterstichprobe | 102 | 612 | 577 | 35 | 0 | 0 | 0 |
+| 18_GFQ_AnhIII | 677 | 14894 | 14609 | 285 | 0 | 0 | 0 |
+| 20_Druck_KOM | 588 | 19404 | 19161 | 243 | 0 | 0 | 0 |
+| X1_KonsMUS_2017 | 213 | 2769 | 2588 | 181 | 0 | 0 | 0 |
+| X2_DiffSch_2017 | 434 | 5642 | 5449 | 193 | 0 | 0 | 0 |
+| X3_DiffSch_S_2017 | 234 | 8424 | 7842 | 582 | 0 | 0 | 0 |
+| X4_DiffSch_2Z_2017 | 241 | 4820 | 4490 | 330 | 0 | 0 | 0 |
+| **Summe** | 10531 | 728895 | 700845 | 28048 | 2 | 0 | 0 |
 
 ## 02_Grundgesamtheit
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 21 | 399 | 375 | 24 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 69 | 1311 | 1273 | 38 | 0 | 0 | 0 |
+| abnahme-luecken | 69 | 1311 | 1300 | 11 | 0 | 0 | 0 |
+| Hauptsatz | 21 | 399 | 375 | 24 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -69,11 +86,14 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 03_MUS_1Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 40 | 1520 | 1415 | 105 | 0 | 0 |
-| pruefer | 158 | 6004 | 5899 | 105 | 0 | 0 |
-| zufall | 100 | 3800 | 3800 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 2660 | 2608 | 52 | 0 | 0 | 0 |
+| abnahme-luecken | 355 | 13490 | 13442 | 48 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 2280 | 2280 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 40 | 1520 | 1417 | 103 | 0 | 0 | 0 |
+| pruefer | 158 | 6004 | 5899 | 105 | 0 | 0 | 0 |
+| zufall | 100 | 3800 | 3800 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -98,11 +118,11 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 19 | Iteration erforderlich (3 Einheiten über dem Auswahlintervall) | 38 | 0 | 0 |
 | 20 | Rechnerischer Umfang nahe an einer ganzen Zahl (Aufrundung) | 38 | 0 | 0 |
 | 21 | Leeres Formular (nur Vorgaben der Vorlage) | 38 | 6 | 0 |
-| 22 | Teilweise: nur Grundgesamtheit und Parameter bis Standardabweichung | 38 | 1 | 0 |
+| 22 | Teilweise: nur Grundgesamtheit und Parameter bis Standardabweichung | 38 | 0 | 0 |
 | 23 | Teilweise: Standardabweichung fehlt | 38 | 11 | 0 |
 | 24 | Teilweise: voraussichtliche Fehlerquote fehlt | 38 | 12 | 0 |
 | 25 | Teilweise: Konfidenzniveau fehlt | 38 | 0 | 0 |
-| 26 | Teilweise: Prüfergebnisse ohne Summe der Fehlerquoten | 38 | 1 | 0 |
+| 26 | Teilweise: Prüfergebnisse ohne Summe der Fehlerquoten | 38 | 0 | 0 |
 | 27 | Teilweise: Prüfergebnisse ohne Standardabweichung der Stichprobe | 38 | 0 | 0 |
 | 28 | Teilweise: hochwertige Schicht nicht angegeben | 38 | 0 | 0 |
 | 29 | Teilweise: Vorgaben geleert (Testart, Schwelle, Art. 83, begrenzter Umfang) | 38 | 1 | 0 |
@@ -120,10 +140,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 04_MUS_1Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 27 | 3294 | 2844 | 450 | 0 | 0 |
-| zufall | 100 | 12200 | 11838 | 362 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 8540 | 8357 | 183 | 0 | 0 | 0 |
+| abnahme-luecken | 124 | 15128 | 14872 | 256 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 7320 | 7260 | 60 | 0 | 0 | 0 |
+| Hauptsatz | 27 | 3294 | 2877 | 417 | 0 | 0 | 0 |
+| zufall | 100 | 12200 | 12100 | 100 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -134,7 +157,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 5 | Hoch 60 %, Art. 83 mit 30 Einheiten | 122 | 1 | 0 |
 | 6 | Begrenzt zulässig Kategorie 1 (50 Einheiten) | 122 | 1 | 0 |
 | 7 | Begrenzt beantragt, aber Kategorie 3 (unzulässig) | 122 | 1 | 0 |
-| 8 | TE ≤ AE, Stichprobenumfang nicht bestimmbar | 122 | 18 | 0 |
+| 8 | TE ≤ AE, Stichprobenumfang nicht bestimmbar | 122 | 1 | 0 |
 | 9 | Hoch 95 % einseitig, fünf Schichten | 122 | 1 | 0 |
 | 10 | Gering mit 60 %: Konfidenzniveau zu niedrig; Wesentlichkeitsschwelle 3 % | 122 | 1 | 0 |
 | 11 | Weniger als 3 Einheiten in einer Zufallsschicht | 122 | 1 | 0 |
@@ -148,8 +171,8 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 19 | Teilweise: sieben Schichten, Standardabweichungen fehlen | 122 | 86 | 0 |
 | 20 | Teilweise: sieben Schichten, Standardabweichung nur in Schicht 4 fehlt | 122 | 80 | 0 |
 | 21 | Teilweise: sieben Schichten, voraussichtliche Fehlerquote fehlt | 122 | 78 | 0 |
-| 22 | Teilweise: Konfidenzniveau fehlt | 122 | 15 | 0 |
-| 23 | Teilweise: Prüfergebnisse fehlen | 122 | 3 | 0 |
+| 22 | Teilweise: Konfidenzniveau fehlt | 122 | 1 | 0 |
+| 23 | Teilweise: Prüfergebnisse fehlen | 122 | 1 | 0 |
 | 24 | Teilweise: Standardabweichung der Stichprobe fehlt in einer Schicht | 122 | 1 | 0 |
 | 25 | Teilweise: Wesentlichkeitsschwelle und Vorgaben geleert | 122 | 19 | 0 |
 | 26 | Teilweise: begrenzt zulässig, Standardabweichungen fehlen | 122 | 86 | 0 |
@@ -157,19 +180,22 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 05_MUS_2Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| fehlend | 5 | 325 | 198 | 127 | 0 | 0 |
-| Hauptsatz | 74 | 4810 | 3927 | 883 | 0 | 0 |
-| zufall | 100 | 6500 | 6197 | 303 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 4550 | 4378 | 172 | 0 | 0 | 0 |
+| abnahme-luecken | 232 | 15080 | 14131 | 949 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 3900 | 3900 | 0 | 0 | 0 | 0 |
+| fehlend | 5 | 325 | 295 | 30 | 0 | 0 | 0 |
+| Hauptsatz | 74 | 4810 | 4019 | 791 | 0 | 0 | 0 |
+| zufall | 100 | 6500 | 6500 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
 | 1 | Standardfall: mittel 70 %, zweiseitig, Standardneuberechnung | 65 | 0 | 0 |
 | 2 | Globale Neuberechnung | 65 | 0 | 0 |
-| 3 | Negativer Nenner, Standardneuberechnung gewählt | 65 | 20 | 0 |
+| 3 | Negativer Nenner, Standardneuberechnung gewählt | 65 | 0 | 0 |
 | 4 | Negativer Nenner, globale Neuberechnung mit Zusatzeinheiten in Zeitraum 1 | 65 | 0 | 0 |
-| 5 | Negativer Nenner bei großem Umfang in Zeitraum 1 | 65 | 20 | 0 |
+| 5 | Negativer Nenner bei großem Umfang in Zeitraum 1 | 65 | 0 | 0 |
 | 6 | Erhöhung bei begrenztem Umfang, Kategorie 1 (50 Einheiten), Umfang überschritten | 65 | 0 | 0 |
 | 7 | Erhöhung bei begrenztem Umfang, Ist unter Prognose (Faktor 1), Umfang eingehalten | 65 | 0 | 0 |
 | 8 | Erhöhung nach Anzahl der Einheiten (N-Verhältnis größer als BV-Verhältnis) | 65 | 0 | 0 |
@@ -182,7 +208,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 15 | TE ≤ AE, Stichprobenumfang nicht bestimmbar | 65 | 0 | 0 |
 | 16 | TE = AE genau auf der Schwelle | 65 | 0 | 0 |
 | 17 | TE knapp über AE | 65 | 0 | 0 |
-| 18 | TE ≤ AE mit begrenztem Umfang | 65 | 21 | 0 |
+| 18 | TE ≤ AE mit begrenztem Umfang | 65 | 0 | 0 |
 | 19 | Wesentlichkeitsschwelle 2,01 % (unzulässig); gering mit 60 % | 65 | 0 | 0 |
 | 20 | Mittel mit Eckwert 60 % | 65 | 0 | 0 |
 | 21 | Mittel mit Eckwert 90 % | 65 | 0 | 0 |
@@ -196,7 +222,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 29 | Hochwertige Einheiten mit Fehlern in beiden Zeiträumen | 65 | 0 | 0 |
 | 30 | Zeitraum 2 ohne Fehler | 65 | 0 | 0 |
 | 31 | Zeitraum 1 ohne Fehler, Summe der Fehlerquoten leer | 65 | 0 | 0 |
-| 32 | Keine Fehlerquoten in beiden Zeiträumen (EE bleibt leer) | 65 | 1 | 0 |
+| 32 | Keine Fehlerquoten in beiden Zeiträumen (EE bleibt leer) | 65 | 0 | 0 |
 | 33 | Gesamtfehlerquote über der Wesentlichkeitsschwelle | 65 | 0 | 0 |
 | 34 | GFQ unter, obere Fehlergrenze über der Schwelle | 65 | 0 | 0 |
 | 35 | Gesamtfehlerquote genau 2 % | 65 | 0 | 0 |
@@ -230,10 +256,10 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 63 | Teilweise: Standardabweichung der Stichprobe Zeitraum 2 fehlt | 65 | 0 | 0 |
 | 64 | Teilweise: Standardabweichungen der Stichprobe fehlen in beiden Zeiträumen | 65 | 0 | 0 |
 | 65 | Teilweise: Konfidenzniveau fehlt | 65 | 0 | 0 |
-| 66 | Teilweise: Konfidenzniveau fehlt, begrenzt zulässig | 65 | 29 | 0 |
+| 66 | Teilweise: Konfidenzniveau fehlt, begrenzt zulässig | 65 | 0 | 0 |
 | 67 | Teilweise: Ist-Anzahl und Prognose der Einheiten fehlen, Erhöhung | 65 | 0 | 0 |
 | 68 | Teilweise: Ansatz der Neuberechnung und Testart geleert | 65 | 0 | 0 |
-| 69 | Teilweise: Prüfergebnisse fehlen | 65 | 1 | 0 |
+| 69 | Teilweise: Prüfergebnisse fehlen | 65 | 0 | 0 |
 | 70 | Teilweise: begrenzt zulässig, Buchwert Zeitraum 1 fehlt | 65 | 47 | 0 |
 | 71 | Teilweise: begrenzt zulässig, prognostizierter Buchwert Zeitraum 2 fehlt | 65 | 41 | 0 |
 | 72 | Teilweise: begrenzt zulässig, voraussichtliche Fehlerquote fehlt | 65 | 41 | 0 |
@@ -242,11 +268,14 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 06_MUS_2Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| fehlend | 14 | 3318 | 2696 | 622 | 0 | 0 |
-| Hauptsatz | 60 | 14220 | 13247 | 973 | 0 | 0 |
-| zufall | 100 | 23700 | 22789 | 911 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 110 | 26070 | 25562 | 508 | 0 | 0 | 0 |
+| abnahme-luecken | 291 | 68967 | 67339 | 1627 | 1 | 0 | 0 |
+| abnahme-schwelle | 60 | 14220 | 14220 | 0 | 0 | 0 | 0 |
+| fehlend | 14 | 3318 | 2915 | 403 | 0 | 0 | 0 |
+| Hauptsatz | 60 | 14220 | 13431 | 789 | 0 | 0 | 0 |
+| zufall | 100 | 23700 | 23700 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -255,7 +284,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 3 | Eine Schicht | 237 | 0 | 0 |
 | 4 | Globale Neuberechnung, drei Schichten | 237 | 0 | 0 |
 | 5 | Globale Neuberechnung, sieben Schichten | 237 | 0 | 0 |
-| 6 | Negativer Nenner, Standardneuberechnung gewählt (kein Umfang für Zeitraum 2) | 237 | 20 | 0 |
+| 6 | Negativer Nenner, Standardneuberechnung gewählt (kein Umfang für Zeitraum 2) | 237 | 0 | 0 |
 | 7 | Negativer Nenner, globale Neuberechnung mit Zusatzeinheiten in Zeitraum 1 | 237 | 0 | 0 |
 | 8 | Erhöhung bei begrenztem Umfang, Kategorie 1 (50 Einheiten), Umfang überschritten | 237 | 0 | 0 |
 | 9 | Erhöhung bei begrenztem Umfang, Art. 83 (30 Einheiten), Ist unter Prognose | 237 | 0 | 0 |
@@ -267,8 +296,8 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 15 | Hoch 80 %, begrenzt zulässig, globale Neuberechnung begrenzt | 237 | 0 | 0 |
 | 16 | Begrenzt beantragt, aber Kategorie 3 (unzulässig) | 237 | 0 | 0 |
 | 17 | Begrenzt zulässig Kategorie 2: Summe der Schichtumfänge über dem begrenzten Umfang | 237 | 0 | 0 |
-| 18 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, sieben Schichten | 237 | 69 | 0 |
-| 19 | TE = AE genau auf der Schwelle | 237 | 32 | 0 |
+| 18 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, sieben Schichten | 237 | 0 | 0 |
+| 19 | TE = AE genau auf der Schwelle | 237 | 0 | 0 |
 | 20 | Wesentlichkeitsschwelle 2,01 % (unzulässig); gering mit 60 % | 237 | 0 | 0 |
 | 21 | Mittel mit Eckwert 90 % | 237 | 0 | 0 |
 | 22 | Rechnerischer Gesamtumfang genau 100 | 237 | 0 | 0 |
@@ -276,16 +305,16 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 24 | Weniger als 3 Einheiten in einer Zufallsschicht von Zeitraum 2 | 237 | 0 | 0 |
 | 25 | Zufallsschicht ohne Einheiten in einer Schicht (n_hs = 0) | 237 | 0 | 0 |
 | 26 | Iteration: weitere hochwertige Einheiten in zwei Schichten | 237 | 0 | 0 |
-| 27 | Keine hochwertigen Einheiten | 237 | 6 | 0 |
+| 27 | Keine hochwertigen Einheiten | 237 | 0 | 0 |
 | 28 | Zeitraum 2 ohne Fehler | 237 | 0 | 0 |
-| 29 | Keine Fehlerquoten in beiden Zeiträumen (EE bleibt leer) | 237 | 2 | 0 |
+| 29 | Keine Fehlerquoten in beiden Zeiträumen (EE bleibt leer) | 237 | 0 | 0 |
 | 30 | Gesamtfehlerquote über der Wesentlichkeitsschwelle | 237 | 0 | 0 |
 | 31 | GFQ unter, obere Fehlergrenze über der Schwelle | 237 | 0 | 0 |
-| 32 | Gesamtfehlerquote genau 2 % | 237 | 2 | 0 |
+| 32 | Gesamtfehlerquote genau 2 % | 237 | 0 | 0 |
 | 33 | Aktualisierte voraussichtliche Fehlerquote | 237 | 0 | 0 |
 | 34 | Auffüllung: kleiner Umfang, mindestens 3 je Schicht in Zeitraum 2 | 237 | 0 | 0 |
 | 35 | Standardneuberechnung ergibt 0 (σ_rh2 = 0) | 237 | 0 | 0 |
-| 36 | Globale Neuberechnung mit TE = AE (aktualisiert) | 237 | 23 | 0 |
+| 36 | Globale Neuberechnung mit TE = AE (aktualisiert) | 237 | 0 | 0 |
 | 37 | Lücke: Schicht 2 leer, Schichten 1 und 3 belegt | 237 | 0 | 0 |
 | 38 | Schicht 3 nur im ersten Zeitraum (kein Ist-Buchwert Zeitraum 2) | 237 | 0 | 0 |
 | 39 | Schicht 3 erst im zweiten Zeitraum (kein Buchwert Zeitraum 1) | 237 | 0 | 0 |
@@ -306,25 +335,28 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 54 | Teilweise: Standardabweichung der Stichprobe Zeitraum 1 fehlt in einer Schicht | 237 | 0 | 0 |
 | 55 | Teilweise: Standardabweichung der Stichprobe Zeitraum 2 fehlt in einer Schicht | 237 | 0 | 0 |
 | 56 | Teilweise: Standardabweichungen der Stichprobe fehlen in allen Schichten | 237 | 0 | 0 |
-| 57 | Teilweise: Konfidenzniveau fehlt | 237 | 24 | 0 |
-| 58 | Teilweise: Ist-Anzahlen und Prognosen der Einheiten fehlen, Erhöhung | 237 | 2 | 0 |
+| 57 | Teilweise: Konfidenzniveau fehlt | 237 | 0 | 0 |
+| 58 | Teilweise: Ist-Anzahlen und Prognosen der Einheiten fehlen, Erhöhung | 237 | 0 | 0 |
 | 59 | Teilweise: Ansatz der Neuberechnung und Testart geleert | 237 | 0 | 0 |
-| 60 | Teilweise: Prüfergebnisse fehlen | 237 | 4 | 0 |
+| 60 | Teilweise: Prüfergebnisse fehlen | 237 | 0 | 0 |
 
 ## 07_MUS_3Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| fehlend | 7 | 651 | 423 | 228 | 0 | 0 |
-| Hauptsatz | 86 | 7998 | 6280 | 1718 | 0 | 0 |
-| zufall | 100 | 9300 | 8883 | 417 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 6510 | 6220 | 290 | 0 | 0 | 0 |
+| abnahme-luecken | 289 | 26877 | 24586 | 2291 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 5580 | 5580 | 0 | 0 | 0 | 0 |
+| fehlend | 7 | 651 | 559 | 92 | 0 | 0 | 0 |
+| Hauptsatz | 86 | 7998 | 6401 | 1597 | 0 | 0 | 0 |
+| zufall | 100 | 9300 | 9300 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
 | 1 | Standardfall: mittel 70 %, zweiseitig, Standardneuberechnung | 93 | 0 | 0 |
 | 2 | Globale Neuberechnung | 93 | 0 | 0 |
-| 3 | Negativer Nenner nach Zeitraum 1, Standardneuberechnung gewählt | 93 | 30 | 0 |
-| 4 | Negativer Nenner nach Zeitraum 2, Standardneuberechnung gewählt | 93 | 20 | 0 |
+| 3 | Negativer Nenner nach Zeitraum 1, Standardneuberechnung gewählt | 93 | 0 | 0 |
+| 4 | Negativer Nenner nach Zeitraum 2, Standardneuberechnung gewählt | 93 | 0 | 0 |
 | 5 | Negativer Nenner nach beiden Zeiträumen, globale Neuberechnung mit Zusatzeinheiten | 93 | 0 | 0 |
 | 6 | Negativer Nenner nach Zeitraum 2, globale Neuberechnung | 93 | 0 | 0 |
 | 7 | Erhöhung bei begrenztem Umfang, Kategorie 1 (50 Einheiten), Umfang überschritten | 93 | 0 | 0 |
@@ -336,8 +368,8 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 13 | Hoch 95 %, einseitig, globale Neuberechnung | 93 | 0 | 0 |
 | 14 | Hoch 80 %, begrenzt zulässig, globale Neuberechnung begrenzt | 93 | 0 | 0 |
 | 15 | Begrenzt beantragt, aber Kategorie 3 (unzulässig) | 93 | 0 | 0 |
-| 16 | TE ≤ AE, Stichprobenumfang nicht bestimmbar | 93 | 8 | 0 |
-| 17 | TE = AE genau auf der Schwelle | 93 | 7 | 0 |
+| 16 | TE ≤ AE, Stichprobenumfang nicht bestimmbar | 93 | 0 | 0 |
+| 17 | TE = AE genau auf der Schwelle | 93 | 0 | 0 |
 | 18 | TE knapp über AE | 93 | 0 | 0 |
 | 19 | TE ≤ AE mit begrenztem Umfang | 93 | 0 | 0 |
 | 20 | Wesentlichkeitsschwelle 2,01 % (unzulässig); gering mit 60 % | 93 | 0 | 0 |
@@ -352,7 +384,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 29 | Hochwertige Einheiten mit Fehlern in allen Zeiträumen | 93 | 0 | 0 |
 | 30 | Zeitraum 2 ohne Fehler | 93 | 0 | 0 |
 | 31 | Zeitraum 3 ohne Fehler, Summe der Fehlerquoten leer | 93 | 0 | 0 |
-| 32 | Keine Fehlerquoten in allen Zeiträumen (EE bleibt leer) | 93 | 1 | 0 |
+| 32 | Keine Fehlerquoten in allen Zeiträumen (EE bleibt leer) | 93 | 0 | 0 |
 | 33 | Gesamtfehlerquote über der Wesentlichkeitsschwelle | 93 | 0 | 0 |
 | 34 | GFQ unter, obere Fehlergrenze über der Schwelle | 93 | 0 | 0 |
 | 35 | Gesamtfehlerquote genau 2 % | 93 | 0 | 0 |
@@ -361,7 +393,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 38 | Aktualisierte voraussichtliche Fehlerquote nach beiden Zeiträumen | 93 | 0 | 0 |
 | 39 | Auffüllung auf 30 Einheiten im Geschäftsjahr | 93 | 0 | 0 |
 | 40 | Standardneuberechnung ergibt 0 (σ = 0 für die Zeiträume 2 und 3) | 93 | 0 | 0 |
-| 41 | Globale Neuberechnung mit TE = AE (aktualisiert) | 93 | 5 | 0 |
+| 41 | Globale Neuberechnung mit TE = AE (aktualisiert) | 93 | 0 | 0 |
 | 42 | Globale Neuberechnung mit TE < AE nach Zeitraum 2 | 93 | 0 | 0 |
 | 43 | Leeres Formular (nur Vorgaben der Vorlage) | 93 | 23 | 0 |
 | 44 | Leeres Formular ohne Vorgaben | 93 | 23 | 0 |
@@ -372,8 +404,8 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 49 | Teilweise: nur Grundgesamtheit und Parameter | 93 | 46 | 0 |
 | 50 | Teilweise: nur Buchwerte | 93 | 23 | 0 |
 | 51 | Teilweise: Wesentlichkeitsschwelle geleert | 93 | 18 | 0 |
-| 52 | Teilweise: Konfidenzniveau fehlt | 93 | 7 | 0 |
-| 53 | Teilweise: Konfidenzniveau fehlt, begrenzt zulässig | 93 | 42 | 0 |
+| 52 | Teilweise: Konfidenzniveau fehlt | 93 | 0 | 0 |
+| 53 | Teilweise: Konfidenzniveau fehlt, begrenzt zulässig | 93 | 0 | 0 |
 | 54 | Teilweise: Ansatz der Neuberechnung und Testart geleert | 93 | 0 | 0 |
 | 55 | Teilweise: Standardabweichung der Stichprobe Zeitraum 1 fehlt | 93 | 0 | 0 |
 | 56 | Teilweise: Standardabweichung der Stichprobe Zeitraum 2 fehlt | 93 | 0 | 0 |
@@ -384,7 +416,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 61 | Teilweise: voraussichtliche Fehlerquote fehlt, aktualisierte vorhanden | 93 | 52 | 0 |
 | 62 | Teilweise: alle voraussichtlichen Standardabweichungen fehlen, begrenzt zulässig | 93 | 53 | 0 |
 | 63 | Teilweise: Ist-Anzahlen und Prognosen der Einheiten fehlen, Erhöhung | 93 | 0 | 0 |
-| 64 | Teilweise: Prüfergebnisse fehlen | 93 | 1 | 0 |
+| 64 | Teilweise: Prüfergebnisse fehlen | 93 | 0 | 0 |
 | 65 | Teilweise: Buchwert Zeitraum 1 fehlt | 93 | 64 | 0 |
 | 66 | Teilweise: prognostizierter Buchwert Zeitraum 2 fehlt | 93 | 56 | 0 |
 | 67 | Teilweise: prognostizierter Buchwert Zeitraum 3 fehlt | 93 | 56 | 0 |
@@ -410,10 +442,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 08_SRS_1Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 68 | 2516 | 2386 | 130 | 0 | 0 |
-| zufall | 100 | 3700 | 3700 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 2590 | 2551 | 39 | 0 | 0 | 0 |
+| abnahme-luecken | 362 | 13394 | 13352 | 42 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 2220 | 2220 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 68 | 2516 | 2387 | 129 | 0 | 0 | 0 |
+| zufall | 100 | 3700 | 3700 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -472,7 +507,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 53 | Teilweise: Kategorie fehlt, begrenzter Umfang beantragt | 37 | 0 | 0 |
 | 54 | Teilweise: Vorgaben geleert (Testart, Schwelle, Art. 83, begrenzter Umfang) | 37 | 1 | 0 |
 | 55 | Teilweise: alles ausgefüllt außer der Summe der Buchwerte der Stichprobe | 37 | 0 | 0 |
-| 56 | Teilweise: alles ausgefüllt außer der Summe der Fehler der Stichprobe | 37 | 1 | 0 |
+| 56 | Teilweise: alles ausgefüllt außer der Summe der Fehler der Stichprobe | 37 | 0 | 0 |
 | 57 | Teilweise: alles ausgefüllt außer der Standardabweichung der Variablen q | 37 | 0 | 0 |
 | 58 | Teilweise: alles ausgefüllt außer den Fehlern der umfassenden Schicht | 37 | 0 | 0 |
 | 59 | Teilweise: Prüfergebnisse fehlen | 37 | 0 | 0 |
@@ -488,10 +523,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 09_SRS_1Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 65 | 5005 | 4614 | 391 | 0 | 0 |
-| zufall | 100 | 7700 | 7547 | 153 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 5390 | 5245 | 145 | 0 | 0 | 0 |
+| abnahme-luecken | 126 | 9702 | 9497 | 205 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 4620 | 4560 | 60 | 0 | 0 | 0 |
+| Hauptsatz | 65 | 5005 | 4637 | 368 | 0 | 0 | 0 |
+| zufall | 100 | 7700 | 7700 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -507,8 +545,8 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 10 | Begrenzt beantragt, aber Kategorie 3 (unzulässig) | 77 | 1 | 0 |
 | 11 | Begrenzt beantragt, aber Kategorie 4 (unzulässig) | 77 | 1 | 0 |
 | 12 | Begrenzt mit Art. 83, rechnerischer Umfang unter dem Mindestumfang | 77 | 1 | 0 |
-| 13 | TE ≤ AE, Stichprobenumfang nicht bestimmbar | 77 | 6 | 0 |
-| 14 | TE = AE genau auf der Schwelle | 77 | 6 | 0 |
+| 13 | TE ≤ AE, Stichprobenumfang nicht bestimmbar | 77 | 1 | 0 |
+| 14 | TE = AE genau auf der Schwelle | 77 | 1 | 0 |
 | 15 | TE knapp über AE | 77 | 1 | 0 |
 | 16 | TE ≤ AE mit begrenztem Umfang Kategorie 2 | 77 | 1 | 0 |
 | 17 | Gering mit 60 %: Konfidenzniveau zu niedrig; Wesentlichkeitsschwelle 3 % | 77 | 1 | 0 |
@@ -547,10 +585,10 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 50 | Teilweise: sieben Schichten, Buchwerte fehlen in allen Schichten | 77 | 45 | 0 |
 | 51 | Teilweise: Buchwerte aller Schichten fehlen | 77 | 33 | 0 |
 | 52 | Teilweise: Buchwert fehlt in Schicht 1, begrenzt zulässig | 77 | 12 | 0 |
-| 53 | Teilweise: Konfidenzniveau fehlt | 77 | 6 | 0 |
+| 53 | Teilweise: Konfidenzniveau fehlt | 77 | 1 | 0 |
 | 54 | Teilweise: Zuverlässigkeit fehlt | 77 | 1 | 0 |
-| 55 | Teilweise: Prüfergebnisse fehlen | 77 | 4 | 0 |
-| 56 | Teilweise: Summen der Fehler fehlen in allen Schichten | 77 | 6 | 0 |
+| 55 | Teilweise: Prüfergebnisse fehlen | 77 | 1 | 0 |
+| 56 | Teilweise: Summen der Fehler fehlen in allen Schichten | 77 | 1 | 0 |
 | 57 | Teilweise: alles ausgefüllt außer der Kategorie | 77 | 1 | 0 |
 | 58 | Teilweise: Wesentlichkeitsschwelle und Vorgaben geleert | 77 | 7 | 0 |
 | 59 | Teilweise: Wesentlichkeitsschwelle geleert | 77 | 7 | 0 |
@@ -563,10 +601,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 10_SRS_2Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 233 | 13980 | 11599 | 2381 | 0 | 0 |
-| zufall | 100 | 6000 | 6000 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 4200 | 4082 | 118 | 0 | 0 | 0 |
+| abnahme-luecken | 251 | 15060 | 14135 | 925 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 3600 | 3600 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 233 | 13980 | 11609 | 2371 | 0 | 0 | 0 |
+| zufall | 100 | 6000 | 6000 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -659,7 +700,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 87 | Globaler Umfang genau auf einer ganzen Zahl | 60 | 0 | 0 |
 | 88 | Standardabweichungen 0: rechnerischer Umfang 0, Mindestumfang greift | 60 | 0 | 0 |
 | 89 | Standardabweichungen 0, global | 60 | 0 | 0 |
-| 90 | Zufallsschicht Zeitraum 1 ohne Einheiten (N₁ = N_e) | 60 | 4 | 0 |
+| 90 | Zufallsschicht Zeitraum 1 ohne Einheiten (N₁ = N_e) | 60 | 0 | 0 |
 | 91 | Prognose Zeitraum 2 mit 0 Einheiten und 0 € | 60 | 0 | 0 |
 | 92 | Stichprobenumfang größer als die Zufallsschichten | 60 | 0 | 0 |
 | 93 | Keine Fehler in Zeitraum 1 | 60 | 0 | 0 |
@@ -777,14 +818,14 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 205 | Teilweise: alles ausgefüllt außer s_e Zeitraum 2 (C79) | 60 | 0 | 0 |
 | 206 | Teilweise: alles ausgefüllt außer s_q Zeitraum 2 (C80) | 60 | 0 | 0 |
 | 207 | Teilweise: alles ausgefüllt außer Fehler der umfassenden Schicht Zeitraum 2 (C81) | 60 | 0 | 0 |
-| 208 | Teilweise: Konfidenzniveau fehlt, begrenzt Kategorie 2, Ansatz „Standard“ | 60 | 5 | 0 |
+| 208 | Teilweise: Konfidenzniveau fehlt, begrenzt Kategorie 2, Ansatz „Standard“ | 60 | 0 | 0 |
 | 209 | Teilweise: Konfidenzniveau fehlt, begrenzt Kategorie 2, Ansatz „Global“ | 60 | 0 | 0 |
 | 210 | Teilweise: Konfidenzniveau fehlt, begrenzt Kategorie 2, Ansatz „Erhöhung“ | 60 | 0 | 0 |
 | 211 | Teilweise: Konfidenzniveau fehlt, begrenzt Kategorie 2, Ansatz „keine Neuberechnung“ | 60 | 0 | 0 |
 | 212 | Teilweise: s_q fehlt in beiden Zeiträumen | 60 | 0 | 0 |
 | 213 | Teilweise: s_q fehlt in beiden Zeiträumen, global, einseitig | 60 | 0 | 0 |
 | 214 | Teilweise: s_q Zeitraum 1 fehlt, Gesamtfehlerquote über der Schwelle | 60 | 0 | 0 |
-| 215 | Teilweise: Summen der Fehler fehlen in beiden Zeiträumen | 60 | 1 | 0 |
+| 215 | Teilweise: Summen der Fehler fehlen in beiden Zeiträumen | 60 | 0 | 0 |
 | 216 | Teilweise: Testart geleert | 60 | 0 | 0 |
 | 217 | Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang) | 60 | 5 | 0 |
 | 218 | Teilweise: Kategorie fehlt, begrenzter Umfang beantragt | 60 | 0 | 0 |
@@ -806,11 +847,14 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 11_SRS_2Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 126 | 20664 | 18785 | 1879 | 0 | 0 |
-| teilbelegung | 13 | 2132 | 1807 | 325 | 0 | 0 |
-| zufall | 100 | 16400 | 15639 | 761 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 110 | 18040 | 17492 | 548 | 0 | 0 | 0 |
+| abnahme-luecken | 315 | 51660 | 50424 | 1236 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 9840 | 9840 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 126 | 20664 | 19054 | 1610 | 0 | 0 | 0 |
+| teilbelegung | 13 | 2132 | 1890 | 242 | 0 | 0 | 0 |
+| zufall | 100 | 16400 | 16400 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -842,27 +886,27 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 26 | Hochwertige Einheiten zehren den begrenzten Umfang auf | 164 | 0 | 0 |
 | 27 | Umfassende Schichten mit 28 Einheiten: Mindestumfang 6 | 164 | 0 | 0 |
 | 28 | Ohne umfassende Schichten (C7–C9, C47, C53–C55, C82 leer) | 164 | 0 | 0 |
-| 29 | TE ≤ AE, Standardansatz | 164 | 28 | 0 |
-| 30 | TE ≤ AE, global | 164 | 21 | 0 |
-| 31 | TE ≤ AE, Erhöhung | 164 | 24 | 0 |
-| 32 | TE ≤ AE, keine Neuberechnung | 164 | 28 | 0 |
-| 33 | TE = AE genau auf der Schwelle, global (Division durch 0) | 164 | 24 | 0 |
-| 34 | TE = AE genau auf der Schwelle, Standardansatz | 164 | 24 | 0 |
+| 29 | TE ≤ AE, Standardansatz | 164 | 0 | 0 |
+| 30 | TE ≤ AE, global | 164 | 0 | 0 |
+| 31 | TE ≤ AE, Erhöhung | 164 | 0 | 0 |
+| 32 | TE ≤ AE, keine Neuberechnung | 164 | 0 | 0 |
+| 33 | TE = AE genau auf der Schwelle, global (Division durch 0) | 164 | 0 | 0 |
+| 34 | TE = AE genau auf der Schwelle, Standardansatz | 164 | 0 | 0 |
 | 35 | TE knapp über AE | 164 | 0 | 0 |
 | 36 | TE ≤ AE mit begrenztem Umfang Kategorie 2 | 164 | 0 | 0 |
-| 37 | TE ≤ AE in Abschnitt I, aktualisierte Fehlerquote darunter | 164 | 28 | 0 |
-| 38 | Aktualisierte voraussichtliche Fehlerquote höher | 164 | 14 | 0 |
+| 37 | TE ≤ AE in Abschnitt I, aktualisierte Fehlerquote darunter | 164 | 0 | 0 |
+| 38 | Aktualisierte voraussichtliche Fehlerquote höher | 164 | 0 | 0 |
 | 39 | Aktualisierte voraussichtliche Fehlerquote 0 | 164 | 0 | 0 |
 | 40 | Globaler Ansatz | 164 | 0 | 0 |
 | 41 | Globaler Ansatz mit Zusatzeinheiten für Zeitraum 1 | 164 | 0 | 0 |
 | 42 | Erhöhung bei begrenztem Umfang ohne begrenzten Umfang | 164 | 0 | 0 |
 | 43 | Keine Neuberechnung | 164 | 0 | 0 |
 | 44 | Ansatz der Neuberechnung geleert | 164 | 0 | 0 |
-| 45 | Negativer Nenner, Standardansatz | 164 | 14 | 0 |
+| 45 | Negativer Nenner, Standardansatz | 164 | 0 | 0 |
 | 46 | Negativer Nenner, global | 164 | 0 | 0 |
 | 47 | Negativer Nenner, Erhöhung | 164 | 0 | 0 |
 | 48 | Negativer Nenner, keine Neuberechnung | 164 | 0 | 0 |
-| 49 | Negativer Nenner, sieben Schichten, Standardansatz | 164 | 18 | 0 |
+| 49 | Negativer Nenner, sieben Schichten, Standardansatz | 164 | 0 | 0 |
 | 50 | Nenner knapp positiv | 164 | 0 | 0 |
 | 51 | Ohne s_eh: Standardabweichung Zeitraum 1 ersatzweise σ | 164 | 0 | 0 |
 | 52 | s_eh nur in Schicht 2 leer | 164 | 0 | 0 |
@@ -879,7 +923,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 63 | Sieben Schichten, Erhöhung mit Art. 83 | 164 | 0 | 0 |
 | 64 | Weniger als 3 Einheiten in einer Zufallsschicht (Zeitraum 1 und Planung Zeitraum 2) | 164 | 0 | 0 |
 | 65 | Weniger als 3 Einheiten je Schicht, keine Neuberechnung: Zeitraum 2 auf 3 angehoben | 164 | 0 | 0 |
-| 66 | Rechnerischer Gesamtumfang genau auf einer ganzen Zahl (64) | 164 | 14 | 0 |
+| 66 | Rechnerischer Gesamtumfang genau auf einer ganzen Zahl (64) | 164 | 0 | 0 |
 | 67 | Stichprobenumfang größer als die Zufallsschichten | 164 | 0 | 0 |
 | 68 | Ist-Werte Zeitraum 2 deutlich über der Prognose | 164 | 0 | 0 |
 | 69 | Ist-Werte Zeitraum 2 deutlich unter der Prognose, global | 164 | 0 | 0 |
@@ -891,7 +935,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 75 | Zeitraum 1 ohne Fehler | 164 | 0 | 0 |
 | 76 | Zeitraum 2 ohne Fehler | 164 | 0 | 0 |
 | 77 | Keine Fehler in beiden Zeiträumen | 164 | 0 | 0 |
-| 78 | Fehlersummen Zeitraum 2 noch leer (nur Zeitraum 1 geprüft) | 164 | 12 | 0 |
+| 78 | Fehlersummen Zeitraum 2 noch leer (nur Zeitraum 1 geprüft) | 164 | 0 | 0 |
 | 79 | Leeres Formular (nur Vorgaben der Vorlage) | 164 | 32 | 0 |
 | 80 | Teilweise: nur Anzahlen und Buchwerte der Schichten | 164 | 54 | 0 |
 | 81 | Teilweise: nur Anzahl in Schicht 1 | 164 | 36 | 0 |
@@ -902,7 +946,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 86 | Teilweise: begrenzter Umfang zulässig, sonst keine Angaben | 164 | 32 | 0 |
 | 87 | Teilweise: nur umfassende Schicht und Parameter, begrenzt zulässig | 164 | 38 | 0 |
 | 88 | Teilweise: alles ausgefüllt außer der Zuverlässigkeit | 164 | 0 | 0 |
-| 89 | Teilweise: alles ausgefüllt außer dem Konfidenzniveau | 164 | 15 | 0 |
+| 89 | Teilweise: alles ausgefüllt außer dem Konfidenzniveau | 164 | 0 | 0 |
 | 90 | Teilweise: Testart geleert | 164 | 0 | 0 |
 | 91 | Teilweise: Wesentlichkeitsschwelle geleert | 164 | 31 | 0 |
 | 92 | Teilweise: Wesentlichkeitsschwelle geleert, global | 164 | 31 | 0 |
@@ -932,7 +976,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 116 | Teilweise: Buchwert Zeitraum 2 fehlt in Schicht 3 | 164 | 11 | 0 |
 | 117 | Teilweise: Summe der Buchwerte der Stichprobe fehlt in Schicht 2 (Zeitraum 1) | 164 | 0 | 0 |
 | 118 | Teilweise: Summe der Fehler fehlt in Schicht 2 (beide Zeiträume) | 164 | 0 | 0 |
-| 119 | Teilweise: Prüfergebnisse fehlen | 164 | 5 | 0 |
+| 119 | Teilweise: Prüfergebnisse fehlen | 164 | 0 | 0 |
 | 120 | Teilweise: systembedingte und anomale Fehler nicht angegeben | 164 | 0 | 0 |
 | 121 | Teilweise: sieben Schichten ohne voraussichtliche Fehlerquote | 164 | 88 | 0 |
 | 122 | Teilweise: sieben Schichten ohne voraussichtliche Fehlerquote, global | 164 | 88 | 0 |
@@ -943,10 +987,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 12_SRS_3Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 231 | 19866 | 16354 | 3512 | 0 | 0 |
-| zufall | 100 | 8600 | 8588 | 12 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 6020 | 5809 | 211 | 0 | 0 | 0 |
+| abnahme-luecken | 324 | 27864 | 25630 | 2233 | 1 | 0 | 0 |
+| abnahme-schwelle | 60 | 5160 | 5160 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 231 | 19866 | 16373 | 3493 | 0 | 0 | 0 |
+| zufall | 100 | 8600 | 8600 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1011,16 +1058,16 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 59 | Wesentlichkeitsschwelle 3 % unzulässig | 86 | 0 | 0 |
 | 60 | Wesentlichkeitsschwelle knapp über 2 % | 86 | 0 | 0 |
 | 61 | Wesentlichkeitsschwelle 1,5 % | 86 | 0 | 0 |
-| 62 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, Ansatz Standard | 86 | 3 | 0 |
+| 62 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, Ansatz Standard | 86 | 0 | 0 |
 | 63 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, Ansatz Global | 86 | 0 | 0 |
-| 64 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, Ansatz Erhöhung | 86 | 3 | 0 |
-| 65 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, Ansatz keine Neuberechnung | 86 | 3 | 0 |
-| 66 | TE = AE genau auf der Schwelle | 86 | 2 | 0 |
-| 67 | TE = AE genau auf der Schwelle, global | 86 | 1 | 0 |
+| 64 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, Ansatz Erhöhung | 86 | 0 | 0 |
+| 65 | TE ≤ AE, Stichprobenumfang nicht bestimmbar, Ansatz keine Neuberechnung | 86 | 0 | 0 |
+| 66 | TE = AE genau auf der Schwelle | 86 | 0 | 0 |
+| 67 | TE = AE genau auf der Schwelle, global | 86 | 0 | 0 |
 | 68 | TE knapp über AE | 86 | 0 | 0 |
 | 69 | TE ≤ AE mit begrenztem Umfang Kategorie 2 | 86 | 0 | 0 |
 | 70 | TE ≤ AE mit begrenztem Umfang Kategorie 2, global | 86 | 0 | 0 |
-| 71 | TE ≤ AE zu Beginn, aktualisierte Fehlerquote darunter | 86 | 3 | 0 |
+| 71 | TE ≤ AE zu Beginn, aktualisierte Fehlerquote darunter | 86 | 0 | 0 |
 | 72 | TE ≤ AE zu Beginn, aktualisierte Fehlerquote darunter, global | 86 | 0 | 0 |
 | 73 | Aktualisierte Fehlerquote nach Zeitraum 1 über der Schwelle | 86 | 0 | 0 |
 | 74 | Aktualisierte Fehlerquote nach Zeitraum 1 über der Schwelle, global | 86 | 0 | 0 |
@@ -1067,7 +1114,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 115 | Teilweise: alles ausgefüllt außer dem prognostizierten Buchwert Zeitraum 3 (C16) | 86 | 36 | 0 |
 | 116 | Teilweise: alles ausgefüllt außer der prognostizierten Anzahl Zeitraum 3 (C17) | 86 | 34 | 0 |
 | 117 | Teilweise: alles ausgefüllt außer der Zuverlässigkeit (C20) | 86 | 0 | 0 |
-| 118 | Teilweise: alles ausgefüllt außer dem Konfidenzniveau (C21) | 86 | 2 | 0 |
+| 118 | Teilweise: alles ausgefüllt außer dem Konfidenzniveau (C21) | 86 | 0 | 0 |
 | 119 | Teilweise: alles ausgefüllt außer der voraussichtlichen Fehlerquote (C28) | 86 | 42 | 0 |
 | 120 | Teilweise: alles ausgefüllt außer σ_e1 (C31) | 86 | 33 | 0 |
 | 121 | Teilweise: alles ausgefüllt außer σ_e2 (C32) | 86 | 33 | 0 |
@@ -1164,8 +1211,8 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 212 | Teilweise: voraussichtliche Fehlerquote fehlt, begrenzt zulässig | 86 | 42 | 0 |
 | 213 | Teilweise: Buchwert Zeitraum 1 fehlt, begrenzt zulässig, global | 86 | 57 | 0 |
 | 214 | Teilweise: alle s_q fehlen | 86 | 0 | 0 |
-| 215 | Teilweise: Summen der Fehler aller Zeiträume fehlen | 86 | 1 | 0 |
-| 216 | Teilweise: Summen der Fehler fehlen, Fehler der umfassenden Schichten vorhanden | 86 | 1 | 0 |
+| 215 | Teilweise: Summen der Fehler aller Zeiträume fehlen | 86 | 0 | 0 |
+| 216 | Teilweise: Summen der Fehler fehlen, Fehler der umfassenden Schichten vorhanden | 86 | 0 | 0 |
 | 217 | Teilweise: systembedingte und anomale Fehler nicht angegeben | 86 | 0 | 0 |
 | 218 | Teilweise: Anzahl Zeitraum 2 fehlt, Gesamtfehlerquote über der Schwelle | 86 | 36 | 0 |
 | 219 | Teilweise: σ_e3 nach Zeitraum 2 fehlt, Gesamtfehlerquote über der Schwelle | 86 | 17 | 0 |
@@ -1184,10 +1231,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 13_NS_GW
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 47 | 1034 | 976 | 58 | 0 | 0 |
-| zufall | 120 | 2640 | 2640 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 1408 | 1386 | 22 | 0 | 0 | 0 |
+| abnahme-luecken | 108 | 2376 | 2338 | 38 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 1320 | 1320 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 47 | 1034 | 977 | 57 | 0 | 0 | 0 |
+| zufall | 120 | 2640 | 2640 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1229,7 +1279,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 36 | Teilweise: alles ausgefüllt außer Buchwert und Anzahl der Einheiten | 22 | 10 | 0 |
 | 37 | Teilweise: alles ausgefüllt außer dem Umfang der Zufallsstichprobe | 22 | 3 | 0 |
 | 38 | Teilweise: alles ausgefüllt außer der Summe der Buchwerte der Stichprobe | 22 | 0 | 0 |
-| 39 | Teilweise: alles ausgefüllt außer der Summe der Fehler der Stichprobe | 22 | 1 | 0 |
+| 39 | Teilweise: alles ausgefüllt außer der Summe der Fehler der Stichprobe | 22 | 0 | 0 |
 | 40 | Teilweise: alles ausgefüllt außer den Fehlern der umfassenden Schicht | 22 | 0 | 0 |
 | 41 | Teilweise: alles ausgefüllt außer systembedingten und anomalen Fehlern | 22 | 0 | 0 |
 | 42 | Teilweise: Wesentlichkeitsschwelle geleert, sonst vollständig | 22 | 1 | 0 |
@@ -1241,10 +1291,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 14_NS_GW_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 54 | 2160 | 1979 | 181 | 0 | 0 |
-| zufall | 120 | 4800 | 4800 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 2560 | 2520 | 40 | 0 | 0 | 0 |
+| abnahme-luecken | 112 | 4480 | 4369 | 111 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 2400 | 2400 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 54 | 2160 | 2010 | 150 | 0 | 0 | 0 |
+| zufall | 120 | 4800 | 4800 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1258,7 +1311,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 8 | Mindestwert 1 für eine sehr kleine Schicht | 40 | 0 | 0 |
 | 9 | Umfang der Zufallsstichprobe 0: je Schicht der Mindestwert 1 | 40 | 0 | 0 |
 | 10 | Schicht mit N_h = 0 | 40 | 0 | 0 |
-| 11 | Einzige Schicht mit N_h = 0 (Division durch null) | 40 | 4 | 0 |
+| 11 | Einzige Schicht mit N_h = 0 (Division durch null) | 40 | 0 | 0 |
 | 12 | N = 299: knapp unter der Schwelle des Art. 79 Abs. 2 | 40 | 0 | 0 |
 | 13 | N = 300: genau auf der Schwelle (nur im Fall des Art. 6 Abs. 3) | 40 | 0 | 0 |
 | 14 | N = 301: knapp über der Schwelle | 40 | 0 | 0 |
@@ -1280,7 +1333,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 30 | Wesentlichkeitsschwelle 1 %: Gesamtfehlerquote darüber | 40 | 0 | 0 |
 | 31 | Keine Fehler festgestellt | 40 | 0 | 0 |
 | 32 | Fehler nur in einer Schicht eingetragen, übrige leer | 40 | 0 | 0 |
-| 33 | Keine Fehlersummen eingetragen | 40 | 1 | 0 |
+| 33 | Keine Fehlersummen eingetragen | 40 | 0 | 0 |
 | 34 | Fehlende Angabe in nur einer Schicht: Buchwert der Schicht 2 | 40 | 8 | 0 |
 | 35 | Fehlende Angabe in nur einer Schicht: Summe der Buchwerte der Stichprobe der Schicht 2 | 40 | 0 | 0 |
 | 36 | Fehlende Angabe in nur einer Schicht: Anzahl der Einheiten der Schicht 2 | 40 | 0 | 0 |
@@ -1291,9 +1344,9 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 41 | Teilweise: nur die Anzahl der Einheiten je Schicht (N ≥ 300) | 40 | 12 | 0 |
 | 42 | Teilweise: nur die umfassende Schicht | 40 | 14 | 0 |
 | 43 | Teilweise: nur Umfang der Zufallsstichprobe und umfassende Schicht | 40 | 14 | 0 |
-| 44 | Teilweise: Schichten und Stichprobe, noch keine Prüfergebnisse | 40 | 3 | 0 |
+| 44 | Teilweise: Schichten und Stichprobe, noch keine Prüfergebnisse | 40 | 0 | 0 |
 | 45 | Teilweise: alles ausgefüllt außer dem Umfang der Zufallsstichprobe | 40 | 7 | 0 |
-| 46 | Teilweise: alles ausgefüllt außer der Anzahl der Einheiten je Schicht | 40 | 15 | 0 |
+| 46 | Teilweise: alles ausgefüllt außer der Anzahl der Einheiten je Schicht | 40 | 0 | 0 |
 | 47 | Teilweise: alles ausgefüllt außer den Buchwerten je Schicht | 40 | 13 | 0 |
 | 48 | Teilweise: alles ausgefüllt außer Einheiten je Schicht und Umfang der Zufallsstichprobe | 40 | 15 | 0 |
 | 49 | Teilweise: alles ausgefüllt außer den Fehlern der umfassenden Schicht | 40 | 0 | 0 |
@@ -1301,14 +1354,17 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 51 | Teilweise: Wesentlichkeitsschwelle geleert, sonst vollständig | 40 | 1 | 0 |
 | 52 | Teilweise: sieben Schichten ohne Umfang der Zufallsstichprobe | 40 | 11 | 0 |
 | 53 | Teilweise: sieben Schichten ohne Buchwerte je Schicht | 40 | 17 | 0 |
-| 54 | Teilweise: sieben Schichten ohne Summen der Buchwerte der Stichprobe | 40 | 8 | 0 |
+| 54 | Teilweise: sieben Schichten ohne Summen der Buchwerte der Stichprobe | 40 | 0 | 0 |
 
 ## 15_NS_PPS
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 54 | 1404 | 1315 | 89 | 0 | 0 |
-| zufall | 120 | 3120 | 3120 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 1664 | 1632 | 32 | 0 | 0 | 0 |
+| abnahme-luecken | 108 | 2808 | 2704 | 104 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 1560 | 1560 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 54 | 1404 | 1318 | 86 | 0 | 0 | 0 |
+| zufall | 120 | 3120 | 3120 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1349,8 +1405,8 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 35 | Leeres Formular, Wesentlichkeitsschwelle geleert | 26 | 9 | 0 |
 | 36 | Teilweise: nur Grundgesamtheit | 26 | 3 | 0 |
 | 37 | Teilweise: nur die Anzahl der Einheiten (N ≥ 300) | 26 | 6 | 0 |
-| 38 | Teilweise: Grundgesamtheit und Stichprobenumfang | 26 | 1 | 0 |
-| 39 | Teilweise: Grundgesamtheit und Stichprobe, noch keine Prüfergebnisse | 26 | 1 | 0 |
+| 38 | Teilweise: Grundgesamtheit und Stichprobenumfang | 26 | 0 | 0 |
+| 39 | Teilweise: Grundgesamtheit und Stichprobe, noch keine Prüfergebnisse | 26 | 0 | 0 |
 | 40 | Teilweise: nur Stichprobenumfang und hochwertige Einheiten | 26 | 10 | 0 |
 | 41 | Teilweise: alles ausgefüllt außer dem Buchwert der Grundgesamtheit | 26 | 8 | 0 |
 | 42 | Teilweise: alles ausgefüllt außer der Anzahl der Einheiten | 26 | 4 | 0 |
@@ -1358,7 +1414,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 44 | Teilweise: alles ausgefüllt außer dem Stichprobenumfang | 26 | 11 | 0 |
 | 45 | Teilweise: alles ausgefüllt außer Buchwert und Stichprobenumfang | 26 | 10 | 0 |
 | 46 | Teilweise: alles ausgefüllt außer den Fehlern der hochwertigen Einheiten | 26 | 0 | 0 |
-| 47 | Teilweise: alles ausgefüllt außer der Summe der Fehlerquoten | 26 | 1 | 0 |
+| 47 | Teilweise: alles ausgefüllt außer der Summe der Fehlerquoten | 26 | 0 | 0 |
 | 48 | Teilweise: alles ausgefüllt außer systembedingten und anomalen Fehlern | 26 | 0 | 0 |
 | 49 | Teilweise: Wesentlichkeitsschwelle geleert, sonst vollständig | 26 | 1 | 0 |
 | 50 | Buchwert und Anzahl aus Blatt 02 übernommen (Verknüpfung) | 26 | 0 | 0 |
@@ -1369,10 +1425,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 16_NS_PPS_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 55 | 3850 | 3592 | 258 | 0 | 0 |
-| zufall | 120 | 8400 | 8400 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 4480 | 4400 | 80 | 0 | 0 | 0 |
+| abnahme-luecken | 113 | 7910 | 7538 | 372 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 4200 | 4200 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 55 | 3850 | 3654 | 196 | 0 | 0 | 0 |
+| zufall | 120 | 8400 | 8400 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1386,7 +1445,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 8 | Mindestwert 1 für eine sehr kleine Schicht | 70 | 0 | 0 |
 | 9 | Stichprobenumfang 0: je Schicht der Mindestwert 1 | 70 | 0 | 0 |
 | 10 | Schicht mit Buchwert 0 | 70 | 0 | 0 |
-| 11 | Einzige Schicht mit Buchwert 0 (Division durch null) | 70 | 7 | 0 |
+| 11 | Einzige Schicht mit Buchwert 0 (Division durch null) | 70 | 0 | 0 |
 | 12 | N = 299: knapp unter der Schwelle des Art. 79 Abs. 2 | 70 | 0 | 0 |
 | 13 | N = 300: genau auf der Schwelle (nur im Fall des Art. 6 Abs. 3) | 70 | 0 | 0 |
 | 14 | N = 301: knapp über der Schwelle | 70 | 0 | 0 |
@@ -1396,7 +1455,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 18 | Mindesterfassung nur durch die Aufrundung je Schicht erreicht | 70 | 0 | 0 |
 | 19 | Mindesterfassung bei N = 30 (0,1 · 30 ist im Gleitkomma knapp über 3) | 70 | 0 | 0 |
 | 20 | Mindesterfassung bei N = 70, eine Einheit zu wenig | 70 | 0 | 0 |
-| 21 | Ohne hochwertige Einheiten (Angaben leer) | 70 | 5 | 0 |
+| 21 | Ohne hochwertige Einheiten (Angaben leer) | 70 | 0 | 0 |
 | 22 | Hochwertige Einheiten ohne Fehler | 70 | 0 | 0 |
 | 23 | Hochwertige Einheiten mit hohen Fehlern | 70 | 0 | 0 |
 | 24 | Alle Einheiten einer Schicht hochwertig (n_hs = 0, Division durch null) | 70 | 0 | 0 |
@@ -1411,7 +1470,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 33 | Wesentlichkeitsschwelle 1 %: Gesamtfehlerquote darüber | 70 | 0 | 0 |
 | 34 | Keine Fehler festgestellt | 70 | 0 | 0 |
 | 35 | Fehlerquoten nur in einer Schicht eingetragen, übrige leer | 70 | 0 | 0 |
-| 36 | Keine Summen der Fehlerquoten eingetragen | 70 | 1 | 0 |
+| 36 | Keine Summen der Fehlerquoten eingetragen | 70 | 0 | 0 |
 | 37 | Fehlende Angabe in nur einer Schicht: Anzahl der Einheiten der Schicht 2 | 70 | 0 | 0 |
 | 38 | Fehlende Angabe in nur einer Schicht: Buchwert der Schicht 2 | 70 | 0 | 0 |
 | 39 | Fehlende Angabe in nur einer Schicht: hochwertige Einheiten der Schicht 1 | 70 | 0 | 0 |
@@ -1420,23 +1479,25 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 42 | Teilweise: nur Buchwerte und Einheiten der Schichten | 70 | 26 | 0 |
 | 43 | Teilweise: nur die Buchwerte je Schicht | 70 | 25 | 0 |
 | 44 | Teilweise: nur die Anzahl der Einheiten je Schicht (N ≥ 300) | 70 | 14 | 0 |
-| 45 | Teilweise: nur der Stichprobenumfang | 70 | 18 | 0 |
-| 46 | Teilweise: Schichten und Stichprobe, noch keine Prüfergebnisse | 70 | 4 | 0 |
+| 45 | Teilweise: nur der Stichprobenumfang | 70 | 0 | 0 |
+| 46 | Teilweise: Schichten und Stichprobe, noch keine Prüfergebnisse | 70 | 0 | 0 |
 | 47 | Teilweise: alles ausgefüllt außer dem Stichprobenumfang | 70 | 24 | 0 |
-| 48 | Teilweise: alles ausgefüllt außer der Anzahl der Einheiten je Schicht | 70 | 5 | 0 |
+| 48 | Teilweise: alles ausgefüllt außer der Anzahl der Einheiten je Schicht | 70 | 0 | 0 |
 | 49 | Teilweise: alles ausgefüllt außer Einheiten je Schicht und Stichprobenumfang | 70 | 28 | 0 |
-| 50 | Teilweise: alles ausgefüllt außer den Buchwerten je Schicht | 70 | 10 | 0 |
+| 50 | Teilweise: alles ausgefüllt außer den Buchwerten je Schicht | 70 | 0 | 0 |
 | 51 | Teilweise: alles ausgefüllt außer systembedingten und anomalen Fehlern | 70 | 0 | 0 |
 | 52 | Teilweise: Wesentlichkeitsschwelle geleert, sonst vollständig | 70 | 1 | 0 |
 | 53 | Teilweise: sieben Schichten ohne Stichprobenumfang | 70 | 42 | 0 |
-| 54 | Teilweise: sieben Schichten ohne Anzahl der Einheiten je Schicht | 70 | 5 | 0 |
-| 55 | Einzige Schicht, alle Einheiten hochwertig: keine Schicht hochrechenbar (n_hs = 0) | 70 | 7 | 0 |
+| 54 | Teilweise: sieben Schichten ohne Anzahl der Einheiten je Schicht | 70 | 0 | 0 |
+| 55 | Einzige Schicht, alle Einheiten hochwertig: keine Schicht hochrechenbar (n_hs = 0) | 70 | 0 | 0 |
 
 ## 17_Unterstichprobe
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 16 | 96 | 92 | 4 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 72 | 432 | 408 | 24 | 0 | 0 | 0 |
+| abnahme-luecken | 14 | 84 | 77 | 7 | 0 | 0 | 0 |
+| Hauptsatz | 16 | 96 | 92 | 4 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1459,10 +1520,12 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 18_GFQ_AnhIII
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 55 | 1210 | 1145 | 65 | 0 | 0 |
-| zufall | 126 | 2772 | 2772 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 126 | 2772 | 2765 | 7 | 0 | 0 | 0 |
+| abnahme-luecken | 370 | 8140 | 7927 | 213 | 0 | 0 | 0 |
+| Hauptsatz | 55 | 1210 | 1145 | 65 | 0 | 0 | 0 |
+| zufall | 126 | 2772 | 2772 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1524,10 +1587,12 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## 20_Druck_KOM
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 24 | 792 | 759 | 33 | 0 | 0 |
-| zufall | 56 | 1848 | 1848 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 98 | 3234 | 3221 | 13 | 0 | 0 | 0 |
+| abnahme-luecken | 410 | 13530 | 13333 | 197 | 0 | 0 | 0 |
+| Hauptsatz | 24 | 792 | 759 | 33 | 0 | 0 | 0 |
+| zufall | 56 | 1848 | 1848 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1558,10 +1623,12 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## X1_KonsMUS_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 24 | 312 | 255 | 57 | 0 | 0 |
-| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 1040 | 951 | 89 | 0 | 0 | 0 |
+| abnahme-luecken | 9 | 117 | 82 | 35 | 0 | 0 | 0 |
+| Hauptsatz | 24 | 312 | 255 | 57 | 0 | 0 | 0 |
+| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1592,10 +1659,12 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## X2_DiffSch_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 28 | 364 | 296 | 68 | 0 | 0 |
-| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 1040 | 962 | 78 | 0 | 0 | 0 |
+| abnahme-luecken | 226 | 2938 | 2891 | 47 | 0 | 0 | 0 |
+| Hauptsatz | 28 | 364 | 296 | 68 | 0 | 0 | 0 |
+| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1630,11 +1699,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## X3_DiffSch_S_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 35 | 1260 | 1026 | 234 | 0 | 0 |
-| teilbelegung | 3 | 108 | 97 | 11 | 0 | 0 |
-| zufall | 100 | 3600 | 3600 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 2880 | 2704 | 176 | 0 | 0 | 0 |
+| abnahme-luecken | 16 | 576 | 412 | 164 | 0 | 0 | 0 |
+| Hauptsatz | 35 | 1260 | 1029 | 231 | 0 | 0 | 0 |
+| teilbelegung | 3 | 108 | 97 | 11 | 0 | 0 | 0 |
+| zufall | 100 | 3600 | 3600 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1664,7 +1735,7 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 | 24 | Schicht nur mit Buchwert, ohne Umfang (H6) | 36 | 23 | 0 |
 | 25 | Schicht nur mit Umfang (H7) | 36 | 28 | 0 |
 | 26 | Schichtumfänge heben beim Aufrunden die Summe über den Gesamtumfang | 36 | 0 | 0 |
-| 27 | TE = AE (erwartete Fehlerquote 2 %): Nenner null | 36 | 3 | 0 |
+| 27 | TE = AE (erwartete Fehlerquote 2 %): Nenner null | 36 | 0 | 0 |
 | 28 | Knapp unter TE = AE (1,99 %) | 36 | 0 | 0 |
 | 29 | Knapp über TE = AE (2,01 %): negativer Nenner wird quadriert | 36 | 0 | 0 |
 | 30 | Rechnerischer Umfang unter 30: Mindestumfang 30 | 36 | 0 | 0 |
@@ -1676,11 +1747,13 @@ Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Tex
 
 ## X4_DiffSch_2Z_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Hauptsatz | 38 | 760 | 623 | 137 | 0 | 0 |
-| teilbelegung | 3 | 60 | 47 | 13 | 0 | 0 |
-| zufall | 100 | 2000 | 2000 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 1600 | 1539 | 61 | 0 | 0 | 0 |
+| abnahme-luecken | 20 | 400 | 281 | 119 | 0 | 0 | 0 |
+| Hauptsatz | 38 | 760 | 623 | 137 | 0 | 0 | 0 |
+| teilbelegung | 3 | 60 | 47 | 13 | 0 | 0 | 0 |
+| zufall | 100 | 2000 | 2000 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|

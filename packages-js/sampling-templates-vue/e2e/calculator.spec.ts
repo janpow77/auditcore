@@ -231,6 +231,10 @@ test('Schichttabelle: hinzufügen bis zur achten Schicht, eigener Rollbereich, p
   await accessible(page)
   await shot(page, '13_schichttabelle_390')
   await table.getByRole('button', { name: 'Letzte Schicht entfernen' }).click()
+  // Die Schicht trägt Eingaben: Sie wird erst nach der Rückfrage entfernt.
+  await expect(page.getByRole('dialog')).toContainText('Die letzte Schicht enthält Eingaben. Wenn Sie fortfahren, werden sie gelöscht.')
+  await expect(table.locator('thead th').last()).toHaveText('Schicht 8')
+  await page.locator('[data-action="discard"]').click()
   await expect(table.locator('thead th').last()).toHaveText('Schicht 7')
   await expect(page.locator('[data-cell="C9"]').first()).toHaveText(/^48\.500\.000,00/)
 })

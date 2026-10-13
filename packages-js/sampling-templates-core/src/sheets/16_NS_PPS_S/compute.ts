@@ -4,8 +4,10 @@
  * Nr. 1.1 DelVO (EU) 2023/67). Schichtzeilen werden je Schichtspalte gerechnet
  * (`fillRow`), Summen über alle Schichtspalten (`totalRow`); die Vorlage summiert
  * D–J, die Webfassung zusätzlich AA–AM. Trägt keine Schicht einen Wert, zeigt
- * die Vorlage die Summe 0 – ein Wert ohne Grundlage, den die Webfassung nach der
- * geltenden Richtlinie offen lässt, samt allem, was darauf aufbaut.
+ * die Vorlage die Summe 0 – ein Wert ohne Grundlage. Die Webfassung lässt ihn
+ * samt allem, was darauf aufbaut, offen, solange eine Pflichteingabe fehlt; bei
+ * vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis
+ * (`evaluateSheet` rechnet dann mit `withoutBasis: 'template'`).
  */
 import { divide, eq, guard, isBlank, isNumber, minus, n, plus, required } from '../../excel/index'
 import { resolveInputs } from '../../model/sheet'
@@ -23,7 +25,7 @@ type Total = (row: number, helper?: boolean) => CellValue
 /**
  * Abschnitt H: Summen der Schichten und Zulässigkeit (C9–C12). Ohne jede
  * Anzahl der Einheiten ist die Summe ohne Grundlage; N und die Zulässigkeit
- * bauen darauf auf und bleiben mit ihr offen.
+ * bauen darauf auf und teilen ihr Schicksal (offen bzw. wie die Vorlage).
  */
 function population(c: Cells, context: SheetContext): void {
   c.C9 = totalRow(c, 9, context)
@@ -56,7 +58,7 @@ function projection(c: Cells, total: Total, context: SheetContext): void {
   c.C26 = totalRow(c, 26, context)
   // =IF(D9="";0;N(D25)+D23*N(D26)): die leere Spalte liefert 0.
   fillRow(c, 28, (column) => (used(column) ? guard(() => plus(n(c[at(column, 25)]), required(c[at(column, 23)]) * n(c[at(column, 26)]))) : 0))
-  // Summiert werden die belegten Schichten; ist keine hochrechenbar, wäre die Summe 0 ohne Grundlage.
+  // Summiert werden die belegten Schichten; ist keine hochrechenbar, ist die Summe 0 der Vorlage ohne Grundlage (`usedTotal`).
   c.C28 = total(28, true)
   c.C29 = c.C25 ?? null
   c.C30 = eq(countRow(c, 26), 0) ? null : (c.C28 ?? null)

@@ -23,6 +23,8 @@ describe('Excel-Semantik', () => {
     expect([roundUp(100.0000000009), roundUp(100.000000001), roundUp(100.00000005), roundUp(39.0000000039), roundUp(31.00000000062)]).toEqual([100, 101, 101, 40, 32])
     expect([roundUp(1000000.0005), roundUp(2000000000.5), roundUp(4850000000.3), roundUp(8693697600)]).toEqual([1000001, 2000000001, 4850000001, 8693697600])
     expect([roundUp(123456789012.25), roundUp(1e-9), roundUp(0.5)]).toEqual([123456789012, 1, 1])
+    // Oberhalb von zwölf ganzzahligen Stellen kürzt die Tabellenkalkulation ebenfalls auf zwölf geltende Stellen (Abnahme, Blatt 03 C21).
+    expect([roundUp(3697929000034.2), roundUp(3697929000080.7), roundUp(369792900021302.4)]).toEqual([3697929000030, 3697929000080, 369792900021000])
   })
 
   it('Vergleiche: gleich innerhalb von 2⁻⁴⁸ des Betrags', () => {

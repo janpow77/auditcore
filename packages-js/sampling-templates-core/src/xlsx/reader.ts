@@ -40,8 +40,17 @@ export interface ReadWorkbook {
   cells(sheet: string): ReadonlyMap<string, WorkbookCellValue>
 }
 
+/** Teil des Archivs als Text; `null`, wenn es ihn nicht gibt. Ein übergroßer Teil ist ein Lesefehler – er würde sonst als leer gelten. */
 function part(data: Uint8Array, name: string): string | null {
-  const files = unzipSync(data, { filter: (file) => file.name === name && file.originalSize <= MAX_PART_SIZE })
+  let oversized = false
+  const files = unzipSync(data, {
+    filter: (file) => {
+      if (file.name !== name) return false
+      oversized = file.originalSize > MAX_PART_SIZE
+      return !oversized
+    },
+  })
+  if (oversized) throw new WorkbookError(`Teil der Arbeitsmappe zu groß: ${name}`)
   const bytes = files[name]
   return bytes ? strFromU8(bytes) : null
 }
@@ -182,9 +191,19 @@ class SheetReader {
   }
 }
 
+/**
+ * Zellen eines Blatts. Endet das Blatt nicht mit dem schließenden Element
+ * `worksheet`, ist die Datei abgeschnitten: Das ist ein Lesefehler, kein
+ * teilweise gelesenes Blatt.
+ */
 function sheetCells(xml: string, strings: readonly string[]): Map<string, WorkbookCellValue> {
   const reader = new SheetReader(strings)
-  for (const token of timed(xml)) reader.read(token)
+  let closed = false
+  for (const token of timed(xml)) {
+    reader.read(token)
+    if (token.name === 'worksheet' && token.kind !== 'open') closed = true
+  }
+  if (!closed) throw new WorkbookError('Blatt der Arbeitsmappe ist unvollständig (abgeschnittene Datei)')
   reader.read({ kind: 'close', name: 'sheetData', text: '' })
   return reader.cells
 }

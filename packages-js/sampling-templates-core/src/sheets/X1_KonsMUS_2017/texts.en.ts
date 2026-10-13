@@ -8,5 +8,5 @@
 import { legacyTexts } from '../shared/legacy'
 
 export const en = legacyTexts('G1', 'Conservative MUS approach (template 1 of the 2017 templates, unchanged)', 'Conservative MUS approach (2017)', {
-  'tolerable-error-not-above-anticipated': 'TE ≤ AE × EF: the legacy template does not check this; the sample size shown is not reliable',
+  'tolerable-error-not-above-anticipated': 'TE ≤ AE × EF: the legacy template does not check this. The sample size and the values derived from it are, as far as shown as in the template, not reliable; please check the anticipated error rate',
 })

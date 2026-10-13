@@ -72,5 +72,6 @@ function onSelect(event: Event): void {
   <p v-else class="fa-st__value" :class="{ 'fa-st__value--missing': cell.missing }">{{ cell.display }}</p>
   <p v-if="cell.missingNote" class="fa-st__note" data-missing-note>{{ cell.missingNote }}</p>
   <p v-if="cell.zeroNote" class="fa-st__note fa-st__note--warning" data-zero-note><strong>{{ t('webHint') }}:</strong> {{ cell.zeroNote }}</p>
+  <p v-if="cell.caveatNote" class="fa-st__note fa-st__note--warning" data-caveat-note><strong>{{ t('webHint') }}:</strong> {{ cell.caveatNote }}</p>
   <p v-if="shownError" :id="`${id}-error`" class="fa-st__error" role="alert">{{ shownError }}</p>
 </template>

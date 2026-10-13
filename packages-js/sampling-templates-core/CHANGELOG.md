@@ -1,5 +1,50 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.1 – 2026-10-13
+
+Auflagen der unabhängigen Gesamtabnahme (noch nicht veröffentlicht).
+
+- **Verbindliche Regel:** Sind alle Pflichteingaben vorhanden, zeigt die
+  Webfassung immer, was die Vorlage zeigt – einheitlich in allen Blättern, auch
+  bei nicht anwendbarer Standardneuberechnung (05–07, 10–12). Werte ohne
+  Grundlage bleiben nur offen, solange eine Eingabe fehlt; sonst tragen sie
+  einen Hinweis in Warnfarbe (`SheetEvaluation.withoutBasis`, `complete`).
+- **Einschränkungen eines Ergebnisses** (`view/limits.ts`: `limitationsOf`,
+  `carriedLimitations`, `isQualified`): mit 0 gerechnete Eingaben, stille
+  Lücken, Werte ohne Grundlage, negative Ergebnisse, Zahlenbereich,
+  Warnhinweise, Auslegung, Altvorlage. Sie reisen vollständig in Blatt 18, den
+  Bericht (Bildschirm und Druck), den Arbeitsstand und jeden Export; eine
+  bestandene Würdigung steht dann nicht uneingeschränkt grün da.
+- **Stille Lücken** (`model/dependence.ts`, `SheetEvaluation.silent`,
+  `FieldDefinition.optional`): Fällt eine Schicht, ein Zeitraum oder eine Größe
+  wegen einer leeren, nicht freiwilligen Eingabe aus der Rechnung der Vorlage,
+  nennt ein Hinweis in Warnfarbe Schicht und Eingabe.
+- **Negative Ergebnisse** (mehr hochwertige Einheiten als Stichprobenumfang,
+  negative Fehlerquote) und Stichprobenumfänge ab 10¹⁵ sind ausgewiesen.
+- `excel.roundUp` kürzt wie LibreOffice auch oberhalb von zwölf ganzzahligen
+  Stellen auf zwölf geltende Stellen; `excel.sum` summiert mit Fehlerausgleich
+  (Kahan-Neumaier) wie `SUMME`.
+- Bericht: Vorlage, Rechtsstand, Fassung des Rechenkerns und – über
+  `workspaceChecksum` – die Prüfsumme der Eingaben (`ReportPage.identity`).
+- Import der ausgefüllten Vorlage: Gegenprobe für alle Blätter einschließlich
+  18 und 20, Ergebnisübersicht N3–N11, beide Richtungen (`ImportDifference.kind`,
+  `explained`); `notes` nennt ungelesene Schichtdaten (Spalte K), ein nicht
+  gewähltes Methodenblatt, gelöschte Vorgaben und Kopien des Blatts 17 unter
+  freiem Namen; abgeschnittene oder übergroße Blätter sind Lesefehler; ein
+  Datum als Tageszahl wird als Datum übernommen.
+- Excel-Export nur noch mit bearbeiteten Blättern; ein anderes Verfahrensblatt
+  ist im Kopf gekennzeichnet.
+- Abweichungstabelle ergänzt: Blatt 02 (C53, C54 ohne C24), Blatt 07 (ohne
+  Wesentlichkeitsschwelle bei globaler Neuberechnung), Blatt 17 (ohne Umfang
+  der Unterstichprobe).
+- Eingabe: eigene Meldungen für zu viele Nachkommastellen; Prozentfelder
+  zeigen alle eingegebenen Stellen. Hinweise zur Übernahme aus den
+  Unterstichproben sagen genau, welche Blätter sie haben.
+- Abgleich: 10.531 Fälle (davon 6.805 der Abnahme), 728.895 Zellen, 0
+  unbegründete Abweichungen; Eigenschaftstests über alle Blätter
+  (`test/properties.spec.ts`). `scripts/golden_recalc.py` rechnet in Stapeln.
+- Einstieg für den Excel-Austausch: `@auditcore/sampling-templates-core/workbook`.
+
 ## 0.1.0 – 2026-10-13
 
 Erste Fassung (noch nicht veröffentlicht).
@@ -31,7 +76,10 @@ Erste Fassung (noch nicht veröffentlicht).
 - Arbeitsstand `flowaudit-stichprobe` Fassung 1: speichern, öffnen, Prüfsumme
   SHA-256, Migrationsgerüst, strenge Prüfung, JSON-Schema, Hinweise der
   Webfassung als eigenes Feld.
-- Excel-Austausch als getrennter Einstieg `./xlsx`: Export mit `_Arbeitsstand`,
+- Bericht (Blatt 20): Programm und Prüfbehörde in Kopf- und Fußzeile sind
+  Angaben der Prüfbehörde, kein fester Text der Vorlage (bewusste Abweichung);
+  Druck als benannte Seite `fa-st-report`.
+- Excel-Austausch als getrennter Einstieg `./workbook`: Export mit `_Arbeitsstand`,
   Import des Exports und der ausgefüllten Vorlage über alle Blätter (Kopien
   des Blatts 17 als Einheiten, gewähltes Methodenblatt aus Blatt 18) mit
   Rückmeldung jedes nicht oder umgedeutet übernommenen Werts und Vergleich

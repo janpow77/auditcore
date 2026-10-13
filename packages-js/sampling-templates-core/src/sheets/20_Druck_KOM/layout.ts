@@ -110,5 +110,8 @@ export const REPORT_LAYOUT = {
     },
   ] as readonly ReportSectionLayout[],
   /** Linke Fußzeile der Druckseite; die Vorlage nennt hier fest die Prüfbehörde. */
-  footer: 'EFRE-Prüfbehörde, Referat Z 6, HMWVW, Wiesbaden',
+  /** Fußzeile: Prüfbehörde, Organisationseinheit und Ort aus den Angaben W5–W7 (in der Vorlage ein fester Text). */
+  footer: 'W8',
+  /** Angaben für Kopf- und Fußzeile; sie stehen bei den Steuerfeldern. */
+  identity: ['W4', 'W5', 'W6', 'W7'],
 } as const

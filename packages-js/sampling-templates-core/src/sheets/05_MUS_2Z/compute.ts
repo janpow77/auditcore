@@ -89,7 +89,9 @@ const CHOSEN: Readonly<Record<ReturnType<typeof approachOf>, CellAddress>> = { s
 /**
  * Abschnitt M, zweiter Teil: endgültige Umfänge und ihre Prüfung (C66–C69).
  * Liefert der gewählte Ansatz keinen Umfang (Text oder leer), bleiben in der
- * Vorlage nur die Untergrenzen; die Webfassung lässt den Umfang dann offen.
+ * Vorlage nur die Untergrenzen – ein Wert ohne Grundlage: Die Webfassung lässt
+ * ihn offen, solange eine Pflichteingabe fehlt, und zeigt ihn bei vollständigen
+ * Pflichteingaben wie die Vorlage mit Hinweis (`evaluateSheet`).
  */
 function finalSizes(c: Cells, pending: Pending, limit: number | null, context: SheetContext): void {
   const approach = approachOf(c.C26)

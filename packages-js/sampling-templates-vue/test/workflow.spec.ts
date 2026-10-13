@@ -97,6 +97,21 @@ describe('Arbeitsschritte und Kontextfluss', () => {
   })
 })
 
+describe('Beispielwerte', () => {
+  it('im Schritt Grundgesamtheit geladen, bleibt der Schritt stehen; mit Blattangabe öffnet die Methode das Verfahren', async () => {
+    const wrapper = mountCalculator()
+    await wrapper.get('[data-sheet="03_MUS_1Z"]').trigger('click')
+    await step(wrapper, 'population')
+    await menu(wrapper, 'sample')
+    expect(wrapper.get('[data-sheet-view]').attributes('data-sheet-view')).toBe('02_Grundgesamtheit')
+    expect(wrapper.get('[data-step="population"]').attributes('aria-current')).toBe('step')
+    ;(wrapper.vm as unknown as { loadSample: (sheet?: string) => void }).loadSample('04_MUS_1Z_S')
+    await settle()
+    expect(wrapper.get('[data-sheet-view]').attributes('data-sheet-view')).toBe('04_MUS_1Z_S')
+    expect(wrapper.get('[data-result="primary"]').text()).toMatch(/\d/)
+  })
+})
+
 describe('Schichttabelle (Blatt 04)', () => {
   async function stratified(): Promise<VueWrapper> {
     const wrapper = mountCalculator()
@@ -132,8 +147,9 @@ describe('Schichttabelle (Blatt 04)', () => {
     await input(wrapper, 'AA9').setValue('1.000.000,00')
     expect(nbsp(cell(wrapper, 'C9').text())).toBe('51.500.000,00 €')
     expect(wrapper.findAll('[data-hint="web"]').map((hint) => hint.text()).join(' ')).toContain('Mehr als sieben Schichten')
-    await wrapper.get('[data-action="strata-remove"]').trigger('click')
-    expect(columns(wrapper).at(-1)).toBe('Schicht 7')
+    await wrapper.get('[data-action="strata-remove"]').trigger('click').then(settle)
+    ;(document.querySelector('[data-action="discard"]') as HTMLButtonElement).click() // Schicht 8 trägt eine Eingabe: Rückfrage
+    expect((await settle(), columns(wrapper).at(-1))).toBe('Schicht 7')
     expect(nbsp(cell(wrapper, 'C9').text())).toBe('50.500.000,00 €')
   })
 
@@ -299,7 +315,7 @@ describe('Dateien: Vorschau, Fehlermeldungen, Entwurf', () => {
   }
 
   async function templateFile(): Promise<File> {
-    const { writeWorkbook } = await import('@auditcore/sampling-templates-core/xlsx')
+    const { writeWorkbook } = await import('@auditcore/sampling-templates-core/workbook')
     const values: Record<number, number | string> = { 7: 48500000, 8: 420, 9: 'Mittel', 10: 0.7, 11: 'Einseitig', 14: 0.02, 17: 0.007, 20: '0,12', 22: 2, 23: 'NEIN', 24: 'ja', 27: 92, 38: 'k. A.' }
     const rows = Array.from({ length: 40 }, (_, index) => [null, null, values[index + 1] === undefined ? null : { value: values[index + 1]! }])
     return new File([writeWorkbook([{ name: '03_MUS_1Z', rows }]).slice().buffer], 'vorlage.xlsx')

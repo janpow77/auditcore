@@ -1,7 +1,8 @@
 /**
- * Begründete Abweichungen des Blatts 07 vom Verhalten der Vorlage. In allen
- * Fällen zeigt die Webfassung keinen Wert (`null`), nie einen anderen Wert als
- * die Vorlage.
+ * Begründete Abweichungen des Blatts 07 vom Verhalten der Vorlage. Die Webfassung
+ * zeigt nie einen anderen Wert als die Vorlage; wo sie abweicht, zeigt sie
+ * keinen Wert (`null`) – und das nur, solange eine Pflichteingabe fehlt. Sind
+ * alle Pflichteingaben vorhanden, zeigt sie jeden Wert wie die Vorlage.
  *
  * Pflichteingaben (ohne `kind`): `whenEmpty` nennt je Zelle die Eingaben, deren
  * Fehlen in den Golden-Fällen die Abweichung auslöst; wo die Vorlage bei einer
@@ -13,7 +14,10 @@
  * trotzdem 50 bzw. 30 Einheiten. Liefert der gewählte Ansatz für Zeitraum 2 bzw.
  * 3 keinen Umfang – leeres Formular, „TE ≤ AE“, nicht anwendbare
  * Standardneuberechnung –, zeigt sie in C75 bzw. C109 nur die Untergrenzen. In
- * beiden Fällen rechnet sie damit weiter. Übersicht: docs/abweichungen.md.
+ * beiden Fällen rechnet sie damit weiter. Die Webfassung lässt diese Werte offen,
+ * solange eine Pflichteingabe fehlt; bei vollständigen Pflichteingaben zeigt sie
+ * sie wie die Vorlage und weist sie mit einem Hinweis in Warnfarbe aus
+ * (`evaluateSheet`, Hinweis `without-basis`). Übersicht: docs/abweichungen.md.
  */
 import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'
 import type { CellAddress, Deviation } from '../../model/types'
@@ -71,8 +75,9 @@ const second: Deviation[] = [
   ...entries(['C65', 'C66', 'C67'], [...SIZE_WITHOUT_FIRST, ...SECOND_INPUTS], SECOND_TEMPLATE, SECOND),
   ...entries(['C68'], ['C7', 'C24', ...SECOND_INPUTS], DEVIATION, SECOND),
   ...entries(['C69', 'C70', 'C72', 'C73'], ['C7', 'C18', 'C21', 'C24', ...SECOND_INPUTS], 'Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30)', SECOND),
-  ...entries(['C71', 'C75', 'C76', 'C77', 'C78', 'C82', 'C83', 'C84'], [...SIZE_INPUTS, ...SECOND_INPUTS], SECOND_TEMPLATE, SECOND),
-  ...entries(['C106'], [...SIZE_INPUTS, ...SECOND_INPUTS, 'C90'], FACTOR_TEMPLATE, FACTOR),
+  // C18: Bei der globalen Neuberechnung hängt der Umfang für Zeitraum 2 auch ohne Gesamtumfang an der Wesentlichkeitsschwelle (C59).
+  ...entries(['C71', 'C75', 'C76', 'C77', 'C78', 'C82', 'C83', 'C84'], [...SIZE_INPUTS, 'C18', ...SECOND_INPUTS], SECOND_TEMPLATE, SECOND),
+  ...entries(['C106'], [...SIZE_INPUTS, 'C18', ...SECOND_INPUTS, 'C90'], FACTOR_TEMPLATE, FACTOR),
   ...entries(['C81'], ['C51'], RANDOM_STRATUM, BOOK_VALUE),
 ]
 
@@ -89,7 +94,7 @@ const third: Deviation[] = [
   ...entries(['C115'], ['C90'], RANDOM_STRATUM, BOOK_VALUE),
   ...entries(
     ['C103', 'C107', 'C108', 'C109', 'C110', 'C111', 'C112', 'C116', 'C117', 'C118', 'C124', 'C125', 'C127', 'C128', 'C129', 'C132', 'C133', 'C134', 'C135', 'C136', 'C137', 'C138', 'N5', 'N7', 'N10', 'N11'],
-    [...SIZE_INPUTS, ...SECOND_INPUTS, ...THIRD_INPUTS],
+    [...SIZE_INPUTS, 'C18', ...SECOND_INPUTS, ...THIRD_INPUTS],
     THIRD_TEMPLATE,
     THIRD,
   ),

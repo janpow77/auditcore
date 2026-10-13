@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { createTranslate } from '../src/i18n/messages'
 import { cellsOf, defaultInputs, fieldsOf, findField, inputFields, named } from '../src/model/definition'
 import { evaluateSheet } from '../src/model/evaluate'
 import { TEMPLATE_POLICY } from '../src/model/policy'
@@ -10,12 +11,20 @@ import { NOT_APPLICABLE_GLOBAL } from '../src/sheets/10_SRS_2Z/compute'
 import { sheet } from '../src/sheets/10_SRS_2Z/index'
 import { en } from '../src/sheets/10_SRS_2Z/texts.en'
 import { INCREASE_INTERPRETATION } from '../src/sheets/shared/srs'
+import { isQualified, limitationsOf } from '../src/view/limits'
 import { caseInputs, loadGolden } from './golden'
 
 const context = createContext()
 const sample = sheet.sample.inputs
 /** Variante „wie die Vorlage“: Werte ohne Grundlage stehen wie in der Vorlage. */
 const likeTemplate = createContext({ policy: TEMPLATE_POLICY })
+const t = createTranslate()
+
+/** Hinweis „wie in der Vorlage gezeigt, obwohl die Grundlage fehlt“ zu den Eingaben – in Warnfarbe, die Würdigung ist dann nicht uneingeschränkt grün. */
+function withoutBasisHint(inputs: CellMap): { tone?: string; qualified: boolean } {
+  const limitations = limitationsOf(sheet, inputs, evaluateSheet(sheet, inputs, context).cells, context, t)
+  return { tone: limitations.find((entry) => entry.kind === 'withoutBasis')?.tone, qualified: isQualified(limitations) }
+}
 const STANDARD = 'Standard (Art. 5 Abs. 6 Buchst. a)'
 const GLOBAL = 'Global (Art. 5 Abs. 6 Buchst. b)'
 const INCREASE = 'Erhöhung bei begrenztem Umfang (Art. 5 Abs. 7 UAbs. 4 Buchst. a)'
@@ -227,19 +236,43 @@ describe('Blatt 10_SRS_2Z: Richtlinie für fehlende Angaben', () => {
     expect(evaluateSheet(sheet, { ...sample, C45: null }, context).assumed.map((entry) => [entry.input, entry.kind])).toEqual([['C45', 'partialErrorSum']])
   })
 
-  it('Wert ohne Grundlage (withoutBasis): keine Hochrechnung 0 € ohne Fehlersummen, kein Umfang aus den bloßen Untergrenzen', () => {
+  it('Wert ohne Grundlage (withoutBasis): Hochrechnung 0 € ohne Fehlersummen wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
     const noErrors = { ...sample, C45: null, C78: null }
     const current = evaluateSheet(sheet, noErrors, context)
-    expect(pick(current.cells, ['C83', 'C84'])).toEqual([null, null])
+    expect(current.complete).toBe(true)
+    expect(pick(current.cells, ['C83', 'C84'])).toEqual([0, null])
+    expect(current.withoutBasis).toEqual(['C83'])
     expect(current.assumed).toEqual([])
     expect(current.lacking.size).toBe(0)
-    expect(pick(sheet.compute(noErrors, likeTemplate), ['C83', 'C84'])).toEqual([0, null])
+    expect(current.cells).toEqual(evaluateSheet(sheet, noErrors, likeTemplate).cells)
+    expect(withoutBasisHint(noErrors)).toEqual({ tone: 'warning', qualified: true })
+    // Fehlt dazu die voraussichtliche Fehlerquote (Pflichteingabe), bleibt die Hochrechnung offen – ohne „Angabe fehlt“ an dieser Zelle.
+    const incomplete = evaluateSheet(sheet, { ...noErrors, C26: null }, context)
+    expect(incomplete.complete).toBe(false)
+    expect(pick(incomplete.cells, ['C83', 'C84'])).toEqual([null, null])
+    expect(incomplete.withoutBasis).toEqual([])
+    expect(incomplete.lacking.has('C83')).toBe(false)
+  })
+
+  it('Wert ohne Grundlage (withoutBasis): Umfang aus den bloßen Untergrenzen wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
     // Ohne Konfidenzniveau ergibt die Standardneuberechnung keinen Umfang; die Vorlage zeigt 3 Einheiten für Zeitraum 2, obwohl 22 geplant waren.
+    // Das Konfidenzniveau ist keine Pflichteingabe im Sinne der Abweichungen (die Vorlage zeigt den Umfang selbst nicht mehr).
     const noConfidence = { ...sample, C19: null, C36: 'Ja' }
     const cells = ['C41', 'C42', 'C43', 'C63', 'C72', 'C73', 'C74', 'C75', 'C76', 'N10']
-    expect(pick(sheet.compute(noConfidence, likeTemplate), cells)).toEqual([48, 27, 22, null, 27, 3, 35, '✔ ≥ 30 Einheiten', '✔ begrenzter Umfang eingehalten', 35])
-    expect(pick(sheet.compute(noConfidence, context), cells)).toEqual([48, 27, 22, null, 27, null, null, null, null, null])
-    expect(evaluateSheet(sheet, noConfidence, context).lacking.size).toBe(0)
+    const shown = [48, 27, 22, null, 27, 3, 35, '✔ ≥ 30 Einheiten', '✔ begrenzter Umfang eingehalten', 35]
+    const current = evaluateSheet(sheet, noConfidence, context)
+    expect(current.complete).toBe(true)
+    expect(pick(current.cells, cells)).toEqual(shown)
+    expect(pick(sheet.compute(noConfidence, likeTemplate), cells)).toEqual(shown)
+    expect(current.withoutBasis).toEqual(['C73', 'C74', 'C75', 'C76', 'N10'])
+    expect(current.lacking.size).toBe(0)
+    expect(withoutBasisHint(noConfidence)).toEqual({ tone: 'warning', qualified: true })
+    // Fehlt dazu die Standardabweichung des zweiten Zeitraums (Pflichteingabe), bleiben die Untergrenzen offen.
+    const incomplete = evaluateSheet(sheet, { ...noConfidence, C56: null }, context)
+    expect(incomplete.complete).toBe(false)
+    expect(pick(incomplete.cells, cells)).toEqual([48, 27, 22, null, 27, null, null, null, null, null])
+    expect(incomplete.withoutBasis).toEqual([])
+    expect(withoutBasisHint({ ...noConfidence, C56: null }).tone).toBeUndefined()
   })
 })
 

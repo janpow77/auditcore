@@ -18,7 +18,7 @@ import {
   type Translate,
   type WorkspaceState,
 } from '@auditcore/sampling-templates-core'
-import type { WorkbookImport } from '@auditcore/sampling-templates-core/xlsx'
+import type { WorkbookImport } from '@auditcore/sampling-templates-core/workbook'
 import { shallowRef, type ShallowRef } from 'vue'
 import type { ImportPreviewData } from '../components/ImportPreview.vue'
 import type { SamplingSession } from './useSamplingSession'
@@ -50,7 +50,7 @@ type TemplateImport = Extract<WorkbookImport, { kind: 'template' }>
 /** Blätter, die kein Verfahren sind (Arbeitsschritte um das Methodenblatt herum). */
 const NOT_A_METHOD: ReadonlySet<string> = new Set(WORKFLOW_STEPS.flatMap((step) => (step.sheet ? [step.sheet] : [])))
 
-const loadXlsx = () => import('@auditcore/sampling-templates-core/xlsx')
+const loadXlsx = () => import('@auditcore/sampling-templates-core/workbook')
 
 /** Arbeitsstand nach der Übernahme: die Blätter der Vorlage ersetzen die bisherigen Eingaben dieser Blätter. */
 function candidate(current: WorkspaceState, imported: TemplateImport): WorkspaceState {
@@ -60,13 +60,24 @@ function candidate(current: WorkspaceState, imported: TemplateImport): Workspace
   return { ...current, activeMethod: imported.method ?? current.activeMethod ?? imported.filled.find((id) => !NOT_A_METHOD.has(id)) ?? null, sheets }
 }
 
+/** Übernommene Eingaben; gelöschte Vorgaben (`null`) zählen nicht. */
+const valuesIn = (row: CellMap): number => Object.values(row).filter((value) => value !== null).length
+
 const countValues = (imported: TemplateImport): number =>
   imported.filled.reduce((total, id) => {
     const inputs = imported.sheets[id]
-    return total + (Array.isArray(inputs) ? (inputs as readonly CellMap[]).reduce((sum, row) => sum + Object.keys(row).length, 0) : Object.keys(inputs ?? {}).length)
+    return total + (Array.isArray(inputs) ? (inputs as readonly CellMap[]).reduce((sum, row) => sum + valuesIn(row), 0) : valuesIn((inputs as CellMap | undefined) ?? {}))
   }, 0)
 
-type Compare = typeof import('@auditcore/sampling-templates-core/xlsx').compareWithWorkbook
+/** Blätter ohne eigene Pflichteingaben, deren Ergebnisse trotzdem mit der Mappe verglichen werden. */
+const ALWAYS_COMPARED = ['18_GFQ_AnhIII', '20_Druck_KOM'] as const
+
+/** Hinweise des Imports; beim nicht gewählten Methodenblatt mit dem Verfahren, das die Webfassung als aktiv annimmt. */
+function notesOf(imported: TemplateImport, state: WorkspaceState): ImportPreviewData['notes'] {
+  return imported.notes.map((note) => (note.kind === 'method-not-chosen' ? { ...note, detail: state.activeMethod ?? '' } : note))
+}
+
+type Compare = typeof import('@auditcore/sampling-templates-core/workbook').compareWithWorkbook
 
 /** Vorschau einer ausgefüllten Vorlage: alle Umdeutungen und die Gegenprobe gegen die Rechenwerte der Mappe; Übernahme erst auf Bestätigung. */
 function useTemplatePreview(session: SamplingSession, options: FileActionOptions) {
@@ -85,9 +96,11 @@ function useTemplatePreview(session: SamplingSession, options: FileActionOptions
     show(imported: TemplateImport, fileName: string, compare: Compare): void {
       if (imported.filled.length === 0 && imported.issues.length === 0) return session.notify('warning', t('noticeTemplateEmpty', { file: fileName }))
       pendingState = candidate(session.workspace.value, imported)
-      const cached = Object.fromEntries(imported.filled.map((id) => [id, imported.cached[id] ?? {}]))
+      // Verglichen werden die ausgefüllten Blätter und immer auch die Blätter, die ihr Ergebnis nur beziehen (Blatt 18, Bericht).
+      const compared = [...new Set([...imported.filled, ...ALWAYS_COMPARED.filter((id) => id in imported.cached)])]
+      const cached = Object.fromEntries(compared.map((id) => [id, imported.cached[id] ?? {}]))
       const differences = compare(pendingState, cached, options.sheets())
-      preview.value = { file: fileName, sheets: imported.filled, count: countValues(imported), pending: imported.pending, issues: imported.issues, differences }
+      preview.value = { file: fileName, sheets: imported.filled, count: countValues(imported), pending: imported.pending, issues: imported.issues, notes: notesOf(imported, pendingState), differences }
     },
     applyPreview(): void {
       const data = preview.value

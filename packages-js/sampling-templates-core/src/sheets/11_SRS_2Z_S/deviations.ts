@@ -1,11 +1,12 @@
 /**
  * Begründete Abweichungen des Blatts 11 bei leeren Eingaben. Wie in den Blättern
- * 04, 08 und 09 zeigt die Webfassung „Angabe fehlt“ (`null`), wo die Vorlage mit
- * 0 weiterrechnet, nie einen anderen Wert. `whenEmpty` nennt je Zelle die
+ * 04, 08 und 09 zeigt die Webfassung „Angabe fehlt“ (`null`), wo die Vorlage ohne
+ * eine Pflichteingabe mit 0 weiterrechnet, nie einen anderen Wert. `whenEmpty` nennt je Zelle die
  * Eingaben, deren Fehlen sie leert (auch mittelbar über Zwischenzellen); alle
  * bestehen die Gegenprobe mit 0. Die Standardabweichung der Stichprobe für die
  * Neuberechnung (Zeile 51) steht nicht in den Listen: Leer verzweigt die Vorlage
- * auf σ (Zeile 29). Die Werte ohne Grundlage stehen in `deviations-basis.ts`.
+ * auf σ (Zeile 29). Die Werte ohne Grundlage stehen in `deviations-basis.ts`
+ * (offen nur, solange eine Pflichteingabe fehlt; sonst wie die Vorlage mit Hinweis).
  * Geführt über alle Schichtspalten des Blatts (D–J der Vorlage, AA–AM der Webfassung).
  */
 import { STRATA_COLUMNS, stratumCell } from '../../model/strata'

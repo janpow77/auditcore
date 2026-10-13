@@ -10,7 +10,7 @@ const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 
 /** Hinweis bei nicht positivem Nenner der Standardneuberechnung für den genannten Zeitraum. */
 const negativeDenominator = (period: number): string =>
-  `Denominator of the standard recalculation is not positive: the standard approach yields no sample size for period ${period} (the template then shows only the minimum sizes). Choose the global recalculation`
+  `Denominator of the standard recalculation is not positive: the standard approach yields no sample size for period ${period}. Where all required inputs are present, the web version shows, like the template, only the minimum size of 3 or the top-up to 30 and continues to calculate with it; the result is not reliable. Recommended: global recalculation`
 
 export const en: SheetTexts = {
   title: 'MUS standard approach – three sampling periods, non-stratified',

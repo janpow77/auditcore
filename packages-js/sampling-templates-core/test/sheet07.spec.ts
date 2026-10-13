@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
+import { createTranslate } from '../src/i18n/messages'
 import { defaultInputs, fieldsOf, inputCells, inputFields, named } from '../src/model/definition'
 import { evaluateSheet } from '../src/model/evaluate'
 import { STRICT_POLICY, TEMPLATE_POLICY } from '../src/model/policy'
 import { SUMMARY_CELLS, createContext, localizeSheet, summaryOf } from '../src/model/sheet'
 import type { CellValue } from '../src/model/types'
 import { sheet } from '../src/sheets/07_MUS_3Z/index'
+import { isQualified, limitationsOf, type Limitation } from '../src/view/limits'
 import { loadGolden, sameValue } from './golden'
 
 const context = createContext()
@@ -13,6 +15,12 @@ const INCREASE = 'Erhöhung bei begrenztem Umfang (Art. 5 Abs. 7 UAbs. 4 Buchst.
 const NOT_APPLICABLE = '✖ nicht anwendbar (Nenner ≤ 0)'
 const likeTemplate = createContext({ policy: TEMPLATE_POLICY })
 const strict = createContext({ policy: STRICT_POLICY })
+const t = createTranslate()
+/** Hinweis „Wert ohne Grundlage“ unter den Einschränkungen der Auswertung. */
+function unfoundedNote(inputs: Record<string, CellValue>): { limitations: Limitation[]; note: Limitation | undefined } {
+  const limitations = limitationsOf(sheet, inputs, evaluateSheet(sheet, inputs, context).cells, context, t)
+  return { limitations, note: limitations.find((entry) => entry.kind === 'withoutBasis') }
+}
 const sample = (changes: Record<string, CellValue> = {}): Record<string, CellValue> => ({ ...sheet.sample.inputs, ...changes })
 const compute = (changes: Record<string, CellValue> = {}): Readonly<Record<string, CellValue>> => sheet.compute(sample(changes), context)
 /** Berechnete Zellen mit einem Wert (ohne Eingabezellen). */
@@ -143,14 +151,35 @@ describe('Blatt 07_MUS_3Z', () => {
     expect(none.assumed.filter((entry) => entry.kind === 'partialErrorSum')).toEqual([])
   })
 
-  it('Wert ohne Grundlage: offen ohne „Angabe fehlt“; unter „wie die Vorlage“ der Wert der Vorlage', () => {
-    const current = evaluateSheet(sheet, sample({ C89: 0.9 }), context)
-    expect(current.cells).toMatchObject({ C109: null, C117: null, C136: null, C138: null })
-    expect(current.lacking.has('C109')).toBe(false)
+  it('Wert ohne Grundlage: bei vollständigen Pflichteingaben wie die Vorlage mit Hinweis in Warnfarbe; offen nur, solange eine Pflichteingabe fehlt', () => {
+    // Nenner der Standardneuberechnung nach Zeitraum 2 nicht positiv: Die Vorlage zeigt die Untergrenze 3 und rechnet damit weiter.
+    const inputs = sample({ C89: 0.9 })
+    const current = evaluateSheet(sheet, inputs, context)
+    expect(current.complete).toBe(true)
+    expect(current.cells).toMatchObject({ C99: NOT_APPLICABLE, C109: 3, C111: '✔ ≥ 30 Einheiten', C116: 2, C117: '✖ < 3 Einheiten (Art. 5 Abs. 5)', C138: '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle', N10: 58 })
+    expect(typeof current.cells.C136).toBe('number')
+    expect(current.cells).toEqual(evaluateSheet(sheet, inputs, likeTemplate).cells)
+    expect(current.withoutBasis).toEqual(expect.arrayContaining(['C109', 'C116', 'C117', 'C136', 'C138', 'N10']))
+    expect(current.lacking.size).toBe(0)
     expect(current.assumed).toEqual([])
-    const template = evaluateSheet(sheet, sample({ C89: 0.9 }), likeTemplate)
-    expect(template.cells).toMatchObject({ C109: 3, C116: 2, C117: '✖ < 3 Einheiten (Art. 5 Abs. 5)' })
-    expect(typeof template.cells.C136).toBe('number')
+    const { limitations, note } = unfoundedNote(inputs)
+    expect(note).toMatchObject({ id: 'without-basis', tone: 'warning' })
+    expect(isQualified(note ? [note] : [])).toBe(true)
+    expect(isQualified(limitations)).toBe(true)
+    expect(limitations.find((entry) => entry.id === 'negative-denominator-3')).toMatchObject({ tone: 'warning', text: expect.stringContaining('wie die Vorlage nur die Untergrenze 3') })
+    // Nenner schon nach Zeitraum 1 nicht positiv: Untergrenzen für beide Zeiträume wie in der Vorlage.
+    const first = evaluateSheet(sheet, sample({ C50: 0.9 }), context)
+    expect(first.cells).toMatchObject({ C65: NOT_APPLICABLE, C75: 3, C82: 1, C83: '✖ < 3 Einheiten (Art. 5 Abs. 5)', C108: 3, C109: 3 })
+    expect(first.withoutBasis).toEqual(expect.arrayContaining(['C75', 'C83', 'C109']))
+    // Derselbe Fall ohne aktualisierte Standardabweichung des dritten Zeitraums (Pflichteingabe): Die Zellen bleiben offen.
+    const open = evaluateSheet(sheet, sample({ C89: 0.9, C92: null }), context)
+    expect(open.complete).toBe(false)
+    expect(open.cells).toMatchObject({ C109: null, C111: null, C116: null, C117: null, C136: null, C138: null, N10: null })
+    expect(open.withoutBasis).toEqual([])
+    // „Angabe fehlt“ steht an der globalen Neuberechnung, die σ_r3 braucht; die Untergrenze in C109 bleibt als Wert ohne Grundlage offen.
+    expect(open.lacking.get('C101')).toEqual(['C92'])
+    expect(open.lacking.has('C109')).toBe(false)
+    expect(unfoundedNote(sample({ C89: 0.9, C92: null })).note).toBeUndefined()
   })
 
   it('fehlt die Standardabweichung der Stichprobe eines Zeitraums, ist ihr Beitrag 0 und wird ausgewiesen', () => {

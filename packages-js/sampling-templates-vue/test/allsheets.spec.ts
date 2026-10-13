@@ -78,6 +78,11 @@ describe('Altvorlage X3: Schichten in den Spalten E–K', () => {
     expect(before.every((value) => value !== '')).toBe(true)
     await wrapper.get('[data-action="strata-remove"]').trigger('click')
     await settle()
+    // Die Schicht trägt Eingaben: Erst nach der Rückfrage wird sie entfernt.
+    expect(columns(wrapper).filter((name) => name.startsWith('Schicht'))).toHaveLength(3)
+    expect(document.body.textContent).toContain('Die letzte Schicht enthält Eingaben. Wenn Sie fortfahren, werden sie gelöscht.')
+    ;(document.querySelector('[data-action="discard"]') as HTMLButtonElement).click()
+    await settle()
     expect(columns(wrapper).filter((name) => name.startsWith('Schicht'))).toEqual(['Schicht 1', 'Schicht 2'])
     expect(['E6', 'F6'].map((cell) => input(wrapper, cell).element.value)).toEqual(before.slice(0, 2))
     // Die dritte Schicht (Spalte G) ist geleert: wieder hinzugefügt, ist sie leer.

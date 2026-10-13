@@ -17,9 +17,9 @@ const sample: CellMap = {
   C33: 2600000, C34: 14000, C35: 3100,
 }
 
-const FIRST = 'TE ≤ AE im ersten Zeitraum: Die Altvorlage prüft das nicht; der ausgewiesene Stichprobenumfang ist nicht belastbar'
-const SECOND = 'TE ≤ AE im zweiten Zeitraum: Die Altvorlage prüft das nicht; der neu berechnete Stichprobenumfang ist nicht belastbar'
-const NEGATIVE = 'Negativer Nenner bei der Neuberechnung des Stichprobenumfangs für den zweiten Zeitraum: Die Altvorlage prüft das nicht; Umfang und Folgegrößen sind nicht belastbar'
+const FIRST = 'TE ≤ AE im ersten Zeitraum: Die Altvorlage prüft das nicht. Stichprobenumfang und Folgegrößen sind, soweit wie in der Vorlage gezeigt, nicht belastbar; bitte die erwartete Fehlerquote prüfen'
+const SECOND = 'TE ≤ AE im zweiten Zeitraum: Die Altvorlage prüft das nicht. Der neu berechnete Stichprobenumfang und die Folgegrößen sind, soweit wie in der Vorlage gezeigt, nicht belastbar; bitte die erwartete Fehlerquote des zweiten Zeitraums prüfen'
+const NEGATIVE = 'Negativer Nenner bei der Neuberechnung des Stichprobenumfangs für den zweiten Zeitraum: Die Altvorlage prüft das nicht. Umfang und Folgegrößen sind wie in der Vorlage gezeigt, aber nicht belastbar; bitte die Angaben beider Zeiträume prüfen'
 
 /** Hinweise der Webfassung zu Blatt X4; sie verändern kein Rechenergebnis. */
 function webHints(inputs: CellMap, results: CellMap): WebHint[] {

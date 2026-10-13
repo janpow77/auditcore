@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DownloadFile } from '@auditcore/common'
 import { saveFile as browserSaveFile } from '@auditcore/common/browser'
-import { FAMILIES, SHEETS, localizeFamilies, samplingTemplatesMessages, tableOf, withMessages, type Family, type MessageKey, type SheetModule, type Translate, type WorkspaceState } from '@auditcore/sampling-templates-core'
+import { FAMILIES, SHEETS, localizeFamilies, samplingTemplatesMessages, tableOf, withMessages, workspaceChecksum, type Family, type MessageKey, type SheetModule, type Translate, type WorkspaceState } from '@auditcore/sampling-templates-core'
 import { FaButton, FaDialog, translate, useI18n, type Locale } from '@auditcore/ui'
 import { computed, ref, watch } from 'vue'
 import DataTableDialog from './components/DataTableDialog.vue'
@@ -18,7 +18,7 @@ import { useAnnouncer, useFileDrop, useUnloadGuard } from './composables/useBrow
 import { useFileActions } from './composables/useFileActions'
 import { useLocalDraft } from './composables/useLocalDraft'
 import { useSamplingSession } from './composables/useSamplingSession'
-import type { MenuAction } from './types'
+import type { DraftMode, MenuAction } from './types'
 
 /**
  * Stichprobenrechner als Ganzes: Verfahrensauswahl, Rechenblatt mit mitlaufender
@@ -34,7 +34,12 @@ const props = withDefaults(
     locale?: Locale
     /** Überschriebene bzw. englische Texte der Oberfläche. */
     messages?: { de?: Partial<Record<MessageKey, string>>; en?: Partial<Record<MessageKey, string>> }
-    /** Lokalen Entwurf im Web Storage dieses Browsers halten; die Anwendung schaltet ihn bewusst ein. */
+    /**
+     * Zwischenstand im Web Storage dieses Browsers: `off` (Vorgabe), `session` (nur diese Sitzung) oder
+     * `device` (auf diesem Gerät behalten). Den Umschalter bietet die Anwendung an (Slot `draft`, Ereignis `draft`).
+     */
+    draft?: DraftMode
+    /** Veraltet: `true` entspricht `draft="device"`. */
     localDraft?: boolean
     /** Schlüssel des lokalen Entwurfs; je Anwendung verschieden wählen. */
     draftKey?: string
@@ -48,9 +53,9 @@ const props = withDefaults(
     /** Eigene Übergabe von Dateien an den Browser (Standard: Download über Blob). */
     saveFile?: (file: DownloadFile) => void | Promise<void>
   }>(),
-  { sheets: () => SHEETS, families: () => FAMILIES, locale: undefined, messages: undefined, localDraft: false, draftKey: 'entwurf', guardUnload: true, initialState: undefined, filePrefix: undefined, dataMark: undefined, saveFile: undefined },
+  { sheets: () => SHEETS, families: () => FAMILIES, locale: undefined, messages: undefined, draft: 'off', localDraft: false, draftKey: 'entwurf', guardUnload: true, initialState: undefined, filePrefix: undefined, dataMark: undefined, saveFile: undefined },
 )
-const emit = defineEmits<{ change: [state: WorkspaceState]; saved: [fileName: string]; opened: [fileName: string]; exported: [fileName: string] }>()
+const emit = defineEmits<{ change: [state: WorkspaceState]; saved: [fileName: string]; opened: [fileName: string]; exported: [fileName: string]; draft: [status: { mode: DraftMode; stored: boolean }]; dirty: [dirty: boolean] }>()
 
 const { locale } = useI18n(samplingTemplatesMessages, () => props.locale)
 const catalogs = computed(() => withMessages(props.messages))
@@ -66,14 +71,16 @@ const files = useFileActions(session, {
   onOpened: (name) => emit('opened', name),
   onExported: (name) => emit('exported', name),
 })
-const draft = useLocalDraft(session, { enabled: () => props.localDraft, key: () => props.draftKey, hasInitialState: () => props.initialState !== undefined, sheets: () => props.sheets, t })
+/** Stufe des Zwischenstands; die frühere Prop `localDraft` steht für „auf diesem Gerät“. */
+const draftMode = computed<DraftMode>(() => (props.draft !== 'off' ? props.draft : props.localDraft ? 'device' : 'off'))
+const draft = useLocalDraft(session, { mode: () => draftMode.value, onStored: (stored) => emit('draft', { mode: draftMode.value, stored }), key: () => props.draftKey, hasInitialState: () => props.initialState !== undefined, sheets: () => props.sheets, t })
 const { workspace, meta, notices, pickerOpen, flash, step, activeSheet, currentSheet, sections, summary, guide, strataCount, listView, selectedUnit, pasteColumns, report } = session
 const shownFamilies = computed(() => localizeFamilies(props.families, locale.value))
 /** Die Verfahrensauswahl steht im Schritt „Verfahren“, solange kein Verfahren gewählt ist oder es gewechselt wird. */
 const choosing = computed(() => step.value === 'method' && (pickerOpen.value || activeSheet.value === null))
 
-/** Aktion, die ungespeicherte Änderungen verwerfen würde und auf Bestätigung wartet. */
-const pending = ref<(() => void) | null>(null)
+/** Aktion, die auf Bestätigung wartet: Sie würde ungespeicherte Änderungen (`discard`) oder die Eingaben einer Schicht (`stratum`) verwerfen. */
+const pending = ref<{ run: () => void; kind: 'discard' | 'stratum' } | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 /** Blatt der gerade geöffneten Nachschlagetabelle (X1a). */
 const shownTable = ref<string | null>(null)
@@ -85,13 +92,19 @@ function guarded(action: () => void): void {
     action()
     revision.value += 1
   }
-  if (meta.value.dirty) pending.value = run
+  if (meta.value.dirty) pending.value = { run, kind: 'discard' }
   else run()
 }
 
 function confirmDiscard(): void {
-  pending.value?.()
+  pending.value?.run()
   pending.value = null
+}
+
+/** „Schicht entfernen“: Trägt die letzte Schicht Eingaben, fragt die Oberfläche vorher nach. */
+function removeStratum(): void {
+  if (session.lastStratumFilled.value) pending.value = { run: session.removeStratum, kind: 'stratum' }
+  else session.removeStratum()
 }
 
 const openFile = (file: File): void => guarded(() => void files.open(file))
@@ -105,13 +118,23 @@ const drop = useFileDrop(openFile)
 function onMenu(action: MenuAction): void {
   if (action === 'open') fileInput.value?.click()
   else if (action === 'save') void files.save()
-  else if (action === 'new') guarded(session.reset)
+  else if (action === 'new') guarded(resetAll)
   else if (action === 'sample') guarded(session.loadSample)
   else draft.clear()
 }
 
+/** Prüfsumme der Eingaben für den Bericht; sie ordnet den Ausdruck dem Arbeitsstand zu. */
+const checksum = ref('')
+watch([workspace, report], ([state, shown]) => (shown ? void workspaceChecksum(state).then((value) => (checksum.value = value)) : undefined), { immediate: true })
+
 /** Bericht drucken bzw. als PDF sichern: der Druckdialog des Browsers; das Druck-Stylesheet zeigt nur die Berichtsseite. */
 const print = (): void => window.print()
+
+/** Zurücksetzen: leeres Formular und kein Zwischenstand mehr, in keiner der beiden Ablagen. */
+function resetAll(): void {
+  session.reset()
+  draft.clear(false)
+}
 
 function onFileChosen(event: Event): void {
   const input = event.target as HTMLInputElement
@@ -136,8 +159,11 @@ const announced = useAnnouncer(() => {
 
 useUnloadGuard(() => props.guardUnload && meta.value.dirty)
 watch(workspace, (state) => emit('change', state))
+/** Ungesicherte Änderungen, für den Routenwächter der Anwendung: Ereignis `dirty` und die Methode `isDirty()`. */
+const dirty = computed(() => meta.value.dirty)
+watch(dirty, (value) => emit('dirty', value), { immediate: true })
 
-defineExpose({ state: workspace, open: files.open, save: files.save, exportResult: files.exportResult, reset: session.reset, loadSample: session.loadSample })
+defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace, open: files.open, save: files.save, exportResult: files.exportResult, reset: resetAll, loadSample: session.loadSample, clearDraft: () => draft.clear(false) })
 </script>
 
 <template>
@@ -150,14 +176,14 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
         </div>
         <div v-if="$slots.mark || dataMark" class="fa-st__mark" data-mark><slot name="mark">{{ dataMark }}</slot></div>
         <p class="fa-st__status" :class="statusClass" data-status><span class="fa-st__dot" aria-hidden="true"></span>{{ statusText }}</p>
-        <WorkspaceMenu :t="t" :draft="localDraft" @action="onMenu" />
+        <WorkspaceMenu :t="t" :draft="draftMode !== 'off'" @action="onMenu" />
         <FaButton variant="primary" :label="t('exportResult')" data-action="export" @click="files.exportResult()" />
         <input ref="fileInput" type="file" accept=".json,.xlsx,application/json" hidden :aria-label="t('menuOpen')" @change="onFileChosen" />
       </div>
     </header>
 
     <MethodBar :definition="activeSheet?.definition ?? null" :step="step" :sheets="sheets" :t="t" @change="((step = 'method'), (pickerOpen = true))" @step="session.setStep" @table="shownTable = $event" />
-    <div class="fa-st__inner"><NoticeList :notices="notices" :sample="meta.sample && !choosing" :t="t" @dismiss="session.dismiss" @clear="guarded(session.reset)" /></div>
+    <div class="fa-st__inner"><NoticeList :notices="notices" :sample="meta.sample && !choosing" :t="t" @dismiss="session.dismiss" @clear="guarded(resetAll)" /></div>
     <MethodPicker v-if="choosing" :families="shownFamilies" :sheets="sheets" :t="t" :current="workspace.activeMethod" :guide="guide" @select="session.selectMethod" @table="shownTable = $event" />
     <div v-else-if="currentSheet" class="fa-st__inner" :data-sheet-view="currentSheet.id">
       <UnitList
@@ -174,7 +200,7 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
         @paste="session.pasteUnits"
         @transfer="session.transferSubsamples"
       />
-      <ReportView v-if="report" :report="report" :t="t" @update="session.setInput" @print="print" />
+      <ReportView v-if="report" :report="report" :checksum="checksum" :t="t" @update="session.setInput" @print="print" />
       <div v-else-if="summary" class="fa-st__main">
         <SheetForm
           :key="`${currentSheet.id}-${selectedUnit}-${revision}`"
@@ -183,7 +209,7 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
           :t="t"
           @update="session.setInput"
           @add-stratum="session.addStratum"
-          @remove-stratum="session.removeStratum"
+          @remove-stratum="removeStratum"
         />
         <aside class="fa-st__aside" :aria-label="t('results')">
           <ResultPanel :summary="summary" :t="t" />
@@ -194,8 +220,9 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
 
     <footer class="fa-st__footer fa-st__inner">
       <p class="fa-st__muted" data-disclaimer>{{ t('disclaimer') }}</p>
-      <p class="fa-st__muted" data-template-status>{{ t('templateStatus') }}</p>
-      <p v-if="localDraft" class="fa-st__muted">{{ t('draftNote') }}</p>
+      <p class="fa-st__muted" data-template-status>{{ t('templateStatus') }} {{ t('verificationNote') }}</p>
+      <p v-if="draftMode !== 'off'" class="fa-st__muted" data-draft-note>{{ t(draftMode === 'session' ? 'draftNoteSession' : 'draftNote') }}</p>
+      <slot name="draft" :mode="draftMode" :stored="draft.stored.value" :clear="() => draft.clear()"></slot>
       <p v-if="locale !== 'de'" class="fa-st__muted" data-translation-note>{{ t('workingTranslation') }}</p>
       <p class="fa-st__flash" role="status" data-flash>{{ flash }}</p>
     </footer>
@@ -204,11 +231,11 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
 
     <DataTableDialog :table="shownTable ? (tableOf(shownTable, sheets) ?? null) : null" :t="t" :locale="locale" @close="shownTable = null" />
     <ImportPreview :preview="files.preview.value" :t="t" :locale="locale" @apply="applyImport" @cancel="files.cancelPreview" />
-    <FaDialog :open="pending !== null" :title="t('discardTitle')" size="sm" :locale="locale" @update:open="pending = null">
-      <p>{{ t('discardText') }}</p>
+    <FaDialog :open="pending !== null" :title="t(pending?.kind === 'stratum' ? 'removeStratumTitle' : 'discardTitle')" size="sm" :locale="locale" @update:open="pending = null">
+      <p class="fa-st__scope">{{ t(pending?.kind === 'stratum' ? 'removeStratumText' : 'discardText') }}</p>
       <template #footer>
         <FaButton :label="t('cancel')" @click="pending = null" />
-        <FaButton variant="danger" :label="t('discard')" data-action="discard" @click="confirmDiscard" />
+        <FaButton variant="danger" :label="t(pending?.kind === 'stratum' ? 'removeStratum' : 'discard')" data-action="discard" @click="confirmDiscard" />
       </template>
     </FaDialog>
   </section>

@@ -41,8 +41,8 @@ function caseFields(row: number, index: number): FieldDefinition[] {
   return [
     { cell: `A${row}`, alias: `case${number}Operation`, kind: 'input', type: 'text', label: `${CASE_HEADERS.A} ${number}` },
     { cell: `B${row}`, alias: `case${number}Programme`, kind: 'input', type: 'text', label: `${CASE_HEADERS.B} ${number}` },
-    { cell: `C${row}`, alias: `case${number}BookValue`, kind: 'input', type: 'amount', format: EUR, label: `${CASE_HEADERS.C} ${number}` },
-    { cell: `D${row}`, alias: `case${number}Error`, kind: 'input', type: 'amount', format: EUR, label: `${CASE_HEADERS.D} ${number}` },
+    { cell: `C${row}`, alias: `case${number}BookValue`, kind: 'input', type: 'amount', format: EUR, optional: `case${number}`, label: `${CASE_HEADERS.C} ${number}` },
+    { cell: `D${row}`, alias: `case${number}Error`, kind: 'input', type: 'amount', format: EUR, optional: `case${number}`, label: `${CASE_HEADERS.D} ${number}` },
     { cell: `E${row}`, alias: `case${number}ErrorRate`, kind: 'formula', type: 'percent', format: '0.0%', label: `${CASE_HEADERS.E} ${number}` },
     { cell: `F${row}`, alias: `case${number}ErrorType`, kind: 'input', type: 'text', label: `${CASE_HEADERS.F} ${number}` },
     { cell: `G${row}`, alias: `case${number}Status`, kind: 'input', type: 'text', label: `${CASE_HEADERS.G} ${number}` },
@@ -52,9 +52,22 @@ function caseFields(row: number, index: number): FieldDefinition[] {
 const controls: FieldDefinition[] = [
   { cell: 'J4', alias: 'asOf', kind: 'input', type: 'text', format: 'dd\\.mm\\.yyyy', label: 'Stand' },
   { cell: 'J5', alias: 'status', kind: 'input', type: 'text', default: 'vorläufig', label: 'Status' },
-  { cell: 'J6', alias: 'auditedExpenditure', kind: 'input', type: 'amount', format: EUR, label: 'Geprüfte Ausgaben der Stichprobe' },
-  { cell: 'J7', alias: 'article98Amounts', kind: 'input', type: 'amount', format: EUR, label: 'Beträge nach Artikel 98 Absatz 6 (E)' },
-  { cell: 'J8', alias: 'financialCorrections', kind: 'input', type: 'amount', format: EUR, label: 'Finanzkorrekturen (H)' },
+  { cell: 'J6', alias: 'auditedExpenditure', kind: 'input', type: 'amount', format: EUR, optional: true, label: 'Geprüfte Ausgaben der Stichprobe' },
+  { cell: 'J7', alias: 'article98Amounts', kind: 'input', type: 'amount', format: EUR, optional: true, label: 'Beträge nach Artikel 98 Absatz 6 (E)' },
+  { cell: 'J8', alias: 'financialCorrections', kind: 'input', type: 'amount', format: EUR, optional: true, label: 'Finanzkorrekturen (H)' },
+]
+
+/**
+ * Angaben für Kopf- und Fußzeile (Hinweis der Webfassung, Zellen W4–W7 sind in
+ * der Vorlage unbelegt). Die Vorlage nennt an diesen Stellen fest ein Programm
+ * und eine Prüfbehörde; die Webfassung fragt beides ab.
+ */
+const identity: FieldDefinition[] = [
+  { cell: 'W4', alias: 'programmeName', kind: 'input', type: 'text', web: true, label: 'Bezeichnung des Programms (Kopfzeile)', hint: 'Ohne Angabe gilt „Programm(e) / CCI“ aus dem gewählten Verfahren.' },
+  { cell: 'W5', alias: 'auditAuthority', kind: 'input', type: 'text', web: true, label: 'Prüfbehörde (Fußzeile)' },
+  { cell: 'W6', alias: 'auditAuthorityUnit', kind: 'input', type: 'text', web: true, label: 'Organisationseinheit (Fußzeile, freiwillig)' },
+  { cell: 'W7', alias: 'auditAuthorityPlace', kind: 'input', type: 'text', web: true, label: 'Ort (Fußzeile, freiwillig)' },
+  { cell: 'W8', alias: 'footer', kind: 'formula', type: 'text', web: true, label: 'Fußzeile' },
 ]
 
 const head: FieldDefinition[] = [
@@ -109,6 +122,7 @@ export const definition: MethodDefinition = {
   legalBasis: '',
   sections: [
     { id: 'S', title: 'Steuerfelder (werden nicht gedruckt)', fields: controls },
+    { id: 'W', title: 'Programm und Prüfbehörde', reference: 'Hinweis der Webfassung', fields: identity },
     { id: 'K', title: TITLE, fields: head },
     { id: '1', title: 'Grundgesamtheit und Stichprobe', fields: population },
     { id: '2', title: 'Ergebnisse der Vorhabenprüfungen', fields: cases },

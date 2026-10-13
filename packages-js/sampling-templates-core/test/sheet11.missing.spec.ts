@@ -4,10 +4,11 @@ import { cellsOf, defaultInputs, fieldsOf, inputFields } from '../src/model/defi
 import { evaluateSheet } from '../src/model/evaluate'
 import { TEMPLATE_POLICY } from '../src/model/policy'
 import { createContext } from '../src/model/sheet'
-import type { CellValue, WebHint } from '../src/model/types'
+import type { CellMap, CellValue, WebHint } from '../src/model/types'
 import { en as shared } from '../src/sheets/01_Parameter/texts.en'
 import { sheet } from '../src/sheets/11_SRS_2Z_S/index'
 import { en } from '../src/sheets/11_SRS_2Z_S/texts.en'
+import { isQualified, limitationsOf } from '../src/view/limits'
 import { buildSummary } from '../src/view/summaryView'
 import { caseInputs, loadGolden } from './golden'
 
@@ -27,6 +28,12 @@ const INPUT_ROWS = ['11', '12', '13', '14', '29', '30', '49', '50', '51', '52', 
 /** Hohe Standardabweichung der Stichprobe in Zeitraum 1: Der Nenner des Standardansatzes wird negativ. */
 const PRECISION_CELLS = ['C93', 'C96', 'C97', 'C98', 'C101', 'C102']
 const nulls = (count: number): null[] => Array.from({ length: count }, () => null)
+
+/** Hinweis „wie in der Vorlage gezeigt, obwohl die Grundlage fehlt“ zu den Eingaben – in Warnfarbe, die Würdigung ist dann nicht uneingeschränkt grün. */
+function withoutBasisHint(inputs: CellMap): { tone?: string; qualified: boolean } {
+  const limitations = limitationsOf(sheet, inputs, evaluateSheet(sheet, inputs, context).cells, context, t)
+  return { tone: limitations.find((entry) => entry.kind === 'withoutBasis')?.tone, qualified: isQualified(limitations) }
+}
 
 /** Dieselben Werte einer Schicht in eine andere Spalte verschoben. */
 function moved(inputs: Inputs, from: string, to: string): Inputs {
@@ -187,24 +194,51 @@ describe('Blatt 11_SRS_2Z_S: Richtlinie für fehlende Angaben', () => {
     expect(unaudited.cells.E89).toBeNull()
     expect(unaudited.cells.C89).toBeCloseTo((run().C89 as number) - (run().E89 as number), 6)
     expect(unaudited.assumed).toContainEqual({ input: 'E85', cells, kind: 'partialErrorSum' })
-    // Trägt keine Schicht eine Fehlersumme, gibt es kein Ergebnis und nichts auszuweisen.
-    const none = evaluateSheet(sheet, { ...sample, D50: null, E50: null, F50: null, D85: null, E85: null, F85: null }, context)
-    expect([none.cells.D89, none.cells.C89, none.cells.C92]).toEqual(nulls(3))
-    expect(none.assumed).toEqual([])
-    expect(none.lacking.size).toBe(0)
   })
 
-  it('Wert ohne Grundlage (withoutBasis): offen ohne „Angabe fehlt“; wie die Vorlage gezeigt', () => {
+  it('keine Schicht trägt eine Fehlersumme (withoutBasis): Hochrechnung 0 € wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
+    const inputs = { ...sample, D50: null, E50: null, F50: null, D85: null, E85: null, F85: null }
+    // Nichts wurde „mit 0 berechnet“ (keine andere Schicht trägt eine Fehlersumme); die Summen 0 der Vorlage stehen als Werte ohne Grundlage.
+    const none = evaluateSheet(sheet, inputs, context)
+    expect(none.complete).toBe(true)
+    expect([none.cells.C50, none.cells.C85, none.cells.D89, none.cells.C89, none.cells.C92]).toEqual([0, 0, 0, 0, null])
+    expect(none.withoutBasis).toEqual(['C50', 'C85', 'D89', 'E89', 'F89', 'C89'])
+    expect(none.assumed).toEqual([])
+    expect(none.lacking.size).toBe(0)
+    expect(none.cells).toEqual(evaluateSheet(sheet, inputs, likeTemplate).cells)
+    expect(withoutBasisHint(inputs)).toEqual({ tone: 'warning', qualified: true })
+    // Fehlt dazu die voraussichtliche Fehlerquote (Pflichteingabe), bleibt die Hochrechnung offen – ohne „Angabe fehlt“ an diesen Zellen.
+    const incomplete = evaluateSheet(sheet, { ...inputs, C25: null }, context)
+    expect(incomplete.complete).toBe(false)
+    expect([incomplete.cells.C50, incomplete.cells.D89, incomplete.cells.C89, incomplete.cells.C92]).toEqual(nulls(4))
+    expect(incomplete.withoutBasis).toEqual([])
+    expect(['D89', 'C89'].some((cell) => incomplete.lacking.has(cell))).toBe(false)
+  })
+
+  it('Wert ohne Grundlage (withoutBasis): bei „TE ≤ AE“ wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
     const inputs = { ...sample, C25: 0.025, C33: NONE }
+    const cells = ['C44', 'D46', 'D77', 'D79', 'C80', 'C93', 'C102']
+    const pick = (results: CellMap): unknown[] => cells.map((cell) => results[cell] ?? null)
+    // Alle Pflichteingaben liegen vor: Untergrenzen, Genauigkeit 0 und die Würdigung „✔“ stehen wie in der Vorlage – mit Hinweis in Warnfarbe.
     const current = evaluateSheet(sheet, inputs, context)
-    expect([current.cells.C44, current.cells.D46, current.cells.D77, current.cells.D79, current.cells.C80, current.cells.C93, current.cells.C102]).toEqual(nulls(7))
+    expect(current.complete).toBe(true)
+    expect(pick(current.cells)).toEqual([0, '✔ ≥ 3', 3, '✔ ≥ 3', 16, 0, '✔ GFQ und obere Fehlergrenze unter der Schwelle'])
+    expect(current.cells).toEqual(evaluateSheet(sheet, inputs, likeTemplate).cells)
+    for (const cell of cells) expect(current.withoutBasis, cell).toContain(cell)
     expect(current.lacking.size).toBe(0)
     expect(current.assumed).toEqual([])
-    const shown = evaluateSheet(sheet, inputs, likeTemplate).cells
-    expect([shown.C44, shown.D46, shown.D77, shown.D79, shown.C80, shown.C93]).toEqual([0, '✔ ≥ 3', 3, '✔ ≥ 3', 16, 0])
-    expect(shown.C102).toBe('✔ GFQ und obere Fehlergrenze unter der Schwelle')
+    expect(withoutBasisHint(inputs)).toEqual({ tone: 'warning', qualified: true })
+    // Fehlt dazu σ Zeitraum 1 einer belegten Schicht (Pflichteingabe), bleiben die Werte ohne Grundlage offen – ohne „Angabe fehlt“ an diesen Zellen.
+    const incomplete = evaluateSheet(sheet, { ...inputs, E29: null }, context)
+    expect(incomplete.complete).toBe(false)
+    expect(pick(incomplete.cells)).toEqual(nulls(7))
+    expect(incomplete.withoutBasis).toEqual([])
+    expect(cells.some((cell) => incomplete.lacking.has(cell))).toBe(false)
+    expect(withoutBasisHint({ ...inputs, E29: null }).tone).toBeUndefined()
     // Mit Gesamtumfang ist die Untergrenze 3 für eine erst in Zeitraum 2 belegte Schicht begründet (Art. 5 Abs. 5).
-    expect(run({ G57: 35, G58: 3200000, G59: 11800, C33: NONE }).G77).toBe(3)
+    const founded = evaluateSheet(sheet, { ...sample, G57: 35, G58: 3200000, G59: 11800, C33: NONE }, context)
+    expect(founded.cells.G77).toBe(3)
+    expect(founded.withoutBasis).not.toContain('G77')
   })
 })
 

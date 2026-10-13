@@ -17,13 +17,27 @@ const METHOD_READERS: readonly SheetId[] = ['18_GFQ_AnhIII', '20_Druck_KOM']
  * der Richtlinie (`model/policy.ts`); `policy` ersetzt sie für Vergleiche.
  */
 export function computeWorkspace(state: WorkspaceState, sheets: readonly SheetModule[] = SHEETS, policy?: MissingPolicy): Record<SheetId, CellMap> {
-  const results: Record<SheetId, CellMap> = {}
+  const incomplete = new Set<SheetId>()
+  // Welche Blätter nicht vollständig ausgefüllt sind, reist mit den Ergebnissen (für `contextFor`), ohne als Blatt zu zählen.
+  const results: Record<SheetId, CellMap> = { [INCOMPLETE]: incomplete } as Record<SheetId, CellMap>
   for (const sheet of sheets) {
     const inputs = state.sheets[sheet.id]
     if (!sheet.available || sheet.definition.layout === 'list' || Array.isArray(inputs)) continue
-    results[sheet.id] = evaluateSheet(sheet, (inputs as CellMap | undefined) ?? {}, contextFor(sheet.id, state, results, policy), false).cells
+    const evaluation = evaluateSheet(sheet, (inputs as CellMap | undefined) ?? {}, contextFor(sheet.id, state, results, policy), false)
+    results[sheet.id] = evaluation.cells
+    if (!evaluation.complete) incomplete.add(sheet.id)
   }
   return results
+}
+
+/** Schlüssel, unter dem `computeWorkspace` die nicht vollständig ausgefüllten Blätter an die Ergebnisse hängt. */
+const INCOMPLETE = Symbol('incomplete')
+type IncompleteCarrier = { [INCOMPLETE]?: ReadonlySet<SheetId> }
+const ACTIVE_METHOD = '<aktives Verfahren>'
+/** Blätter, aus denen ein Blatt Werte bezieht: Fehlt dort eine Pflichteingabe, ist auch das beziehende Blatt nicht vollständig. */
+const SOURCES: Readonly<Record<SheetId, readonly string[]>> = {
+  '18_GFQ_AnhIII': ['02_Grundgesamtheit', ACTIVE_METHOD],
+  '20_Druck_KOM': ['02_Grundgesamtheit', ACTIVE_METHOD, '18_GFQ_AnhIII'],
 }
 
 /**
@@ -32,7 +46,10 @@ export function computeWorkspace(state: WorkspaceState, sheets: readonly SheetMo
  * Methodenblatts. Anzeige und Export verwenden denselben Kontext wie die Rechnung.
  */
 export function contextFor(sheet: SheetId, state: WorkspaceState, results: Readonly<Record<SheetId, CellMap>>, policy?: MissingPolicy): SheetContext {
-  return createContext({ sheets: results, method: methodFor(sheet, state, results), policy })
+  const sources = SOURCES[sheet]?.map((source) => (source === ACTIVE_METHOD ? state.activeMethod : source)) ?? []
+  const incomplete = (results as IncompleteCarrier)[INCOMPLETE]
+  const sourceIncomplete = sources.some((source) => source !== null && incomplete?.has(source) === true)
+  return createContext({ sheets: results, method: methodFor(sheet, state, results), policy, ...(sourceIncomplete ? { sourceIncomplete } : {}) })
 }
 
 /** Ergebnisübersicht des gewählten Methodenblatts – nur für die Blätter 18 und 20. */

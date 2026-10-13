@@ -57,6 +57,7 @@
 /* Mit `.fa-st` davor, damit die Liste die Punkte behält, die der Rechner Listen sonst nimmt. */
 .fa-st .fa-st__report-hints,
 .fa-st__report-hints { display: flex; flex-direction: column; gap: 0.125rem; padding-left: var(--fa-space-4); list-style: disc; }
+.fa-st__report-identity { display: flex; flex-wrap: wrap; gap: 0 var(--fa-space-3); font-family: var(--fa-font-mono); overflow-wrap: anywhere; }
 .fa-st__report-footer { padding-top: var(--fa-space-1); border-top: 1px solid var(--fa-color-border); color: var(--fa-color-text-muted); }
 
 /* Schmale Behälter: Steuerfelder unter der Seite, Tabellen rollen in der Seite */
@@ -66,7 +67,8 @@
 }
 
 @media print {
-  @page { size: A4 portrait; margin: 12.7mm 15.2mm 17.8mm; }
+  /* Benannte Seite: Die Seitengröße gilt nur für die Berichtsseite, nicht für andere Ausdrucke der einbindenden Anwendung. */
+  @page fa-st-report { size: A4 portrait; margin: 12.7mm 15.2mm 17.8mm; }
 
   /* Nur die Berichtsseite: Alles, was sie weder ist noch enthält, entfällt; was sie enthält, verliert Rahmen und Abstände. */
   body:has(.fa-st__report-page) *:not(:has(.fa-st__report-page)):not(.fa-st__report-page):not(.fa-st__report-page *) { display: none !important; }
@@ -86,6 +88,7 @@
     transform: none !important;
   }
   .fa-st__report-page {
+    page: fa-st-report;
     --fa-color-text: black;
     --fa-color-text-muted: black;
     --fa-color-border: black;
@@ -108,6 +111,8 @@
   .fa-st__report-notes { margin-top: 2mm; font-size: 7.5pt; }
   .fa-st__report-screen { display: none !important; }
   .fa-st__report-print { display: block; }
+  /* Leerer Freitext: kein Platzhalter im Druck, nur eine Leerzeile. */
+  .fa-st__report-blank { min-height: 1.3em; }
   td > .fa-st__report-print { display: inline; }
   .fa-st__report-table :is(th, td) { padding: 0.6mm 1mm; }
   .fa-st__report-table tbody tr { height: 5mm; }

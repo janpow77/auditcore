@@ -15,7 +15,7 @@ const view = computed(() => (props.table ? buildDataTable(props.table) : null))
 
 <template>
   <FaDialog :open="view !== null" :title="view?.title ?? ''" size="lg" :locale="locale" @update:open="$emit('close')">
-    <div v-if="view" class="fa-st__datatable" data-table>
+    <div v-if="view" class="fa-st__datatable fa-st__scope" data-table>
       <p class="fa-st__muted">{{ t('dataTable') }} · {{ t('tableSource', { source: view.source }) }}</p>
       <div class="fa-st__datatable-scroll" role="region" tabindex="0" :aria-label="t('tableScroll')">
         <table class="fa-st__datatable-table">

@@ -1,7 +1,7 @@
 /**
  * Begründete Abweichungen des Blatts 12 vom Verhalten der Vorlage bei leeren
- * Eingaben. In allen Fällen zeigt die Webfassung „Angabe fehlt“ (`null`), nie
- * einen anderen Wert als die Vorlage. `whenEmpty` nennt je Zelle die Eingaben,
+ * Eingaben. Fehlt eine Pflichteingabe, zeigt die Webfassung „Angabe fehlt“
+ * (`null`), nie einen anderen Wert als die Vorlage. `whenEmpty` nennt je Zelle die Eingaben,
  * deren Fehlen die Zelle leert – unmittelbar oder über Zwischenzellen; die
  * Listen folgen deshalb dem Aufbau der Formeln. Wo die Vorlage bei einer
  * fehlenden Eingabe selbst nichts zeigt (z. B. Division durch 0 bei leerer
@@ -9,6 +9,10 @@
  * Dazu die Werte ohne Grundlage (`kind: 'withoutBasis'`): der anzuwendende Umfang
  * für Zeitraum 2 aus der bloßen Untergrenze 3 und die Hochrechnung 0, solange
  * kein Zeitraum eine Fehlersumme trägt.
+ * Werte ohne Grundlage lässt die Webfassung offen, solange eine Pflichteingabe
+ * fehlt; bei vollständigen Pflichteingaben zeigt sie sie wie die Vorlage und
+ * weist sie mit einem Hinweis in Warnfarbe aus (`evaluateSheet`, Hinweis
+ * `without-basis`); die Würdigung ist dann nicht uneingeschränkt grün.
  * Jede Zeile ist durch mindestens einen Golden-Fall belegt (test/deviations.spec.ts).
  */
 import type { CellAddress, Deviation } from '../../model/types'
@@ -60,7 +64,7 @@ const THIRD_TEMPLATE = 'Wert auf Grundlage der mit 0 gerechneten Angabe (z. B. U
 const FLOOR_REASON =
   'Ohne gewählten Umfang für Zeitraum 2 bleibt in der Vorlage nur die Untergrenze von 3 Einheiten (MAX übergeht den leeren Bezug); als anzuwendender Umfang hätte sie keine Grundlage.'
 
-/** Werte ohne Grundlage (`unfounded`): Die Webfassung zeigt sie nach der geltenden Richtlinie nicht. */
+/** Werte ohne Grundlage (`unfounded`): offen, solange eine Pflichteingabe fehlt; bei vollständigen Pflichteingaben wie die Vorlage mit Hinweis. */
 const withoutBasis: readonly Deviation[] = [
   // Gewählter Umfang je nach Ansatz der Neuberechnung: Standard C73, Global C81, Erhöhung C83, keine Neuberechnung C46.
   ...entries(['C84'], ['C73', 'C81', 'C83', 'C46'], '3 (Untergrenze, obwohl für Zeitraum 2 kein Umfang bestimmt ist, z. B. beim leeren Formular oder bei „TE ≤ AE“)', FLOOR_REASON, 'withoutBasis'),

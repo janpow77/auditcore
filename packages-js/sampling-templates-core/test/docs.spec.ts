@@ -11,7 +11,7 @@ import type { AvailableSheet } from '../src/model/sheet'
 import { STRATA_COLUMNS, TEMPLATE_STRATA } from '../src/model/strata'
 import { availableSheets } from '../src/sheets/registry'
 import { LEGACY_STRATA } from '../src/sheets/shared/legacy'
-import { TOLERANCE, compareCase, goldenFiles, templateMismatches, type CaseReport, type GoldenCase } from './golden'
+import { AMOUNT_TOLERANCE, TOLERANCE, compareCase, goldenFiles, templateMismatches, type CaseReport, type GoldenCase } from './golden'
 
 const WRITE = process.env.SAMPLING_TEMPLATES_WRITE_DOCS === '1'
 /** Während mehrere Blätter gleichzeitig entstehen, werden die Nachweise erst beim Zusammenführen erzeugt. */
@@ -34,6 +34,8 @@ interface Counts {
   cases: number
   compared: number
   explained: number
+  /** Würdigungen an der Toleranzkante bei 17-stelliger Eingabe. */
+  edge: number
   unexplained: number
   /** Abweichungen unter der Richtlinie „wie die Vorlage“. */
   template: number
@@ -45,6 +47,7 @@ function countsOf(sheet: AvailableSheet, cases: readonly GoldenCase[]): Counts &
     cases: list.length,
     compared: total(list, (report) => report.compared),
     explained: total(list, (report) => report.explained.length),
+    edge: total(list, (report) => report.edge.length),
     unexplained: total(list, (report) => report.unexplained.length),
     template: cases.reduce((sum, golden) => sum + templateMismatches(sheet, golden).length, 0),
     reports: list,
@@ -55,15 +58,16 @@ const add = (left: Counts, right: Counts): Counts => ({
   cases: left.cases + right.cases,
   compared: left.compared + right.compared,
   explained: left.explained + right.explained,
+  edge: left.edge + right.edge,
   unexplained: left.unexplained + right.unexplained,
   template: left.template + right.template,
 })
 
 const row = (name: string, counts: Counts): string =>
-  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.unexplained} | ${counts.explained} | ${counts.unexplained} | ${counts.template} |`
+  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.edge - counts.unexplained} | ${counts.explained} | ${counts.edge} | ${counts.unexplained} | ${counts.template} |`
 
-const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, unexplained: 0, template: 0 }
-const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|']
+const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, edge: 0, unexplained: 0, template: 0 }
+const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|']
 
 function comparison(): string {
   const lines = [
@@ -74,11 +78,26 @@ function comparison(): string {
     'Je Fall werden die Eingaben in eine Kopie der Excel-Vorlage geschrieben, die Mappe wird mit LibreOffice',
     'neu berechnet (`scripts/golden_recalc.py`), und jede Formelzelle des Blatts wird mit dem Rechenkern verglichen:',
     `Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz ${TOLERANCE}, Texte wortgleich.`,
+    `Bei Eurobeträgen gilt zusätzlich ein absoluter Unterschied bis ${AMOUNT_TOLERANCE} € als gleich (Rauschen aus einer`,
+    'Auslöschung, Blatt 20 G43). Werte ab 10¹⁵ liegen außerhalb des geprüften Zahlenbereichs: Dort wird nur die',
+    'Größenordnung verglichen (relativ 0,001), und die Webfassung weist das Ergebnis als nicht belastbar aus.',
+    '',
+    '**Grenze dieses Nachweises:** Alle Sollwerte stammen aus der Neuberechnung der Vorlage mit LibreOffice 24.2.',
+    'Eine Gegenprobe mit Microsoft Excel steht aus. Vergleichstoleranz (2⁻⁴⁸), `AUFRUNDEN` (Kürzung auf zwölf geltende',
+    'Stellen) und die Summation mit Fehlerausgleich sind an LibreOffice gemessen; ob Excel an Schwellen und beim',
+    'Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.',
     '',
     '- **Begründet** sind Zellen, an denen die Webfassung nach der geltenden Richtlinie für fehlende Angaben keinen Wert',
-    '  zeigt, während die Vorlage einen zeigt ([abweichungen.md](abweichungen.md)); die Gegenprobe ist bestanden.',
+    '  zeigt, während die Vorlage einen zeigt ([abweichungen.md](abweichungen.md)); die Gegenprobe ist bestanden. Seit der',
+    '  Regel „bei vollständigen Pflichteingaben immer wie die Vorlage“ entstehen sie nur noch, wo eine Eingabe fehlt.',
+    '- **Toleranzkante** sind Würdigungen, bei denen die Quote genau auf der Vergleichstoleranz liegt und der Fall eine',
+    '  Eingabe mit 16 oder 17 geltenden Stellen trägt (Prüfsonde der Abnahme). Geprüft ist je Zelle: Mit der um höchstens',
+    '  zwei letzte Stellen verschobenen Eingabe zeigt die Webfassung genau den Text der Vorlage. Über die Oberfläche lässt',
+    '  sich eine solche Zahl nicht eingeben.',
     '- **„Wie die Vorlage“** ist dieselbe Rechnung unter der Richtlinie `TEMPLATE_POLICY` (jede fehlende Angabe mit 0',
     '  gerechnet): Dann muss jede Zelle den Wert der Vorlage zeigen.',
+    '- Die Fallsätze `abnahme-grund`, `abnahme-luecken` und `abnahme-schwelle` sind die 6.805 Fälle der unabhängigen',
+    '  Gesamtabnahme (eigener Generator, Einzellücken-Matrix, Schwellen- und Ganzzahlsonden).',
     '',
     `| Blatt ${HEAD[0]}`,
     `|---${HEAD[1]}`,

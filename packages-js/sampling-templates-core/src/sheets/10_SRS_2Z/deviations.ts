@@ -1,13 +1,18 @@
 /**
  * Begründete Abweichungen des Blatts 10 vom Verhalten der Vorlage bei leeren
- * Eingaben. In allen Fällen zeigt die Webfassung „Angabe fehlt“ (`null`), nie
- * einen anderen Wert als die Vorlage. `whenEmpty` nennt je Zelle die Eingaben,
+ * Eingaben. Fehlt eine Pflichteingabe, zeigt die Webfassung „Angabe fehlt“
+ * (`null`), nie einen anderen Wert als die Vorlage. `whenEmpty` nennt je Zelle die Eingaben,
  * deren Fehlen in den Golden-Fällen die Abweichung auslöst – jede ist durch
  * einen Fall „alles ausgefüllt außer …“ belegt. Wo die Vorlage bei einer
  * fehlenden Eingabe selbst nichts zeigt (z. B. C33 ohne Wesentlichkeitsschwelle),
  * steht die Eingabe nicht in der Liste. Dazu die Werte ohne Grundlage
  * (`kind: 'withoutBasis'`): der anzuwendende Umfang für Zeitraum 2 aus den bloßen
  * Untergrenzen und die Hochrechnung 0, solange kein Zeitraum eine Fehlersumme trägt.
+ *
+ * Werte ohne Grundlage lässt die Webfassung offen, solange eine Pflichteingabe
+ * fehlt; bei vollständigen Pflichteingaben zeigt sie sie wie die Vorlage und
+ * weist sie mit einem Hinweis in Warnfarbe aus (`evaluateSheet`, Hinweis
+ * `without-basis`); die Würdigung ist dann nicht uneingeschränkt grün.
  */
 import type { CellAddress, Deviation } from '../../model/types'
 
@@ -56,7 +61,7 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C83', 'C84', 'C91', 'C92', 'N5', 'N11'], ['C7', 'C49'], 'Hochrechnung auf Grundlage von 0 € abzüglich des Buchwerts der umfassenden Schicht (negativer Betrag)', BOOK_VALUE),
   ...entries(['C85', 'C88', 'C89', 'C90', 'C93', 'N7'], ALL_INPUTS, 'Wert auf Grundlage der mit 0 gerechneten Umfänge bzw. einer Zufallsschicht mit N ≤ 0', FINAL),
   ...entries(['C94'], ['C7', 'C8', 'C14', 'C15', 'C26', 'C29', 'C30', 'C49', 'C50', 'C56'], 'Würdigung auf Grundlage der mit 0 gerechneten Genauigkeit', FINAL),
-  // Werte ohne Grundlage (`unfounded`): Die Webfassung zeigt sie nach der geltenden Richtlinie nicht.
+  // Werte ohne Grundlage (`unfounded`): offen, solange eine Pflichteingabe fehlt; bei vollständigen Pflichteingaben wie die Vorlage mit Hinweis.
   ...entries(
     ['C73', 'C74', 'C75', 'C76', 'N10'],
     ['C63'],

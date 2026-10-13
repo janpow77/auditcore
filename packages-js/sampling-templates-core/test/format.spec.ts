@@ -22,6 +22,11 @@ describe('Deutsche Zahleneingabe', () => {
     expect(parseFieldInput({ type: 'decimal' }, '0,0451')).toEqual({ ok: true, value: 0.0451 })
     expect(parseFieldInput({ type: 'percent' }, '0,125 %')).toEqual({ ok: true, value: 0.00125 })
     expect(parseFieldInput({ type: 'amount' }, '1,234')).toEqual({ ok: false, reason: 'ambiguous' })
+    // Zu genaue Eingaben nennen den Grund (Abnahme N6): Betrag mit mehr als zwei, Dezimalzahl mit mehr als zehn Nachkommastellen.
+    expect(parseFieldInput({ type: 'amount' }, '0,045')).toEqual({ ok: false, reason: 'cents' })
+    expect(parseFieldInput({ type: 'amount' }, '12,3456')).toEqual({ ok: false, reason: 'cents' })
+    expect(parseFieldInput({ type: 'decimal' }, '0,12345678901')).toEqual({ ok: false, reason: 'decimals' })
+    expect(parseFieldInput({ type: 'decimal' }, '0,1234567890')).toEqual({ ok: true, value: 0.123456789 })
   })
 
   it('Ganzzahlfelder: Punkt ist Tausendertrenner, Nachkommastellen werden abgelehnt', () => {

@@ -1,14 +1,21 @@
 /** Blatt 20_Druck_KOM: Druckfassung für die Kommission; liest Blatt 02, das aktive Verfahren und Blatt 18. */
-import { defineSheet } from '../../model/sheet'
+import { defineSheet, type Adaptation } from '../../model/sheet'
 import type { CellMap } from '../../model/types'
-import { compute } from './compute'
+import { compute, headLead } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { webHints } from './hints'
 import { en } from './texts.en'
 
-/** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
+/** Beginn des Teils der Kopfzeile, den die Webfassung unverändert aus der Vorlage übernimmt. */
+const HEAD_TAIL_START = 'CCI '
+
+/** Erfundene Beispielwerte; sie stammen aus keiner Prüfung, Programm und Prüfbehörde gibt es nicht. */
 const sample: CellMap = {
+  W4: 'Beispielprogramm EFRE Musterland 2021–2027',
+  W5: 'Prüfbehörde Musterland (Beispiel)',
+  W6: 'Referat Beispiel',
+  W7: 'Musterstadt',
   J4: '13.10.2026',
   J5: 'vorläufig',
   J6: 5300000,
@@ -28,4 +35,17 @@ const sample: CellMap = {
   G21: 'endgültig',
 }
 
-export const sheet = defineSheet({ id: '20_Druck_KOM', definition, compute, sample: { inputs: sample }, deviations, webHints, translations: { en } })
+/**
+ * Kopfzeile A6: Die Vorlage beginnt sie mit einem festen Programmnamen. Die
+ * Webfassung setzt die Bezeichnung des Programms ein, die die Prüfbehörde angibt
+ * (W4); der Rest der Zeile – ab „CCI“ – ist wie in der Vorlage.
+ */
+const adapted: readonly Adaptation[] = [
+  {
+    cell: 'A6',
+    reason: 'Die Vorlage nennt in der Kopfzeile fest ein bestimmtes Programm; die Webfassung nennt das Programm der Prüfbehörde, die den Bericht erstellt.',
+    fromTemplate: (shown, results) => (typeof shown === 'string' && shown.includes(HEAD_TAIL_START) ? `${headLead(results.W4)}${shown.slice(shown.indexOf(HEAD_TAIL_START))}` : shown),
+  },
+]
+
+export const sheet = defineSheet({ id: '20_Druck_KOM', definition, compute, sample: { inputs: sample }, deviations, webHints, adapted, translations: { en } })

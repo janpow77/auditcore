@@ -12,7 +12,7 @@ import type { CellValue, ListKey, Parameters } from '../model/types'
 export const PERCENT_DIGITS = 3
 const MAX_DECIMALS = 10
 
-export type InputFailure = 'ambiguous' | 'invalid' | 'negative' | 'integer'
+export type InputFailure = 'ambiguous' | 'invalid' | 'negative' | 'integer' | 'cents' | 'decimals'
 
 /** Ergebnis einer Feldeingabe: Wert (leer = `null`) oder Grund der Ablehnung. */
 export type InputResult = { ok: true; value: CellValue } | { ok: false; reason: InputFailure }
@@ -23,6 +23,8 @@ export const INPUT_FAILURE_HINTS: Readonly<Record<InputFailure, string>> = {
   invalid: PARSE_FAILURE_HINTS.invalid,
   negative: PARSE_FAILURE_HINTS.negative,
   integer: 'ganze Zahl erwartet',
+  cents: 'Beträge mit höchstens zwei Nachkommastellen',
+  decimals: `höchstens ${MAX_DECIMALS} Nachkommastellen`,
 }
 
 /** „2“ Prozent → 0.02, ohne Gleitkommarauschen (Verschieben des Kommas im Dezimaltext). */
@@ -52,7 +54,20 @@ function decimalComma(text: string): string | null {
 
 type DecimalText = { ok: true; value: string | null } | { ok: false; reason: InputFailure }
 
+/** Zu viele Nachkommastellen für den Feldtyp: nennt den Grund, statt „mehrdeutig“ oder „keine gültige Zahl“ zu melden. */
+function tooPrecise(type: FieldDefinition['type'], text: string): InputFailure | null {
+  const match = /^-?(\d+),(\d+)$/.exec(text.replace(/[\s€%]/g, '').replace(/−/g, '-'))
+  if (!match) return null
+  const [, integer = '', decimals = ''] = match
+  if (type !== 'amount') return decimals.length > MAX_DECIMALS ? 'decimals' : null
+  // „1,234“ im Betragsfeld bleibt mehrdeutig (englische Tausendergruppe?); „0,045“ und „1,2345“ sind eindeutig zu genau.
+  const grouped = decimals.length === 3 && /^[1-9]\d{0,2}$/.test(integer)
+  return decimals.length > 2 && !grouped ? 'cents' : null
+}
+
 function readDecimal(type: FieldDefinition['type'], text: string): DecimalText {
+  const precise = tooPrecise(type, text)
+  if (precise) return { ok: false, reason: precise }
   const cleaned = type === 'percent' ? text.replace(/%/g, ' ') : text
   const plain = type === 'decimal' || type === 'percent' ? decimalComma(cleaned) : null
   if (plain !== null) return { ok: true, value: plain }
@@ -90,7 +105,8 @@ export function formatFieldInput(field: Pick<FieldDefinition, 'type'>, value: Ce
   if (!isNumber(value)) return String(value)
   if (field.type === 'amount') return formatNumber(value, { digits: 2 })
   if (field.type === 'integer') return formatInt(value)
-  if (field.type === 'percent') return formatNumber(value * 100, { maxDigits: 6, grouping: false })
+  // Prozentfelder zeigen alle eingegebenen Stellen: Gerechnet wird mit allen, also stehen auch alle im Feld.
+  if (field.type === 'percent') return formatNumber(value * 100, { maxDigits: MAX_DECIMALS, grouping: false })
   return formatNumber(value, { maxDigits: MAX_DECIMALS, grouping: false })
 }
 

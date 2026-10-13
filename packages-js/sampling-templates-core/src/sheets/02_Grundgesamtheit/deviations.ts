@@ -18,4 +18,5 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C22', 'C30'], ['C16'], 'Betrag bzw. Differenz auf Grundlage von 0 €', CLAIM),
   ...entries(['C37', 'C39', 'C51'], ['C25'], '0 € bzw. nur die TH-Pauschale', RECORDS),
   ...entries(['C38', 'C52'], ['C24'], '0 Einheiten', RECORDS),
+  ...entries(['C53', 'C54'], ['C24'], 'Prüfhinweis und Mindestumfang auf Grundlage von 0 Einheiten abzüglich der Abzüge (bei vorhandenen Abzügen eine negative Anzahl, z. B. „✔ weniger als 300 Einheiten“ und Mindestumfang −1)', RECORDS),
 ]

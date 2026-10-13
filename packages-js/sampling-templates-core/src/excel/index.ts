@@ -127,14 +127,16 @@ const ROUND_SIGNIFICANT_DIGITS = 12
  * `AUFRUNDEN` / `ROUNDUP(x;stellen)`: von null weg. Wie die Tabellenkalkulation
  * kürzt die Funktion den Wert zuerst auf zwölf signifikante Stellen (Richtung
  * −∞) und rundet erst dann auf: 100,0000000009 bleibt 100, 100,000000001 wird
- * 101. Ganzzahlige Stellen bleiben immer erhalten. Verhalten an LibreOffice
- * 24.2 gemessen (`test/fixtures/libreoffice-semantik.json`).
+ * 101. Das gilt auch oberhalb von zwölf ganzzahligen Stellen: Aus
+ * 369.792.900.021.303 wird 369.792.900.021.000 (Stichprobenumfänge dieser Größe
+ * entstehen nur, wenn TE − AE fast null ist). Verhalten an LibreOffice 24.2
+ * gemessen (`test/fixtures/libreoffice-semantik.json`, Fälle der Abnahme).
  */
 export function roundUp(value: number, digits = 0): number {
   if (value === 0 || !Number.isFinite(value)) return value
-  const exponent = Math.floor(Math.log10(Math.abs(value)))
-  const kept = Math.max(ROUND_SIGNIFICANT_DIGITS - 1 - exponent, 0)
-  const cut = approxFloor(value * 10 ** kept) / 10 ** (kept - digits)
+  const kept = ROUND_SIGNIFICANT_DIGITS - 1 - Math.floor(Math.log10(Math.abs(value)))
+  const truncated = kept >= 0 ? approxFloor(value * 10 ** kept) / 10 ** kept : approxFloor(value / 10 ** -kept) * 10 ** -kept
+  const cut = truncated * 10 ** digits
   const magnitude = Math.abs(cut)
   const nearest = Math.round(magnitude)
   const rounded = eq(magnitude, nearest) ? nearest : Math.ceil(magnitude)
@@ -157,9 +159,23 @@ function numbers(values: readonly unknown[]): number[] {
   return values.filter(isNumber)
 }
 
-/** `SUMME` / `SUM` über einen Bereich: Text und leere Zellen zählen nicht. */
+/**
+ * `SUMME` / `SUM` über einen Bereich: Text und leere Zellen zählen nicht. Wie
+ * die Tabellenkalkulation summiert die Funktion mit Fehlerausgleich
+ * (Kahan-Neumaier): Der Rundungsrest jeder Addition wird mitgeführt und am Ende
+ * zugeschlagen. Ohne ihn weicht die Summe über mehrere Schichten um eine Stelle
+ * in der letzten Ziffer ab – genug, um eine Würdigung genau an der Schwelle zu kippen.
+ */
 export function sum(values: readonly unknown[]): number {
-  return numbers(values).reduce((total, value) => total + value, 0)
+  let total = 0
+  let rest = 0
+  for (const value of numbers(values)) {
+    const next = total + value
+    rest += Math.abs(total) >= Math.abs(value) ? total - next + value : value - next + total
+    total = next
+  }
+  const result = total + rest
+  return Number.isFinite(result) ? result : total
 }
 
 /** `ANZAHL` / `COUNT`: Anzahl der Zahlen. */

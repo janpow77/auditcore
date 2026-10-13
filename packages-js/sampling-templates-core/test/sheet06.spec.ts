@@ -10,6 +10,7 @@ import type { CellValue } from '../src/model/types'
 import { sheet as sheet04 } from '../src/sheets/04_MUS_1Z_S/index'
 import { en as texts04 } from '../src/sheets/04_MUS_1Z_S/texts.en'
 import { sheet } from '../src/sheets/06_MUS_2Z_S/index'
+import { isQualified, limitationsOf, type Limitation } from '../src/view/limits'
 import { buildSections, strataRows } from '../src/view/sheetView'
 import { loadGolden, sameValue } from './golden'
 
@@ -18,6 +19,12 @@ const GLOBAL = 'Global (Art. 5 Abs. 6 Buchst. b)'
 const INCREASE = 'Erhöhung bei begrenztem Umfang (Art. 5 Abs. 7 UAbs. 4 Buchst. a)'
 const likeTemplate = createContext({ policy: TEMPLATE_POLICY })
 const strict = createContext({ policy: STRICT_POLICY })
+const t = createTranslate()
+/** Hinweis „Wert ohne Grundlage“ unter den Einschränkungen der Auswertung. */
+function unfoundedNote(inputs: Record<string, CellValue>): { limitations: Limitation[]; note: Limitation | undefined } {
+  const limitations = limitationsOf(sheet, inputs, evaluateSheet(sheet, inputs, context).cells, context, t)
+  return { limitations, note: limitations.find((entry) => entry.kind === 'withoutBasis') }
+}
 const sample = (changes: Record<string, CellValue> = {}): Record<string, CellValue> => ({ ...sheet.sample.inputs, ...changes })
 const compute = (changes: Record<string, CellValue> = {}): Readonly<Record<string, CellValue>> => sheet.compute(sample(changes), context)
 /** Eingaben des Beispiels ohne die genannten Schichtzeilen. */
@@ -132,6 +139,12 @@ describe('Blatt 06_MUS_2Z_S', () => {
     const hints = sheet.webHints?.(inputs, current.cells, context) ?? []
     expect(hints.find((hint) => hint.id === 'no-planned-size-3')?.text).toMatch(/^Schicht 3: /)
     expect(hints.filter((hint) => hint.id.startsWith('no-planned-size')).map((hint) => hint.id)).toEqual(['no-planned-size-3'])
+    // Fehlt allein die Prognose (keine Pflichteingabe), zeigt die Webfassung wie die Vorlage die Untergrenze 3 und weist sie und die leere Eingabe aus.
+    const template = evaluateSheet(sheet, sample({ C28: 'keine Neuberechnung', F9: null }), context)
+    expect(template.cells).toMatchObject({ F69: 3, F78: 3, F79: '✔ ≥ 3', C69: 41, N10: 93 })
+    expect(template.withoutBasis).toEqual(expect.arrayContaining(['F69', 'F79', 'C69', 'N10']))
+    expect(template.silent).toEqual(['F9'])
+    expect(hints.find((hint) => hint.id === 'no-planned-size-3')?.text).toContain('wie die Vorlage die Untergrenze 3')
     // Beim Standardansatz kommt der Umfang der Schicht aus der Neuberechnung, nicht aus dem Planumfang.
     expect(typeof compute({ F9: null, F25: null }).F69).toBe('number')
   })
@@ -189,6 +202,12 @@ describe('Blatt 06_MUS_2Z_S', () => {
     expect(template).toMatchObject({ C51: 0, C55: 26000000, C63: 0, C69: 0, N10: 49 })
     expect(typeof template.C97).toBe('number')
     expect(sheet.webHints?.(firstOnly, current.cells, context).map((hint) => hint.id)).toContain('second-period-empty')
+    // Fehlen allein die Ist-Buchwerte (keine Pflichteingabe), zeigt die Webfassung die Werte der Vorlage und weist sie und die leeren Eingaben aus.
+    const bookValues = evaluateSheet(sheet, withoutRows(51), context)
+    expect(bookValues.cells).toMatchObject({ C51: 0, C55: 26000000, C63: 0, C69: 0, N10: 49 })
+    expect(bookValues.withoutBasis).toEqual(expect.arrayContaining(['C51', 'C89', 'C97', 'C99']))
+    expect(bookValues.silent).toEqual(['D51', 'E51', 'F51'])
+    expect(sheet.webHints?.(withoutRows(51), bookValues.cells, context).find((hint) => hint.id === 'second-period-empty')?.text).toContain('zeigt die Webfassung dieselben Werte')
     // Ohne Prognose für Zeitraum 2 ist schon der Gesamtumfang nicht bestimmt.
     expect(evaluateSheet(sheet, withoutRows(9, 10, 25), context).cells).toMatchObject({ C9: null, C11: null, C29: null, C35: null, N10: null })
   })
@@ -232,12 +251,26 @@ describe('Blatt 06_MUS_2Z_S', () => {
     expect(none.assumed.filter((entry) => entry.kind === 'partialErrorSum')).toEqual([])
   })
 
-  it('Prüfhinweis „mindestens drei Einheiten“ ohne Einheiten: kein „✔ ≥ 3“; mit Einheiten wie die Vorlage', () => {
-    // „TE ≤ AE“: Die Vorlage zeigt keinen Umfang je Schicht und trotzdem „✔ ≥ 3“.
-    const current = evaluateSheet(sheet, sample({ C20: 0.025 }), context)
-    expect(current.cells).toMatchObject({ C29: 'TE ≤ AE', D37: null, D44: null, D45: null, C37: null })
-    expect(current.lacking.has('D45')).toBe(false)
-    expect(evaluateSheet(sheet, sample({ C20: 0.025 }), likeTemplate).cells).toMatchObject({ D44: null, D45: '✔ ≥ 3', C37: 0 })
+  it('Prüfhinweis „mindestens drei Einheiten“ ohne Einheiten: bei vollständigen Pflichteingaben „✔ ≥ 3“ wie die Vorlage mit Hinweis in Warnfarbe; offen, solange eine Pflichteingabe fehlt', () => {
+    // „TE ≤ AE“: Die Vorlage zeigt keinen Umfang je Schicht, trotzdem „✔ ≥ 3“ und die Summe 0, und rechnet damit weiter.
+    const inputs = sample({ C20: 0.025 })
+    const current = evaluateSheet(sheet, inputs, context)
+    expect(current.complete).toBe(true)
+    expect(current.cells).toMatchObject({ C29: 'TE ≤ AE', D37: null, D44: null, D45: '✔ ≥ 3', E45: '✔ ≥ 3', F45: '✔ ≥ 3', G45: null, C37: 0 })
+    expect(current.cells).toEqual(evaluateSheet(sheet, inputs, likeTemplate).cells)
+    expect(current.withoutBasis).toEqual(expect.arrayContaining(['D45', 'E45', 'F45', 'C37']))
+    expect(current.lacking.size).toBe(0)
+    const { limitations, note } = unfoundedNote(inputs)
+    expect(note).toMatchObject({ id: 'without-basis', tone: 'warning', text: expect.stringContaining('Mindestens drei Einheiten je Zufallsschicht') })
+    expect(isQualified(note ? [note] : [])).toBe(true)
+    expect(isQualified(limitations)).toBe(true)
+    // Derselbe Fall ohne aktualisierte Standardabweichung einer belegten Schicht (Pflichteingabe): kein „✔ ≥ 3“, keine Summe 0.
+    const open = evaluateSheet(sheet, sample({ C20: 0.025, F53: null }), context)
+    expect(open.complete).toBe(false)
+    expect(open.cells).toMatchObject({ C29: 'TE ≤ AE', D37: null, D44: null, D45: null, E45: null, F45: null, C37: null })
+    expect(open.withoutBasis).toEqual([])
+    expect(open.lacking.has('D45')).toBe(false)
+    expect(unfoundedNote(sample({ C20: 0.025, F53: null })).note).toBeUndefined()
     expect(compute({ D41: 21 })).toMatchObject({ D44: 1, D45: '✖ < 3', E45: '✔ ≥ 3' })
     expect(sheet.deviations.filter((entry) => entry.kind === 'withoutBasis' && /^[A-Z]+45$/.test(entry.cell))).toHaveLength(STRATA_COLUMNS.length * 3)
   })

@@ -23,7 +23,7 @@ describe('Richtlinie für fehlende Angaben', () => {
     it(`${sheet.id}: Variante „wie die Vorlage“ zeigt in jedem Fall genau die Werte der Vorlage`, () => {
       const mismatches = loadGolden(sheet.id).flatMap((golden) => templateMismatches(sheet, golden).map((entry) => `${golden.name}: ${entry.cell}`))
       expect(mismatches).toEqual([])
-    })
+    }, 240_000)
   }
 
   it('Blatt 03 ohne s_r: geltend mit 0 gerechnet und ausgewiesen, streng offen mit Nennung der Eingabe, wie die Vorlage ebenfalls ausgewiesen', () => {

@@ -68,7 +68,8 @@ export function projectedError(entered: number, exhaustive: Value, random: Value
  * (`IF(D11="";0;…)`): summiert werden die belegten Schichten (`key` ist die
  * Zeile, deren Wert eine Schicht als belegt kennzeichnet). Trägt keine belegte
  * Schicht einen Wert, zeigt die Vorlage die Summe der Nullen der unbelegten
- * Spalten – ein Wert ohne Grundlage (`totalRow`).
+ * Spalten – ein Wert ohne Grundlage (`totalRow`): offen, solange eine
+ * Pflichteingabe fehlt; bei vollständigen Eingaben wie die Vorlage mit Hinweis.
  */
 export function usedTotal(c: Readonly<Cells>, row: number, key: number, context: Pick<SheetContext, 'policy'> | undefined): CellValue {
   return totalRow(c, row, context, STRATA_COLUMNS.filter((column) => !isBlank(c[stratumCell(column, key)])))
@@ -129,8 +130,8 @@ const HINTS = {
 
 /** Hinweise der Webfassung zu einer einzelnen Schicht; die Kennung trägt die Schichtnummer (`stratum-ignored-3`). */
 const STRATUM_HINTS = {
-  'stratum-not-projected': 'Der extrapolierte Fehler ist nicht bestimmbar; wie in der Vorlage ist die Schicht in der Summe nicht enthalten',
-  'stratum-ignored': 'Angaben vorhanden, aber kein Wert in der ersten Schichtzeile; wie in der Vorlage gilt die Schicht als nicht belegt',
+  'stratum-not-projected': 'Der extrapolierte Fehler ist nicht bestimmbar; wie in der Vorlage ist die Schicht in der Summe nicht enthalten. Extrapolierter Fehler und Fehlerquote sind so nicht belastbar; bitte die Angaben der Schicht prüfen',
+  'stratum-ignored': 'Angaben vorhanden, aber kein Wert in der ersten Schichtzeile; wie in der Vorlage gilt die Schicht als nicht belegt und geht nicht in das Ergebnis ein. Bitte die erste Schichtzeile ausfüllen oder die Angaben entfernen',
 } as const
 
 type StratumHintId = keyof typeof STRATUM_HINTS
@@ -206,8 +207,8 @@ export const HINTS_EN: Readonly<Record<HintId, string>> = {
 }
 
 const STRATUM_HINTS_EN: Readonly<Record<StratumHintId, string>> = {
-  'stratum-not-projected': 'the extrapolated error cannot be determined; as in the template the stratum is not included in the total',
-  'stratum-ignored': 'entries present but no value in the first stratum row; as in the template the stratum is treated as not in use',
+  'stratum-not-projected': 'the extrapolated error cannot be determined; as in the template the stratum is not included in the total. The extrapolated error and the error rate are therefore not reliable; please check the entries of the stratum',
+  'stratum-ignored': 'entries present but no value in the first stratum row; as in the template the stratum is treated as not in use and does not enter the result. Please fill in the first stratum row or remove the entries',
 }
 
 /** Hinweise der Webfassung zu den Schichten in der englischen Arbeitsübersetzung, je Schichtnummer (`stratum-ignored-3`). */

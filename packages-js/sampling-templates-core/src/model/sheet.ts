@@ -7,7 +7,7 @@ import { PARAMETERS } from '../sheets/01_Parameter/index'
 import { cellsOf, inputFields, type MethodDefinition, type SubsampleRole } from './definition'
 import type { DataTable } from './table'
 import { localizeDefinition, type SheetTexts, type SheetTranslations, type TranslationLocale } from './texts'
-import type { CellAddress, CellMap, Cells, Compute, Deviation, MethodSummary, SheetContext, SheetId, WebHint } from './types'
+import type { CellAddress, CellMap, CellValue, Cells, Compute, Deviation, MethodSummary, SheetContext, SheetId, WebHint } from './types'
 
 /** Erfundene Beispielwerte eines Blatts; die Oberfläche kennzeichnet sie als Beispiel. */
 export interface SampleInputs {
@@ -42,12 +42,27 @@ export interface AvailableSheet {
    * Webfassung aus („Keine Angabe, daher mit 0 berechnet.“).
    */
   zeroAssumed?: (results: CellMap) => readonly ZeroAssumption[]
+  /**
+   * Zellen, die die Webfassung bewusst anders bildet als die Vorlage (z. B. die
+   * Kopfzeile des Berichts, die in der Vorlage ein festes Programm nennt). Die
+   * einzige Ausnahme vom Grundsatz „nie ein anderer Wert als die Vorlage“; jede
+   * steht in docs/abweichungen.md.
+   */
+  adapted?: readonly Adaptation[]
   /** Nur Listenblätter (Blatt 17): Summen über alle Einheiten für die Übernahme in ein Methodenblatt. */
   totals?: (rows: readonly CellMap[], context: SheetContext, needs?: SubsampleNeeds) => SubsampleTotals
   /** Arbeitsübersetzungen der Texte des Blatts; Deutsch ist der Wortlaut der Vorlage. */
   translations?: SheetTranslations
   /** Von `localizeSheet` gesetzt: die Übersetzung, in der das Blatt gerade angezeigt wird. */
   texts?: SheetTexts
+}
+
+/** Bewusst anders gebildete Zelle: was die Webfassung zeigt, ausgedrückt durch den Wert der Vorlage. */
+export interface Adaptation {
+  cell: CellAddress
+  reason: string
+  /** Wert der Webfassung zu dem Wert, den die Vorlage zeigt; `results` sind die Zellwerte der Webfassung. */
+  fromTemplate: (shown: CellValue, results: CellMap) => CellValue
 }
 
 /** Eine fehlende Eingabe, mit der wie in der Vorlage als 0 gerechnet wurde. */

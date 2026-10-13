@@ -57,6 +57,7 @@ const inputOf = (wrapper: VueWrapper, cell: string) => field(wrapper, cell).get<
 beforeEach(() => {
   delivered.length = 0
   localStorage.clear()
+  sessionStorage.clear()
 })
 afterEach(() => {
   for (const wrapper of mounted.splice(0)) wrapper.unmount()
@@ -314,6 +315,48 @@ describe('Lokaler Entwurf', () => {
     await menu(second, 'clearDraft')
     expect(localStorage.getItem('auditcore-sampling-templates:test')).toBeNull()
     expect(second.get('[data-flash]').text()).toBe('Lokaler Entwurf gelöscht.')
+  })
+  it('Stufe „nur diese Sitzung“: sessionStorage statt localStorage; „Neu“ löscht den Zwischenstand', async () => {
+    const first = await withSample({ draft: 'session', draftKey: 'sitzung' })
+    await inputOf(first, 'C20').setValue('0,24')
+    expect(first.get('[data-draft-note]').text()).toContain('für diese Sitzung')
+    first.unmount()
+    mounted.length = 0
+    await settle()
+    expect(sessionStorage.getItem('auditcore-sampling-templates:sitzung')).toContain('flowaudit-stichprobe')
+    expect(localStorage.length).toBe(0)
+    const second = mountCalculator({ draft: 'session', draftKey: 'sitzung' })
+    await settle()
+    await settle()
+    expect(inputOf(second, 'C20').element.value).toBe('0,24')
+    await menu(second, 'new')
+    ;(document.querySelector('[data-action="discard"]') as HTMLButtonElement).click()
+    await settle()
+    expect(sessionStorage.getItem('auditcore-sampling-templates:sitzung')).toBeNull()
+  })
+
+  it('Stufenwechsel: „auf diesem Gerät behalten“ zieht den Zwischenstand um, „aus“ leert beide Ablagen; die Anwendung bietet den Umschalter im Slot an', async () => {
+    const wrapper = mount(SamplingCalculator, {
+      attachTo: document.body,
+      props: { sheets: FOUNDATION_SHEETS, draft: 'session', draftKey: 'wechsel', saveFile: () => undefined },
+      slots: { draft: '<template #draft="{ mode, stored }"><span data-slot-draft>{{ mode }}/{{ stored }}</span></template>' },
+    })
+    mounted.push(wrapper)
+    await wrapper.get('[data-sheet="03_MUS_1Z"]').trigger('click')
+    await inputOf(wrapper, 'C20').setValue('0,24')
+    await new Promise((resolve) => setTimeout(resolve, 700))
+    await settle()
+    expect(sessionStorage.getItem('auditcore-sampling-templates:wechsel')).not.toBeNull()
+    expect(wrapper.get('[data-slot-draft]').text()).toBe('session/true')
+    expect(wrapper.emitted('draft')).toEqual([[{ mode: 'session', stored: true }]])
+    await wrapper.setProps({ draft: 'device' })
+    await settle()
+    expect(localStorage.getItem('auditcore-sampling-templates:wechsel')).toContain('flowaudit-stichprobe')
+    expect(sessionStorage.getItem('auditcore-sampling-templates:wechsel')).toBeNull()
+    await wrapper.setProps({ draft: 'off' })
+    await settle()
+    expect(localStorage.length + sessionStorage.length).toBe(0)
+    expect(wrapper.find('[data-draft-note]').exists()).toBe(false)
   })
 })
 

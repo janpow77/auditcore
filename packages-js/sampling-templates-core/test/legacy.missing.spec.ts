@@ -18,6 +18,7 @@ import { sheet as x2 } from '../src/sheets/X2_DiffSch_2017/index'
 import { sheet as x3 } from '../src/sheets/X3_DiffSch_S_2017/index'
 import { sheet as x4 } from '../src/sheets/X4_DiffSch_2Z_2017/index'
 import { LEGACY_NOTICE, LEGACY_STRATA } from '../src/sheets/shared/legacy'
+import { isQualified, limitationsOf } from '../src/view/limits'
 import { buildSummary } from '../src/view/summaryView'
 
 type Inputs = Record<string, CellValue>
@@ -215,14 +216,28 @@ describe('Fehlersumme einer Schicht bzw. eines Zeitraums fehlt (partialErrorSum)
 })
 
 describe('Wert der Vorlage ohne Grundlage (withoutBasis)', () => {
-  it('X3 bei TE = AE: kein Stichprobenumfang, also keine Hochrechnung – die Vorlage zeigt 0 €, 0 % und den Buchwert', () => {
-    const current = evaluate(x3, { D11: 0.02 })
-    for (const cell of ['D15', 'E17', 'E22', 'D23', 'D24', 'D25', 'D26', 'D28', 'D29']) expect(current.cells[cell], cell).toBeNull()
+  it('X3 bei TE = AE, Pflichteingaben vollständig: 0 €, 0 % und der Buchwert wie in der Vorlage – ausgewiesen, nicht belastbar', () => {
+    const inputs = { ...x3.sample.inputs, D11: 0.02 }
+    const context = createContext()
+    const current = evaluateSheet(x3, inputs, context)
+    // Kein Stichprobenumfang: Umfang, Schichtwerte und Genauigkeit zeigt auch die Vorlage nicht.
+    for (const cell of ['D15', 'E17', 'E22', 'D26', 'D28', 'D29']) expect(current.cells[cell], cell).toBeNull()
     expect([current.cells.D1, current.cells.D30]).toEqual([48500000, 47530000])
-    for (const cell of ['D23', 'D24', 'D25']) expect(current.lacking.has(cell), cell).toBe(false)
-    expect(current.assumed).toEqual([])
-    const template = evaluate(x3, { D11: 0.02 }, TEMPLATE_POLICY)
-    expect([template.cells.D23, template.cells.D24, template.cells.D25]).toEqual([0, 0, 48500000])
+    expect([current.cells.D23, current.cells.D24, current.cells.D25]).toEqual([0, 0, 48500000])
+    expect([current.complete, current.withoutBasis, [...current.lacking.keys()], current.assumed]).toEqual([true, ['D23', 'D24', 'D25'], [], []])
+    const limitations = limitationsOf(x3, inputs, current.cells, context, createTranslate())
+    expect(limitations.find((entry) => entry.kind === 'withoutBasis')).toMatchObject({ id: 'without-basis', tone: 'warning' })
+    expect(limitations.find((entry) => entry.id === 'tolerable-error-not-above-anticipated')).toMatchObject({ tone: 'warning' })
+    expect(isQualified(limitations)).toBe(true)
+    expect(evaluate(x3, { D11: 0.02 }, TEMPLATE_POLICY).cells).toEqual(current.cells)
+  })
+
+  it('X3 bei TE = AE, eine Pflichteingabe fehlt: Hochrechnung, Fehlerquote und berichtigter Buchwert bleiben offen', () => {
+    for (const missing of ['D9', 'E7']) {
+      const current = evaluate(x3, { D11: 0.02, [missing]: null })
+      for (const cell of ['D15', 'E17', 'E22', 'D23', 'D24', 'D25', 'D26', 'D28', 'D29']) expect(current.cells[cell], `${missing}: ${cell}`).toBeNull()
+      expect([current.complete, current.withoutBasis], missing).toEqual([false, []])
+    }
   })
 
   it('X3 leer: unter „wie die Vorlage“ stehen die Nullen der Vorlage, geltend bleibt jede Summe offen', () => {

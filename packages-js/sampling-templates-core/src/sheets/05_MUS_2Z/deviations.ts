@@ -1,7 +1,8 @@
 /**
- * Begründete Abweichungen des Blatts 05 vom Verhalten der Vorlage. In allen
- * Fällen zeigt die Webfassung keinen Wert (`null`), nie einen anderen Wert als
- * die Vorlage.
+ * Begründete Abweichungen des Blatts 05 vom Verhalten der Vorlage. Die Webfassung
+ * zeigt nie einen anderen Wert als die Vorlage; wo sie abweicht, zeigt sie
+ * keinen Wert (`null`) – und das nur, solange eine Pflichteingabe fehlt. Sind
+ * alle Pflichteingaben vorhanden, zeigt sie jeden Wert wie die Vorlage.
  *
  * Pflichteingaben (ohne `kind`): `whenEmpty` nennt je Zelle die Eingaben, deren
  * Fehlen in den Golden-Fällen die Abweichung auslöst; wo die Vorlage bei einer
@@ -13,7 +14,10 @@
  * trotzdem 50 bzw. 30 Einheiten. Liefert der gewählte Ansatz für Zeitraum 2
  * keinen Umfang – die Standardneuberechnung ist nicht anwendbar (Text in C57) –,
  * zeigt sie in C67 nur die Untergrenzen. In beiden Fällen rechnet sie damit
- * weiter. Übersicht: docs/abweichungen.md.
+ * weiter. Die Webfassung lässt diese Werte offen, solange eine Pflichteingabe
+ * fehlt; bei vollständigen Pflichteingaben zeigt sie sie wie die Vorlage und
+ * weist sie mit einem Hinweis in Warnfarbe aus (`evaluateSheet`, Hinweis
+ * `without-basis`). Übersicht: docs/abweichungen.md.
  */
 import { PROJECTION_WITHOUT_ERRORS } from '../../model/policy'
 import type { CellAddress, Deviation } from '../../model/types'

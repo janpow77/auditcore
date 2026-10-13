@@ -69,7 +69,7 @@ function applyPaste(): void {
     </div>
 
     <FaDialog :open="pasting" :title="t('listPasteTitle')" size="lg" :locale="locale" @update:open="pasting = false">
-      <p :id="`${id}-help`" class="fa-st__muted">{{ t('listPasteHelp', { columns: pasteColumns }) }}</p>
+      <p :id="`${id}-help`" class="fa-st__muted fa-st__scope">{{ t('listPasteHelp', { columns: pasteColumns }) }}</p>
       <label class="fa-st__label-text" :for="`${id}-paste`">{{ t('listPasteLabel') }}</label>
       <textarea :id="`${id}-paste`" v-model="pasted" class="fa-st__input fa-st__textarea" rows="8" spellcheck="false" :aria-describedby="`${id}-help`"></textarea>
       <template #footer>

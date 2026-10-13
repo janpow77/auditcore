@@ -12,12 +12,12 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 
 ## Was aus der Vorlage im Paket steckt
 
-| Inhalt | Ort | Umfang in 0.1.0 |
+| Inhalt | Ort | Umfang in 0.1.1 |
 |---|---|---|
 | Rechenwege (Formeln als TypeScript, Zelle für Zelle) | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter: 02–18, 20, X1–X4 |
 | Bezeichnungen (Spalte B), Fundstellen und Hinweise (Spalte D bzw. K), Abschnittstitel, Zahlenformate, Vorgaben | `src/sheets/<Blatt>/definition*.ts` | alle Blätter, wörtlich; Bezeichnungen mit Formel in Bezeichnung und Kurzformel getrennt. Altvorlagen: englischer Wortlaut der Vorlage von 2017 |
 | Prüfhinweistexte (✔/⚠/✖), wortgleich | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter |
-| Texte und Aufbau der Druckfassung (Blatt 20), einschließlich der festen Angaben zu Programm und Behörde | `src/sheets/20_Druck_KOM/` | vollständig |
+| Texte und Aufbau der Druckfassung (Blatt 20); Programm und Behörde sind Angaben der Prüfbehörde, kein fester Text | `src/sheets/20_Druck_KOM/` | vollständig |
 | Tabelle der Zuverlässigkeitsfaktoren (Blatt X1a), 574 Zellen | `src/sheets/X1a_RF_2017/table.ts` | vollständig |
 | Englische Arbeitsübersetzung dieser Texte (eigene Übersetzung, als solche gekennzeichnet) | `src/sheets/<Blatt>/texts.en.ts`, `src/catalog/texts.en.ts` | alle Blätter, Katalog |
 | z-Werte und Auswahllisten aus Blatt 01 | `src/sheets/01_Parameter/index.ts` | vollständig (z-Werte aus Anhang I DelVO) |

@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { isNumber } from '../src/excel/index'
 import { defaultInputs, findField } from '../src/model/definition'
 import { evaluateSheet } from '../src/model/evaluate'
-import { TEMPLATE_POLICY } from '../src/model/policy'
+import { MISSING_POLICY, TEMPLATE_POLICY } from '../src/model/policy'
 import { SUMMARY_CELLS, createContext, isEmptyReference, type AvailableSheet, type SheetModule } from '../src/model/sheet'
 import type { CellMap, CellValue, Deviation, MissingPolicy } from '../src/model/types'
 import { SHEETS, availableSheets } from '../src/sheets/registry'
@@ -35,6 +35,11 @@ export interface CaseReport {
   compared: number
   /** Zellen, die als begründete Abweichung geführt sind. */
   explained: (Mismatch & { deviation: Deviation })[]
+  /**
+   * Würdigungen genau an der Vergleichstoleranz, die an der letzten Stelle einer
+   * 17-stelligen Eingabe hängen (`readingEdge`); über die Oberfläche nicht eingebbar.
+   */
+  edge: Mismatch[]
   /** Abweichungen ohne Begründung – Soll: keine. */
   unexplained: Mismatch[]
 }
@@ -52,11 +57,31 @@ export function loadGolden(sheet: string): GoldenCase[] {
   return goldenFiles(sheet).flatMap((name) => JSON.parse(readFileSync(`${GOLDEN_DIRECTORY}${name}`, 'utf8')) as GoldenCase[])
 }
 
-/** Zahlen mit relativer Toleranz, Texte wortgleich. `exact`: Ganzzahlzellen (Stichprobenumfänge) müssen genau stimmen. */
-export function sameValue(expected: CellValue, actual: CellValue, exact = false): boolean {
-  // Jenseits von 15 Stellen speichert die neu berechnete Mappe den Wert nicht mehr genau.
-  if (isNumber(expected) && isNumber(actual)) return exact && Math.abs(expected) < 1e15 ? expected === actual : Math.abs(expected - actual) <= TOLERANCE * Math.max(1, Math.abs(expected))
+/** Ab dieser Größe liegt ein Wert außerhalb des geprüften Zahlenbereichs (`view/limits.ts`, Hinweis der Webfassung). */
+const BEYOND_RANGE = 1e15
+/** Jenseits des geprüften Zahlenbereichs ist TE − AE nur noch Rundungsrauschen; verglichen wird dort nur die Größenordnung. */
+const BEYOND_RANGE_TOLERANCE = 1e-3
+/** Eurobeträge: Ein Unterschied unter einem Zehntausendstel Cent ist Rauschen aus einer Auslöschung (Blatt 20 G43), kein Rechenunterschied. */
+export const AMOUNT_TOLERANCE = 1e-6
+
+/**
+ * Zahlen mit relativer Toleranz, Texte wortgleich. `exact`: Ganzzahlzellen
+ * (Stichprobenumfänge) müssen genau stimmen. `absolute`: zusätzlich zulässiger
+ * absoluter Unterschied (Eurobeträge).
+ */
+export function sameValue(expected: CellValue, actual: CellValue, exact = false, absolute = 0): boolean {
+  if (isNumber(expected) && isNumber(actual)) {
+    // Jenseits von 15 Stellen speichert die neu berechnete Mappe den Wert nicht mehr genau.
+    const beyond = Math.abs(expected) >= BEYOND_RANGE
+    if (exact && !beyond) return expected === actual
+    return Math.abs(expected - actual) <= Math.max(absolute, (beyond ? BEYOND_RANGE_TOLERANCE : TOLERANCE) * Math.max(1, Math.abs(expected)))
+  }
   return (expected ?? null) === (actual ?? null)
+}
+
+/** Zulässiger absoluter Unterschied einer Zelle: bei Eurobeträgen `AMOUNT_TOLERANCE`, sonst keiner. */
+export function absoluteTolerance(sheet: AvailableSheet, cell: string): number {
+  return findField(sheet.definition, cell)?.type === 'amount' ? AMOUNT_TOLERANCE : 0
 }
 
 /** Zelle mit ganzzahligem Format (`#,##0`): Der Abgleich verlangt den genauen Wert. */
@@ -129,7 +154,9 @@ function computeWithZeroInputs(sheet: AvailableSheet, golden: GoldenCase, refere
     sheets[name] = { ...sheets[name], [cell]: 0 }
   }
   const inputs = sheet.definition.layout === 'list' ? { ...defaultInputs(sheet.definition), ...(golden.eingaben as CellMap) } : caseInputs(sheet, golden)
-  return sheet.compute({ ...inputs, ...own }, checkContext(sheet, golden, sheets))
+  // Wie die Webfassung selbst: Sind alle Pflichteingaben vorhanden, zählen Werte ohne Grundlage in der Gegenrechnung wie in der Vorlage.
+  const complete = evaluateSheet(sheet, inputs, checkContext(sheet, golden, all), false).complete
+  return sheet.compute({ ...inputs, ...own }, checkContext(sheet, golden, sheets, complete ? { ...MISSING_POLICY, withoutBasis: 'template' } : undefined))
 }
 
 /** Rechnet das Blatt unter der Richtlinie „wie die Vorlage“ (`TEMPLATE_POLICY`). */
@@ -162,11 +189,11 @@ function explain(sheet: AvailableSheet, golden: GoldenCase, mismatch: Mismatch, 
   if (unchecked) return unchecked
   if (required[0]) {
     const empty = [...new Set(required.flatMap((entry) => entry.whenEmpty.filter((cell) => isEmptyReference(cell, own, all))))]
-    if (sameValue(mismatch.expected, withZeros(sheet, golden, empty, all)[mismatch.cell] ?? null, isIntegerCell(sheet, mismatch.cell))) return required[0]
+    if (sameValue(mismatch.expected, withZeros(sheet, golden, empty, all)[mismatch.cell] ?? null, isIntegerCell(sheet, mismatch.cell), absoluteTolerance(sheet, mismatch.cell))) return required[0]
   }
   // Prüfhinweis ohne Grundlage: Unter der Richtlinie „wie die Vorlage“ muss der Rechenkern genau den Wert der Vorlage liefern.
   const withoutBasis = entries.find((entry) => entry.kind === 'withoutBasis')
-  return withoutBasis && sameValue(mismatch.expected, likeTemplate(sheet, golden, all)[mismatch.cell] ?? null) ? withoutBasis : undefined
+  return withoutBasis && sameValue(mismatch.expected, likeTemplate(sheet, golden, all)[mismatch.cell] ?? null, false, absoluteTolerance(sheet, mismatch.cell)) ? withoutBasis : undefined
 }
 
 /** Ergebnisse aller Blätter des Falls (Verknüpfungen aus anderen Blättern eingeschlossen). */
@@ -199,7 +226,8 @@ export function templateMismatches(sheet: AvailableSheet, golden: GoldenCase): M
   for (const [reference, expected] of Object.entries(golden.erwartet)) {
     const [name, cell] = reference.split('!') as [string, string]
     const actual = results[cell] ?? null
-    if (name === sheet.id && !sameValue(expected, actual, isIntegerCell(sheet, cell))) mismatches.push({ cell, expected, actual })
+    if (name !== sheet.id || sameValue(asShownByWeb(sheet, cell, expected, results), actual, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))) continue
+    if (!readingEdge(sheet, golden, { cell, expected, actual })) mismatches.push({ cell, expected, actual })
   }
   return mismatches
 }
@@ -215,19 +243,62 @@ export function caseResults(sheet: AvailableSheet, golden: GoldenCase): CellMap 
   return caseWorkspace(sheet, golden)[sheet.id] ?? {}
 }
 
+/**
+ * Sollwert einer Zelle: der Wert der Vorlage – außer bei den wenigen Zellen, die
+ * die Webfassung bewusst anders bildet (`sheet.adapted`); dort der Wert, der sich
+ * aus dem der Vorlage ergibt.
+ */
+function asShownByWeb(sheet: AvailableSheet, cell: string, expected: CellValue, results: CellMap): CellValue {
+  const adaptation = sheet.adapted?.find((entry) => entry.cell === cell)
+  return adaptation ? adaptation.fromTemplate(expected, results) : expected
+}
+
+/** Nächste darstellbare Zahl in `steps` Schritten (letzte Stelle der Gleitkommazahl). */
+function shifted(value: number, steps: number): number {
+  const buffer = new Float64Array([value])
+  const bits = new BigInt64Array(buffer.buffer)
+  bits[0] = (bits[0] ?? 0n) + BigInt(value < 0 ? -steps : steps)
+  return buffer[0] ?? value
+}
+
+/** Geltende Stellen der kürzesten Dezimaldarstellung. */
+const significantDigits = (value: number): number => value.toExponential().split('e')[0]!.replace(/[-.]/g, '').length
+/** Ab so vielen geltenden Stellen ist eine Eingabe nur als Prüfsonde entstanden (die Oberfläche nimmt höchstens 15). */
+const PROBE_DIGITS = 16
+
+/**
+ * Würdigung an der Toleranzkante: Die Vorlage würdigt anders, obwohl alle Zahlen
+ * im Rahmen der Toleranz gleich sind. Das ist nur begründet, wenn der Fall eine
+ * Eingabe mit 16 oder 17 geltenden Stellen trägt und die Webfassung mit der um
+ * höchstens zwei letzte Stellen verschobenen Eingabe genau den Text der Vorlage
+ * zeigt: LibreOffice liest so lange Dezimalzahlen nicht immer auf die nächste
+ * Gleitkommazahl, und die Quote liegt genau auf der Vergleichstoleranz (2⁻⁴⁸).
+ */
+function readingEdge(sheet: AvailableSheet, golden: GoldenCase, mismatch: Mismatch): boolean {
+  if (typeof mismatch.expected !== 'string' || typeof mismatch.actual !== 'string') return false
+  const probes = Object.entries(golden.eingaben).filter((entry): entry is [string, number] => isNumber(entry[1]) && significantDigits(entry[1]) >= PROBE_DIGITS)
+  return probes.some(([reference, value]) =>
+    [-2, -1, 1, 2].some((steps) => {
+      const moved = { ...golden, eingaben: { ...golden.eingaben, [reference]: shifted(value, steps) } }
+      return (caseWorkspace(sheet, moved)[sheet.id] ?? {})[mismatch.cell] === mismatch.expected
+    }),
+  )
+}
+
 export function compareCase(sheet: AvailableSheet, golden: GoldenCase): CaseReport {
   const all = caseWorkspace(sheet, golden)
   const results = all[sheet.id] ?? {}
-  const report: CaseReport = { name: golden.name, compared: 0, explained: [], unexplained: [] }
+  const report: CaseReport = { name: golden.name, compared: 0, explained: [], edge: [], unexplained: [] }
   for (const [reference, expected] of Object.entries(golden.erwartet)) {
     const [name, cell] = reference.split('!') as [string, string]
     if (name !== sheet.id) continue
     report.compared += 1
     const actual = results[cell] ?? null
-    if (sameValue(expected, actual, isIntegerCell(sheet, cell))) continue
+    if (sameValue(asShownByWeb(sheet, cell, expected, results), actual, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))) continue
     const mismatch = { cell, expected, actual }
     const deviation = explain(sheet, golden, mismatch, all)
     if (deviation) report.explained.push({ ...mismatch, deviation })
+    else if (readingEdge(sheet, golden, mismatch)) report.edge.push(mismatch)
     else report.unexplained.push(mismatch)
   }
   return report

@@ -6,7 +6,9 @@
  * - Wert ohne Grundlage (`kind: 'withoutBasis'`): die Summe 0 über eine
  *   Schichtzeile, in der keine Schicht einen Wert trägt, und alles, was auf
  *   dieser 0 aufbaut (BV, N, Zulässigkeit, Mindesterfassung, Fehler der
- *   umfassenden Schichten, Hochrechnung).
+ *   umfassenden Schichten, Hochrechnung). Die Webfassung lässt ihn offen,
+ *   solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn
+ *   wie die Vorlage mit Hinweis.
  * - Pflichteingabe fehlt (ohne `kind`): Stichprobenumfang und
  *   Wesentlichkeitsschwelle.
  */
@@ -17,6 +19,9 @@ function entries(cells: readonly string[], whenEmpty: readonly string[], templat
   return cells.map((cell) => ({ cell, whenEmpty, template, reason }))
 }
 
+/** Geltende Regel für Werte ohne Grundlage: offen nur, solange eine Pflichteingabe fehlt. */
+const WITHOUT_BASIS = 'Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe.'
+
 /** Zellen einer Schichtzeile in allen Schichtspalten. */
 const row = (number: number): string[] => STRATA_COLUMNS.map((column) => stratumCell(column, number))
 
@@ -26,7 +31,7 @@ function emptyTotal(cell: string, rows: readonly number[]): Deviation {
     cell,
     whenEmpty: rows.flatMap(row),
     template: '0 (Summe über Schichten ohne Wert)',
-    reason: 'Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus.',
+    reason: `Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. ${WITHOUT_BASIS}`,
     kind: 'withoutBasis',
   }
 }
@@ -42,7 +47,7 @@ function withoutTotal(cells: readonly string[], totals: readonly string[], templ
     cell,
     whenEmpty: totals,
     template,
-    reason: 'Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt.',
+    reason: `Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. ${WITHOUT_BASIS}`,
     kind: 'withoutBasis',
   }))
 }

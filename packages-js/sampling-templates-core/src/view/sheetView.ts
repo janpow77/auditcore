@@ -7,9 +7,12 @@
 import { isBlank, toneOf } from '../excel/index'
 import { fieldOptions, formatFieldInput, formatFieldValue, type ChoiceOption } from '../format/numbers'
 import type { Translate } from '../i18n/messages'
-import { cellsOf, findField, type FieldDefinition, type FieldKind, type SubsampleRole, type ValueType } from '../model/definition'
+import { cellsOf, type FieldDefinition, type FieldKind, type SubsampleRole, type ValueType } from '../model/definition'
 import { evaluateSheet, type SheetEvaluation } from '../model/evaluate'
 import type { AvailableSheet, ZeroAssumption } from '../model/sheet'
+import { carriedLimitations, inputName, isQualified, limitationsOf } from './limits'
+
+export { inputName } from './limits'
 import { translateValue } from '../model/texts'
 import type { CellAddress, CellMap, CellValue, SheetContext, SheetId, Tone } from '../model/types'
 
@@ -31,6 +34,8 @@ export interface CellView {
   missingNote: string
   /** Hinweis der Webfassung, wenn eine fehlende Eingabe wie in der Vorlage als 0 gerechnet ist; sonst leer. */
   zeroNote: string
+  /** Hinweis an der Würdigung, wenn ein bestandener Befund durch Hinweise der Webfassung eingeschränkt ist; sonst leer. */
+  caveatNote: string
 }
 
 export interface RowView extends CellView {
@@ -67,6 +72,8 @@ interface Scope {
   evaluation: SheetEvaluation
   /** Zelle → fehlende Eingaben, die als 0 gerechnet sind. */
   assumed: ReadonlyMap<CellAddress, readonly CellAddress[]>
+  /** Hinweise der Webfassung in Warnfarbe schränken das Ergebnis ein (eigene und die des liefernden Verfahrens). */
+  qualified: boolean
   sheet: AvailableSheet
   inputs: CellMap
   results: CellMap
@@ -86,12 +93,6 @@ function missingInputs(scope: Scope, cell: CellAddress): readonly string[] {
   return isBlank(scope.results[cell]) ? (scope.evaluation.lacking.get(cell) ?? []) : []
 }
 
-/** Bezeichnung einer Eingabe für Hinweise: „Bezeichnung (Zelle)“, bei anderen Blättern „Blatt!Zelle“. */
-export function inputName(sheet: AvailableSheet, reference: string): string {
-  const field = reference.includes('!') ? undefined : findField(sheet.definition, reference)
-  return field ? `${field.label} (${reference})` : reference
-}
-
 function displayOf(scope: Scope, field: FieldDefinition, value: CellValue, missing: boolean): string {
   if (typeof value === 'string' && value !== '') return translateValue(scope.sheet.texts, value)
   if (!isBlank(value)) return formatFieldValue(field, value)
@@ -99,21 +100,36 @@ function displayOf(scope: Scope, field: FieldDefinition, value: CellValue, missi
   return field.type === 'check' ? scope.t('noValue') : formatFieldValue(field, null)
 }
 
+/**
+ * Nicht uneingeschränkt grün: die Würdigung, solange ein Hinweis in Warnfarbe das
+ * Ergebnis einschränkt, und jeder bestandene Prüfhinweis, den die Webfassung wie
+ * die Vorlage zeigt, obwohl ihm die Grundlage fehlt.
+ */
+function isRestricted(scope: Scope, field: FieldDefinition, cell: CellAddress, tone: Tone): boolean {
+  return tone === 'success' && ((scope.qualified && field.alias === ASSESSMENT) || scope.evaluation.withoutBasis.includes(cell))
+}
+
 function cellOf(scope: Scope, field: FieldDefinition, cell: CellAddress, isInput: boolean): CellView {
   const value = scope.results[cell] ?? null
   const lacking = isInput ? [] : missingInputs(scope, cell)
   const assumed = scope.assumed.get(cell) ?? []
+  const tone = field.type === 'check' ? toneOf(value) : 'neutral'
+  const caveat = isRestricted(scope, field, cell, tone)
   return {
     cell,
     value,
     inputText: isInput ? formatFieldInput(field, value) : '',
     display: displayOf(scope, field, value, lacking.length > 0),
-    tone: field.type === 'check' ? toneOf(value) : 'neutral',
+    tone: caveat ? 'warning' : tone,
     missing: lacking.length > 0,
     missingNote: lacking.length ? scope.t('missingInputs', { inputs: lacking.map((input) => inputName(scope.sheet, input)).join('; ') }) : '',
     zeroNote: assumed.length ? scope.t('zeroAssumedInput', { input: assumed.map((input) => inputName(scope.sheet, input)).join('; ') }) : '',
+    caveatNote: caveat ? scope.t('qualifiedNote') : '',
   }
 }
+
+/** Alias der Würdigung in den Methodenblättern und in Blatt 18. */
+const ASSESSMENT = 'assessment'
 
 /** Unveränderliche Angaben der Zeile aus der Definition. */
 function textsOf(field: FieldDefinition): Pick<RowView, 'kind' | 'type' | 'label' | 'hint' | 'formula' | 'interpretation' | 'key' | 'web' | 'subsample'> {
@@ -161,7 +177,8 @@ export function assumedCells(assumed: readonly ZeroAssumption[]): Map<CellAddres
 /** Abschnitte und Zeilen eines Blatts in der Reihenfolge der Vorlage. */
 export function buildSections(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate): SectionView[] {
   const evaluation = evaluateSheet(sheet, inputs, context)
-  const scope: Scope = { sheet, inputs, results, context, t, assumed: assumedCells(evaluation.assumed), evaluation }
+  const qualified = isQualified([...limitationsOf(sheet, inputs, results, context, t), ...carriedLimitations(sheet, context, t)])
+  const scope: Scope = { sheet, inputs, results, context, t, assumed: assumedCells(evaluation.assumed), evaluation, qualified }
   return sheet.definition.sections.map((section) => ({
     id: section.id,
     title: section.title,

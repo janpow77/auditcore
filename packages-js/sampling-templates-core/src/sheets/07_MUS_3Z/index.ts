@@ -35,7 +35,7 @@ function exceeds(results: CellMap, size: string, units: string, period: number):
 function negativeDenominator(results: CellMap, cell: string, id: string, periods: string): WebHint[] {
   const value = results[cell]
   if (approachOf(results.C28) !== 'standard' || !isNumber(value) || !le(value, 0)) return []
-  return [{ id, tone: 'warning', text: `Nenner der Standardneuberechnung ist nicht positiv: Der Standardansatz liefert keinen Umfang für ${periods} (die Vorlage zeigt dann nur die Untergrenzen). Globale Neuberechnung wählen` }]
+  return [{ id, tone: 'warning', text: `Nenner der Standardneuberechnung ist nicht positiv: Der Standardansatz liefert keinen Umfang für ${periods}. Sind alle Pflichteingaben vorhanden, zeigt die Webfassung wie die Vorlage nur die Untergrenze 3 bzw. die Auffüllung auf 30 und rechnet damit weiter; das Ergebnis ist nicht belastbar. Empfohlen: globale Neuberechnung` }]
 }
 
 /** Hinweise der Webfassung zu Blatt 07; sie verändern kein Rechenergebnis. Die Vorlage führt für Zeitraum 1 keine Anzahl der Einheiten. */

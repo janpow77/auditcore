@@ -38,7 +38,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
     hints.push({
       id: 'negative-denominator',
       tone: 'warning',
-      text: 'Nenner der Standardneuberechnung ist nicht positiv: Der Standardansatz liefert keinen Umfang für Zeitraum 2 (die Vorlage zeigt dann nur die Untergrenzen: mindestens 3, Auffüllung auf 30). Globale Neuberechnung wählen',
+      text: 'Nenner der Standardneuberechnung ist nicht positiv: Der Standardansatz liefert keinen Umfang für Zeitraum 2. Sind alle Pflichteingaben vorhanden, zeigt die Webfassung wie die Vorlage nur die Untergrenze 3 bzw. die Auffüllung auf 30 und rechnet damit weiter; das Ergebnis ist nicht belastbar. Empfohlen: globale Neuberechnung',
     })
   }
   if (sameNumber(results.C13, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })

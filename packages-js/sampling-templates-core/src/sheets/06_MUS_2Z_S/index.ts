@@ -45,7 +45,8 @@ function stratumHints(id: string, tone: WebHint['tone'], text: string, applies: 
 /** Texte der Hinweise je Schicht (deutscher Wortlaut ohne die vorangestellte Schichtnummer). */
 export const STRATUM_HINTS = {
   'size-exceeds-population-2': 'Stichprobenumfang für Zeitraum 2 übersteigt die Anzahl der Einheiten der Schicht',
-  'no-planned-size': 'ohne Prognose für Zeitraum 2 gibt es keinen Planumfang; bei diesem Ansatz bleibt der Umfang der Schicht für Zeitraum 2 offen',
+  'no-planned-size':
+    'ohne Prognose für Zeitraum 2 gibt es keinen Planumfang, auf dem dieser Ansatz aufbaut. Sind alle Pflichteingaben vorhanden, zeigt die Webfassung wie die Vorlage die Untergrenze 3 als Umfang der Schicht für Zeitraum 2 und rechnet damit weiter; das Ergebnis ist nicht belastbar',
 } as const
 
 /** Schichten, deren Umfang für Zeitraum 2 die Anzahl ihrer Einheiten übersteigt, und Schichten ohne Planumfang bei einem Ansatz, der auf ihm aufbaut. */
@@ -61,6 +62,11 @@ function strataHints(results: CellMap): WebHint[] {
   ]
 }
 
+const NEGATIVE_DENOMINATOR =
+  'Nenner der Standardneuberechnung ist nicht positiv: Der Standardansatz liefert für Zeitraum 2 keinen Umfang je Schicht. Sind alle Pflichteingaben vorhanden, zeigt die Webfassung wie die Vorlage den Umfang 0 für Zeitraum 2 und den Prüfhinweis „✔ ≥ 3“ ohne Einheiten und rechnet damit weiter; das Ergebnis ist nicht belastbar. Empfohlen: globale Neuberechnung'
+const SECOND_PERIOD_EMPTY =
+  'Für Zeitraum 2 ist kein Ist-Buchwert eingetragen: Die Vorlage rechnet allein mit Zeitraum 1 weiter. Sind alle Pflichteingaben vorhanden, zeigt die Webfassung dieselben Werte; Neuberechnung, Hochrechnung und Gesamtfehlerquote sind dann nicht belastbar. Fehlt eine Pflichteingabe, bleiben sie offen'
+
 /** Hinweise zu den Umfängen: Summe der aufgerundeten Schichtumfänge, Einheiten je Schicht, negativer Nenner. */
 function sizeHints(results: CellMap): WebHint[] {
   const hints: WebHint[] = limitWithoutSize(results, 'C34', 'C29', 'C35')
@@ -70,7 +76,7 @@ function sizeHints(results: CellMap): WebHint[] {
   }
   hints.push(...strataHints(results))
   if (approachOf(results.C28) === 'standard' && isNumber(results.C62) && le(results.C62, 0)) {
-    hints.push({ id: 'negative-denominator', tone: 'warning', text: 'Nenner der Standardneuberechnung ist nicht positiv: Der Standardansatz liefert für Zeitraum 2 keinen Umfang je Schicht. Globale Neuberechnung wählen' })
+    hints.push({ id: 'negative-denominator', tone: 'warning', text: NEGATIVE_DENOMINATOR })
   }
   return hints
 }
@@ -79,7 +85,7 @@ function sizeHints(results: CellMap): WebHint[] {
 function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   const hints = sizeHints(results)
   if (isNumber(results.C8) && gt(results.C8, 0) && eq(countRow(results, 51), 0)) {
-    hints.push({ id: 'second-period-empty', tone: 'warning', text: 'Für Zeitraum 2 ist kein Ist-Buchwert eingetragen: Neuberechnung, Hochrechnung und Gesamtfehlerquote bleiben offen (die Vorlage rechnet allein mit Zeitraum 1 weiter)' })
+    hints.push({ id: 'second-period-empty', tone: 'warning', text: SECOND_PERIOD_EMPTY })
   }
   if (sameNumber(results.C13, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
   if (gt(usedStrata(inputs, [8, 9, 51]), TEMPLATE_STRATA.length)) {

@@ -5,8 +5,10 @@
  * Schichtspalte gerechnet (`fillRow`), Summen über alle Schichtspalten
  * (`totalRow`); die Vorlage summiert D–J, die Webfassung zusätzlich AA–AM.
  * Trägt keine Schicht einen Wert, zeigt die Vorlage die Summe 0 – ein Wert ohne
- * Grundlage, den die Webfassung nach der geltenden Richtlinie offen lässt, samt
- * allem, was darauf aufbaut (N, Zulässigkeit, Mindesterfassung, Gesamtstichprobe).
+ * Grundlage. Die Webfassung lässt ihn samt allem, was darauf aufbaut (N,
+ * Zulässigkeit, Mindesterfassung, Gesamtstichprobe), offen, solange eine
+ * Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage
+ * mit Hinweis (`evaluateSheet` rechnet dann mit `withoutBasis: 'template'`).
  */
 import { divide, guard, isBlank, isNumber, n, plus, required } from '../../excel/index'
 import { resolveInputs } from '../../model/sheet'
@@ -18,7 +20,7 @@ import { definition } from './definition'
 /**
  * Abschnitt H: Summen der Schichten, Grundgesamtheit und Zulässigkeit (C11–C15).
  * Ohne jede Angabe zu den Schichten ist die Summe ohne Grundlage; BV, N und die
- * Zulässigkeit bauen darauf auf und bleiben mit ihr offen.
+ * Zulässigkeit bauen darauf auf und teilen ihr Schicksal (offen bzw. wie die Vorlage).
  */
 function population(c: Cells, context: SheetContext): void {
   c.C11 = totalRow(c, 11, context)
@@ -47,7 +49,7 @@ function strataProjection(c: Cells, context: SheetContext): void {
   fillRow(c, 27, (column) => (used(column) ? guard(() => divide(required(c[at(column, 12)]) * n(c[at(column, 25)]), required(c[at(column, 24)]))) : 0))
   // Fehlt der Buchwert einer belegten Schicht, rechnet die Vorlage ihren Fehler mit 0; die Webfassung lässt die Summe offen.
   const lacking = STRATA_COLUMNS.some((column) => used(column) && isBlank(c[at(column, 12)]))
-  // Summiert werden die belegten Schichten; ist keine hochrechenbar, wäre die Summe 0 ohne Grundlage.
+  // Summiert werden die belegten Schichten; ist keine hochrechenbar, ist die Summe 0 der Vorlage ohne Grundlage (`usedTotal`).
   c.C27 = lacking ? null : usedTotal(c, 27, 11, context)
 }
 

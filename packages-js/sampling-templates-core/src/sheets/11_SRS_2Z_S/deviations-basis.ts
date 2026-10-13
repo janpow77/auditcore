@@ -1,7 +1,10 @@
 /**
  * Werte ohne Grundlage in Blatt 11 (`kind: 'withoutBasis'`): Die Vorlage zeigt
- * sie, obwohl die summierte bzw. geprüfte Größe fehlt; die Webfassung lässt sie
- * nach der geltenden Richtlinie offen (`unfounded`, `totalRow`). Das sind die
+ * sie, obwohl die summierte bzw. geprüfte Größe fehlt (`unfounded`, `totalRow`).
+ * Die Webfassung lässt sie offen, solange eine Pflichteingabe fehlt; bei
+ * vollständigen Pflichteingaben zeigt sie sie wie die Vorlage und weist sie mit
+ * einem Hinweis in Warnfarbe aus (`evaluateSheet`, Hinweis `without-basis`); die
+ * Würdigung ist dann nicht uneingeschränkt grün. Das sind die
  * Summen über Schichtzeilen ohne Summanden samt allem, was auf ihnen aufbaut,
  * die Prüfhinweise „✔ ≥ 3“ ohne Umfang je Schicht, die Untergrenze 3 je Schicht
  * ohne Gesamtumfang und die Hochrechnung 0, solange keine Schicht eine

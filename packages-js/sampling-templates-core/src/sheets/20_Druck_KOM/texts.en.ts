@@ -7,10 +7,10 @@
  *
  * Die Texte der Seitenaufteilung (`layout.ts`) und die festen Texte des
  * Rechenkerns stehen mit ihrem deutschen Wortlaut als Schlüssel in `values`.
- * Nicht übersetzbar sind mit `SheetTexts` die zusammengesetzte Kopfzeile A6
- * („EFRE-Programm Hessen 2021–2027 · CCI … · Geschäftsjahr …“) und die
- * Eingaben der Prüfbehörde (Status, Stand der Fehlerfälle): Die Vorlage summiert
- * „davon vorläufig“ über den deutschen Wortlaut „vorläufig“ in Spalte G.
+ * Die Kopfzeile setzt die Berichtsansicht aus ihren Teilen in der Sprache des
+ * Blatts zusammen; Programm und Prüfbehörde sind Eingaben. Die Eingaben zum
+ * Status bleiben deutsch gespeichert (die Vorlage summiert „davon vorläufig“
+ * über den Wortlaut „vorläufig“ in Spalte G), angezeigt werden sie übersetzt.
  */
 import type { FieldTexts, SheetTexts } from '../../model/texts'
 import { NOT_CALCULATED } from './compute'
@@ -76,6 +76,7 @@ export const en: SheetTexts = {
   title: TITLE_EN,
   shortTitle: 'Report',
   sections: {
+    W: { title: 'Programme and audit authority', reference: 'note of the web version' },
     S: { title: 'Control fields (not printed)' },
     K: { title: TITLE_EN },
     1: { title: 'Population and sample' },
@@ -84,6 +85,11 @@ export const en: SheetTexts = {
     4: { title: 'Residual error rate and further steps' },
   },
   fields: {
+    W4: { label: 'Name of the programme (header)', hint: 'If left empty, “Programme(s) / CCI” of the chosen method applies.' },
+    W5: { label: 'Audit authority (footer)' },
+    W6: { label: 'Organisational unit (footer, optional)' },
+    W7: { label: 'Place (footer, optional)' },
+    W8: { label: 'Footer' },
     J4: { label: 'As at' },
     J5: { label: 'Status' },
     J6: { label: 'Audited expenditure of the sample' },
@@ -165,7 +171,10 @@ export const en: SheetTexts = {
     'Finanzkorrekturen (H)': FIGURES.corrections,
     'Restfehlerquote nach Finanzkorrekturen': FIGURES.residualRate,
     'Hochgerechnete Finanzkorrektur bis zur Wesentlichkeitsschwelle von 2 %': FIGURES.extrapolatedCorrection,
-    [REPORT_LAYOUT.footer]: 'ERDF audit authority, Unit Z 6, HMWVW, Wiesbaden',
+    // Kopfzeile: Wörter zwischen den Angaben; Programm und Prüfbehörde sind Eingaben und bleiben, wie sie eingegeben sind.
+    Geschäftsjahr: 'Accounting year',
+    vorläufig: 'preliminary',
+    endgültig: 'final',
     // Rechenkern und Zahlenformate
     'Stand ': 'As at ',
     'davon vorläufig: ': 'of which preliminary: ',
@@ -175,8 +184,7 @@ export const en: SheetTexts = {
     'Die Gesamtfehlerquote liegt unter der Wesentlichkeitsschwelle.': 'The total error rate is below the materiality threshold.',
   },
   webHints: {
-    'fixed-programme':
-      'As in the template, header and footer name the “EFRE-Programm Hessen 2021–2027” (ERDF programme Hessen 2021–2027) and the audit authority in Wiesbaden as fixed text; for other programmes the template has to be adapted',
+    'own-header': 'Header and footer name the programme and the audit authority as you enter them. The template carries fixed details in these places; the web version deliberately deviates from it',
     'case-book-value-zero': 'Error case with book value 0: the rate cannot be determined (the template shows an error value there)',
     'residual-rate-undefined': 'The residual error rate cannot be determined: amounts under Article 98(6) and financial corrections together reach the extrapolation basis',
   },

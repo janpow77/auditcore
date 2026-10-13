@@ -48,7 +48,8 @@ function sampleSize(c: Cells): boolean {
 /**
  * Abschnitt L: Hochrechnung (Verhältnisschätzung) und Genauigkeit (C41–C44).
  * C42 liest die Fehlersumme mit `N(…)`: Fehlt sie, zeigt die Vorlage 0 € – ein
- * Wert ohne Grundlage, den die Webfassung nach der geltenden Richtlinie offen lässt.
+ * Wert ohne Grundlage: offen, solange eine Pflichteingabe fehlt; bei vollständigen
+ * Pflichteingaben zeigt ihn die Webfassung wie die Vorlage mit Hinweis (`evaluateSheet`).
  */
 function projection(c: Cells, context: SheetContext): void {
   const projected = guard(() => ratioProjection(c.C12, c.C37, c.C36))

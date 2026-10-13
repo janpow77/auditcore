@@ -3,6 +3,12 @@
  * zeigt die Webfassung „Angabe fehlt“, wo die Vorlage mit 0 weiterrechnet;
  * hier kommen die Schichtzeilen dazu. Sie gelten für alle Schichtspalten; durch
  * Golden-Fälle belegt sind die sieben der Vorlage (D–J).
+ *
+ * Werte ohne Grundlage (`kind: 'withoutBasis'`: Summe 0 ohne belegte Schicht,
+ * „✔ ≥ 3“ ohne Einheiten der Zufallsschicht) lässt die Webfassung offen, solange
+ * eine Pflichteingabe fehlt; bei vollständigen Pflichteingaben zeigt sie sie wie
+ * die Vorlage und weist sie mit einem Hinweis in Warnfarbe aus (`evaluateSheet`,
+ * Hinweis `without-basis`).
  */
 import { STRATA_COLUMNS, stratumCell } from '../../model/strata'
 import type { Deviation } from '../../model/types'
@@ -52,7 +58,8 @@ export const deviations: readonly Deviation[] = [
   ...withoutTotal(['C11', 'C19', 'C21'], 'C9', '0 € (Summe der Buchwerte ohne belegte Schicht)'),
   ...withoutTotal(['N6'], 'C49', '0 € (Summe ohne belegte Schicht)'),
   ...withoutTotal(['C53', 'C57', 'C58', 'C60', 'C61', 'C62', 'C63', 'N5', 'N11'], 'C51', 'Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine Schicht einen Stichprobenumfang hat (z. B. bei „TE ≤ AE“)'),
-  ...entries(['C11'], ['02_Grundgesamtheit!C51'], 'Summe der Schichten abzüglich 0 € (leeres Blatt 02)', 'Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen.'),
+  // Der Abgleich mit Blatt 02 betrifft nur C11; ohne ihn ist Blatt 04 trotzdem vollständig ausgefüllt.
+  ...entries(['C11'], ['02_Grundgesamtheit!C51'], 'Summe der Schichten abzüglich 0 € (leeres Blatt 02)', 'Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen.').map((entry) => ({ ...entry, local: true })),
   ...entries(['C19'], ['C17'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus.'),
   ...entries(['C21'], ['C20'], '0,00 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus.'),
   ...STRATA_COLUMNS.flatMap((column) =>

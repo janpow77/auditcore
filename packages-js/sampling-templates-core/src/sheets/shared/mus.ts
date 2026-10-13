@@ -205,7 +205,10 @@ export function errorDependents(row: number): CellAddress[] {
 
 /**
  * Hinweis der Webfassung: Begrenzter Umfang gewählt, aber kein rechnerischer
- * Umfang – der anzuwendende Umfang bleibt offen statt auf die Begrenzung zu fallen.
+ * Umfang und der anzuwendende Umfang ist offen. Das ist nur der Fall, solange eine
+ * Pflichteingabe fehlt; bei vollständigen Pflichteingaben zeigt die Webfassung wie
+ * die Vorlage den begrenzten Umfang und weist ihn als Wert ohne Grundlage aus
+ * (`evaluateSheet`, Hinweis `without-basis`).
  */
 export function limitWithoutSize(results: CellMap, limit: CellAddress, computed: CellAddress, applied: CellAddress): WebHint[] {
   if (!isNumber(results[limit]) || !isBlank(results[computed]) || !isBlank(results[applied])) return []
