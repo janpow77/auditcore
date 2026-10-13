@@ -242,6 +242,29 @@ zeitlimit_s = 300
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_tyfindings", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
 
+# Zusammenhängende synthetische Testbündel (Summenbindung, Vorlagenprofile, freie Tabelle); Hypothesis-Eigenschaftstests.
+[pruefprofile.dummybundle]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 600
+autofix = false
+
+[pruefprofile.dummybundle.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_dummybundle", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.dummybundle.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_dummybundle/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.dummybundle.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_dummybundle && exec python3 -m mypy src --no-color-output --no-error-summary"]
+zeitlimit_s = 300
+
+[pruefprofile.dummybundle.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_dummybundle", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300
+
 # Office-, VBA- und VM-Prüfbank (Etappe 0: Gerüst) samt Plugin-Gerüst; ohne Office und ohne VM.
 [pruefprofile.officebank]
 werkzeuge = ["ruff", "pytest", "mypy", "codegate"]

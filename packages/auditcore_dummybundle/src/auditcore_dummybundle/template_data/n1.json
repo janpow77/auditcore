@@ -1,0 +1,382 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.n1",
+  "id": "N1",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Belegliste zum Mittelabruf (kompakt)",
+  "purpose": "Belegliste eines oder mehrerer Mittelabrufe unter allgemeinen Spaltennamen, mit Beträgen, Skonto, Kürzung und Vergabeangaben.",
+  "legal_basis": "VO (EU) 2021/1060, Art. 74 Abs. 1 Buchst. a (Verwaltungsüberprüfung der Ausgaben)",
+  "sources": [
+    "Inhalte der ausführlichen Belegliste (V1) in kompakter Form unter allgemeinen Spaltennamen."
+  ],
+  "open_points": [
+    "Der Skontobetrag ist die Differenz aus Bemessungsgrundlage und geltend gemachtem Betrag und kann um einen Cent vom gerundeten Satz abweichen."
+  ],
+  "tables": [
+    {
+      "name": "Belegliste",
+      "title": "Belegliste zum Mittelabruf (kompakt)",
+      "source": "receipts",
+      "columns": [
+        {
+          "header": "Vorhaben",
+          "kind": "text",
+          "field": "operation_id",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "SYN-{JJJJ}-0001"
+            }
+          }
+        },
+        {
+          "header": "Mittelabruf",
+          "kind": "text",
+          "field": "claim_id",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "MA-SYN-0001-01"
+            }
+          }
+        },
+        {
+          "header": "Belegnummer",
+          "kind": "int",
+          "field": "receipt_no",
+          "free": {
+            "type": "sequence",
+            "params": {}
+          }
+        },
+        {
+          "header": "Rechnungsnummer",
+          "kind": "text",
+          "field": "invoice_no",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "RE-{JJJJ}-{ZZZZZZ}",
+              "date_field": "Rechnungsdatum"
+            }
+          }
+        },
+        {
+          "header": "Kostenart",
+          "kind": "text",
+          "field": "cost_category",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Personalausgaben",
+                  "weight": 3
+                },
+                {
+                  "value": "Sachausgaben",
+                  "weight": 4
+                },
+                {
+                  "value": "Investitionen",
+                  "weight": 3
+                },
+                {
+                  "value": "Fremdleistungen",
+                  "weight": 3
+                },
+                {
+                  "value": "Reisekosten",
+                  "weight": 1
+                },
+                {
+                  "value": "Öffentlichkeitsarbeit",
+                  "weight": 1
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Rechnungsdatum",
+          "kind": "date",
+          "field": "invoice_date",
+          "free": {
+            "type": "date",
+            "params": {}
+          }
+        },
+        {
+          "header": "Zahlungsdatum",
+          "kind": "date",
+          "field": "payment_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Rechnungsdatum",
+              "min_days": 0,
+              "max_days": 30
+            }
+          }
+        },
+        {
+          "header": "Rechnungssteller",
+          "kind": "text",
+          "field": "supplier_name",
+          "free": {
+            "type": "company",
+            "params": {}
+          }
+        },
+        {
+          "header": "USt-IdNr. des Rechnungsstellers",
+          "kind": "text",
+          "field": "supplier_vat_id",
+          "free": {
+            "type": "vat_id",
+            "params": {}
+          }
+        },
+        {
+          "header": "Verwendungszweck",
+          "kind": "text",
+          "field": "purpose",
+          "free": {
+            "type": "text",
+            "params": {}
+          }
+        },
+        {
+          "header": "Betrag netto",
+          "kind": "amount",
+          "field": "net",
+          "sum": true,
+          "free": {
+            "type": "amount",
+            "params": {
+              "min": "100.00",
+              "max": "25000.00",
+              "distribution": "skewed"
+            }
+          }
+        },
+        {
+          "header": "Umsatzsteuer",
+          "kind": "amount",
+          "field": "vat",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Betrag netto"
+              ],
+              "rate": "0.19"
+            }
+          }
+        },
+        {
+          "header": "Betrag brutto",
+          "kind": "amount",
+          "field": "gross",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "sum",
+              "fields": [
+                "Betrag netto",
+                "Umsatzsteuer"
+              ]
+            }
+          }
+        },
+        {
+          "header": "Skontosatz",
+          "kind": "rate",
+          "field": "discount_rate",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "0.00"
+            }
+          }
+        },
+        {
+          "header": "Skontobetrag",
+          "kind": "amount",
+          "field": "discount_amount",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Betrag netto"
+              ],
+              "rate": "0"
+            }
+          }
+        },
+        {
+          "header": "gezahlter Betrag",
+          "kind": "amount",
+          "field": "paid",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Betrag brutto"
+              ],
+              "rate": "1"
+            }
+          }
+        },
+        {
+          "header": "geltend gemachter Betrag",
+          "kind": "amount",
+          "field": "project_related",
+          "sum": true,
+          "free": {
+            "type": "amount_factor",
+            "params": {
+              "field": "Betrag netto",
+              "min_factor": "0.80",
+              "max_factor": "1.00"
+            }
+          }
+        },
+        {
+          "header": "Kürzung",
+          "kind": "amount",
+          "field": "reduction",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "geltend gemachter Betrag"
+              ],
+              "rate": "0"
+            }
+          }
+        },
+        {
+          "header": "anerkannter Betrag",
+          "kind": "amount",
+          "field": "recognised",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "difference",
+              "fields": [
+                "geltend gemachter Betrag",
+                "Kürzung"
+              ]
+            }
+          }
+        },
+        {
+          "header": "Kürzungsgrund",
+          "kind": "text",
+          "field": "reduction_reason",
+          "note": "Neutraler Platzhalter, kein Katalog.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Vergabeart",
+          "kind": "text",
+          "field": "award_type",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Entfällt",
+                  "weight": 6
+                },
+                {
+                  "value": "VGV (oberhalb Schwellenwert)",
+                  "weight": 1
+                },
+                {
+                  "value": "VOB unterhalb Schwellenwert",
+                  "weight": 2
+                },
+                {
+                  "value": "VOB oberhalb Schwellenwert",
+                  "weight": 1
+                },
+                {
+                  "value": "VOL unterhalb Schwellenwert",
+                  "weight": 2
+                },
+                {
+                  "value": "Direktauftrag",
+                  "weight": 3
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Direktauftrag",
+          "kind": "bool",
+          "field": "direct_award",
+          "free": {
+            "type": "boolean",
+            "params": {
+              "probability": "0.20"
+            }
+          }
+        },
+        {
+          "header": "Gebrauchtanschaffung",
+          "kind": "bool",
+          "field": "used_purchase",
+          "free": {
+            "type": "boolean",
+            "params": {
+              "probability": "0.04"
+            }
+          }
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "EUR"
+            }
+          }
+        }
+      ],
+      "total_row": "bottom",
+      "free_start": true
+    }
+  ],
+  "content_hash": "801ec536b33d18157b040ccfa144fa4bbac161a26daf40bef388004a26544c1a",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"
+  }
+}
