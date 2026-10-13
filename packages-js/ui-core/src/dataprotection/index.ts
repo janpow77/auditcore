@@ -49,4 +49,5 @@ export { registerCsv, registerFilename, registerHtml, registerMarkdown, type Reg
 export * from './vvt'
 export * from './dsfa'
 export * from './assistant'
+export * from './checklistTree'
 export type * from './assistantTypes'

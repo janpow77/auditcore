@@ -35,4 +35,40 @@ describe('Parität Datenschutz-Assistent Vue ↔ React', () => {
     expect(rendered.vue.textContent).toContain('Es gibt bewusst keinen Gesamtstatus')
     await act(async () => undefined)
   })
+
+  it('Prüfpunkte als Baum: aufklappen, Status ändern und speichern führt zu gleichem DOM', async () => {
+    const ports = [fakeAssistantPort(), fakeAssistantPort()] as const
+    const rendered = await renderBoth(
+      FaDatenschutzAssistent,
+      { port: ports[0], activityId },
+      <FlowauditDatenschutzAssistent port={ports[1]} activityId={activityId} />,
+    )
+    for (const [root, fire, port] of [[rendered.vue, domEvent, ports[0]], [rendered.react, fireEvent, ports[1]]] as const) {
+      fire.click(Array.from(root.querySelectorAll('[role="tab"]')).find((node) => node.textContent === 'Prüfpunkte') as HTMLElement)
+      await flushPromises()
+      await tick()
+      expect(root.querySelectorAll('.fa-checklist__node--area').length).toBe(6)
+      expect(root.querySelectorAll('.fa-checklist__node--item').length).toBe(30)
+      expect(root.querySelectorAll('.fa-checklist__detail').length).toBe(0)
+      fire.click(root.querySelector('[data-node="bereich:B"] > .fa-checklist__row') as HTMLElement)
+      fire.click(root.querySelector('[data-item="CHK-14"] > .fa-checklist__row') as HTMLElement)
+      await tick()
+      expect(root.querySelectorAll('.fa-checklist__node--item').length).toBe(25)
+      const detail = root.querySelector('[data-item="CHK-14"] .fa-checklist__detail') as HTMLElement
+      expect(detail.textContent).toContain('Betriebsnachweis, Konzept, Test')
+      fire.change(detail.querySelector('select') as HTMLElement, { target: { value: 'zur_pruefung' } })
+      await tick()
+      // v-model hört bei Eingabefeldern auf „input“, React auf „change“.
+      ;(fire === domEvent ? fire.input : fire.change)(detail.querySelector('input[type="date"]') as HTMLElement, { target: { value: '2026-11-30' } })
+      await tick()
+      fire.click(detail.querySelector('.fa-checklist__save') as HTMLElement)
+      await flushPromises()
+      await tick()
+      expect(port.checklist).toHaveBeenCalledWith(activityId, 'CHK-14', { status: 'zur_pruefung', justification: '', evidence_ids: [], due: '2026-11-30' }, expect.anything())
+    }
+    expect(normalizeDom(rendered.react)).toBe(normalizeDom(rendered.vue))
+    expect(rendered.vue.textContent).toContain('0 von 30 erledigt')
+    expect(rendered.vue.textContent).toContain('Bereich A')
+    await act(async () => undefined)
+  })
 })

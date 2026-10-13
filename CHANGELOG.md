@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Datenschutz-Assistent (`@auditcore/ui-core`, `@auditcore/ui`, `@auditcore/ui-react`,
+  unveröffentlicht): Der Reiter „Prüfpunkte“ zeigt CHK-01 bis CHK-30 als aufklappbaren
+  Baum (Bereich → Prüfpunkt → Angaben und Status) mit Fortschritt je Bereich statt als
+  flache Tabelle; Bearbeitung und Frist sind dort jetzt eintragbar. Vorbild ist der
+  Checklistenbaum im audit_designer; der Serververtrag
+  bleibt unverändert, das Baum-Modell liegt in `checklistTree.ts`.
 - Release v0.12.0 (12.10.2026) veröffentlicht und in `docs/deployment/package-feed.md`
   als aktueller Stand dokumentiert: `auditcore_dataprotection` 0.6.0 mit dem
   Datenschutz-Assistenten, `auditcore_invoicesynth` 0.3.0, `auditcore_runner` 0.1.1,
