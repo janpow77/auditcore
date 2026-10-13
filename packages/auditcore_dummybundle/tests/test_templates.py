@@ -171,9 +171,11 @@ def test_placeholders_are_recognisable() -> None:
 
 def test_no_named_bodies_in_sources_profiles_and_documentation() -> None:
     """Quelltext und Daten ohne alle Begriffe; die Doku darf Werkzeuge nennen, Stellen nicht."""
-    root = PACKAGE.parent.parent
+    # Quellbaum – auch beim Test gegen das installierte Wheel.
+    root = Path(__file__).resolve().parents[1]
     code = [*PACKAGE.rglob("*.json"), *PACKAGE.rglob("*.py"), *(root / "tests").glob("*.py")]
-    prose = [*root.glob("*.md"), root / "NOTICE", *(root / "docs").glob("*.md")]
+    candidates = (*root.glob("*.md"), root / "NOTICE", *(root / "docs").glob("*.md"))
+    prose = [path for path in candidates if path.is_file()]
     assert len(code) >= 30
     for paths, words in ((code, FORBIDDEN), (prose, FORBIDDEN[:8])):
         for path in sorted(paths):
