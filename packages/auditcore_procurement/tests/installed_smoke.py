@@ -1,11 +1,14 @@
 """Run with python -I against an installed wheel or Debian package; no pytest needed."""
 
+from datetime import date
 from decimal import Decimal
 from importlib.metadata import distribution
 from importlib.util import find_spec
 
 from auditcore_procurement import (
     build_ted_query,
+    check_eu_threshold,
+    eu_catalogue,
     inspect_notice,
     load_profile,
     normalize_notice,
@@ -93,6 +96,21 @@ def main() -> None:
     assert y2019["checks"][0]["calculated_tier"] == "BELOW_EU"
     assert y2019["checks"][0]["eu_threshold"]["value"] == 221000
     assert y2019["checks"][0]["eu_threshold"]["official_journal"].startswith("ABl. L 337")
+    regimes = load_profile("procurement.hvtg", "2026.10.1")
+    sector = check_eu_threshold(
+        regimes,
+        Decimal("432000"),
+        regime="utilities",
+        contract_type="supplies_services",
+        reference_date=date(2026, 1, 1),
+    )
+    assert sector["above_threshold"] is True and sector["eu_threshold"]["celex"] == "32025R2150"
+    assert [r["id"] for r in eu_catalogue(regimes)["regimes"]] == [
+        "public_contracts",
+        "utilities",
+        "concessions",
+        "defence",
+    ]
     assert ted_company_result(500, None, "DE", "designer").status == "failed"
     if find_spec("auditcore_harvest") is not None:
         from auditcore_procurement.sources import TedAwardsAdapter

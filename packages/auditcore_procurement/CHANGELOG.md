@@ -1,5 +1,39 @@
 # Changelog auditcore_procurement
 
+## Unveröffentlicht
+
+EU-Schwellenwerte vollständig: Profil `procurement.hvtg 2026.10.1` (Schema 3,
+`CURRENT_PROFILE`) führt neben der Jahrestabelle der Vorprüfung den Block
+`eu_regimes` mit allen Schwellenwerten 2014–2027 je Regime, Auftragsart,
+Auftraggeberart und Geltungszeitraum.
+
+- Neu: Sektorenaufträge (Art. 15 RL 2014/25/EU, bis 17.04.2016 Art. 16
+  RL 2004/17/EG), Konzessionen (Art. 8 Abs. 1 RL 2014/23/EU, ab 18.04.2016),
+  Verteidigung und Sicherheit (Art. 8 RL 2009/81/EG), soziale und andere
+  besondere Dienstleistungen (750.000 EUR nach Art. 4 Buchst. d RL 2014/24/EU,
+  1.000.000 EUR nach Art. 15 Buchst. c RL 2014/25/EU, jeweils ab 18.04.2016).
+  Die Werte für öffentliche Bau-, Liefer- und Dienstleistungsaufträge wurden
+  am 13.10.2026 erneut am amtlichen Text geprüft: keine Abweichung.
+- Jeder Wert nennt Verordnung, ABl.-Fundstelle, CELEX-Nummer, SHA-256 des
+  abgerufenen Dokuments und den Wortlaut der einschlägigen Artikel
+  (`tools/build_eu_regimes_profile.py`, `tools/eu_threshold_sources.json`).
+  Das Profil lädt nicht, wenn ein Wert nicht im hinterlegten Wortlaut steht
+  oder Jahrestabelle und Regimetabelle voneinander abweichen.
+- Neue öffentliche Namen: `eu_catalogue`, `check_eu_threshold`,
+  `eu_regime_threshold` (Module `eu_thresholds`, `eu_regimes`); sie werten nur
+  den EU-Teil aus und geben keine nationale Stufe zurück.
+  `check_threshold` nimmt zusätzlich `regime` und `contract_type`
+  (nur `mode="strict"`).
+- Unverändert: Ergebnisse aller bisherigen Aufrufe (`run_prechecks`,
+  `check_threshold` ohne `regime`, beide Modi); die Profile 2026.09.1 bis
+  2026.09.3 bleiben bytegleich und ladbar. `profile_from_ruleset(...,
+  year_bound=True)` ohne `eu_version` übernimmt jetzt 2026.10.1 (anderer
+  Fingerprint, gleiche Werte); `eu_version="2026.09.3"` reproduziert den
+  bisherigen Fingerprint.
+- Nicht enthalten: Zeiträume vor 2014 und ab 2028, Baukonzessionen nach
+  Art. 56 RL 2004/18/EG vor dem 18.04.2016, subventionierte Aufträge (Art. 13
+  RL 2014/24/EU), Wettbewerbe als eigene Auftragsart.
+
 ## 0.2.5 – 2026-10-03
 
 Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 12 Invarianten (I1–I12) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`; keine Befunde. `hypothesis` im Extra `dev`.
