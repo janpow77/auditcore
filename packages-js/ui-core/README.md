@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1225):
+Exporte der Einstiegspunkte aus `package.json#exports` (1240):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -210,6 +210,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `ButtonSize` | Typ | – | `base/types` |
 | `@auditcore/ui-core` | `ButtonVariant` | Typ | – | `base/types` |
 | `@auditcore/ui-core` | `CHANGE_STATUSES` | Konstante | Vorgabe des Filters „Alle Änderungen“: alles außer unverändert. | `synopsis/types` |
+| `@auditcore/ui-core` | `CHECKLIST_STATUSES` | Konstante | – | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `COMPARISON_KINDS` | Konstante | – | `documents/form` |
 | `@auditcore/ui-core` | `COMPARISON_MODES` | Konstante | – | `documents/form` |
 | `@auditcore/ui-core` | `CONTRACT` | Konstante | – | `screening/types` |
@@ -218,8 +219,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `ChartBox` | Schnittstelle | – | `benford/chart` |
 | `@auditcore/ui-core` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
 | `@auditcore/ui-core` | `ChecklistChange` | Schnittstelle | – | `dataprotection/assistantTypes` |
+| `@auditcore/ui-core` | `ChecklistEdit` | Schnittstelle | – | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `ChecklistItemView` | Schnittstelle | – | `dataprotection/assistantTypes` |
+| `@auditcore/ui-core` | `ChecklistMetaRow` | Schnittstelle | – | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `ChecklistProgress` | Schnittstelle | – | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `ChecklistStatus` | Typ | – | `dataprotection/assistantTypes` |
+| `@auditcore/ui-core` | `ChecklistTone` | Typ | Farbton eines Knotens; der Status steht daneben immer als Text (GUI-10). | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `ChecklistTreeNode` | Schnittstelle | – | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `ChiSquareMetric` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `ClientExportFormat` | Typ | – | `synopsis/types` |
 | `@auditcore/ui-core` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
@@ -877,6 +883,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `cellText` | Funktion | – | `table/index` |
 | `@auditcore/ui-core` | `changeIds` | Funktion | Kennungen der Änderungszeilen in Anzeigereihenfolge (Ziel der Navigation). | `synopsis/viewModel` |
 | `@auditcore/ui-core` | `chartGeometry` | Funktion | – | `benford/chart` |
+| `@auditcore/ui-core` | `checklistBranchIds` | Funktion | Kennungen aller Knoten mit Kindern (für „Alle aufklappen“ und den Startzustand). | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `checklistChange` | Funktion | Änderung für den Server; Bearbeitung und Frist gehen nur mit, wenn sie geändert wurden. | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `checklistEdit` | Funktion | Eingabestand der Detailansicht aus dem Serverstand. | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `checklistMeta` | Funktion | Angaben zum Prüfpunkt für die Detailansicht; leere Angaben entfallen. | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `checklistProgress` | Funktion | Summe über Knoten einer Ebene. | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `checklistTone` | Funktion | – | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `checklistTree` | Funktion | Gruppiert nach `bereich` in der Reihenfolge des Katalogs. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `cloneContent` | Funktion | Tiefe Kopie (JSON-Daten), damit Eingaben den gelesenen Stand nie verändern. | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `codeLabel` | Funktion | Beschriftung eines Codes aus dem Vertrag (Status, Stufe, Hinweis); unbekannte Codes bleiben stehen. | `screening/messages` |
 | `@auditcore/ui-core` | `columnLabel` | Funktion | – | `dbkanban/view` |
@@ -1119,6 +1132,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `parseConditions` | Funktion | Auflagen: eine je Zeile, leere Zeilen entfallen. | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `parseCount` | Funktion | Eingabe eines Zahlfeldes: leer → null, sonst nichtnegative ganze Zahl; ungültig → undefined. | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `parseDegrees` | Funktion | Dezimalgrad aus Texteingabe; Komma und Punkt sind als Dezimaltrenner erlaubt, Tausendertrennzeichen nicht. Ungültiges ergibt `null`. | `geo/model` |
+| `@auditcore/ui-core` | `parseEvidenceIds` | Funktion | Eingabe „a, b“ als Liste von Nachweiskennungen. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `parseImport` | Funktion | – | `documents/importing` |
 | `@auditcore/ui-core` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
 | `@auditcore/ui-core` | `parseLatLon` | Funktion | Punkt aus zwei Texteingaben mit Wertebereichsprüfung. | `geo/model` |
@@ -1284,6 +1298,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `toCompareFields` | Funktion | Formularfelder für `POST /comparisons`; Gesetzessynopse ohne die Optionen des Standardvergleichs. | `documents/form` |
 | `@auditcore/ui-core` | `toHtml` | Funktion | Eigenständiges HTML-Dokument mit Druck-CSS (keine externen Ressourcen). | `synopsis/exporters` |
 | `@auditcore/ui-core` | `toMarkdown` | Funktion | Markdown: gestrichene Wörter als ~~…~~, neue als **…**. | `synopsis/exporters` |
+| `@auditcore/ui-core` | `toggleChecklistNode` | Funktion | Neuer Satz aufgeklappter Knoten nach dem Umschalten von `id`. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `toggleMeasure` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `toggleSection` | Funktion | Abschnitt ein- oder ausschalten; Reihenfolge wie `ROW_STATUSES`. | `documents/form` |
 | `@auditcore/ui-core` | `totals` | Funktion | – | `risk/state` |
