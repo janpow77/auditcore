@@ -1,5 +1,14 @@
 # Changelog – auditcore_risk
 
+## 0.4.1 – 2026-10-13 – Bindung an auditcore_procurement 0.3.0
+
+Keine Verhaltensänderung. Das Extra `procurement` (und `dev`) bindet
+`auditcore_procurement==0.3.0` statt 0.2.5, weil interne Bindungen exakt sind
+und 0.2.5 sonst neben dem neuen Vergabepaket nicht installierbar wäre. Die
+jahresbezogenen EU-Schwellen des Profils `riskanalysis.year_bound` kommen
+weiter aus `procurement.hvtg 2026.09.3`; Profile, Fingerabdrücke und
+Ergebnisse sind unverändert. `LIBRARY` lautet `auditcore_risk 0.4.1`.
+
 ## 0.4.0 – 2026-10-03 – BL_RF07/BL_RF10 in ganzen Cent, Spaltenpfad (noch nicht veröffentlicht)
 
 **Neue Profilversion `audit_designer.flowstat_belegliste` 2026.10.1

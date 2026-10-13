@@ -2,7 +2,11 @@
 
 ## Unreleased
 
-- Neues Paket `auditcore_dummybundle` 0.1.0 (unveröffentlicht): zusammenhängende
+- Vorbereitung Release v0.13.0 (13.10.2026): `auditcore_procurement` 0.3.0,
+  `auditcore_dummybundle` 0.1.0 und – nur wegen der exakten Bindung im Extra
+  `procurement` – `auditcore_risk` 0.4.1. Alle übrigen Pakete, auch die
+  npm-Pakete, sind gegenüber v0.12.0 unverändert und behalten ihre Version.
+- Neues Paket `auditcore_dummybundle` 0.1.0 (vorgesehen für v0.13.0): zusammenhängende
   synthetische Testbündel Vorhaben → Mittelabrufe → Belege → Zahlungsanträge an
   die Kommission → Rechnungslegung mit Summenbindung in Dezimalrechnung
   (`amounts.allocate`: die eine Fassung der Betragsverteilung mit Restausgleich),
@@ -15,7 +19,7 @@
   kommen aus der Liste des Feldgenerators. Die Köpfe der Vorlagen
   V5 und V6 stammen aus dem Amtsblatt (ABl. L 231 vom 30.6.2021, deutsche
   Fassung, Abruf 13.10.2026). `auditcore_dummygenerator` bleibt unverändert.
-- `auditcore_procurement` (unveröffentlicht): Profil `procurement.hvtg 2026.10.1`
+- `auditcore_procurement` 0.3.0 (vorgesehen für v0.13.0): Profil `procurement.hvtg 2026.10.1`
   führt die EU-Schwellenwerte 2014–2027 vollständig – neben öffentlichen Bau-,
   Liefer- und Dienstleistungsaufträgen (RL 2014/24/EU) jetzt Sektorenaufträge
   (RL 2014/25/EU), Konzessionen (RL 2014/23/EU), Verteidigung und Sicherheit
@@ -29,7 +33,7 @@
   als aktueller Stand dokumentiert: `auditcore_dataprotection` 0.6.0 mit dem
   Datenschutz-Assistenten, `auditcore_invoicesynth` 0.3.0, `auditcore_runner` 0.1.1,
   `@auditcore/ui-core` 0.4.0, `@auditcore/ui` 0.5.0, `@auditcore/ui-react` 1.3.0.
-- `auditcore_invoicesynth` (unveröffentlicht): Generatorvariante `v2` für die
+- `auditcore_invoicesynth` 0.3.0 (veröffentlicht mit v0.12.0): Generatorvariante `v2` für die
   Donut-Trainingsrunde „Stufe 5“ (`--variety v2`, Standard bleibt `v1`).
   Anlass: Fehleranalyse auf dem Layout-Holdout T2 (Fälligkeit 180× als
   Lieferdatum gelesen, Rechnungsdatum 17× vertauscht; Ziffernfehler in
