@@ -1,5 +1,10 @@
 # Changelog – auditcore_runner
 
+## 0.1.2 – 2026-10-13
+
+- Eingebettetes Oberflächenbündel `runner-elements.js` aus `@auditcore/ui` 0.6.0 und
+  `@auditcore/ui-core` 0.5.0 neu erzeugt; keine Änderung am Verhalten des Runners.
+
 ## 0.1.1 – 2026-10-11
 
 - Nichts geprüft ist rot: Ein JUnit-Bericht ohne ausgeführten Testfall (fehlt,

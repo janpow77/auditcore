@@ -183,7 +183,7 @@ Die repositoryweite Bestandsaufnahme und empfohlene Einbindung stehen in
 
 ## Abhängigkeiten
 
-- `@auditcore/ui@0.5.0` für Designtoken, Icons und Light-DOM-Web-Component-Helfer.
+- `@auditcore/ui@0.6.0` für Designtoken, Icons und Light-DOM-Web-Component-Helfer.
 - `vue@^3.5.0` als Peer-Abhängigkeit.
 - Keine API- oder Dateisystemzugriffe. Speicher- und Exportlogik verbleibt in
   der Host-Anwendung.

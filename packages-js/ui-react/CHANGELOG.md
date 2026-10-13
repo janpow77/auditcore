@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-react
 
+## 1.4.0 – 2026-10-13
+
+- Datenschutz-Assistent: Reiter „Prüfpunkte“ als aufklappbarer Baum, DOM-gleich zur Vue-Fassung; Bearbeitung und Frist eintragbar. Abhängigkeiten `@auditcore/ui-core` 0.5.0 und `@auditcore/ui` 0.6.0.
+
 ## 1.2.0 – 2026-09-29
 
 Native Konten-/Mandantenoberfläche mit gemeinsamer Vue-Paritätsprüfung.

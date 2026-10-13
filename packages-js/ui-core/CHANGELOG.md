@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-core
 
+## 0.5.0 – 2026-10-13
+
+- Datenschutz-Assistent: Baum-Modell der Prüfpunkte (`checklistTree`: Bereich → Prüfpunkt, Fortschritt, Ton, Angaben, Änderung mit Bearbeitung und Frist), neue Texte und Styles `fa-checklist__*`.
+
 ## 0.3.0 – 2026-09-29
 
 Gemeinsamer Kontenformularvertrag, Controller, REST-Port, Styles und Bildlogik.

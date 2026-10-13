@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui
 
+## 0.6.0 – 2026-10-13
+
+- Datenschutz-Assistent: Reiter „Prüfpunkte“ als aufklappbarer Baum (Bereich → Prüfpunkt → Angaben und Status) mit Fortschritt je Bereich; Bearbeitung und Frist eintragbar. Abhängigkeit `@auditcore/ui-core` auf 0.5.0.
+
 ## 0.4.0 – 2026-09-29
 
 Konten-/Mandantenoberfläche einschließlich Bild-Upload, Webcam und Corporate Design.
