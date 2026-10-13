@@ -3,7 +3,7 @@
  * und von Hand geprüft. Die Vorlage ist „je Stichprobeneinheit zu kopieren“; die
  * Webfassung führt dafür eine Liste von Einheiten (`layout: 'list'`). Abschnitt W
  * gibt es in der Vorlage nicht: Er ordnet die Einheit dem Methodenblatt zu
- * (Hinweis der Webfassung, Zellen W5–W8 sind in der Vorlage unbelegt).
+ * (Hinweis der Webfassung, Zellen W5–W10 sind in der Vorlage unbelegt).
  */
 import type { MethodDefinition } from '../../model/definition'
 
@@ -55,6 +55,8 @@ export const definition: MethodDefinition = {
       fields: [
         { cell: 'W5', alias: 'methodStratum', kind: 'input', type: 'choice', options: ['Zufallsschicht', 'hochwertige Einheit'], default: 'Zufallsschicht', web: true, label: 'Schicht der Stichprobeneinheit im Methodenblatt', hint: 'Hochwertige Einheiten gehen mit ihrem Fehler in ΣE_e ein, Einheiten der Zufallsschicht mit ihrer Fehlerquote in Σ E_i/BV_i.' },
         { cell: 'W6', alias: 'variant', kind: 'input', type: 'choice', options: ['Variante 1', 'Variante 2'], default: 'Variante 1', web: true, label: 'Maßgebliche Variante der Unterstichprobe', hint: 'Variante 1: Auswahl mit gleicher Wahrscheinlichkeit; Variante 2: PPS-Auswahl.' },
+        { cell: 'W9', alias: 'methodStratumNumber', kind: 'input', type: 'integer', format: '0', web: true, label: 'Nummer der Schicht im Methodenblatt (nur geschichtete Verfahren)', hint: 'Geschichtete Verfahren übernehmen die Summen je Schicht; ohne Nummer wird die Einheit dort nicht übernommen.' },
+        { cell: 'W10', alias: 'methodPeriod', kind: 'input', type: 'integer', format: '0', web: true, label: 'Stichprobenzeitraum im Methodenblatt (nur Verfahren mit mehreren Zeiträumen)', hint: 'Verfahren mit mehreren Zeiträumen übernehmen die Summen je Zeitraum (1, 2 oder 3); ohne Angabe wird die Einheit dort nicht übernommen.' },
         { cell: 'W7', alias: 'unitError', kind: 'result', type: 'amount', format: '#,##0.00" €"', web: true, label: 'Maßgeblicher hochgerechneter Fehler (E_i)' },
         { cell: 'W8', alias: 'unitErrorRate', kind: 'result', type: 'decimal', format: '0.0000', web: true, label: 'Maßgebliche Fehlerquote (E_i/BV_i)' },
       ],

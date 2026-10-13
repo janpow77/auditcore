@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createTranslate } from '../src/i18n/messages'
-import { applySubsamples, parsePastedRows, pasteColumns, subsampleTargets } from '../src/model/list'
+import { applySubsamples, parsePastedRows, pasteColumns, subsampleNeeds, subsampleTargets } from '../src/model/list'
 import { createContext } from '../src/model/sheet'
 import type { CellMap } from '../src/model/types'
 import { sheet as method } from '../src/sheets/03_MUS_1Z/index'
@@ -63,7 +63,50 @@ describe('Liste der Stichprobeneinheiten', () => {
     const none = applySubsamples(method, method.sample.inputs, sheet.totals!([], context))
     expect(none.applied).toEqual([])
     expect(none.inputs).toEqual(method.sample.inputs)
-    expect(subsampleTargets(stratified.definition)).toEqual([])
+  })
+
+  it('geschichtetes Verfahren: Übernahme je Schicht, Einheiten ohne Schichtnummer bleiben außen vor', () => {
+    expect(subsampleTargets(stratified.definition).map((field) => [field.cell, field.subsample])).toEqual([
+      ['D45', 'highValueErrors'],
+      ['D46', 'errorRateSum'],
+    ])
+    expect(subsampleNeeds(stratified.definition)).toEqual({ stratum: true, period: false })
+    expect(subsampleNeeds(method.definition)).toEqual({ stratum: false, period: false })
+    const unit = (id: string, bookValue: number, errors: number, extra: CellMap): CellMap => ({ C5: id, C6: bookValue, C10: 10, C11: bookValue / 2, C12: errors, W5: 'Zufallsschicht', W6: 'Variante 1', ...extra })
+    const units = [
+      unit('S1-a', 100000, 500, { W9: 1 }),
+      unit('S1-b', 200000, 0, { W9: 1 }),
+      unit('S3-a', 300000, 3000, { W9: 3 }),
+      unit('S3-hoch', 900000, 9000, { W9: 3, W5: 'hochwertige Einheit' }),
+      unit('S9', 100000, 1000, { W9: 9 }),
+      unit('ohne Schicht', 100000, 1000, {}),
+    ]
+    const totals = sheet.totals!(units, context, subsampleNeeds(stratified.definition))
+    expect(totals.unassigned).toBe(1)
+    expect(totals.groups?.map((group) => [group.stratum, group.period])).toEqual([[1, null], [3, null], [9, null]])
+    const applied = applySubsamples(stratified, {}, totals)
+    expect(applied.cells).toEqual(['F45', 'D46', 'F46', 'AB46'])
+    expect(applied.inputs.D46).toBeCloseTo(0.01, 12)
+    expect(applied.inputs.F46).toBeCloseTo(0.02, 12)
+    expect(applied.inputs.F45).toBeCloseTo(18000, 6)
+    expect(applied.inputs.AB46).toBeCloseTo(0.02, 12)
+    expect(applied.inputs.E46).toBeUndefined()
+    const view = buildListView(sheet, units, stratified, context, t)
+    expect(view).toMatchObject({ transferable: true, unassigned: 1 })
+    expect(view.totals.map((total) => total.target)).toEqual(['Summe der Fehler in hochwertigen Einheiten (ΣE_eh) (D45 ff., je Schicht)', 'Summe der Fehlerquoten der Zufallsschicht (Σ E/BV) (D46 ff., je Schicht)'])
+    // Ohne Unterscheidung (ungeschichtetes Verfahren) zählt dieselbe Liste vollständig.
+    expect(sheet.totals!(units, context).unassigned).toBeUndefined()
+  })
+
+  it('mehrere Zeiträume: Übernahme je Zeitraum über das Kennzeichen `period` der Felder', () => {
+    const twoPeriods = { ...method, definition: { ...method.definition, sections: method.definition.sections.map((section) => ({ ...section, fields: section.fields.map((field) => (field.subsample ? { ...field, period: 2 } : field)) })) } }
+    expect(subsampleNeeds(twoPeriods.definition)).toEqual({ stratum: false, period: true })
+    const unit = (period: number | null): CellMap => ({ C5: `Z${period}`, C6: 100000, C10: 10, C11: 50000, C12: 500, W5: 'Zufallsschicht', W6: 'Variante 1', ...(period ? { W10: period } : {}) })
+    const totals = sheet.totals!([unit(1), unit(2), unit(2), unit(null)], context, subsampleNeeds(twoPeriods.definition))
+    expect(totals.unassigned).toBe(1)
+    const applied = applySubsamples(twoPeriods, {}, totals)
+    expect(applied.cells).toEqual(['C38'])
+    expect(applied.inputs.C38).toBeCloseTo(0.02, 12)
   })
 
   it('Übersicht: Spalten der Einheiten und Summen für das Methodenblatt', () => {
@@ -136,5 +179,22 @@ describe('Liste im Arbeitsstand und im Excel-Austausch', () => {
     const imported = importWorkbook(writeWorkbook([{ name: sheet.id, rows: template }]))
     expect(imported).toMatchObject({ kind: 'template', filled: [sheet.id], sheets: { [sheet.id]: [{ C5: 'V-9', C6: 250000, W5: 'Zufallsschicht', W6: 'Variante 1' }] } })
     expect(importWorkbook(writeWorkbook([{ name: sheet.id, rows: [[]] }]))).toMatchObject({ filled: [], sheets: { [sheet.id]: [] } })
+  })
+
+  it('Import der Vorlage: Kopien des Blatts 17 werden weitere Einheiten; das in Blatt 18 gewählte Methodenblatt wird gemeldet', () => {
+    const unit = (id: string, bookValue: number) => Array.from({ length: 12 }, (_, index) => [null, null, index === 4 ? { value: id } : index === 5 ? { value: bookValue } : null])
+    const chosen = [[], [], [], [null, null, { value: method.id }]]
+    const workbook = writeWorkbook([
+      { name: sheet.id, rows: unit('V-1', 100000) },
+      { name: `${sheet.id} (2)`, rows: unit('V-2', 200000) },
+      { name: `${sheet.id} (3)`, rows: [[]] },
+      { name: '18_GFQ_AnhIII', rows: chosen },
+    ])
+    const imported = importWorkbook(workbook)
+    expect(imported).toMatchObject({ kind: 'template', filled: [sheet.id], method: method.id })
+    if (imported.kind !== 'template') throw new Error('Vorlage erwartet')
+    expect((imported.sheets[sheet.id] as readonly CellMap[]).map((row) => [row.C5, row.C6])).toEqual([['V-1', 100000], ['V-2', 200000]])
+    const unknown = importWorkbook(writeWorkbook([{ name: sheet.id, rows: unit('V-1', 1) }, { name: '18_GFQ_AnhIII', rows: [[], [], [], [null, null, { value: 'kein Blatt' }]] }]))
+    expect(unknown).toMatchObject({ method: null })
   })
 })

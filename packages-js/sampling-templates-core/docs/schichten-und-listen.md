@@ -34,28 +34,37 @@ je Spalte (`fillRow`), geprüft in `test/strata.spec.ts`.
 { cell: 'D9', alias: 'stratumBookValue', kind: 'input', type: 'amount', columns: STRATA_COLUMNS, total: 'C9', label: 'Buchwert je Schicht (BV_h)' }
 ```
 
-`cell` ist die Zelle der ersten Schicht, `columns` immer `STRATA_COLUMNS`,
-`total` die Summenzelle in Spalte C, falls die Vorlage eine hat. Der Generator
+`cell` ist die Zelle der ersten Schicht, `columns` `STRATA_COLUMNS` (in der
+Altvorlage X3 `LEGACY_STRATA`, dort liegen die Schichten in E–K), `total` die
+Summenzelle in Spalte C, falls die Vorlage eine hat. Oberfläche, Export und
+Import lesen die Schichtspalten eines Blatts aus seiner Definition
+(`strataColumnsOf`). Der Generator
 erzeugt diese Felder. `cellsOf(field)` liefert alle 20 Zellen, `findField`
 findet das Feld auch über eine Schicht- oder Summenzelle.
 
 ### Rechenkern
 
 ```ts
-import { countRow, fillRow, rowValues, stratumCell as at, sumRow } from '../../model/strata'
+import { countRow, fillRow, stratumCell as at, sumRow, totalRow } from '../../model/strata'
 
-c.C9 = sumRow(c, 9)                                  // =SUM(D9:J9)
-fillRow(c, 39, (column) => (isBlank(c[at(column, 9)]) ? null : guard(() => required(c[at(column, 9)]) - n(c[at(column, 38)]))))
-c.C53 = countRow(c, 46) === 0 ? null : c.C51         // COUNT(D46:J46)
+c.C9 = totalRow(c, 9, context)                       // =SUM(D9:J9), angezeigte Summe
+fillRow(c, 39, (column) => (isBlank(c[at(column, 9)]) ? null : guard(() => minus(required(c[at(column, 9)]), n(c[at(column, 38)])))))
+c.C53 = eq(countRow(c, 46), 0) ? null : c.C51        // COUNT(D46:J46)
 ```
 
 - `IF(D9="";"";…)` wird zu „Schicht nicht belegt → `null`“, `IF(D9="";0;…)` zu `0`.
 - Summen laufen über alle 20 Spalten; leere Zellen und Texte zählen nicht.
+- **Summe ohne Summanden:** Trägt keine Schicht einen Wert, zeigt die Vorlage
+  0. `totalRow` gibt dann einen Wert ohne Grundlage zurück, den die Webfassung
+  nach der geltenden Richtlinie nicht zeigt ([abweichungen.md](abweichungen.md)
+  Nr. 1 und 5); die Zelle steht mit `kind: 'withoutBasis'` in den Abweichungen.
+  `sumRow` bleibt für Zwischenrechnungen.
 - **Offener Stichprobenumfang:** Fehlt eine Angabe, mit der die Vorlage als 0
   weiterrechnen würde, bleiben auch die Summen der davon abhängigen
-  Schichtzeilen offen – sonst zeigte die Summe 0, wo die Vorlage eine Zahl
-  zeigt. Muster in `04_MUS_1Z_S/compute.ts` (`sampleSize` gibt `pending`
-  zurück, `total(row)` berücksichtigt es).
+  Schichtzeilen offen. Muster in `04_MUS_1Z_S/compute.ts` (`sampleSize` gibt
+  `pending` zurück, `total(row)` berücksichtigt es).
+- **Mindestens drei Einheiten je Schicht:** `checkStratumUnits(units, open, context)`
+  aus `shared/statistical.ts`.
 - Prüfhinweise je Schicht (`type: 'check'` mit `columns`) erscheinen in der
   Ergebnisspalte zusammengefasst: ein gemeinsamer Hinweis, wenn alle Schichten
   erfüllt sind, sonst je Schicht mit Befund eine Zeile („Schicht 2: ✖ < 3“).
@@ -97,34 +106,41 @@ Liste, je Einheit ein Satz Zellwerte mit den Zelladressen der Vorlage (höchsten
 
 Die Vorlage überlässt die Übernahme des hochgerechneten Fehlers ins
 Methodenblatt der Prüfbehörde. Damit die Webfassung summieren kann, braucht
-jede Einheit zwei Angaben, die es in der Vorlage nicht gibt. Sie liegen in den
-dort unbelegten Zellen W5–W8, tragen `web: true` und sind als „Hinweis der
+jede Einheit Angaben, die es in der Vorlage nicht gibt. Sie liegen in den
+dort unbelegten Zellen W5–W10, tragen `web: true` und sind als „Hinweis der
 Webfassung“ gekennzeichnet:
 
 | Zelle | Inhalt |
 |---|---|
 | `W5` | Schicht der Einheit im Methodenblatt: „Zufallsschicht“ oder „hochwertige Einheit“ |
 | `W6` | maßgebliche Variante: „Variante 1“ (gleiche Wahrscheinlichkeit) oder „Variante 2“ (PPS) |
+| `W9` | Nummer der Schicht im Methodenblatt (nur geschichtete Verfahren) |
+| `W10` | Stichprobenzeitraum im Methodenblatt, 1 bis 3 (nur Verfahren mit mehreren Zeiträumen) |
 | `W7`, `W8` | maßgeblicher hochgerechneter Fehler und maßgebliche Fehlerquote (aus C13/C14 bzw. C22/C23) |
 
 ### Übernahme ins Methodenblatt
 
-`sheet.totals(rows, context)` summiert über alle Einheiten; ein Methodenblatt
-kennzeichnet die Felder, die eine Summe aufnehmen, mit `subsample`:
+`sheet.totals(rows, context, needs)` summiert über alle Einheiten; ein
+Methodenblatt kennzeichnet die Felder, die eine Summe aufnehmen, mit `subsample`:
 
-| Rolle | Summe | in Blatt 03 |
-|---|---|---|
-| `highValueErrors` | Fehler der Einheiten „hochwertige Einheit“ | C37 (ΣE_e) |
-| `errorRateSum` | Fehlerquoten der Einheiten „Zufallsschicht“ | C38 (Σ E_i/BV_i) |
-| `errorSum` | Fehler der Einheiten „Zufallsschicht“ | – (für Verhältnisschätzung) |
-| `bookValueSum` | Buchwerte der Einheiten „Zufallsschicht“ | – (für Verhältnisschätzung) |
+| Rolle | Summe | in Blatt 03 | in Blatt 04 (je Schicht) |
+|---|---|---|---|
+| `highValueErrors` | Fehler der Einheiten „hochwertige Einheit“ | C37 (ΣE_e) | Zeile 45 |
+| `errorRateSum` | Fehlerquoten der Einheiten „Zufallsschicht“ | C38 (Σ E_i/BV_i) | Zeile 46 |
+| `errorSum` | Fehler der Einheiten „Zufallsschicht“ | – (für Verhältnisschätzung) | – |
+| `bookValueSum` | Buchwerte der Einheiten „Zufallsschicht“ | – (für Verhältnisschätzung) | – |
 
 Die Schaltfläche „Summen in Blatt nn übernehmen“ schreibt die Summen als
 gewöhnliche Eingaben in das gewählte Methodenblatt (`applySubsamples`); danach
 besteht keine Verbindung mehr, die Werte bleiben überschreibbar. Einheiten
-ohne bestimmbaren Fehler gehen nicht ein und werden gezählt. Geschichtete
-Blätter haben je Schicht eigene Summenzellen; eine Zuordnung der Einheiten zu
-Schichten gibt es noch nicht, deshalb kennzeichnet Blatt 04 keine Felder.
+ohne bestimmbaren Fehler gehen nicht ein und werden gezählt.
+
+**Je Schicht und je Zeitraum.** Trägt das Zielfeld eine Schichtzeile
+(`columns`), entstehen die Summen je Schicht aus `W9` und landen in der Spalte
+dieser Schicht. Trägt es `period: 2`, gehen nur Einheiten mit `W10 = 2` ein.
+`subsampleNeeds(definition)` sagt, wonach ein Methodenblatt unterscheidet;
+Einheiten ohne die nötige Angabe werden nicht übernommen und als „nicht
+zugeordnet“ gezählt (`totals.unassigned`).
 
 ### Einfügen aus Zwischenablage oder CSV
 
@@ -139,4 +155,5 @@ leer und werden gezählt.
 
 Der Export enthält ein Blatt `17_Unterstichprobe` mit einer Zeile je Einheit
 und einer Spalte je Feld. Beim Import der ausgefüllten Vorlage ist Blatt 17
-eine Einheit.
+eine Einheit; Kopien des Blatts in der Mappe (`17_Unterstichprobe (2)` …)
+werden zu weiteren Einheiten.

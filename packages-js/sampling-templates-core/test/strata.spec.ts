@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { createTranslate } from '../src/i18n/messages'
 import { cellsOf, findField, inputCells } from '../src/model/definition'
+import { evaluateSheet } from '../src/model/evaluate'
+import { STRICT_POLICY } from '../src/model/policy'
 import { createContext } from '../src/model/sheet'
 import { EXTRA_STRATA, MAX_STRATA, STRATA_COLUMNS, TEMPLATE_STRATA, countRow, fillRow, rowValues, stratumCell, sumRow, usedStrata } from '../src/model/strata'
 import type { CellValue } from '../src/model/types'
@@ -89,6 +91,13 @@ describe('Blatt 04_MUS_1Z_S', () => {
     expect(results.E52).toBe(0)
     expect(sheet.zeroAssumed?.(results)).toEqual([{ input: 'E47', cells: ['E52', 'C52', 'C54', 'C57', 'C58', 'C59', 'C62', 'C63'] }])
     expect(sheet.zeroAssumed?.(sheet.compute(sheet.sample.inputs, context))).toEqual([])
+    // Summe der Fehlerquoten einer belegten Schicht fehlt, andere Schichten tragen eine: wie die Vorlage mit 0 gerechnet und ausgewiesen.
+    const partial = sheet.compute({ ...sheet.sample.inputs, E46: null }, context)
+    expect(partial.E50).toBe(0)
+    expect(sheet.zeroAssumed?.(partial)).toEqual([{ input: 'E46', cells: ['E50', 'E51', 'C50', 'C51', 'C53', 'C57', 'C58', 'C60', 'C61', 'C62', 'C63', 'N5', 'N11'], kind: 'partialErrorSum' }])
+    const strict = evaluateSheet(sheet, { ...sheet.sample.inputs, E46: null }, createContext({ policy: STRICT_POLICY }))
+    expect(strict.cells.C53).toBeNull()
+    expect(strict.lacking.get('C53')).toEqual(['E46'])
   })
 
   it('Anzeigemodell: Schichtzeilen mit Summenzelle und je Schicht einer Zelle', () => {

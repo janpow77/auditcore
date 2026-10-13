@@ -1,0 +1,69 @@
+/**
+ * Richtlinie für fehlende Angaben – die eine Stelle, an der sich für alle
+ * Blätter umstellen lässt, was die Webfassung zeigt, wenn eine Eingabe fehlt
+ * und die Vorlage trotzdem einen Wert zeigt.
+ *
+ * Die Blätter selbst kennen nur die Fallarten: Sie liefern für eine fehlende
+ * Pflichteingabe keinen Wert und führen die Zelle als begründete Abweichung
+ * (`deviations`), sie melden mit 0 gerechnete Eingaben (`zeroAssumed`), und sie
+ * geben einen Prüfhinweis ohne Grundlage über `unfounded` zurück. Was daraus in
+ * der Anzeige wird, entscheidet `evaluateSheet` anhand dieser Tabelle.
+ */
+import type { CellValue, MissingPolicy, SheetContext } from './types'
+
+/**
+ * Geltende Richtlinie (vorläufige Vorgabe des Auftraggebers):
+ *
+ * - `requiredInput` – eine Pflichteingabe fehlt, die Vorlage rechnet mit 0
+ *   weiter: Die Webfassung zeigt „Angabe fehlt“ und nennt die Eingabe.
+ * - `sampleDeviation` – die Standardabweichung der Stichprobe (s_r, s_q, s der
+ *   Differenzen) fehlt in der Auswertung: wie die Vorlage mit 0 gerechnet und
+ *   als „Keine Angabe, daher mit 0 berechnet.“ ausgewiesen (entschieden).
+ * - `partialErrorSum` – die Fehlersumme einer von mehreren belegten Schichten
+ *   fehlt, während eine andere Schicht eine trägt: wie die Vorlage mit 0
+ *   gerechnet und ebenso ausgewiesen.
+ * - `withoutBasis` – die Vorlage zeigt einen Wert ohne Grundlage: einen
+ *   bestandenen Prüfhinweis („✔“), obwohl die geprüfte Größe fehlt, oder die
+ *   Summe 0 über eine Schichtzeile, in der keine Schicht einen Wert trägt.
+ *   Die Webfassung zeigt ihn nicht.
+ *
+ * Zum Umstellen genügt es, hier einen Wert zu ändern; kein Blatt wird angefasst.
+ */
+export const MISSING_POLICY: MissingPolicy = {
+  requiredInput: 'missing',
+  sampleDeviation: 'zero',
+  partialErrorSum: 'zero',
+  withoutBasis: 'open',
+}
+
+/** Variante „wie die Vorlage“: jede fehlende Angabe mit 0 gerechnet und ausgewiesen, Prüfhinweise wie in der Vorlage. */
+export const TEMPLATE_POLICY: MissingPolicy = {
+  requiredInput: 'zero',
+  sampleDeviation: 'zero',
+  partialErrorSum: 'zero',
+  withoutBasis: 'template',
+}
+
+/** Variante „streng“: jede fehlende Angabe lässt die abhängigen Werte offen. */
+export const STRICT_POLICY: MissingPolicy = {
+  requiredInput: 'missing',
+  sampleDeviation: 'missing',
+  partialErrorSum: 'missing',
+  withoutBasis: 'open',
+}
+
+/** Richtlinie des Kontexts; ohne Angabe die geltende. */
+export function policyOf(context: Pick<SheetContext, 'policy'> | undefined): MissingPolicy {
+  return context?.policy ?? MISSING_POLICY
+}
+
+/**
+ * Wert ohne Grundlage: `shown` ist, was die Vorlage zeigt, obwohl die geprüfte
+ * bzw. summierte Größe fehlt (z. B. „✔ ≥ 3“ ohne Stichprobenumfang, weil sie
+ * eine leere Textzelle im Vergleich größer als jede Zahl wertet; 0 als Summe
+ * leerer Schichten). Die Zelle gehört zusätzlich mit `kind: 'withoutBasis'` in
+ * die Abweichungen des Blatts, `whenEmpty` nennt die fehlende Größe.
+ */
+export function unfounded(context: Pick<SheetContext, 'policy'> | undefined, shown: CellValue): CellValue {
+  return policyOf(context).withoutBasis === 'template' ? shown : null
+}

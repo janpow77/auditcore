@@ -74,8 +74,8 @@ export const definition: MethodDefinition = {
     {
       id: 'L', title: 'Prüfergebnisse je Schicht',
       fields: [
-        { cell: 'D45', alias: 'stratumHighValueErrors', kind: 'input', type: 'amount', format: '#,##0.00" €"', columns: STRATA_COLUMNS, total: 'C45', label: 'Summe der Fehler in hochwertigen Einheiten (ΣE_eh)' },
-        { cell: 'D46', alias: 'stratumErrorRateSum', kind: 'input', type: 'decimal', format: '0.0000', columns: STRATA_COLUMNS, total: 'C46', label: 'Summe der Fehlerquoten der Zufallsschicht (Σ E/BV)' },
+        { cell: 'D45', alias: 'stratumHighValueErrors', kind: 'input', type: 'amount', format: '#,##0.00" €"', columns: STRATA_COLUMNS, total: 'C45', subsample: 'highValueErrors', label: 'Summe der Fehler in hochwertigen Einheiten (ΣE_eh)' },
+        { cell: 'D46', alias: 'stratumErrorRateSum', kind: 'input', type: 'decimal', format: '0.0000', columns: STRATA_COLUMNS, total: 'C46', subsample: 'errorRateSum', label: 'Summe der Fehlerquoten der Zufallsschicht (Σ E/BV)' },
         { cell: 'D47', alias: 'stratumSampleDeviation', kind: 'input', type: 'decimal', format: '0.0000', columns: STRATA_COLUMNS, label: 'Standardabweichung der Fehlerquoten der Zufallsschicht (s_rh)' },
       ],
     },

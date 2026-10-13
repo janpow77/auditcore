@@ -1,0 +1,121 @@
+/*
+ * Bericht (Blatt 20, Druckfassung für die Kommission): Seite in A4-Proportion am
+ * Bildschirm und Druck-Stylesheet für genau diese Seite. Gelesen werden nur die
+ * FlowAudit-Designtoken (--fa-*); im Druck sind sie auf Schwarz und Weiß gesetzt.
+ * Ränder wie in der Vorlage: oben 12,7 mm, seitlich 15,2 mm, unten 17,8 mm.
+ */
+.fa-st__report { display: flex; flex-direction: column; gap: var(--fa-space-3); padding-block: var(--fa-space-4); }
+.fa-st__report-tools { display: flex; justify-content: flex-end; }
+.fa-st__report-layout { display: grid; grid-template-columns: minmax(0, 210mm) minmax(15rem, 1fr); gap: var(--fa-space-4); align-items: start; }
+.fa-st__report-controls { display: flex; flex-direction: column; gap: var(--fa-space-2); padding: var(--fa-space-4); }
+.fa-st__report-controls .fa-st__row { grid-template-columns: minmax(0, 1fr); }
+
+/* Die Seite */
+.fa-st__report-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-3);
+  width: 100%;
+  max-width: 210mm;
+  aspect-ratio: 210 / 297;
+  padding: 12.7mm 15.2mm 17.8mm;
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius-sm);
+  background: var(--fa-color-surface);
+  color: var(--fa-color-text);
+  box-shadow: var(--fa-shadow-lg);
+  font-size: var(--fa-font-size-xs);
+  line-height: 1.35;
+}
+.fa-st__report-head { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-st__report-eu { display: flex; flex-direction: column; font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-st__report-title { margin: var(--fa-space-2) 0 0; font-size: var(--fa-font-size-lg); font-weight: 700; line-height: 1.2; }
+.fa-st__report-sub { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--fa-space-1) var(--fa-space-3); padding-bottom: var(--fa-space-1); border-bottom: 2px solid var(--fa-color-text); }
+.fa-st__report-section,
+.fa-st__report-notes { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-st__report-heading { margin: 0; padding-bottom: 0.125rem; border-bottom: 1px solid var(--fa-color-border-strong); font-size: var(--fa-font-size-sm); font-weight: 700; }
+.fa-st__report-heading--notes { font-size: var(--fa-font-size-xs); }
+.fa-st__report-textarea { min-height: 4.5rem; padding: var(--fa-space-2); font: inherit; line-height: inherit; resize: vertical; }
+.fa-st__report-statement { font-weight: 600; }
+.fa-st__report-statement:empty { display: none; }
+.fa-st__report-print { display: none; white-space: pre-wrap; overflow-wrap: anywhere; }
+.fa-st__report-placeholder { color: var(--fa-color-text-muted); font-style: italic; }
+
+/* Tabellen: Linien statt Flächen, Zahlen rechtsbündig mit Ziffern gleicher Breite */
+.fa-st__report-table { width: 100%; border-collapse: collapse; table-layout: auto; }
+.fa-st__report-table :is(th, td) { padding: 0.125rem var(--fa-space-1); border-bottom: 1px solid var(--fa-color-border); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.fa-st__report-table thead :is(th, td) { border-bottom: 1px solid var(--fa-color-border-strong); font-weight: 600; }
+.fa-st__report-table tbody th { font-weight: 400; }
+.fa-st__report-table tfoot :is(th, td) { border-top: 1px solid var(--fa-color-border-strong); border-bottom: 0; font-weight: 600; }
+.fa-st__report-table .fa-st__report-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fa-st__report-table--figures td { width: 11rem; }
+.fa-st__report-missing { font-style: italic; }
+.fa-st__report-table .fa-st__input { min-height: 1.75rem; padding: 0 var(--fa-space-1); font-size: inherit; }
+.fa-st__report-table .fa-st__note,
+.fa-st__report-table .fa-st__error { text-align: left; }
+.fa-st__report-notes { margin-top: auto; color: var(--fa-color-text-muted); }
+/* Mit `.fa-st` davor, damit die Liste die Punkte behält, die der Rechner Listen sonst nimmt. */
+.fa-st .fa-st__report-hints,
+.fa-st__report-hints { display: flex; flex-direction: column; gap: 0.125rem; padding-left: var(--fa-space-4); list-style: disc; }
+.fa-st__report-footer { padding-top: var(--fa-space-1); border-top: 1px solid var(--fa-color-border); color: var(--fa-color-text-muted); }
+
+/* Schmale Behälter: Steuerfelder unter der Seite, Tabellen rollen in der Seite */
+@container fa-st (max-width: 64rem) {
+  .fa-st__report-layout { grid-template-columns: minmax(0, 1fr); }
+  .fa-st__report-page { aspect-ratio: auto; padding: var(--fa-space-4); overflow-x: auto; }
+}
+
+@media print {
+  @page { size: A4 portrait; margin: 12.7mm 15.2mm 17.8mm; }
+
+  /* Nur die Berichtsseite: Alles, was sie weder ist noch enthält, entfällt; was sie enthält, verliert Rahmen und Abstände. */
+  body:has(.fa-st__report-page) *:not(:has(.fa-st__report-page)):not(.fa-st__report-page):not(.fa-st__report-page *) { display: none !important; }
+  body:has(.fa-st__report-page) *:has(.fa-st__report-page) {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+  .fa-st__report-page {
+    --fa-color-text: black;
+    --fa-color-text-muted: black;
+    --fa-color-border: black;
+    --fa-color-border-strong: black;
+    --fa-color-surface: white;
+    max-width: none;
+    aspect-ratio: auto;
+    gap: 2.5mm;
+    padding: 0 0 8mm;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 8.5pt;
+    line-height: 1.3;
+    overflow: visible;
+  }
+  .fa-st__report-title { font-size: 13pt; }
+  .fa-st__report-heading { font-size: 9.5pt; }
+  .fa-st__report-heading--notes { font-size: 8pt; }
+  .fa-st__report-notes { margin-top: 2mm; font-size: 7.5pt; }
+  .fa-st__report-screen { display: none !important; }
+  .fa-st__report-print { display: block; }
+  td > .fa-st__report-print { display: inline; }
+  .fa-st__report-table :is(th, td) { padding: 0.6mm 1mm; }
+  .fa-st__report-table tbody tr { height: 5mm; }
+  .fa-st__report-table,
+  .fa-st__report-table tr,
+  .fa-st__report-free,
+  .fa-st__report-notes { break-inside: avoid; }
+  .fa-st__report-heading { break-after: avoid; }
+  /* Fußzeile am unteren Seitenrand, wie die Fußzeile der Vorlage auf jeder Seite. */
+  .fa-st__report-footer { position: fixed; right: 0; bottom: 0; left: 0; background: var(--fa-color-surface); }
+}

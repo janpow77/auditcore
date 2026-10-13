@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { findAvailableSheet, type Family, type GuideView, type MatrixGap, type MessageKey, type SheetModule, type Translate, type Variant } from '@auditcore/sampling-templates-core'
+import { findAvailableSheet, tableOf, type Family, type GuideView, type MatrixGap, type MessageKey, type SheetModule, type Translate, type Variant } from '@auditcore/sampling-templates-core'
 import { useId } from '@auditcore/ui'
 import { computed, nextTick, ref } from 'vue'
 import MethodGuide from './MethodGuide.vue'
@@ -11,7 +11,7 @@ import VariantTile from './VariantTile.vue'
  * bzw. als Liste. Varianten ohne Rechenkern sind gekennzeichnet und nicht wählbar.
  */
 const props = defineProps<{ families: readonly Family[]; sheets: readonly SheetModule[]; t: Translate; current?: string | null; guide?: GuideView | null }>()
-defineEmits<{ select: [sheet: string] }>()
+defineEmits<{ select: [sheet: string]; table: [sheet: string] }>()
 
 const id = useId('fa-st-picker')
 const initial = props.families.findIndex((family) => family.variants.some((variant) => variant.sheet === props.current))
@@ -31,6 +31,8 @@ const KEY_STEPS: Readonly<Record<string, (index: number, last: number) => number
 }
 
 const isAvailable = (variant: Variant): boolean => findAvailableSheet(variant.sheet, props.sheets) !== undefined
+/** Nachschlagetabelle der Vorlage (Blatt X1a): kein Verfahren, aber anzeigbar. */
+const isTable = (variant: Variant): boolean => tableOf(variant.sheet, props.sheets) !== undefined
 const variantAt = (periods: number, stratified: boolean): Variant | undefined => family.value.variants.find((variant) => variant.periods === periods && variant.stratified === stratified)
 const gapAt = (periods: number, stratified: boolean): MatrixGap | undefined => family.value.gaps?.find((gap) => gap.periods === periods && gap.stratified === stratified)
 
@@ -82,7 +84,7 @@ function onKeydown(event: KeyboardEvent): void {
             <tr v-for="period in PERIODS" :key="period.count">
               <th scope="row">{{ t(period.key) }}</th>
               <td v-for="stratified in [false, true]" :key="String(stratified)">
-                <VariantTile v-if="variantAt(period.count, stratified)" :variant="variantAt(period.count, stratified)!" :available="isAvailable(variantAt(period.count, stratified)!)" :t="t" @select="$emit('select', $event)" />
+                <VariantTile v-if="variantAt(period.count, stratified)" :variant="variantAt(period.count, stratified)!" :available="isAvailable(variantAt(period.count, stratified)!)" :table="isTable(variantAt(period.count, stratified)!)" :t="t" @select="$emit('select', $event)" @table="$emit('table', $event)" />
                 <div v-else-if="gapAt(period.count, stratified)" class="fa-st__tile fa-st__tile--gap" aria-disabled="true">
                   <span class="fa-st__tile-name">{{ t(period.key) }}, {{ t('stratified') }}: {{ t('noSheet') }}</span>
                   <span class="fa-st__tile-ref">{{ gapAt(period.count, stratified)!.note }}</span>
@@ -93,7 +95,7 @@ function onKeydown(event: KeyboardEvent): void {
         </table>
         <ul v-else class="fa-st__variant-list" :aria-label="`${t('variants')}: ${family.name}`">
           <li v-for="variant in family.variants" :key="variant.sheet">
-            <VariantTile :variant="variant" :available="isAvailable(variant)" :t="t" @select="$emit('select', $event)" />
+            <VariantTile :variant="variant" :available="isAvailable(variant)" :table="isTable(variant)" :t="t" @select="$emit('select', $event)" @table="$emit('table', $event)" />
           </li>
         </ul>
       </div>

@@ -9,25 +9,68 @@ Stellen. Es gilt durchgehend:
 > Die Webfassung zeigt nie einen anderen Wert als die Vorlage. Sie zeigt an
 > manchen Stellen **keinen** Wert, wo die Vorlage einen zeigt.
 
-## 1. Leere Eingaben: „Angabe fehlt“ statt Rechnen mit 0
+## 1. Fehlende Angaben: die Richtlinie und ihre zwei Varianten
 
 Excel behandelt eine leere Zelle in einer Rechnung als 0. Die Vorlage zeigt
 deshalb bei unvollständig ausgefüllten Blättern Werte, die wie Ergebnisse
-aussehen – zum Beispiel einen Stichprobenumfang von 30, solange die
-voraussichtliche Standardabweichung fehlt. Die Webfassung liefert an diesen
-Zellen `null` und zeigt „Angabe fehlt“.
+aussehen – einen Stichprobenumfang von 30, solange die voraussichtliche
+Standardabweichung fehlt, oder die Würdigung „✔ GFQ und obere Fehlergrenze
+unter der Schwelle“ bei „TE ≤ AE“, obwohl es keine Stichprobe gibt.
 
-Jedes Blatt führt diese Stellen als Daten (`src/sheets/<Blatt>/deviations.ts`):
-Zelle, auslösende leere Eingaben, Anzeige der Vorlage, Begründung. Der
-Golden-Abgleich lässt eine Abweichung nur zu, wenn sie dort steht, die
-Webfassung `null` liefert und eine der genannten Eingaben tatsächlich leer ist;
-jede Zeile muss durch mindestens einen Golden-Fall belegt sein
-(`test/deviations.spec.ts`).
+Was die Webfassung in diesen Fällen zeigt, steht an **einer** Stelle:
+`src/model/policy.ts`, Konstante `MISSING_POLICY`. Die Blätter kennen nur die
+Fallart; die Anzeige entscheidet `evaluateSheet` (`src/model/evaluate.ts`)
+anhand dieser Tabelle. Zum Umstellen wird dort ein Wert geändert, kein Blatt.
+
+| Fallart | Bedeutung | geltend (vorläufige Vorgabe) | Alternative |
+|---|---|---|---|
+| `requiredInput` | Eine Pflichteingabe fehlt, die Vorlage rechnet mit 0 weiter (Buchwert, Anzahl, Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung, Umfänge, Angaben der Planung und der Neuberechnung). | `missing`: „Angabe fehlt“, die fehlende Eingabe wird genannt | `zero`: wie die Vorlage mit 0 gerechnet, an jedem betroffenen Wert „Keine Angabe, daher mit 0 berechnet.“ |
+| `sampleDeviation` | Die Standardabweichung der Stichprobe (s_r, s_q, s der Differenzen) fehlt in der Auswertung; ohne sie ist nur die Genauigkeit 0. | `zero` (vom Auftraggeber entschieden) | `missing` |
+| `partialErrorSum` | Die Fehlersumme bzw. Summe der Fehlerquoten einer von mehreren belegten Schichten oder eines von mehreren Zeiträumen fehlt, eine andere ist eingetragen; die Vorlage zeigt ein Ergebnis. | `zero`, ausgewiesen wie oben | `missing` |
+| `withoutBasis` | Die Vorlage zeigt einen Wert ohne Grundlage: einen bestandenen Prüfhinweis („✔“), obwohl die geprüfte Größe fehlt, oder die Summe 0 über Schichten ohne Wert samt allem, was darauf aufbaut. | `open`: kein Wert | `template`: wie die Vorlage |
+
+Nicht ausgewiesen wird, was die Vorlage ausdrücklich als freiwillige Angabe
+mit `N(…)` liest und was fachlich „keine“ bedeutet: Fehler der hochwertigen
+bzw. umfassenden Schicht, abgegrenzte systembedingte und nicht berichtigte
+anomale Fehler. Sie zählen wie in der Vorlage 0.
+
+**Folgen der beiden Grundsatzvarianten** (die Entscheidung des Auftraggebers
+steht aus):
+
+- *Geltend („Angabe fehlt“):* Ein unvollständiges Blatt zeigt keine
+  Scheinergebnisse; die Ergebnisspalte nennt, welche Eingabe fehlt. Dafür
+  weicht die Anzeige bei Teilbelegungen von einer daneben geöffneten Vorlage
+  ab (dort stehen Zahlen). Der Abgleich weist diese Zellen als „begründet“ aus.
+- *Variante „mit 0 berechnet“* (`TEMPLATE_POLICY`: alle vier Fallarten wie die
+  Vorlage): Die Webfassung zeigt in jeder Zelle genau den Wert der Vorlage,
+  auch den Stichprobenumfang 30 ohne Standardabweichung und die grüne
+  Würdigung ohne Stichprobe; jeder so entstandene Wert trägt den Hinweis
+  „Keine Angabe, daher mit 0 berechnet: …“ in Warnfarbe, ebenso Ergebnisspalte,
+  Export, Arbeitsstand und Bericht. Diese Variante ist für jedes Blatt und
+  jeden Fall des Abgleichs geprüft (`test/policy.spec.ts`; Spalte „wie die
+  Vorlage“ in [abgleich.md](abgleich.md): 0 Abweichungen).
+- Mischformen sind möglich (z. B. nur `withoutBasis: 'template'`).
+
+Was die Blätter dafür tun:
+
+- Pflichteingabe: Der Rechenkern verlangt sie (`required`) und liefert sonst
+  `null`; die Zelle steht in `src/sheets/<Blatt>/deviations.ts` mit den
+  auslösenden Eingaben. Der Abgleich lässt die Abweichung nur zu, wenn die
+  Gegenprobe stimmt: Mit 0 statt der leeren Eingaben liefert der Rechenkern
+  den Wert der Vorlage.
+- Mit 0 gerechnete Eingabe: Der Rechenkern rechnet wie die Vorlage; das Blatt
+  meldet Eingabe und betroffene Zellen über `zeroAssumed`.
+- Wert ohne Grundlage: Der Rechenkern gibt den Wert der Vorlage über
+  `unfounded(context, wert)` bzw. `totalRow(…)` zurück; die Zelle steht mit
+  `kind: 'withoutBasis'` in den Abweichungen. Gegenprobe: Unter
+  `TEMPLATE_POLICY` liefert der Rechenkern den Wert der Vorlage.
+
+Jede Zeile der folgenden Tabelle ist durch mindestens einen Golden-Fall belegt
+(`test/deviations.spec.ts`); bei Schichtzeilen genügt der Beleg in einer
+Schichtspalte, die Abweichung gilt für alle bis zu 20 Schichten.
 
 Wo die Vorlage bei fehlenden Angaben `""` zeigt, liefert die Webfassung
-ebenfalls `null`; das ist keine Abweichung. Wo die Vorlage ausdrücklich mit
-`N(…)` rechnet (z. B. leere Fehlersumme der hochwertigen Einheiten = 0), rechnet
-die Webfassung genauso.
+ebenfalls `null`; das ist keine Abweichung.
 
 <!-- abweichungen:start – erzeugt mit `npm run docs:write`, nicht von Hand ändern -->
 
@@ -129,22 +172,33 @@ begrenzten Umfang; die Webfassung folgt ihr.
 
 ## 5. Schichtzeilen
 
-Geschichtete Blätter (Muster: Blatt 04) zeigen „Angabe fehlt“ auch in den
-Summen der Schichtzeilen, solange der Stichprobenumfang offen ist – die Summe
-über leere Zellen wäre 0, die Vorlage zeigt dort eine Zahl. Der Prüfhinweis
-„Mindestens drei Einheiten je Zufallsschicht“ bleibt leer, solange es keinen
-Umfang je Schicht gibt; die Vorlage zeigt in diesem Fall „✔ ≥ 3“, weil Excel
-eine leere Textzelle im Vergleich größer als jede Zahl wertet.
+Die Summe über eine Schichtzeile, in der keine Schicht einen Wert trägt, ist
+in der Vorlage 0. Die Webfassung zeigt dort nach der geltenden Richtlinie
+keinen Wert (`withoutBasis`) – auch nicht in den Zellen, die auf dieser 0
+aufbauen (Abgleich mit Blatt 02, zulässiger Fehler, Hochrechnung, Würdigung,
+Ergebnisübersicht). Summen, die vom Stichprobenumfang abhängen, bleiben offen,
+solange der Umfang offen ist.
+
+Der Prüfhinweis „mindestens drei Einheiten je (Zufalls-)Schicht“ lautet in
+der Vorlage „✔ ≥ 3“, wenn es keinen Umfang je Schicht gibt (leere Textzelle,
+im Vergleich größer als jede Zahl). Die Webfassung zeigt ihn dann in allen
+geschichteten Blättern einheitlich nicht (`checkStratumUnits`).
 
 Die 8. bis 20. Schicht (Spalten AA–AM) gibt es in der Vorlage nicht; siehe
-[schichten-und-listen.md](schichten-und-listen.md).
+[schichten-und-listen.md](schichten-und-listen.md). Die Altvorlage X3 führt
+ihre Schichten in E–K; die Webfassung liest die Schichtspalten je Blatt aus
+der Definition (`strataColumnsOf`).
 
 ## 6. Blatt 17 als Liste
 
 Die Vorlage wird je Stichprobeneinheit kopiert, die Webfassung führt eine
-Liste. Die Zuordnung der Einheiten zum Methodenblatt (Zellen W5–W8) und die
-Summenbildung sind Hinweise der Webfassung; der Rechenkern je Einheit folgt
-der Vorlage.
+Liste. Die Zuordnung der Einheiten zum Methodenblatt (Zellen W5–W10:
+Zufallsschicht oder hochwertige Einheit, maßgebliche Variante, Nummer der
+Schicht, Stichprobenzeitraum) und die Summenbildung sind Hinweise der
+Webfassung; der Rechenkern je Einheit folgt der Vorlage. Die Summen werden
+per Schaltfläche in die Eingaben des gewählten Verfahrens übernommen – bei
+geschichteten Verfahren je Schicht, bei mehreren Zeiträumen je Zeitraum.
+Einheiten ohne die dafür nötige Angabe werden nicht übernommen und genannt.
 
 ## 7. Darstellung
 
@@ -152,22 +206,27 @@ Prozentwerte erscheinen mit drei Nachkommastellen (0,652 %), die Vorlage
 formatiert mit zwei. Gerechnet wird mit dem vollen Wert; der Excel-Export
 verwendet die Zahlenformate der Vorlage.
 
-## 8. Fehlende Standardabweichung der Stichprobe: mit 0 berechnet
+## 8. Mit 0 gerechnet und ausgewiesen
 
-Entscheidung des Auftraggebers: Fehlt die Standardabweichung der Fehlerquoten
-in der Stichprobe (Blatt 03: C39; Blatt 04: Zeile 47 einer belegten Schicht),
-rechnet die Webfassung wie die Vorlage mit 0 und zeigt die Werte. An den
-betroffenen Werten (Genauigkeit, Fehlergrenzen, Würdigung) steht der Hinweis
-der Webfassung „Keine Angabe, daher mit 0 berechnet.“ (englisch „Not provided,
+Entscheidung des Auftraggebers: Fehlt die Standardabweichung der Stichprobe
+(z. B. Blatt 03: C39; Blatt 04: Zeile 47 einer belegten Schicht), rechnet die
+Webfassung wie die Vorlage mit 0 und zeigt die Werte. An den betroffenen
+Werten (Genauigkeit, Fehlergrenzen, Würdigung) steht der Hinweis der
+Webfassung „Keine Angabe, daher mit 0 berechnet.“ (englisch „Not provided,
 therefore calculated with 0.“). Die Würdigung erscheint mit dem Wortlaut der
 Vorlage, daneben in Warnfarbe der Hinweis; sie ist nicht uneingeschränkt grün.
-Derselbe Hinweis steht in der Ergebnisspalte, im Excel-Export und im
-Arbeitsstand (`hinweise`). Das ist keine Abweichung im Wert, sondern eine
-Kennzeichnung. Für alle anderen Eingaben bleibt es bei „Angabe fehlt“.
+Derselbe Hinweis steht in der Ergebnisspalte, im Excel-Export, im Arbeitsstand
+(`hinweise`) und im Bericht. Ebenso behandelt wird die fehlende Fehlersumme
+einer von mehreren belegten Schichten bzw. eines von mehreren Zeiträumen
+(`partialErrorSum`). Das ist keine Abweichung im Wert, sondern eine
+Kennzeichnung; die Fallarten stehen in Abschnitt 1.
 
 ## 9. Import der ausgefüllten Vorlage
 
-Die Webfassung liest die Eingabezellen der ausgefüllten Vorlage. Jeder Wert,
+Die Webfassung liest die Eingabezellen aller Blätter der ausgefüllten Vorlage
+und nennt, welche Blätter Werte enthielten. Kopien des Blatts 17 werden zu
+weiteren Stichprobeneinheiten; das in Blatt 18 gewählte Methodenblatt wird
+das aktive Verfahren. Jeder Wert,
 den sie nicht oder umgedeutet übernimmt (abweichende Schreibweise einer
 Auswahl, Zahl als Text, Datum, überschriebene Verknüpfung, unbekannter
 Auswahlwert), erscheint vor der Übernahme in einer Vorschau mit Blatt, Zelle,

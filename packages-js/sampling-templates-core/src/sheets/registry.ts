@@ -5,6 +5,7 @@
  * Parameter und steht deshalb nicht im Register.
  */
 import type { AvailableSheet, SheetModule } from '../model/sheet'
+import type { DataTable } from '../model/table'
 import type { SheetId } from '../model/types'
 import { sheet as sheet02 } from './02_Grundgesamtheit/index'
 import { sheet as sheet03 } from './03_MUS_1Z/index'
@@ -60,6 +61,12 @@ export const SHEETS: readonly SheetModule[] = [
 /** Blatt zu einem Blattnamen der Vorlage. */
 export function findSheet(id: SheetId, sheets: readonly SheetModule[] = SHEETS): SheetModule | undefined {
   return sheets.find((sheet) => sheet.id === id)
+}
+
+/** Nachschlagetabelle eines Blatts (X1a) oder `undefined`. */
+export function tableOf(id: SheetId, sheets: readonly SheetModule[] = SHEETS): DataTable | undefined {
+  const sheet = findSheet(id, sheets)
+  return sheet && !sheet.available ? sheet.table : undefined
 }
 
 /** Blätter mit Rechenkern. */

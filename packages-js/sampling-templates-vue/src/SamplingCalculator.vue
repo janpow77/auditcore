@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { DownloadFile } from '@auditcore/common'
 import { saveFile as browserSaveFile } from '@auditcore/common/browser'
-import { FAMILIES, SHEETS, localizeFamilies, samplingTemplatesMessages, withMessages, type Family, type MessageKey, type SheetModule, type Translate, type WorkspaceState } from '@auditcore/sampling-templates-core'
+import { FAMILIES, SHEETS, localizeFamilies, samplingTemplatesMessages, tableOf, withMessages, type Family, type MessageKey, type SheetModule, type Translate, type WorkspaceState } from '@auditcore/sampling-templates-core'
 import { FaButton, FaDialog, translate, useI18n, type Locale } from '@auditcore/ui'
 import { computed, ref, watch } from 'vue'
+import DataTableDialog from './components/DataTableDialog.vue'
 import MethodBar from './components/MethodBar.vue'
 import MethodPicker from './components/MethodPicker.vue'
 import ImportPreview from './components/ImportPreview.vue'
@@ -73,6 +74,8 @@ const choosing = computed(() => step.value === 'method' && (pickerOpen.value || 
 /** Aktion, die ungespeicherte Änderungen verwerfen würde und auf Bestätigung wartet. */
 const pending = ref<(() => void) | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
+/** Blatt der gerade geöffneten Nachschlagetabelle (X1a). */
+const shownTable = ref<string | null>(null)
 /** Zähler, der das Formular nach Neu, Öffnen und Beispielwerten neu aufbaut. */
 const revision = ref(0)
 
@@ -149,9 +152,9 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
       </div>
     </header>
 
-    <MethodBar :definition="activeSheet?.definition ?? null" :step="step" :sheets="sheets" :t="t" @change="((step = 'method'), (pickerOpen = true))" @step="session.setStep" />
+    <MethodBar :definition="activeSheet?.definition ?? null" :step="step" :sheets="sheets" :t="t" @change="((step = 'method'), (pickerOpen = true))" @step="session.setStep" @table="shownTable = $event" />
     <div class="fa-st__inner"><NoticeList :notices="notices" :sample="meta.sample && !choosing" :t="t" @dismiss="session.dismiss" @clear="guarded(session.reset)" /></div>
-    <MethodPicker v-if="choosing" :families="shownFamilies" :sheets="sheets" :t="t" :current="workspace.activeMethod" :guide="guide" @select="session.selectMethod" />
+    <MethodPicker v-if="choosing" :families="shownFamilies" :sheets="sheets" :t="t" :current="workspace.activeMethod" :guide="guide" @select="session.selectMethod" @table="shownTable = $event" />
     <div v-else-if="currentSheet" class="fa-st__inner" :data-sheet-view="currentSheet.id">
       <UnitList
         v-if="listView"
@@ -194,6 +197,7 @@ defineExpose({ state: workspace, open: files.open, save: files.save, exportResul
     <p class="fa-sr-only" aria-live="polite" aria-atomic="true" data-live>{{ announced }}</p>
     <div v-if="drop.dragging.value" class="fa-st__drop">{{ t('dropHere') }}</div>
 
+    <DataTableDialog :table="shownTable ? (tableOf(shownTable, sheets) ?? null) : null" :t="t" :locale="locale" @close="shownTable = null" />
     <ImportPreview :preview="files.preview.value" :t="t" :locale="locale" @apply="applyImport" @cancel="files.cancelPreview" />
     <FaDialog :open="pending !== null" :title="t('discardTitle')" size="sm" :locale="locale" @update:open="pending = null">
       <p>{{ t('discardText') }}</p>

@@ -6,7 +6,8 @@
 import {
   MAX_LIST_ROWS,
   MAX_STRATA,
-  STRATA_COLUMNS,
+  strataColumnsOf,
+  subsampleNeeds,
   applySubsamples,
   cellsOf,
   defaultInputs,
@@ -61,7 +62,8 @@ function useStrata(context: ActionContext): Pick<SheetActions, 'strataCount' | '
     removeStratum() {
       const sheet = view.currentSheet.value
       if (!sheet || strataCount.value <= 1) return
-      const column = STRATA_COLUMNS[strataCount.value - 1]!
+      const column = strataColumnsOf(sheet.definition)[strataCount.value - 1]
+      if (!column) return
       const inputs: Record<string, CellValue> = { ...ownInputs(context.state(), sheet.id) }
       const cells = inputFields(sheet.definition).filter((field) => field.columns).flatMap(cellsOf)
       for (const cell of cells.filter((address) => address.replace(/\d+$/, '') === column)) delete inputs[cell]
@@ -102,12 +104,13 @@ function useUnits(context: ActionContext): Pick<SheetActions, 'addUnit' | 'remov
     transferSubsamples() {
       const sheet = view.currentSheet.value
       const method = view.activeSheet.value
-      const totals = sheet?.totals?.(rows(), view.context.value)
+      const totals = method ? sheet?.totals?.(rows(), view.context.value, subsampleNeeds(method.definition)) : undefined
       if (!method || !totals) return
       const result = applySubsamples(method, ownInputs(context.state(), method.id), totals)
       if (result.applied.length === 0) return context.notify('info', t('listTransferNone'))
       context.write(method.id, result.inputs)
-      context.say(t('listTransferred', { number: method.definition.number, fields: result.applied.map((field) => field.cell).join(', ') }))
+      context.say(t('listTransferred', { number: method.definition.number, fields: result.cells.join(', ') }))
+      if (totals.unassigned) context.notify('warning', t('listUnassigned', { count: totals.unassigned }))
     },
   }
 }

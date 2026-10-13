@@ -8,6 +8,7 @@
 import { formatDateTime, type DownloadFile } from '@auditcore/common'
 import {
   MAX_WORKSPACE_SIZE,
+  WORKFLOW_STEPS,
   describeNotice,
   describeOpenError,
   openWorkspace,
@@ -46,13 +47,17 @@ export interface FileActions {
 
 type TemplateImport = Extract<WorkbookImport, { kind: 'template' }>
 
+/** Blätter, die kein Verfahren sind (Arbeitsschritte um das Methodenblatt herum). */
+const NOT_A_METHOD: ReadonlySet<string> = new Set(WORKFLOW_STEPS.flatMap((step) => (step.sheet ? [step.sheet] : [])))
+
 const loadXlsx = () => import('@auditcore/sampling-templates-core/xlsx')
 
 /** Arbeitsstand nach der Übernahme: die Blätter der Vorlage ersetzen die bisherigen Eingaben dieser Blätter. */
 function candidate(current: WorkspaceState, imported: TemplateImport): WorkspaceState {
   const sheets = { ...current.sheets }
   for (const id of imported.filled) sheets[id] = imported.sheets[id] ?? {}
-  return { ...current, activeMethod: current.activeMethod ?? imported.filled[0] ?? null, sheets }
+  // Verfahren: das in Blatt 18 der Mappe gewählte, sonst das bisherige, sonst das erste ausgefüllte Methodenblatt.
+  return { ...current, activeMethod: imported.method ?? current.activeMethod ?? imported.filled.find((id) => !NOT_A_METHOD.has(id)) ?? null, sheets }
 }
 
 const countValues = (imported: TemplateImport): number =>

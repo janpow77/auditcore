@@ -44,16 +44,30 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   return hints
 }
 
+const used = (results: CellMap, column: string): boolean => !isBlank(results[stratumCell(column, 9)])
+
 /**
- * Fehlt die Standardabweichung der Stichprobe einer belegten Schicht (Zeile 47),
- * setzt die Vorlage ihren Beitrag zur Genauigkeit auf 0 (Zeile 52).
+ * Mit 0 gerechnete Eingaben (wie die Vorlage), die die Webfassung ausweist:
+ * - Standardabweichung der Stichprobe einer belegten Schicht (Zeile 47): ihr
+ *   Beitrag zur Genauigkeit ist 0 (Zeile 52).
+ * - Summe der Fehlerquoten einer belegten Schicht (Zeile 46), während eine
+ *   andere Schicht eine trägt: Die Vorlage rechnet ihre Hochrechnung mit 0 (Zeile 50).
  */
 function zeroAssumed(results: CellMap): ZeroAssumption[] {
-  if (!isNumber(results.C54)) return []
-  return STRATA_COLUMNS.filter((column) => !isBlank(results[stratumCell(column, 9)]) && isBlank(results[stratumCell(column, 47)])).map((column) => ({
-    input: stratumCell(column, 47),
-    cells: [stratumCell(column, 52), 'C52', 'C54', 'C57', 'C58', 'C59', 'C62', 'C63'],
-  }))
+  const deviation = isNumber(results.C54)
+    ? STRATA_COLUMNS.filter((column) => used(results, column) && isBlank(results[stratumCell(column, 47)])).map((column): ZeroAssumption => ({
+        input: stratumCell(column, 47),
+        cells: [stratumCell(column, 52), 'C52', 'C54', 'C57', 'C58', 'C59', 'C62', 'C63'],
+      }))
+    : []
+  const errorSum = isNumber(results.C53)
+    ? STRATA_COLUMNS.filter((column) => used(results, column) && isBlank(results[stratumCell(column, 46)])).map((column): ZeroAssumption => ({
+        input: stratumCell(column, 46),
+        cells: [stratumCell(column, 50), stratumCell(column, 51), 'C50', 'C51', 'C53', 'C57', 'C58', 'C60', 'C61', 'C62', 'C63', 'N5', 'N11'],
+        kind: 'partialErrorSum',
+      }))
+    : []
+  return [...deviation, ...errorSum]
 }
 
 export const sheet = defineSheet({ id: '04_MUS_1Z_S', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed })

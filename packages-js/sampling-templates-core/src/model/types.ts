@@ -93,6 +93,23 @@ export interface SheetContext {
   sheets: Readonly<Record<SheetId, CellMap>>
   /** Nur für Blatt 18: Ergebnisübersicht des gewählten Methodenblatts. */
   method?: MethodSummary
+  /** Richtlinie für fehlende Angaben; ohne Angabe gilt `MISSING_POLICY`. */
+  policy?: MissingPolicy
+}
+
+/** Behandlung einer fehlenden Angabe: Wert offen lassen oder wie die Vorlage mit 0 rechnen und das ausweisen. */
+export type MissingTreatment = 'missing' | 'zero'
+
+/** Richtlinie für fehlende Angaben je Fallart; die geltende steht in `model/policy.ts`. */
+export interface MissingPolicy {
+  /** Pflichteingabe fehlt, die Vorlage rechnet mit 0 weiter. */
+  requiredInput: MissingTreatment
+  /** Standardabweichung der Stichprobe fehlt in der Auswertung. */
+  sampleDeviation: MissingTreatment
+  /** Fehlersumme einer von mehreren belegten Schichten fehlt. */
+  partialErrorSum: MissingTreatment
+  /** Wert der Vorlage ohne Grundlage (bestandener Prüfhinweis ohne geprüfte Größe, Summe 0 über leere Schichten): offen lassen oder wie die Vorlage zeigen. */
+  withoutBasis: 'open' | 'template'
 }
 
 /** Rechenkern eines Blatts: reine Funktion ohne Seiteneffekte. */
@@ -128,4 +145,10 @@ export interface Deviation {
    * Vorlage zeigt den Wert aus einem anderen Grund (z. B. Textvergleich einer leeren Zelle).
    */
   check?: 'zero' | 'none'
+  /**
+   * Fallart der Richtlinie (`model/policy.ts`): `requiredInput` (Standard) –
+   * Pflichteingabe fehlt; `withoutBasis` – die Vorlage zeigt einen Wert ohne
+   * Grundlage, der Rechenkern gibt ihn über `unfounded` bzw. `totalRow` zurück.
+   */
+  kind?: 'requiredInput' | 'withoutBasis'
 }

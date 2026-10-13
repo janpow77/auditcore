@@ -6,8 +6,8 @@
 import { parseTable } from '@auditcore/common'
 import { isBlank } from '../excel/index'
 import { parseFieldInput } from '../format/numbers'
-import { defaultInputs, fieldsOf, inputFields, type FieldDefinition, type MethodDefinition } from './definition'
-import type { AvailableSheet, SubsampleTotals } from './sheet'
+import { cellsOf, defaultInputs, fieldsOf, inputFields, type FieldDefinition, type MethodDefinition } from './definition'
+import type { AvailableSheet, SubsampleNeeds, SubsampleTotals } from './sheet'
 import type { CellAddress, CellMap, CellValue } from './types'
 
 /** Höchstzahl der Einheiten einer Liste (wie in der Prüfung der Arbeitsstandsdatei). */
@@ -63,18 +63,51 @@ export function subsampleTargets(definition: MethodDefinition): FieldDefinition[
   return fieldsOf(definition).filter((field) => field.subsample !== undefined && (field.kind === 'input' || field.kind === 'link'))
 }
 
+/** Unterscheidet das Methodenblatt die Summen nach Schicht (Schichtzeile) bzw. nach Zeitraum (`period`)? */
+export function subsampleNeeds(definition: MethodDefinition): SubsampleNeeds {
+  const targets = subsampleTargets(definition)
+  return { stratum: targets.some((field) => field.columns !== undefined), period: targets.some((field) => field.period !== undefined) }
+}
+
+/** Zielzellen eines Felds mit ihren Werten: bei Schichtzeilen je Schicht eine Zelle, sonst die Zelle des Felds. */
+function targetValues(field: FieldDefinition, totals: SubsampleTotals): [CellAddress, CellValue][] {
+  const role = field.subsample
+  if (!role) return []
+  const groups = totals.groups
+  if (!groups) return [[field.cell, totals[role]]]
+  const period = field.period ?? null
+  const matching = groups.filter((group) => group.period === period)
+  if (!field.columns) return [[field.cell, sumOf(matching.map((group) => group[role]))]]
+  const cells = cellsOf(field)
+  return matching.flatMap((group): [CellAddress, CellValue][] => {
+    const cell = group.stratum === null ? undefined : cells[group.stratum - 1]
+    return cell ? [[cell, group[role]]] : []
+  })
+}
+
+/** Summe über Gruppen; `null`, solange keine Gruppe beiträgt. */
+function sumOf(values: readonly (number | null)[]): number | null {
+  const present = values.filter((value): value is number => value !== null)
+  return present.length ? present.reduce((total, value) => total + value, 0) : null
+}
+
 /**
  * Summen der Unterstichproben in die gekennzeichneten Felder eines
- * Methodenblatts schreiben. Summen ohne Beitrag (`null`) lassen das Feld unverändert.
+ * Methodenblatts schreiben – bei geschichteten Verfahren je Schicht, bei
+ * mehreren Zeiträumen je Zeitraum (`totals.groups`). Summen ohne Beitrag
+ * (`null`) lassen die Zelle unverändert.
  */
-export function applySubsamples(method: AvailableSheet, inputs: CellMap, totals: SubsampleTotals): { inputs: CellMap; applied: readonly FieldDefinition[] } {
+export function applySubsamples(method: AvailableSheet, inputs: CellMap, totals: SubsampleTotals): { inputs: CellMap; applied: readonly FieldDefinition[]; cells: readonly CellAddress[] } {
   const next: Record<CellAddress, CellValue> = { ...inputs }
   const applied: FieldDefinition[] = []
+  const cells: CellAddress[] = []
   for (const field of subsampleTargets(method.definition)) {
-    const value = field.subsample ? totals[field.subsample] : null
-    if (isBlank(value)) continue
-    next[field.cell] = value
-    applied.push(field)
+    const written = targetValues(field, totals).filter(([, value]) => !isBlank(value))
+    for (const [cell, value] of written) {
+      next[cell] = value
+      cells.push(cell)
+    }
+    if (written.length) applied.push(field)
   }
-  return { inputs: next, applied }
+  return { inputs: next, applied, cells }
 }

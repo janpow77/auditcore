@@ -4,21 +4,22 @@
  * Anzeigemodellen, der Wegweiser und die Übersicht der Unterstichproben.
  */
 import {
-  POPULATION_SHEET,
-  SHARED_TEXTS,
-  WORKFLOW_STEPS,
   buildGuide,
   buildListView,
   buildSections,
   buildSummary,
   computeWorkspace,
-  createContext,
+  contextFor,
   findAvailableSheet,
   listRows,
   localizeSheet,
   pasteColumns,
+  POPULATION_SHEET,
+  SHARED_TEXTS,
+  strataColumnsOf,
   strataRows,
   usedStrata,
+  WORKFLOW_STEPS,
   type AvailableSheet,
   type CellMap,
   type GuideView,
@@ -73,9 +74,10 @@ export function useSessionView(workspace: ShallowRef<WorkspaceState>, step: Ref<
     return sheet ? localizeSheet(sheet, options.locale(), options.locale() === 'de' ? {} : SHARED_TEXTS[options.locale() as 'en']) : null
   }
   const results = computed(() => computeWorkspace(workspace.value, options.sheets()))
-  const context = computed(() => createContext({ sheets: results.value }))
   const activeSheet = computed(() => find(workspace.value.activeMethod))
   const currentSheet = computed(() => (step.value === 'method' ? activeSheet.value : find(WORKFLOW_STEPS.find((entry) => entry.id === step.value)?.sheet ?? null)))
+  /** Derselbe Kontext wie in der Rechnung des Arbeitsstands (für Blatt 18 mit der Ergebnisübersicht des gewählten Verfahrens). */
+  const context = computed(() => contextFor(currentSheet.value?.id ?? '', workspace.value, results.value))
   /** Eingaben und Zellwerte des angezeigten Formulars: das Blatt selbst oder die gewählte Einheit einer Liste. */
   const form = computed(() => {
     const sheet = currentSheet.value
@@ -94,7 +96,7 @@ export function useSessionView(workspace: ShallowRef<WorkspaceState>, step: Ref<
     summary: computed(() => (form.value ? buildSummary(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t) : null)),
     guide: computed(() => buildGuide(find(POPULATION_SHEET) ?? undefined, results.value[POPULATION_SHEET], context.value.parameters, options.t)),
     hasStrata: computed(() => strata.value.length > 0),
-    usedStrata: computed(() => (form.value ? usedStrata(form.value.inputs, strata.value) : 0)),
+    usedStrata: computed(() => (form.value ? usedStrata(form.value.inputs, strata.value, strataColumnsOf(form.value.sheet.definition)) : 0)),
     listView: computed(() => {
       const sheet = currentSheet.value
       return sheet && isList(sheet) ? buildListView(sheet, listRows(workspace.value, sheet.id), activeSheet.value, context.value, options.t) : null

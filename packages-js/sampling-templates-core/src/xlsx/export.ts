@@ -8,14 +8,14 @@ import { formatDateTime } from '@auditcore/common'
 import { isBlank } from '../excel/index'
 import { formatFieldValue } from '../format/numbers'
 import { createTranslate, type MessageKey, type Translate } from '../i18n/messages'
-import { cellsOf, fieldsOf, type FieldDefinition } from '../model/definition'
+import { cellsOf, fieldsOf, type FieldDefinition, strataColumnsOf } from '../model/definition'
 import { createContext, type AvailableSheet, type SheetModule } from '../model/sheet'
-import type { CellMap, CellValue } from '../model/types'
+import type { CellMap, CellValue, SheetContext } from '../model/types'
 import { SHEETS } from '../sheets/registry'
 import { TEMPLATE_STRATA, usedStrata } from '../model/strata'
 import { strataRows } from '../view/sheetView'
 import { buildHints } from '../view/summaryView'
-import { computeWorkspace, listRows } from '../workspace/compute'
+import { contextFor, computeWorkspace, listRows } from '../workspace/compute'
 import { exportFileName } from '../workspace/filenames'
 import { saveWorkspace } from '../workspace/save'
 import { LEGAL_STATE, TEMPLATE_NAME, type WorkspaceFile, type WorkspaceState } from '../workspace/types'
@@ -83,6 +83,11 @@ function reference(field: FieldDefinition, strata: number): string {
   return field.total ? `${field.total}; ${range}` : range
 }
 
+/** Fundstelle bzw. Hinweis der Vorlage; eine Auslegung der Vorlage ist als solche gekennzeichnet. */
+function referenceText(field: FieldDefinition, t: Translate): string {
+  return [field.hint, field.interpretation ? `${t('interpretation')}: ${field.interpretation}` : ''].filter(Boolean).join(' ')
+}
+
 function fieldRows(sheet: AvailableSheet, results: CellMap, strata: number, t: Translate): (WorkbookCell | null)[][] {
   return sheet.definition.sections.flatMap((section) =>
     section.fields.map((field) => [
@@ -90,7 +95,7 @@ function fieldRows(sheet: AvailableSheet, results: CellMap, strata: number, t: T
       text(field.formula ? `${field.label} (${field.formula})` : field.label),
       valueCell(field, results[field.columns ? (field.total ?? '') : field.cell] ?? null),
       text(t(field.web ? 'kindWebHint' : field.type === 'check' ? 'kindCheck' : KIND_KEYS[field.kind])),
-      text(field.hint ?? ''),
+      text(referenceText(field, t)),
       text(reference(field, strata)),
       ...(field.columns ? cellsOf(field).slice(0, strata).map((cell) => valueCell(field, results[cell] ?? null)) : []),
     ]),
@@ -100,15 +105,15 @@ function fieldRows(sheet: AvailableSheet, results: CellMap, strata: number, t: T
 /** Anzahl der Schichtspalten im Export: die belegten Schichten des Blatts. */
 function strataCount(sheet: AvailableSheet, inputs: CellMap): number {
   const rows = strataRows(sheet)
-  return rows.length ? Math.max(1, usedStrata(inputs, rows)) : 0
+  return rows.length ? Math.max(1, usedStrata(inputs, rows, strataColumnsOf(sheet.definition))) : 0
 }
 
-function resultSheet(name: string, sheet: AvailableSheet, inputs: CellMap, results: CellMap, file: WorkspaceFile, t: Translate): WorkbookSheet {
+function resultSheet(name: string, sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, file: WorkspaceFile, t: Translate): WorkbookSheet {
   const columns: MessageKey[] = ['columnSection', 'columnLabel', 'columnValue', 'columnKind', 'columnReference', 'columnCell']
   const strata = strataCount(sheet, inputs)
   const strataHead = Array.from({ length: strata }, (_, index) => text(t('stratum', { number: index + 1 }), HEAD))
   const beyond = strata > TEMPLATE_STRATA.length ? [[null, text(t('strataBeyondTemplate')), null, text(t('kindWebHint'))]] : []
-  const webHints = buildHints(sheet, inputs, results, createContext(), t)
+  const webHints = buildHints(sheet, inputs, results, context, t)
     .filter((hint) => hint.source === 'web')
     .map((hint) => [null, text(hint.text), null, text(t('kindWebHint'))])
   return {
@@ -147,23 +152,24 @@ function resultSheets(state: WorkspaceState, sheets: readonly SheetModule[], fil
   const pages: WorkbookSheet[] = []
   for (const sheet of sheets) {
     if (!sheet.available) continue
-    const active = sheet.id === state.activeMethod
-    const page = pageOf(sheet, state, results[sheet.id], active, file, t)
-    if (page && active) pages.unshift(page)
+    const page = pageOf(sheet, state, results, file, t)
+    if (page && sheet.id === state.activeMethod) pages.unshift(page)
     else if (page) pages.push(page)
   }
   return pages
 }
 
 /** Seite eines Blatts oder `null`, wenn es nicht bearbeitet ist. */
-function pageOf(sheet: AvailableSheet, state: WorkspaceState, computed: CellMap | undefined, active: boolean, file: WorkspaceFile, t: Translate): WorkbookSheet | null {
+function pageOf(sheet: AvailableSheet, state: WorkspaceState, results: Readonly<Record<string, CellMap>>, file: WorkspaceFile, t: Translate): WorkbookSheet | null {
+  const active = sheet.id === state.activeMethod
+  const computed = results[sheet.id]
   if (sheet.definition.layout === 'list') {
     const rows = listRows(state, sheet.id)
     return rows.length > 0 ? listSheet(sheet, rows, file, t) : null
   }
   const inputs = state.sheets[sheet.id]
   if (!computed || Array.isArray(inputs) || (!active && !inputs)) return null
-  return resultSheet(active ? t('exportSheet') : sheet.id, sheet, (inputs as CellMap | undefined) ?? {}, computed, file, t)
+  return resultSheet(active ? t('exportSheet') : sheet.id, sheet, (inputs as CellMap | undefined) ?? {}, computed, contextFor(sheet.id, state, results), file, t)
 }
 
 /** Exportiert das Ergebnis des aktiven Verfahrens und aller weiteren bearbeiteten Blätter. */

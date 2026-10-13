@@ -63,6 +63,7 @@ function applyPaste(): void {
       </dl>
       <p v-else class="fa-st__muted">{{ methodNumber ? t('listTransferNone') : t('chooseMethodFirst') }}</p>
       <p v-if="view.incomplete" class="fa-st__muted">{{ t('listIncomplete', { count: view.incomplete }) }}</p>
+      <p v-if="view.unassigned" class="fa-st__muted" data-unassigned>{{ t('listUnassigned', { count: view.unassigned }) }}</p>
       <p class="fa-st__hint"><strong>{{ t('webHint') }}:</strong> {{ t('listTotalsNote') }}</p>
       <FaButton variant="primary" :label="t('listTransfer', { number: methodNumber || '–' })" :disabled="!view.transferable || view.rows.length === 0" data-action="unit-transfer" @click="$emit('transfer')" />
     </div>

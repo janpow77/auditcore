@@ -61,6 +61,8 @@ export type WorkbookImport =
       issues: readonly ImportIssue[]
       /** Zuletzt berechnete Werte der Formelzellen der Mappe, für den Vergleich mit der Webfassung. */
       cached: Record<SheetId, CellMap>
+      /** In Blatt 18 der Mappe gewähltes Methodenblatt (Zelle C4), wenn es ein Blatt mit Rechenkern nennt. */
+      method: SheetId | null
     }
   /** Weder Arbeitsstand noch Blätter der Vorlage. */
   | { kind: 'unknown' }
@@ -138,8 +140,9 @@ class TemplateReader {
     return read.value
   }
 
-  sheet(sheet: AvailableSheet): { inputs: CellMap; filled: boolean; cached: CellMap } {
-    const cells = this.workbook.cells(sheet.id)
+  /** `name`: Blattname in der Mappe (bei Kopien des Listenblatts abweichend vom Blatt der Vorlage). */
+  sheet(sheet: AvailableSheet, name: string = sheet.id): { inputs: CellMap; filled: boolean; cached: CellMap } {
+    const cells = this.workbook.cells(name)
     const inputs: Record<string, CellValue> = {}
     let filled = false
     for (const field of inputFields(sheet.definition).filter((entry) => !entry.web)) {
@@ -165,9 +168,38 @@ function cachedResults(sheet: AvailableSheet, cells: ReadonlyMap<string, Workboo
   return cached
 }
 
+/** Blatt 18 der Vorlage und die Zelle, in der das Methodenblatt gewählt wird. */
+const TOTAL_ERROR_RATE_SHEET = '18_GFQ_AnhIII'
+const METHOD_CELL = 'C4'
+
+/** In der Mappe gewähltes Methodenblatt, sofern es ein Blatt mit Rechenkern ist. */
+function chosenMethod(workbook: ReadWorkbook, sheets: readonly SheetModule[]): SheetId | null {
+  if (!workbook.sheetNames.includes(TOTAL_ERROR_RATE_SHEET)) return null
+  const chosen = workbook.cells(TOTAL_ERROR_RATE_SHEET).get(METHOD_CELL)?.value
+  return typeof chosen === 'string' && sheets.some((sheet) => sheet.available && sheet.id === chosen) ? chosen : null
+}
+
 /**
- * Liest eine `.xlsx`-Datei. Blätter der Vorlage ohne Rechenkern werden unter
- * `pending` genannt und noch nicht gelesen.
+ * Einheiten eines Listenblatts: das Blatt selbst und seine Kopien in der Mappe
+ * (die Vorlage wird je Stichprobeneinheit kopiert, die Kopien heißen dann z. B.
+ * `17_Unterstichprobe (2)`). Vorgaben der Webfelder kommen dazu.
+ */
+function listUnits(reader: TemplateReader, workbook: ReadWorkbook, sheet: AvailableSheet): { rows: CellMap[]; cached: CellMap } {
+  const names = workbook.sheetNames.filter((name) => name === sheet.id || name.startsWith(`${sheet.id} `) || name.startsWith(`${sheet.id}_`) || name.startsWith(`${sheet.id}(`))
+  const rows: CellMap[] = []
+  let cached: CellMap = {}
+  for (const name of names) {
+    const read = reader.sheet(sheet, name)
+    if (name === sheet.id) cached = read.cached
+    if (read.filled) rows.push({ ...defaultInputs(sheet.definition), ...read.inputs })
+  }
+  return { rows, cached }
+}
+
+/**
+ * Liest eine `.xlsx`-Datei: alle Blätter der Vorlage mit Rechenkern. `filled`
+ * nennt die Blätter, die mehr als die Vorgaben enthielten; Blätter ohne
+ * Rechenkern stehen unter `pending` und werden nicht gelesen.
  */
 export function importWorkbook(data: Uint8Array | ArrayBuffer, sheets: readonly SheetModule[] = SHEETS): WorkbookImport {
   const workbook = readWorkbook(data instanceof Uint8Array ? data : new Uint8Array(data))
@@ -180,12 +212,19 @@ export function importWorkbook(data: Uint8Array | ArrayBuffer, sheets: readonly 
   const filled: SheetId[] = []
   for (const sheet of present) {
     if (!sheet.available) continue
+    if (sheet.definition.layout === 'list') {
+      const units = listUnits(reader, workbook, sheet)
+      inputs[sheet.id] = units.rows
+      cached[sheet.id] = units.cached
+      if (units.rows.length > 0) filled.push(sheet.id)
+      continue
+    }
     const read = reader.sheet(sheet)
-    // Ein Listenblatt der Vorlage ist eine Einheit; Vorgaben der Webfelder kommen dazu.
-    const isList = sheet.definition.layout === 'list'
-    inputs[sheet.id] = isList ? (read.filled ? [{ ...defaultInputs(sheet.definition), ...read.inputs }] : []) : read.inputs
+    inputs[sheet.id] = read.inputs
     cached[sheet.id] = read.cached
     if (read.filled) filled.push(sheet.id)
   }
-  return { kind: 'template', sheets: inputs, filled, pending: present.filter((sheet) => !sheet.available).map((sheet) => sheet.id), issues: reader.issues, cached }
+  // Blätter ohne Rechenkern; Nachschlagetabellen (X1a) enthalten keine Eingaben und zählen nicht dazu.
+  const pending = present.filter((sheet) => !sheet.available && !sheet.table).map((sheet) => sheet.id)
+  return { kind: 'template', sheets: inputs, filled, pending, issues: reader.issues, cached, method: chosenMethod(workbook, sheets) }
 }

@@ -1,33 +1,44 @@
 /** Alle Blätter eines Arbeitsstands in der Reihenfolge der Vorlage berechnen. */
 import { cellsOf, findField, inputFields } from '../model/definition'
+import { evaluateSheet } from '../model/evaluate'
 import { createContext, summaryOf, type AvailableSheet, type SheetModule } from '../model/sheet'
-import type { CellMap, CellValue, MethodSummary, SheetId } from '../model/types'
+import type { CellMap, CellValue, MethodSummary, MissingPolicy, SheetContext, SheetId } from '../model/types'
 import { SHEETS } from '../sheets/registry'
 import type { WorkspaceState } from './types'
 
-/** Blatt, dessen Kontext die Ergebnisübersicht des gewählten Methodenblatts braucht. */
-const TOTAL_ERROR_RATE_SHEET = '18_GFQ_AnhIII'
+/** Blätter, deren Kontext die Ergebnisübersicht des gewählten Methodenblatts braucht: Gesamtfehlerquote und Bericht. */
+const METHOD_READERS: readonly SheetId[] = ['18_GFQ_AnhIII', '20_Druck_KOM']
 
 /**
  * Berechnet jedes Blatt mit Rechenkern. Die Reihenfolge des Registers ist die
  * der Vorlage, sodass Verknüpfungen (Blatt 02 → Methodenblatt → Blatt 18) auf
  * bereits berechnete Blätter treffen. Listenblätter (Blatt 17) rechnet das
- * jeweilige Blattmodul selbst.
+ * jeweilige Blattmodul selbst. Fehlende Angaben behandelt `evaluateSheet` nach
+ * der Richtlinie (`model/policy.ts`); `policy` ersetzt sie für Vergleiche.
  */
-export function computeWorkspace(state: WorkspaceState, sheets: readonly SheetModule[] = SHEETS): Record<SheetId, CellMap> {
+export function computeWorkspace(state: WorkspaceState, sheets: readonly SheetModule[] = SHEETS, policy?: MissingPolicy): Record<SheetId, CellMap> {
   const results: Record<SheetId, CellMap> = {}
   for (const sheet of sheets) {
     const inputs = state.sheets[sheet.id]
     if (!sheet.available || sheet.definition.layout === 'list' || Array.isArray(inputs)) continue
-    results[sheet.id] = sheet.compute((inputs as CellMap | undefined) ?? {}, createContext({ sheets: results, method: methodFor(sheet.id, state, results) }))
+    results[sheet.id] = evaluateSheet(sheet, (inputs as CellMap | undefined) ?? {}, contextFor(sheet.id, state, results, policy), false).cells
   }
   return results
 }
 
-/** Ergebnisübersicht des gewählten Methodenblatts – nur für Blatt 18. */
-function methodFor(sheet: SheetId, state: WorkspaceState, results: Record<SheetId, CellMap>): MethodSummary | undefined {
+/**
+ * Kontext, in dem ein Blatt des Arbeitsstands gerechnet wird: Ergebnisse der
+ * anderen Blätter und – für Blatt 18 – die Ergebnisübersicht des gewählten
+ * Methodenblatts. Anzeige und Export verwenden denselben Kontext wie die Rechnung.
+ */
+export function contextFor(sheet: SheetId, state: WorkspaceState, results: Readonly<Record<SheetId, CellMap>>, policy?: MissingPolicy): SheetContext {
+  return createContext({ sheets: results, method: methodFor(sheet, state, results), policy })
+}
+
+/** Ergebnisübersicht des gewählten Methodenblatts – nur für die Blätter 18 und 20. */
+function methodFor(sheet: SheetId, state: WorkspaceState, results: Readonly<Record<SheetId, CellMap>>): MethodSummary | undefined {
   const active = state.activeMethod ? results[state.activeMethod] : undefined
-  return sheet === TOTAL_ERROR_RATE_SHEET && state.activeMethod && active ? summaryOf(state.activeMethod, active) : undefined
+  return METHOD_READERS.includes(sheet) && state.activeMethod && active ? summaryOf(state.activeMethod, active) : undefined
 }
 
 /** Einheiten eines Listenblatts (Blatt 17) aus dem Arbeitsstand. */

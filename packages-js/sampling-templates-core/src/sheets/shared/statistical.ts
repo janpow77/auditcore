@@ -7,7 +7,8 @@
  * genau einmal im Quelltext.
  */
 import { eq, ge, gt, guard, isNumber, le, lt, minus, n, ne, required, roundUp, sameNumber, sameText } from '../../excel/index'
-import type { CellValue } from '../../model/types'
+import { unfounded } from '../../model/policy'
+import type { CellValue, SheetContext } from '../../model/types'
 
 /** Prüfung Konfidenzniveau gegen Systembewertung (Anh. I Nr. 2). */
 export function checkConfidence(reliability: CellValue | undefined, confidence: CellValue | undefined): CellValue {
@@ -78,6 +79,19 @@ export function appliedSampleSize(computed: CellValue | undefined, limit: number
 export function checkMinimumUnits(units: CellValue | undefined): CellValue {
   if (!isNumber(units)) return null
   return ge(units, 3) ? '✔ ≥ 3 Einheiten' : '✖ < 3 Einheiten (Art. 5 Abs. 5)'
+}
+
+/**
+ * Mindestens drei Einheiten je Zufallsschicht (Art. 5 Abs. 5), Schichtzeile:
+ * `IF(n_h>=3;"✔ ≥ 3";"✖ < 3")`. Gibt es keinen Umfang je Schicht (`""`, etwa bei
+ * „TE ≤ AE“), vergleicht die Vorlage eine leere Textzelle mit 3; ein Text ist im
+ * Größenvergleich größer als jede Zahl, sie zeigt dann „✔ ≥ 3“. Das ist ein
+ * Prüfhinweis ohne Grundlage (`unfounded`): Die Webfassung zeigt ihn nach der
+ * geltenden Richtlinie nicht. `open`: Der Umfang fehlt nur, weil eine Angabe fehlt.
+ */
+export function checkStratumUnits(units: CellValue | undefined, open: boolean, context: Pick<SheetContext, 'policy'> | undefined): CellValue {
+  if (isNumber(units)) return ge(units, 3) ? '✔ ≥ 3' : '✖ < 3'
+  return open ? null : unfounded(context, '✔ ≥ 3')
 }
 
 /** Prüfung Iteration: Einheiten der Zufallsschicht mit BV über dem Auswahlintervall. */

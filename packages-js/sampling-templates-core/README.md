@@ -10,10 +10,12 @@ Ergebnisse herunterladen, den Arbeitsstand als Datei speichern und später
 wieder öffnen – ohne Server, ohne Anmeldung, ohne Netzanfragen. Die Oberfläche
 liegt in [`@auditcore/sampling-templates-vue`](../sampling-templates-vue/README.md).
 
-**Stand 0.1.0:** rechenbar sind die Blätter `02_Grundgesamtheit`, `03_MUS_1Z`
-(MUS-Standardansatz, ein Zeitraum), `04_MUS_1Z_S` (geschichtet) und
-`17_Unterstichprobe`; Blatt 01 liegt als Daten vor, alle übrigen Blätter sind
-im Register als „noch nicht verfügbar“ geführt. Ein Blatt ergänzen:
+**Stand 0.1.0:** Alle Blätter der Vorlage sind gebaut und gegen sie
+abgeglichen: Grundgesamtheit (02), MUS-Standardansatz (03–07), einfaches
+Zufallsstichprobenverfahren (08–12), nichtstatistische Verfahren (13–16),
+Unterstichproben (17), Gesamtfehlerquote nach Anhang III (18), Bericht (20) und
+die Altvorlagen von 2017 (X1–X4; X1a als Datentabelle). Blatt 01 liegt als
+Daten vor. Ein Blatt ergänzen oder ändern:
 [docs/blatt-ergaenzen.md](docs/blatt-ergaenzen.md).
 
 **Abgrenzung zu `auditcore_sampling` (Python):** Dort stehen allgemeine
@@ -113,10 +115,10 @@ if (imported.kind !== 'workspace') throw new Error('Arbeitsstand fehlt')
 |---|---|
 | `excel` | Excel-Semantik: `roundUp` und die Vergleiche `eq`/`lt`/`le`/`gt`/`ge` mit dem gemessenen Verhalten der Tabellenkalkulation, `n`, `guard` (= `IFERROR(…;"")` → `null`), `ifError`, `required`, Bereichs- und Textfunktionen. Inventar: [docs/excel-funktionen.md](docs/excel-funktionen.md) |
 | `sheets/<Blatt>/` | je Blatt ein Verzeichnis: `compute` (reine Funktion `compute(eingaben, kontext) → ergebnisse`), `definition`, `deviations`, Beispielwerte, englische Arbeitsübersetzung; `shared/` hält Formeln, die mehrere Blätter wortgleich verwenden; `registry.ts` führt alle 23 Blätter |
-| `model` | Schichtspalten (`strata`), Listenblätter (`list`), `MethodDefinition` (Abschnitte, Felder, Zelle, Art, Format, Auswahlliste, Fundstelle, Kurzformel), `SheetContext` (Blatt 01, Ergebnisse anderer Blätter, Ergebnisübersicht für Blatt 18) |
+| `model` | Richtlinie für fehlende Angaben (`policy`, `evaluate`), Schichtspalten (`strata`), Listenblätter (`list`), Datentabellen (`table`), `MethodDefinition` (Abschnitte, Felder, Zelle, Art, Format, Auswahlliste, Fundstelle, Kurzformel), `SheetContext` (Blatt 01, Ergebnisse anderer Blätter, Ergebnisübersicht für Blatt 18) |
 | `catalog` | Verfahrensfamilien und Varianten nach Blatt 00, Arbeitsschritte |
 | `workspace` | Arbeitsstandsdatei: speichern, öffnen, Prüfsumme, Migrationen, strenge Prüfung; Schema `arbeitsstand.schema.json` |
-| `view`, `format`, `i18n` | Anzeigemodelle, deutsche Zahlen, Texte der Oberfläche |
+| `view`, `format`, `i18n` | Anzeigemodelle (Formular, Ergebnisspalte, Liste, Datentabelle, Bericht), deutsche Zahlen, Texte der Oberfläche |
 | `./xlsx` | Ergebnisexport (formatiertes Blatt „Ergebnis“, ausgeblendetes Blatt `_Arbeitsstand`) und Import |
 
 Nachweise: [docs/abgleich.md](docs/abgleich.md) (Golden-Abgleich),
@@ -305,7 +307,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (162):
   überschreibbar mit `withMessages({ de, en })`. Bezeichnungen, Fundstellen
   und Prüfhinweise der Vorlage sind deutsch maßgeblich; `localizeSheet`
   liefert je Blatt eine gekennzeichnete englische Arbeitsübersetzung
-  (vorhanden für die Blätter 01–03). Gespeicherte Werte bleiben deutsch.
+  (vorhanden für alle Blätter; die Altvorlagen sind in der Vorlage englisch).
+  Gespeicherte Werte bleiben deutsch.
+- **Fehlende Angaben:** Was die Webfassung zeigt, wenn eine Eingabe fehlt und
+  die Vorlage trotzdem einen Wert zeigt, steht an einer Stelle:
+  `MISSING_POLICY` in `src/model/policy.ts` (Fallarten `requiredInput`,
+  `sampleDeviation`, `partialErrorSum`, `withoutBasis`). `evaluateSheet`
+  wendet sie an; `computeWorkspace(state, sheets, policy)` und
+  `createContext({ policy })` nehmen eine andere Richtlinie für Vergleiche
+  (`TEMPLATE_POLICY`: wie die Vorlage; `STRICT_POLICY`).
 - **Dateinamen:** `saveWorkspace` und `exportWorkbook` nehmen `filePrefix`
   (Standard „Stichprobe“).
 - **Theming:** `style.css` liest nur die FlowAudit-Designtoken `--fa-*`
@@ -340,10 +350,16 @@ unabhängigen Prüfung des Fundaments. Einzelheiten: [PROVENANCE.md](PROVENANCE.
 
 ## Bewusste Verhaltensabweichungen
 
-Bei leeren Eingaben zeigt die Webfassung „Angabe fehlt“, wo die Vorlage mit 0
-weiterrechnet; sie zeigt nie einen anderen Wert als die Vorlage. Fehlt die
-Standardabweichung der Stichprobe, rechnet sie wie die Vorlage mit 0 und
-kennzeichnet die betroffenen Werte („Keine Angabe, daher mit 0 berechnet.“).
+Die Webfassung zeigt nie einen anderen Wert als die Vorlage, an manchen
+Stellen keinen. Nach der geltenden Richtlinie (vorläufige Vorgabe des
+Auftraggebers): „Angabe fehlt“ mit Nennung der Eingabe, wo die Vorlage wegen
+einer fehlenden Pflichteingabe mit 0 weiterrechnet; kein Wert, wo die Vorlage
+einen ohne Grundlage zeigt (bestandener Prüfhinweis ohne geprüfte Größe,
+Summe 0 über leere Schichten); wie die Vorlage mit 0 gerechnet und als „Keine
+Angabe, daher mit 0 berechnet.“ ausgewiesen bei fehlender Standardabweichung
+der Stichprobe und fehlender Fehlersumme einer von mehreren Schichten bzw.
+Zeiträumen. Die Variante „durchgehend wie die Vorlage“ ist ebenfalls für jedes
+Blatt geprüft und an einer Stelle einschaltbar.
 Vergleiche und Aufrunden folgen dem an LibreOffice gemessenen Verhalten;
 Microsoft Excel ist nicht gegengeprüft. Vollständig:
 [docs/abweichungen.md](docs/abweichungen.md).

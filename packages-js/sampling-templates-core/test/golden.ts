@@ -7,10 +7,12 @@ import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isNumber } from '../src/excel/index'
 import { defaultInputs, findField } from '../src/model/definition'
+import { evaluateSheet } from '../src/model/evaluate'
+import { TEMPLATE_POLICY } from '../src/model/policy'
 import { SUMMARY_CELLS, createContext, isEmptyReference, type AvailableSheet, type SheetModule } from '../src/model/sheet'
-import type { CellMap, CellValue, Deviation } from '../src/model/types'
+import type { CellMap, CellValue, Deviation, MissingPolicy } from '../src/model/types'
 import { SHEETS, availableSheets } from '../src/sheets/registry'
-import { computeWorkspace } from '../src/workspace/compute'
+import { computeWorkspace, contextFor } from '../src/workspace/compute'
 import { emptyWorkspace, type WorkspaceState } from '../src/workspace/types'
 
 export const TOLERANCE = 1e-9
@@ -72,12 +74,32 @@ export function caseState(sheet: AvailableSheet, golden: GoldenCase, sheets: rea
   for (const other of availableSheets(sheets)) {
     if (other.definition.layout !== 'list') inputs[other.id] = { ...defaultInputs(other.definition) }
   }
+  // Blatt 18 und 20: Das Methodenblatt aus Zelle C4 des Blatts 18 ist in der Webfassung das aktive Verfahren, keine Eingabe.
+  const choice = METHOD_CHOICE[sheet.id]
   for (const [reference, value] of Object.entries(golden.eingaben)) {
+    if (reference === choice) continue
     const [name, cell] = reference.includes('!') ? (reference.split('!') as [string, string]) : [sheet.id, reference]
     const target = inputs[name]
     if (target) target[cell] = value
   }
-  return { ...emptyWorkspace(), activeMethod: sheet.id, sheets: inputs }
+  return { ...emptyWorkspace(), activeMethod: choice ? chosenMethod(golden, choice) : sheet.id, sheets: inputs }
+}
+
+/**
+ * Blätter, die die Ergebnisübersicht des aktiven Verfahrens lesen, mit der Eingabe
+ * des Falls, die das Methodenblatt nennt (in der Vorlage `18_GFQ_AnhIII!C4`).
+ */
+const METHOD_CHOICE: Readonly<Record<string, string>> = { '18_GFQ_AnhIII': 'C4', '20_Druck_KOM': '18_GFQ_AnhIII!C4' }
+
+/** Im Fall gewähltes Methodenblatt; ohne Angabe ist kein Verfahren aktiv. */
+function chosenMethod(golden: GoldenCase, choice: string): string | null {
+  const value = golden.eingaben[choice]
+  return typeof value === 'string' && value !== '' ? value : null
+}
+
+/** Kontext der Gegenproben: für die Blätter 18 und 20 mit der Ergebnisübersicht des aktiven Verfahrens, sonst wie bisher. */
+function checkContext(sheet: AvailableSheet, golden: GoldenCase, sheets: Record<string, CellMap>, policy?: MissingPolicy) {
+  return METHOD_CHOICE[sheet.id] ? contextFor(sheet.id, caseState(sheet, golden), sheets, policy) : createContext({ sheets, policy })
 }
 
 /** Eingaben des Blatts selbst (für Tests, die nur ein Blatt rechnen). */
@@ -94,7 +116,15 @@ function withZeros(sheet: AvailableSheet, golden: GoldenCase, references: readon
     sheets[name] = { ...sheets[name], [cell]: 0 }
   }
   const inputs = sheet.definition.layout === 'list' ? { ...defaultInputs(sheet.definition), ...(golden.eingaben as CellMap) } : caseInputs(sheet, golden)
-  return sheet.compute({ ...inputs, ...own }, createContext({ sheets }))
+  return sheet.compute({ ...inputs, ...own }, checkContext(sheet, golden, sheets))
+}
+
+/** Rechnet das Blatt unter der Richtlinie „wie die Vorlage“ (`TEMPLATE_POLICY`). */
+function likeTemplate(sheet: AvailableSheet, golden: GoldenCase, all: Record<string, CellMap>): CellMap {
+  // Blatt 18 und 20 bauen auf Blatt 02 und dem Methodenblatt auf: Die Gegenprobe rechnet den ganzen Arbeitsstand wie die Vorlage.
+  if (METHOD_CHOICE[sheet.id]) return caseWorkspace(sheet, golden, TEMPLATE_POLICY)[sheet.id] ?? {}
+  const inputs = sheet.definition.layout === 'list' ? { ...defaultInputs(sheet.definition), ...(golden.eingaben as CellMap) } : caseInputs(sheet, golden)
+  return evaluateSheet(sheet, inputs, createContext({ sheets: all, policy: TEMPLATE_POLICY })).cells
 }
 
 /**
@@ -108,17 +138,57 @@ function explain(sheet: AvailableSheet, golden: GoldenCase, mismatch: Mismatch, 
   if (mismatch.actual !== null) return undefined
   const own = all[sheet.id] ?? {}
   const entries = sheet.deviations.filter((entry) => entry.cell === mismatch.cell && entry.whenEmpty.some((cell) => isEmptyReference(cell, own, all)))
-  const first = entries[0]
-  if (!first || entries.some((entry) => entry.check === 'none')) return first
-  const empty = [...new Set(entries.flatMap((entry) => entry.whenEmpty.filter((cell) => isEmptyReference(cell, own, all))))]
-  return sameValue(mismatch.expected, withZeros(sheet, golden, empty, all)[mismatch.cell] ?? null, isIntegerCell(sheet, mismatch.cell)) ? first : undefined
+  const required = entries.filter((entry) => entry.kind !== 'withoutBasis')
+  const unchecked = required.find((entry) => entry.check === 'none')
+  if (unchecked) return unchecked
+  if (required[0]) {
+    const empty = [...new Set(required.flatMap((entry) => entry.whenEmpty.filter((cell) => isEmptyReference(cell, own, all))))]
+    if (sameValue(mismatch.expected, withZeros(sheet, golden, empty, all)[mismatch.cell] ?? null, isIntegerCell(sheet, mismatch.cell))) return required[0]
+  }
+  // Prüfhinweis ohne Grundlage: Unter der Richtlinie „wie die Vorlage“ muss der Rechenkern genau den Wert der Vorlage liefern.
+  const withoutBasis = entries.find((entry) => entry.kind === 'withoutBasis')
+  return withoutBasis && sameValue(mismatch.expected, likeTemplate(sheet, golden, all)[mismatch.cell] ?? null) ? withoutBasis : undefined
 }
 
 /** Ergebnisse aller Blätter des Falls (Verknüpfungen aus anderen Blättern eingeschlossen). */
-export function caseWorkspace(sheet: AvailableSheet, golden: GoldenCase): Record<string, CellMap> {
+export function caseWorkspace(sheet: AvailableSheet, golden: GoldenCase, policy?: MissingPolicy): Record<string, CellMap> {
   // Listenblätter (Blatt 17): ein Fall ist eine Stichprobeneinheit.
-  if (sheet.definition.layout === 'list') return { [sheet.id]: sheet.compute({ ...defaultInputs(sheet.definition), ...(golden.eingaben as CellMap) }, createContext()) }
-  return computeWorkspace(caseState(sheet, golden))
+  if (sheet.definition.layout === 'list') return { [sheet.id]: evaluateSheet(sheet, { ...defaultInputs(sheet.definition), ...(golden.eingaben as CellMap) }, createContext({ policy })).cells }
+  return computeWorkspace(caseState(sheet, golden), involvedSheets(sheet, golden), policy)
+}
+
+/** Blatt, aus dem die Methodenblätter ihre Verknüpfungen beziehen. */
+const POPULATION_SHEET = '02_Grundgesamtheit'
+
+/**
+ * Blätter, die für einen Fall gerechnet werden müssen: das Blatt selbst, Blatt 02
+ * und jedes Blatt, in das der Fall Eingaben schreibt. Die übrigen Blätter tragen
+ * nichts bei; sie mitzurechnen kostete nur Zeit.
+ */
+export function involvedSheets(sheet: AvailableSheet, golden: GoldenCase): SheetModule[] {
+  const named = new Set([sheet.id, POPULATION_SHEET, ...Object.keys(golden.eingaben).filter((reference) => reference.includes('!')).map((reference) => reference.split('!')[0] as string)])
+  // Blatt 18 und 20: zusätzlich das gewählte Methodenblatt und Blatt 18, auch wenn der Fall dort nichts einträgt.
+  const choice = METHOD_CHOICE[sheet.id]
+  if (choice) for (const id of [chosenMethod(golden, choice), '18_GFQ_AnhIII']) if (id) named.add(id)
+  return SHEETS.filter((entry) => named.has(entry.id))
+}
+
+/** Zellen, in denen die Webfassung unter der Richtlinie „wie die Vorlage“ etwas anderes zeigt als die Vorlage – Soll: keine. */
+export function templateMismatches(sheet: AvailableSheet, golden: GoldenCase): Mismatch[] {
+  const results = caseWorkspace(sheet, golden, TEMPLATE_POLICY)[sheet.id] ?? {}
+  const mismatches: Mismatch[] = []
+  for (const [reference, expected] of Object.entries(golden.erwartet)) {
+    const [name, cell] = reference.split('!') as [string, string]
+    const actual = results[cell] ?? null
+    if (name === sheet.id && !sameValue(expected, actual, isIntegerCell(sheet, cell))) mismatches.push({ cell, expected, actual })
+  }
+  return mismatches
+}
+
+/** `SAMPLING_TEMPLATES_SHEET=<Blatt>[,<Blatt>…]` beschränkt Abgleich und Abweichungstests auf diese Blätter. */
+export function selectedSheets(): AvailableSheet[] {
+  const only = (process.env.SAMPLING_TEMPLATES_SHEET ?? '').split(',').map((name) => name.trim()).filter(Boolean)
+  return availableSheets().filter((sheet) => only.length === 0 || only.includes(sheet.id))
 }
 
 /** Ergebnisse des Blatts im Zusammenhang des ganzen Arbeitsstands. */

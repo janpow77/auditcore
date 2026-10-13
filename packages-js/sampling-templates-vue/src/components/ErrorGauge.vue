@@ -23,7 +23,7 @@ const threshold = computed(() => x(props.gauge.threshold))
     <text class="fa-st__gauge-text fa-st__gauge-text--threshold" :x="threshold" :y="Y - 14" text-anchor="middle">{{ gauge.thresholdLabel }}</text>
     <circle class="fa-st__gauge-rate" :cx="rate" :cy="Y" r="4.5" />
     <circle v-if="upper !== null" class="fa-st__gauge-upper" :cx="upper" :cy="Y" r="3.5" />
-    <text class="fa-st__gauge-text" :x="LEFT" :y="Y + 26">● {{ t('gaugeRate') }}  ○ {{ t('gaugeUpper') }}</text>
+    <text class="fa-st__gauge-text" :x="LEFT" :y="Y + 26">● {{ gauge.rateLabel }}<template v-if="gauge.upperLabel">  ○ {{ gauge.upperLabel }}</template></text>
     <text class="fa-st__gauge-text" :x="LEFT + WIDTH" :y="Y + 26" text-anchor="end">{{ gauge.maxLabel }}</text>
   </svg>
 </template>

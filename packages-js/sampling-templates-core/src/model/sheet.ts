@@ -5,6 +5,7 @@
 import { isBlank } from '../excel/index'
 import { PARAMETERS } from '../sheets/01_Parameter/index'
 import { cellsOf, inputFields, type MethodDefinition, type SubsampleRole } from './definition'
+import type { DataTable } from './table'
 import { localizeDefinition, type SheetTexts, type SheetTranslations, type TranslationLocale } from './texts'
 import type { CellAddress, CellMap, Cells, Compute, Deviation, MethodSummary, SheetContext, SheetId, WebHint } from './types'
 
@@ -13,10 +14,14 @@ export interface SampleInputs {
   inputs: CellMap
 }
 
-/** Blatt, das im Katalog steht, dessen Rechenkern aber noch fehlt. */
+/**
+ * Blatt ohne Rechenkern: entweder noch geplant oder – mit `table` – eine
+ * Nachschlagetabelle der Vorlage (Blatt X1a), die als Datentabelle angezeigt wird.
+ */
 export interface PlannedSheet {
   id: SheetId
   available: false
+  table?: DataTable
 }
 
 /** Blatt mit Rechenkern und Methodendefinition. */
@@ -38,7 +43,7 @@ export interface AvailableSheet {
    */
   zeroAssumed?: (results: CellMap) => readonly ZeroAssumption[]
   /** Nur Listenblätter (Blatt 17): Summen über alle Einheiten für die Übernahme in ein Methodenblatt. */
-  totals?: (rows: readonly CellMap[], context: SheetContext) => SubsampleTotals
+  totals?: (rows: readonly CellMap[], context: SheetContext, needs?: SubsampleNeeds) => SubsampleTotals
   /** Arbeitsübersetzungen der Texte des Blatts; Deutsch ist der Wortlaut der Vorlage. */
   translations?: SheetTranslations
   /** Von `localizeSheet` gesetzt: die Übersetzung, in der das Blatt gerade angezeigt wird. */
@@ -51,6 +56,8 @@ export interface ZeroAssumption {
   input: CellAddress
   /** Zellen, deren Wert davon abhängt. */
   cells: readonly CellAddress[]
+  /** Fallart der Richtlinie (`model/policy.ts`); Standard `sampleDeviation`. */
+  kind?: 'sampleDeviation' | 'partialErrorSum' | 'requiredInput'
 }
 
 /** Summen der Unterstichproben je Rolle; `null`, solange keine Einheit dazu beiträgt. */
@@ -59,6 +66,24 @@ export type SubsampleTotals = Readonly<Record<SubsampleRole, number | null>> & {
   units: number
   /** Einheiten, deren Fehler bzw. Fehlerquote noch nicht bestimmt ist. */
   incomplete: number
+  /** Summen je Schicht und Zeitraum, soweit das Methodenblatt danach unterscheidet (`needs`). */
+  groups?: readonly SubsampleGroup[]
+  /** Einheiten ohne die Schicht- bzw. Zeitraumangabe, die das Methodenblatt braucht; sie gehen in keine Gruppe ein. */
+  unassigned?: number
+}
+
+/** Wonach das Methodenblatt die Summen der Unterstichproben unterscheidet. */
+export interface SubsampleNeeds {
+  /** Geschichtetes Verfahren: Summen je Schicht. */
+  stratum: boolean
+  /** Mehrere Stichprobenzeiträume: Summen je Zeitraum. */
+  period: boolean
+}
+
+/** Summen der Einheiten einer Schicht und eines Zeitraums; `null` heißt „nicht unterschieden“. */
+export type SubsampleGroup = Readonly<Record<SubsampleRole, number | null>> & {
+  stratum: number | null
+  period: number | null
 }
 
 export type SheetModule = PlannedSheet | AvailableSheet
@@ -66,6 +91,11 @@ export type SheetModule = PlannedSheet | AvailableSheet
 /** Platzhalter für ein Blatt ohne Rechenkern. */
 export function plannedSheet(id: SheetId): PlannedSheet {
   return { id, available: false }
+}
+
+/** Nachschlagetabelle anmelden: kein Rechenblatt, aber als Datentabelle anzeigbar. */
+export function tableSheet(id: SheetId, table: DataTable): PlannedSheet {
+  return { id, available: false, table }
 }
 
 /** Blatt mit Rechenkern anmelden. */

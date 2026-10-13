@@ -48,6 +48,11 @@ export interface FieldDefinition {
   web?: boolean
   /** Ziel der Übernahme aus den Unterstichproben (Blatt 17) in ein Methodenblatt. */
   subsample?: SubsampleRole
+  /**
+   * Stichprobenzeitraum des Felds (1–3) in Blättern mit mehreren Zeiträumen. Ordnet die
+   * Übernahme aus den Unterstichproben zu: Übernommen werden nur Einheiten dieses Zeitraums.
+   */
+  period?: number
 }
 
 /**
@@ -78,7 +83,13 @@ export interface SummaryDefinition {
   /** `reason`: Zelle, deren Text erklärt, warum die Hauptgröße fehlt (z. B. „TE ≤ AE“). */
   primary: { cell: CellAddress; label: string; unit: string; reason?: CellAddress }
   rows: readonly SummaryRow[]
-  gauge?: { threshold: CellAddress; rate: CellAddress; upper?: CellAddress }
+  /**
+   * Skala gegen die Wesentlichkeitsschwelle. `upper` entfällt, wo es keine obere
+   * Fehlergrenze gibt (nichtstatistische Verfahren). `rateLabel`/`upperLabel`:
+   * Begriffe des Blatts, wenn sie von „Gesamtfehlerquote“/„obere Fehlergrenze“
+   * abweichen (Altvorlagen).
+   */
+  gauge?: { threshold: CellAddress; rate: CellAddress; upper?: CellAddress; rateLabel?: string; upperLabel?: string }
 }
 
 export interface MethodDefinition {
@@ -97,6 +108,8 @@ export interface MethodDefinition {
   layout?: 'form' | 'list'
   /** Listenblatt: Zellen, die die Übersicht der Einheiten als Spalten zeigt. */
   listColumns?: readonly CellAddress[]
+  /** Nachschlagetabellen der Vorlage, die zu diesem Verfahren gehören (Blatt X1: X1a). */
+  tables?: readonly SheetId[]
 }
 
 /** Alle Felder in der Reihenfolge der Vorlage. */
@@ -119,14 +132,40 @@ export function cellsOf(field: FieldDefinition): CellAddress[] {
   return field.columns ? field.columns.map((column) => `${column}${rowNumber(field.cell)}`) : [field.cell]
 }
 
+/**
+ * Schichtspalten des Blatts in der Reihenfolge der Schichten: die Spalten der
+ * ersten Schichtzeile (in den Blättern 04–16 D–J und AA–AM, in der Altvorlage
+ * X3 E–K und AA–AM); leer bei Blättern ohne Schichten.
+ */
+export function strataColumnsOf(definition: MethodDefinition): readonly string[] {
+  return fieldsOf(definition).find((field) => field.columns)?.columns ?? []
+}
+
 /** Alle Eingabezellen eines Blatts (Schichtzeilen aufgelöst). */
 export function inputCells(definition: MethodDefinition): CellAddress[] {
   return inputFields(definition).flatMap(cellsOf)
 }
 
+/** Zelle → Feld je Definition; Definitionen sind unveränderlich, der Index entsteht einmal. */
+const fieldIndex = new WeakMap<MethodDefinition, Map<CellAddress, FieldDefinition>>()
+
+function indexOfFields(definition: MethodDefinition): Map<CellAddress, FieldDefinition> {
+  let index = fieldIndex.get(definition)
+  if (!index) {
+    index = new Map()
+    for (const field of fieldsOf(definition)) {
+      for (const cell of [field.cell, ...(field.total ? [field.total] : []), ...(field.columns ? cellsOf(field) : [])]) {
+        if (!index.has(cell)) index.set(cell, field)
+      }
+    }
+    fieldIndex.set(definition, index)
+  }
+  return index
+}
+
 /** Feld zu einer Zelle; auch Schichtzellen und Summenzellen einer Schichtzeile werden gefunden. */
 export function findField(definition: MethodDefinition, cell: CellAddress): FieldDefinition | undefined {
-  return fieldsOf(definition).find((field) => field.cell === cell || field.total === cell || (field.columns !== undefined && cellsOf(field).includes(cell)))
+  return indexOfFields(definition).get(cell)
 }
 
 /** Vorgaben der Vorlage für ein leeres Formular. */

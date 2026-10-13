@@ -8,7 +8,8 @@ import { isBlank, toneOf } from '../excel/index'
 import { fieldOptions, formatFieldInput, formatFieldValue, type ChoiceOption } from '../format/numbers'
 import type { Translate } from '../i18n/messages'
 import { cellsOf, findField, type FieldDefinition, type FieldKind, type SubsampleRole, type ValueType } from '../model/definition'
-import { computeLikeTemplate, isEmptyReference, type AvailableSheet } from '../model/sheet'
+import { evaluateSheet, type SheetEvaluation } from '../model/evaluate'
+import type { AvailableSheet, ZeroAssumption } from '../model/sheet'
 import { translateValue } from '../model/texts'
 import type { CellAddress, CellMap, CellValue, SheetContext, SheetId, Tone } from '../model/types'
 
@@ -62,8 +63,8 @@ export interface SectionView {
 }
 
 interface Scope {
-  /** Gegenrechnung wie die Vorlage (leere Eingaben als 0). */
-  template: CellMap
+  /** Auswertung unter der Richtlinie für fehlende Angaben. */
+  evaluation: SheetEvaluation
   /** Zelle → fehlende Eingaben, die als 0 gerechnet sind. */
   assumed: ReadonlyMap<CellAddress, readonly CellAddress[]>
   sheet: AvailableSheet
@@ -80,14 +81,9 @@ function controlOf(field: FieldDefinition): RowControl {
   return field.type === 'text' ? 'text' : 'number'
 }
 
-/**
- * Leere Eingaben, mit denen die Vorlage als 0 weiterrechnen würde. Leer, wenn die
- * Zelle einen Wert hat oder auch die Vorlage keinen zeigte (Gegenrechnung `template`).
- */
-function missingInputs(scope: Scope, cell: CellAddress): string[] {
-  if (!isBlank(scope.results[cell]) || isBlank(scope.template[cell])) return []
-  const entries = scope.sheet.deviations.filter((entry) => entry.cell === cell)
-  return [...new Set(entries.flatMap((entry) => entry.whenEmpty.filter((input) => isEmptyReference(input, scope.results, scope.context.sheets))))]
+/** Leere Pflichteingaben, derentwegen die Zelle offen ist („Angabe fehlt“); leer, wenn auch die Vorlage keinen Wert zeigte. */
+function missingInputs(scope: Scope, cell: CellAddress): readonly string[] {
+  return isBlank(scope.results[cell]) ? (scope.evaluation.lacking.get(cell) ?? []) : []
 }
 
 /** Bezeichnung einer Eingabe für Hinweise: „Bezeichnung (Zelle)“, bei anderen Blättern „Blatt!Zelle“. */
@@ -154,9 +150,9 @@ function rowOf(scope: Scope, field: FieldDefinition): RowView {
 }
 
 /** Betroffene Zelle → fehlende Eingaben, die wie in der Vorlage als 0 gerechnet sind. */
-export function assumedCells(sheet: AvailableSheet, results: CellMap): Map<CellAddress, CellAddress[]> {
+export function assumedCells(assumed: readonly ZeroAssumption[]): Map<CellAddress, CellAddress[]> {
   const cells = new Map<CellAddress, CellAddress[]>()
-  for (const assumption of sheet.zeroAssumed?.(results) ?? []) {
+  for (const assumption of assumed) {
     for (const cell of assumption.cells) cells.set(cell, [...(cells.get(cell) ?? []), assumption.input])
   }
   return cells
@@ -164,7 +160,8 @@ export function assumedCells(sheet: AvailableSheet, results: CellMap): Map<CellA
 
 /** Abschnitte und Zeilen eines Blatts in der Reihenfolge der Vorlage. */
 export function buildSections(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate): SectionView[] {
-  const scope: Scope = { sheet, inputs, results, context, t, assumed: assumedCells(sheet, results), template: computeLikeTemplate(sheet, inputs, results, context) }
+  const evaluation = evaluateSheet(sheet, inputs, context)
+  const scope: Scope = { sheet, inputs, results, context, t, assumed: assumedCells(evaluation.assumed), evaluation }
   return sheet.definition.sections.map((section) => ({
     id: section.id,
     title: section.title,

@@ -10,11 +10,11 @@ Prüfbehörde gibt ein, lädt Ergebnisse herunter und speichert ihren Arbeitssta
 als Datei; es gibt keinen Server, keine Anmeldung und keine Netzanfragen.
 Gerechnet wird in
 [`@auditcore/sampling-templates-core`](../sampling-templates-core/README.md).
-Stand 0.1.0: rechenbar sind die Blätter 02 (Grundgesamtheit), 03 und 04
-(MUS-Standardansatz, ein Zeitraum, ungeschichtet und geschichtet) und 17
-(Unterstichproben); die übrigen Verfahren erscheinen als „noch nicht
-verfügbar“, die Arbeitsschritte Gesamtfehlerquote und Bericht als „folgt“.
-Eine React-Fassung gibt es nicht.
+Stand 0.1.0: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
+Zufallsstichprobenverfahren, nichtstatistische Verfahren, Altvorlagen von
+2017), dazu die Arbeitsschritte Grundgesamtheit, Unterstichproben,
+Gesamtfehlerquote und Bericht (Druckfassung auf einer A4-Seite). Eine
+React-Fassung gibt es nicht.
 
 ## Installation
 
@@ -92,7 +92,8 @@ Schichtung), `MethodBar`, `SheetForm`/`SheetField` (Formular aus der
 Methodendefinition), `ResultPanel`/`ErrorGauge`, `WorkspaceMenu`, `NoticeList`,
 `VariantTile`, `StrataTable` (Schichtzeilen mit eigenem Rollbereich),
 `UnitList` (Listenblatt mit Einfügen aus der Zwischenablage), `MethodGuide`
-(Wegweiser), `ImportPreview` (Vorschau der ausgefüllten Vorlage); Zustand und Dateiaktionen als Composables `useSamplingSession`,
+(Wegweiser), `ImportPreview` (Vorschau der ausgefüllten Vorlage),
+`DataTableDialog` (Nachschlagetabelle X1a), `ReportView` (Bericht); Zustand und Dateiaktionen als Composables `useSamplingSession`,
 `useFileActions`, `useLocalDraft`, `useUnloadGuard`, `useFileDrop`,
 `useAnnouncer`.
 

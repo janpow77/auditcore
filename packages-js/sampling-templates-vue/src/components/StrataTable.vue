@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { MAX_STRATA, TEMPLATE_STRATA, type CellAddress, type CellValue, type RowView, type Translate } from '@auditcore/sampling-templates-core'
-import { FaButton, useId } from '@auditcore/ui'
+import { FaBadge, FaButton, useId } from '@auditcore/ui'
 import CellControl from './CellControl.vue'
 
 /**
@@ -34,6 +34,7 @@ const TEMPLATE_COUNT = TEMPLATE_STRATA.length
               <span class="fa-st__label-text">{{ row.type === 'percent' && row.kind === 'input' ? `${row.label} ${t('percentSuffix')}` : row.label }}</span>
               <span v-if="row.formula" class="fa-st__formula">{{ row.formula }}</span>
               <span v-if="row.hint" class="fa-st__hint">{{ row.hint }}</span>
+              <span v-if="row.interpretation" class="fa-st__hint" data-interpretation><FaBadge class="fa-st__tag" tone="accent" :label="t('interpretation')" /> {{ row.interpretation }}</span>
             </th>
             <td :data-cell="row.strata?.total?.cell">
               <p v-if="row.strata?.total" class="fa-st__value" :class="{ 'fa-st__value--missing': row.strata.total.missing }">{{ row.strata.total.display }}</p>

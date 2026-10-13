@@ -331,3 +331,15 @@
 /* Datenmarke der Anwendung (Slot `mark`) und Kennzeichnung noch folgender Arbeitsschritte. */
 .fa-st__mark { display: inline-flex; align-items: center; gap: var(--fa-space-2); font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
 .fa-st__step-note { font-weight: 400; }
+
+/* Nachschlagetabelle der Vorlage (Blatt X1a): eigener Rollbereich, klebende Kopfzeile und Zeilenüberschrift. */
+.fa-st__datatable { display: grid; gap: var(--fa-space-3); min-width: 0; }
+.fa-st__datatable-scroll { overflow: auto; max-height: 60vh; border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); }
+.fa-st__datatable-scroll:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-st__datatable-table { border-collapse: collapse; width: 100%; font: var(--fa-font-size-sm) / 1.3 var(--fa-font-mono); font-variant-numeric: tabular-nums; }
+.fa-st__datatable-table th,
+.fa-st__datatable-table td { padding: var(--fa-space-1) var(--fa-space-3); text-align: right; white-space: nowrap; border-bottom: 1px solid var(--fa-color-border); }
+.fa-st__datatable-table thead th,
+.fa-st__datatable-table thead td { position: sticky; top: 0; background: var(--fa-color-surface-sunken); color: var(--fa-color-text); font-family: var(--fa-font-sans); }
+.fa-st__datatable-table thead tr + tr th { top: 1.9em; }
+.fa-st__datatable-table tbody th { position: sticky; left: 0; background: var(--fa-color-surface); color: var(--fa-color-text); font-weight: 600; }

@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { WORKFLOW_STEPS, findAvailableSheet, type MessageKey, type MethodDefinition, type SheetModule, type Translate, type WorkflowStep } from '@auditcore/sampling-templates-core'
+import { WORKFLOW_STEPS, findAvailableSheet, tableOf, type MessageKey, type MethodDefinition, type SheetModule, type Translate, type WorkflowStep } from '@auditcore/sampling-templates-core'
 import { FaButton } from '@auditcore/ui'
+import { computed } from 'vue'
 
 /** Gewähltes Verfahren als Kapsel und die Arbeitsschritte der Vorlage zum Umschalten. */
 const props = defineProps<{ definition: MethodDefinition | null; step: WorkflowStep['id']; sheets: readonly SheetModule[]; t: Translate }>()
-const emit = defineEmits<{ change: []; step: [id: WorkflowStep['id']] }>()
+const emit = defineEmits<{ change: []; step: [id: WorkflowStep['id']]; table: [sheet: string] }>()
+
+/** Nachschlagetabellen des gewählten Verfahrens, die im Blattbestand als Datentabelle vorliegen. */
+const tables = computed(() => (props.definition?.tables ?? []).filter((sheet) => tableOf(sheet, props.sheets) !== undefined))
 
 const STEP_KEYS: Readonly<Record<WorkflowStep['id'], MessageKey>> = {
   population: 'stepPopulation',
@@ -27,6 +31,7 @@ function choose(step: WorkflowStep): void {
       <span class="fa-st__chip-no">{{ t('sheetNumber', { number: definition.number }) }}</span>
       <strong>{{ definition.shortTitle }}</strong>
       <FaButton size="sm" :label="t('changeMethod')" @click="$emit('change')" />
+      <FaButton v-for="sheet in tables" :key="sheet" size="sm" :label="t('showTable', { name: tableOf(sheet, sheets)?.title ?? sheet })" :data-action="`table-${sheet}`" @click="emit('table', sheet)" />
     </div>
     <nav class="fa-st__stepnav" :aria-label="t('steps')">
       <ol class="fa-st__steps">

@@ -1,12 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { availableSheets } from '../src/sheets/registry'
-import { compareCase, loadGolden } from './golden'
-
-/** `SAMPLING_TEMPLATES_SHEET=<Blatt>` beschränkt den Lauf auf ein Blatt. */
-const ONLY = process.env.SAMPLING_TEMPLATES_SHEET ?? ''
+import { compareCase, loadGolden, selectedSheets } from './golden'
 
 describe('Golden-Abgleich mit der Vorlage (LibreOffice-Neuberechnung)', () => {
-  for (const sheet of availableSheets().filter((entry) => !ONLY || entry.id === ONLY)) {
+  for (const sheet of selectedSheets()) {
     const cases = loadGolden(sheet.id)
     it(`${sheet.id}: mindestens 12 Fälle`, () => expect(cases.length).toBeGreaterThanOrEqual(12))
     for (const golden of cases) {

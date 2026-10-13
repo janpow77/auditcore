@@ -1,12 +1,12 @@
 /** Arbeitsstand als Datei schreiben. */
 import { isBlank } from '../excel/index'
 import { createTranslate, type Translate } from '../i18n/messages'
-import { createContext, type SheetModule } from '../model/sheet'
+import type { SheetModule } from '../model/sheet'
 import type { CellMap, CellValue, SheetId } from '../model/types'
 import { SHEETS } from '../sheets/registry'
 import { buildHints } from '../view/summaryView'
 import { canonicalInputs, checksumOf } from './canonical'
-import { computeWorkspace, computedCells } from './compute'
+import { computeWorkspace, computedCells, contextFor } from './compute'
 import { workspaceFileName } from './filenames'
 import {
   ENGINE_VERSION,
@@ -63,7 +63,7 @@ function stored(state: WorkspaceState, sheets: readonly SheetModule[], t: Transl
     const computed = results[sheet.id]
     if (!sheet.available || !computed || !(state.sheets[sheet.id] || sheet.id === state.activeMethod)) continue
     ergebnisse[sheet.id] = computedCells(sheet, computed)
-    const web = buildHints(sheet, (state.sheets[sheet.id] as CellMap | undefined) ?? {}, computed, createContext({ sheets: results }), t).filter((hint) => hint.source === 'web')
+    const web = buildHints(sheet, (state.sheets[sheet.id] as CellMap | undefined) ?? {}, computed, contextFor(sheet.id, state, results), t).filter((hint) => hint.source === 'web')
     if (web.length) hinweise[sheet.id] = web.map((hint) => ({ id: hint.id, text: hint.text }))
   }
   return { ergebnisse, hinweise }
