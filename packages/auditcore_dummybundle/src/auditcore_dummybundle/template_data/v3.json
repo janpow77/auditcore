@@ -1,0 +1,233 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v3",
+  "id": "V3",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Gesamtbelegliste des Vorhabens",
+  "purpose": "Alle ausführlichen Beleglisten eines oder mehrerer Vorhaben in einer Tabelle mit vorangestellter Spalte „Quelldatei“ (38 Spalten).",
+  "legal_basis": "VO (EU) 2021/1060, Art. 74 Abs. 1 Buchst. a (Verwaltungsüberprüfung)",
+  "sources": [
+    "Aufbau einer in der Förderpraxis gebräuchlichen Belegliste; Spalten nach dem Vorlagenvorschlag vom 13.10.2026 (V3)."
+  ],
+  "open_points": [
+    "Auswahlwerte der Spalten Vergabe, Einheit/SEK, Kürzungsgrund, Abhilfemaßnahme, Unregelmäßigkeit, Prüfstatus und Belegtyp sind nicht belegt; die Spalten bleiben leer.",
+    "Standardeinheitskosten werden nicht erzeugt; die zugehörigen Spalten bleiben leer."
+  ],
+  "tables": [
+    {
+      "name": "Gesamtbelegliste",
+      "title": "Gesamtbelegliste",
+      "source": "receipts",
+      "columns": [
+        {
+          "header": "Quelldatei",
+          "kind": "text",
+          "field": "source_file"
+        },
+        {
+          "header": "Version",
+          "kind": "int",
+          "field": "list_version"
+        },
+        {
+          "header": "Belegnummer",
+          "kind": "int",
+          "field": "receipt_no"
+        },
+        {
+          "header": "Rechnungsnummer / ext. Referenz",
+          "kind": "text",
+          "field": "invoice_no"
+        },
+        {
+          "header": "Kostenart",
+          "kind": "text",
+          "field": "cost_category"
+        },
+        {
+          "header": "Rechnungsdatum",
+          "kind": "date",
+          "field": "invoice_date"
+        },
+        {
+          "header": "Datum der Bezahlung",
+          "kind": "date",
+          "field": "payment_date"
+        },
+        {
+          "header": "Rechnungssteller",
+          "kind": "text",
+          "field": "supplier_name"
+        },
+        {
+          "header": "Verwendung",
+          "kind": "text",
+          "field": "purpose"
+        },
+        {
+          "header": "Gesamt Brutto",
+          "kind": "amount",
+          "field": "gross",
+          "sum": true
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR"
+        },
+        {
+          "header": "Gesamt Netto",
+          "kind": "amount",
+          "field": "net",
+          "sum": true
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR"
+        },
+        {
+          "header": "projektbez. Betrag",
+          "kind": "amount",
+          "field": "project_related",
+          "sum": true
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR"
+        },
+        {
+          "header": "Einnahmebetrag, projektbezogen",
+          "kind": "amount",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR"
+        },
+        {
+          "header": "Vergabe",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer."
+        },
+        {
+          "header": "Gebrauchtanschaffung",
+          "kind": "bool",
+          "field": "used_purchase"
+        },
+        {
+          "header": "Jahr/SEK",
+          "kind": "text",
+          "note": "Standardeinheitskosten werden nicht erzeugt."
+        },
+        {
+          "header": "Monat/SEK",
+          "kind": "text",
+          "note": "Standardeinheitskosten werden nicht erzeugt."
+        },
+        {
+          "header": "Geleistete Einheit/SEK",
+          "kind": "text",
+          "note": "Standardeinheitskosten werden nicht erzeugt."
+        },
+        {
+          "header": "Einheit/SEK",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer."
+        },
+        {
+          "header": "SEK-Satz",
+          "kind": "amount",
+          "note": "Standardeinheitskosten werden nicht erzeugt."
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR"
+        },
+        {
+          "header": "Kommentar des Kunden",
+          "kind": "text",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Kürzungsbetrag",
+          "kind": "amount",
+          "field": "reduction",
+          "sum": true
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR"
+        },
+        {
+          "header": "anerkannter Betrag",
+          "kind": "amount",
+          "field": "recognised",
+          "sum": true
+        },
+        {
+          "header": "Währung",
+          "kind": "text",
+          "const": "EUR"
+        },
+        {
+          "header": "Kürzungsgrund",
+          "kind": "text",
+          "field": "reduction_reason",
+          "note": "Neutraler Platzhalter; Katalog nicht belegt."
+        },
+        {
+          "header": "Direktvergabe",
+          "kind": "bool",
+          "field": "direct_award"
+        },
+        {
+          "header": "Abhilfemaßnahme",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer."
+        },
+        {
+          "header": "Unregelmäßigkeit",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer."
+        },
+        {
+          "header": "Bemerkung intern",
+          "kind": "text",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Kommentar für den Kunden (extern)",
+          "kind": "text",
+          "note": "Bleibt leer."
+        },
+        {
+          "header": "Prüfstatus",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer."
+        },
+        {
+          "header": "Belegtyp",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer."
+        }
+      ]
+    }
+  ],
+  "content_hash": "3f43c83c4feec7c9f0acd0bf6dd6ca48c1cc1fd38effa7b45d169770957e90d7",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"
+  }
+}
