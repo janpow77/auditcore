@@ -18,12 +18,13 @@ python -m pip install auditcore_procurement \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.4 im
-Release v0.4.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.5,
+zuletzt im Release v0.12.0; 0.3.0 mit den EU-Schwellenwerten je Regime folgt
+mit dem nächsten Release, Versionen und Hashes stehen dann unter
 `https://janpow77.github.io/auditcore/simple/auditcore-procurement/`):
 
 ```text
-auditcore_procurement @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_procurement-0.2.4-py3-none-any.whl#sha256=4b2271bf17bdd39955d56091b6cb77e8db275e56f1c8b1bbccd2769b117917e7
+auditcore_procurement @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_procurement-0.2.5-py3-none-any.whl#sha256=52636859cfed991b4e7a11af7560021a8adee396c47ca312c6108043ef58fd05
 ```
 
 Ab 0.2.2 gehört `auditcore_common` als eigene Zeile dazu. Debian/Ubuntu über
@@ -234,8 +235,8 @@ gleich, `inspect_notice` meldet sie als `ambiguous_amount`.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Pflicht: `auditcore_common==0.1.0`. Optional `lxml>=4.9.2`
-(`[html]`) und `auditcore_harvest==0.1.3` (`[sources]`). Keine Abhängigkeit
+Python ≥ 3.11. Pflicht: `auditcore_common==0.2.1`. Optional `lxml>=4.9.2`
+(`[html]`) und `auditcore_harvest==0.1.4` (`[sources]`). Keine Abhängigkeit
 von der Plattform `auditcore`, Webframeworks oder Datenbanken.
 
 ## Sicherheit und Datenschutz
