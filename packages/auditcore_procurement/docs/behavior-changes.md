@@ -82,6 +82,54 @@ und SHA-256 des gelesenen Dokuments je Zeitraum.
   year_bound=True)` übernimmt damit 2014–2027; mit `eu_version="2026.09.2"` bleibt
   das Verhalten von 0.1.0 reproduzierbar.
 
+## Profil 2026.10.1: EU-Schwellenwerte aller Regime (13.10.2026)
+
+Anlass: Das Paket soll die EU-Schwellenwerte vollständig führen (Auftrag vom
+13.10.2026; der Schwellenwert-Rechner der Anwendung zeigte Sektorenaufträge,
+Konzessionen sowie soziale und andere besondere Dienstleistungen als „nicht
+hinterlegt“). Kein bisheriges Ergebnis ändert sich; die Profile 2026.09.1 bis
+2026.09.3 sind bytegleich.
+
+Abruf am 13.10.2026 beim Amt für Veröffentlichungen
+(`http://publications.europa.eu/resource/celex/<CELEX>`, deutsche Fassung). Die
+Liste der Änderungsrechtsakte je Richtlinie stammt aus der Cellar-Abfrage
+(`cdm:resource_legal_amends_resource_legal`). Werte in EUR ohne MwSt.
+
+| Zeitraum | RL 2014/24/EU: Bau / L+D zentral / L+D subzentral | RL 2014/25/EU: Bau / L+D | RL 2014/23/EU: Konzession | RL 2009/81/EG: Bau / L+D |
+|---|---|---|---|---|
+| 01.01.2014–31.12.2015 | 5.186.000 / 134.000 / 207.000 – VO (EU) Nr. 1336/2013 Art. 2 (RL 2004/18/EG) | 5.186.000 / 414.000 – VO (EU) Nr. 1336/2013 Art. 1 (RL 2004/17/EG) | nicht eingetragen | 5.186.000 / 414.000 – VO (EU) Nr. 1336/2013 Art. 3 |
+| 01.01.2016–31.12.2017 | 5.225.000 / 135.000 / 209.000 – VO (EU) 2015/2342 (bis 17.04.2016), Del. VO (EU) 2015/2170 | 5.225.000 / 418.000 – VO (EU) 2015/2341 (bis 17.04.2016), Del. VO (EU) 2015/2171 | 5.225.000 ab 18.04.2016 – Del. VO (EU) 2015/2172 | 5.225.000 / 418.000 – VO (EU) 2015/2340 |
+| 01.01.2018–31.12.2019 | 5.548.000 / 144.000 / 221.000 – Del. VO (EU) 2017/2365 | 5.548.000 / 443.000 – Del. VO (EU) 2017/2364 | 5.548.000 – Del. VO (EU) 2017/2366 | 5.548.000 / 443.000 – VO (EU) 2017/2367 |
+| 01.01.2020–31.12.2021 | 5.350.000 / 139.000 / 214.000 – Del. VO (EU) 2019/1828 | 5.350.000 / 428.000 – Del. VO (EU) 2019/1829 | 5.350.000 – Del. VO (EU) 2019/1827 | 5.350.000 / 428.000 – Del. VO (EU) 2019/1830 |
+| 01.01.2022–31.12.2023 | 5.382.000 / 140.000 / 215.000 – Del. VO (EU) 2021/1952 | 5.382.000 / 431.000 – Del. VO (EU) 2021/1953 | 5.382.000 – Del. VO (EU) 2021/1951 | 5.382.000 / 431.000 – Del. VO (EU) 2021/1950 |
+| 01.01.2024–31.12.2025 | 5.538.000 / 143.000 / 221.000 – Del. VO (EU) 2023/2495 | 5.538.000 / 443.000 – Del. VO (EU) 2023/2496 | 5.538.000 – Del. VO (EU) 2023/2497 | 5.538.000 / 443.000 – Del. VO (EU) 2023/2510 |
+| 01.01.2026–31.12.2027 | 5.404.000 / 140.000 / 216.000 – Del. VO (EU) 2025/2152 | 5.404.000 / 432.000 – Del. VO (EU) 2025/2150 | 5.404.000 – Del. VO (EU) 2025/2151 | 5.404.000 / 432.000 – Del. VO (EU) 2025/2487 |
+
+Soziale und andere besondere Dienstleistungen: 750.000 EUR (Art. 4 Buchst. d
+RL 2014/24/EU, Anhang XIV) und 1.000.000 EUR (Art. 15 Buchst. c RL 2014/25/EU,
+Anhang XVII), eingetragen vom 18.04.2016 bis 31.12.2027. Keine der
+Änderungsverordnungen berührt diese Buchstaben.
+
+- **Richtlinienwechsel 2016:** Im Block `eu_regimes` ist der Zeitraum 2016–2017
+  für öffentliche Aufträge und Sektorenaufträge am 17./18.04.2016 geteilt und
+  nennt je Teil die Verordnung zur damals geltenden Richtlinie; die Werte sind
+  gleich. Die Jahrestabelle der Vorprüfung behält den durchgehenden Zeitraum.
+  Konzessionen und der Schwellenwert für soziale und andere besondere
+  Dienstleistungen beginnen am 18.04.2016 (Ablauf der Umsetzungsfrist); ein
+  Stichtag davor ergibt „nicht hinterlegt“.
+- **Verteidigungsbereich nach RL 2014/24/EU:** Art. 4 Buchst. b gilt bei
+  Lieferaufträgen öffentlicher Auftraggeber im Verteidigungsbereich nur für
+  Waren nach Anhang III, sonst Buchst. c. Das Profil führt dafür keine eigene
+  Auftragsart; der Hinweis steht bei der Auftraggeberart `central`.
+- **Nicht eingetragen:** vor 2014 und ab 2028; Baukonzessionen nach Art. 56
+  RL 2004/18/EG vor dem 18.04.2016; subventionierte Aufträge (Art. 13
+  RL 2014/24/EU); Wettbewerbe als eigene Auftragsart; die Regeln zur Schätzung
+  des Auftragswerts.
+- **`CURRENT_PROFILE`** ist jetzt 2026.10.1. `profile_from_ruleset(...,
+  year_bound=True)` übernimmt damit auch die Regimetabelle; der Fingerprint des
+  so gebauten Profils ändert sich, die Ergebnisse nicht. Mit
+  `eu_version="2026.09.3"` bleibt der bisherige Fingerprint.
+
 ## Offene fachliche Entscheidungen (HUMAN_DECISION_REQUIRED)
 
 1. **Nationale Stufen** (1.000/25.000 €), Verfahrenszuordnung nach HVTG und

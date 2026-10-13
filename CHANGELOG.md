@@ -15,6 +15,16 @@
   kommen aus der Liste des Feldgenerators. Die Köpfe der Vorlagen
   V5 und V6 stammen aus dem Amtsblatt (ABl. L 231 vom 30.6.2021, deutsche
   Fassung, Abruf 13.10.2026). `auditcore_dummygenerator` bleibt unverändert.
+- `auditcore_procurement` (unveröffentlicht): Profil `procurement.hvtg 2026.10.1`
+  führt die EU-Schwellenwerte 2014–2027 vollständig – neben öffentlichen Bau-,
+  Liefer- und Dienstleistungsaufträgen (RL 2014/24/EU) jetzt Sektorenaufträge
+  (RL 2014/25/EU), Konzessionen (RL 2014/23/EU), Verteidigung und Sicherheit
+  (RL 2009/81/EG) sowie soziale und andere besondere Dienstleistungen. Jeder
+  Wert trägt Verordnung, ABl.-Fundstelle, CELEX-Nummer, Prüfsumme und Wortlaut
+  des am 13.10.2026 abgerufenen amtlichen Textes. Neue Funktionen
+  `eu_catalogue`, `check_eu_threshold`, `eu_regime_threshold` werten nur den
+  EU-Teil aus; bisherige Aufrufe und die Profile bis 2026.09.3 bleiben
+  unverändert. `CURRENT_PROFILE` zeigt auf 2026.10.1.
 - Release v0.12.0 (12.10.2026) veröffentlicht und in `docs/deployment/package-feed.md`
   als aktueller Stand dokumentiert: `auditcore_dataprotection` 0.6.0 mit dem
   Datenschutz-Assistenten, `auditcore_invoicesynth` 0.3.0, `auditcore_runner` 0.1.1,
