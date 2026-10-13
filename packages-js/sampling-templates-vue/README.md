@@ -10,10 +10,12 @@ Prüfbehörde gibt ein, lädt Ergebnisse herunter und speichert ihren Arbeitssta
 als Datei; es gibt keinen Server, keine Anmeldung und keine Netzanfragen.
 Gerechnet wird in
 [`@auditcore/sampling-templates-core`](../sampling-templates-core/README.md).
-Stand 0.1.1: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
+Stand 0.1.2: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
 Zufallsstichprobenverfahren, nichtstatistische Verfahren, Altvorlagen von
 2017), dazu die Arbeitsschritte Grundgesamtheit, Unterstichproben,
-Gesamtfehlerquote und Bericht (Druckfassung auf einer A4-Seite). Eine
+Gesamtfehlerquote und Bericht (Druckfassung: leeres Formular und
+Beispielwerte auf einer A4-Seite, längere Freitexte laufen auf Folgeseiten
+über). Eine
 React-Fassung gibt es nicht.
 
 ## Installation
@@ -30,10 +32,10 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.1.tgz
+npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.2.tgz
 ```
 
-Version 0.1.1 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
+Version 0.1.2 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
 und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
@@ -524,16 +526,19 @@ Geprüft mit 69 Komponententests und 31 Browsertests (Chromium, gebaute Demo mit
 mit Beispielwerten gerechnet, Rundlauf Speichern → Neu → Öffnen, Excel-Export
 → Öffnen, Prüfsummenhinweis, Kontextfluss aus Blatt 02, Schichttabelle (auch
 der Altvorlage X3), Unterstichproben mit Übernahme je Schicht,
-Gesamtfehlerquote, Bericht mit Druckansicht auf einer A4-Seite, Datentabelle
+Gesamtfehlerquote, Bericht mit Druckansicht (PDF mit Seitenzahl: leeres
+Formular und Beispielwerte je eine A4-Seite, im mitgelieferten Chromium und im
+installierten Google Chrome; lange Freitexte auf Folgeseiten), Bericht und
+Menü bei 390 px, Datentabelle
 X1a, Vorschau der ausgefüllten Vorlage, fehlende Angaben, keine Anfrage an
 fremde Hosts, Tokens einer Anwendung; je Blattart hell und dunkel, 1280 px und
 390 px ohne waagerechtes Scrollen, axe-core (WCAG 2.1 A/AA) ohne Verstöße.
 
 ## Abhängigkeiten
 
-`@auditcore/sampling-templates-core@0.1.1` (Rechenkerne, Arbeitsstand, Stile),
+`@auditcore/sampling-templates-core@0.1.2` (Rechenkerne, Arbeitsstand, Stile),
 `@auditcore/ui` ab 0.4.0 (`FaButton`, `FaBadge`, `FaDialog`, Sprache),
-`@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.1`
+`@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.2`
 (Download, Web Storage, Zeitsteuerung); Peer `vue@^3.5.0`. Verwendet werden nur
 Bausteine, die zwischen `@auditcore/ui` 0.4.0 und 0.5.0 bzw. `ui-core` 0.3.0
 und 0.4.0 unverändert sind; deshalb sind beide Fassungen zugelassen.

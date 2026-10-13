@@ -1,5 +1,18 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.2 – 2026-10-14
+
+Befunde der Abnahme des Einbaus (noch nicht veröffentlicht).
+
+- Bericht: Tabellen in eigenem Rollrahmen (`role="region"`, per Tastatur
+  erreichbar); Druck auf einer A4-Seite für leeres Formular und Beispielwerte,
+  auch in Google Chrome (Browsertest mit `page.pdf()` und Seitenzahl).
+- Nach der Wahl eines Blatts liegt der Fokus auf dem Blatt.
+- Die bloße Wahl eines anderen Blatts gilt nicht als Änderung, solange der
+  Arbeitsstand nicht aus einer Datei stammt.
+- Der Excel-Export zählt als Sicherung: Er trägt den vollständigen
+  Arbeitsstand und lässt sich wieder öffnen; der Stand ist danach „gespeichert“.
+
 ## 0.1.1 – 2026-10-13
 
 Auflagen der unabhängigen Gesamtabnahme (noch nicht veröffentlicht).

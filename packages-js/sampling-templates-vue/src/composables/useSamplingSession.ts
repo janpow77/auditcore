@@ -145,7 +145,8 @@ export function useSamplingSession(options: SessionOptions): SamplingSession {
     if (!find(id)) return
     const changed = workspace.value.activeMethod !== null && workspace.value.activeMethod !== id
     workspace.value = { ...workspace.value, activeMethod: id }
-    if (changed) meta.value = { ...meta.value, dirty: true }
+    // Die bloße Wahl eines anderen Blatts ist keine Änderung, solange nichts aus einer Datei stammt: Verloren ginge dabei nichts.
+    if (changed && meta.value.fileName !== null) meta.value = { ...meta.value, dirty: true }
     step.value = 'method'
     pickerOpen.value = false
   }

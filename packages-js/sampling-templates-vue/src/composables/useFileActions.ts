@@ -140,8 +140,8 @@ export function useFileActions(session: SamplingSession, options: FileActionOpti
     reported(t('errorSave'), async () => {
       const { exportWorkbook } = await loadXlsx()
       const exported = await exportWorkbook(session.workspace.value, { sheets: options.sheets(), t, filePrefix: options.filePrefix?.() })
-      const blob = new Blob([exported.data.slice().buffer], { type: exported.mediaType })
-      await options.deliver({ blob, filename: exported.fileName, mediaType: exported.mediaType })
+      await options.deliver({ blob: new Blob([exported.data.slice().buffer], { type: exported.mediaType }), filename: exported.fileName, mediaType: exported.mediaType })
+      session.markSaved(exported.fileName) // Der Export trägt den vollständigen Arbeitsstand und lässt sich wieder öffnen: gesichert.
       session.say(t('exported'))
       options.onExported?.(exported.fileName)
     })

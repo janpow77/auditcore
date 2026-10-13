@@ -3,7 +3,7 @@ import type { DownloadFile } from '@auditcore/common'
 import { saveFile as browserSaveFile } from '@auditcore/common/browser'
 import { FAMILIES, SHEETS, localizeFamilies, samplingTemplatesMessages, tableOf, withMessages, workspaceChecksum, type Family, type MessageKey, type SheetModule, type Translate, type WorkspaceState } from '@auditcore/sampling-templates-core'
 import { FaButton, FaDialog, translate, useI18n, type Locale } from '@auditcore/ui'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import DataTableDialog from './components/DataTableDialog.vue'
 import MethodBar from './components/MethodBar.vue'
 import MethodPicker from './components/MethodPicker.vue'
@@ -107,6 +107,13 @@ function removeStratum(): void {
   else session.removeStratum()
 }
 
+/** Nach der Wahl eines Blatts steht der Fokus auf dem Blatt (sonst fiele er mit der Kachel auf die Seite zurück). */
+const sheetView = ref<HTMLElement | null>(null)
+function selectMethod(id: string): void {
+  session.selectMethod(id)
+  void nextTick(() => sheetView.value?.focus())
+}
+
 const openFile = (file: File): void => guarded(() => void files.open(file))
 /** Übernahme der Vorlage aus der Vorschau; das Formular wird danach neu aufgebaut. */
 function applyImport(): void {
@@ -184,8 +191,8 @@ defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace
 
     <MethodBar :definition="activeSheet?.definition ?? null" :step="step" :sheets="sheets" :t="t" @change="((step = 'method'), (pickerOpen = true))" @step="session.setStep" @table="shownTable = $event" />
     <div class="fa-st__inner"><NoticeList :notices="notices" :sample="meta.sample && !choosing" :t="t" @dismiss="session.dismiss" @clear="guarded(resetAll)" /></div>
-    <MethodPicker v-if="choosing" :families="shownFamilies" :sheets="sheets" :t="t" :current="workspace.activeMethod" :guide="guide" @select="session.selectMethod" @table="shownTable = $event" />
-    <div v-else-if="currentSheet" class="fa-st__inner" :data-sheet-view="currentSheet.id">
+    <MethodPicker v-if="choosing" :families="shownFamilies" :sheets="sheets" :t="t" :current="workspace.activeMethod" :guide="guide" @select="selectMethod" @table="shownTable = $event" />
+    <div v-else-if="currentSheet" ref="sheetView" class="fa-st__inner fa-st__sheet" tabindex="-1" :aria-label="`${currentSheet.definition.number} · ${currentSheet.definition.title}`" :data-sheet-view="currentSheet.id">
       <UnitList
         v-if="listView"
         :view="listView"

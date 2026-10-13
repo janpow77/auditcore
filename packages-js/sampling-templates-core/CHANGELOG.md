@@ -1,5 +1,22 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.2 – 2026-10-14
+
+Befunde der Abnahme des Einbaus (noch nicht veröffentlicht). Keine Änderung am
+Rechenkern; der Abgleich ist unverändert.
+
+- Berichtsdruck (`styles/report.css`): Kopf- und Summenzeile der Tabellen sind
+  im Druck gewöhnliche Zeilengruppen. Als wiederholte Gruppen schob Google
+  Chrome die Summenzeile der Tabelle „Ergebnisse der Vorhabenprüfungen“ auf
+  eine zweite Seite. Leeres Formular und Beispielwerte ergeben eine A4-Seite;
+  Freitexte dürfen umbrechen, Tabellen bleiben je für sich zusammen.
+- Mit „Hintergrundgrafiken“ bleibt das Blatt weiß (Seitenhintergrund der
+  Anwendung an `html` und `body` wird nicht gedruckt).
+- Bericht am Bildschirm: jede Tabelle in einem eigenen, waagerecht rollenden
+  Rahmen mit Mindestbreite; Kennzahlentabellen passen ohne Rollen.
+- Schmale Breite: Menü „Arbeitsstand“ an der Kopfzeile ausgerichtet, Kopfzeile
+  verdichtet und nicht klebend; Schichttabellen mit breiteren Feldern.
+
 ## 0.1.1 – 2026-10-13
 
 Auflagen der unabhängigen Gesamtabnahme (noch nicht veröffentlicht).

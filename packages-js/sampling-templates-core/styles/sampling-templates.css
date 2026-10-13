@@ -19,6 +19,7 @@
 .fa-st :is(h2, h3, p, dl, dd, ul, ol) { margin: 0; padding: 0; }
 .fa-st :is(ul, ol) { list-style: none; }
 .fa-st__inner { max-width: 76rem; margin: 0 auto; padding: 0 var(--fa-space-4); }
+.fa-st__sheet:focus { outline: none; }
 .fa-st__muted { color: var(--fa-color-text-muted); font-size: var(--fa-font-size-sm); }
 .fa-st__mono { font-family: var(--fa-font-mono); font-variant-numeric: tabular-nums; }
 
@@ -230,7 +231,9 @@
 .fa-st__units-table tbody tr:last-child :is(th, td) { border-bottom: 0; }
 .fa-st__strata-table thead th,
 .fa-st__units-table thead th { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); white-space: nowrap; }
-.fa-st__strata-table td { min-width: 8.5rem; }
+/* Breite für einen Betrag wie 999.999.999,99 € im Feld, ohne dass Ziffern angeschnitten werden. */
+.fa-st__strata-table td { min-width: 10.5rem; }
+.fa-st__strata-table .fa-st__input { padding: 0 var(--fa-space-2); }
 .fa-st__strata-table .fa-st__strata-label {
   position: sticky;
   left: 0;
@@ -314,6 +317,15 @@
   .fa-st__picker-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @container fa-st (max-width: 35rem) {
+  /* Kopfzeile: nicht klebend und verdichtet – auf einem Telefon nähme sie sonst ein Viertel der Höhe. */
+  .fa-st__bar { position: static; }
+  .fa-st__bar-inner { position: relative; gap: var(--fa-space-1) var(--fa-space-2); padding-block: var(--fa-space-2); }
+  .fa-st__brand { flex-basis: 100%; }
+  .fa-st__brand .fa-st__muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fa-st__status { flex: 1 1 100%; font-size: var(--fa-font-size-xs); }
+  /* Menü „Arbeitsstand“: an der Kopfzeile ausgerichtet statt am Knopf, damit es nicht aus dem Bild ragt. */
+  .fa-st__menu-wrap { position: static; }
+  .fa-st__menu { right: var(--fa-space-4); left: var(--fa-space-4); min-width: 0; }
   .fa-st__row { grid-template-columns: minmax(0, 1fr); }
   .fa-st__value { text-align: left; }
   .fa-st__check { justify-content: flex-start; }

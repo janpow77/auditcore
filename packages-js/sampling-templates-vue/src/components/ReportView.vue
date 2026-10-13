@@ -68,31 +68,33 @@ function onText(cell: CellAddress, event: Event): void {
               <p class="fa-st__report-print" :class="{ 'fa-st__report-blank': !block.text }">{{ block.text }}</p>
             </div>
             <p v-else-if="block.kind === 'statement'" class="fa-st__report-statement" data-report-statement>{{ block.text }}</p>
-            <table v-else class="fa-st__report-table" :class="{ 'fa-st__report-table--figures': block.columns.length === 0 }">
-              <caption class="fa-sr-only">{{ section.title }}</caption>
-              <thead v-if="block.columns.length">
-                <tr>
-                  <template v-for="(column, index) in block.columns" :key="index">
-                    <th v-if="column.label" scope="col" :class="{ 'fa-st__report-num': column.numeric }">{{ column.label }}</th>
-                    <td v-else></td>
-                  </template>
-                </tr>
-              </thead>
-              <component :is="group.tag" v-for="group in groupsOf(block)" :key="group.tag">
-                <tr v-for="row in group.rows" :key="row.key">
-                  <th v-if="row.header" scope="row">{{ row.header }}</th>
-                  <td v-for="(cell, index) in row.cells" :key="index" :class="cellClass(cell)" :colspan="cell.span > 1 ? cell.span : undefined" :data-cell="cell.cell ?? undefined">
-                    <template v-if="cell.input && cell.cell">
-                      <span class="fa-st__report-screen">
-                        <CellControl :id="`${id}-${cell.cell}`" :row="cell.input" :cell="cell.input" :t="t" :label="cell.input.label" @update="(address, value) => emit('update', address, value)" />
-                      </span>
-                      <span class="fa-st__report-print">{{ cell.text }}</span>
+            <div v-else class="fa-st__report-scroll" role="region" tabindex="0" :aria-label="section.title" data-report-scroll>
+              <table class="fa-st__report-table" :class="{ 'fa-st__report-table--figures': block.columns.length === 0 }">
+                <caption class="fa-sr-only">{{ section.title }}</caption>
+                <thead v-if="block.columns.length">
+                  <tr>
+                    <template v-for="(column, index) in block.columns" :key="index">
+                      <th v-if="column.label" scope="col" :class="{ 'fa-st__report-num': column.numeric }">{{ column.label }}</th>
+                      <td v-else></td>
                     </template>
-                    <template v-else>{{ cell.text }}</template>
-                  </td>
-                </tr>
-              </component>
-            </table>
+                  </tr>
+                </thead>
+                <component :is="group.tag" v-for="group in groupsOf(block)" :key="group.tag">
+                  <tr v-for="row in group.rows" :key="row.key">
+                    <th v-if="row.header" scope="row">{{ row.header }}</th>
+                    <td v-for="(cell, index) in row.cells" :key="index" :class="cellClass(cell)" :colspan="cell.span > 1 ? cell.span : undefined" :data-cell="cell.cell ?? undefined">
+                      <template v-if="cell.input && cell.cell">
+                        <span class="fa-st__report-screen">
+                          <CellControl :id="`${id}-${cell.cell}`" :row="cell.input" :cell="cell.input" :t="t" :label="cell.input.label" @update="(address, value) => emit('update', address, value)" />
+                        </span>
+                        <span class="fa-st__report-print">{{ cell.text }}</span>
+                      </template>
+                      <template v-else>{{ cell.text }}</template>
+                    </td>
+                  </tr>
+                </component>
+              </table>
+            </div>
           </template>
         </section>
 
