@@ -1,6 +1,6 @@
 # Spezifikation auditcore_procurement
 
-Stand: 13.10.2026 (EU-Schwellenwerte je Regime ergänzt; übrige Teile 26.09.2026, Paketversion 0.2.4), Datensatzvertrag `auditcore_procurement.notice/1`.
+Stand: 13.10.2026 (EU-Schwellenwerte je Regime ergänzt, Paketversion 0.3.0; übrige Teile 26.09.2026, Paketversion 0.2.4), Datensatzvertrag `auditcore_procurement.notice/1`.
 Charakterisierung: tatsächlich ausgeführtes Original (`tools/capture_procurement_legacy.py`,
 `tests/fixtures/procurement_legacy_observed.json`, `tests/test_legacy_replay.py`),
 Schwellenwerte je Jahr (`tests/test_year_thresholds.py`, `tests/test_historic_thresholds.py`);
