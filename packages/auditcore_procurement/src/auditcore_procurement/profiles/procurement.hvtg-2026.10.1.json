@@ -1,0 +1,1284 @@
+{
+ "schema": "auditcore_procurement.precheck-profile/3",
+ "id": "procurement.hvtg",
+ "version": "2026.10.1",
+ "status": "SOURCE_CHARACTERIZED",
+ "legal_status": "EU-Schwellenwerte je Geltungszeitraum 2014–2027 mit amtlicher Fundstelle für öffentliche Aufträge, Sektorenaufträge, Konzessionen sowie Verteidigung und Sicherheit (Block eu_regimes, abgerufen am 13.10.2026); nur belegte Zeiträume sind eingetragen. Nationale Stufen, Verfahren, Mindestangebote und Pflichtdokumente stammen aus dem Regelwerk PROCUREMENT_HVTG der Anwendungen und sind fachlich nicht bestätigt: REVIEW_REQUIRED.",
+ "source": {
+  "repositories": [
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "e76961b1bdab273f8c2441a4bfe2108a2c71f9eb"
+   },
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "a3fa3be4d0c486f2cf0d161a94b3795e6f46455b"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   }
+  ],
+  "rights": "USER_AUTHORIZED_MIT"
+ },
+ "construction_marker": "Bau",
+ "tiers": {
+  "supply_service": [
+   {
+    "tier": "BELOW_1K",
+    "max": 1000,
+    "procedure": "Direktvergabe",
+    "min_bids": 1
+   },
+   {
+    "tier": "BELOW_25K",
+    "max": 25000,
+    "procedure": "Verhandlungsvergabe",
+    "min_bids": 3
+   },
+   {
+    "tier": "BELOW_EU",
+    "max": 221000,
+    "procedure": "Oeffentliche Ausschreibung",
+    "min_bids": 3
+   },
+   {
+    "tier": "ABOVE_EU",
+    "max": null,
+    "procedure": "EU-Verfahren",
+    "min_bids": 5
+   }
+  ],
+  "construction": [
+   {
+    "tier": "BELOW_1K",
+    "max": 1000,
+    "procedure": "Direktvergabe",
+    "min_bids": 1
+   },
+   {
+    "tier": "BELOW_25K",
+    "max": 25000,
+    "procedure": "Freihaendige Vergabe",
+    "min_bids": 3
+   },
+   {
+    "tier": "BELOW_EU",
+    "max": 5538000,
+    "procedure": "Oeffentliche Ausschreibung",
+    "min_bids": 3
+   },
+   {
+    "tier": "ABOVE_EU",
+    "max": null,
+    "procedure": "EU-Verfahren",
+    "min_bids": 5
+   }
+  ]
+ },
+ "fallback_tier": "ABOVE_EU",
+ "required_documents": {
+  "Direktvergabe": [
+   "VERGABEVERMERK"
+  ],
+  "Verhandlungsvergabe": [
+   "VERGABEVERMERK",
+   "ANGEBOT",
+   "ZUSCHLAG"
+  ],
+  "Freihaendige Vergabe": [
+   "VERGABEVERMERK",
+   "ANGEBOT",
+   "ZUSCHLAG"
+  ],
+  "Oeffentliche Ausschreibung": [
+   "VERGABEVERMERK",
+   "AUSSCHREIBUNG",
+   "ANGEBOT",
+   "SUBMISSIONSPROTOKOLL",
+   "ZUSCHLAG"
+  ],
+  "EU-Verfahren": [
+   "VERGABEVERMERK",
+   "AUSSCHREIBUNG",
+   "ANGEBOT",
+   "SUBMISSIONSPROTOKOLL",
+   "ZUSCHLAG",
+   "VERTRAG",
+   "COI",
+   "TARIFTREUEERKLAERUNG"
+  ]
+ },
+ "bid_document_type": "ANGEBOT",
+ "default_min_bids": 1,
+ "value_deviation": {
+  "warning_above_percent": 10,
+  "fail_above_percent": 20,
+  "fail_reference": "§ 132 GWB"
+ },
+ "eu_thresholds": {
+  "legal_basis": "Art. 4 Richtlinie 2014/24/EU (ab 18.04.2016) bzw. Art. 7 Richtlinie 2004/18/EG (bis 17.04.2016) in der jeweils durch (Delegierte) Verordnung der Kommission geänderten Fassung; § 106 Abs. 1 und 2 Nr. 1 GWB",
+  "comparison": "reached_or_exceeded",
+  "comparison_reference": "§ 106 Abs. 1 Satz 1 GWB: Anwendung, wenn der geschätzte Auftragswert den Schwellenwert erreicht oder überschreitet",
+  "tier": "BELOW_EU",
+  "categories": {
+   "construction": "works",
+   "supply_service": {
+    "central": "supplies_services_central",
+    "sub_central": "supplies_services_sub_central"
+   }
+  },
+  "periods": [
+   {
+    "valid_from": "2014-01-01",
+    "valid_to": "2015-12-31",
+    "values": {
+     "works": 5186000,
+     "supplies_services_central": 134000,
+     "supplies_services_sub_central": 207000
+    },
+    "source": {
+     "regulation": "Verordnung (EU) Nr. 1336/2013 der Kommission vom 13. Dezember 2013",
+     "amends": "Richtlinie 2004/18/EG, Artikel 7 Buchstaben a bis c (Artikel 2 Nr. 1)",
+     "official_journal": "ABl. L 335 vom 14.12.2013, S. 17",
+     "celex": "32013R1336",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32013R1336",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32013R1336",
+     "retrieved_sha256": "742dba08cadb29ec56acaf6f0335a29fa4b2e4c1974f6190c900946b4b844146",
+     "applies_from": "2014-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)",
+     "note": "Bis 17.04.2016 galt die Richtlinie 2004/18/EG (Aufhebung durch Art. 91 RL 2014/24/EU zum 18.04.2016). Artikel 7 Buchstabe a betrifft die in Anhang IV genannten zentralen Regierungsbehörden, Buchstabe b die übrigen öffentlichen Auftraggeber; die Werte stimmen mit der Ursprungsfassung von Art. 4 Buchstaben a bis c RL 2014/24/EU (ABl. L 94 vom 28.3.2014, S. 65) überein."
+    }
+   },
+   {
+    "valid_from": "2016-01-01",
+    "valid_to": "2017-12-31",
+    "values": {
+     "works": 5225000,
+     "supplies_services_central": 135000,
+     "supplies_services_sub_central": 209000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2015/2170 der Kommission vom 24. November 2015",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 307 vom 25.11.2015, S. 5",
+     "celex": "32015R2170",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2170",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2170",
+     "retrieved_sha256": "a13e12ebc9091340cf7ad83c8c37831a1ecc94da6e11051730c4e19dc2a73dd4",
+     "applies_from": "2016-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)",
+     "concurrent_source": {
+      "regulation": "Verordnung (EU) 2015/2342 der Kommission vom 15. Dezember 2015",
+      "amends": "Richtlinie 2004/18/EG, Artikel 7 Buchstaben a bis c",
+      "official_journal": "ABl. L 330 vom 16.12.2015, S. 18",
+      "celex": "32015R2342",
+      "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2342",
+      "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2342",
+      "retrieved_sha256": "989cac3a9f939f65b99784d3549730cf4e20f87034fd49627bdff4d26f375e32",
+      "applies_from": "2016-01-01"
+     },
+     "note": "01.01.–17.04.2016 galt RL 2004/18/EG in der Fassung der VO (EU) 2015/2342, ab 18.04.2016 RL 2014/24/EU in der Fassung der Delegierten VO (EU) 2015/2170; beide setzen dieselben Werte fest, der Zeitraum ist daher durchgehend."
+    }
+   },
+   {
+    "valid_from": "2018-01-01",
+    "valid_to": "2019-12-31",
+    "values": {
+     "works": 5548000,
+     "supplies_services_central": 144000,
+     "supplies_services_sub_central": 221000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2017/2365 der Kommission vom 18. Dezember 2017",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 337 vom 19.12.2017, S. 19",
+     "celex": "32017R2365",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R2365",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32017R2365",
+     "retrieved_sha256": "4a9cdce02e59ea8e4f73398c0f77f5ee2a25821e206e483debdea7a5b1d9cb8b",
+     "applies_from": "2018-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)"
+    }
+   },
+   {
+    "valid_from": "2020-01-01",
+    "valid_to": "2021-12-31",
+    "values": {
+     "works": 5350000,
+     "supplies_services_central": 139000,
+     "supplies_services_sub_central": 214000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2019/1828 der Kommission vom 30. Oktober 2019",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 279 vom 31.10.2019, S. 25",
+     "celex": "32019R1828",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32019R1828",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32019R1828",
+     "retrieved_sha256": "f7685bad87f95b205ce07d2343c4778b5529cc3ece0f7f115794b58ff3da29c0",
+     "applies_from": "2020-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)"
+    }
+   },
+   {
+    "valid_from": "2022-01-01",
+    "valid_to": "2023-12-31",
+    "values": {
+     "works": 5382000,
+     "supplies_services_central": 140000,
+     "supplies_services_sub_central": 215000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2021/1952 der Kommission vom 10. November 2021",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 398 vom 11.11.2021, S. 23",
+     "celex": "32021R1952",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32021R1952",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32021R1952",
+     "retrieved_sha256": "7b612376694b1312d8475faf2c5313d0c607ae0bc924a6346cd74bddee6184ca",
+     "applies_from": "2022-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)"
+    }
+   },
+   {
+    "valid_from": "2024-01-01",
+    "valid_to": "2025-12-31",
+    "values": {
+     "works": 5538000,
+     "supplies_services_central": 143000,
+     "supplies_services_sub_central": 221000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2023/2495 der Kommission vom 15. November 2023",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L, 2023/2495, 16.11.2023",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202302495",
+     "applies_from": "2024-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Wortlaut von Artikel 1 und 2 auf EUR-Lex gelesen",
+     "legacy_note": "Die Quellwerte 221.000 EUR (supply_service BELOW_EU) und 5.538.000 EUR (construction BELOW_EU) entsprechen dieser Periode; der Wert für zentrale Regierungsbehörden (143.000 EUR) war im Quellregelwerk nicht abgebildet.",
+     "celex": "32023R2495",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32023R2495",
+     "retrieved_sha256": "ca2ef5aa1411ce71a330a3ececda60c1a777c841f2b99844222930249c06e8f1",
+     "rechecked_on": "2026-09-23"
+    }
+   },
+   {
+    "valid_from": "2026-01-01",
+    "valid_to": "2027-12-31",
+    "values": {
+     "works": 5404000,
+     "supplies_services_central": 140000,
+     "supplies_services_sub_central": 216000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2025/2152 der Kommission vom 22. Oktober 2025",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L, 2025/2152, 23.10.2025",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202502152",
+     "national_publication": "Bekanntmachung des BMWE vom 9. Dezember 2025, BAnz AT 18.12.2025 B4 (§ 106 Abs. 3 GWB)",
+     "applies_from": "2026-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 auf EUR-Lex und Bundesanzeiger-Bekanntmachung gelesen",
+     "celex": "32025R2152",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32025R2152",
+     "retrieved_sha256": "42a76b2d440449e63dd40d78ffe8db3c197dad35baefd0d63de198969f897c97",
+     "rechecked_on": "2026-09-23"
+    }
+   }
+  ],
+  "not_entered": "Zeiträume vor 2014 und ab 2028 sind nicht eingetragen (kein im Profil belegter Wert). Diese Jahrestabelle dient der Vorprüfung und führt nur öffentliche Bau-, Liefer- und Dienstleistungsaufträge (RL 2014/24/EU); Sektorenaufträge (RL 2014/25/EU), Konzessionen (RL 2014/23/EU), Verteidigung und Sicherheit (RL 2009/81/EG) sowie soziale und andere besondere Dienstleistungen stehen im Block eu_regimes."
+ },
+ "national_tiers": {
+  "status": "REVIEW_REQUIRED",
+  "tiers": [
+   "BELOW_1K",
+   "BELOW_25K"
+  ],
+  "comparison": "inclusive_maximum",
+  "source": "Regelwerk PROCUREMENT_HVTG der Anwendungen (threshold_rules), siehe source.repositories; keine Norm im Regelwerk angegeben"
+ },
+ "eu_regimes": {
+  "comparison": "reached_or_exceeded",
+  "comparison_reference": "Die Richtlinien gelten für Aufträge, deren geschätzter Wert ohne Mehrwertsteuer den Schwellenwert „nicht unterschreitet“ (Art. 4 RL 2014/24/EU, Art. 15 RL 2014/25/EU, Art. 8 RL 2009/81/EG), und für Konzessionen, deren Vertragswert „mindestens“ den Schwellenwert beträgt (Art. 8 Abs. 1 RL 2014/23/EU); § 106 Abs. 1 Satz 1 GWB: Anwendung, wenn der geschätzte Auftrags- oder Vertragswert den Schwellenwert erreicht oder überschreitet.",
+  "verified_on": "2026-10-13",
+  "retrieval": "Amtlicher deutscher Text vom Amt für Veröffentlichungen (Cellar), http://publications.europa.eu/resource/celex/<CELEX> mit Accept: application/xhtml+xml und Accept-Language: de; retrieved_sha256 ist die SHA-256 der abgerufenen Datei, quote der Wortlaut der einschlägigen Artikel ohne Auszeichnung mit zusammengefasstem Leerraum. Die Liste der Änderungsrechtsakte je Richtlinie stammt aus der Cellar-Abfrage (cdm:resource_legal_amends_resource_legal); danach ändern bis zum Abruftag nur die genannten Verordnungen die Schwellenwerte.",
+  "precheck_view": {
+   "regime": "public_contracts",
+   "categories": {
+    "construction": "works",
+    "supply_service": "supplies_services"
+   }
+  },
+  "regimes": [
+   {
+    "id": "public_contracts",
+    "directive": "Richtlinie 2014/24/EU",
+    "celex": "32014L0024",
+    "label": {
+     "de": "Öffentliche Aufträge (Richtlinie 2014/24/EU)",
+     "en": "Public contracts (Directive 2014/24/EU)"
+    },
+    "buyer": {
+     "de": "öffentliche Auftraggeber",
+     "en": "contracting authorities"
+    },
+    "legal_basis": "Art. 4 Richtlinie 2014/24/EU (ab 18.04.2016) bzw. Art. 7 Richtlinie 2004/18/EG (bis 17.04.2016) in der jeweils durch (Delegierte) Verordnung der Kommission geänderten Fassung",
+    "national_reference": "§ 106 Abs. 2 Nr. 1 GWB",
+    "note": {
+     "de": "Bis 17.04.2016 galt die Richtlinie 2004/18/EG (aufgehoben zum 18.04.2016 durch Art. 91 der Richtlinie 2014/24/EU); die Werte bis dahin stammen aus Art. 7 dieser Richtlinie. Ab 01.01.2016 setzen die Änderungsverordnungen zu beiden Richtlinien dieselben Werte fest.",
+     "en": "Until 17 April 2016 Directive 2004/18/EC applied (repealed with effect from 18 April 2016 by Article 91 of Directive 2014/24/EU); the values up to that date are those of Article 7 of that Directive. From 1 January 2016 the amending regulations set the same values in both Directives."
+    },
+    "contract_types": [
+     {
+      "id": "works",
+      "label": {
+       "de": "Öffentliche Bauaufträge",
+       "en": "Public works contracts"
+      },
+      "legal_basis": "Art. 4 Buchst. a RL 2014/24/EU; bis 17.04.2016 Art. 7 Buchst. c RL 2004/18/EG",
+      "thresholds": [
+       {
+        "valid_from": "2014-01-01",
+        "valid_to": "2015-12-31",
+        "value": 5186000,
+        "source": "32013R1336",
+        "provision": "Artikel 2: ändert Art. 7 Buchst. c RL 2004/18/EG"
+       },
+       {
+        "valid_from": "2016-01-01",
+        "valid_to": "2016-04-17",
+        "value": 5225000,
+        "source": "32015R2342",
+        "provision": "Artikel 1: ändert Art. 7 Buchst. c RL 2004/18/EG"
+       },
+       {
+        "valid_from": "2016-04-18",
+        "valid_to": "2017-12-31",
+        "value": 5225000,
+        "source": "32015R2170",
+        "provision": "Artikel 1: ändert Art. 4 Buchst. a RL 2014/24/EU"
+       },
+       {
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "value": 5548000,
+        "source": "32017R2365",
+        "provision": "Artikel 1: ändert Art. 4 Buchst. a RL 2014/24/EU"
+       },
+       {
+        "valid_from": "2020-01-01",
+        "valid_to": "2021-12-31",
+        "value": 5350000,
+        "source": "32019R1828",
+        "provision": "Artikel 1: ändert Art. 4 Buchst. a RL 2014/24/EU"
+       },
+       {
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "value": 5382000,
+        "source": "32021R1952",
+        "provision": "Artikel 1: ändert Art. 4 Buchst. a RL 2014/24/EU"
+       },
+       {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "value": 5538000,
+        "source": "32023R2495",
+        "provision": "Artikel 1: ändert Art. 4 Buchst. a RL 2014/24/EU"
+       },
+       {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "value": 5404000,
+        "source": "32025R2152",
+        "provision": "Artikel 1: ändert Art. 4 Buchst. a RL 2014/24/EU"
+       }
+      ]
+     },
+     {
+      "id": "supplies_services",
+      "label": {
+       "de": "Öffentliche Liefer- und Dienstleistungsaufträge",
+       "en": "Public supply and service contracts"
+      },
+      "legal_basis": "Art. 4 Buchst. b und c RL 2014/24/EU; bis 17.04.2016 Art. 7 Buchst. a und b RL 2004/18/EG",
+      "authority_types": [
+       {
+        "id": "central",
+        "label": {
+         "de": "zentrale Regierungsbehörden",
+         "en": "central government authorities"
+        },
+        "legal_basis": "Art. 4 Buchst. b RL 2014/24/EU; bis 17.04.2016 Art. 7 Buchst. a RL 2004/18/EG",
+        "note": {
+         "de": "Bei Lieferaufträgen öffentlicher Auftraggeber im Verteidigungsbereich gilt dieser Schwellenwert nur für Waren nach Anhang III; für andere Waren gilt der Schwellenwert der subzentralen öffentlichen Auftraggeber (Art. 4 Buchst. b und c RL 2014/24/EU). Der Wert gilt auch für Wettbewerbe dieser Behörden. In Deutschland ist er nach § 106 Abs. 2 Nr. 1 GWB (Fassung vom 13.10.2026) vom Bundeskanzleramt und den Bundesministerien anzuwenden.",
+         "en": "For supply contracts awarded by contracting authorities operating in the field of defence this threshold applies only to products covered by Annex III; for other products the threshold for sub-central contracting authorities applies (Article 4(b) and (c) of Directive 2014/24/EU). The value also applies to design contests organised by these authorities. In Germany it is applied by the Federal Chancellery and the federal ministries (Section 106(2) no. 1 GWB as at 13 October 2026)."
+        },
+        "thresholds": [
+         {
+          "valid_from": "2014-01-01",
+          "valid_to": "2015-12-31",
+          "value": 134000,
+          "source": "32013R1336",
+          "provision": "Artikel 2: ändert Art. 7 Buchst. a RL 2004/18/EG"
+         },
+         {
+          "valid_from": "2016-01-01",
+          "valid_to": "2016-04-17",
+          "value": 135000,
+          "source": "32015R2342",
+          "provision": "Artikel 1: ändert Art. 7 Buchst. a RL 2004/18/EG"
+         },
+         {
+          "valid_from": "2016-04-18",
+          "valid_to": "2017-12-31",
+          "value": 135000,
+          "source": "32015R2170",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. b RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2018-01-01",
+          "valid_to": "2019-12-31",
+          "value": 144000,
+          "source": "32017R2365",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. b RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2020-01-01",
+          "valid_to": "2021-12-31",
+          "value": 139000,
+          "source": "32019R1828",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. b RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2022-01-01",
+          "valid_to": "2023-12-31",
+          "value": 140000,
+          "source": "32021R1952",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. b RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2024-01-01",
+          "valid_to": "2025-12-31",
+          "value": 143000,
+          "source": "32023R2495",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. b RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-12-31",
+          "value": 140000,
+          "source": "32025R2152",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. b RL 2014/24/EU"
+         }
+        ]
+       },
+       {
+        "id": "sub_central",
+        "label": {
+         "de": "subzentrale öffentliche Auftraggeber",
+         "en": "sub-central contracting authorities"
+        },
+        "legal_basis": "Art. 4 Buchst. c RL 2014/24/EU; bis 17.04.2016 Art. 7 Buchst. b RL 2004/18/EG",
+        "thresholds": [
+         {
+          "valid_from": "2014-01-01",
+          "valid_to": "2015-12-31",
+          "value": 207000,
+          "source": "32013R1336",
+          "provision": "Artikel 2: ändert Art. 7 Buchst. b RL 2004/18/EG"
+         },
+         {
+          "valid_from": "2016-01-01",
+          "valid_to": "2016-04-17",
+          "value": 209000,
+          "source": "32015R2342",
+          "provision": "Artikel 1: ändert Art. 7 Buchst. b RL 2004/18/EG"
+         },
+         {
+          "valid_from": "2016-04-18",
+          "valid_to": "2017-12-31",
+          "value": 209000,
+          "source": "32015R2170",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. c RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2018-01-01",
+          "valid_to": "2019-12-31",
+          "value": 221000,
+          "source": "32017R2365",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. c RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2020-01-01",
+          "valid_to": "2021-12-31",
+          "value": 214000,
+          "source": "32019R1828",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. c RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2022-01-01",
+          "valid_to": "2023-12-31",
+          "value": 215000,
+          "source": "32021R1952",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. c RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2024-01-01",
+          "valid_to": "2025-12-31",
+          "value": 221000,
+          "source": "32023R2495",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. c RL 2014/24/EU"
+         },
+         {
+          "valid_from": "2026-01-01",
+          "valid_to": "2027-12-31",
+          "value": 216000,
+          "source": "32025R2152",
+          "provision": "Artikel 1: ändert Art. 4 Buchst. c RL 2014/24/EU"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "social_services",
+      "label": {
+       "de": "Soziale und andere besondere Dienstleistungen (Anhang XIV)",
+       "en": "Social and other specific services (Annex XIV)"
+      },
+      "legal_basis": "Art. 4 Buchst. d RL 2014/24/EU",
+      "thresholds": [
+       {
+        "valid_from": "2016-04-18",
+        "valid_to": "2027-12-31",
+        "value": 750000,
+        "source": "32014L0024",
+        "provision": "Artikel 4 Buchst. d (Ursprungsfassung; von keiner Änderungsverordnung berührt)"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "utilities",
+    "directive": "Richtlinie 2014/25/EU",
+    "celex": "32014L0025",
+    "label": {
+     "de": "Sektorenaufträge (Richtlinie 2014/25/EU)",
+     "en": "Utilities contracts (Directive 2014/25/EU)"
+    },
+    "buyer": {
+     "de": "Auftraggeber im Bereich der Wasser-, Energie- und Verkehrsversorgung sowie der Postdienste (Sektorenauftraggeber)",
+     "en": "contracting entities operating in the water, energy, transport and postal services sectors"
+    },
+    "legal_basis": "Art. 15 Richtlinie 2014/25/EU (ab 18.04.2016) bzw. Art. 16 Richtlinie 2004/17/EG (bis 17.04.2016) in der jeweils durch (Delegierte) Verordnung der Kommission geänderten Fassung",
+    "national_reference": "§ 106 Abs. 2 Nr. 2 GWB",
+    "note": {
+     "de": "Bis 17.04.2016 galt die Richtlinie 2004/17/EG (aufgehoben zum 18.04.2016 durch Art. 107 der Richtlinie 2014/25/EU); die Werte bis dahin stammen aus Art. 16 dieser Richtlinie. Ab 01.01.2016 setzen die Änderungsverordnungen zu beiden Richtlinien dieselben Werte fest.",
+     "en": "Until 17 April 2016 Directive 2004/17/EC applied (repealed with effect from 18 April 2016 by Article 107 of Directive 2014/25/EU); the values up to that date are those of Article 16 of that Directive. From 1 January 2016 the amending regulations set the same values in both Directives."
+    },
+    "contract_types": [
+     {
+      "id": "works",
+      "label": {
+       "de": "Bauaufträge",
+       "en": "Works contracts"
+      },
+      "legal_basis": "Art. 15 Buchst. b RL 2014/25/EU; bis 17.04.2016 Art. 16 Buchst. b RL 2004/17/EG",
+      "thresholds": [
+       {
+        "valid_from": "2014-01-01",
+        "valid_to": "2015-12-31",
+        "value": 5186000,
+        "source": "32013R1336",
+        "provision": "Artikel 1: ändert Art. 16 Buchst. b RL 2004/17/EG"
+       },
+       {
+        "valid_from": "2016-01-01",
+        "valid_to": "2016-04-17",
+        "value": 5225000,
+        "source": "32015R2341",
+        "provision": "Artikel 1: ändert Art. 16 Buchst. b RL 2004/17/EG"
+       },
+       {
+        "valid_from": "2016-04-18",
+        "valid_to": "2017-12-31",
+        "value": 5225000,
+        "source": "32015R2171",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. b RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "value": 5548000,
+        "source": "32017R2364",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. b RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2020-01-01",
+        "valid_to": "2021-12-31",
+        "value": 5350000,
+        "source": "32019R1829",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. b RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "value": 5382000,
+        "source": "32021R1953",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. b RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "value": 5538000,
+        "source": "32023R2496",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. b RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "value": 5404000,
+        "source": "32025R2150",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. b RL 2014/25/EU"
+       }
+      ]
+     },
+     {
+      "id": "supplies_services",
+      "label": {
+       "de": "Liefer- und Dienstleistungsaufträge",
+       "en": "Supply and service contracts"
+      },
+      "legal_basis": "Art. 15 Buchst. a RL 2014/25/EU; bis 17.04.2016 Art. 16 Buchst. a RL 2004/17/EG",
+      "thresholds": [
+       {
+        "valid_from": "2014-01-01",
+        "valid_to": "2015-12-31",
+        "value": 414000,
+        "source": "32013R1336",
+        "provision": "Artikel 1: ändert Art. 16 Buchst. a RL 2004/17/EG"
+       },
+       {
+        "valid_from": "2016-01-01",
+        "valid_to": "2016-04-17",
+        "value": 418000,
+        "source": "32015R2341",
+        "provision": "Artikel 1: ändert Art. 16 Buchst. a RL 2004/17/EG"
+       },
+       {
+        "valid_from": "2016-04-18",
+        "valid_to": "2017-12-31",
+        "value": 418000,
+        "source": "32015R2171",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. a RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "value": 443000,
+        "source": "32017R2364",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. a RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2020-01-01",
+        "valid_to": "2021-12-31",
+        "value": 428000,
+        "source": "32019R1829",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. a RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "value": 431000,
+        "source": "32021R1953",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. a RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "value": 443000,
+        "source": "32023R2496",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. a RL 2014/25/EU"
+       },
+       {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "value": 432000,
+        "source": "32025R2150",
+        "provision": "Artikel 1: ändert Art. 15 Buchst. a RL 2014/25/EU"
+       }
+      ]
+     },
+     {
+      "id": "social_services",
+      "label": {
+       "de": "Soziale und andere besondere Dienstleistungen (Anhang XVII)",
+       "en": "Social and other specific services (Annex XVII)"
+      },
+      "legal_basis": "Art. 15 Buchst. c RL 2014/25/EU",
+      "thresholds": [
+       {
+        "valid_from": "2016-04-18",
+        "valid_to": "2027-12-31",
+        "value": 1000000,
+        "source": "32014L0025",
+        "provision": "Artikel 15 Buchst. c (Ursprungsfassung; von keiner Änderungsverordnung berührt)"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "concessions",
+    "directive": "Richtlinie 2014/23/EU",
+    "celex": "32014L0023",
+    "label": {
+     "de": "Konzessionen (Richtlinie 2014/23/EU)",
+     "en": "Concessions (Directive 2014/23/EU)"
+    },
+    "buyer": {
+     "de": "Konzessionsgeber (öffentliche Auftraggeber und Auftraggeber)",
+     "en": "contracting authorities and contracting entities"
+    },
+    "legal_basis": "Art. 8 Abs. 1 Richtlinie 2014/23/EU in der jeweils durch Delegierte Verordnung der Kommission geänderten Fassung",
+    "national_reference": "§ 106 Abs. 2 Nr. 4 GWB",
+    "note": {
+     "de": "Eingetragen ab dem Ablauf der Umsetzungsfrist am 18.04.2016 (Art. 51 Abs. 1 RL 2014/23/EU). Der Schwellenwert bezieht sich auf den Vertragswert der Konzession (geschätzter Gesamtumsatz ohne MwSt., Art. 8 Abs. 2).",
+     "en": "Entered from the end of the transposition period on 18 April 2016 (Article 51(1) of Directive 2014/23/EU). The threshold refers to the value of the concession (estimated total turnover net of VAT, Article 8(2))."
+    },
+    "contract_types": [
+     {
+      "id": "concession",
+      "label": {
+       "de": "Bau- und Dienstleistungskonzessionen",
+       "en": "Works and services concessions"
+      },
+      "legal_basis": "Art. 8 Abs. 1 RL 2014/23/EU",
+      "thresholds": [
+       {
+        "valid_from": "2016-04-18",
+        "valid_to": "2017-12-31",
+        "value": 5225000,
+        "source": "32015R2172",
+        "provision": "Artikel 1: ändert Art. 8 Abs. 1 RL 2014/23/EU"
+       },
+       {
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "value": 5548000,
+        "source": "32017R2366",
+        "provision": "Artikel 1: ändert Art. 8 Abs. 1 RL 2014/23/EU"
+       },
+       {
+        "valid_from": "2020-01-01",
+        "valid_to": "2021-12-31",
+        "value": 5350000,
+        "source": "32019R1827",
+        "provision": "Artikel 1: ändert Art. 8 Abs. 1 RL 2014/23/EU"
+       },
+       {
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "value": 5382000,
+        "source": "32021R1951",
+        "provision": "Artikel 1: ändert Art. 8 Abs. 1 RL 2014/23/EU"
+       },
+       {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "value": 5538000,
+        "source": "32023R2497",
+        "provision": "Artikel 1: ändert Art. 8 Abs. 1 RL 2014/23/EU"
+       },
+       {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "value": 5404000,
+        "source": "32025R2151",
+        "provision": "Artikel 1: ändert Art. 8 Abs. 1 RL 2014/23/EU"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "defence",
+    "directive": "Richtlinie 2009/81/EG",
+    "celex": "32009L0081",
+    "label": {
+     "de": "Aufträge in den Bereichen Verteidigung und Sicherheit (Richtlinie 2009/81/EG)",
+     "en": "Contracts in the fields of defence and security (Directive 2009/81/EC)"
+    },
+    "buyer": {
+     "de": "öffentliche Auftraggeber und Auftraggeber",
+     "en": "contracting authorities and contracting entities"
+    },
+    "legal_basis": "Art. 8 Richtlinie 2009/81/EG in der jeweils durch (Delegierte) Verordnung der Kommission geänderten Fassung",
+    "national_reference": "§ 106 Abs. 2 Nr. 3 GWB",
+    "contract_types": [
+     {
+      "id": "works",
+      "label": {
+       "de": "Bauaufträge",
+       "en": "Works contracts"
+      },
+      "legal_basis": "Art. 8 Buchst. b RL 2009/81/EG",
+      "thresholds": [
+       {
+        "valid_from": "2014-01-01",
+        "valid_to": "2015-12-31",
+        "value": 5186000,
+        "source": "32013R1336",
+        "provision": "Artikel 3: ändert Art. 8 Buchst. b RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2016-01-01",
+        "valid_to": "2017-12-31",
+        "value": 5225000,
+        "source": "32015R2340",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. b RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "value": 5548000,
+        "source": "32017R2367",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. b RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2020-01-01",
+        "valid_to": "2021-12-31",
+        "value": 5350000,
+        "source": "32019R1830",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. b RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "value": 5382000,
+        "source": "32021R1950",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. b RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "value": 5538000,
+        "source": "32023R2510",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. b RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "value": 5404000,
+        "source": "32025R2487",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. b RL 2009/81/EG"
+       }
+      ]
+     },
+     {
+      "id": "supplies_services",
+      "label": {
+       "de": "Liefer- und Dienstleistungsaufträge",
+       "en": "Supply and service contracts"
+      },
+      "legal_basis": "Art. 8 Buchst. a RL 2009/81/EG",
+      "thresholds": [
+       {
+        "valid_from": "2014-01-01",
+        "valid_to": "2015-12-31",
+        "value": 414000,
+        "source": "32013R1336",
+        "provision": "Artikel 3: ändert Art. 8 Buchst. a RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2016-01-01",
+        "valid_to": "2017-12-31",
+        "value": 418000,
+        "source": "32015R2340",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. a RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "value": 443000,
+        "source": "32017R2367",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. a RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2020-01-01",
+        "valid_to": "2021-12-31",
+        "value": 428000,
+        "source": "32019R1830",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. a RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "value": 431000,
+        "source": "32021R1950",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. a RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "value": 443000,
+        "source": "32023R2510",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. a RL 2009/81/EG"
+       },
+       {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "value": 432000,
+        "source": "32025R2487",
+        "provision": "Artikel 1: ändert Art. 8 Buchst. a RL 2009/81/EG"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "sources": {
+   "32013R1336": {
+    "regulation": "Verordnung (EU) Nr. 1336/2013 der Kommission vom 13. Dezember 2013",
+    "official_journal": "ABl. L 335 vom 14.12.2013, S. 17",
+    "celex": "32013R1336",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32013R1336",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32013R1336",
+    "retrieved_sha256": "742dba08cadb29ec56acaf6f0335a29fa4b2e4c1974f6190c900946b4b844146",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2014-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2004/17/EG wird wie folgt geändert: 1. Artikel 16 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „400 000 EUR“ durch „414 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „5 000 000 EUR“ durch „5 186 000 EUR“ ersetzt. 2. Artikel 61 wird wie folgt geändert: a) In Absatz 1 wird der Betrag „400 000 EUR“ durch „414 000 EUR“ ersetzt. b) In Absatz 2 wird der Betrag „400 000 EUR“ durch „414 000 EUR“ ersetzt. Artikel 2 Die Richtlinie 2004/18/EG wird wie folgt geändert: 1. Artikel 7 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „130 000 EUR“ durch „134 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „200 000 EUR“ durch „207 000 EUR“ ersetzt. c) Unter Buchstabe c wird der Betrag „5 000 000 EUR“ durch „5 186 000 EUR“ ersetzt. 2. Artikel 8 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 000 000 EUR“ durch „5 186 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „200 000 EUR“ durch „207 000 EUR“ ersetzt. 3. In Artikel 56 wird der Betrag „5 000 000 EUR“ durch „5 186 000 EUR“ ersetzt. 4. In Artikel 63 Absatz 1 Unterabsatz 1 wird der Betrag „5 000 000 EUR“ durch „5 186 000 EUR“ ersetzt. 5. Artikel 67 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „130 000 EUR“ durch „134 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „200 000 EUR“ durch „207 000 EUR“ ersetzt. c) Unter Buchstabe c wird der Betrag „200 000 EUR“ durch „207 000 EUR“ ersetzt. Artikel 3 Artikel 8 der Richtlinie 2009/81/EG wird wie folgt geändert: 1. Unter Buchstabe a wird der Betrag „400 000 EUR“ durch „414 000 EUR“ ersetzt. 2. Unter Buchstabe b wird der Betrag „5 000 000 EUR“ durch „5 186 000 EUR“ ersetzt. Artikel 4 Diese Verordnung tritt am 1. Januar 2014 in Kraft."
+   },
+   "32015R2170": {
+    "regulation": "Delegierte Verordnung (EU) 2015/2170 der Kommission vom 24. November 2015",
+    "official_journal": "ABl. L 307 vom 25.11.2015, S. 5",
+    "celex": "32015R2170",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2170",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2170",
+    "retrieved_sha256": "a13e12ebc9091340cf7ad83c8c37831a1ecc94da6e11051730c4e19dc2a73dd4",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2014/24/EU wird wie folgt geändert: (1) Artikel 4 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „134 000 EUR“ durch „135 000 EUR“ ersetzt. c) Unter Buchstabe c wird der Betrag „207 000 EUR“ durch „209 000 EUR“ ersetzt. (2) Artikel 13 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „207 000 EUR“ durch „209 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2016 in Kraft."
+   },
+   "32015R2171": {
+    "regulation": "Delegierte Verordnung (EU) 2015/2171 der Kommission vom 24. November 2015",
+    "official_journal": "ABl. L 307 vom 25.11.2015, S. 7",
+    "celex": "32015R2171",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2171",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2171",
+    "retrieved_sha256": "0bd70f7c499c012820ecb33f38b21dc7c0e4376cf4b215a396b3821f5bd71bee",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-01-01",
+    "quote": "Artikel 1 Artikel 15 der Richtlinie 2014/25/EU wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „414 000 EUR“ durch „418 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2016 in Kraft."
+   },
+   "32015R2172": {
+    "regulation": "Delegierte Verordnung (EU) 2015/2172 der Kommission vom 24. November 2015",
+    "official_journal": "ABl. L 307 vom 25.11.2015, S. 9",
+    "celex": "32015R2172",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2172",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2172",
+    "retrieved_sha256": "af490a9c8e4918cee807005e602c5b5d9252702d1b07205635c8574d7f7a4354",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-01-01",
+    "quote": "Artikel 1 In Artikel 8 Absatz 1 der Richtlinie 2014/23/EU wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2016 in Kraft."
+   },
+   "32015R2340": {
+    "regulation": "Verordnung (EU) 2015/2340 der Kommission vom 15. Dezember 2015",
+    "official_journal": "ABl. L 330 vom 16.12.2015, S. 14",
+    "celex": "32015R2340",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2340",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2340",
+    "retrieved_sha256": "045e1b9747736b19aedf07cd48fabe645990028ff26ba80bf90ea1dfcc30ce08",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-01-01",
+    "quote": "Artikel 1 Artikel 8 der Richtlinie 2009/81/EG wird wie folgt geändert: 1. Unter Buchstabe a wird der Betrag „414 000 EUR“ durch „418 000 EUR“ ersetzt. 2. Unter Buchstabe b wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2016 in Kraft."
+   },
+   "32015R2341": {
+    "regulation": "Verordnung (EU) 2015/2341 der Kommission vom 15. Dezember 2015",
+    "official_journal": "ABl. L 330 vom 16.12.2015, S. 16",
+    "celex": "32015R2341",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2341",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2341",
+    "retrieved_sha256": "e9bf066417f07da2ee9ef438a14035609b10fb092f78cc3ff779ac8ae59c7db7",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2004/17/EG wird wie folgt geändert: 1. Artikel 16 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „414 000 EUR“ durch „418 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. 2. Artikel 61 wird wie folgt geändert: a) In Absatz 1 wird der Betrag „414 000 EUR“ durch „418 000 EUR“ ersetzt. b) In Absatz 2 wird der Betrag „414 000 EUR“ durch „418 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2016 in Kraft."
+   },
+   "32015R2342": {
+    "regulation": "Verordnung (EU) 2015/2342 der Kommission vom 15. Dezember 2015",
+    "official_journal": "ABl. L 330 vom 16.12.2015, S. 18",
+    "celex": "32015R2342",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2342",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2342",
+    "retrieved_sha256": "989cac3a9f939f65b99784d3549730cf4e20f87034fd49627bdff4d26f375e32",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2004/18/EG wird wie folgt geändert: (1) Artikel 7 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „134 000 EUR“ durch „135 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „207 000 EUR“ durch „209 000 EUR“ ersetzt. c) Unter Buchstabe c wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. (2) Artikel 8 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „207 000 EUR“ durch „209 000 EUR“ ersetzt. (3) In Artikel 56 wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. (4) In Artikel 63 Absatz 1 Unterabsatz 1 wird der Betrag „5 186 000 EUR“ durch „5 225 000 EUR“ ersetzt. (5) Artikel 67 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „134 000 EUR“ durch „135 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „207 000 EUR“ durch „209 000 EUR“ ersetzt. c) Unter Buchstabe c wird der Betrag „207 000 EUR“ durch „209 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2016 in Kraft."
+   },
+   "32017R2364": {
+    "regulation": "Delegierte Verordnung (EU) 2017/2364 der Kommission vom 18. Dezember 2017",
+    "official_journal": "ABl. L 337 vom 19.12.2017, S. 17",
+    "celex": "32017R2364",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R2364",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32017R2364",
+    "retrieved_sha256": "9aab6e0f1f7b7dcb54081e7e221dabfc411a6f0c76a13eef107b9e40229f52e8",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2018-01-01",
+    "quote": "Artikel 1 Artikel 15 der Richtlinie 2014/25/EU wird wie folgt geändert: (1) Unter Buchstabe a wird der Betrag „418 000 EUR“ durch „443 000 EUR“ ersetzt. (2) Unter Buchstabe b wird der Betrag „5 225 000 EUR“ durch „5 548 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2018 in Kraft."
+   },
+   "32017R2365": {
+    "regulation": "Delegierte Verordnung (EU) 2017/2365 der Kommission vom 18. Dezember 2017",
+    "official_journal": "ABl. L 337 vom 19.12.2017, S. 19",
+    "celex": "32017R2365",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R2365",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32017R2365",
+    "retrieved_sha256": "4a9cdce02e59ea8e4f73398c0f77f5ee2a25821e206e483debdea7a5b1d9cb8b",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2018-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2014/24/EU wird wie folgt geändert: (1) Artikel 4 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 225 000 EUR“ durch „5 548 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „135 000 EUR“ durch „144 000 EUR“ ersetzt. c) Unter Buchstabe c wird der Betrag „209 000 EUR“ durch „221 000 EUR“ ersetzt. (2) Artikel 13 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 225 000 EUR“ durch „5 548 000 EUR“ ersetzt. b) Unter Buchstabe b wird der Betrag „209 000 EUR“ durch „221 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2018 in Kraft."
+   },
+   "32017R2366": {
+    "regulation": "Delegierte Verordnung (EU) 2017/2366 der Kommission vom 18. Dezember 2017",
+    "official_journal": "ABl. L 337 vom 19.12.2017, S. 21",
+    "celex": "32017R2366",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R2366",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32017R2366",
+    "retrieved_sha256": "ebddbb30a9540da7a45baac287761df0528261d6df886880856a500099f5d790",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2018-01-01",
+    "quote": "Artikel 1 In Artikel 8 Absatz 1 der Richtlinie 2014/23/EU wird der Betrag „5 225 000 EUR“ durch „5 548 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2018 in Kraft."
+   },
+   "32017R2367": {
+    "regulation": "Verordnung (EU) 2017/2367 der Kommission vom 18. Dezember 2017",
+    "official_journal": "ABl. L 337 vom 19.12.2017, S. 22",
+    "celex": "32017R2367",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R2367",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32017R2367",
+    "retrieved_sha256": "24e934376451464ac75c914b9ccd5ddf18e35c936fe287e5bbb9f28108a233d4",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2018-01-01",
+    "quote": "Artikel 1 Artikel 8 der Richtlinie 2009/81/EG wird wie folgt geändert: (1) Unter Buchstabe a wird der Betrag „418 000 EUR“ durch „443 000 EUR“ ersetzt. (2) Unter Buchstabe b wird der Betrag „5 225 000 EUR“ durch „5 548 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am 1. Januar 2018 in Kraft."
+   },
+   "32019R1827": {
+    "regulation": "Delegierte Verordnung (EU) 2019/1827 der Kommission vom 30. Oktober 2019",
+    "official_journal": "ABl. L 279 vom 31.10.2019, S. 23",
+    "celex": "32019R1827",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32019R1827",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32019R1827",
+    "retrieved_sha256": "a3103912fd43bbad2f03ada3756dde72e3e4536fbe531bed7692e76a0a9b9d12",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2020-01-01",
+    "quote": "Artikel 1 In Artikel 8 Absatz 1 der Richtlinie 2014/23/EU wird der Betrag „5 548 000 EUR“ durch den Betrag „5 350 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2020."
+   },
+   "32019R1828": {
+    "regulation": "Delegierte Verordnung (EU) 2019/1828 der Kommission vom 30. Oktober 2019",
+    "official_journal": "ABl. L 279 vom 31.10.2019, S. 25",
+    "celex": "32019R1828",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32019R1828",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32019R1828",
+    "retrieved_sha256": "f7685bad87f95b205ce07d2343c4778b5529cc3ece0f7f115794b58ff3da29c0",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2020-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2014/24/EU wird wie folgt geändert: 1. Artikel 4 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 548 000 EUR“ ersetzt durch „5 350 000 EUR“, b) unter Buchstabe b wird der Betrag „144 000 EUR“ ersetzt durch „139 000 EUR“; c) unter Buchstabe c wird der Betrag „221 000 EUR“ ersetzt durch „214 000 EUR“; 2. Artikel 13 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 548 000 EUR“ ersetzt durch „5 350 000 EUR“, b) Unter Buchstabe b wird der Betrag „221 000 EUR“ ersetzt durch „214 000 EUR“; Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2020."
+   },
+   "32019R1829": {
+    "regulation": "Delegierte Verordnung (EU) 2019/1829 der Kommission vom 30. Oktober 2019",
+    "official_journal": "ABl. L 279 vom 31.10.2019, S. 27",
+    "celex": "32019R1829",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32019R1829",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32019R1829",
+    "retrieved_sha256": "f5e6d39e64181c703c92c139288db5a0fa1e9f35eadcfb69f407d33e19d99c58",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2020-01-01",
+    "quote": "Artikel 1 Artikel 15 der Richtlinie 2014/25/EU wird wie folgt geändert: 1. In Buchstabe a wird „443 000 EUR“ ersetzt durch „428 000 EUR“; 2. in Buchstabe b wird „5 548 000 EUR“ ersetzt durch „5 350 000 EUR“. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2020."
+   },
+   "32019R1830": {
+    "regulation": "Delegierte Verordnung (EU) 2019/1830 der Kommission vom 30. Oktober 2019",
+    "official_journal": "ABl. L 279 vom 31.10.2019, S. 29",
+    "celex": "32019R1830",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32019R1830",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32019R1830",
+    "retrieved_sha256": "5a17f21ea1447846b1b904f2e11be804403791ef5524ca69c94ce186f86f3880",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2020-01-01",
+    "quote": "Artikel 1 Artikel 8 der Richtlinie 2009/81/EG wird wie folgt geändert: 1. In Buchstabe a wird „443 000 EUR“ ersetzt durch „428 000 EUR“; 2. in Buchstabe b wird „5 548 000 EUR“ ersetzt durch „5 350 000 EUR“. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2020."
+   },
+   "32021R1950": {
+    "regulation": "Delegierte Verordnung (EU) 2021/1950 der Kommission vom 10. November 2021",
+    "official_journal": "ABl. L 398 vom 11.11.2021, S. 19",
+    "celex": "32021R1950",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32021R1950",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32021R1950",
+    "retrieved_sha256": "33bab7a59a449d46c44bca5ae4a70a374a205b937e46bb3870a4c9ac82a12d27",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2022-01-01",
+    "quote": "Artikel 1 Artikel 8 der Richtlinie 2009/81/EG wird wie folgt geändert: 1. In Buchstabe a wird „428 000 EUR“ ersetzt durch „431 000 EUR“; 2. in Buchstabe b wird „5 350 000 EUR“ ersetzt durch „5 382 000 EUR“. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2022."
+   },
+   "32021R1951": {
+    "regulation": "Delegierte Verordnung (EU) 2021/1951 der Kommission vom 10. November 2021",
+    "official_journal": "ABl. L 398 vom 11.11.2021, S. 21",
+    "celex": "32021R1951",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32021R1951",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32021R1951",
+    "retrieved_sha256": "98becc43f6b86cb2a135c73c4a92d70b2ccc29463aaf75355041fce1ed7f4e95",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2022-01-01",
+    "quote": "Artikel 1 In Artikel 8 Absatz 1 der Richtlinie 2014/23/EU wird der Betrag „5 350 000 EUR“ durch den Betrag „5 382 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2022."
+   },
+   "32021R1952": {
+    "regulation": "Delegierte Verordnung (EU) 2021/1952 der Kommission vom 10. November 2021",
+    "official_journal": "ABl. L 398 vom 11.11.2021, S. 23",
+    "celex": "32021R1952",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32021R1952",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32021R1952",
+    "retrieved_sha256": "7b612376694b1312d8475faf2c5313d0c607ae0bc924a6346cd74bddee6184ca",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2022-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2014/24/EU wird wie folgt geändert: 1. Artikel 4 wird wie folgt geändert: a) Unter Buchstabe a wird „5 350 000 EUR“ ersetzt durch „5 382 000 EUR“; b) unter Buchstabe b wird „139 000 EUR“ ersetzt durch „140 000 EUR“; c) unter Buchstabe c wird „214 000 EUR“ ersetzt durch „215 000 EUR“. 2. Artikel 13 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird „5 350 000 EUR“ ersetzt durch „5 382 000 EUR“; b) unter Buchstabe b wird „214 000 EUR“ ersetzt durch „215 000 EUR“. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2022."
+   },
+   "32021R1953": {
+    "regulation": "Delegierte Verordnung (EU) 2021/1953 der Kommission vom 10. November 2021",
+    "official_journal": "ABl. L 398 vom 11.11.2021, S. 25",
+    "celex": "32021R1953",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32021R1953",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32021R1953",
+    "retrieved_sha256": "c74256ed505e4f6e09c1aea1e0cdc6878ffe776796494443e5d684f2f1f47bfd",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2022-01-01",
+    "quote": "Artikel 1 Artikel 15 der Richtlinie 2014/25/EU wird wie folgt geändert: 1. In Buchstabe a wird „428 000 EUR“ ersetzt durch „431 000 EUR“; 2. in Buchstabe b wird „5 350 000 EUR“ ersetzt durch „5 382 000 EUR“. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2022."
+   },
+   "32023R2495": {
+    "regulation": "Delegierte Verordnung (EU) 2023/2495 der Kommission vom 15. November 2023",
+    "official_journal": "ABl. L, 2023/2495, 16.11.2023",
+    "celex": "32023R2495",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32023R2495",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32023R2495",
+    "retrieved_sha256": "ca2ef5aa1411ce71a330a3ececda60c1a777c841f2b99844222930249c06e8f1",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2024-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2014/24/EU wird wie folgt geändert: 1. Artikel 4 wird wie folgt geändert: a) unter Buchstabe a wird der Betrag „5 382 000 EUR“ durch den Betrag „5 538 000 EUR“ ersetzt; b) unter Buchstabe b wird der Betrag „140 000 EUR“ durch den Betrag „143 000 EUR“ ersetzt; c) unter Buchstabe c wird der Betrag „215 000 EUR“ durch den Betrag „221 000 EUR“ ersetzt; 2. Artikel 13 Absatz 1 wird wie folgt geändert: a) unter Buchstabe a wird der Betrag „5 382 000 EUR“ durch den Betrag „5 538 000 EUR“ ersetzt; b) unter Buchstabe b wird der Betrag „215 000 EUR“ durch den Betrag „221 000 EUR“ ersetzt; Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2024."
+   },
+   "32023R2496": {
+    "regulation": "Delegierte Verordnung (EU) 2023/2496 der Kommission vom 15. November 2023",
+    "official_journal": "ABl. L, 2023/2496, 16.11.2023",
+    "celex": "32023R2496",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32023R2496",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32023R2496",
+    "retrieved_sha256": "f936ea914fa9e55e1e7650758d499ee2f57a92102e77545accdd7ff8913f84b5",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2024-01-01",
+    "quote": "Artikel 1 Artikel 15 der Richtlinie 2014/25/EU wird wie folgt geändert: 1. Unter Buchstabe a wird der Betrag „431 000 EUR“ durch den Betrag „443 000 EUR“ ersetzt; 2. unter Buchstabe b wird der Betrag „5 382 000 EUR“ durch den Betrag „5 538 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2024."
+   },
+   "32023R2497": {
+    "regulation": "Delegierte Verordnung (EU) 2023/2497 der Kommission vom 15. November 2023",
+    "official_journal": "ABl. L, 2023/2497, 16.11.2023",
+    "celex": "32023R2497",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32023R2497",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32023R2497",
+    "retrieved_sha256": "58dcb8a0a01e73c46c65c42a5645783be8f89672b6c79f8f2d13fda203d0cdd8",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2024-01-01",
+    "quote": "Artikel 1 In Artikel 8 Absatz 1 der Richtlinie 2014/23/EU wird der Betrag „5 382 000 EUR“ durch den Betrag „5 538 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2024."
+   },
+   "32023R2510": {
+    "regulation": "Delegierte Verordnung (EU) 2023/2510 der Kommission vom 15. November 2023",
+    "official_journal": "ABl. L, 2023/2510, 16.11.2023",
+    "celex": "32023R2510",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32023R2510",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32023R2510",
+    "retrieved_sha256": "37d706d866d091ab0de041045bbffd8228606fe4e49392cec801ef61d5f349f1",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2024-01-01",
+    "quote": "Artikel 1 Artikel 8 der Richtlinie 2009/81/EG wird wie folgt geändert: 1. Unter Buchstabe a wird „431 000 EUR“ ersetzt durch „443 000 EUR“; 2. unter Buchstabe b wird „5 382 000 EUR“ ersetzt durch „5 538 000 EUR“. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2024."
+   },
+   "32025R2150": {
+    "regulation": "Delegierte Verordnung (EU) 2025/2150 der Kommission vom 22. Oktober 2025",
+    "official_journal": "ABl. L, 2025/2150, 23.10.2025",
+    "celex": "32025R2150",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32025R2150",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32025R2150",
+    "retrieved_sha256": "8e1eccbd7c7dceb3f566dbf706878f4f7a2d4f3967cc3ff43a61ad3ab6fc09ae",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2026-01-01",
+    "quote": "Artikel 1 Artikel 15 der Richtlinie 2014/25/EU wird wie folgt geändert: 1. Unter Buchstabe a wird der Betrag „443 000 EUR“ durch den Betrag „432 000 EUR“ ersetzt, 2. unter Buchstabe b wird der Betrag „5 538 000 EUR“ durch den Betrag „5 404 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2026."
+   },
+   "32025R2151": {
+    "regulation": "Delegierte Verordnung (EU) 2025/2151 der Kommission vom 22. Oktober 2025",
+    "official_journal": "ABl. L, 2025/2151, 23.10.2025",
+    "celex": "32025R2151",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32025R2151",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32025R2151",
+    "retrieved_sha256": "100b889ea1733d07fce5048e3cf49f3aeea3f605712a083668aa73263fb1d167",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2026-01-01",
+    "quote": "Artikel 1 In Artikel 8 Absatz 1 der Richtlinie 2014/23/EU wird der Betrag „5 538 000 EUR“ durch den Betrag „5 404 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2026."
+   },
+   "32025R2152": {
+    "regulation": "Delegierte Verordnung (EU) 2025/2152 der Kommission vom 22. Oktober 2025",
+    "official_journal": "ABl. L, 2025/2152, 23.10.2025",
+    "celex": "32025R2152",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32025R2152",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32025R2152",
+    "retrieved_sha256": "42a76b2d440449e63dd40d78ffe8db3c197dad35baefd0d63de198969f897c97",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2026-01-01",
+    "quote": "Artikel 1 Die Richtlinie 2014/24/EU wird wie folgt geändert: 1. Artikel 4 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 538 000 EUR“ durch den Betrag „5 404 000 EUR“ ersetzt, b) unter Buchstabe b wird der Betrag „143 000 EUR“ durch den Betrag „140 000 EUR“ ersetzt, c) unter Buchstabe c wird der Betrag „221 000 EUR“ durch den Betrag „216 000 EUR“ ersetzt. 2. Artikel 13 Absatz 1 wird wie folgt geändert: a) Unter Buchstabe a wird der Betrag „5 538 000 EUR“ durch den Betrag „5 404 000 EUR“ ersetzt, b) unter Buchstabe b wird der Betrag „221 000 EUR“ durch den Betrag „216 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2026."
+   },
+   "32025R2487": {
+    "regulation": "Delegierte Verordnung (EU) 2025/2487 der Kommission vom 2. Dezember 2025",
+    "official_journal": "ABl. L, 2025/2487, 4.12.2025",
+    "celex": "32025R2487",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32025R2487",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32025R2487",
+    "retrieved_sha256": "5b21cc0bd9dd6560f1761de185feda67541bb166027b70555b0ca68c1eb2a643",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2026-01-01",
+    "quote": "Artikel 1 Artikel 8 der Richtlinie 2009/81/EG wird wie folgt geändert: 1. Unter Buchstabe a wird der Betrag „443 000 EUR“ durch den Betrag „432 000 EUR“ ersetzt; 2. unter Buchstabe b wird der Betrag „5 538 000 EUR“ durch den Betrag „5 404 000 EUR“ ersetzt. Artikel 2 Diese Verordnung tritt am zwanzigsten Tag nach ihrer Veröffentlichung im Amtsblatt der Europäischen Union in Kraft. Sie gilt ab dem 1. Januar 2026."
+   },
+   "32014L0024": {
+    "regulation": "Richtlinie 2014/24/EU des Europäischen Parlaments und des Rates vom 26. Februar 2014",
+    "official_journal": "ABl. L 94 vom 28.3.2014, S. 65",
+    "celex": "32014L0024",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0024",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32014L0024",
+    "retrieved_sha256": "c97a294508f12456228cfecc6f5e0de9712d971064699777d46aee5efb982ee1",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-04-18",
+    "quote": "Artikel 4 Höhe der Schwellenwerte Diese Richtlinie gilt für Aufträge, deren geschätzter Wert ohne Mehrwertsteuer (MwSt.) die folgenden Schwellenwerte nicht unterschreitet: a) 5 186 000 EUR bei öffentlichen Bauaufträgen; b) 134 000 EUR bei öffentlichen Liefer- und Dienstleistungsaufträgen, die von zentralen Regierungsbehörden vergeben werden, und bei von diesen Behörden ausgerichteten Wettbewerben; bei öffentlichen Lieferaufträgen, die von öffentlichen Auftraggebern im Verteidigungsbereich vergeben werden, gilt dieser Schwellenwert nur für Aufträge über Waren, die in Anhang III aufgeführt sind; c) 207 000 EUR bei öffentlichen Liefer- und Dienstleistungsaufträgen, die von subzentralen öffentlichen Auftraggebern vergeben werden, und bei von diesen Behörden ausgerichteten Wettbewerben; dieser Schwellenwert gilt auch bei öffentlichen Lieferaufträgen, die von zentralen Regierungsbehörden im Verteidigungsbereich vergeben werden, sofern diese Aufträge Waren betreffen, die nicht in Anhang III aufgeführt sind; d) 750 000 EUR bei öffentlichen Dienstleistungsaufträgen betreffend soziale und andere besondere Dienstleistungen im Sinne von Anhang XIV."
+   },
+   "32014L0025": {
+    "regulation": "Richtlinie 2014/25/EU des Europäischen Parlaments und des Rates vom 26. Februar 2014",
+    "official_journal": "ABl. L 94 vom 28.3.2014, S. 243",
+    "celex": "32014L0025",
+    "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32014L0025",
+    "retrieved_from": "http://publications.europa.eu/resource/celex/32014L0025",
+    "retrieved_sha256": "c9e76cf4548d1e23d2b621a15710e8e7b314410c3eb2f756e635857c5c2cfac0",
+    "retrieved_on": "2026-10-13",
+    "applies_from": "2016-04-18",
+    "quote": "Artikel 15 Höhe der Schwellenwerte Mit Ausnahme von Aufträgen, für die die Ausnahmen der Artikel 18 bis 23 gelten oder die gemäß Artikel 34 ausgeschlossen sind, gilt diese Richtlinie in Bezug auf die Ausübung der betreffenden Tätigkeit für Aufträge, deren geschätzter Wert ohne Mehrwertsteuer (MwSt.) die folgenden Schwellenwerte nicht unterschreitet: a) 414 000 EUR bei Liefer- und Dienstleistungsaufträgen sowie Wettbewerben; b) 5 186 000 EUR bei Bauaufträgen; c) 1 000 000 EUR bei Dienstleistungsaufträgen betreffend soziale und andere besondere Dienstleistungen, die in Anhang XVII aufgeführt sind."
+   }
+  },
+  "not_entered": "Nicht eingetragen sind Zeiträume vor 2014 und ab 2028. Konzessionen sind erst ab dem 18.04.2016 eingetragen; Baukonzessionen nach Art. 56 RL 2004/18/EG für die Zeit davor sind nicht enthalten. Der Schwellenwert für soziale und andere besondere Dienstleistungen besteht erst seit den Richtlinien von 2014 und ist ab dem 18.04.2016 eingetragen. Wettbewerbe werden nicht gesondert geführt (Art. 4 Buchst. b und c RL 2014/24/EU und Art. 15 Buchst. a RL 2014/25/EU nennen sie beim Schwellenwert für Liefer- und Dienstleistungsaufträge). Subventionierte Aufträge (Art. 13 RL 2014/24/EU) und die Regeln zur Schätzung des Auftragswerts einschließlich der Losregelungen sind nicht abgebildet."
+ }
+}

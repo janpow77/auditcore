@@ -151,7 +151,7 @@ def test_profile_from_ruleset_year_bound_and_legacy() -> None:
         rules, profile_id="app", version="1", source={}, year_bound=True
     )
     current = prechecks.load_profile(*prechecks.CURRENT_PROFILE)
-    assert prechecks.CURRENT_PROFILE == ("procurement.hvtg", "2026.09.3")
+    assert prechecks.CURRENT_PROFILE == ("procurement.hvtg", "2026.10.1")
     assert bound.eu_periods == current.eu_periods and bound.tiers == HVTG.tiers
     pinned = prechecks.profile_from_ruleset(
         rules, profile_id="app", version="1", source={}, year_bound=True, eu_version="2026.09.2"
