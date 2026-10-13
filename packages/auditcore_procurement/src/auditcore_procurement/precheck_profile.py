@@ -3,7 +3,8 @@
 Part of :mod:`auditcore_procurement.prechecks` (which re-exports every public
 name): the ``threshold_rules``/``required_documents_by_procedure`` of the
 ``PROCUREMENT_HVTG`` ruleset as a validated, fingerprinted profile, and the
-year-bound EU thresholds of schema 2 with their official sources.
+year-bound EU thresholds of schema 2 with their official sources. Schema 3 adds
+the EU thresholds of all regimes (:mod:`auditcore_procurement.eu_regimes`).
 """
 
 from __future__ import annotations
@@ -18,10 +19,16 @@ from typing import Any
 from auditcore_common.hashing import canonical_sha256
 from auditcore_common.profiles import load_packaged_profile
 
+from .eu_regimes import RegimeError, RegimeTable, find_series, parse_regimes, row_on
+
 AUTHORITY_TYPES = ("central", "sub_central")
 #: Decoded profile or ruleset JSON as read from a file or passed by a consumer.
 ProfileData = Mapping[str, Any]
-SCHEMAS = ("auditcore_procurement.precheck-profile/1", "auditcore_procurement.precheck-profile/2")
+SCHEMAS = (
+    "auditcore_procurement.precheck-profile/1",
+    "auditcore_procurement.precheck-profile/2",
+    "auditcore_procurement.precheck-profile/3",
+)
 
 
 class ProfileError(ValueError):
@@ -96,6 +103,7 @@ class PrecheckProfile:
     eu_categories: ProfileData | None = None
     national_tiers: tuple[str, ...] = ()
     national_status: str = ""
+    eu_regimes: RegimeTable | None = None
 
     @property
     def reference(self) -> dict[str, str]:
@@ -152,6 +160,7 @@ def profile_from_dict(data: ProfileData) -> PrecheckProfile:
             eu_categories=eu_categories,
             national_tiers=national,
             national_status=national_status,
+            eu_regimes=_schema3(data, periods, eu_categories),
         )
     except (KeyError, TypeError, ValueError) as exc:
         if isinstance(exc, ProfileError):
@@ -183,6 +192,49 @@ def _schema2(
     return tuple(periods), eu_tier, categories, names, str(national["status"])
 
 
+def _schema3(
+    data: ProfileData, periods: Sequence[ThresholdPeriod], categories: ProfileData | None
+) -> RegimeTable | None:
+    """Validate the regime block of schema 3 and its agreement with the year table."""
+    if data["schema"] != SCHEMAS[2]:
+        return None
+    try:
+        table = parse_regimes(data["eu_regimes"])
+    except RegimeError as exc:
+        raise ProfileError(f"EU-Schwellenwerte je Regime: {exc}") from exc
+    if set(table.precheck_categories) != set(categories or {}):
+        raise ProfileError("precheck_view deckt die Kategorien der Jahrestabelle nicht ab.")
+    for category, spec in (categories or {}).items():
+        keys: dict[str | None, str] = (
+            {str(k): str(v) for k, v in spec.items()}
+            if isinstance(spec, Mapping)
+            else {None: str(spec)}
+        )
+        for authority, key in keys.items():
+            if not _view_agrees(table, category, authority, key, periods):
+                raise ProfileError(f"Jahrestabelle und Regimetabelle weichen bei '{key}' ab.")
+    return table
+
+
+def _view_agrees(
+    table: RegimeTable,
+    category: str,
+    authority: str | None,
+    key: str,
+    periods: Sequence[ThresholdPeriod],
+) -> bool:
+    """Same value in the year table and in the regime table on every period boundary."""
+    regime = table.regime(table.precheck_regime)
+    series = find_series(regime, table.precheck_categories[category], authority)
+    if series is None:
+        return False
+    return all(
+        (row := row_on(series, day)) is not None and row.value == period.values[key]
+        for period in periods
+        for day in (period.valid_from, period.valid_to)
+    )
+
+
 def _eu_periods(rows: Sequence[ProfileData]) -> list[ThresholdPeriod]:
     """Validated periods in date order; overlapping periods are rejected."""
     periods = [_eu_period_row(row) for row in rows]
@@ -208,19 +260,21 @@ def _eu_period_row(row: ProfileData) -> ThresholdPeriod:
 
 
 def _packaged_eu_block(version: str) -> dict[str, Any]:
-    """EU table and national block of a packaged ``procurement.hvtg`` profile version."""
+    """Schema, EU blocks and national block of a packaged ``procurement.hvtg`` version."""
     name = f"{CURRENT_PROFILE[0]}-{version}.json"
     entry = resources.files("auditcore_procurement.profiles").joinpath(name)
     if "/" in name or "\\" in name or not entry.is_file():
         raise ProfileError(f"Profil {name[:-5]} ist nicht vorhanden.")
     data = json.loads(entry.read_text(encoding="utf-8"))
-    if data.get("schema") != SCHEMAS[1]:
+    if data.get("schema") not in SCHEMAS[1:]:
         raise ProfileError(f"Profil {CURRENT_PROFILE[0]} {version} hat keine Jahrestabelle.")
-    return {"eu_thresholds": data["eu_thresholds"], "national_tiers": data["national_tiers"]}
+    blocks = ("schema", "eu_thresholds", "national_tiers", "eu_regimes")
+    return {key: data[key] for key in blocks if key in data}
 
 
-#: Newest packaged year-bound profile (2014–2027). 2026.09.2 (2024–2027) stays loadable.
-CURRENT_PROFILE = ("procurement.hvtg", "2026.09.3")
+#: Newest packaged profile (2014–2027, all EU regimes). 2026.09.3 (public contracts
+#: only) and 2026.09.2 (2024–2027) stay loadable.
+CURRENT_PROFILE = ("procurement.hvtg", "2026.10.1")
 
 
 def profile_from_ruleset(
@@ -238,9 +292,9 @@ def profile_from_ruleset(
 
     ``year_bound=True`` adds the verified year-bound EU table of the packaged
     ``procurement.hvtg`` profile ``eu_version`` (default: ``CURRENT_PROFILE``,
-    2026.09.3; pin ``"2026.09.2"`` to reproduce 0.1.0) for ``strict`` mode
-    (schema 2); the ruleset's own ``BELOW_EU`` maxima are then used only by
-    ``legacy`` mode."""
+    2026.10.1 with all EU regimes; pin ``"2026.09.3"`` or ``"2026.09.2"`` to
+    reproduce earlier fingerprints) for ``strict`` mode; the ruleset's own
+    ``BELOW_EU`` maxima are then used only by ``legacy`` mode."""
     try:
         tiers = {
             category: [
@@ -257,10 +311,9 @@ def profile_from_ruleset(
         required = ruleset["required_documents_by_procedure"]
     except (KeyError, AttributeError, TypeError) as exc:
         raise ProfileError(f"Regelwerk ohne threshold_rules/required_documents: {exc!r}") from exc
-    extra = _packaged_eu_block(eu_version) if year_bound else {}
+    extra = _packaged_eu_block(eu_version) if year_bound else {"schema": SCHEMAS[0]}
     return profile_from_dict(
         {
-            "schema": f"auditcore_procurement.precheck-profile/{2 if year_bound else 1}",
             **extra,
             "id": profile_id,
             "version": version,

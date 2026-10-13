@@ -140,7 +140,8 @@
   "profiles": [
     "procurement.hvtg-legacy 2026.09.1",
     "procurement.hvtg 2026.09.2",
-    "procurement.hvtg 2026.09.3"
+    "procurement.hvtg 2026.09.3",
+    "procurement.hvtg 2026.10.1"
   ],
   "behavior_changes": "docs/behavior-changes.md",
   "eu_thresholds": {
@@ -199,9 +200,57 @@
         "date": "2026-09-23",
         "text": "c2. ja",
         "effect": "EU-Schwellenwerte 2014–2023 aus den amtlichen (Delegierten) Verordnungen nachgetragen (Profil procurement.hvtg 2026.09.3)"
+      },
+      {
+        "date": "2026-10-13",
+        "text": "Auftrag: Das Paket soll die EU-Schwellenwerte vollständig führen (Sektorenaufträge, Konzessionen, soziale und andere besondere Dienstleistungen, Verteidigung und Sicherheit).",
+        "effect": "Profil procurement.hvtg 2026.10.1 mit Block eu_regimes; Werte für öffentliche Aufträge erneut geprüft, keine Abweichung"
       }
     ],
-    "retrieval": "Amtlicher deutscher Text über Cellar des Amts für Veröffentlichungen (publications.europa.eu/resource/celex/<CELEX>); SHA-256 je Dokument im Profil (retrieved_sha256)"
+    "retrieval": "Amtlicher deutscher Text über Cellar des Amts für Veröffentlichungen (publications.europa.eu/resource/celex/<CELEX>); SHA-256 je Dokument im Profil (retrieved_sha256)",
+    "regimes": {
+      "profile": "procurement.hvtg 2026.10.1",
+      "verified_on": "2026-10-13",
+      "builder": "tools/build_eu_regimes_profile.py",
+      "official_texts": "tools/eu_threshold_sources.json (SHA-256 und Wortlaut je CELEX-Nummer)",
+      "directives": [
+        "32014L0024",
+        "32014L0025",
+        "32014L0023",
+        "32009L0081"
+      ],
+      "amending_acts": [
+        "32013R1336",
+        "32015R2170",
+        "32015R2171",
+        "32015R2172",
+        "32015R2340",
+        "32015R2341",
+        "32015R2342",
+        "32017R2364",
+        "32017R2365",
+        "32017R2366",
+        "32017R2367",
+        "32019R1827",
+        "32019R1828",
+        "32019R1829",
+        "32019R1830",
+        "32021R1950",
+        "32021R1951",
+        "32021R1952",
+        "32021R1953",
+        "32023R2495",
+        "32023R2496",
+        "32023R2497",
+        "32023R2510",
+        "32025R2150",
+        "32025R2151",
+        "32025R2152",
+        "32025R2487"
+      ],
+      "amending_acts_source": "Cellar-SPARQL (cdm:resource_legal_amends_resource_legal) am 13.10.2026; 32019R1243 (RL 2009/81/EG) und 32026L0806 (RL 2014/24/EU) ändern keine Schwellenwerte",
+      "not_entered": "vor 2014, ab 2028; Baukonzessionen nach Art. 56 RL 2004/18/EG vor dem 18.04.2016; subventionierte Aufträge (Art. 13 RL 2014/24/EU); Wettbewerbe als eigene Auftragsart"
+    }
   },
   "specification": {
     "document": "docs/spezifikation.md",
