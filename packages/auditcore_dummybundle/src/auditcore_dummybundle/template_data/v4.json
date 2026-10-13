@@ -1,0 +1,244 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v4",
+  "id": "V4",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Mittelabruf des Begünstigten",
+  "purpose": "Erstattungsantrag des Begünstigten an die zwischengeschaltete Stelle: Kopfdaten, Summen, Fristdaten und die Belegübersicht.",
+  "legal_basis": "VO (EU) 2021/1060, Art. 74 Abs. 1 Buchst. b (Auszahlung binnen 80 Tagen), Anhang XVII Felder 70 und 72",
+  "sources": [
+    "Datenfelder nach dem Vorlagenvorschlag vom 13.10.2026 (V4)."
+  ],
+  "open_points": [
+    "Wortlaut und Aufbau eines Mittelabrufformulars sowie weitere Statuswerte sind nicht belegt; erzeugt werden nur die Datenfelder.",
+    "Die Erklärungen des Begünstigten werden nicht nachgebildet."
+  ],
+  "tables": [
+    {
+      "name": "Mittelabrufe",
+      "title": "Mittelabrufe",
+      "source": "claims",
+      "columns": [
+        {
+          "header": "Vorhaben (Antrags-Nr.)",
+          "kind": "text",
+          "field": "operation_id",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "SYN-0001"
+            }
+          }
+        },
+        {
+          "header": "MA-Lfd.",
+          "kind": "int",
+          "field": "seq",
+          "free": {
+            "type": "sequence",
+            "params": {}
+          }
+        },
+        {
+          "header": "Antragsnummer",
+          "kind": "text",
+          "field": "claim_id",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "MA-SYN-0001-{NN}"
+            }
+          }
+        },
+        {
+          "header": "Datum Antrag",
+          "kind": "date",
+          "field": "application_date",
+          "free": {
+            "type": "date",
+            "params": {}
+          }
+        },
+        {
+          "header": "Datum Eingang bei der zwischengeschalteten Stelle",
+          "kind": "date",
+          "field": "receipt_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Datum Antrag",
+              "min_days": 0,
+              "max_days": 3
+            }
+          }
+        },
+        {
+          "header": "Datum Auszahlung",
+          "kind": "date",
+          "field": "payment_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Datum Eingang bei der zwischengeschalteten Stelle",
+              "min_days": 5,
+              "max_days": 60
+            }
+          }
+        },
+        {
+          "header": "Bearbeitungsdauer (Tage)",
+          "kind": "int",
+          "field": "processing_days",
+          "note": "Auszahlung minus Eingang.",
+          "free": {
+            "type": "integer",
+            "params": {
+              "min": 5,
+              "max": 60
+            }
+          }
+        },
+        {
+          "header": "Anforderung EUR",
+          "kind": "amount",
+          "field": "requested",
+          "sum": true,
+          "free": {
+            "type": "amount",
+            "params": {
+              "min": "5000.00",
+              "max": "250000.00",
+              "distribution": "skewed"
+            }
+          }
+        },
+        {
+          "header": "Förderfähig EUR",
+          "kind": "amount",
+          "field": "eligible",
+          "sum": true,
+          "free": {
+            "type": "amount_factor",
+            "params": {
+              "field": "Anforderung EUR",
+              "min_factor": "0.90",
+              "max_factor": "1.00"
+            }
+          }
+        },
+        {
+          "header": "Davon öffentlich EUR",
+          "kind": "amount",
+          "field": "public",
+          "sum": true,
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Förderfähig EUR"
+              ],
+              "rate": "0.75"
+            }
+          }
+        },
+        {
+          "header": "Status",
+          "kind": "text",
+          "field": "status",
+          "note": "Nur der Wert „ausgezahlt“ ist belegt.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": "ausgezahlt"
+            }
+          }
+        },
+        {
+          "header": "Verwendungsnachweis eingereicht",
+          "kind": "bool",
+          "field": "final_statement",
+          "free": {
+            "type": "boolean",
+            "params": {
+              "probability": "0.30"
+            }
+          }
+        },
+        {
+          "header": "Unterzeichner",
+          "kind": "text",
+          "field": "signatory",
+          "free": {
+            "type": "person",
+            "params": {}
+          }
+        }
+      ],
+      "total_row": "bottom",
+      "free_start": true
+    },
+    {
+      "name": "Belegübersicht",
+      "title": "Belegübersicht je Mittelabruf",
+      "source": "receipts",
+      "columns": [
+        {
+          "header": "Antragsnummer",
+          "kind": "text",
+          "field": "claim_id"
+        },
+        {
+          "header": "Belegnummer",
+          "kind": "int",
+          "field": "receipt_no"
+        },
+        {
+          "header": "Datum",
+          "kind": "date",
+          "field": "invoice_date"
+        },
+        {
+          "header": "Lieferant",
+          "kind": "text",
+          "field": "supplier_name"
+        },
+        {
+          "header": "Kostenart",
+          "kind": "text",
+          "field": "cost_category"
+        },
+        {
+          "header": "Rechnung (Bemessungsgrundlage)",
+          "kind": "amount",
+          "field": "claim_basis",
+          "sum": true
+        },
+        {
+          "header": "Skonto",
+          "kind": "amount",
+          "field": "discount_amount",
+          "sum": true
+        },
+        {
+          "header": "angemeldet",
+          "kind": "amount",
+          "field": "project_related",
+          "sum": true
+        }
+      ]
+    }
+  ],
+  "content_hash": "2a86906876030265e9b894550d562412a92e8599607febc57519b82af926c152",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"
+  }
+}

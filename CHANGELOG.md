@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Neues Paket `auditcore_dummybundle` 0.1.0 (unveröffentlicht): zusammenhängende
+  synthetische Testbündel Vorhaben → Mittelabrufe → Belege → Zahlungsanträge an
+  die Kommission → Rechnungslegung mit Summenbindung in Dezimalrechnung
+  (`amounts.allocate`: die eine Fassung der Betragsverteilung mit Restausgleich),
+  acht Summenproben, elf Vorlagenprofile als Daten (V0 bis V9 und die kompakte
+  Belegliste N1; vom Rechteinhaber am 13.10.2026 freigegeben, jedes mit
+  Inhaltshash), freie Tabelle aus einem
+  Rezept mit 21 Feldtypen und den Regeln `when` und `sum_to`, 13 Auffälligkeiten
+  mit getrennter Lösung, REST-Vertrag `dummybundle_ui/1`. IBAN und USt-IdNr.
+  tragen im Standard eine gezielt verfehlte Prüfziffer. Firmennamen
+  kommen aus der Liste des Feldgenerators. Die Köpfe der Vorlagen
+  V5 und V6 stammen aus dem Amtsblatt (ABl. L 231 vom 30.6.2021, deutsche
+  Fassung, Abruf 13.10.2026). `auditcore_dummygenerator` bleibt unverändert.
 - `auditcore_procurement` (unveröffentlicht): Profil `procurement.hvtg 2026.10.1`
   führt die EU-Schwellenwerte 2014–2027 vollständig – neben öffentlichen Bau-,
   Liefer- und Dienstleistungsaufträgen (RL 2014/24/EU) jetzt Sektorenaufträge

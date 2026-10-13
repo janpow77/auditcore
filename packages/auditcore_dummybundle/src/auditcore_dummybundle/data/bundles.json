@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "bundles": [
+    {
+      "id": "kette",
+      "title": "Vom Vorhaben bis zur Rechnungslegung",
+      "purpose": "Vorhaben, Mittelabrufe, Belege, Zahlungsanträge, Korrekturen, Rechnungslegung und Grundgesamtheit aus einem Guss; alle Summen gehen ineinander auf.",
+      "templates": ["V0", "V4", "N1", "V5", "V7", "V6", "V9"]
+    },
+    {
+      "id": "vorhabenpruefung",
+      "title": "Vorhabenprüfung",
+      "purpose": "Vorhabenstamm, Mittelabrufe, Beleglisten der Prüfung je Mittelabruf und die Grundgesamtheit.",
+      "templates": ["V0", "V4", "V2", "V9"]
+    },
+    {
+      "id": "abschluss",
+      "title": "Zahlungsantrag und Rechnungslegung",
+      "purpose": "Zahlungsanträge, Abzüge und Korrekturen sowie die Anlagen der Rechnungslegung mit Abstimmung.",
+      "templates": ["V5", "V7", "V6"]
+    }
+  ]
+}
