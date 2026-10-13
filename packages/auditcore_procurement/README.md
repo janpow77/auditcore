@@ -18,17 +18,28 @@ python -m pip install auditcore_procurement \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.5,
-zuletzt im Release v0.12.0; 0.3.0 mit den EU-Schwellenwerten je Regime folgt
-mit dem nächsten Release, Versionen und Hashes stehen dann unter
-`https://janpow77.github.io/auditcore/simple/auditcore-procurement/`):
+Hashgebunden über die Requirements-Datei des Releases (0.3.0 erscheint mit
+v0.13.0); sie bindet das Paket und `auditcore_common` an die Prüfsummen der
+signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.13.0/SHA256SUMS).
+Dieselben Prüfsummen stehen im Index unter
+`https://janpow77.github.io/auditcore/simple/auditcore-procurement/`:
+
+```bash
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.13.0/requirements-auditcore_procurement.txt
+```
+
+Wer die Zeilen selbst in eine `requirements.txt` schreibt, nimmt die Prüfsumme
+von `auditcore_procurement-0.3.0-py3-none-any.whl` aus den signierten
+`SHA256SUMS` und bindet `auditcore_common` mit. Vorgänger 0.2.5 (zuletzt im
+Release v0.12.0):
 
 ```text
+auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_common-0.2.1-py3-none-any.whl#sha256=701d8cab0a17c7a77cae51065af340f1d90c0b37414505d3fd7eac383ec26271
 auditcore_procurement @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_procurement-0.2.5-py3-none-any.whl#sha256=52636859cfed991b4e7a11af7560021a8adee396c47ca312c6108043ef58fd05
 ```
 
-Ab 0.2.2 gehört `auditcore_common` als eigene Zeile dazu. Debian/Ubuntu über
-die signierte APT-Quelle eines Releases
+Debian/Ubuntu über die signierte APT-Quelle eines Releases
 ([Einrichtung](../../docs/deployment/package-feed.md)); Suggests
 `python3-lxml`, `python3-auditcore-harvest`:
 
