@@ -56,7 +56,7 @@ Folgenabschätzung.
 | Fragen mit „Warum wird das gefragt?“, Fundstelle, ja/nein/unklar, „nicht anwendbar“ nur mit Begründung | ➕ |
 | Fehlerübersicht mit Sprung zur Frage, Eingabe bleibt erhalten | ➕ |
 | Vorschläge (Import, Vorlage, KI) als unbestätigt mit „Vorschlag prüfen und übernehmen“ | ➕ |
-| Reiter „Prüfpunkte“ (CHK-01 bis CHK-30) und „Status und Sperren“ (sechs Achsen, GATE-01 bis GATE-08) | ➕ |
+| Reiter „Prüfpunkte“ (CHK-01 bis CHK-30 als aufklappbarer Baum Bereich → Prüfpunkt → Angaben) und „Status und Sperren“ (sechs Achsen, GATE-01 bis GATE-08) | ➕ |
 | Paritätsfälle `cases-datenschutz-assistent.ts`, Browsertest nur mit Tastatur und axe | ➕ |
 | Rollenfilter der Aufgaben, Versionsvergleich, Nachweisablage | ⏳ (siehe `packages/auditcore_dataprotection/docs/pruefkatalog-abgleich.md`) |
 

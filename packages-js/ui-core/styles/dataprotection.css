@@ -94,3 +94,39 @@
 .fa-assistant__table { width: 100%; border-collapse: collapse; margin: var(--fa-space-2) 0; }
 .fa-assistant__table th, .fa-assistant__table td { border: 1px solid var(--fa-color-border); padding: var(--fa-space-1); text-align: left; }
 .fa-assistant__table input { width: 100%; font: inherit; }
+/* Prüfpunkte als Baum (Bereich → Prüfpunkt → Angaben); Farbe ergänzt den Statustext nur. */
+.fa-checklist__head { margin-bottom: var(--fa-space-3); }
+.fa-checklist__head h3 { margin: 0; }
+.fa-checklist__head button, .fa-checklist__save { font: inherit; font-size: var(--fa-font-size-xs); background: none; border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-sm); padding: var(--fa-space-1) var(--fa-space-2); color: var(--fa-color-text); cursor: pointer; }
+.fa-checklist__head button:hover, .fa-checklist__save:hover:not(:disabled) { background: var(--fa-color-surface-sunken); }
+.fa-checklist__tree, .fa-checklist__children { list-style: none; margin: 0; padding: 0; }
+.fa-checklist__children { margin-left: var(--fa-space-3); padding-left: var(--fa-space-3); border-left: 1px solid var(--fa-color-border); }
+.fa-checklist__node--area { margin-bottom: var(--fa-space-2); }
+.fa-checklist__row { width: 100%; display: flex; align-items: center; gap: var(--fa-space-2); text-align: left; background: none; border: 0; border-radius: var(--fa-radius-sm); padding: var(--fa-space-2); font: inherit; color: inherit; cursor: pointer; transition: background var(--fa-transition); }
+.fa-checklist__row:hover { background: var(--fa-color-surface-sunken); }
+.fa-checklist__row[aria-expanded='true'] > .fa-checklist__chevron { transform: rotate(90deg); }
+.fa-checklist__node--area > .fa-checklist__row { font-weight: 600; background: var(--fa-color-surface-sunken); }
+.fa-checklist__node--item > .fa-checklist__row[aria-expanded='true'] { background: var(--fa-color-accent-soft); }
+.fa-checklist__chevron { flex: none; width: 1em; text-align: center; color: var(--fa-color-text-muted); transition: transform var(--fa-transition); }
+.fa-checklist__dot { flex: none; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--fa-color-border-strong); }
+.fa-checklist__dot--progress { background: var(--fa-color-accent); }
+.fa-checklist__dot--attention { background: var(--fa-color-warning); }
+.fa-checklist__dot--settled { background: var(--fa-color-success); }
+.fa-checklist__key { flex: none; font-family: var(--fa-font-mono); font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-checklist__title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.fa-checklist__status { flex: none; border-radius: 999px; padding: 0 var(--fa-space-2); font-size: var(--fa-font-size-xs); font-weight: 400; background: var(--fa-color-surface-sunken); color: var(--fa-color-text-muted); white-space: nowrap; }
+.fa-checklist__node--area > .fa-checklist__row .fa-checklist__status { background: var(--fa-color-surface); }
+.fa-checklist__row .fa-checklist__status--progress { background: var(--fa-color-accent-soft); color: var(--fa-color-text); }
+.fa-checklist__row .fa-checklist__status--attention, .fa-checklist__head .fa-checklist__status--attention { background: var(--fa-color-warning-soft); color: var(--fa-color-warning); }
+.fa-checklist__row .fa-checklist__status--settled { background: var(--fa-color-success-soft); color: var(--fa-color-success); }
+.fa-checklist__detail { margin: var(--fa-space-1) 0 var(--fa-space-3) calc(1em + var(--fa-space-4)); padding: var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-sm); background: var(--fa-color-surface); }
+.fa-checklist__form { display: grid; align-items: end; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 var(--fa-space-4); margin-top: var(--fa-space-3); }
+.fa-checklist__wide { grid-column: 1 / -1; }
+.fa-checklist__save { justify-self: start; font-size: var(--fa-font-size-sm); border-color: var(--fa-color-border-strong); }
+.fa-checklist__save:disabled { cursor: default; opacity: 0.6; }
+.fa-checklist__node--item > .fa-checklist__row[aria-expanded='true'] .fa-checklist__status { background: var(--fa-color-surface); }
+@media (max-width: 48rem) {
+  .fa-checklist__row { flex-wrap: wrap; }
+  .fa-checklist__title { flex-basis: 60%; }
+  .fa-checklist__detail { margin-left: 0; }
+}
