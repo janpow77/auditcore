@@ -22,6 +22,7 @@ der Anwendung.
 |---|---|---|---|
 | `TestDataGenerator(seed=None, *, base_date=None, max_workers=None, use_joblib=None)` | Seed (`int` oder `None`), Bezugsdatum für `date_after` ohne Referenzfeld, Obergrenze der Worker (≥ 1), Backendwahl | Generatorinstanz mit eigener `random.Random`-Quelle | keine; der globale Zufallszustand bleibt unberührt |
 | `generate_first_name`, `generate_last_name`, `generate_street`, `generate_city`, `generate_postal_code`, `generate_phone` | Länderwert | Wert aus dem AT-Katalog bei `"AT"`, sonst aus dem DE-Katalog; `generate_city` liefert `(Stadt, PLZ)` | ein bis mehrere Zufallsziehungen |
+| `company_name_at(position, *, seed, entity_form="private")`, `draw_company_name(rng, entity_form="private")`, `company_name_count(entity_form=None)` (seit 0.2.0) | Position im Namensraum bzw. eigene `random.Random`, Begünstigtentyp `private`/`nonprofit`/`public` | Firmenname mit passender Rechtsform; Anzahl der Namen | `draw_company_name`: genau ein `randrange`; `company_name_at`: keine (eigene abgeleitete Quelle). Unbekannter Typ oder Position außerhalb: `ValueError` |
 | `generate_iban`, `generate_bic`, `generate_ustid` | Länderwert | Zeichenketten in IBAN-, BIC- bzw. USt-IdNr.-Form (AT oder DE) | – |
 | `generate_date_range(start, end)` | ISO-Daten `JJJJ-MM-TT` | ISO-Datum im geschlossenen Bereich | – |
 | `generate_date_after(ref, min_days, max_days)` | ISO-Datum und ganzzahliger Versatzbereich | ISO-Datum `ref + Versatz` | – |
@@ -74,6 +75,10 @@ Profile: 27 Feld-, Abweichungs- und Katalogprofile in `profiles.json`, Version
 - Keine gültigen Kennungen: Wer prüfziffernrichtige IBAN, USt-IdNr. oder
   Steuernummern braucht, nutzt `auditcore_identifiers` zur Prüfung oder eigene
   Testvektoren.
+- Namensbaukasten (seit 0.2.0): verschiedene Positionen derselben Folge
+  ergeben bis `company_name_count(entity_form)` verschiedene Namen; gleicher
+  Startwert, Typ und gleiche Position ergeben denselben Namen
+  (`tests/test_company_names.py`). Bestehende Ausgaben ändern sich dadurch nicht.
 - Keine echten Personen- oder Firmendaten; Kataloge sind fest und synthetisch,
   zufällige Übereinstimmungen mit realen Personen sind möglich.
 - Keine Rechnungen als Ganzes (dafür `auditcore_invoicegenerator`), keine

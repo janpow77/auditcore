@@ -80,14 +80,26 @@ synthetische Kennungen (`generate_iban`, `generate_bic`, `generate_ustid`,
 `generate_weighted_choice` …), `generate_field`, `apply_deviation`,
 `generate_rows` und die beiden parallelen Varianten.
 
+Seit 0.2.0 zusätzlich der **Namensbaukasten für Firmen** (`company_names`):
+getrennte Listen für Branchenpräfixe, Geschäftsbereiche, Namenszusätze und
+Rechtsformen je Begünstigtentyp (`private`, `nonprofit`, `public`), zusammen
+28 080 Namen. `company_name_at(position, seed=…, entity_form=…)` liefert eine
+reproduzierbare Folge ohne Dubletten, `draw_company_name(rng, …)` einen Namen
+mit genau einer Ziehung. Liste `companies` und Feldtyp `company` bleiben
+unverändert.
+
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_dummygenerator.__all__` (6):
+Öffentliche Namen aus `auditcore_dummygenerator.__all__` (10):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
+| `ENTITY_FORMS` | Konstante | Supported entity forms: commercial enterprise, non-profit body, public-law body. | `company_names` |
 | `JOBLIB_AVAILABLE` | Konstante | – | `generator` |
 | `BatchGenerationError` | Ausnahme | A worker failed or returned fewer rows; no partial success is returned. | `rows` |
 | `TestDataGenerator` | Klasse | Generate synthetic rows; seeded output retains the recorded legacy rules. | `generator` |
+| `company_name_at` | Funktion | Name number ``position`` of a seeded, collision-free sequence. | `company_names` |
+| `company_name_count` | Funktion | Number of distinct names for one entity form, or for all forms together. | `company_names` |
+| `draw_company_name` | Funktion | Draw one name with a single ``rng.randrange`` call. | `company_names` |
 | `get_optimal_workers` | Funktion | Ermittelt die optimale Anzahl an Worker-Prozessen. | `rows` |
 | `list_profiles` | Funktion | Read independently owned metadata; reject altered content or implementation hashes. | `profiles` |
 | `profile_reference` | Funktion | Return an exact ID/version/hash reference for a caller-owned run manifest. | `profiles` |
@@ -96,6 +108,7 @@ synthetische Kennungen (`generate_iban`, `generate_bic`, `generate_ustid`,
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_dummygenerator.company_names` | Modular synthetic company names: prefix, business area, name suffix, legal form. |
 | `auditcore_dummygenerator.generator` | Seeded synthetic rows extracted from the recorded FlowAudit implementation. |
 | `auditcore_dummygenerator.profiles` | Version and fingerprint references for the shipped synthetic-data profiles. |
 | `auditcore_dummygenerator.rows` | Row assembly and ordered worker batches for :class:`TestDataGenerator`. |
@@ -168,7 +181,8 @@ Datenbanken oder anderen Fachpaketen.
 Erzeugt ausschließlich synthetische Daten; es werden keine personenbezogenen
 Echtdaten gelesen oder geschrieben, kein Netzwerk und keine Dateien genutzt.
 Namen und Adressen stammen aus festen Katalogen und können zufällig realen
-Personen gleichen. Kennungen und Beträge sind nicht für verbindliche
+Personen oder Unternehmen gleichen; die Listen des Namensbaukastens sind
+bewusst generisch und enthalten keine bekannten Marken. Kennungen und Beträge sind nicht für verbindliche
 fachliche oder steuerrechtliche Entscheidungen bestimmt. Der Paketkontext
 `auditcore-context.json` gilt nur für die Bibliothek, nicht für Consumer.
 

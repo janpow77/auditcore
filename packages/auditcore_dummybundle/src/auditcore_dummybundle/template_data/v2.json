@@ -1,0 +1,508 @@
+{
+  "artifact_id": "auditcore.dummybundle.template.v2",
+  "id": "V2",
+  "version": "0.1.0",
+  "status": "Freigegeben",
+  "public": true,
+  "title": "Belegliste der Vorhabenprüfung",
+  "purpose": "Arbeitsliste der Prüfbehörde je geprüftem Mittelabruf: Angaben der zwischengeschalteten Stelle und die Nachweis- und Fehlerspalten der Prüfung (Spalten A–Z).",
+  "legal_basis": "VO (EU) 2021/1060, Art. 77 und 79 (Vorhabenprüfung)",
+  "sources": [
+    "Spaltenköpfe A–Z und Auswahllisten nach dem Vorlagenvorschlag vom 13.10.2026 (V2)."
+  ],
+  "open_points": [
+    "Wertebereich der Spalte „Oberschicht“ und Rechenregeln der Spalten „Betrag Hochzurechnen“, „Betrag Einzelfall“, „Betrag Systematisch“ und „Fehleranteil“ sind nicht belegt; die Spalten bleiben leer.",
+    "Der Inhalt des ersten Blatts der Prüfmappe ist nicht belegt und wird nicht erzeugt.",
+    "„Inhouse“ ist der vergaberechtliche Begriff, nicht das Geschäft mit einem verbundenen Unternehmen."
+  ],
+  "tables": [
+    {
+      "name": "Belegliste",
+      "title": "Belegliste der Vorhabenprüfung",
+      "source": "receipts",
+      "columns": [
+        {
+          "header": "Lfd. Nr.",
+          "kind": "int",
+          "field": "receipt_no",
+          "free": {
+            "type": "sequence",
+            "params": {}
+          }
+        },
+        {
+          "header": "Beleg-Nr. / Rechnungs-Nr.",
+          "kind": "text",
+          "field": "invoice_no",
+          "free": {
+            "type": "pattern",
+            "params": {
+              "pattern": "RE-{JJJJ}-{ZZZZZZ}",
+              "date_field": "Rechnungsdatum"
+            }
+          }
+        },
+        {
+          "header": "Kostenart gem. Ausgabenplan des Zuwendungsbescheides",
+          "kind": "text",
+          "field": "cost_category",
+          "note": "Neutrale Kostenarten, kein Wortlaut eines Bescheids.",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Personalausgaben",
+                  "weight": 3
+                },
+                {
+                  "value": "Sachausgaben",
+                  "weight": 4
+                },
+                {
+                  "value": "Investitionen",
+                  "weight": 3
+                },
+                {
+                  "value": "Fremdleistungen",
+                  "weight": 3
+                },
+                {
+                  "value": "Reisekosten",
+                  "weight": 1
+                },
+                {
+                  "value": "Öffentlichkeitsarbeit",
+                  "weight": 1
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Rechnungssteller",
+          "kind": "text",
+          "field": "supplier_name",
+          "free": {
+            "type": "company",
+            "params": {}
+          }
+        },
+        {
+          "header": "Verwendungszweck",
+          "kind": "text",
+          "field": "purpose",
+          "free": {
+            "type": "text",
+            "params": {}
+          }
+        },
+        {
+          "header": "Rechnungsdatum",
+          "kind": "date",
+          "field": "invoice_date",
+          "free": {
+            "type": "date",
+            "params": {}
+          }
+        },
+        {
+          "header": "Bezahldatum (Wertstellung)",
+          "kind": "date",
+          "field": "payment_date",
+          "free": {
+            "type": "date_offset",
+            "params": {
+              "field": "Rechnungsdatum",
+              "min_days": 0,
+              "max_days": 30
+            }
+          }
+        },
+        {
+          "header": "tatsächlich gezahlter Betrag in EUR",
+          "kind": "amount",
+          "field": "paid",
+          "sum": true,
+          "free": {
+            "type": "amount",
+            "params": {
+              "min": "100.00",
+              "max": "25000.00",
+              "distribution": "skewed"
+            }
+          }
+        },
+        {
+          "header": "Förderfähig lt. zwischengeschalteter Stelle",
+          "kind": "amount",
+          "field": "recognised",
+          "sum": true,
+          "free": {
+            "type": "amount_factor",
+            "params": {
+              "field": "tatsächlich gezahlter Betrag in EUR",
+              "min_factor": "0.80",
+              "max_factor": "1.00"
+            }
+          }
+        },
+        {
+          "header": "Anerkannt von der PB",
+          "kind": "amount",
+          "field": "recognised",
+          "sum": true,
+          "note": "Ohne Prüfung: gleich dem Betrag der zwischengeschalteten Stelle.",
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "rate",
+              "fields": [
+                "Förderfähig lt. zwischengeschalteter Stelle"
+              ],
+              "rate": "1"
+            }
+          }
+        },
+        {
+          "header": "Differenz",
+          "kind": "amount",
+          "const": "0.00",
+          "sum": true,
+          "note": "Differenz = anerkannt − förderfähig.",
+          "free": {
+            "type": "computed",
+            "params": {
+              "operation": "difference",
+              "fields": [
+                "Anerkannt von der PB",
+                "Förderfähig lt. zwischengeschalteter Stelle"
+              ]
+            }
+          }
+        },
+        {
+          "header": "Beleg lag vor",
+          "kind": "text",
+          "field": "evidence_receipt",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Ja",
+                  "weight": 85
+                },
+                {
+                  "value": "offen",
+                  "weight": 8
+                },
+                {
+                  "value": "Nein",
+                  "weight": 2
+                },
+                {
+                  "value": "Entfällt",
+                  "weight": 5
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Zahlungsnachweis",
+          "kind": "text",
+          "field": "evidence_payment",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Ja",
+                  "weight": 85
+                },
+                {
+                  "value": "offen",
+                  "weight": 8
+                },
+                {
+                  "value": "Nein",
+                  "weight": 2
+                },
+                {
+                  "value": "Entfällt",
+                  "weight": 5
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Vergabe",
+          "kind": "text",
+          "field": "evidence_award",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Ja",
+                  "weight": 85
+                },
+                {
+                  "value": "offen",
+                  "weight": 8
+                },
+                {
+                  "value": "Nein",
+                  "weight": 2
+                },
+                {
+                  "value": "Entfällt",
+                  "weight": 5
+                },
+                {
+                  "value": "Inhouse",
+                  "weight": 1
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Vergabeart",
+          "kind": "text",
+          "field": "award_type",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Entfällt",
+                  "weight": 6
+                },
+                {
+                  "value": "VGV (oberhalb Schwellenwert)",
+                  "weight": 1
+                },
+                {
+                  "value": "VOB unterhalb Schwellenwert",
+                  "weight": 2
+                },
+                {
+                  "value": "VOB oberhalb Schwellenwert",
+                  "weight": 1
+                },
+                {
+                  "value": "VOL unterhalb Schwellenwert",
+                  "weight": 2
+                },
+                {
+                  "value": "Direktauftrag",
+                  "weight": 3
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Vertrag",
+          "kind": "text",
+          "field": "evidence_contract",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Ja",
+                  "weight": 85
+                },
+                {
+                  "value": "offen",
+                  "weight": 8
+                },
+                {
+                  "value": "Nein",
+                  "weight": 2
+                },
+                {
+                  "value": "Entfällt",
+                  "weight": 5
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Publizität",
+          "kind": "text",
+          "field": "evidence_publicity",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Ja",
+                  "weight": 85
+                },
+                {
+                  "value": "offen",
+                  "weight": 8
+                },
+                {
+                  "value": "Nein",
+                  "weight": 2
+                },
+                {
+                  "value": "Entfällt",
+                  "weight": 5
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Stundenzettel",
+          "kind": "text",
+          "field": "evidence_timesheet",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Ja",
+                  "weight": 1
+                }
+              ]
+            },
+            "rule": {
+              "kind": "when",
+              "field": "Kostenart gem. Ausgabenplan des Zuwendungsbescheides",
+              "equals": "Personalausgaben",
+              "value": "Ja",
+              "otherwise": "Entfällt"
+            }
+          }
+        },
+        {
+          "header": "Kopie",
+          "kind": "text",
+          "field": "evidence_copy",
+          "free": {
+            "type": "choice",
+            "params": {
+              "values": [
+                {
+                  "value": "Ja",
+                  "weight": 85
+                },
+                {
+                  "value": "offen",
+                  "weight": 8
+                },
+                {
+                  "value": "Nein",
+                  "weight": 2
+                },
+                {
+                  "value": "Entfällt",
+                  "weight": 5
+                }
+              ]
+            }
+          }
+        },
+        {
+          "header": "Kommentar",
+          "kind": "text",
+          "note": "Bleibt leer.",
+          "free": {
+            "type": "text",
+            "params": {},
+            "empty_share": "0.90"
+          }
+        },
+        {
+          "header": "Referenz in Checkliste",
+          "kind": "text",
+          "note": "Bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Oberschicht",
+          "kind": "text",
+          "note": "Wertebereich nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Betrag Hochzurechnen",
+          "kind": "amount",
+          "note": "Rechenregel nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Betrag Einzelfall",
+          "kind": "amount",
+          "note": "Rechenregel nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Betrag Systematisch",
+          "kind": "amount",
+          "note": "Rechenregel nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        },
+        {
+          "header": "Fehleranteil",
+          "kind": "rate",
+          "note": "Rechenregel nicht belegt; bleibt leer.",
+          "free": {
+            "type": "constant",
+            "params": {
+              "value": ""
+            }
+          }
+        }
+      ],
+      "split_by": "claim_id",
+      "total_row": "top",
+      "free_start": true
+    }
+  ],
+  "content_hash": "b59ee7ccfd118e8622f3658d7dad70e1b32cbb2a1b9a7e394fccbe6fdef90b8c",
+  "review": {
+    "status": "TECHNICAL_TESTS_EXECUTED",
+    "human_release_approval": "GRANTED",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "approved_on": "2026-10-13",
+    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
+    "policy": "docs/profile-versioning.md",
+    "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"
+  }
+}
