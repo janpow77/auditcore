@@ -19,10 +19,10 @@ from auditcore_dummybundle import (
 def main() -> None:
     """Sum checks, template projection and the REST contract on the installed package."""
     package = distribution("auditcore_dummybundle")
-    assert package.version == "0.1.0"
+    assert package.version == "0.2.0"
     assert sorted(r for r in package.requires or [] if "extra ==" not in r) == [
         "auditcore_common==0.2.1",
-        "auditcore_dummygenerator==0.1.4",
+        "auditcore_dummygenerator==0.2.0",
         "auditcore_identifiers==0.2.1",
     ]
     assert find_spec("auditcore") is None

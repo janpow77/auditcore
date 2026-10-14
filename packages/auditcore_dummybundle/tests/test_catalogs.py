@@ -2,19 +2,35 @@
 
 from __future__ import annotations
 
+from datetime import date
 from random import Random
 
 import pytest
-from auditcore_dummygenerator import TestDataGenerator
+from auditcore_dummygenerator import company_name_at, company_name_count
 
 from auditcore_dummybundle import catalogs as cat
+from auditcore_dummybundle.chain import build_operation
+from auditcore_dummybundle.config import BundleConfig
+from auditcore_dummybundle.receipts import build_suppliers
 
 
-def test_company_names_are_the_list_of_the_field_generator() -> None:
-    legacy = tuple(TestDataGenerator(seed=0).companies)
-    assert cat.catalogs().companies == legacy and len(legacy) == 10
-    drawn = {cat.company_name(Random(seed)) for seed in range(300)}
-    assert drawn == set(legacy)
+def test_company_names_come_from_the_modular_name_space_of_the_field_generator() -> None:
+    assert [cat.company_name(42, i) for i in range(5)] == [
+        company_name_at(i, seed=42) for i in range(5)
+    ]
+    assert cat.company_name(42, company_name_count("private")) == cat.company_name(42, 0)
+
+
+def test_company_names_are_distinct_within_a_bundle_and_match_the_entity_form() -> None:
+    config = BundleConfig(seed=42, base_date=date(2026, 6, 30), operations=200)
+    operations = [build_operation(config, index) for index in range(1, 201)]
+    names = [str(row["beneficiary_name"]) for row in operations]
+    assert len(set(names)) == len(names)
+    suppliers = {supplier.name for supplier in build_suppliers(config)}
+    assert len(suppliers) == len(build_suppliers(config)) and not suppliers & set(names)
+    for row, name in zip(operations, names, strict=True):
+        public = row["entity_form"] == "öffentlich-rechtlich"
+        assert public == (name.endswith("AöR") or name.startswith(("Zweckverband", "Eigenbetrieb")))
 
 
 def test_package_data_carries_no_company_stems_of_its_own() -> None:

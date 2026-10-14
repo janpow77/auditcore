@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_dummybundle",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contract": "dummybundle_ui/1",
   "classification": "NEW_IMPLEMENTATION",
   "sources": [],
