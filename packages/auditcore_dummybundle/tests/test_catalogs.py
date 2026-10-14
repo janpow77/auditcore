@@ -62,3 +62,11 @@ def test_weighted_pick_respects_weights_and_rejects_empty_weights() -> None:
     assert drawn.count("c") == 0 and drawn.count("a") > drawn.count("b") * 5
     with pytest.raises(ValueError):
         cat.weighted_pick(rng, (("a", 0),))
+
+
+def test_person_names_come_from_the_country_catalogues_of_the_field_generator() -> None:
+    data = cat.catalogs()
+    for country in cat.COUNTRIES:
+        first, last = cat.person_name(Random(7), country).split(" ", 1)
+        assert first in data.first_names[country]
+        assert last in data.last_names[country]
