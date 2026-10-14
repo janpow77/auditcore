@@ -1,9 +1,10 @@
 """Catalogues: lists of the field generator plus neutral labels of this package.
 
 Cities, postal codes, first and last names, purpose phrases and company names
-are the catalogues of ``auditcore_dummygenerator``. The company names are
-generic sample names; any resemblance to existing companies is coincidental
-and not intended. Street names and neutral labels come from
+come from ``auditcore_dummygenerator``; company names from its modular name
+space (prefix, business area, name suffix, legal form). They are generic
+sample names; any resemblance to existing companies is coincidental and not
+intended. Street names and neutral labels come from
 ``data/catalogs.json``.
 """
 
@@ -17,7 +18,7 @@ from importlib.resources import files
 from random import Random
 from typing import cast
 
-from auditcore_dummygenerator import TestDataGenerator
+from auditcore_dummygenerator import TestDataGenerator, company_name_at, company_name_count
 
 COUNTRIES = ("DE", "AT")
 
@@ -116,14 +117,15 @@ def country_of(rng: Random, countries: str) -> str:
     return COUNTRIES[rng.randrange(2)] if countries == "DE+AT" else countries
 
 
-def company_name(rng: Random) -> str:
-    """Company name drawn from the list of the field generator, as it draws them itself.
+def company_name(seed: int, position: int, entity_form: str = "private") -> str:
+    """Company name number ``position`` of the seeded name sequence of the field generator.
 
-    The list is short, so names recur; a bundle tells beneficiaries apart by
-    their identifier, not by their name.
+    Different positions give different names until the name space of the
+    entity form (``private``, ``nonprofit``, ``public``) is used up; beyond
+    that the sequence starts again. The legal form matches the entity form.
     """
-    companies = catalogs().companies
-    return companies[rng.randrange(len(companies))]
+    count = company_name_count(entity_form)
+    return company_name_at(position % count, seed=seed, entity_form=entity_form)
 
 
 def address(rng: Random, country: str) -> tuple[str, str, str]:

@@ -18,13 +18,16 @@ from auditcore_dummybundle.amounts import ZERO, quantize, share, split_random
 from auditcore_dummybundle.chain import MIN_RECEIPT
 from auditcore_dummybundle.config import BundleConfig
 from auditcore_dummybundle.model import Row, amount, day
-from auditcore_dummybundle.seeds import stream
+from auditcore_dummybundle.seeds import derive_seed, stream
 
 YES = "Ja"
 NOT_APPLICABLE = "Entfällt"
 DIRECT_AWARD = "Direktauftrag"
 _BELOW_THRESHOLD = ("VOL unterhalb Schwellenwert", "VOB unterhalb Schwellenwert")
 _REDUCTION_PERCENT = (10, 25, 50, 100)
+#: Suppliers take name positions above every possible operation index, so a
+#: supplier never carries the name of a beneficiary of the same bundle.
+SUPPLIER_NAME_OFFSET = 10_000
 
 
 @dataclass(frozen=True)
@@ -44,7 +47,7 @@ def build_suppliers(config: BundleConfig) -> tuple[Supplier, ...]:
         country = cat.country_of(rng, config.country)
         suppliers.append(
             Supplier(
-                cat.company_name(rng),
+                cat.company_name(derive_seed(config.seed, "company"), SUPPLIER_NAME_OFFSET + index),
                 identifiers.vat_id(rng, country, valid=config.identifiers_valid),
                 country,
             )
