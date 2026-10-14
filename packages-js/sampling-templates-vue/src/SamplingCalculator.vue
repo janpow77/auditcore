@@ -8,6 +8,7 @@ import DataTableDialog from './components/DataTableDialog.vue'
 import MethodBar from './components/MethodBar.vue'
 import MethodPicker from './components/MethodPicker.vue'
 import ImportPreview from './components/ImportPreview.vue'
+import KpiStrip from './components/KpiStrip.vue'
 import NoticeList from './components/NoticeList.vue'
 import ReportView from './components/ReportView.vue'
 import ResultPanel from './components/ResultPanel.vue'
@@ -52,8 +53,10 @@ const props = withDefaults(
     dataMark?: string
     /** Eigene Übergabe von Dateien an den Browser (Standard: Download über Blob). */
     saveFile?: (file: DownloadFile) => void | Promise<void>
+    /** Menü „Arbeitsstand“ im Rechner; `false` bei eigenem Menü der Anwendung (`runAction()`, `openFile()`). */
+    workspaceMenu?: boolean
   }>(),
-  { sheets: () => SHEETS, families: () => FAMILIES, locale: undefined, messages: undefined, draft: 'off', localDraft: false, draftKey: 'entwurf', guardUnload: true, initialState: undefined, filePrefix: undefined, dataMark: undefined, saveFile: undefined },
+  { sheets: () => SHEETS, families: () => FAMILIES, locale: undefined, messages: undefined, draft: 'off', localDraft: false, draftKey: 'entwurf', guardUnload: true, initialState: undefined, filePrefix: undefined, dataMark: undefined, saveFile: undefined, workspaceMenu: true },
 )
 const emit = defineEmits<{ change: [state: WorkspaceState]; saved: [fileName: string]; opened: [fileName: string]; exported: [fileName: string]; draft: [status: { mode: DraftMode; stored: boolean }]; dirty: [dirty: boolean] }>()
 
@@ -96,10 +99,7 @@ function guarded(action: () => void): void {
   else run()
 }
 
-function confirmDiscard(): void {
-  pending.value?.run()
-  pending.value = null
-}
+const confirmDiscard = (): void => void (pending.value?.run(), (pending.value = null))
 
 /** „Schicht entfernen“: Trägt die letzte Schicht Eingaben, fragt die Oberfläche vorher nach. */
 function removeStratum(): void {
@@ -116,10 +116,7 @@ function selectMethod(id: string): void {
 
 const openFile = (file: File): void => guarded(() => void files.open(file))
 /** Übernahme der Vorlage aus der Vorschau; das Formular wird danach neu aufgebaut. */
-function applyImport(): void {
-  files.applyPreview()
-  revision.value += 1
-}
+const applyImport = (): void => void (files.applyPreview(), (revision.value += 1))
 const drop = useFileDrop(openFile)
 
 function onMenu(action: MenuAction): void {
@@ -170,7 +167,7 @@ watch(workspace, (state) => emit('change', state))
 const dirty = computed(() => meta.value.dirty)
 watch(dirty, (value) => emit('dirty', value), { immediate: true })
 
-defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace, open: files.open, save: files.save, exportResult: files.exportResult, reset: resetAll, loadSample: session.loadSample, clearDraft: () => draft.clear(false) })
+defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace, open: files.open, save: files.save, exportResult: files.exportResult, reset: resetAll, loadSample: session.loadSample, openFile, runAction: onMenu, clearDraft: () => draft.clear(false) })
 </script>
 
 <template>
@@ -183,7 +180,7 @@ defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace
         </div>
         <div v-if="$slots.mark || dataMark" class="fa-st__mark" data-mark><slot name="mark">{{ dataMark }}</slot></div>
         <p class="fa-st__status" :class="statusClass" data-status><span class="fa-st__dot" aria-hidden="true"></span>{{ statusText }}</p>
-        <WorkspaceMenu :t="t" :draft="draftMode !== 'off'" @action="onMenu" />
+        <WorkspaceMenu v-if="workspaceMenu" :t="t" :draft="draftMode !== 'off'" @action="onMenu" />
         <FaButton variant="primary" :label="t('exportResult')" data-action="export" @click="files.exportResult()" />
         <input ref="fileInput" type="file" accept=".json,.xlsx,application/json" hidden :aria-label="t('menuOpen')" @change="onFileChosen" />
       </div>
@@ -209,6 +206,7 @@ defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace
       />
       <ReportView v-if="report" :report="report" :checksum="checksum" :t="t" @update="session.setInput" @print="print" />
       <div v-else-if="summary" class="fa-st__main">
+        <KpiStrip :summary="summary" :t="t" />
         <SheetForm
           :key="`${currentSheet.id}-${selectedUnit}-${revision}`"
           :sections="sections"
@@ -247,3 +245,4 @@ defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace
     </FaDialog>
   </section>
 </template>
+

@@ -32,7 +32,7 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.3.tgz
+npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.4.tgz
 ```
 
 Version 0.1.3 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
@@ -296,6 +296,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (36):
 | `filePrefix` | `string` | nein | `undefined` | Vorsatz der Dateinamen von Arbeitsstand und Export (Standard: „Stichprobe“). |
 | `dataMark` | `string` | nein | `undefined` | Datenmarke der Anwendung als Text neben dem Titel; mehr Gestaltung über den Slot `mark`. |
 | `saveFile` | `(file: DownloadFile) => void \| Promise<void>` | nein | `undefined` | Eigene Übergabe von Dateien an den Browser (Standard: Download über Blob). |
+| `workspaceMenu` | `boolean` | nein | `true` | Menü „Arbeitsstand“ in der Kopfzeile des Rechners; `false`, wenn die Anwendung ein eigenes Menü führt (dann `runAction()`/`openFile()`). |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
@@ -418,6 +419,13 @@ ohne Angabe bleiben gewähltes Verfahren und Arbeitsschritt stehen; `reset()`
 leert das Formular und den Zwischenstand; `open(file)`, `save()`,
 `exportResult()`, `clearDraft()`; `state` ist der Arbeitsstand; `isDirty()`
 und der reaktive Wert `dirty` sagen, ob es ungesicherte Änderungen gibt.
+Für ein eigenes Menü der Anwendung (`workspace-menu="false"`): `runAction(aktion)`
+mit `'save' | 'open' | 'new' | 'sample' | 'clearDraft'` und `openFile(datei)` –
+beide mit derselben Rückfrage bei ungesicherten Änderungen wie das eingebaute Menü.
+
+In schmalen Behältern (unter 56rem) klebt über dem Formular eine kompakte
+Kennzahlenleiste (Hauptgröße, hervorgehobene Kennzahlen, Ampel). Ihren Abstand
+nach oben setzt die Anwendung über `--fa-st-sticky-top` (Standard `0`).
 
 **Routenwächter der Anwendung:** Die Komponente warnt selbst nur beim
 Schließen oder Neuladen der Seite (`beforeunload`). Verlässt die Nutzerin den

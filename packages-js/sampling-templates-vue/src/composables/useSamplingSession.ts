@@ -112,13 +112,31 @@ function withDefaults(state: WorkspaceState, sheets: readonly SheetModule[]): Wo
 }
 
 /** Beispielwerte aller Blätter mit Rechenkern; Listenblätter erhalten eine Beispieleinheit. */
+/** Heutiges Datum in der Schreibweise der Vorlage (TT.MM.JJJJ). */
+export function todayText(now: Date = new Date()): string {
+  const pad = (value: number): string => String(value).padStart(2, '0')
+  return `${pad(now.getDate())}.${pad(now.getMonth() + 1)}.${now.getFullYear()}`
+}
+
+/**
+ * Beispielwerte eines Blatts; ein Feld „Stand“ (Kürzel `asOf`, z. B. Blatt 20)
+ * trägt das heutige Datum statt des festen Datums der Beispielwerte. Der Stand
+ * des Berichts ist der Tag, an dem er erstellt wird – auch im Beispiel.
+ */
+function withTodayAsOf(sheet: AvailableSheet, now?: Date): CellMap {
+  const field = sheet.definition.sections.flatMap((section) => [...section.fields]).find((entry) => entry.alias === 'asOf' && entry.kind === 'input')
+  const inputs = sheet.sample.inputs
+  if (!field || inputs[field.cell] === undefined) return inputs
+  return { ...inputs, [field.cell]: todayText(now) }
+}
+
 function sampleState(method: AvailableSheet | undefined, sheets: readonly SheetModule[]): WorkspaceState {
   if (!method) return withDefaults(emptyWorkspace(), sheets)
   const inputs: Record<SheetId, WorkspaceState['sheets'][SheetId]> = {}
   for (const sheet of availableSheets(sheets)) {
     const isMethod = findVariant(sheet.id) !== undefined
     if (sheet.definition.layout === 'list') inputs[sheet.id] = [sheet.sample.inputs]
-    else if (!isMethod || sheet.id === method.id) inputs[sheet.id] = sheet.sample.inputs
+    else if (!isMethod || sheet.id === method.id) inputs[sheet.id] = withTodayAsOf(sheet)
   }
   return withDefaults({ ...emptyWorkspace(), activeMethod: method.id, sheets: inputs }, sheets)
 }

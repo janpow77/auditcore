@@ -1,5 +1,19 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.4 – 2026-10-14
+
+Hinweise der Abnahme des Einbaus (noch nicht veröffentlicht); keine Änderung
+am Rechenkern.
+
+- Prop `workspaceMenu` (Standard `true`): Die Anwendung kann das Menü
+  „Arbeitsstand“ selbst führen; dafür neue Methoden `runAction(aktion)` und
+  `openFile(datei)` mit derselben Rückfrage bei ungesicherten Änderungen.
+- Kompakte, klebende Kennzahlenleiste in schmalen Behältern (Hauptgröße,
+  Gesamtfehlerquote, obere Fehlergrenze, Ampel); Abstand über
+  `--fa-st-sticky-top`. Im Druck ausgeblendet.
+- Beispielwerte: Das Feld „Stand“ des Berichts (Blatt 20) trägt das heutige
+  Datum statt des festen Datums der Beispielwerte.
+
 ## 0.1.3 – 2026-10-14
 
 Oberfläche als Arbeitsassistent statt Blattansicht (noch nicht veröffentlicht);
