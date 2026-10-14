@@ -1,5 +1,19 @@
 # Changelog auditcore_dummybundle
 
+## 0.2.0 – unveröffentlicht
+
+**Verhaltensänderung:** Gleicher Startwert ergibt andere Daten als 0.1.0.
+
+- Firmennamen aus dem Namensbaukasten von `auditcore_dummygenerator` 0.2.0
+  statt aus dessen Zehnerliste `companies`: Begünstigte, Lieferanten und
+  Spalten `company` der freien Tabelle tragen innerhalb eines Bündels
+  verschiedene Namen; die Rechtsform folgt `entity_form`
+  (öffentlich-rechtlich → AöR, Zweckverband, Eigenbetrieb).
+- Weil die Namensziehung keine Zahl mehr aus dem Strom des Vorhabens bzw.
+  Lieferanten verbraucht, verschieben sich dort auch die folgenden Werte
+  (USt-IdNr., IBAN, Anschrift usw.).
+- Pin `auditcore_dummygenerator==0.2.0`.
+
 ## 0.1.0 – 2026-10-13
 
 Erstfassung. Zusammenhängende Bündel (Vorhaben → Mittelabrufe → Belege →

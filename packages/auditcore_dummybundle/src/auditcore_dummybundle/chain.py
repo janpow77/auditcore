@@ -17,7 +17,7 @@ from auditcore_dummybundle import identifiers
 from auditcore_dummybundle.amounts import CENT, ZERO, quantize, share, split_random
 from auditcore_dummybundle.config import BundleConfig, accounting_year
 from auditcore_dummybundle.model import Row, amount, day
-from auditcore_dummybundle.seeds import pick_cents, stream
+from auditcore_dummybundle.seeds import derive_seed, pick_cents, stream
 
 #: Smallest project-related amount of one receipt.
 MIN_RECEIPT = Decimal("10.00")
@@ -38,9 +38,12 @@ def _party(config: BundleConfig, rng: Random, index: int) -> Row:
         cat.address(rng, country) if rng.randrange(4) == 0 else (street, postal_code, city)
     )
     public_entity = rng.randrange(4) == 0
+    name = cat.company_name(
+        derive_seed(config.seed, "company"), index, "public" if public_entity else "private"
+    )
     return {
         "beneficiary_id": f"BEN-{index:05d}",
-        "beneficiary_name": cat.company_name(rng),
+        "beneficiary_name": name,
         "beneficiary_vat_id": identifiers.vat_id(rng, country, valid=config.identifiers_valid),
         "beneficiary_iban": identifiers.iban(rng, country, valid=config.identifiers_valid),
         "beneficiary_bic": identifiers.bic(country),
