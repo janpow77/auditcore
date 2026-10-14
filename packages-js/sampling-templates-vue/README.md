@@ -10,7 +10,7 @@ Prüfbehörde gibt ein, lädt Ergebnisse herunter und speichert ihren Arbeitssta
 als Datei; es gibt keinen Server, keine Anmeldung und keine Netzanfragen.
 Gerechnet wird in
 [`@auditcore/sampling-templates-core`](../sampling-templates-core/README.md).
-Stand 0.1.2: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
+Stand 0.1.3: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
 Zufallsstichprobenverfahren, nichtstatistische Verfahren, Altvorlagen von
 2017), dazu die Arbeitsschritte Grundgesamtheit, Unterstichproben,
 Gesamtfehlerquote und Bericht (Druckfassung: leeres Formular und
@@ -32,10 +32,10 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.2.tgz
+npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.3.tgz
 ```
 
-Version 0.1.2 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
+Version 0.1.3 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
 und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
@@ -88,9 +88,10 @@ darunter eine Spalte mit der Ergebnisspalte oben. Sie trägt eine klebende
 Kopfzeile; in einer Anwendung mit eigener Kopfzeile den Abstand über
 `.fa-st__bar { top: … }` setzen.
 
-**Bausteine** für eigene Zusammenstellungen: `MethodPicker` (Familienliste
-als senkrechte Reiter mit Pfeiltasten, Varianten als Tabelle Zeiträume ×
-Schichtung), `MethodBar`, `SheetForm`/`SheetField` (Formular aus der
+**Bausteine** für eigene Zusammenstellungen: `MethodPicker` (Auswahl als
+Filter: Methode als Reiter mit Pfeiltasten, Zeiträume und Schichtung als
+Umschalter, daraus genau ein Verfahren), `MethodGlossary` (Kurzerklärungen),
+`MethodBar` (nummerierte Schrittleiste), `SheetForm`/`SheetField` (Formular aus der
 Methodendefinition), `ResultPanel`/`ErrorGauge`, `WorkspaceMenu`, `NoticeList`,
 `VariantTile`, `StrataTable` (Schichtzeilen mit eigenem Rollbereich),
 `UnitList` (Listenblatt mit Einfügen aus der Zwischenablage), `MethodGuide`

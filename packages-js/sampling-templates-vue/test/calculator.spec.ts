@@ -3,7 +3,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { SamplingCalculator } from '../src/index'
-import { FOUNDATION_SHEETS } from './sheets'
+import { FOUNDATION_SHEETS, pickVariant } from './sheets'
 
 const nbsp = (text: string): string => text.replaceAll(String.fromCharCode(160), ' ')
 const delivered: DownloadFile[] = []
@@ -65,21 +65,33 @@ afterEach(() => {
 })
 
 describe('Verfahrensauswahl', () => {
-  it('zeigt Familien als Reiterliste und die Varianten als Tabelle Zeiträume × Schichtung', () => {
+  it('grenzt das Verfahren über Methode, Zeiträume und Schichtung auf genau eine Variante ein', async () => {
     const wrapper = mountCalculator()
-    expect(wrapper.findAll('[role="tab"]').map((tab) => tab.find('.fa-st__family-name').text())).toEqual([
+    expect(wrapper.findAll('[role="tab"]').map((tab) => tab.text())).toEqual([
       'MUS-Standardansatz',
       'Einfache Zufallsstichprobe',
       'Nichtstatistisch, gleiche Wahrscheinlichkeit',
       'Nichtstatistisch, PPS',
       'Weitere Methoden nach Art. 79',
     ])
-    expect(wrapper.findAll('table th[scope="row"]').map((cell) => cell.text())).toEqual(['1 Zeitraum', '2 Zeiträume', '3 Zeiträume'])
+    expect(wrapper.findAll('[data-periods]').map((button) => button.text())).toEqual(['1 Zeitraum', '2 Zeiträume', '3 Zeiträume'])
+    expect(wrapper.text()).not.toMatch(/Blatt \d/)
     expect(wrapper.get('[data-sheet="03_MUS_1Z"]').attributes('aria-disabled')).toBeUndefined()
+    await wrapper.get('[data-stratified="true"]').trigger('click')
     expect(wrapper.get('[data-sheet="04_MUS_1Z_S"]').attributes('aria-disabled')).toBeUndefined()
+    await wrapper.get('[data-periods="2"]').trigger('click')
+    await wrapper.get('[data-stratified="false"]').trigger('click')
     expect(wrapper.get('[data-sheet="05_MUS_2Z"]').attributes('aria-disabled')).toBe('true')
     expect(wrapper.get('[data-sheet="05_MUS_2Z"]').text()).toContain('noch nicht verfügbar')
-    expect(wrapper.get('.fa-st__tile--gap').text()).toContain('kein Blatt in der Vorlage')
+    await wrapper.get('[data-periods="3"]').trigger('click')
+    await wrapper.get('[data-stratified="true"]').trigger('click')
+    expect(wrapper.find('[data-match] [data-sheet]').exists()).toBe(false)
+    expect(wrapper.get('[data-gap]').text()).toContain('kein Blatt in der Vorlage')
+  })
+
+  it('erklärt MUS, PPS, Zufallsstichprobe und Startwert in aufklappbaren Kurztexten', () => {
+    const wrapper = mountCalculator()
+    expect(wrapper.findAll('[data-glossary] summary').map((item) => item.text())).toEqual(['MUS (Monetary Unit Sampling)', 'PPS (Probability Proportional to Size)', 'Einfache Zufallsstichprobe', 'Startwert'])
   })
 
   it('ist mit Pfeiltasten, Pos1 und Ende bedienbar', async () => {
@@ -98,14 +110,16 @@ describe('Verfahrensauswahl', () => {
 
   it('eine Variante ohne Rechenkern lässt sich nicht wählen', async () => {
     const wrapper = mountCalculator()
-    await wrapper.get('[data-sheet="05_MUS_2Z"]').trigger('click')
+    await pickVariant(wrapper, '05_MUS_2Z')
     expect(wrapper.find('.fa-st__form').exists()).toBe(false)
-    await wrapper.get('[data-sheet="03_MUS_1Z"]').trigger('click')
-    expect(wrapper.get('.fa-st__chip').text()).toContain('Blatt 03')
+    await pickVariant(wrapper, '03_MUS_1Z')
+    expect(wrapper.get('.fa-st__chip').text()).toContain('MUS')
+    expect(wrapper.get('[data-substeps] [aria-current="step"]').text()).toBe('Parameter und Ergebnis')
     expect(wrapper.findAll('.fa-st__section-title').map((title) => title.text().slice(0, 1))).toEqual(['H', 'I', 'J', 'K', 'L', 'M'])
     await wrapper.get('.fa-st__chip button').trigger('click')
     expect(wrapper.get('[role="tab"][aria-selected="true"]').text()).toContain('MUS-Standardansatz')
   })
+
 })
 
 describe('Rechenblatt', () => {

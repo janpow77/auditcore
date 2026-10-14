@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Download, type Page } from '@playwright/test'
 import { writeWorkbook } from '../../sampling-templates-core/src/xlsx/writer'
+import { pick } from './pick'
 
 const SHOTS = process.env.SAMPLING_SCREENSHOTS ?? 'e2e-results'
 /** Fester Blattbestand, damit die Tests nicht davon abhängen, welche Blätter inzwischen dazugekommen sind. */
@@ -12,7 +13,7 @@ const nbsp = (text: string): string => text.replaceAll(String.fromCharCode(160),
 
 async function chooseSheet03(page: Page, extra = ''): Promise<void> {
   await page.goto(`/?${BASE}${extra}`)
-  await page.getByRole('button', { name: /Blatt 03/ }).click()
+  await pick(page, '03_MUS_1Z')
   await expect(page.getByRole('heading', { name: 'H · Zu prüfende Grundgesamtheit' })).toBeVisible()
 }
 
@@ -68,15 +69,13 @@ test('Verfahrensauswahl ist per Tastatur bedienbar und nennt nicht verfügbare V
   await page.keyboard.press('ArrowDown')
   await expect(tabs.nth(1)).toBeFocused()
   await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true')
-  await expect(page.getByRole('button', { name: /Blatt 08/ })).toHaveAttribute('aria-disabled', 'true')
+  await expect(page.locator('[data-sheet="08_SRS_1Z"]')).toHaveAttribute('aria-disabled', 'true')
   await page.keyboard.press('End')
   await expect(page.getByRole('tabpanel')).toContainText('Keine gebrauchsfertige Methode der DelVO')
   await page.keyboard.press('Home')
-  await page.keyboard.press('Tab')
-  await page.keyboard.press('Tab')
-  await expect(page.getByRole('button', { name: /Blatt 03/ })).toBeFocused()
+  await expect(page.locator('[data-sheet="03_MUS_1Z"]')).toBeVisible()
+  await page.locator('[data-sheet="03_MUS_1Z"]').focus()
   await page.keyboard.press('Enter')
-  await expect(page.locator('.fa-st__chip')).toContainText('Blatt 03')
   await expect(page.locator('.fa-st__chip')).toContainText('MUS, 1 Zeitraum')
 })
 
@@ -98,13 +97,13 @@ test('Rundlauf Speichern → Neu → Öffnen, Excel-Export → Öffnen, manipuli
   await expect(page.locator('[data-cell="C21"] .fa-st__value')).toHaveText('366')
   await expect(page.locator('[data-status]')).toContainText('geändert')
 
-  const [json] = await Promise.all([page.waitForEvent('download'), menu(page, /Arbeitsstand speichern/)])
+  const [json] = await Promise.all([page.waitForEvent('download'), menu(page, /Als JSON sichern/)])
   expect(json.suggestedFilename()).toBe('Stichprobe_03_MUS_1Z_2025_2026_Arbeitsstand.json')
   const jsonPath = await saved(json)
   await expect(page.locator('[data-status]')).toContainText('gespeichert')
   const before = await summary(page)
 
-  await menu(page, /Neu/)
+  await menu(page, /Zurücksetzen/)
   await expect(page.locator('[data-result="primary"]')).toHaveText('noch keine Angaben')
   await page.locator('input[type="file"]').setInputFiles(jsonPath)
   await expect(page.locator('[data-cell="C21"] .fa-st__value')).toHaveText('366')
@@ -114,7 +113,7 @@ test('Rundlauf Speichern → Neu → Öffnen, Excel-Export → Öffnen, manipuli
   const [xlsx] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Ergebnis exportieren' }).click()])
   expect(xlsx.suggestedFilename()).toBe('Stichprobe_03_MUS_1Z_2025_2026_Ergebnis.xlsx')
   const xlsxPath = await saved(xlsx)
-  await menu(page, /Neu/)
+  await menu(page, /Zurücksetzen/)
   await page.locator('input[type="file"]').setInputFiles(xlsxPath)
   await expect(page.locator('[data-cell="C21"] .fa-st__value')).toHaveText('366')
   expect(await summary(page)).toEqual(before)
@@ -136,7 +135,7 @@ test('zur Laufzeit wird nichts von fremden Hosts geladen und die Content-Securit
   await chooseSheet03(page, '&entwurf=1')
   await menu(page, 'Beispielwerte laden')
   await page.getByLabel('Konfidenzniveau').selectOption('0.95')
-  await Promise.all([page.waitForEvent('download'), menu(page, /Arbeitsstand speichern/)])
+  await Promise.all([page.waitForEvent('download'), menu(page, /Als JSON sichern/)])
   await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Ergebnis exportieren' }).click()])
   await expect(page.locator('meta[http-equiv="Content-Security-Policy"]')).toHaveAttribute('content', /default-src 'self'/)
   expect(requests.filter((url) => !url.startsWith(baseURL ?? '') && !url.startsWith('blob:') && !url.startsWith('data:'))).toEqual([])
@@ -194,7 +193,7 @@ test('Kontextfluss: Grundgesamtheit → Wegweiser → Methodenblatt mit vorbeleg
   await expect(page.locator('[data-guide-item="limited-size"]')).toContainText('Kategorie 1 oder 2')
   await accessible(page)
   await shot(page, '09_wegweiser')
-  await page.getByRole('button', { name: /Blatt 03/ }).click()
+  await pick(page, '03_MUS_1Z')
   const bookValue = page.getByLabel('Buchwert der angepassten zu prüfenden Grundgesamtheit (positive Einheiten) (BV)')
   await expect(bookValue).toHaveValue('17.300.000,00')
   await expect(page.locator('[data-cell="C7"] [data-link]')).toHaveText('aus Blatt 02_Grundgesamtheit vorbelegt')
@@ -207,7 +206,7 @@ test('Kontextfluss: Grundgesamtheit → Wegweiser → Methodenblatt mit vorbeleg
 
 test('Schichttabelle: hinzufügen bis zur achten Schicht, eigener Rollbereich, per Tastatur bedienbar', async ({ page }) => {
   await page.goto(`/?${BASE}`)
-  await page.getByRole('button', { name: /Blatt 04/ }).click()
+  await pick(page, '04_MUS_1Z_S')
   await menu(page, 'Beispielwerte laden')
   const table = page.locator('[data-strata]').first()
   await expect(table.locator('thead th')).toHaveText(['Gesamt', 'Schicht 1', 'Schicht 2', 'Schicht 3'])
@@ -269,7 +268,7 @@ test('Unterstichproben: Liste, Einfügen, Übernahme der Summen in das Methodenb
 
 test('englische Arbeitsübersetzung ist gekennzeichnet; gespeicherte Werte bleiben deutsch', async ({ page }) => {
   await page.goto(`/?${BASE}&sprache=en`)
-  await page.getByRole('button', { name: /Sheet 03/ }).click()
+  await pick(page, '03_MUS_1Z')
   await menu2(page, 'Working file', 'Load example values')
   await expect(page.locator('[data-result="primary"]')).toHaveText(/^92\s+units$/)
   await expect(page.locator('[data-cell="C13"]')).toContainText('✔ average: value between the two minimum levels')
@@ -355,7 +354,7 @@ for (const theme of ['light', 'dark'] as const) {
     await noOverflow(page)
     await shot(page, `19_anwendungstokens_${theme}`)
     await page.locator('[data-cell="C8"] input').fill('1300')
-    await menu(page, /Neu/)
+    await menu(page, /Zurücksetzen/)
     await expect(page.getByRole('dialog')).toBeVisible()
     await accessible(page)
     await shot(page, `20_anwendungstokens_dialog_${theme}`)

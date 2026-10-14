@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
+import { pick, variants } from './pick'
 
 /**
  * Voller Blattbestand im Browser: je Blattart ein Verfahren mit Beispielwerten,
@@ -21,16 +22,10 @@ async function noOverflow(page: Page): Promise<void> {
   expect(overflow).toBeLessThanOrEqual(0)
 }
 
-/** Verfahren wählen: die Familie suchen, die die Kachel des Blatts zeigt. */
+/** Verfahren wählen: Methode, Zeiträume und Schichtung einstellen, dann übernehmen. */
 async function choose(page: Page, sheet: string, theme: string): Promise<void> {
   await page.goto(`/?entwurf=0&theme=${theme}`)
-  const tabs = page.getByRole('tab')
-  const tile = page.locator(`[data-sheet="${sheet}"]`)
-  for (let index = 0; index < (await tabs.count()); index += 1) {
-    await tabs.nth(index).click()
-    if (await tile.count()) break
-  }
-  await tile.click()
+  await pick(page, sheet)
   await expect(page.locator(`[data-sheet-view="${sheet}"]`)).toBeVisible()
 }
 
@@ -158,14 +153,9 @@ test('Altvorlage X3: „Letzte Schicht entfernen“ lässt die Eingaben der übr
 
 test('alle Verfahren sind wählbar; nur X1a ist eine Datentabelle', async ({ page }) => {
   await page.goto('/?entwurf=0')
-  const tabs = page.getByRole('tab')
-  let tiles = 0
-  for (let index = 0; index < (await tabs.count()); index += 1) {
-    await tabs.nth(index).click()
-    await expect(page.locator('.fa-st__variants')).not.toContainText('noch nicht verfügbar')
-    tiles += await page.locator('.fa-st__variants [data-sheet]').count()
-  }
-  expect(tiles).toBe(19)
+  const found = await variants(page)
+  expect(found.size).toBe(19)
+  expect([...found.values()].filter((disabled) => disabled === 'true')).toEqual([])
   await expect(page.locator('[data-step-follows]')).toHaveCount(0)
 })
 

@@ -3,8 +3,12 @@ import { WORKFLOW_STEPS, findAvailableSheet, tableOf, type MessageKey, type Meth
 import { FaButton } from '@auditcore/ui'
 import { computed } from 'vue'
 
-/** Gewähltes Verfahren als Kapsel und die Arbeitsschritte der Vorlage zum Umschalten. */
-const props = defineProps<{ definition: MethodDefinition | null; step: WorkflowStep['id']; sheets: readonly SheetModule[]; t: Translate }>()
+/**
+ * Schrittleiste des Assistenten (nummerierte Arbeitsschritte der Vorlage) und das
+ * gewählte Verfahren als Kapsel mit dem Teilschritt „Verfahren wählen“ bzw.
+ * „Parameter und Ergebnis“.
+ */
+const props = withDefaults(defineProps<{ definition: MethodDefinition | null; step: WorkflowStep['id']; sheets: readonly SheetModule[]; t: Translate; choosing?: boolean }>(), { choosing: false })
 const emit = defineEmits<{ change: []; step: [id: WorkflowStep['id']]; table: [sheet: string] }>()
 
 /** Nachschlagetabellen des gewählten Verfahrens, die im Blattbestand als Datentabelle vorliegen. */
@@ -27,20 +31,25 @@ function choose(step: WorkflowStep): void {
 
 <template>
   <div class="fa-st__methodbar fa-st__inner">
-    <div v-if="definition" class="fa-st__chip">
-      <span class="fa-st__chip-no">{{ t('sheetNumber', { number: definition.number }) }}</span>
-      <strong>{{ definition.shortTitle }}</strong>
-      <FaButton size="sm" :label="t('changeMethod')" @click="$emit('change')" />
-      <FaButton v-for="sheet in tables" :key="sheet" size="sm" :label="t('showTable', { name: tableOf(sheet, sheets)?.title ?? sheet })" :data-action="`table-${sheet}`" @click="emit('table', sheet)" />
-    </div>
     <nav class="fa-st__stepnav" :aria-label="t('steps')">
       <ol class="fa-st__steps">
-        <li v-for="entry in WORKFLOW_STEPS" :key="entry.id">
+        <li v-for="(entry, index) in WORKFLOW_STEPS" :key="entry.id">
           <button type="button" class="fa-st__step" :data-step="entry.id" :aria-current="entry.id === step ? 'step' : undefined" :aria-disabled="isReady(entry) ? undefined : 'true'" :title="isReady(entry) ? undefined : t('notAvailable')" @click="choose(entry)">
-            {{ t(STEP_KEYS[entry.id]) }}<span v-if="!isReady(entry)" class="fa-st__step-note" data-step-follows> · {{ t('stepFollows') }}</span>
+            <span class="fa-st__step-no" aria-hidden="true">{{ index + 1 }}</span>
+            <span>{{ t(STEP_KEYS[entry.id]) }}<span v-if="!isReady(entry)" class="fa-st__step-note" data-step-follows> · {{ t('stepFollows') }}</span></span>
           </button>
         </li>
       </ol>
     </nav>
+    <div v-if="step === 'method'" class="fa-st__substeps" data-substeps>
+      <span class="fa-st__substep" :aria-current="choosing ? 'step' : undefined">{{ t('substepChoose') }}</span>
+      <span class="fa-st__substep-sep" aria-hidden="true">›</span>
+      <span class="fa-st__substep" :aria-current="!choosing && definition ? 'step' : undefined">{{ t('substepParameters') }}</span>
+    </div>
+    <div v-if="definition && !choosing" class="fa-st__chip">
+      <strong>{{ definition.shortTitle }}</strong>
+      <FaButton size="sm" :label="t('changeMethod')" @click="$emit('change')" />
+      <FaButton v-for="sheet in tables" :key="sheet" size="sm" :label="t('showTable', { name: tableOf(sheet, sheets)?.title ?? sheet })" :data-action="`table-${sheet}`" @click="emit('table', sheet)" />
+    </div>
   </div>
 </template>

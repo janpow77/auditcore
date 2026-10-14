@@ -4,7 +4,7 @@ import { FaButton, useClickOutside, useId } from '@auditcore/ui'
 import { computed, nextTick, ref } from 'vue'
 import type { MenuAction } from '../types'
 
-/** Menü „Arbeitsstand“: Öffnen, Speichern, Neu, Beispielwerte, lokalen Entwurf löschen. */
+/** Menü „Arbeitsstand“: als JSON sichern, Datei einlesen, zurücksetzen, Beispielwerte, lokalen Entwurf löschen. */
 const props = defineProps<{ t: Translate; draft: boolean }>()
 const emit = defineEmits<{ action: [action: MenuAction] }>()
 
@@ -15,8 +15,8 @@ interface Entry {
   separated?: boolean
 }
 const ENTRIES: readonly Entry[] = [
-  { action: 'open', label: 'menuOpen', hint: 'menuOpenHint' },
   { action: 'save', label: 'menuSave', hint: 'menuSaveHint' },
+  { action: 'open', label: 'menuOpen', hint: 'menuOpenHint' },
   { action: 'new', label: 'menuNew', separated: true },
   { action: 'sample', label: 'menuSample' },
   { action: 'clearDraft', label: 'menuClearDraft', separated: true },

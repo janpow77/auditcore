@@ -3,7 +3,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { SamplingCalculator } from '../src/index'
-import { FOUNDATION_SHEETS } from './sheets'
+import { FOUNDATION_SHEETS, pickVariant } from './sheets'
 
 const nbsp = (text: string): string => text.replaceAll(String.fromCharCode(160), ' ')
 const mounted: VueWrapper[] = []
@@ -44,7 +44,8 @@ afterEach(() => {
 describe('Arbeitsschritte und Kontextfluss', () => {
   it('die Schritte sind umschaltbar; Schritte ohne Rechenkern sind gekennzeichnet', async () => {
     const wrapper = mountCalculator()
-    expect(wrapper.findAll('[data-step]').map((button) => button.text())).toEqual(['Grundgesamtheit', 'Verfahren', 'Unterstichproben', 'Gesamtfehlerquote · folgt', 'Bericht · folgt'])
+    expect(wrapper.findAll('[data-step]').map((button) => button.text())).toEqual(['1Grundgesamtheit', '2Verfahren', '3Unterstichproben', '4Gesamtfehlerquote · folgt', '5Bericht · folgt'])
+    expect(wrapper.get('[data-substeps] [aria-current="step"]').text()).toBe('Verfahren wählen')
     expect(wrapper.get('[data-step="method"]').attributes('aria-current')).toBe('step')
     await step(wrapper, 'totalErrorRate')
     expect(wrapper.get('[data-step="method"]').attributes('aria-current')).toBe('step')
@@ -115,7 +116,7 @@ describe('Beispielwerte', () => {
 describe('Schichttabelle (Blatt 04)', () => {
   async function stratified(): Promise<VueWrapper> {
     const wrapper = mountCalculator()
-    await wrapper.get('[data-sheet="04_MUS_1Z_S"]').trigger('click')
+    await pickVariant(wrapper, '04_MUS_1Z_S')
     await menu(wrapper, 'sample')
     return wrapper
   }
@@ -246,7 +247,7 @@ describe('Englische Arbeitsübersetzung', () => {
   it('Oberfläche, Katalog, Bezeichnungen, Listen und Prüfhinweise erscheinen englisch; die Werte bleiben', async () => {
     const wrapper = mountCalculator({ locale: 'en' })
     expect(wrapper.get('[role="tab"]').text()).toContain('MUS standard approach')
-    expect(wrapper.get('[data-sheet="03_MUS_1Z"]').text()).toContain('Sheet 03')
+    expect(wrapper.get('[data-match]').text()).toContain('MUS standard approach')
     await wrapper.get('[data-sheet="03_MUS_1Z"]').trigger('click')
     await menu(wrapper, 'sample')
     expect(cell(wrapper, 'C27').get('.fa-st__label-text').text()).toBe('Sample size to be applied (at least 30; capped where applicable)')

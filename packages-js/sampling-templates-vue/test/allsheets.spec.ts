@@ -3,6 +3,7 @@ import { SHEETS, availableSheets, FAMILIES } from '@auditcore/sampling-templates
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { SamplingCalculator } from '../src/index'
+import { pickVariant } from './sheets'
 
 /** Oberfläche mit dem vollen Blattbestand: jedes Verfahren wählbar, Altvorlage X3, Datentabelle X1a, Übernahme je Schicht. */
 const mounted: VueWrapper[] = []
@@ -28,11 +29,9 @@ async function menu(wrapper: VueWrapper, action: string): Promise<void> {
   await settle()
 }
 
-/** Verfahren über die Auswahl öffnen: zuerst die Familie, dann die Kachel. */
+/** Verfahren über die Auswahl öffnen: Familie, Zeiträume, Schichtung, dann übernehmen. */
 async function choose(wrapper: VueWrapper, sheet: string): Promise<void> {
-  const family = FAMILIES.findIndex((entry) => entry.variants.some((variant) => variant.sheet === sheet))
-  await wrapper.findAll('[role="tab"]')[family]!.trigger('click')
-  await wrapper.get(`[data-sheet="${sheet}"]`).trigger('click')
+  await pickVariant(wrapper, sheet)
   await settle()
 }
 

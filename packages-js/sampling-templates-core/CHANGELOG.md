@@ -1,5 +1,16 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.3 – 2026-10-14
+
+Nur Stile und Texte der Oberfläche (noch nicht veröffentlicht); keine Änderung
+am Rechenkern.
+
+- Stile für Filterauswahl, Schrittleiste, Kennzahlenkarten, Ampel und
+  Begriffserklärungen; Schrittleiste bricht bei schmaler Breite um.
+- Neue Oberflächentexte (deutsch und englisch); Menütexte „Als JSON sichern“,
+  „Datei einlesen …“, „Zurücksetzen (leeres Formular)“; Wegweiser nennt
+  „Schritt 1“ statt „Blatt 02“.
+
 ## 0.1.2 – 2026-10-14
 
 Befunde der Abnahme des Einbaus (noch nicht veröffentlicht). Keine Änderung am

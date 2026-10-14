@@ -6,6 +6,7 @@
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { chromium, expect, test, type Browser, type Page } from '@playwright/test'
+import { locateVariant, pick } from './pick'
 
 const ALL = '/?entwurf=0'
 const CHANGE_METHOD = 'Verfahren wechseln'
@@ -13,7 +14,7 @@ const pagesOf = (pdf: Buffer): number => Number(/\/Count (\d+)/.exec(pdf.toStrin
 
 async function openReport(page: Page, sample: boolean, base = ''): Promise<void> {
   await page.goto(`${base}${ALL}`)
-  await page.getByRole('button', { name: /Blatt 03/ }).click()
+  await pick(page, '03_MUS_1Z')
   if (sample) {
     await page.getByRole('button', { name: 'Arbeitsstand' }).click()
     await page.getByRole('menuitem', { name: 'Beispielwerte laden' }).click()
@@ -73,7 +74,7 @@ test('Berichtsdruck im installierten Chrome: ebenfalls eine Seite (dort schob di
 test('390 px: Das Menü „Arbeitsstand“ bleibt im Bild, die Kopfzeile ist verdichtet', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto(ALL)
-  await page.getByRole('button', { name: /Blatt 03/ }).click()
+  await pick(page, '03_MUS_1Z')
   await page.getByRole('button', { name: 'Arbeitsstand' }).click()
   const box = await page.getByRole('menu').boundingBox()
   expect(box).not.toBeNull()
@@ -126,7 +127,7 @@ test('390 px: Bericht am Bildschirm – Tabellen mit Mindestbreite in eigenem, p
 
 test('Blattwahl per Tastatur setzt den Fokus auf das Blatt; die Wahl eines anderen Blatts und der Excel-Export sind keine ungesicherte Änderung', async ({ page }) => {
   await page.goto(ALL)
-  await page.getByRole('button', { name: /Blatt 03/ }).focus()
+  await (await locateVariant(page, '03_MUS_1Z')).focus()
   await page.keyboard.press('Enter')
   await expect(page.locator('[data-sheet-view="03_MUS_1Z"]')).toBeFocused()
   await page.getByRole('button', { name: 'Arbeitsstand' }).click()
@@ -134,12 +135,7 @@ test('Blattwahl per Tastatur setzt den Fokus auf das Blatt; die Wahl eines ander
   await expect(page.locator('[data-status]')).not.toContainText('geändert')
   // Anderes Blatt wählen: keine Änderung, solange nichts eingegeben ist.
   await page.getByRole('button', { name: CHANGE_METHOD }).click()
-  const tile = page.locator('[data-sheet="08_SRS_1Z"]')
-  for (const tab of await page.getByRole('tab').all()) {
-    await tab.click()
-    if (await tile.count()) break
-  }
-  await tile.click()
+  await pick(page, '08_SRS_1Z')
   await expect(page.locator('[data-sheet-view="08_SRS_1Z"]')).toBeVisible()
   await expect(page.locator('[data-status]')).not.toContainText('geändert')
   // Eine Eingabe ist eine Änderung; nach dem Export (er trägt den Arbeitsstand) gilt der Stand als gesichert.

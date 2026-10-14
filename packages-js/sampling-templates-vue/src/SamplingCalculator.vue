@@ -179,7 +179,7 @@ defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace
       <div class="fa-st__bar-inner fa-st__inner">
         <div class="fa-st__brand">
           <h2 class="fa-st__title">{{ t('title') }}</h2>
-          <p class="fa-st__muted">{{ currentSheet && !choosing ? `${currentSheet.definition.number} · ${currentSheet.definition.title}` : t('subtitle') }}</p>
+          <p class="fa-st__muted">{{ currentSheet && !choosing ? currentSheet.definition.title : t('subtitle') }}</p>
         </div>
         <div v-if="$slots.mark || dataMark" class="fa-st__mark" data-mark><slot name="mark">{{ dataMark }}</slot></div>
         <p class="fa-st__status" :class="statusClass" data-status><span class="fa-st__dot" aria-hidden="true"></span>{{ statusText }}</p>
@@ -189,10 +189,10 @@ defineExpose({ dirty, isDirty: (): boolean => meta.value.dirty, state: workspace
       </div>
     </header>
 
-    <MethodBar :definition="activeSheet?.definition ?? null" :step="step" :sheets="sheets" :t="t" @change="((step = 'method'), (pickerOpen = true))" @step="session.setStep" @table="shownTable = $event" />
+    <MethodBar :definition="activeSheet?.definition ?? null" :step="step" :choosing="choosing" :sheets="sheets" :t="t" @change="((step = 'method'), (pickerOpen = true))" @step="session.setStep" @table="shownTable = $event" />
     <div class="fa-st__inner"><NoticeList :notices="notices" :sample="meta.sample && !choosing" :t="t" @dismiss="session.dismiss" @clear="guarded(resetAll)" /></div>
     <MethodPicker v-if="choosing" :families="shownFamilies" :sheets="sheets" :t="t" :current="workspace.activeMethod" :guide="guide" @select="selectMethod" @table="shownTable = $event" />
-    <div v-else-if="currentSheet" ref="sheetView" class="fa-st__inner fa-st__sheet" tabindex="-1" :aria-label="`${currentSheet.definition.number} · ${currentSheet.definition.title}`" :data-sheet-view="currentSheet.id">
+    <div v-else-if="currentSheet" ref="sheetView" class="fa-st__inner fa-st__sheet" tabindex="-1" :aria-label="currentSheet.definition.title" :data-sheet-view="currentSheet.id">
       <UnitList
         v-if="listView"
         :view="listView"

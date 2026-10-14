@@ -1,5 +1,22 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.3 – 2026-10-14
+
+Oberfläche als Arbeitsassistent statt Blattansicht (noch nicht veröffentlicht);
+keine Änderung am Rechenkern.
+
+- Verfahrensauswahl als Filter: Methode, Zahl der Zeiträume und Schichtung
+  führen auf genau ein Verfahren, das mit „Verfahren verwenden“ übernommen
+  wird. Die Blattkacheln und die Tabelle Zeiträume × Schichtung entfallen; nur
+  die Altvorlagen erscheinen weiter als Liste.
+- Kurzerklärungen zu MUS, PPS, einfacher Zufallsstichprobe und Startwert.
+- Nummerierte Schrittleiste mit Teilschritt „Verfahren wählen › Parameter und
+  Ergebnis“; Blattnummern stehen nicht mehr in Kopfzeile und Kapsel.
+- Kennzahlenspalte: Hauptgröße, hervorgehobene Kennzahlen als Karten, Skala mit
+  Ampel gegen die Wesentlichkeitsschwelle, übrige Kennzahlen kompakt.
+- Menü „Arbeitsstand“: „Als JSON sichern“, „Datei einlesen …“, „Zurücksetzen“.
+- Tests auf die neue Auswahl umgestellt (Hilfen `pickVariant` bzw. `e2e/pick.ts`).
+
 ## 0.1.2 – 2026-10-14
 
 Befunde der Abnahme des Einbaus (noch nicht veröffentlicht).
