@@ -170,10 +170,16 @@ Nummern), ein Merkmal „eindeutig“, Verteilungen nach Klassen.
 
 ## 8 Kennungen und Namen
 
-Firmennamen kommen aus der Liste `companies` von `auditcore_dummygenerator`
-und werden wie dort gezogen (ein Name je Ziehung, mit Zurücklegen). Die Liste
-hat zehn Einträge; in größeren Bündeln wiederholen sich Namen, Begünstigte
-unterscheidet die Kennung `BEN-…`. Es sind generische Beispielnamen;
+Firmennamen kommen seit 0.2.0 aus dem Namensbaukasten von
+`auditcore_dummygenerator` (`company_name_at`: Präfix, Geschäftsbereich,
+Namenszusatz, Rechtsform). Die Position ist die laufende Nummer des
+Vorhabens, Lieferanten nehmen Positionen ab 10 000, eine Spalte `company` der
+freien Tabelle die Zeilennummer; der Startwert der Folge ist aus dem
+Bündel-Startwert abgeleitet. Damit tragen innerhalb eines Bündels keine zwei
+Begünstigten und kein Lieferant denselben Namen. Öffentlich-rechtliche
+Begünstigte erhalten öffentlich-rechtliche Formen (AöR, Zweckverband,
+Eigenbetrieb), privatrechtliche GmbH, AG, GmbH & Co. KG, UG
+(haftungsbeschränkt), KG oder eG. Die Kennung `BEN-…` bleibt. Es sind generische Beispielnamen;
 Ähnlichkeiten mit bestehenden Unternehmen sind zufällig und nicht
 beabsichtigt.
 

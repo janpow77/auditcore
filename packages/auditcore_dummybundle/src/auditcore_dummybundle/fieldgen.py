@@ -120,7 +120,8 @@ def _person(ctx: Context, spec: FieldSpec, rng: Random) -> list[Cell]:
 
 
 def _company(ctx: Context, _: FieldSpec, rng: Random) -> list[Cell]:
-    return [cat.company_name(rng) for _ in range(ctx.rows)]
+    seed = rng.randrange(2**63)
+    return [cat.company_name(seed, index) for index in range(ctx.rows)]
 
 
 def _address(ctx: Context, spec: FieldSpec, _: Random) -> list[Cell]:
