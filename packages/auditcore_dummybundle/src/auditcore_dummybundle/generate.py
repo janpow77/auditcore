@@ -21,7 +21,7 @@ from auditcore_dummybundle.templates import (
 )
 
 PACKAGE = "auditcore_dummybundle"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 MARKING_COLUMN = "synthetisch"
 _NOTICE = "Synthetische Testdaten ohne Bezug zu echten Vorhaben, Personen oder Unternehmen."
 _INVALID_NOTE = (

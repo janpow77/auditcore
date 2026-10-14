@@ -1,5 +1,11 @@
 # Changelog auditcore_invoicesynth
 
+## 0.3.1 – unveröffentlicht
+
+Keine Verhaltensänderung. Nur Pin auf `auditcore_invoicegenerator==0.2.5`
+(der seinerseits `auditcore_dummygenerator` 0.2.0 bindet); ohne den Sprung
+wären beide Pakete nicht gemeinsam installierbar.
+
 ## 0.3.0 – 2026-10-11
 
 Generatorvariante `v4` (`build --variety v4`; `v1`, `v2`, `v3` bleiben bitgleich,

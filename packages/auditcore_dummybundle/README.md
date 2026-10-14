@@ -242,15 +242,16 @@ Keine gegenüber einem Altbestand: Das Paket ersetzt kein vorhandenes Modul.
 Gegenüber `auditcore_dummygenerator` gilt bewusst anderes: Beträge sind
 `Decimal` statt Gleitkomma, IBAN und USt-IdNr. tragen eine gezielt verfehlte
 Prüfziffer, und unbekannte Feldtypen werden abgewiesen statt leer ausgegeben.
-Firmennamen zieht das Bündel aus der Liste `companies` des Feldgenerators, so
-wie dieser es selbst tut; bei mehr Zeilen als Listeneinträgen wiederholen sie
-sich.
+Firmennamen nimmt das Bündel seit 0.2.0 aus dem Namensbaukasten des
+Feldgenerators (`company_name_at`, 25 920 privatrechtliche, je 1 080
+gemeinnützige und öffentlich-rechtliche Namen): innerhalb eines Bündels
+verschieden, Rechtsform passend zur Rechtsform des Begünstigten.
 
 ## Abhängigkeiten
 
 Python ≥ 3.11 und drei exakt gebundene auditcore-Pakete, sonst nur die
 Standardbibliothek: `auditcore_common==0.2.1` (Hashing, REST-Vertragsfehler),
-`auditcore_dummygenerator==0.1.4` (Firmenliste sowie Kataloge DE/AT für Orte,
+`auditcore_dummygenerator==0.2.0` (Namensbaukasten für Firmen sowie Kataloge DE/AT für Orte,
 Namen und Verwendungszwecke) und `auditcore_identifiers==0.2.1` (Prüfziffern). Bewusst
 keine Abhängigkeit von Faker, NumPy, openpyxl, einem Web-Framework oder einer
 Datenbank.
