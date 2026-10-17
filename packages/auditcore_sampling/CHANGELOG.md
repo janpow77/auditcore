@@ -1,6 +1,6 @@
 # Changelog auditcore_sampling
 
-## Unreleased
+## 0.2.5 – 2026-10-17
 
 - Begriff: `auditcore_sampling.guidance` nennt die 2-%-Schwelle in Meldungen und Herleitung (`TE = Signifikanzschwelle × BV`) „Signifikanzschwelle“ statt „Wesentlichkeit“ (DelVO (EU) 2023/67, Anhang I Nr. 1). Bezeichner und REST-Vertrag bleiben unverändert. Die betragsmäßige Wesentlichkeit M der Altmethoden (`sizes`, `legacy`, Profil-Parameter „Wesentlichkeit (M)“) bleibt unverändert.
 
