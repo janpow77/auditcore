@@ -61,7 +61,7 @@ export function strataColumns(method: SampleSizeMethod | null): StratumColumn[] 
   return ['name', 'populationSize', 'sd', 'exhaustive']
 }
 
-/** Anfangswerte bei Methodenwechsel: sichtbar vorbelegt ist nur die Wesentlichkeit von 2 %. */
+/** Anfangswerte bei Methodenwechsel: sichtbar vorbelegt ist nur die Signifikanzschwelle von 2 %. */
 export function formFor(method: SampleSizeMethod | null, catalogue: SampleSizeCatalogue | null): SampleSizeForm {
   if (!method) return EMPTY_FORM
   const values: Record<string, string> = {}

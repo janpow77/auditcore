@@ -29,11 +29,11 @@ NOT_MATERIAL = "not_material"
 INCONCLUSIVE = "inconclusive"
 
 CONCLUSION_TEXTS = {
-    MATERIAL: "Wesentlicher Fehler: Die Gesamtfehlerquote liegt über der Wesentlichkeitsschwelle.",
+    MATERIAL: "Wesentlicher Fehler: Die Gesamtfehlerquote liegt über der Signifikanzschwelle.",
     NOT_MATERIAL: "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der "
-    "Wesentlichkeitsschwelle.",
+    "Signifikanzschwelle.",
     INCONCLUSIVE: "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über "
-    "der Wesentlichkeitsschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens "
+    "der Signifikanzschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens "
     "(Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
 }
 
@@ -101,10 +101,10 @@ class TotalErrorRate:
 def check_materiality(rate: float) -> float:
     """Materiality rate in (0, 2 %]; a higher threshold is not admissible."""
     if isinstance(rate, bool) or not isinstance(rate, (int, float)) or not math.isfinite(rate):
-        raise ExtrapolationInputError("Die Wesentlichkeitsschwelle muss eine Zahl sein.")
+        raise ExtrapolationInputError("Die Signifikanzschwelle muss eine Zahl sein.")
     if not 0 < rate <= MATERIALITY_RATE:
         raise ExtrapolationInputError(
-            "Die Wesentlichkeitsschwelle muss größer als 0 und höchstens 2 % sein "
+            "Die Signifikanzschwelle muss größer als 0 und höchstens 2 % sein "
             "(Leitfaden, Abschn. 4.9)."
         )
     return float(rate)
@@ -160,7 +160,7 @@ def evaluate(
     upper = None if projection.precision is None else total + projection.precision
     conclusion = conclude(total, upper, tolerable)
     steps = [
-        Step("Tolerierbarer Fehler", "TE = Wesentlichkeit × BV", tolerable, guidance("4.10")),
+        Step("Tolerierbarer Fehler", "TE = Signifikanzschwelle × BV", tolerable, guidance("4.10")),
         Step(
             "Gesamtfehler",
             "EE + systemische + nicht korrigierte anomale Fehler",

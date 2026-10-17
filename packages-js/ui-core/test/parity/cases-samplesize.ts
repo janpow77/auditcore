@@ -29,7 +29,7 @@ export const samplesizeCases: ReadonlyArray<ParityCase<SamplesizeCaseProps>> = [
     name: 'vorbelegt: MUS konservativ',
     props: () => ({ port: fakeSamplesizePort(), request: conservativeRequest }),
     expect: {
-      texts: ['Faktorprofil', 'Wesentlichkeit (%)', 'EGESIF_16-0014-01, Abschn. 6.3.5.2'],
+      texts: ['Faktorprofil', 'Signifikanzschwelle (%)', 'EGESIF_16-0014-01, Abschn. 6.3.5.2'],
       roles: [['button', 'Umfang berechnen'], ['combobox', 'Konfidenzniveau'], ['textbox', 'Buchwert der Grundgesamtheit (BV, €)']],
       counts: { '[data-testid="samplesize-strata"]': 0, '[data-testid="samplesize-result"]': 0 },
     },

@@ -48,7 +48,7 @@ def test_unknown_profile_level_and_method_are_rejected() -> None:
     ("change", "message"),
     [
         ({"materiality_rate": 0.025}, "höchstens 2 %"),
-        ({"anticipated_error_rate": 0.02}, "kleiner als die Wesentlichkeit"),
+        ({"anticipated_error_rate": 0.02}, "kleiner als die Signifikanzschwelle"),
         ({"error_sd": 0.0}, "größer als 0"),
         ({"population_size": 0}, "ganze Zahl"),
         ({"book_value": float("nan")}, "endliche Zahl"),

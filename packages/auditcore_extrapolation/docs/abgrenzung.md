@@ -10,7 +10,7 @@ Anwendungsverhalten charakterisiert.
   daher Ergebnisse und braucht eine fachliche Entscheidung.
 - **audit-portal** (`rer_service.compute_rer`): setzt dieselbe Vorlage Annex 3
   mit `Decimal` um. Die Zeilen A–M sind gleich definiert; die Bibliothek prüft
-  zusätzlich die Wesentlichkeitsschwelle (≤ 2 %) und verlangt nicht negative
+  zusätzlich die Signifikanzschwelle (≤ 2 %) und verlangt nicht negative
   Beträge für E1, E2 und H.
 - **auditcore_sampling**: bleibt zuständig für Stichprobenumfang und Auswahl.
   Die KOM-Formeln für den Umfang (z. B. n = (z × BV × σ_r/(TE − AE))² oder
@@ -29,7 +29,7 @@ Bibliothek deckt die **Auswertung** ab. Stichprobenumfang und Auswahl
 | 3.2.1 | Konfidenzniveau nach Systembewertung (Tabelle 1) | abgedeckt | `SYSTEM_ASSESSMENT_LEVELS`, `system_confidence_level` (für 7.7) |
 | 3.2.2 | Gruppe von Programmen: ein Zusicherungsniveau | abgedeckt (Hinweis) | anspruchsvollste Kategorie wählen; siehe 7.8 |
 | 4.6 | Negative Stichprobeneinheiten | abgedeckt | `split_population` (Varianten 1–3, Abstimmung netto/positiv/negativ), `review_negative_units`; REST `/negative-units`. Einheiten mit negativem Buchwert bleiben in der Hochrechnung unzulässig (gesonderte Grundgesamtheit, keine Fehlerquote) |
-| 4.9–4.14 | Wesentlichkeit, TE, Obergrenze, Ergebnis, Fehlerquoten | abgedeckt | `evaluate`, `conclude` |
+| 4.9–4.14 | Signifikanzschwelle, TE, Obergrenze, Ergebnis, Fehlerquoten | abgedeckt | `evaluate`, `conclude` |
 | 6.1.1, 6.1.2 | SRS, geschichtet | abgedeckt | `srs.*` |
 | 6.1.3 | SRS, zwei Zeiträume | abgedeckt | `project_periods` |
 | 6.2.1, 6.2.2 | Differenzenschätzung, geschichtet | abgedeckt | `difference` |

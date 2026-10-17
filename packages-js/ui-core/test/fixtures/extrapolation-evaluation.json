@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.1.0",
+ "library": "auditcore_extrapolation 0.2.0",
  "fingerprint": "0aee56b94ff817114f92170da16fc080371c2e65236c349b09607b617414ea9d",
  "method": {
   "id": "mus.standard",
@@ -83,7 +83,7 @@
   "upper_limit_rate": 0.03245,
   "conclusion": "inconclusive",
   "explanation": [
-   "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Wesentlichkeitsschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
+   "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Signifikanzschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
    "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
    "Abgegrenzte systemische Fehler sind nicht hochgerechnet, sondern mit ihrem abgegrenzten Betrag enthalten (Leitfaden, Anhang 1).",
    "Korrigierte anomale Fehler sind nicht Teil der Gesamtfehlerquote."
@@ -91,7 +91,7 @@
   "steps": [
    {
     "label": "Tolerierbarer Fehler",
-    "formula": "TE = Wesentlichkeit × BV",
+    "formula": "TE = Signifikanzschwelle × BV",
     "value": 20000.0,
     "source": "EGESIF_16-0014-01, Abschn. 4.10"
    },

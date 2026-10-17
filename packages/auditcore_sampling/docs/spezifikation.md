@@ -31,7 +31,7 @@ Profil.
 | `systematic_mus(values, *, sample_size, interval, start, variant)` | Beträge in Reihenfolge, Variante `portal` oder `flowstat` | `MusSelection` (Treffer, Positionen, Ausschlüsse) | – |
 | `draw_start(rng, interval)`, `simple_random(rng, population, size)` | ausdrücklicher `random.Random` | Startwert bzw. Auswahl ohne Zurücklegen | nur der übergebene Generator |
 | `stratified_allocation(n, strata, method)` | Gesamtumfang, Schichtgrößen, `proportional`/`equal` | Umfang je Schicht, höchstens N_h | – |
-| `guidance.equal_probability_size`, `guidance.stratified_equal_probability_size` | Methode `guidance.srs`/`guidance.difference`, N, BV, σ_e bzw. Schichten, Konfidenzniveau, Faktorprofil, erwartete Fehlerquote, Wesentlichkeit ≤ 2 % | `GuidancePlan` mit Herleitung und Fundstelle je Schritt, Status `GUIDANCE_EGESIF_16_0014_01` | – |
+| `guidance.equal_probability_size`, `guidance.stratified_equal_probability_size` | Methode `guidance.srs`/`guidance.difference`, N, BV, σ_e bzw. Schichten, Konfidenzniveau, Faktorprofil, erwartete Fehlerquote, Signifikanzschwelle ≤ 2 % | `GuidancePlan` mit Herleitung und Fundstelle je Schritt, Status `GUIDANCE_EGESIF_16_0014_01` | – |
 | `guidance.mus_standard_size`, `guidance.mus_stratified_size`, `guidance.mus_conservative_size` | BV, σ_r bzw. Schichten, Konfidenzniveau, Faktorprofil, Fehlerquote | `GuidancePlan` (bei MUS Standard mit `book_values` auch Hochwertschicht) | – |
 | `guidance.nonstatistical_minimum(rule, *, population_size, book_value, assurance_level)` | Regelprofil `cpr_2021_art79_2` oder `cpr_2013_art127_1` | Mindestumfang, Mindestabdeckung, Tabelle-6-Bänder | – |
 | `guidance.high_value_split(book_values, n)` | Buchwerte > 0, n ≥ 1 | `HighValueSplit` (Hochwertschicht, SI, n_s) | – |
@@ -70,7 +70,7 @@ deutscher Meldung; es gibt keine stillen Ersatzwerte.
 |---|---|
 | unbekannte Methode, unbekanntes Faktorprofil, Regelprofil oder Verfahren | Fehler mit Liste der zulässigen Kennungen |
 | Konfidenzniveau nicht in der Tabelle der Methode bzw. des Profils | Fehler „kein Ersatzwert“ |
-| Wesentlichkeit ≤ 0 oder über 2 %, erwartete Fehlerquote ≥ Wesentlichkeit, TE − AE × EF ≤ 0 | Fehler mit Fundstelle |
+| Signifikanzschwelle ≤ 0 oder über 2 %, erwartete Fehlerquote ≥ Signifikanzschwelle, TE − AE × EF ≤ 0 | Fehler mit Fundstelle |
 | nicht endliche Zahlen, Wahrheitswerte als Zahl, N < 1, Standardabweichung ≤ 0 | Fehler |
 | nicht-statistisch nach `cpr_2021_art79_2` mit N ≥ 300 | Fehler „statistisch planen“ |
 | Ziehreihenfolge ohne jede Position genau einmal, negative Beträge | Fehler |

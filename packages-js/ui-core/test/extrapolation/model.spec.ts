@@ -33,7 +33,7 @@ describe('Formularlogik der Hochrechnung', () => {
     expect(readExtrapolationAmount('2,5', { integer: true })).toBe('invalid')
   })
 
-  it('baut die Anfrage aus den Zeilen (Wesentlichkeit in Prozent → Anteil)', () => {
+  it('baut die Anfrage aus den Zeilen (Signifikanzschwelle in Prozent → Anteil)', () => {
     const checked = buildEvaluationRequest(extrapolationCatalogue, form())
     expect(checked.ok).toBe(true)
     if (!checked.ok) return
