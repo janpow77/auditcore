@@ -14,31 +14,31 @@ Behörde nachbildet, ohne dass es belegt und freigegeben ist.
 ## Installation
 
 Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt);
-`auditcore_dummybundle` 0.1.0 erscheint mit dem Release v0.13.0:
+`auditcore_dummybundle` 0.2.0 erscheint mit dem Release v0.14.0:
 
 ```bash
-python -m pip install 'auditcore_dummybundle==0.1.0' \
+python -m pip install 'auditcore_dummybundle==0.2.0' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
 Hashgebunden über die Requirements-Datei des Releases; sie bindet das Paket
 und seine auditcore-Abhängigkeiten an die Prüfsummen der signierten
-[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.13.0/SHA256SUMS).
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.14.0/SHA256SUMS).
 Dieselben Prüfsummen stehen im Index unter
 `https://janpow77.github.io/auditcore/simple/auditcore-dummybundle/`:
 
 ```bash
-python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.13.0/requirements-auditcore_dummybundle.txt
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.14.0/requirements-auditcore_dummybundle.txt
 ```
 
-Wer die Zeilen selbst in eine `requirements.txt` schreibt, nimmt die Prüfsumme
-von `auditcore_dummybundle-0.1.0-py3-none-any.whl` aus den signierten
-`SHA256SUMS` und bindet die drei Pflichtabhängigkeiten mit; ihre Wheels sind
-seit v0.12.0 unverändert:
+Wer die Zeilen selbst in eine `requirements.txt` schreibt, nimmt die Prüfsummen
+von `auditcore_dummybundle-0.2.0-py3-none-any.whl` und
+`auditcore_dummygenerator-0.2.0-py3-none-any.whl` aus den signierten
+`SHA256SUMS` von v0.14.0 und bindet die beiden übrigen Pflichtabhängigkeiten
+mit; ihre Wheels sind seit v0.12.0 unverändert:
 
 ```text
 auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_common-0.2.1-py3-none-any.whl#sha256=701d8cab0a17c7a77cae51065af340f1d90c0b37414505d3fd7eac383ec26271
-auditcore_dummygenerator @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_dummygenerator-0.1.4-py3-none-any.whl#sha256=1aae51ecdeb252d33f3f64eae9ed246e26c412b2a9112f4cd45f6ee6ea9dda0a
 auditcore_identifiers @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_identifiers-0.2.1-py3-none-any.whl#sha256=ae335c04653b3b3f62692951aee68774cadb68cf37606dd6c39914f2a7e8a67a
 ```
 

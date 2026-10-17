@@ -1,6 +1,6 @@
 # Changelog auditcore_invoicesynth
 
-## 0.3.1 – unveröffentlicht
+## 0.3.1 – 2026-10-17
 
 Keine Verhaltensänderung. Nur Pin auf `auditcore_invoicegenerator==0.2.5`
 (der seinerseits `auditcore_dummygenerator` 0.2.0 bindet); ohne den Sprung
