@@ -7,6 +7,7 @@ import { STRATA_COLUMNS } from '../../model/strata'
 import type { SheetTexts } from '../../model/texts'
 import { delvoHintsEn, globalMarginId, withNotApplicableNoteEn } from '../shared/delvo'
 import { EXHAUSTIVE_MINIMUM_INTERPRETATION_EN, PERIOD2_ALLOCATION_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { GLOBAL_NOT_APPLICABLE, GLOBAL_NOT_APPLICABLE_EN } from '../shared/periods'
 
 /** Hinweis je Schicht: `negative-denominator-<Schicht>`. */
 const negativeDenominator = Object.fromEntries(
@@ -128,6 +129,7 @@ export const en: SheetTexts = {
   },
   values: {
     'Einfaches Zufallsstichprobenverfahren, 2 Zeiträume, geschichtet': 'Simple random sampling, 2 periods, stratified',
+    [GLOBAL_NOT_APPLICABLE]: GLOBAL_NOT_APPLICABLE_EN,
     '✔ mind. 90 % eingehalten': '✔ at least 90 % observed',
     '✖ gering: mind. 90 % erforderlich': '✖ low: at least 90 % required',
     '✔ mind. 60 % eingehalten': '✔ at least 60 % observed',

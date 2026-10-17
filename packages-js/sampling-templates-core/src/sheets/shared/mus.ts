@@ -13,7 +13,7 @@ import { unfounded } from '../../model/policy'
 import type { ZeroAssumption } from '../../model/sheet'
 import type { FieldTexts } from '../../model/texts'
 import type { CellAddress, CellMap, CellValue, Cells, SheetContext, WebHint } from '../../model/types'
-import { NOT_APPLICABLE, appliedPeriodSize as periodSize } from './periods'
+import { appliedPeriodSize as periodSize, GLOBAL_NOT_APPLICABLE, GLOBAL_NOT_APPLICABLE_EN, globalBlocked, NOT_APPLICABLE } from './periods'
 import { appliedSampleSize, assessment, checkIteration, checkMinimumUnits, lowerErrorLimit } from './statistical'
 
 type Value = CellValue | undefined
@@ -79,6 +79,8 @@ export function remembered(compute: (cells: Cells, context: SheetContext) => Cel
  * nichts zu begrenzen – ein Wert ohne Grundlage (`unfounded`).
  */
 export function appliedTotalSize(computed: Value, limit: number | null, open: boolean, context: Pick<SheetContext, 'policy'>): CellValue {
+  // Globale Neuberechnung nach der DelVO nicht anwendbar (AE ≥ TE): kein Gesamtumfang, auch kein begrenzter.
+  if (globalBlocked(computed)) return null
   const size = appliedSampleSize(computed, limit, open)
   return open || !isBlank(computed) ? size : unfounded(context, size)
 }
@@ -221,6 +223,7 @@ export function limitWithoutSize(results: CellMap, limit: CellAddress, computed:
  * dieser Datei. Begriffe nach der englischen Fassung der DelVO (EU) 2023/67.
  */
 export const VALUES_EN: Readonly<Record<string, string>> = {
+  [GLOBAL_NOT_APPLICABLE]: GLOBAL_NOT_APPLICABLE_EN,
   '✔ mind. 90 % eingehalten': '✔ at least 90 % observed',
   '✖ gering: mind. 90 % erforderlich': '✖ low: at least 90 % required',
   '✔ mind. 60 % eingehalten': '✔ at least 60 % observed',

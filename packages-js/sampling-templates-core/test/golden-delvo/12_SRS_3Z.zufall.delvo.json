@@ -1,0 +1,66 @@
+[
+ {
+  "position": 3,
+  "name": "Zufall 004",
+  "cells": {
+   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 6,
+  "name": "Zufall 007",
+  "cells": {
+   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 8,
+  "name": "Zufall 009",
+  "cells": {
+   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 25,
+  "name": "Zufall 026",
+  "cells": {
+   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 59,
+  "name": "Zufall 060",
+  "cells": {
+   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
+   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 61,
+  "name": "Zufall 062",
+  "cells": {
+   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 86,
+  "name": "Zufall 087",
+  "cells": {
+   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

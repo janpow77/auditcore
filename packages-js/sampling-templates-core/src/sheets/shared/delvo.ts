@@ -7,7 +7,7 @@
  */
 import { gt, isNumber, left, sameText } from '../../excel/index'
 import type { CellAddress, CellMap, SheetContext, WebHint } from '../../model/types'
-import { recalculationOf } from './periods'
+import { GLOBAL_NOT_APPLICABLE, recalculationOf } from './periods'
 
 const warning = (id: string, text: string): WebHint => ({ id, tone: 'warning', text })
 
@@ -15,19 +15,18 @@ const warning = (id: string, text: string): WebHint => ({ id, tone: 'warning', t
 export const globalMarginId = (period?: number): string => (period ? `global-te-not-above-ae-${period}` : 'global-te-not-above-ae')
 
 const GLOBAL_MARGIN =
-  'Globale Neuberechnung mit aktualisiertem voraussichtlichem Fehler mindestens so groß wie der zulässige Fehler (AE ≥ TE): Die Formel des Stichprobenumfangs nach Anhang II DelVO (EU) 2023/67 setzt TE > AE voraus; durch das Quadrieren von (TE − AE) entsteht trotzdem ein Umfang. Die Vorlage prüft das hier nicht (anders als beim ersten Zeitraum); die Webfassung zeigt ihren Wert, er ist nicht belastbar'
+  'Berechnet nach DelVO (EU) 2023/67, Anhang II: Die Formel des Stichprobenumfangs setzt voraus, dass der voraussichtliche Fehler kleiner ist als der zulässige Fehler (AE < TE). Bei dieser globalen Neuberechnung ist AE ≥ TE; der Umfang ist nicht bestimmbar, die Folgegrößen bleiben offen und die Würdigung entfällt. Die Vorlage rechnet hier anders (sie prüft TE > AE nicht und zeigt durch das Quadrieren von (TE − AE) einen scheinbar plausiblen Umfang); Entscheidung des Inhabers vom 17.10.2026'
 
 const GLOBAL_MARGIN_EN =
-  'Global recalculation with an updated anticipated error at least as large as the tolerable error (AE ≥ TE): the sample size formula of Annex II to Delegated Regulation (EU) 2023/67 presupposes TE > AE; squaring (TE − AE) nevertheless yields a sample size. The template does not check this here (unlike for the first period); the web version shows its value, which is not reliable'
+  'Calculated in accordance with Delegated Regulation (EU) 2023/67, Annex II: the sample size formula presupposes that the anticipated error is smaller than the tolerable error (AE < TE). In this global recalculation AE ≥ TE; the sample size cannot be determined, the dependent values remain open and there is no assessment. The template calculates differently here (it does not check TE > AE and, by squaring (TE − AE), shows a seemingly plausible sample size); decision of the owner of 17 October 2026'
 
 /**
- * Nr. 2 des Abgleichs: Bei der globalen Neuberechnung prüft die Vorlage nicht
- * auf TE > AE. Hinweis, wenn der globale Ansatz gewählt ist, der Umfang einen
- * Wert hat und AE ≥ TE.
+ * Nr. 2 des Abgleichs: Bei der globalen Neuberechnung rechnet die Webfassung nach
+ * der DelVO (`GLOBAL_NOT_APPLICABLE` bei AE ≥ TE). Hinweis, wenn der globale
+ * Ansatz gewählt ist und deshalb kein Umfang entsteht.
  */
-export function globalWithoutMargin(results: CellMap, approach: CellAddress, cells: { size: CellAddress; tolerable: CellAddress; anticipated: CellAddress }, period?: number): WebHint[] {
-  const [size, tolerable, anticipated] = [results[cells.size], results[cells.tolerable], results[cells.anticipated]]
-  if (recalculationOf(results[approach]) !== 'global' || !isNumber(size) || !isNumber(tolerable) || !isNumber(anticipated) || gt(tolerable, anticipated)) return []
+export function globalWithoutMargin(results: CellMap, approach: CellAddress, cells: { size: CellAddress }, period?: number): WebHint[] {
+  if (recalculationOf(results[approach]) !== 'global' || results[cells.size] !== GLOBAL_NOT_APPLICABLE) return []
   return [warning(globalMarginId(period), GLOBAL_MARGIN)]
 }
 

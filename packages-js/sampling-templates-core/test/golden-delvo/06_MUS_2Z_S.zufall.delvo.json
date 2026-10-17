@@ -1,0 +1,200 @@
+[
+ {
+  "position": 5,
+  "name": "Zufallsbelegung 006 (3 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 10,
+  "name": "Zufallsbelegung 011 (7 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 17,
+  "name": "Zufallsbelegung 018 (7 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 20,
+  "name": "Zufallsbelegung 021 (3 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 21,
+  "name": "Zufallsbelegung 022 (4 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 26,
+  "name": "Zufallsbelegung 027 (7 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 27,
+  "name": "Zufallsbelegung 028 (4 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 28,
+  "name": "Zufallsbelegung 029 (1 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 29,
+  "name": "Zufallsbelegung 030 (2 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 35,
+  "name": "Zufallsbelegung 036 (5 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 51,
+  "name": "Zufallsbelegung 052 (7 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 57,
+  "name": "Zufallsbelegung 058 (1 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 58,
+  "name": "Zufallsbelegung 059 (5 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 62,
+  "name": "Zufallsbelegung 063 (7 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 67,
+  "name": "Zufallsbelegung 068 (3 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 70,
+  "name": "Zufallsbelegung 071 (1 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 74,
+  "name": "Zufallsbelegung 075 (1 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 77,
+  "name": "Zufallsbelegung 078 (3 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 78,
+  "name": "Zufallsbelegung 079 (7 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 82,
+  "name": "Zufallsbelegung 083 (7 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 98,
+  "name": "Zufallsbelegung 099 (5 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 99,
+  "name": "Zufallsbelegung 100 (5 Schichten)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

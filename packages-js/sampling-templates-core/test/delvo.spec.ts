@@ -7,7 +7,7 @@
 import { describe, expect, it } from 'vitest'
 import { createTranslate } from '../src/i18n/messages'
 import { fieldsOf } from '../src/model/definition'
-import type { AvailableSheet } from '../src/model/sheet'
+import { createContext, type AvailableSheet } from '../src/model/sheet'
 import { OFFICIAL_THRESHOLD_TERM, TEMPLATE_THRESHOLD_TERM, THRESHOLD_TERM_FIRST, officialWording } from '../src/model/terms'
 import type { CellMap } from '../src/model/types'
 import { availableSheets, findAvailableSheet } from '../src/sheets/registry'
@@ -106,10 +106,23 @@ describe('Amtlicher Begriff: Signifikanzschwelle', () => {
 describe('Abweichungen der Vorlage von der DelVO: Hinweise in Warnfarbe', () => {
   it('Nr. 2: globale Neuberechnung bei AE ≥ TE (05, 07, 10)', async () => {
     const text = await expectCarried(stateWith(sheetOf('05_MUS_2Z'), { C26: GLOBAL, C51: 0.03 }), 'global-te-not-above-ae', '05')
-    expect(text).toContain('Anhang II DelVO (EU) 2023/67 setzt TE > AE voraus')
+    expect(text).toMatch(/^Berechnet nach DelVO \(EU\) 2023\/67, Anhang II: .*Die Vorlage rechnet hier anders \(/)
     expect((await trace(stateWith(sheetOf('05_MUS_2Z'), { C26: GLOBAL }))).method.map((hint) => hint.id)).not.toContain('global-te-not-above-ae')
     expect((await trace(stateWith(sheetOf('07_MUS_3Z'), { C28: GLOBAL, C57: 0.03 }))).method.map((hint) => hint.id)).toContain('global-te-not-above-ae-2')
     await expectCarried(stateWith(sheetOf('10_SRS_2Z'), { C32: GLOBAL, C57: 0.03 }), 'global-te-not-above-ae', '10')
+  })
+
+  it('Nr. 2 nach DelVO: bei AE ≥ TE ist die globale Neuberechnung nicht anwendbar, Folgegrößen und Würdigung bleiben offen', () => {
+    const sheet = sheetOf('05_MUS_2Z')
+    const blocked = sheet.compute({ ...sheet.sample.inputs, C26: GLOBAL, C51: 0.03 }, createContext())
+    expect(blocked.C59).toBe('✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)')
+    expect(['C60', 'C61', 'C62', 'C63', 'C66', 'C67', 'C85', 'C86', 'C93', 'C95', 'N10'].map((cell) => blocked[cell] ?? null)).toEqual(Array(11).fill(null))
+    // AE < TE: Formel wie in der Vorlage, (z·BV·σ_w/(TE − AE))² aufgerundet.
+    const applied = sheet.compute({ ...sheet.sample.inputs, C26: GLOBAL }, createContext())
+    const [z, bookValue, deviation, tolerable, anticipated] = ['C15', 'C52', 'C58', 'C53', 'C54'].map((cell) => Number(applied[cell]))
+    expect(applied.C59).toBe(Math.ceil(((z! * bookValue! * deviation!) / (tolerable! - anticipated!)) ** 2))
+    // Erster Zeitraum: dieselbe Bedingung, dort mit dem Text der Vorlage „TE ≤ AE“.
+    expect(sheet.compute({ ...sheet.sample.inputs, C20: 0.03 }, createContext()).C27).toBe('TE ≤ AE')
   })
 
   it('Nr. 3: nicht anwendbare Standardneuberechnung nennt Anhang II und die Untergrenze', async () => {
@@ -129,8 +142,7 @@ describe('Abweichungen der Vorlage von der DelVO: Hinweise in Warnfarbe', () => 
   it('Nr. 1 und Nr. 4 in Blatt 18: Ersetzung bei Tabelle 2, ein Faktor bei geschichteten Verfahren', async () => {
     const replaced = await trace(stateWith(sheetOf('09_SRS_1Z_S'), {}, REPLACEMENT))
     const precision = textOf(replaced.sheet18, 'replacement-precision-not-scaled')
-    expect(precision).toContain('Nach Anhang III Tabelle 2 DelVO (EU) 2023/67 ist die Genauigkeit für die reduzierte Grundgesamtheit zu berechnen')
-    expect(precision).toContain('Wirkung:')
+    expect(precision).toMatch(/^Berechnet nach DelVO \(EU\) 2023\/67, Anhang III Tabelle 2 \(Ersetzung\): .*Die Vorlage rechnet hier anders \(/)
     const factor = textOf(replaced.sheet18, 'stratified-single-factor')
     expect(factor).toContain('„BV(h) ursprünglich“ / „BV(h) reduziert“')
     for (const text of [precision, factor]) {
@@ -143,8 +155,8 @@ describe('Abweichungen der Vorlage von der DelVO: Hinweise in Warnfarbe', () => 
 
   it('jeder neue Hinweis hat eine englische Fassung mit der Fundstelle der englischen DelVO', () => {
     const english = (id: string, hint: string): string => sheetOf(id).translations?.en?.webHints?.[hint] ?? ''
-    expect(english('05_MUS_2Z', 'global-te-not-above-ae')).toContain('Annex II to Delegated Regulation (EU) 2023/67')
-    expect(english('12_SRS_3Z', 'global-te-not-above-ae-3')).toContain('presupposes TE > AE')
+    expect(english('05_MUS_2Z', 'global-te-not-above-ae')).toContain('Calculated in accordance with Delegated Regulation (EU) 2023/67, Annex II')
+    expect(english('12_SRS_3Z', 'global-te-not-above-ae-3')).toContain('presupposes that the anticipated error is smaller than the tolerable error (AE < TE)')
     expect(english('11_SRS_2Z_S', 'exclusion-reference-population')).toContain('Annex III, Tables 1 and 2')
     expect(english('18_GFQ_AnhIII', 'stratified-single-factor')).toContain('“BV(h) original” / “BV(h) reduced”')
     expect(english('18_GFQ_AnhIII', 'replacement-precision-not-scaled')).toContain('Annex III, Table 2')

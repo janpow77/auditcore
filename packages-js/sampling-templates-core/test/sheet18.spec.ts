@@ -60,9 +60,16 @@ describe('Blatt 18: Gesamtfehlerquote nach Anhang III', () => {
     expect(replaced).toMatchObject({ C24: 120000, C19: '✔ Basis stimmt mit der erwarteten Grundgesamtheit überein' })
   })
 
-  it('Ersetzung bei Tabelle 2: wie die Vorlage ohne Anpassung der Genauigkeit, mit Hinweis der Webfassung', () => {
-    const ctx = context({}, { C48: 500000, C49: 'Ersetzung (Anh. III)' })
-    expect(compute({}, ctx).C25).toBe(60000)
+  it('Ersetzung bei Tabelle 2: Genauigkeit nach Anhang III DelVO für die reduzierte Grundgesamtheit, mit Hinweis der Webfassung', () => {
+    // N = 400 Einheiten, davon 40 nach Art. 80 Abs. 3 berührt (Buchwert 500.000 € von 10.000.000 €).
+    const ctx = context({}, { C47: 40, C48: 500000, C49: 'Ersetzung (Anh. III)', C52: 400 })
+    // SE · (N − N_Art.80)/N · BV/BV_r = 60.000 · 360/400 · 10.000.000/9.500.000 = 56.842,105…; die Vorlage zeigt 60.000.
+    const c = compute({}, ctx)
+    expect(c.C25).toBeCloseTo(56842.10526315789, 6)
+    expect(c.C28).toBeCloseTo((120000 + 56842.10526315789 + 5000 + 1000) / 10000000, 12)
+    // Ausschluss (Tabellen 1 und 2): Genauigkeit der reduzierten Grundgesamtheit mal BV/BV_r, wie die Vorlage; Ersetzung bei MUS: unverändert.
+    expect(compute({}, context({}, { C47: 40, C48: 500000, C49: 'Ausschluss (Art. 3 Abs. 6 Buchst. b)', C52: 360 })).C25).toBeCloseTo((60000 * 10000000) / 9500000, 6)
+    expect(compute({}, context({ sheet: '03_MUS_1Z' }, { C47: 40, C48: 500000, C49: 'Ersetzung (Anh. III)', C52: 400 })).C25).toBe(60000)
     expect(hintIds({}, ctx)).toContain('replacement-precision-not-scaled')
     expect(hintIds({}, context({ sheet: '03_MUS_1Z' }, { C48: 500000, C49: 'Ersetzung (Anh. III)' }))).not.toContain('replacement-precision-not-scaled')
   })

@@ -5,7 +5,7 @@
  */
 import { isBlank, isNumber, le, left, sameText } from '../../excel/index'
 import type { CellMap, SheetContext, WebHint } from '../../model/types'
-import { adoptedMethod } from './compute'
+import { adoptedMethod, isReplacementTable2 } from './compute'
 
 const warning = (id: string, text: string): WebHint => ({ id, tone: 'warning', text })
 
@@ -35,8 +35,8 @@ function populationHints(results: CellMap): WebHint[] {
 /** Anpassung nach Anhang III: Genauigkeit bei Ersetzung (Tabelle 2) und unvollständige hochwertige Schicht. */
 function adjustmentHints(results: CellMap): WebHint[] {
   const hints: WebHint[] = []
-  if (isNumber(results.C8) && sameText(left(results.C15, 9), 'Ersetzung') && sameText(left(results.C11, 9), 'Tabelle 2')) {
-    hints.push(warning('replacement-precision-not-scaled', 'Ersetzung bei einem Verfahren der Tabelle 2: Nach Anhang III Tabelle 2 DelVO (EU) 2023/67 ist die Genauigkeit für die reduzierte Grundgesamtheit zu berechnen und danach mit dem Verhältnis BV ursprünglich / BV reduziert anzupassen, auch wenn keine berührte Einheit gezogen wurde. Die Vorlage übernimmt die Genauigkeit des Methodenblatts, die dort für die ursprüngliche Grundgesamtheit gerechnet ist, ohne Anpassung (ihr Vergleich mit „Tabelle 2“ trifft nie zu). Wirkung: Genauigkeit und obere Fehlergrenze beruhen nicht auf dem Rechenweg der DelVO. Die Webfassung rechnet wie die Vorlage – angepasste Genauigkeit und obere Fehlergrenze fachlich würdigen'))
+  if (isNumber(results.C8) && isReplacementTable2(results)) {
+    hints.push(warning('replacement-precision-not-scaled', 'Berechnet nach DelVO (EU) 2023/67, Anhang III Tabelle 2 (Ersetzung): Die Genauigkeit ist für die reduzierte Grundgesamtheit berechnet (Genauigkeit des Methodenblatts mal N_r/N, Einheiten ohne die nach Art. 80 Abs. 3 berührten) und danach mit dem Verhältnis BV ursprünglich / BV reduziert angepasst; obere Fehlergrenze und Würdigung beruhen darauf. Die Vorlage rechnet hier anders (sie übernimmt die Genauigkeit des Methodenblatts, gerechnet für die ursprüngliche Grundgesamtheit, ohne Anpassung; ihr Vergleich mit „Tabelle 2“ trifft nie zu); Entscheidung des Inhabers vom 17.10.2026'))
   }
   if (sameText(results.C20, 'Ja') && (isBlank(results.C21) || isBlank(results.C22))) {
     hints.push(warning('high-value-incomplete', 'Anpassung der hochwertigen Schicht gewählt, aber der Buchwert der ursprünglichen (BV_e,u) oder der geprüften hochwertigen Schicht (BV_e,r) fehlt'))

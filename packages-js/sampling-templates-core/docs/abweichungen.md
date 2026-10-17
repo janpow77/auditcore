@@ -11,6 +11,12 @@ Stellen. Es gilt durchgehend:
 > solange eine Eingabe fehlt, zeigt sie an manchen Stellen **keinen** Wert, wo
 > die Vorlage einen zeigt.
 
+**Ausnahme nach Entscheidung des Inhabers vom 17.10.2026:** An zwei Stellen, an
+denen die Vorlage von der DelVO (EU) 2023/67 abweicht, rechnet die Webfassung
+nach der DelVO – Genauigkeit bei Ersetzung in Tabelle 2 (Blatt 18) und globale
+Neuberechnung bei AE ≥ TE (Blätter 05–07, 10–12). Dort zeigt sie bewusst einen
+anderen Wert bzw. keinen (Nr. 16).
+
 Ausnahmen in der Darstellung: Kopf- und Fußzeile des Berichts (Nr. 12), der
 Wahrheitswert FALSCH der Altvorlagen (gezeigt als 0, mit dem die Vorlage
 rechnet) und der Fehlerwert `#DIV/0!` in Blatt 20 (kein Wert mit Hinweis;
@@ -574,7 +580,7 @@ ebenfalls `null`; das ist keine Abweichung.
 | C18 | C14, C17 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
 | C19 | C5, C14, C17 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
 | C24 | C6, C7, C18, C23 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
-| C25 | C8, C18 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C25 | C8, C18, 02_Grundgesamtheit!C52 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
 | C26 | C14, C24 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
 | C27 | C12, C26 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
 | C28 | C14, C24, C25 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
@@ -1068,17 +1074,77 @@ Weitere Begriffe des Abgleichs, nicht umgestellt:
   Umstellung auf „vorhergesagt“ wäre ohne amtlichen Begriff. Bleibt wie in der
   Vorlage.
 
-**Abweichungen der Vorlage von der DelVO, mit Hinweis in Warnfarbe** (am
-Ergebnis, in Blatt 18, im Bericht und im Export; `src/sheets/shared/delvo.ts`,
-Blatt 18 `hints.ts`):
+**Entscheidung des Inhabers vom 17.10.2026: Nr. 1 und 2 nach der DelVO.** Bei den
+Abweichungen 1 und 2 rechnet die Webfassung nach der DelVO, nicht wie die
+Vorlage; sie weicht dort bewusst von der Excel-Vorlage ab. Der Hinweis in
+Warnfarbe lautet „Berechnet nach DelVO … ; die Vorlage rechnet hier anders (…)“
+und steht am Ergebnis, in Blatt 18, im Bericht und im Export.
+
+- **Nr. 1, Blatt 18, Ersetzung bei Tabelle 2** (einfache Zufallsstichprobe bzw.
+  Auswahl mit gleicher Wahrscheinlichkeit). Anhang III Tabelle 2, Ersetzung:
+  „Die Genauigkeit muss für die reduzierte Grundgesamtheit berechnet werden …
+  Danach sollte sie … angepasst werden, … indem die Genauigkeit der reduzierten
+  Grundgesamtheit multipliziert wird mit dem Verhältnis zwischen den Ausgaben
+  BV(h) ursprünglich … und … BV(h) reduziert“ (ABl. L 7 vom 10.1.2023, S. 24;
+  am amtlichen PDF gelesen). Das Methodenblatt rechnet bei Ersetzung mit der
+  ursprünglichen Grundgesamtheit (Blatt 02 zieht nur beim Ausschluss ab). Die
+  Genauigkeit der einfachen Zufallsstichprobe ist proportional zur Zahl der
+  Einheiten (SE = N·z·s_q/√n); auf die reduzierte Grundgesamtheit bezogen ist
+  sie SE · N_r/N. Danach folgt genau einmal die Anpassung mit BV/BV_r:
+  **SE = SE_Methodenblatt · (N − N_Art.80)/N · BV/BV_r** (N aus Blatt 02 C52,
+  N_Art.80 aus C47, BV/BV_r = C18). Die Vorlage übernimmt SE unverändert
+  (`LEFT($C$11;10)="Tabelle 2"` trifft nie zu); nur die Länge des Vergleichs zu
+  korrigieren, würde einen schon auf die ursprüngliche Grundgesamtheit
+  bezogenen Wert noch einmal hochskalieren. Annahme der Webfassung: Die
+  berührten Einheiten verteilen sich anteilig auf Schichten und Zeiträume (die
+  Vorlage erfasst nicht, wo sie liegen). Beispiel: SE 60.000 €, N = 400, davon
+  40 berührt, BV 10 Mio. €, BV_r 9,5 Mio. € → 60.000 · 360/400 · 10/9,5 =
+  56.842,11 € (Vorlage 60.000 €). Daraus folgen obere Fehlergrenze (C28) und
+  Würdigung (C30), im Bericht G34 und G35.
+  Übrige Fälle unverändert wie die Vorlage, genau nach Anhang III: Ausschluss
+  (Tabellen 1 und 2) – Hochrechnung und Genauigkeit auf der reduzierten
+  Grundgesamtheit, angepasst mit BV/BV_r; Ersetzung bei Tabelle 1 –
+  Hochrechnung und Genauigkeit für die ursprüngliche Grundgesamtheit, ohne
+  Anpassung; Ersetzung bei Tabelle 2 – Hochrechnung für die ursprüngliche
+  Grundgesamtheit, ohne Anpassung.
+- **Nr. 2, globale Neuberechnung bei AE ≥ TE** (05, 06, 07, 10, 11, 12). Die
+  Umfangsformel des Anhangs II, n = (z·BV·σ / (TE − AE))² bzw. mit N, setzt
+  TE > AE voraus; beim ersten Zeitraum zeigt schon die Vorlage „TE ≤ AE“.
+  Ist der (aktualisierte) voraussichtliche Fehler mindestens so groß wie der
+  zulässige (und nicht 0), zeigt die Zelle des globalen Umfangs „✖ nicht
+  anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige
+  Fehler (Anhang II)“ statt des durch das Quadrieren scheinbar plausiblen
+  Umfangs der Vorlage. Der anzuwendende globale Umfang, die Zusatzeinheiten und
+  die Umfänge der Folgezeiträume bleiben offen („—“) – auch bei begrenztem
+  Stichprobenumfang –, ebenso Hochrechnung, Genauigkeit, Fehlergrenzen,
+  Gesamtfehlerquote und Würdigung, wenn der globale Ansatz gewählt ist (keine
+  grüne Würdigung). In den geschichteten Blättern 06 und 11 bleiben dann alle
+  Formelzellen nach der globalen Neuberechnung offen. Blatt 18 und der Bericht
+  übernehmen aus einem solchen Verfahren nichts. Beispiel: Blatt 05 mit
+  Beispielwerten, Ansatz „Global“, aktualisierte voraussichtliche Fehlerquote
+  3 % bei Schwelle 2 %: TE = 0,02 · BV < AE = 0,03 · BV → nicht anwendbar
+  (Vorlage: ein Umfang aus (z·BV·σ/(−0,01·BV))²).
+
+Die Hinweise zu Nr. 3–5 bleiben wie in 0.1.7 (Rechenwerte wie die Vorlage):
 
 | Nr. | Abweichung | Blätter | Hinweis | Fundstelle |
 |---|---|---|---|---|
-| 1 | Ersetzung bei Tabelle 2: Genauigkeit nicht für die reduzierte Grundgesamtheit gerechnet und nicht angepasst | 18 | `replacement-precision-not-scaled` (Wortlaut mit Fundstelle und Wirkung) | Anhang III Tabelle 2 |
-| 2 | globale Neuberechnung ohne Prüfung TE > AE | 05, 06, 07, 10, 11, 12 | `global-te-not-above-ae` (07, 12 je Neuberechnung `-2`, `-3`), wenn der globale Ansatz gewählt ist und AE ≥ TE | Anhang II, Formel des Umfangs |
+| 1 | Ersetzung bei Tabelle 2 – **nach DelVO gerechnet** | 18 | `replacement-precision-not-scaled` („Berechnet nach DelVO …“) | Anhang III Tabelle 2 |
+| 2 | globale Neuberechnung bei AE ≥ TE – **nach DelVO gerechnet** | 05, 06, 07, 10, 11, 12 | `global-te-not-above-ae` (07, 12 je Neuberechnung `-2`, `-3`, „Berechnet nach DelVO …“) | Anhang II, Formel des Umfangs |
 | 3 | nicht anwendbare Standardneuberechnung (Nenner ≤ 0): Umfang aus den Untergrenzen | 05, 06, 07, 10, 11, 12 | bestehender Hinweis `negative-denominator…` mit Zusatz „Standardansatz nicht anwendbar … Untergrenze“ | Anhang II, Anmerkungen zu Nr. 1.2 und 2.2 |
 | 4 | ein einziger Anpassungsfaktor auch bei Schichtung | 18 bei 04, 06, 09, 11, 14, 16 mit Ausschluss oder Ersetzung | `stratified-single-factor` | Anhang III, „BV(h)“ |
 | 5 | Umfangsparameter bei Ausschluss aus der reduzierten Grundgesamtheit (Auslegungsfrage) | 08–12 (nur einfache Zufallsstichprobe; bei MUS kürzt sich BV heraus) | `exclusion-reference-population`, wenn in Blatt 02 der Ausschluss gewählt und eine Einheit betroffen ist | Anhang III Tabellen 1 und 2 |
+
+**Nachweis im Golden-Abgleich:** Die Zellen, an denen die Webfassung nach der
+DelVO rechnet, führt `docs/abgleich.md` als eigene Spalte „bewusst nach DelVO“.
+Die Sollwerte rechnet `scripts/delvo_soll.py` unabhängig vom Rechenkern aus den
+Excel-Sollwerten und den Eingaben der Fälle nach (`test/golden-delvo/`): für Nr. 1
+SE, obere Fehlergrenze und Würdigung (Blatt 18) bzw. G34 und G35 (Bericht), für
+Nr. 2 die betroffenen Fälle (AE ≥ TE aus den Excel-Werten von TE und AE bzw.
+für Blatt 18 und 20 aus den Eingaben des Verfahrens) mit dem Text der
+Umfangszelle; jede weitere abweichende Zelle eines solchen Falls muss leer sein
+(oder „n. a.“/„nicht berechnet“ in Blatt 18 und im Bericht). Alle übrigen Zellen
+bleiben beim Abgleich mit Excel.
 
 **Auslegungen, die die Vorlage nicht kennzeichnet**, kennzeichnet die
 Webfassung wie die übrigen Auslegungen am Feld („Auslegung der Vorlage – …“,

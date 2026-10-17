@@ -38,6 +38,8 @@ interface Counts {
   adapted: number
   /** Texte mit dem amtlichen Begriff statt des Begriffs der Vorlage. */
   terms: number
+  /** Zellen, an denen die Webfassung bewusst nach der DelVO rechnet. */
+  delvo: number
   unexplained: number
   /** Abweichungen unter der Richtlinie „wie die Vorlage“. */
   template: number
@@ -51,6 +53,7 @@ function countsOf(sheet: AvailableSheet, cases: readonly GoldenCase[]): Counts &
     explained: total(list, (report) => report.explained.length),
     adapted: total(list, (report) => report.adapted.length),
     terms: total(list, (report) => report.terms.length),
+    delvo: total(list, (report) => report.delvo.length),
     unexplained: total(list, (report) => report.unexplained.length),
     template: cases.reduce((sum, golden) => sum + templateMismatches(sheet, golden).length, 0),
     reports: list,
@@ -63,15 +66,16 @@ const add = (left: Counts, right: Counts): Counts => ({
   explained: left.explained + right.explained,
   adapted: left.adapted + right.adapted,
   terms: left.terms + right.terms,
+  delvo: left.delvo + right.delvo,
   unexplained: left.unexplained + right.unexplained,
   template: left.template + right.template,
 })
 
 const row = (name: string, counts: Counts): string =>
-  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.adapted - counts.terms - counts.unexplained} | ${counts.explained} | ${counts.adapted} | ${counts.terms} | ${counts.unexplained} | ${counts.template} |`
+  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.adapted - counts.terms - counts.delvo - counts.unexplained} | ${counts.explained} | ${counts.adapted} | ${counts.terms} | ${counts.delvo} | ${counts.unexplained} | ${counts.template} |`
 
-const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, adapted: 0, terms: 0, unexplained: 0, template: 0 }
-const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|---:|']
+const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, adapted: 0, terms: 0, delvo: 0, unexplained: 0, template: 0 }
+const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
 
 function comparison(): string {
   const lines = [
@@ -108,6 +112,11 @@ function comparison(): string {
     '  genau den Wert zeigt, der sich nach dieser Regel aus dem Wert von Excel ergibt.',
     '- **Amtlicher Begriff** sind Texte, in denen die Webfassung statt „Signifikanzschwelle“ der Vorlage den amtlichen',
     '  Begriff „Signifikanzschwelle“ zeigt (Anhang I Nr. 1 DelVO (EU) 2023/67); sonst ist der Text wortgleich.',
+    '- **Bewusst nach DelVO** sind Zellen, an denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 nach der',
+    '  DelVO (EU) 2023/67 rechnet und nicht wie die Vorlage: Genauigkeit bei Ersetzung in Tabelle 2 (Anhang III; Blatt 18)',
+    '  und globale Neuberechnung bei AE ≥ TE (Anhang II; Blätter 05–07, 10–12). Je Zelle ist geprüft, dass die Webfassung',
+    '  den Wert zeigt, den `scripts/delvo_soll.py` unabhängig vom Rechenkern aus den Excel-Sollwerten nachrechnet',
+    '  (`test/golden-delvo/`); Folgegrößen eines nicht bestimmbaren Umfangs müssen leer sein.',
     '- **Toleranzkanten** gibt es gegen Excel keine mehr: Die beiden Würdigungen, die gegen LibreOffice an der',
     '  Vergleichstoleranz hingen (Blatt 06 C99, Blatt 12 C138), zeigt die Webfassung mit der Vergleichsregel von Excel',
     '  genau wie Excel.',

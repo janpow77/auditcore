@@ -1,5 +1,12 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.8 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.8 gebunden. Der Kern rechnet
+nach Entscheidung des Inhabers vom 17.10.2026 an zwei Stellen nach der DelVO
+(Genauigkeit bei Ersetzung in Tabelle 2, globale Neuberechnung bei AE ≥ TE);
+die Komponente zeigt das ohne eigene Änderung mit den neuen Hinweisen.
+
 ## 0.1.7 – 2026-10-17
 
 Exakt an `@auditcore/sampling-templates-core` 0.1.7 gebunden (DelVO-Abgleich).

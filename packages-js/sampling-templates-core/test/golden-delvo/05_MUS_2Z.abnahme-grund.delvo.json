@@ -1,0 +1,56 @@
+[
+ {
+  "position": 1,
+  "name": "Abnahme 1: A001 te_eq_ae",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 29,
+  "name": "Abnahme 1: A029 miss_te",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 53,
+  "name": "Abnahme 1: A053 miss_errsum_part",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 57,
+  "name": "Abnahme 1: A057 te_eq_ae",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 66,
+  "name": "Abnahme 1: A066 te_eq_ae",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 67,
+  "name": "Abnahme 1: A067 te_lt_ae",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

@@ -1,0 +1,790 @@
+[
+ {
+  "position": 52,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Basis",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 53,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C8",
+  "cells": {
+   "G34": 188500.46072106637,
+   "G35": 0.025757026467676462
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 54,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C9",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 55,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C10",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 56,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D12",
+  "cells": {
+   "G34": 188411.99502355704,
+   "G35": 0.017080835362957503
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 57,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E12",
+  "cells": {
+   "G34": 239565.07825094715,
+   "G35": 0.022994163089123054
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 58,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D13",
+  "cells": {
+   "G34": 127809.1748687077,
+   "G35": 0.01460408215630183
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 59,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E13",
+  "cells": {
+   "G34": 129400.81013253231,
+   "G35": 0.018491902243439856
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 60,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C16",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 62,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C18",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 64,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C24",
+  "cells": {
+   "G34": 268429.0996407911,
+   "G35": 0.02902359908331092
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 65,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D28",
+  "cells": {
+   "G34": 374510.5333995097,
+   "G35": 0.03335900015139989
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 66,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E28",
+  "cells": {
+   "G34": 277152.68942834233,
+   "G35": 0.0293801200987465
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 67,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C33",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 68,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C34",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 69,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C43",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.02647990491822405
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 70,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D45",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.01848797914185481
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 71,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E45",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.02231075130327863
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 72,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D46",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.01848797914185481
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 73,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E46",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.02231075130327863
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 74,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D47",
+  "cells": {
+   "G34": 112069.90578401473,
+   "G35": 0.022633415692746742
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 75,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E47",
+  "cells": {
+   "G34": 192611.78356125194,
+   "G35": 0.025925050529956195
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 76,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C54",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.02419687779862068
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 77,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C55",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.026273986640397696
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 78,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C23",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 79,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C24",
+  "cells": {
+   "G34": -675264.5386437764,
+   "G35": -0.009543851057618413
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 80,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C25",
+  "cells": {
+   "G34": -393.504358896695,
+   "G35": 600.8056654217659
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 81,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C26",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 82,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C27",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 83,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C36",
+  "cells": {
+   "G34": 222834.86608698335,
+   "G35": 0.02716298443821164
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 85,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C15",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 86,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C16",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 87,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C20",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 88,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C21",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 89,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C41",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 90,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C42",
+  "cells": {
+   "G34": 224526.86239194564,
+   "G35": 0.02722937553715248
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 91,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C43",
+  "cells": {
+   "G34": 220669.38289968728,
+   "G35": 0.027071725700434528
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 92,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C44",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 93,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C45",
+  "cells": {
+   "G34": 223404.2280799859,
+   "G35": 0.02718349502986019
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 94,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C46",
+  "cells": {
+   "G34": 221253.8195632956,
+   "G35": 0.02709561081629185
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 95,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C32",
+  "cells": {
+   "G34": 222845.70702440944,
+   "G35": 0.027160669048959477
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 96,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C33",
+  "cells": {
+   "G34": 222842.6394562978,
+   "G35": 0.027158601030197228
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 97,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C34",
+  "cells": {
+   "G34": 222834.48062879738,
+   "G35": 0.027160210241741263
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 98,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C35",
+  "cells": {
+   "G34": 222843.29639677476,
+   "G35": 0.027163329008272025
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 99,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C57",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 101,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C20",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.026990392311716554
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 102,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C21",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.02647990491822405
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 103,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C22",
+  "cells": {
+   "G34": 222842.91092400608
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 104,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C29",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 105,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!J5",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 106,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!J6",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 107,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!J7",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 108,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!J8",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 109,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!C20",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 110,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!D20",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 111,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!G20",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 112,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!C21",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 113,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!D21",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 114,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 20_Druck_KOM!G21",
+  "cells": {
+   "G34": 222842.91092400608,
+   "G35": 0.027160554776214044
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 280,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18=Schwelle",
+  "cells": {
+   "G34": 8440009.0839071,
+   "G35": 0.01764551134627692
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 281,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18 +1e-13",
+  "cells": {
+   "G34": 8440009.0839071,
+   "G35": 0.01764551134627842
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 282,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18 −1e-13",
+  "cells": {
+   "G34": 8440009.0839071,
+   "G35": 0.01764551134627542
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 283,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18 Cent",
+  "cells": {
+   "G34": 8440009.0839071,
+   "G35": 0.017645511347571276
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 284,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | OFG18=Schwelle",
+  "cells": {
+   "G34": 8440009.0839071,
+   "G35": 0.014999349205905965
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 285,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | OFG18 +1e-13",
+  "cells": {
+   "G34": 8440009.0839071,
+   "G35": 0.014999349205907465
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 298,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18=Schwelle",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 299,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 +1e-13",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 300,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 −1e-13",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 301,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 Cent",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 302,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | OFG18=Schwelle",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 303,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | OFG18 +1e-13",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 344,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18=Schwelle",
+  "cells": {
+   "G34": 273161.17586156516,
+   "G35": 0.024810354744165448
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 345,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18 +1e-13",
+  "cells": {
+   "G34": 273161.17586156516,
+   "G35": 0.02481035474416745
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 346,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18 −1e-13",
+  "cells": {
+   "G34": 273161.17586156516,
+   "G35": 0.02481035474416345
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 347,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18 Cent",
+  "cells": {
+   "G34": 273161.17586156516,
+   "G35": 0.024810354738968452
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 348,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | OFG18=Schwelle",
+  "cells": {
+   "G34": 273161.17586156516,
+   "G35": 0.019991114255897155
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 349,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | OFG18 +1e-13",
+  "cells": {
+   "G34": 273161.17586156516,
+   "G35": 0.019991114255899157
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 356,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18=Schwelle",
+  "cells": {
+   "G34": 35632259.09731054,
+   "G35": 0.028470768491272898
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 357,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18 +1e-13",
+  "cells": {
+   "G34": 35632259.09731054,
+   "G35": 0.0284707684912749
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 358,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18 −1e-13",
+  "cells": {
+   "G34": 35632259.09731054,
+   "G35": 0.028470768491270896
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 359,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18 Cent",
+  "cells": {
+   "G34": 35632259.09731054,
+   "G35": 0.028470768490545167
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 360,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | OFG18=Schwelle",
+  "cells": {
+   "G34": 35632259.09731054,
+   "G35": 0.01999816002180936
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 361,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | OFG18 +1e-13",
+  "cells": {
+   "G34": 35632259.09731054,
+   "G35": 0.019998160021811356
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 398,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18=Schwelle",
+  "cells": {
+   "G34": 1425161.531289431,
+   "G35": 0.02199004416551829
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 399,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18 +1e-13",
+  "cells": {
+   "G34": 1425161.531289431,
+   "G35": 0.02199004416552029
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 400,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18 −1e-13",
+  "cells": {
+   "G34": 1425161.531289431,
+   "G35": 0.02199004416551629
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 401,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18 Cent",
+  "cells": {
+   "G34": 1425161.531289431,
+   "G35": 0.02199004416941512
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 402,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | OFG18=Schwelle",
+  "cells": {
+   "G34": 1425161.531289431,
+   "G35": 0.019863830708503324
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 403,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | OFG18 +1e-13",
+  "cells": {
+   "G34": 1425161.531289431,
+   "G35": 0.019863830708505326
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ }
+]

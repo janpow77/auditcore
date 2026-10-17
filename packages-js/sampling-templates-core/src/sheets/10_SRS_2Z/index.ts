@@ -41,7 +41,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
     })
   }
   if (sameNumber(results.C19, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C32', { size: 'C66', tolerable: 'C59', anticipated: 'C60' }), ...exclusionReference(context)])
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C32', { size: 'C66' }), ...exclusionReference(context)])
 }
 
 /**

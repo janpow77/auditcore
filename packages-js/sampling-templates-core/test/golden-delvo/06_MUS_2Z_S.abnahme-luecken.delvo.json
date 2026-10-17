@@ -1,0 +1,254 @@
+[
+ {
+  "position": 10,
+  "name": "Abnahme 2: L0 Lücke C17 (te) Standard (Art. 5 Abs. 6 Buchst. a)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 59,
+  "name": "Abnahme 2: L1 Lücke C17 (te) Global (Art. 5 Abs. 6 Buchst. b)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 108,
+  "name": "Abnahme 2: L2 Lücke C17 (te) Erhöhung bei begrenztem Umfang (Art. 5 Abs. 7 UAbs. 4 Buchst. a)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 156,
+  "name": "Abnahme 2: L3 Lücke C17 (te) keine Neuberechnung",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 207,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle (volle Genauigkeit)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 208,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle +1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 209,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle −1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 210,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle +3e-15",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 211,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle −3e-15",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 212,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle auf Cent gerundet",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 213,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle +1 Cent",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 214,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle −1 Cent",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 215,
+  "name": "Abnahme 2: S A001 te_eq_ae | OFG=Schwelle",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 216,
+  "name": "Abnahme 2: S A001 te_eq_ae | OFG=Schwelle +1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 217,
+  "name": "Abnahme 2: S A001 te_eq_ae | OFG=Schwelle −1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 218,
+  "name": "Abnahme 2: S A001 te_eq_ae | OFG Schwelle Cent",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 219,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle (volle Genauigkeit)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 220,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle +1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 221,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle −1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 222,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle +3e-15",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 223,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle −3e-15",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 224,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle auf Cent gerundet",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 225,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle +1 Cent",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 226,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle −1 Cent",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 227,
+  "name": "Abnahme 2: S A002 te_lt_ae | OFG=Schwelle",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 228,
+  "name": "Abnahme 2: S A002 te_lt_ae | OFG=Schwelle +1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 229,
+  "name": "Abnahme 2: S A002 te_lt_ae | OFG=Schwelle −1e-13",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 230,
+  "name": "Abnahme 2: S A002 te_lt_ae | OFG Schwelle Cent",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

@@ -1,0 +1,771 @@
+[
+ {
+  "position": 42,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Basis",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 43,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C8",
+  "cells": {
+   "C25": 188500.46072106637,
+   "C28": 0.025757026467676455,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 44,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C9",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 45,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C10",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 46,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D12",
+  "cells": {
+   "C25": 188411.995023557,
+   "C28": 0.017080835362957496,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 47,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E12",
+  "cells": {
+   "C25": 239565.07825094718,
+   "C28": 0.022994163089123058,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 48,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D13",
+  "cells": {
+   "C25": 127809.1748687077,
+   "C28": 0.014604082156301828,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 49,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E13",
+  "cells": {
+   "C25": 129400.81013253232,
+   "C28": 0.018491902243439856,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 50,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C16",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 52,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C18",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 54,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C24",
+  "cells": {
+   "C25": 268429.0996407911,
+   "C28": 0.029023599083310928,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 55,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D28",
+  "cells": {
+   "C25": 374510.53339950973,
+   "C28": 0.03335900015139989,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 56,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E28",
+  "cells": {
+   "C25": 277152.68942834233,
+   "C28": 0.029380120098746496,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 57,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C33",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 58,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C34",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 59,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C43",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.026479904918224054,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 60,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D45",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.01848797914185481,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 61,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E45",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02231075130327863,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 62,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D46",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.01848797914185481,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 63,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E46",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02231075130327863,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 64,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!D47",
+  "cells": {
+   "C25": 112069.90578401473,
+   "C28": 0.022633415692746742,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 65,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!E47",
+  "cells": {
+   "C25": 192611.78356125194,
+   "C28": 0.025925050529956195,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 66,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C54",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.024196877798620682,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 67,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 09_SRS_1Z_S!C55",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.0262739866403977,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 68,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C23",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 69,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C24",
+  "cells": {
+   "C25": -675264.5386437766,
+   "C28": -0.009543851057618407,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 70,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C25",
+  "cells": {
+   "C25": -393.50435889669507,
+   "C28": 600.8056654217662,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 71,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C26",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 72,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C27",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 73,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C36",
+  "cells": {
+   "C25": 222834.86608698338,
+   "C28": 0.02716298443821165,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 75,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C15",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 76,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C16",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 77,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C20",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 78,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C21",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 79,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C41",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 80,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C42",
+  "cells": {
+   "C25": 224526.86239194564,
+   "C28": 0.02722937553715249,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 81,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C43",
+  "cells": {
+   "C25": 220669.38289968725,
+   "C28": 0.02707172570043453,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 82,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C44",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 83,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C45",
+  "cells": {
+   "C25": 223404.22807998594,
+   "C28": 0.027183495029860193,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 84,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C46",
+  "cells": {
+   "C25": 221253.81956329558,
+   "C28": 0.027095610816291853,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 85,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C32",
+  "cells": {
+   "C25": 222845.70702440944,
+   "C28": 0.027160669048959488,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 86,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C33",
+  "cells": {
+   "C25": 222842.63945629777,
+   "C28": 0.02715860103019723,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 87,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C34",
+  "cells": {
+   "C25": 222834.48062879738,
+   "C28": 0.027160210241741266,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 88,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C35",
+  "cells": {
+   "C25": 222843.29639677473,
+   "C28": 0.02716332900827203,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 89,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 02_Grundgesamtheit!C57",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 91,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C20",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02699039231171655,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 92,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C21",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.026479904918224054,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 93,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C22",
+  "cells": {
+   "C25": 222842.91092400608
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 94,
+  "name": "Abnahme 2: L18 09_SRS_1Z_S Lücke 18_GFQ_AnhIII!C29",
+  "cells": {
+   "C25": 222842.91092400608,
+   "C28": 0.02716055477621405
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 240,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18=Schwelle",
+  "cells": {
+   "C25": 150813.73515728838,
+   "C28": 0.015696353227242596,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 241,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18 +1e-13",
+  "cells": {
+   "C25": 150813.73515728838,
+   "C28": 0.015696353227243595,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 242,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18 −1e-13",
+  "cells": {
+   "C25": 150813.73515728838,
+   "C28": 0.015696353227241597,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 243,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | GFQ18 Cent",
+  "cells": {
+   "C25": 150813.73515728838,
+   "C28": 0.01569635318971441,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 244,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | OFG18=Schwelle",
+  "cells": {
+   "C25": 150813.73515728838,
+   "C28": 0.009929603051762815,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 245,
+  "name": "Abnahme 2: S18 A005 Kontext 08_SRS_1Z | OFG18 +1e-13",
+  "cells": {
+   "C25": 150813.73515728838,
+   "C28": 0.009929603051763812,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 258,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18=Schwelle",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 259,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 +1e-13",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 260,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 −1e-13",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 261,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 Cent",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 262,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | OFG18=Schwelle",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 263,
+  "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | OFG18 +1e-13",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 304,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18=Schwelle",
+  "cells": {
+   "C25": 56276.08484037264,
+   "C28": 0.047781567268112765,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 305,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18 +1e-13",
+  "cells": {
+   "C25": 56276.08484037264,
+   "C28": 0.04778156726811476,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 306,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18 −1e-13",
+  "cells": {
+   "C25": 56276.08484037264,
+   "C28": 0.04778156726811077,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 307,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | GFQ18 Cent",
+  "cells": {
+   "C25": 56276.08484037264,
+   "C28": 0.04778156706187315,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 308,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | OFG18=Schwelle",
+  "cells": {
+   "C25": 56276.08484037264,
+   "C28": 0.020034330542785375,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 309,
+  "name": "Abnahme 2: S18 A019 Kontext 08_SRS_1Z | OFG18 +1e-13",
+  "cells": {
+   "C25": 56276.08484037264,
+   "C28": 0.02003433054278737,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 322,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18=Schwelle",
+  "cells": {
+   "C25": 10377.9822756874,
+   "C28": 0.024180655848248772,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 323,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18 +1e-13",
+  "cells": {
+   "C25": 10377.9822756874,
+   "C28": 0.024180655848250774,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 324,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18 −1e-13",
+  "cells": {
+   "C25": 10377.9822756874,
+   "C28": 0.024180655848246774,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 325,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | GFQ18 Cent",
+  "cells": {
+   "C25": 10377.9822756874,
+   "C28": 0.024180654032536886,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 326,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | OFG18=Schwelle",
+  "cells": {
+   "C25": 10377.9822756874,
+   "C28": 0.019886342769732262,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 327,
+  "name": "Abnahme 2: S18 A023 Kontext 12_SRS_3Z | OFG18 +1e-13",
+  "cells": {
+   "C25": 10377.9822756874,
+   "C28": 0.019886342769734264,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 364,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18=Schwelle",
+  "cells": {
+   "C25": 7917414.459871341,
+   "C28": 0.027060709796343244,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 365,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18 +1e-13",
+  "cells": {
+   "C25": 7917414.459871341,
+   "C28": 0.027060709796345242,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 366,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18 −1e-13",
+  "cells": {
+   "C25": 7917414.459871341,
+   "C28": 0.02706070979634124,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 367,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | GFQ18 Cent",
+  "cells": {
+   "C25": 7917414.459871341,
+   "C28": 0.027060709798078404,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 368,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | OFG18=Schwelle",
+  "cells": {
+   "C25": 7917414.459871341,
+   "C28": 0.020191381017154092,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 369,
+  "name": "Abnahme 2: S18 A033 Kontext 08_SRS_1Z | OFG18 +1e-13",
+  "cells": {
+   "C25": 7917414.459871341,
+   "C28": 0.02019138101715609,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ }
+]

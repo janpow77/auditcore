@@ -11,6 +11,7 @@ import type { CellValue, Cells, SheetContext } from '../../model/types'
 import { type Pending, type Recalculation, allocate, appliedRandomSize, checkAnnualMinimum, increasedSize, minimumRandomSize, netLimitedSize, NOT_APPLICABLE, recalculationOf, strataTotal } from '../shared/srs'
 import { checkStratumUnits } from '../shared/statistical'
 import { UNITS, sizeDeviation, used } from './strata'
+import { blockedGlobal, globalSize } from '../shared/periods'
 
 /** Aktualisierte Größen (C57–C65): Buchwert des Geschäftsjahres, TE, AE, Standardabweichung Zeitraum 1. */
 function updated(c: Cells, context: SheetContext): void {
@@ -59,8 +60,8 @@ function global(c: Cells, pending: Pending, limit: number | null, context: Sheet
   )
   c.C70 = strataTotal(c, 70, pending, context, (column) => used(c, column, UNITS.period1) || used(c, column, UNITS.period2))
   c.C71 = guard(() => required(c.C11) + required(c.C57))
-  // Wie in der Vorlage ohne Prüfung TE > AE: (TE − AE) geht quadriert ein.
-  c.C72 = guard(() => roundUp(divide(required(c.C20) * required(c.C71) * squareRoot(divide(required(c.C70), required(c.C71))), minus(required(c.C62), required(c.C63))) ** 2))
+  // Nach der DelVO nur bei TE > AE (Entscheidung des Inhabers vom 17.10.2026); die Vorlage prüft das nicht.
+  c.C72 = globalSize(c.C62, c.C63, () => roundUp(divide(required(c.C20) * required(c.C71) * squareRoot(divide(required(c.C70), required(c.C71))), minus(required(c.C62), required(c.C63))) ** 2))
   c.C73 = netLimitedSize(limit, c.C9, c.C55)
   c.C74 = appliedRandomSize(c.C72, minimumRandomSize(6, c.C8, c.C54), c.C73, pending('C72'))
   // =IF(D11="";"";MAX(0;ROUNDUP(D11/C71*C74;0)-D44))
@@ -68,7 +69,8 @@ function global(c: Cells, pending: Pending, limit: number | null, context: Sheet
     if (!used(c, column, UNITS.period1)) return null
     return guard(() => Math.max(0, minus(allocate(c[at(column, 11)], c.C71, c.C74), required(c[at(column, 44)]))))
   })
-  c.C76 = strataTotal(c, 76, pending, context)
+  // Nach der DelVO nicht anwendbar: keine Zusatzeinheiten aus der globalen Neuberechnung (statt der Summe 0).
+  c.C76 = blockedGlobal(c, 'C72', pending) ? null : strataTotal(c, 76, pending, context)
 }
 
 /**
@@ -110,7 +112,8 @@ function finalSizes(c: Cells, pending: Pending, context: SheetContext): void {
     return guard(() => required(c[at(column, 44)]) + (approach === 'global' ? required(c[at(column, 76)]) : 0))
   })
   fillRow(c, 79, (column) => (used(c, column, UNITS.period2) ? checkStratumUnits(c[at(column, 77)], pending(at(column, 77)), context) : null))
-  c.C77 = strataTotal(c, 77, pending, context)
+  // Globale Neuberechnung nach der DelVO nicht anwendbar: kein Umfang für Zeitraum 2 (statt der Summe 0 leerer Schichten).
+  c.C77 = approach === 'global' && blockedGlobal(c, 'C72', pending) ? null : strataTotal(c, 77, pending, context)
   c.C78 = strataTotal(c, 78, pending, context)
   c.C80 = guard(() => required(c.C78) + required(c.C77) + n(c.C8) + n(c.C54))
   // =IF(C77=0;"";IF(C80>=30;…))

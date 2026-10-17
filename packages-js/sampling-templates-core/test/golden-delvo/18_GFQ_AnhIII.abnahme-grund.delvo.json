@@ -1,0 +1,197 @@
+[
+ {
+  "position": 5,
+  "name": "Abnahme 1: A005 Kontext",
+  "cells": {
+   "C25": 150813.73515728838,
+   "C28": 0.0158441091028608,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 8,
+  "name": "Abnahme 1: A008 Kontext",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 9,
+  "name": "Abnahme 1: A009 Kontext",
+  "cells": {
+   "C25": 19982799.261271916
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 19,
+  "name": "Abnahme 1: A019 Kontext",
+  "cells": {
+   "C25": 56276.08484037264,
+   "C28": 0.06427397215729004,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 23,
+  "name": "Abnahme 1: A023 Kontext",
+  "cells": {
+   "C25": 10377.9822756874,
+   "C28": 0.011198785037781007,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 33,
+  "name": "Abnahme 1: A033 Kontext",
+  "cells": {
+   "C25": 7917414.459871341,
+   "C28": 0.02780067791416555,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 37,
+  "name": "Abnahme 1: A037 Kontext",
+  "cells": {
+   "C25": 13118.489083551684
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 47,
+  "name": "Abnahme 1: A047 Kontext",
+  "cells": {
+   "C25": 23178045.586780947,
+   "C28": 0.03481729094600703,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 51,
+  "name": "Abnahme 1: A051 Kontext",
+  "cells": {
+   "C25": 50130539.209885605,
+   "C28": 0.017665593540131305,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 61,
+  "name": "Abnahme 1: A061 Kontext",
+  "cells": {
+   "C25": 15045.945647758352,
+   "C28": 0.010227158412806693,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 64,
+  "name": "Abnahme 1: A064 Kontext",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 65,
+  "name": "Abnahme 1: A065 Kontext",
+  "cells": {
+   "C25": 199979.99716567097
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 75,
+  "name": "Abnahme 1: A075 Kontext",
+  "cells": {
+   "C25": 1428292.3308253821,
+   "C28": 0.025769071078823272
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 79,
+  "name": "Abnahme 1: A079 Kontext",
+  "cells": {
+   "C25": 130950.98237288422,
+   "C28": 0.009079141473090187,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 89,
+  "name": "Abnahme 1: A089 Kontext",
+  "cells": {
+   "C25": 706037.7823937505,
+   "C28": 0.04246520926495699,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 92,
+  "name": "Abnahme 1: A092 Kontext",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 93,
+  "name": "Abnahme 1: A093 Kontext",
+  "cells": {
+   "C25": 4293542.350955929
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 103,
+  "name": "Abnahme 1: A103 Kontext",
+  "cells": {
+   "C25": 2353977.076003274,
+   "C28": 0.04477107068584477,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 107,
+  "name": "Abnahme 1: A107 Kontext",
+  "cells": {
+   "C25": 85795.47422723248,
+   "C28": 0.02940729647453519,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 117,
+  "name": "Abnahme 1: A117 Kontext",
+  "cells": {
+   "C25": 22508705.187262636
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 120,
+  "name": "Abnahme 1: A120 Kontext",
+  "cells": {},
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+ },
+ {
+  "position": 121,
+  "name": "Abnahme 1: A121 Kontext",
+  "cells": {
+   "C25": 1771229.5183938348
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ }
+]

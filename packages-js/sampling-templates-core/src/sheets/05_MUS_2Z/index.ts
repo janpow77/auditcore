@@ -43,7 +43,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
     })
   }
   if (sameNumber(results.C13, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C26', { size: 'C59', tolerable: 'C53', anticipated: 'C54' })])
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C26', { size: 'C59' })])
 }
 
 /** Zellen, die von der Genauigkeit abhängen: SE, Fehlergrenzen, relative Genauigkeit, obere Grenze in %, Würdigung. */

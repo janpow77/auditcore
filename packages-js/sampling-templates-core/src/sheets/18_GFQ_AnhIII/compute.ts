@@ -88,15 +88,43 @@ function adjustedError(c: Cells): CellValue {
   })
 }
 
+/** Ersetzung bei einem Verfahren der Tabelle 2 (einfache Zufallsstichprobe/Auswahl mit gleicher Wahrscheinlichkeit). */
+export const isReplacementTable2 = (c: CellMap): boolean => sameText(left(c.C15, 9), 'Ersetzung') && sameText(left(c.C11, 9), 'Tabelle 2')
+
+/**
+ * Genauigkeit bei Ersetzung, Tabelle 2, nach Anhang III DelVO (EU) 2023/67:
+ * „Die Genauigkeit muss für die reduzierte Grundgesamtheit berechnet werden …
+ * Danach sollte sie … angepasst werden, … indem die Genauigkeit der reduzierten
+ * Grundgesamtheit multipliziert wird mit dem Verhältnis zwischen den Ausgaben
+ * BV(h) ursprünglich … und … BV(h) reduziert.“ Das Methodenblatt rechnet bei
+ * Ersetzung mit der ursprünglichen Grundgesamtheit (N). Die Genauigkeit der
+ * einfachen Zufallsstichprobe ist proportional zur Zahl der Einheiten (SE =
+ * N·z·s_q/√n); bezogen auf die reduzierte Grundgesamtheit ist sie SE · N_r/N.
+ * Danach die Anpassung mit BV/BV_r (C18) – nur einmal, nicht auf einen Wert, der
+ * schon auf der ursprünglichen Grundgesamtheit beruht.
+ * SE_DelVO = SE · (N − N_Art.80)/N · BV/BV_r. Entscheidung des Inhabers vom
+ * 17.10.2026: Die Webfassung rechnet hier nach der DelVO; die Vorlage übernimmt
+ * die Genauigkeit des Methodenblatts unverändert (`LEFT($C$11;10)="Tabelle 2"`
+ * trifft nie zu).
+ */
+function replacementPrecision(c: Cells, context: SheetContext): CellValue {
+  const population = context.sheets[POPULATION_SHEET] ?? {}
+  return guard(() => {
+    const units = required(population.C52)
+    const reduced = minus(units, n(population.C47))
+    return required(c.C8) * divide(reduced, units) * required(c.C18)
+  })
+}
+
 /** C25: angepasste Genauigkeit; ohne Genauigkeit im Methodenblatt „n. a.“. */
 function adjustedPrecision(c: Cells, context: SheetContext): CellValue {
   // Ohne Wert in C8 zeigt die Vorlage „n. a.“ – auch dann, wenn das Methodenblatt nur noch keine Genauigkeit liefert.
   if (isBlank(c.C8)) return unfounded(context, NOT_APPLICABLE)
   if (!isNumber(c.C8)) return NOT_APPLICABLE
-  // Wortgleich zur Vorlage: `LEFT($C$11;10)="Tabelle 2"` vergleicht zehn Zeichen („Tabelle 2 “) mit neun und trifft
-  // deshalb nie zu – bei Ersetzung wird die Genauigkeit auch in Tabelle 2 nicht angepasst (Auffälligkeit der Vorlage).
-  const scaled = isExclusion(c) || (sameText(left(c.C15, 9), 'Ersetzung') && sameText(left(c.C11, 10), 'Tabelle 2'))
-  return scaled ? guard(() => required(c.C8) * required(c.C18)) : c.C8
+  // Ausschluss (Tabellen 1 und 2): Genauigkeit der reduzierten Grundgesamtheit mal BV/BV_r. Ersetzung, Tabelle 1:
+  // für die ursprüngliche Grundgesamtheit, ohne Anpassung. Ersetzung, Tabelle 2: nach der DelVO (`replacementPrecision`).
+  if (isExclusion(c)) return guard(() => required(c.C8) * required(c.C18))
+  return isReplacementTable2(c) ? replacementPrecision(c, context) : c.C8
 }
 
 /** C28: obere Fehlergrenze in Prozent; ohne Genauigkeit „n. a.“. */

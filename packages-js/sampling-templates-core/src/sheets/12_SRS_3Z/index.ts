@@ -52,7 +52,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
     ...negativeDenominator(results, 'C105', 3, 'mindestens 3, Auffüllung auf 30'),
   ]
   if (sameNumber(results.C21, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C35', { size: 'C77', tolerable: 'C66', anticipated: 'C67' }, 2), ...globalWithoutMargin(results, 'C35', { size: 'C109', tolerable: 'C102', anticipated: 'C103' }, 3), ...exclusionReference(context)])
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C35', { size: 'C77' }, 2), ...globalWithoutMargin(results, 'C35', { size: 'C109' }, 3), ...exclusionReference(context)])
 }
 
 /** Standardabweichungen der Variablen q in den Stichproben der drei Zeiträume (s_q). */

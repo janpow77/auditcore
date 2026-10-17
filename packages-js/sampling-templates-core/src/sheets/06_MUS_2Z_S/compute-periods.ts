@@ -9,6 +9,7 @@ import { unfounded } from '../../model/policy'
 import type { CellValue } from '../../model/types'
 import { type Approach, appliedPeriodSize, checkLimitKept, checkYearMinimum, errorLimits, summary, underestimationFactor } from '../shared/mus'
 import { type Run, checkUnits, fill, has, inputTotals, total, optionalTotals } from './run'
+import { blockedGlobal } from '../shared/periods'
 
 /**
  * Zeile 69: Umfang Zeitraum 2 je Schicht nach dem gewählten Ansatz, mindestens 3.
@@ -35,7 +36,8 @@ export function finalSizes(run: Run, approach: Approach): void {
   const { c } = run
   fill(run, 69, (column) => (has(run, column, 51) ? sizePeriodTwo(run, approach, column) : null))
   fill(run, 70, (column) => (has(run, column, 8) ? guard(() => required(c[at(column, 37)]) + (approach === 'global' ? required(c[at(column, 68)]) : 0)) : null))
-  c.C69 = total(run, 69)
+  // Globale Neuberechnung nach der DelVO nicht anwendbar: kein Umfang für Zeitraum 2 (statt der Summe 0 leerer Schichten).
+  c.C69 = approach === 'global' && blockedGlobal(c, 'C65', run.pending) ? null : total(run, 69)
   c.C70 = total(run, 70)
   const year = (): number => required(c.C70) + required(c.C69)
   c.C71 = checkLimitKept(run.limit, year, '⚠ Umfang überschritten – Art. 5 Abs. 7 UAbs. 4')

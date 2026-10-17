@@ -31,6 +31,7 @@ import {
 } from '../shared/mus'
 import { checkConfidence, checkMateriality, checkTolerableError, computedSampleSize, limitedSampleSize } from '../shared/statistical'
 import { definition } from './definition'
+import { blockedGlobal, withoutGlobalAssessment } from '../shared/periods'
 
 /**
  * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet; die Webfassung
@@ -96,7 +97,9 @@ const CHOSEN: Readonly<Record<ReturnType<typeof approachOf>, CellAddress>> = { s
 function finalSizes(c: Cells, pending: Pending, limit: number | null, context: SheetContext): void {
   const approach = approachOf(c.C26)
   c.C66 = guard(() => required(c.C34) + (approach === 'global' ? required(c.C62) : 0))
-  c.C67 = appliedPeriodSize(c[CHOSEN[approach]], pending(CHOSEN[approach]), context, () => minus(30, required(c.C66)))
+  // Globaler Ansatz nach der DelVO nicht anwendbar (AE ≥ TE): Der Umfang für Zeitraum 2 bleibt offen, statt auf die Untergrenzen zu fallen.
+  const blocked = approach === 'global' && blockedGlobal(c, 'C59', pending)
+  c.C67 = appliedPeriodSize(c[CHOSEN[approach]], pending(CHOSEN[approach]) || blocked, context, () => minus(30, required(c.C66)))
   const total = (): number => required(c.C66) + required(c.C67)
   c.C68 = checkLimitKept(limit, total, '⚠ Umfang überschritten – Art. 5 Abs. 7 UAbs. 4 Buchst. a oder b')
   c.C69 = isNumber(c.C67) ? checkYearMinimum(total) : null
@@ -128,6 +131,7 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   projection(c, context)
   errorLimits(c, 85, c.C14, c.C52, c.C17)
   summary(c, 'MUS-Standardansatz, 2 Zeiträume', 85, c.C52, c.C83, () => required(c.C66) + required(c.C67))
+  withoutGlobalAssessment(c, approachOf(c.C26), ['C59'], pending, 'C95')
 }
 
 const calculate = remembered((cells, context) => computeTwice(cells, REQUIRED_INPUTS, context, evaluate))

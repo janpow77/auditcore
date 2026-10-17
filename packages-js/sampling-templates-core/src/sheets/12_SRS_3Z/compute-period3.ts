@@ -6,6 +6,7 @@
 import { guard, isBlank, isNumber, minus, n, required } from '../../excel/index'
 import type { CellAddress, Cells, SheetContext } from '../../model/types'
 import { type Pending, type Recalculation, additionalUnits, appliedRandomSize, auditedTerm, checkAnnualMinimum, globalComputedSize, increasedSize, minimumRandomSize, netLimitedSize, periodSize, share, standardSize, weightedDeviation } from '../shared/srs'
+import { blockedGlobal } from '../shared/periods'
 
 /** Ist-Werte des Zeitraums 3 und endgültige Größen des Geschäftsjahres (C97–C104). */
 function updated(c: Cells): void {
@@ -51,7 +52,8 @@ function applied(c: Cells, pending: Pending, approach: Recalculation, context: S
   c.C117 = guard(() => required(c.C84) + (approach === 'global' ? required(c.C113) : 0))
   const exhaustive = [c.C10, c.C56, c.C95].map(n)
   const shortfall = (): number => exhaustive.reduce((rest, units) => minus(rest, units), minus(minus(30, required(c.C116)), required(c.C117)))
-  c.C118 = periodSize(chosen, { open: pending(CHOSEN[approach]), notApplicable: typeof chosen === 'string' }, context, shortfall)
+  const blocked = approach === 'global' && (blockedGlobal(c, 'C77', pending) || blockedGlobal(c, 'C109', pending))
+  c.C118 = periodSize(chosen, { open: pending(CHOSEN[approach]) || blocked, notApplicable: typeof chosen === 'string' }, context, shortfall)
   c.C119 = guard(() => exhaustive.reduce((total, units) => total + units, required(c.C116) + required(c.C117) + required(c.C118)))
   c.C120 = isNumber(c.C118) && isNumber(c.C119) ? checkAnnualMinimum(c.C119) : null
 }

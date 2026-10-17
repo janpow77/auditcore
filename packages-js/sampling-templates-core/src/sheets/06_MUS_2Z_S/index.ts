@@ -92,7 +92,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   if (gt(usedStrata(inputs, [8, 9, 51]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C28', { size: 'C65', tolerable: 'C56', anticipated: 'C57' })])
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C28', { size: 'C65' })])
 }
 
 /** Zellen, die von der Genauigkeit abhängen (ohne die Hilfszelle der Schicht). */

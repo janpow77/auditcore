@@ -9,7 +9,7 @@ import { divide, ge, guard, ifError, isBlank, isNumber, le, minus, n, required, 
 import { unfounded } from '../../model/policy'
 import { STRATA_COLUMNS, stratumCell, sumRow, totalRow } from '../../model/strata'
 import type { CellAddress, CellValue, Cells, SheetContext } from '../../model/types'
-import { NOT_APPLICABLE, allocate, appliedPeriodSize, type Pending } from './periods'
+import { NOT_APPLICABLE, allocate, appliedPeriodSize, globalBlocked, type Pending } from './periods'
 import { assessment, lowerErrorLimit } from './statistical'
 
 export { INCREASE_INTERPRETATION, NOT_APPLICABLE, allocate, computeBesideTemplate, globalComputedSize, recalculationOf, share, weightedDeviation, type Pending, type Recalculation } from './periods'
@@ -39,7 +39,8 @@ export function netLimitedSize(limit: CellValue | undefined, ...highValueUnits: 
  * die Vorlage als 0 weiterrechnen würde – dann bleibt auch dieser Umfang offen.
  */
 export function appliedRandomSize(computed: CellValue | undefined, minimum: number, netLimit: number | null, pending: boolean): CellValue {
-  if (pending) return null
+  // Globale Neuberechnung nach der DelVO nicht anwendbar (AE ≥ TE): kein Umfang, auch kein begrenzter.
+  if (pending || globalBlocked(computed)) return null
   const atLeast = isNumber(computed) ? Math.max(computed, minimum) : null
   if (netLimit === null) return atLeast
   return atLeast === null ? netLimit : Math.min(atLeast, netLimit)

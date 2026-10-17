@@ -53,7 +53,7 @@ const adjusted: FieldDefinition[] = [
     hint: 'Ausschluss: EE × Faktor; Ersetzung: Hochrechnung auf die ursprüngliche Grundgesamtheit. Bei Anwendung von C wird nur der Zufallsteil skaliert (Auslegung).',
     interpretation: 'Bei Anwendung von Abschnitt C wird nur der Zufallsteil des extrapolierten Fehlers mit dem Anpassungsfaktor skaliert.',
   },
-  { cell: 'C25', alias: 'adjustedPrecision', kind: 'result', type: 'amount', format: EUR, label: 'Angepasste Genauigkeit (SE)', hint: 'Tabelle 2, Ersetzung: Genauigkeit für die reduzierte Grundgesamtheit berechnen und mit dem Faktor anpassen.' },
+  { cell: 'C25', alias: 'adjustedPrecision', kind: 'result', type: 'amount', format: EUR, label: 'Angepasste Genauigkeit (SE)', hint: 'Tabelle 2, Ersetzung: Genauigkeit für die reduzierte Grundgesamtheit berechnen und mit dem Faktor anpassen. Die Webfassung rechnet nach der DelVO: SE · N_r/N · BV/BV_r (die Vorlage passt nicht an).' },
 ]
 
 const totalErrorRate: FieldDefinition[] = [

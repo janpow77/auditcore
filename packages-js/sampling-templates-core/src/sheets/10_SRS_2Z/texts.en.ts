@@ -6,6 +6,7 @@
 import type { SheetTexts } from '../../model/texts'
 import { delvoHintsEn, globalMarginId, withNotApplicableNoteEn } from '../shared/delvo'
 import { EXHAUSTIVE_MINIMUM_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { GLOBAL_NOT_APPLICABLE, GLOBAL_NOT_APPLICABLE_EN } from '../shared/periods'
 
 export const en: SheetTexts = {
   title: 'Simple random sampling – two sampling periods, non-stratified',
@@ -120,6 +121,7 @@ export const en: SheetTexts = {
   },
   values: {
     'Einfaches Zufallsstichprobenverfahren, 2 Zeiträume': 'Simple random sampling, 2 periods',
+    [GLOBAL_NOT_APPLICABLE]: GLOBAL_NOT_APPLICABLE_EN,
     '✔ mind. 90 % eingehalten': '✔ at least 90 % observed',
     '✖ gering: mind. 90 % erforderlich': '✖ low: at least 90 % required',
     '✔ mind. 60 % eingehalten': '✔ at least 60 % observed',

@@ -1,0 +1,146 @@
+[
+ {
+  "position": 22,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Standard“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 23,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Global“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 24,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Erhöhung“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 25,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „keine Neuberechnung“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 30,
+  "name": "Aktualisierte Fehlerquote über der Schwelle (TE < AE in der Neuberechnung), Standard",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 31,
+  "name": "Aktualisierte Fehlerquote über der Schwelle (TE < AE in der Neuberechnung), Global",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 32,
+  "name": "Aktualisierte Fehlerquote gleich der Schwelle (TE = AE in der Neuberechnung), Standard",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 33,
+  "name": "Aktualisierte Fehlerquote gleich der Schwelle (TE = AE in der Neuberechnung), Global",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 121,
+  "name": "Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Standard“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 132,
+  "name": "Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Global“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 143,
+  "name": "Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Erhöhung“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 154,
+  "name": "Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „keine Neuberechnung“",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 165,
+  "name": "Teilweise: Wesentlichkeitsschwelle (C23) fehlt, begrenzt Kategorie 2",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 176,
+  "name": "Teilweise: Wesentlichkeitsschwelle (C23) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 187,
+  "name": "Teilweise: Wesentlichkeitsschwelle (C23) fehlt, negativer Nenner",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 216,
+  "name": "Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang)",
+  "cells": {
+   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

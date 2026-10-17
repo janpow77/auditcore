@@ -49,7 +49,7 @@ export const en: SheetTexts = {
       hint: 'Exclusion: EE × factor; replacement: extrapolation to the original population. Where section C is applied, only the random part is scaled (interpretation).',
       interpretation: 'Where section C is applied, only the random part of the extrapolated error is scaled by the adjustment factor.',
     },
-    C25: { label: 'Adjusted precision (SE)', hint: 'Table 2, replacement: calculate the precision for the reduced population and adjust it by the factor.' },
+    C25: { label: 'Adjusted precision (SE)', hint: 'Table 2, replacement: calculate the precision for the reduced population and adjust it by the factor. The web version calculates in accordance with the Delegated Regulation: SE · N_r/N · BV/BV_r (the template does not adjust).' },
     C26: {
       label: 'Total error rate',
       formula: '(EE + delimited systemic + uncorrected anomalous errors) / BV excluding TA',
@@ -93,7 +93,7 @@ export const en: SheetTexts = {
       'No treatment of the units that cannot be audited under Art. 80(3) has been chosen in sheet 02; as in the template, the calculation is made without exclusion and without replacement',
     'reduced-population-not-positive': 'The reduced population (BV_r) is not positive; the adjustment factor is then not meaningful',
     'replacement-precision-not-scaled':
-      'Replacement with a method of Table 2: under Annex III, Table 2, to Delegated Regulation (EU) 2023/67 the precision is to be calculated for the reduced population and then adjusted by the ratio BV original / BV reduced, even where no affected unit has been drawn. The template takes over the precision of the method sheet, calculated there for the original population, without adjustment (its comparison with “Tabelle 2” never matches). Effect: precision and upper error limit do not follow the calculation path of the Delegated Regulation. The web version calculates like the template – assess the adjusted precision and the upper error limit with professional judgement',
+      'Calculated in accordance with Delegated Regulation (EU) 2023/67, Annex III, Table 2 (replacement): the precision is calculated for the reduced population (precision of the method sheet times N_r/N, units without those affected by Art. 80(3)) and then adjusted by the ratio BV original / BV reduced; upper error limit and assessment rest on it. The template calculates differently here (it takes over the precision of the method sheet, calculated for the original population, without adjustment; its comparison with “Tabelle 2” never matches); decision of the owner of 17 October 2026',
     'stratified-single-factor':
       'Stratified method with exclusion or replacement under Art. 80(3): Annex III to Delegated Regulation (EU) 2023/67 describes the adjustment by the ratio “BV(h) original” / “BV(h) reduced”, i.e. per stratum. The template uses a single adjustment factor for the whole population; where the affected units are unevenly distributed over the strata, the result departs from the calculation path of the Delegated Regulation. The web version calculates like the template',
     'high-value-incomplete': 'Adjustment of the high value stratum chosen, but the book value of the original (BV_e,u) or of the audited high value stratum (BV_e,r) is missing',

@@ -1,0 +1,56 @@
+[
+ {
+  "position": 14,
+  "name": "TE ≤ AE, Stichprobenumfang nicht bestimmbar",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 15,
+  "name": "TE = AE genau auf der Schwelle",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 17,
+  "name": "TE ≤ AE mit begrenztem Umfang",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 39,
+  "name": "Globale Neuberechnung mit TE = AE (aktualisiert)",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 40,
+  "name": "Globale Neuberechnung mit TE < AE (aktualisiert)",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 49,
+  "name": "Teilweise: Wesentlichkeitsschwelle geleert",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

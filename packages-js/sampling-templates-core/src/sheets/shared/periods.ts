@@ -10,7 +10,8 @@
  * Dort muss der Rechenkern wissen, ob ein Zwischenwert leer ist, weil auch die
  * Vorlage keinen zeigt, oder weil eine Angabe fehlt.
  */
-import { divide, guard, isBlank, isNumber, left, minus, required, roundUp, sameText, squareRoot } from '../../excel/index'
+import { divide, gt, guard, isBlank, isNumber, le, left, minus, ne, required, roundUp, sameText, squareRoot } from '../../excel/index'
+import { cellsOf, fieldsOf, type MethodDefinition } from '../../model/definition'
 import { TEMPLATE_POLICY } from '../../model/policy'
 import type { CellAddress, CellValue, Cells, SheetContext } from '../../model/types'
 
@@ -24,7 +25,10 @@ export const INCREASE_INTERPRETATION =
 export const NOT_APPLICABLE = '✖ nicht anwendbar (Nenner ≤ 0)'
 
 /** `true`: Die Zelle ist offen, weil eine Angabe fehlt – die Vorlage zeigte dort einen Wert. */
-export type Pending = (cell: CellAddress) => boolean
+export type Pending = ((cell: CellAddress) => boolean) & {
+  /** Wert der Zelle im Lauf „wie die Vorlage“ (leere Pflichteingaben als 0); nur im Lauf des Aufrufs gesetzt. */
+  readonly likeTemplate?: (cell: CellAddress) => CellValue
+}
 
 /**
  * Rechnet ein Blatt mit dem Kontext des Aufrufs und, sobald eine Formel danach
@@ -49,7 +53,8 @@ export function computeBesideTemplate(inputs: Cells, requiredInputs: readonly Ce
     return template
   }
   const cells: Cells = { ...inputs }
-  evaluate(cells, (cell) => isBlank(cells[cell]) && !isBlank(likeTemplate()[cell]), context)
+  const pending: Pending = Object.assign((cell: CellAddress) => isBlank(cells[cell]) && !isBlank(likeTemplate()[cell]), { likeTemplate: (cell: CellAddress) => likeTemplate()[cell] ?? null })
+  evaluate(cells, pending, context)
   return cells
 }
 
@@ -82,11 +87,76 @@ export function weightedDeviation(periods: readonly (readonly [weight: Value, de
 }
 
 /**
- * Globale Neuberechnung: `ROUNDUP((z·G·σ_w/(TE-AE))^2;0)` mit G = BV bzw. N.
- * Anders als beim ersten Zeitraum prüft die Vorlage hier nicht auf TE ≤ AE.
+ * Ergebnis der globalen Neuberechnung bei AE ≥ TE: Nach Anhang II DelVO (EU)
+ * 2023/67 ist die Formel des Stichprobenumfangs dann nicht anwendbar.
+ * Entscheidung des Inhabers vom 17.10.2026: Die Webfassung rechnet hier nach
+ * der DelVO und nicht wie die Vorlage, die TE > AE nicht prüft und durch das
+ * Quadrieren von (TE − AE) einen Umfang zeigt (`docs/abweichungen.md` Nr. 16).
  */
+export const GLOBAL_NOT_APPLICABLE = '✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)'
+
+/** Englische Arbeitsübersetzung von `GLOBAL_NOT_APPLICABLE`. */
+export const GLOBAL_NOT_APPLICABLE_EN = '✖ not applicable: the anticipated error must be smaller than the tolerable error (Annex II)'
+
+/**
+ * Globale Neuberechnung nach der DelVO: Ist der (aktualisierte) voraussichtliche
+ * Fehler mindestens so groß wie der zulässige, `GLOBAL_NOT_APPLICABLE`; sonst
+ * die Formel `formula` wie in der Vorlage (wie beim ersten Zeitraum, dort „TE ≤ AE“).
+ */
+export function globalSize(tolerable: Value, anticipated: Value, formula: () => number): CellValue {
+  // Bei TE = AE = 0 (etwa leere Eingaben, die die Vorlage als 0 liest) ist schon die Formel ein Fehlerwert wie in der Vorlage.
+  if (isNumber(tolerable) && isNumber(anticipated) && ne(anticipated, 0) && le(tolerable, anticipated)) return GLOBAL_NOT_APPLICABLE
+  return guard(formula)
+}
+
+/** Globale Neuberechnung: `ROUNDUP((z·G·σ_w/(TE-AE))^2;0)` mit G = BV bzw. N, nur bei TE > AE (`globalSize`). */
 export function globalComputedSize(z: Value, size: Value, deviation: Value, tolerable: Value, anticipated: Value): CellValue {
-  return guard(() => roundUp(divide(required(z) * required(size) * required(deviation), minus(required(tolerable), required(anticipated))) ** 2))
+  return globalSize(tolerable, anticipated, () => roundUp(divide(required(z) * required(size) * required(deviation), minus(required(tolerable), required(anticipated))) ** 2))
+}
+
+/**
+ * Der globale Ansatz liefert keinen Umfang, weil er nach der DelVO nicht
+ * anwendbar ist: Der anzuwendende Gesamtumfang und die Umfänge der
+ * Folgezeiträume bleiben offen („—“), statt auf den begrenzten Umfang oder die
+ * Untergrenzen zu fallen.
+ */
+export function globalBlocked(computed: Value): boolean {
+  return computed === GLOBAL_NOT_APPLICABLE
+}
+
+/** Folgegrößen der Ergebnisübersicht, die vom Stichprobenumfang abhängen (EE, SE, Umfang, Gesamtfehlerquote). */
+const SIZE_DEPENDENT_SUMMARY: readonly CellAddress[] = ['N5', 'N7', 'N10', 'N11']
+
+/**
+ * Geschichtete Blätter (06, 11): Ist der gewählte globale Ansatz nach der DelVO
+ * nicht anwendbar, sind alle Formelzellen nach der globalen Neuberechnung
+ * (`row`) Folgegrößen ohne bestimmbaren Umfang: Sie bleiben offen („—“), auch
+ * Summen über Schichten, die sonst wie in der Vorlage 0 zeigten.
+ */
+export function clearAfterGlobal(c: Cells, definition: MethodDefinition, row: number): void {
+  for (const field of fieldsOf(definition)) {
+    if (field.kind === 'input') continue
+    for (const cell of [...cellsOf(field), ...(field.total ? [field.total] : [])]) if (gt(Number(cell.replace(/^[A-Z]+/, '')), row)) c[cell] = null
+  }
+  for (const cell of SIZE_DEPENDENT_SUMMARY) c[cell] = null
+}
+
+/**
+ * Ist der gewählte globale Ansatz nach der DelVO nicht anwendbar – oder offen,
+ * weil eine Angabe fehlt –, gibt es keine Würdigung: Sie bliebe sonst wie in der
+ * Vorlage gegen leere Zellen stehen („⚠“ oder „✔“ ohne Grundlage).
+ */
+export function withoutGlobalAssessment(c: Cells, approach: string, sizes: readonly CellAddress[], pending: Pending, assessment: CellAddress): void {
+  if (approach === 'global' && sizes.some((size) => blockedGlobal(c, size, pending))) c[assessment] = null
+}
+
+/**
+ * Globale Neuberechnung in `cell` nach der DelVO nicht anwendbar – auch dann,
+ * wenn sie nur offen ist, weil eine Pflichteingabe fehlt, und mit dieser als 0
+ * (wie die Vorlage) nicht anwendbar wäre (etwa TE = 0 bei fehlender Schwelle).
+ */
+export function blockedGlobal(c: Cells, cell: CellAddress, pending: Pending): boolean {
+  return globalBlocked(c[cell]) || (pending(cell) && pending.likeTemplate?.(cell) === GLOBAL_NOT_APPLICABLE)
 }
 
 /**

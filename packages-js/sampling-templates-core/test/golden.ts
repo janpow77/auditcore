@@ -17,6 +17,7 @@ import type { CellMap, CellValue, Deviation, MissingPolicy } from '../src/model/
 import { SHEETS, availableSheets } from '../src/sheets/registry'
 import { computeWorkspace, contextFor } from '../src/workspace/compute'
 import { emptyWorkspace, type WorkspaceState } from '../src/workspace/types'
+import { delvoEntries, delvoVerdict, type DelvoEntry } from './delvoGolden'
 
 export const TOLERANCE = 1e-9
 
@@ -26,6 +27,8 @@ export interface GoldenCase {
   eingaben: Record<string, CellValue>
   /** Werte der Vorlage; Excel zeigt auch Wahrheitswerte (`false`) und Fehlerwerte (`"#DIV/0!"`). */
   erwartet: Record<string, CellValue | boolean>
+  /** DelVO-Sollwerte, wo die Webfassung bewusst nach der DelVO rechnet (`delvoGolden.ts`). */
+  delvo?: DelvoEntry
 }
 
 /** Soll einer Zelle: Wert der Vorlage, in Excel auch ein Wahrheitswert. */
@@ -48,6 +51,8 @@ export interface CaseReport {
   adapted: Mismatch[]
   /** Texte, die nur den amtlichen Begriff statt des Begriffs der Vorlage tragen („Signifikanzschwelle“). */
   terms: Mismatch[]
+  /** Zellen, an denen die Webfassung bewusst nach der DelVO rechnet; je Zelle gegen den unabhängig gerechneten DelVO-Wert geprüft. */
+  delvo: Mismatch[]
 }
 
 const GOLDEN_DIRECTORY = fileURLToPath(new URL('./golden/', import.meta.url))
@@ -65,7 +70,11 @@ export function loadGolden(sheet: string): GoldenCase[] {
 
 /** Fälle einer Golden-Datei. */
 export function readGoldenFile(name: string): GoldenCase[] {
-  return JSON.parse(readFileSync(`${GOLDEN_DIRECTORY}${name}`, 'utf8')) as GoldenCase[]
+  const delvo = delvoEntries(name)
+  return (JSON.parse(readFileSync(`${GOLDEN_DIRECTORY}${name}`, 'utf8')) as GoldenCase[]).map((golden, position) => {
+    const entry = delvo.get(position)
+    return entry ? { ...golden, delvo: entry } : golden
+  })
 }
 
 /** Ab dieser Größe liegt ein Wert außerhalb des geprüften Zahlenbereichs (`view/limits.ts`, Hinweis der Webfassung). */
@@ -237,7 +246,10 @@ export function templateMismatches(sheet: AvailableSheet, golden: GoldenCase): M
   for (const [reference, expected] of Object.entries(golden.erwartet)) {
     const [name, cell] = reference.split('!') as [string, string]
     const actual = results[cell] ?? null
-    if (name !== sheet.id || sameValue(asShownByWeb(sheet, cell, expected, results), actual, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))) continue
+    const same = (soll: CellValue, value: CellValue): boolean => sameValue(soll, value, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))
+    if (name !== sheet.id || same(asShownByWeb(sheet, cell, expected, results) as CellValue, actual)) continue
+    // Bewusst nach der DelVO gerechnet: auch unter der Richtlinie „wie die Vorlage“ der DelVO-Wert.
+    if (delvoVerdict(golden.delvo, cell, actual, same) === 'delvo') continue
     mismatches.push({ cell, expected, actual })
   }
   return mismatches
@@ -266,27 +278,68 @@ function asShownByWeb(sheet: AvailableSheet, cell: string, expected: Expected, r
   return adaptation ? adaptation.fromTemplate(official, results) : official
 }
 
+/** Eine verglichene Zelle eines Falls. */
+interface ComparedCell {
+  cell: string
+  expected: Expected
+  actual: CellValue
+  target: Expected
+  same: (soll: CellValue, value: CellValue) => boolean
+}
+
+/** Mismatch begründet (`explained`) oder nicht (`unexplained`) einordnen. */
+function settle(report: CaseReport, sheet: AvailableSheet, golden: GoldenCase, mismatch: Mismatch, all: Record<string, CellMap>): void {
+  const deviation = explain(sheet, golden, mismatch, all)
+  if (deviation) report.explained.push({ ...mismatch, deviation })
+  else report.unexplained.push(mismatch)
+}
+
+/**
+ * Zellen eines Falls mit DelVO-Sollwerten (`delvoGolden.ts`); `true`, wenn die
+ * Zelle damit eingeordnet ist. Eine Zelle mit DelVO-Sollwert, an der die
+ * Webfassung keinen Wert zeigt, ist nur begründet, wenn die Gegenprobe mit 0 den
+ * DelVO-Wert ergibt; eine leere Folgegröße wird zuerst wie gewohnt begründet
+ * (fehlende Angabe), sonst als „bewusst nach DelVO“ gezählt.
+ */
+function delvoCell(report: CaseReport, sheet: AvailableSheet, golden: GoldenCase, all: Record<string, CellMap>, entry: ComparedCell): boolean {
+  const { cell, expected, actual, target, same } = entry
+  const verdict = delvoVerdict(golden.delvo, cell, actual, same)
+  if (verdict === 'wrong') {
+    settle(report, sheet, golden, { cell, expected: golden.delvo?.cells[cell] ?? null, actual }, all)
+    return true
+  }
+  if (verdict !== 'delvo' || same(officialWording(expected) as CellValue, actual)) return false
+  const listed = golden.delvo !== undefined && cell in golden.delvo.cells
+  const deviation = listed ? undefined : explain(sheet, golden, { cell, expected: target, actual }, all)
+  if (deviation) report.explained.push({ cell, expected: target, actual, deviation })
+  else report.delvo.push({ cell, expected, actual })
+  return true
+}
+
+/** Gleich mit dem Wert der Vorlage, bewusst anders dargestellt oder nur im amtlichen Begriff verschieden; `true`, wenn eingeordnet. */
+function matchingCell(report: CaseReport, entry: ComparedCell): boolean {
+  const { cell, expected, actual, target, same } = entry
+  if (!same(target as CellValue, actual)) return false
+  if (same(officialWording(expected) as CellValue, actual) && !sameValue(expected, actual)) report.terms.push({ cell, expected, actual })
+  else if (!same(expected as CellValue, actual)) report.adapted.push({ cell, expected, actual })
+  return true
+}
+
 export function compareCase(sheet: AvailableSheet, golden: GoldenCase): CaseReport {
   const all = caseWorkspace(sheet, golden)
   const results = all[sheet.id] ?? {}
-  const report: CaseReport = { name: golden.name, compared: 0, explained: [], unexplained: [], adapted: [], terms: [] }
+  const report: CaseReport = { name: golden.name, compared: 0, explained: [], unexplained: [], adapted: [], terms: [], delvo: [] }
   for (const [reference, expected] of Object.entries(golden.erwartet)) {
     const [name, cell] = reference.split('!') as [string, string]
     if (name !== sheet.id) continue
     report.compared += 1
+    const exact = isIntegerCell(sheet, cell)
     const actual = results[cell] ?? null
     const target = asShownByWeb(sheet, cell, expected, results)
-    const exact = isIntegerCell(sheet, cell)
-    if (sameValue(target, actual, exact, absoluteTolerance(sheet, cell))) {
-      if (sameValue(officialWording(expected), actual, exact, absoluteTolerance(sheet, cell)) && !sameValue(expected, actual)) report.terms.push({ cell, expected, actual })
-      else if (!sameValue(expected, actual, exact, absoluteTolerance(sheet, cell))) report.adapted.push({ cell, expected, actual })
-      continue
-    }
+    const entry: ComparedCell = { cell, expected, actual, target, same: (soll, value) => sameValue(soll, value, exact, absoluteTolerance(sheet, cell)) }
+    if (delvoCell(report, sheet, golden, all, entry) || matchingCell(report, entry)) continue
     // Die Gegenproben vergleichen mit dem Wert, den die Webfassung für den Wert der Vorlage zeigt (FALSCH als 0).
-    const mismatch = { cell, expected: target, actual }
-    const deviation = explain(sheet, golden, mismatch, all)
-    if (deviation) report.explained.push({ ...mismatch, deviation })
-    else report.unexplained.push(mismatch)
+    settle(report, sheet, golden, { cell, expected: target, actual }, all)
   }
   return report
 }

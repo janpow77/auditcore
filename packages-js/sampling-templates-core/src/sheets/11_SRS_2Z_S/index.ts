@@ -72,7 +72,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
   if (gt(usedStrata(inputs, [UNITS.period1, UNITS.forecast2, UNITS.period2]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C33', { size: 'C72', tolerable: 'C62', anticipated: 'C63' }), ...exclusionReference(context)])
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C33', { size: 'C72' }), ...exclusionReference(context)])
 }
 
 /** Je Zeitraum: Zeile der Einheiten, der Standardabweichung der Variablen q (s_qh) und der Fehlersumme (Σ E_i). */

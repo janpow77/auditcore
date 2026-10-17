@@ -1,0 +1,20 @@
+[
+ {
+  "position": 3,
+  "name": "Fehlend: Wesentlichkeitsschwelle 0 % eingetragen, begrenzt zulässig",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 4,
+  "name": "Fehlend: Wesentlichkeitsschwelle 0 % eingetragen, begrenzt zulässig, globale Neuberechnung",
+  "cells": {
+   "C59": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

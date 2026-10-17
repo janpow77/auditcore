@@ -1,0 +1,22 @@
+[
+ {
+  "position": 18,
+  "name": "SRS (08), Ersetzung: Tabelle 2, Genauigkeit mit dem Faktor angepasst",
+  "cells": {
+   "C25": 818962.3381068491,
+   "C28": 0.056835412164659864,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 25,
+  "name": "Anpassung hochwertige Schicht Ja (08), Ersetzung",
+  "cells": {
+   "C25": 596363.2039745299,
+   "C28": 0.06007576727611389,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ }
+]

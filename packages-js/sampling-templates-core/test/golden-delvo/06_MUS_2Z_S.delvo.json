@@ -1,0 +1,38 @@
+[
+ {
+  "position": 17,
+  "name": "TE ≤ AE, Stichprobenumfang nicht bestimmbar, sieben Schichten",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 18,
+  "name": "TE = AE genau auf der Schwelle",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 35,
+  "name": "Globale Neuberechnung mit TE = AE (aktualisiert)",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ },
+ {
+  "position": 46,
+  "name": "Teilweise: Wesentlichkeitsschwelle geleert",
+  "cells": {
+   "C65": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+  },
+  "others": null,
+  "rule": "Anhang II: AE ≥ TE"
+ }
+]

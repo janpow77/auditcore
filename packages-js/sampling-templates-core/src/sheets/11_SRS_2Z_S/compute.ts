@@ -20,6 +20,7 @@ import { projection } from './compute-projection'
 import { recalculation } from './compute-recalculation'
 import { definition } from './definition'
 import { UNITS, sizeDeviation, used } from './strata'
+import { blockedGlobal, clearAfterGlobal, recalculationOf, withoutGlobalAssessment } from '../shared/periods'
 
 /** Zellen einer Schichtzeile über alle Schichtspalten. */
 const row = (number: number): CellAddress[] => STRATA_COLUMNS.map((column) => at(column, number))
@@ -90,6 +91,8 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   projection(c, pending, context)
   conclusion(c, 92, { bookValue: 'C61', testType: 'C19', materiality: 'C22' }, pending('C93'))
   summary(c, { method: 'Einfaches Zufallsstichprobenverfahren, 2 Zeiträume, geschichtet', bookValue: 'C61', first: 92, exhaustive: 'C91', sampleSize: c.C80 })
+  withoutGlobalAssessment(c, recalculationOf(c.C33), ['C72'], pending, 'C102')
+  if (recalculationOf(c.C33) === 'global' && blockedGlobal(c, 'C72', pending)) clearAfterGlobal(c, definition, 72)
 }
 
 /** Berechnet alle Formelzellen des Blatts 11; Eingaben und Ergebnisse tragen die Zelladressen der Vorlage. */

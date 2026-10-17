@@ -1,5 +1,29 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.8 – 2026-10-17
+
+Entscheidung des Inhabers vom 17.10.2026: Bei den Abweichungen 1 und 2 des
+DelVO-Abgleichs rechnet die Webfassung nach der DelVO (EU) 2023/67 und weicht
+dort bewusst von der Excel-Vorlage ab (noch nicht veröffentlicht).
+
+- Blatt 18, Ersetzung bei Tabelle 2 (Anhang III Tabelle 2): angepasste
+  Genauigkeit C25 = SE · (N − N_Art.80)/N · BV/BV_r – Genauigkeit für die
+  reduzierte Grundgesamtheit, danach einmal mit dem Verhältnis der Buchwerte
+  angepasst (N aus Blatt 02 C52, N_Art.80 aus C47). Daraus obere Fehlergrenze,
+  Würdigung und im Bericht G34/G35. Ausschluss und Ersetzung bei Tabelle 1
+  unverändert wie die Vorlage. Neue begründete Abweichung: C25 offen, wenn N in
+  Blatt 02 fehlt.
+- Globale Neuberechnung bei AE ≥ TE (05, 06, 07, 10, 11, 12; Anhang II):
+  „✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der
+  zulässige Fehler (Anhang II)“ statt eines Umfangs (`GLOBAL_NOT_APPLICABLE`,
+  `globalSize`); anzuwendender globaler Umfang, Zusatzeinheiten,
+  Folgezeiträume, Hochrechnung, Genauigkeit und Würdigung bleiben offen.
+- Hinweise zu Nr. 1 und 2 lauten „Berechnet nach DelVO … ; die Vorlage rechnet
+  hier anders (…)“ (deutsch und englisch); Nr. 3–5 wie in 0.1.7.
+- Golden-Abgleich mit eigener Spalte „bewusst nach DelVO“, Sollwerte unabhängig
+  nachgerechnet (`scripts/delvo_soll.py`, `test/golden-delvo/`). Gegenüber 0.1.7
+  ändern sich 4.534 Zellen in 533 Fällen (nur 05–07, 10–12, 18, 20).
+
 ## 0.1.7 – 2026-10-17
 
 DelVO-Abgleich vom 17.10.2026 (noch nicht veröffentlicht). Keine Rechenänderung:

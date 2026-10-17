@@ -30,7 +30,8 @@ const UPSTREAM: readonly (readonly [cell: CellAddress, whenEmpty: readonly strin
   ['C19', ['C5', 'C14', 'C17']],
   ['C23', ['C7']],
   ['C24', ['C6', 'C7', 'C18', 'C23']],
-  ['C25', ['C8', 'C18']],
+  // Ersetzung bei Tabelle 2 (nach der DelVO): Die Genauigkeit baut zusätzlich auf N der Grundgesamtheit aus Blatt 02 auf.
+  ['C25', ['C8', 'C18', '02_Grundgesamtheit!C52']],
   ['C26', ['C14', 'C24']],
   ['C27', ['C12', 'C26']],
   ['C28', ['C14', 'C24', 'C25']],

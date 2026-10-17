@@ -245,7 +245,8 @@ const filled = countRow(c, 46)
 
 ### 6. Fehlende Angaben
 
-Die Webfassung zeigt nie einen anderen Wert als die Vorlage, höchstens keinen.
+Die Webfassung zeigt nie einen anderen Wert als die Vorlage, höchstens keinen
+(Ausnahmen nach der DelVO: [abweichungen.md](abweichungen.md) Nr. 16).
 Was sie zeigt, wenn eine Angabe fehlt, entscheidet **eine** Stelle:
 `src/model/policy.ts` (Richtlinie je Fallart) über `evaluateSheet`. Ein Blatt
 ordnet nur jede Stelle einer Fallart zu und liest die Richtlinie nie selbst

@@ -12,7 +12,7 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 
 ## Was aus der Vorlage im Paket steckt
 
-| Inhalt | Ort | Umfang in 0.1.7 |
+| Inhalt | Ort | Umfang in 0.1.8 |
 |---|---|---|
 | Rechenwege (Formeln als TypeScript, Zelle für Zelle) | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter: 02–18, 20, X1–X4 |
 | Bezeichnungen (Spalte B), Fundstellen und Hinweise (Spalte D bzw. K), Abschnittstitel, Zahlenformate, Vorgaben | `src/sheets/<Blatt>/definition*.ts` | alle Blätter, wörtlich; Bezeichnungen mit Formel in Bezeichnung und Kurzformel getrennt. Altvorlagen: englischer Wortlaut der Vorlage von 2017 |
@@ -49,7 +49,11 @@ ohne Dialog). Vorher entstanden die Sollwerte mit `scripts/golden_recalc.py`,
 das die Vorlage mit LibreOffice (24.2.7.2) ohne Oberfläche neu rechnet; diese
 Fassung liegt in der Versionsgeschichte (0.1.5) und weicht in 937 Zellen von
 Excel ab. `scripts/golden_recalc.py` bleibt als Hilfsmittel für vorläufige
-Sollwerte neuer Fälle. `test/golden.spec.ts` vergleicht jede Zelle
+Sollwerte neuer Fälle. Seit 0.1.8 rechnet die Webfassung an zwei Stellen nach
+der DelVO statt wie die Vorlage (Entscheidung des Inhabers vom 17.10.2026,
+`docs/abweichungen.md` Nr. 16); die Sollwerte dieser Zellen rechnet
+`scripts/delvo_soll.py` unabhängig vom Rechenkern aus den Excel-Sollwerten nach
+(`test/golden-delvo/`). `test/golden.spec.ts` vergleicht jede Zelle
 (Zellen mit Ganzzahlformat exakt, übrige relative Toleranz 1e-9, Texte
 wortgleich); Ergebnis in `docs/abgleich.md`. Eine Abweichung ist nur
 zugelassen, wenn die Webfassung keinen Wert zeigt, die Abweichung als Datum

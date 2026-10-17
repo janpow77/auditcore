@@ -281,12 +281,13 @@ describe('Blatt 12_SRS_3Z: Richtlinie für fehlende Angaben', () => {
     // „TE ≤ AE“: Es gibt keinen Umfang; die Vorlage zeigt für Zeitraum 2 dennoch 3 Einheiten.
     const undetermined = { ...sample, C28: 0.025, C35: NONE }
     const cells = ['C36', 'C44', 'C46', 'C84', 'C113', 'C117', 'C118', 'C119']
-    const shown = ['TE ≤ AE', null, null, 3, 76, 3, null, null]
+    // C113 (Zusatzeinheiten der globalen Neuberechnung nach Zeitraum 2): Bei AE ≥ TE ist der globale Ansatz nach der DelVO nicht anwendbar (Nr. 16).
+    const shown = ['TE ≤ AE', null, null, 3, null, 3, null, null]
     const current = evaluateSheet(sheet, undetermined, context)
     expect(current.complete).toBe(true)
     expect(pick(current.cells, cells)).toEqual(shown)
     expect(pick(sheet.compute(undetermined, likeTemplate), cells)).toEqual(shown)
-    expect(current.withoutBasis).toEqual(['C84', 'C113', 'C117'])
+    expect(current.withoutBasis).toEqual(['C84', 'C117'])
     expect(current.lacking.size).toBe(0)
     expect(withoutBasisHint(undetermined)).toEqual({ tone: 'warning', qualified: true })
     // Fehlt dazu die Standardabweichung des dritten Zeitraums (Pflichteingabe), bleibt die Untergrenze offen.
