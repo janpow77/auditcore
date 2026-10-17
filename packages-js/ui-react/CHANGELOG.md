@@ -1,7 +1,8 @@
 # Changelog @auditcore/ui-react
 
-## Unreleased
+## 1.3.1 – 2026-10-17
 
+- Abhängigkeit `@auditcore/ui-core` auf 0.4.1 angehoben (Paritätstests gegen `@auditcore/ui` 0.5.1).
 - Begriff: `FlowauditExtrapolation` und `FlowauditSampleSizePlanner` zeigen wie die Vue-Fassung „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“ (Texte aus `@auditcore/ui-core`). Eigenschaften und Ereignisse bleiben unverändert.
 
 ## 1.2.0 – 2026-09-29
