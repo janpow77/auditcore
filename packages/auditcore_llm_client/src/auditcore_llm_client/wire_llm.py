@@ -103,7 +103,10 @@ def _prompt_messages(system: str | None, prompt: str) -> list[JsonValue]:
 def _ollama_chat(
     config: ClientConfig, prompt: str, system: str | None, sampling: Sampling
 ) -> PreparedRequest:
-    """audit_designer ``call_llm``: ``/api/chat`` with fixed options, 404 → OpenAI route."""
+    """``/api/chat`` with the profile's fixed options (audit_designer), 404 → OpenAI route.
+
+    ``options`` is omitted when empty (profile ``OLLAMA_CHAT_PLAIN`` without arguments).
+    """
     profile = config.profile
     model = sampling.model or config.model_defaults.llm
     messages = _prompt_messages(system, prompt)
@@ -116,7 +119,8 @@ def _ollama_chat(
     body: JsonObject = {"model": model, "messages": messages, "stream": False}
     put_optional(body, "think", ollama_think(sampling, profile.think))
     put_optional(body, "keep_alive", config.keep_alive or profile.default_keep_alive)
-    body["options"] = options
+    if options:
+        body["options"] = options
     if sampling.json_mode:
         body["format"] = "json"
     fallback = PreparedRequest(

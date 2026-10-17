@@ -9,10 +9,12 @@ need only the standard library; the HTTP clients :class:`LlmClient` and
 
 from __future__ import annotations
 
+from importlib import import_module
 from typing import TYPE_CHECKING
 
 from auditcore_llm_client.catalog import ModelCatalog, ModelSnapshot
 from auditcore_llm_client.config import (
+    DIRECT_OLLAMA_PORT,
     ClientConfig,
     Mode,
     Quality,
@@ -52,6 +54,7 @@ from auditcore_llm_client.profiles import (
     COCKPIT,
     FLOWINVOICE,
     GENERIC,
+    OLLAMA_CHAT_PLAIN,
     PROFILES,
     EmbedRoute,
     EnvNames,
@@ -79,20 +82,24 @@ from auditcore_llm_client.results import (
 
 if TYPE_CHECKING:
     from auditcore_llm_client.async_client import AsyncLlmClient
+    from auditcore_llm_client.pool import AsyncLlmClientPool, LlmClientPool
     from auditcore_llm_client.sync_client import LlmClient
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 
 __all__ = [
     "AUDIT_DESIGNER",
     "AUDIT_PORTAL",
     "COCKPIT",
+    "DIRECT_OLLAMA_PORT",
     "FLOWINVOICE",
     "GENERIC",
+    "OLLAMA_CHAT_PLAIN",
     "PROFILES",
     "AiRouterError",
     "async_safe_call",
     "AsyncLlmClient",
+    "AsyncLlmClientPool",
     "BreakerPolicy",
     "BreakerState",
     "CircuitBreaker",
@@ -111,6 +118,7 @@ __all__ = [
     "InvalidResponseError",
     "is_secret_reference",
     "LlmClient",
+    "LlmClientPool",
     "LlmClientError",
     "LlmResult",
     "Mode",
@@ -150,14 +158,18 @@ __all__ = [
 ]
 
 
+_HTTP_NAMES = {
+    "LlmClient": "sync_client",
+    "AsyncLlmClient": "async_client",
+    "LlmClientPool": "pool",
+    "AsyncLlmClientPool": "pool",
+}
+
+
 def __getattr__(name: str) -> object:
     """Import the httpx-based clients on first use (extra ``http``)."""
-    if name == "LlmClient":
-        from auditcore_llm_client.sync_client import LlmClient
-
-        return LlmClient
-    if name == "AsyncLlmClient":
-        from auditcore_llm_client.async_client import AsyncLlmClient
-
-        return AsyncLlmClient
+    module = _HTTP_NAMES.get(name)
+    if module is not None:
+        loaded: object = getattr(import_module(f"auditcore_llm_client.{module}"), name)
+        return loaded
     raise AttributeError(f"module 'auditcore_llm_client' has no attribute {name!r}")

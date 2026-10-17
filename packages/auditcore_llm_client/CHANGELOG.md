@@ -1,5 +1,26 @@
 # Changelog – auditcore_llm_client
 
+## 0.2.0 – unveröffentlicht
+
+Neue Funktionen aus Issue #237 (Umstellung des Harvesting-Extraktors in
+regulierung); bestehende Felder, Profile und Signaturen bleiben unverändert.
+
+- `LlmResult.thinking` (Eigenschaft über `raw_response`, kein neues
+  Datenklassenfeld): Denkanteil aus eigenem Antwortfeld (Ollama
+  `message.thinking` bzw. `thinking`, OpenAI-kompatibel `reasoning_content`
+  oder `reasoning`). `content` wird nie aus `thinking` gefüllt; der Rückfall
+  ist Opt-in über `LlmResult.content_or_thinking`.
+- Profil `OLLAMA_CHAT_PLAIN` (`ollama_chat_plain`): `generate` über schlichtes
+  `/api/chat` ohne fest mitgesendete Optionen, `keep_alive`, `think` oder
+  Sampling-Standardwerte.
+- `LlmClientPool`/`AsyncLlmClientPool` (Extra `http`): ein Client je
+  Gateway-URL aus einer Vorlagenkonfiguration, mit eigenem Circuit-Breaker,
+  Verbindungspool und Modell-Cache je URL; LRU-Grenze `max_clients`.
+- `DIRECT_OLLAMA_PORT` öffentlich; README begründet die Ablehnung von Port
+  11434 und empfiehlt `validate_base_url` als Eingabeprüfung der Anwendungen.
+- Route `/api/chat` (`generate`): ein leeres `options`-Objekt wird nicht mehr
+  gesendet. `AUDIT_DESIGNER` sendet stets Optionen und ist nicht betroffen.
+
 ## 0.1.3 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
