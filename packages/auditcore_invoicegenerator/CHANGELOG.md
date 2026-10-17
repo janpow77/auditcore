@@ -1,6 +1,6 @@
 # Changelog auditcore_invoicegenerator
 
-## 0.2.5 – unveröffentlicht
+## 0.2.5 – 2026-10-17
 
 Keine Verhaltensänderung. Pin `auditcore_dummygenerator==0.2.0` (neue
 Schnittstelle Namensbaukasten; bisherige Ausgaben des Generators unverändert).
