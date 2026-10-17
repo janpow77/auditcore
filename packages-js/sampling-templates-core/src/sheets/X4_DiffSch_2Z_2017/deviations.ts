@@ -26,7 +26,7 @@ const RECALCULATION = 'Ohne die Angaben beider Zeiträume ist der neu berechnete
 export const deviations: readonly Deviation[] = [
   ...deviationRows(['C1', 'C15'], ['C3', 'C4'], 'Wert auf Grundlage nur eines Buchwerts bzw. 0 €', BOOK_VALUE),
   ...deviationRows(['C9'], ['C5', 'C6', 'C7', 'C8'], 'Wert ohne den Beitrag des Zeitraums mit fehlender Angabe', 'Das gewichtete Mittel der Varianzen setzt Umfang und Standardabweichung beider Zeiträume voraus.'),
-  ...deviationRows(['C11'], ['C10'], '0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH)', 'Ohne Konfidenzniveau gibt es keinen Koeffizienten z.'),
+  ...deviationRows(['C11'], ['C10'], 'FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0)', 'Ohne Konfidenzniveau gibt es keinen Koeffizienten z.'),
   ...deviationRows(['C13'], ['C3', 'C4', 'C12'], '0 € bzw. Wert auf Grundlage nur eines Buchwerts', 'Der voraussichtliche Fehler setzt die Buchwerte beider Zeiträume und die erwartete Fehlerquote voraus.'),
   ...deviationRows(['C16', 'C17', 'C18'], FIRST, 'Umfang auf Grundlage der mit 0 gerechneten Angabe (z. B. 0)', 'Ohne die Angaben zur Planung des ersten Zeitraums ist der Stichprobenumfang nicht bestimmt.'),
   ...deviationRows(['C24', 'C30', 'C43'], ['C3', 'C25'], 'Wert auf Grundlage nur eines Buchwerts bzw. 0 €', BOOK_VALUE),

@@ -11,7 +11,7 @@ import type { AvailableSheet } from '../src/model/sheet'
 import { STRATA_COLUMNS, TEMPLATE_STRATA } from '../src/model/strata'
 import { availableSheets } from '../src/sheets/registry'
 import { LEGACY_STRATA } from '../src/sheets/shared/legacy'
-import { AMOUNT_TOLERANCE, TOLERANCE, compareCase, goldenFiles, templateMismatches, type CaseReport, type GoldenCase } from './golden'
+import { AMOUNT_TOLERANCE, TOLERANCE, compareCase, goldenFiles, readGoldenFile, templateMismatches, type CaseReport, type GoldenCase } from './golden'
 
 const WRITE = process.env.SAMPLING_TEMPLATES_WRITE_DOCS === '1'
 /** Während mehrere Blätter gleichzeitig entstehen, werden die Nachweise erst beim Zusammenführen erzeugt. */
@@ -24,7 +24,7 @@ const END = '<!-- abweichungen:end -->'
 function caseSets(sheet: AvailableSheet): { name: string; cases: GoldenCase[] }[] {
   return goldenFiles(sheet.id).map((file) => ({
     name: file.replace(`${sheet.id}.`, '').replace(/\.?golden\.json$/, '') || 'Hauptsatz',
-    cases: JSON.parse(readFileSync(fileURLToPath(new URL(`./golden/${file}`, import.meta.url)), 'utf8')) as GoldenCase[],
+    cases: readGoldenFile(file),
   }))
 }
 
@@ -34,8 +34,8 @@ interface Counts {
   cases: number
   compared: number
   explained: number
-  /** Würdigungen an der Toleranzkante bei 17-stelliger Eingabe. */
-  edge: number
+  /** Zellen, die die Webfassung bewusst anders darstellt (`adapted`). */
+  adapted: number
   unexplained: number
   /** Abweichungen unter der Richtlinie „wie die Vorlage“. */
   template: number
@@ -47,7 +47,7 @@ function countsOf(sheet: AvailableSheet, cases: readonly GoldenCase[]): Counts &
     cases: list.length,
     compared: total(list, (report) => report.compared),
     explained: total(list, (report) => report.explained.length),
-    edge: total(list, (report) => report.edge.length),
+    adapted: total(list, (report) => report.adapted.length),
     unexplained: total(list, (report) => report.unexplained.length),
     template: cases.reduce((sum, golden) => sum + templateMismatches(sheet, golden).length, 0),
     reports: list,
@@ -58,16 +58,16 @@ const add = (left: Counts, right: Counts): Counts => ({
   cases: left.cases + right.cases,
   compared: left.compared + right.compared,
   explained: left.explained + right.explained,
-  edge: left.edge + right.edge,
+  adapted: left.adapted + right.adapted,
   unexplained: left.unexplained + right.unexplained,
   template: left.template + right.template,
 })
 
 const row = (name: string, counts: Counts): string =>
-  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.edge - counts.unexplained} | ${counts.explained} | ${counts.edge} | ${counts.unexplained} | ${counts.template} |`
+  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.adapted - counts.unexplained} | ${counts.explained} | ${counts.adapted} | ${counts.unexplained} | ${counts.template} |`
 
-const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, edge: 0, unexplained: 0, template: 0 }
-const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|']
+const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, adapted: 0, unexplained: 0, template: 0 }
+const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|']
 
 function comparison(): string {
   const lines = [
@@ -75,25 +75,36 @@ function comparison(): string {
     '',
     '<!-- Erzeugt mit `npm run docs:write -w @auditcore/sampling-templates-core`; nicht von Hand ändern. -->',
     '',
-    'Je Fall werden die Eingaben in eine Kopie der Excel-Vorlage geschrieben, die Mappe wird mit LibreOffice',
-    'neu berechnet (`scripts/golden_recalc.py`), und jede Formelzelle des Blatts wird mit dem Rechenkern verglichen:',
-    `Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz ${TOLERANCE}, Texte wortgleich.`,
-    `Bei Eurobeträgen gilt zusätzlich ein absoluter Unterschied bis ${AMOUNT_TOLERANCE} € als gleich (Rauschen aus einer`,
-    'Auslöschung, Blatt 20 G43). Werte ab 10¹⁵ liegen außerhalb des geprüften Zahlenbereichs: Dort wird nur die',
-    'Größenordnung verglichen (relativ 0,001), und die Webfassung weist das Ergebnis als nicht belastbar aus.',
+    'Je Fall werden die Eingaben in eine Kopie der Excel-Vorlage geschrieben, die Mappe wird in **Microsoft Excel**',
+    '(Microsoft 365, Version 16.0.20326, 64 Bit, de-de) neu berechnet, und jede Formelzelle des Blatts wird mit dem',
+    `Rechenkern verglichen: Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz ${TOLERANCE}, Texte wortgleich,`,
+    'Wahrheits- und Fehlerwerte wie Excel sie zeigt. Die Sollwerte stammen aus der Excel-Gegenprobe vom 17.10.2026',
+    '(10.531 Fälle, 728.895 Formelzellen; Ablauf in [abweichungen.md](abweichungen.md), Abschnitt 3).',
     '',
-    '**Grenze dieses Nachweises:** Alle Sollwerte stammen aus der Neuberechnung der Vorlage mit LibreOffice 24.2.',
-    'Eine Gegenprobe mit Microsoft Excel steht aus. Vergleichstoleranz (2⁻⁴⁸), `AUFRUNDEN` (Kürzung auf zwölf geltende',
-    'Stellen) und die Summation mit Fehlerausgleich sind an LibreOffice gemessen; ob Excel an Schwellen und beim',
-    'Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.',
+    '**Toleranzen und ihr Grund.** Der Rechenkern bildet die Rechensemantik von Excel nach (Vergleich nach Rundung auf',
+    '15 geltende Stellen, `AUFRUNDEN` mit Vorrundung auf 15 Stellen, `VERGLEICH` genau, Summen ohne Fehlerausgleich);',
+    'die Toleranz deckt nur die Reihenfolge der Gleitkommaoperationen, die in JavaScript und Excel nicht in jeder Formel',
+    'gleich ist (relative Unterschiede bis etwa 1e-15). Ganzzahlzellen (Stichprobenumfänge) sind davon ausgenommen und',
+    `müssen genau stimmen. Bei Eurobeträgen gilt zusätzlich ein absoluter Unterschied bis ${AMOUNT_TOLERANCE} € als gleich`,
+    '(Auslöschung in Abstimmungszellen wie Blatt 02 C30, wo Excel einen Rest bis 4,8e-7 € zeigt). Werte ab 10¹⁵ liegen',
+    'außerhalb des geprüften Zahlenbereichs: Dort wird nur die Größenordnung verglichen (relativ 0,001), und die',
+    'Webfassung weist das Ergebnis als nicht belastbar aus.',
+    '',
+    '**LibreOffice** ist nur noch Hilfsmittel: Die früheren Sollwerte aus der Neuberechnung mit LibreOffice 24.2',
+    '(`scripts/golden_recalc.py`) liegen in der Versionsgeschichte (Stand 0.1.5) und unterscheiden sich in 937 Zellen',
+    'von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`).',
     '',
     '- **Begründet** sind Zellen, an denen die Webfassung nach der geltenden Richtlinie für fehlende Angaben keinen Wert',
     '  zeigt, während die Vorlage einen zeigt ([abweichungen.md](abweichungen.md)); die Gegenprobe ist bestanden. Seit der',
     '  Regel „bei vollständigen Pflichteingaben immer wie die Vorlage“ entstehen sie nur noch, wo eine Eingabe fehlt.',
-    '- **Toleranzkante** sind Würdigungen, bei denen die Quote genau auf der Vergleichstoleranz liegt und der Fall eine',
-    '  Eingabe mit 16 oder 17 geltenden Stellen trägt (Prüfsonde der Abnahme). Geprüft ist je Zelle: Mit der um höchstens',
-    '  zwei letzte Stellen verschobenen Eingabe zeigt die Webfassung genau den Text der Vorlage. Über die Oberfläche lässt',
-    '  sich eine solche Zahl nicht eingeben.',
+    '- **Bewusst anders dargestellt** sind Zellen, die die Webfassung nach einer festen Regel anders zeigt (`adapted`):',
+    '  die Kopfzeile von Blatt 20 (A6), die Fehlerquote eines Falls mit Buchwert 0 (Blatt 20 E20–E27: Excel `#DIV/0!`,',
+    '  Webfassung kein Wert mit Hinweis) und der Faktor zu einem Konfidenzniveau außerhalb der Stufen der Altvorlagen',
+    '  (X1 C5/C6, X2 C6, X3 D10, X4 C11: Excel FALSCH, Webfassung 0 mit Hinweis). Geprüft ist je Zelle, dass die Webfassung',
+    '  genau den Wert zeigt, der sich nach dieser Regel aus dem Wert von Excel ergibt.',
+    '- **Toleranzkanten** gibt es gegen Excel keine mehr: Die beiden Würdigungen, die gegen LibreOffice an der',
+    '  Vergleichstoleranz hingen (Blatt 06 C99, Blatt 12 C138), zeigt die Webfassung mit der Vergleichsregel von Excel',
+    '  genau wie Excel.',
     '- **„Wie die Vorlage“** ist dieselbe Rechnung unter der Richtlinie `TEMPLATE_POLICY` (jede fehlende Angabe mit 0',
     '  gerechnet): Dann muss jede Zelle den Wert der Vorlage zeigen.',
     '- Die Fallsätze `abnahme-grund`, `abnahme-luecken` und `abnahme-schwelle` sind die 6.805 Fälle der unabhängigen',

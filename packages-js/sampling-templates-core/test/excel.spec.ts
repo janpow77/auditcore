@@ -17,41 +17,55 @@ describe('Excel-Semantik', () => {
     expect([roundUp(1.231, 2), roundUp(1.23, 2)]).toEqual([1.24, 1.23])
   })
 
-  it('AUFRUNDEN kürzt wie die Tabellenkalkulation zuerst auf zwölf signifikante Stellen', () => {
+  it('AUFRUNDEN rundet wie Excel zuerst auf 15 geltende Stellen', () => {
     expect(Math.ceil((0.1 + 0.2) * 10)).toBe(4)
     expect(roundUp((0.1 + 0.2) * 10)).toBe(3)
-    expect([roundUp(100.0000000009), roundUp(100.000000001), roundUp(100.00000005), roundUp(39.0000000039), roundUp(31.00000000062)]).toEqual([100, 101, 101, 40, 32])
-    expect([roundUp(1000000.0005), roundUp(2000000000.5), roundUp(4850000000.3), roundUp(8693697600)]).toEqual([1000001, 2000000001, 4850000001, 8693697600])
-    expect([roundUp(123456789012.25), roundUp(1e-9), roundUp(0.5)]).toEqual([123456789012, 1, 1])
-    // Oberhalb von zwölf ganzzahligen Stellen kürzt die Tabellenkalkulation ebenfalls auf zwölf geltende Stellen (Abnahme, Blatt 03 C21).
-    expect([roundUp(3697929000034.2), roundUp(3697929000080.7), roundUp(369792900021302.4)]).toEqual([3697929000030, 3697929000080, 369792900021000])
+    // Abnahme Blatt 03, Fall „R-off 100 · (1 + 1e-14)“: Excel 101 (LibreOffice kürzte auf zwölf Stellen und zeigte 100).
+    expect([roundUp(100 * (1 + 1e-14)), roundUp(100 * (1 + 16 * 2 ** -52)), roundUp(99.00000000000009), roundUp(1.000000000005)]).toEqual([101, 100, 100, 2])
+    expect([roundUp(123456789012.25), roundUp(1e-9), roundUp(0.5), roundUp(8693697600)]).toEqual([123456789013, 1, 1, 8693697600])
+    // Oberhalb von 15 Stellen bleibt die 15-stellige Rundung: Excel zeigt 369.792.900.021.001 auch mit zwei Nachkommastellen.
+    expect([roundUp(369792900021000.7, 2), roundUp(36979290002130.2)]).toEqual([369792900021001, 36979290002131])
   })
 
-  it('Vergleiche: gleich innerhalb von 2⁻⁴⁸ des Betrags', () => {
+  it('Vergleiche: beide Seiten auf 15 geltende Stellen gerundet', () => {
     const sum = (411130.9 + 1023471.01 + 353646.09) / 89412400
     expect(sum > 0.02).toBe(true)
     expect([gt(sum, 0.02), eq(sum, 0.02), le(sum, 0.02), ge(sum, 0.02), lt(sum, 0.02), ne(sum, 0.02)]).toEqual([false, true, true, true, false, false])
     expect([eq(0.7000000000000001, 0.7), eq(0.1 + 0.2, 0.3), eq(1, 1 + 1e-14), eq(0, 1e-300), eq(0, 0)]).toEqual([true, true, false, false, true])
+    // Das Fenster hängt an den Dezimalstellen: 1,0000000000000036 ist gleich 1, 0,9999999999999993 kleiner.
+    expect([eq(1, 1.0000000000000036), lt(0.9999999999999993, 1), gt(1.0000000000000053, 1)]).toEqual([true, true, true])
     expect([gt(2, 1), lt(1, 2), ge(1, 2), le(2, 1)]).toEqual([true, true, false, false])
     expect([minus(0.3, 0.1 + 0.2), minus(5, 3), plus(0.1 + 0.2, -0.3), plus(2, 3)]).toEqual([0, 2, 0, 5])
+    expect([minus(1.0000000000000018, 1), minus(1.0000000000000013, 1)]).toEqual([1.0000000000000018 - 1, 0])
     expect([sameNumber(0.1 + 0.2, 0.3), sameNumber('1', 1), sameNumber(null, 0)]).toEqual([true, false, false])
   })
 
-  it('Vergleiche und Aufrunden stimmen mit der Messung an LibreOffice überein', () => {
-    const measured = JSON.parse(readFileSync(new URL('./fixtures/libreoffice-semantik.json', import.meta.url), 'utf8')) as {
-      vergleiche: { a: number; b: number; eq: number; lt: number; le: number; gt: number; ge: number; minus: number }[]
+  it('Vergleiche, Subtraktion, Aufrunden und Summen stimmen mit der Messung an Excel 16.0.20326 überein', () => {
+    type Comparison = { a: number; b: number; eq: number; lt: number; le: number; gt: number; ge: number; minus: number; minusNull?: number }
+    const measured = JSON.parse(readFileSync(new URL('./fixtures/excel-semantik.json', import.meta.url), 'utf8')) as {
+      vergleiche: Comparison[]
+      vergleicheFormel: Comparison[]
       aufrunden: { x: number; roundUp0: number; roundUp2: number }[]
+      summen: { werte: number[]; summe: number; klammern: number }[]
     }
-    expect(measured.vergleiche.length).toBeGreaterThan(400)
+    expect([measured.vergleiche.length, measured.vergleicheFormel.length, measured.aufrunden.length]).toEqual([451, 363, 193])
     const flag = (value: boolean): number => (value ? 1 : 0)
-    for (const row of measured.vergleiche) {
+    // Die Messmappe vergleicht B mit A (`=WENN(B<A;1;0)`) und rechnet `=B-A` als ganze Formel.
+    for (const row of [...measured.vergleiche, ...measured.vergleicheFormel]) {
       const actual = { eq: flag(eq(row.b, row.a)), lt: flag(lt(row.b, row.a)), le: flag(le(row.b, row.a)), gt: flag(gt(row.b, row.a)), ge: flag(ge(row.b, row.a)) }
       expect(actual, `${row.b} gegen ${row.a}`).toEqual({ eq: row.eq, lt: row.lt, le: row.le, gt: row.gt, ge: row.ge })
-      expect(minus(row.b, row.a) === 0, `${row.b} − ${row.a}`).toBe(row.minus === 0)
+      expect(minus(row.b, row.a), `${row.b} − ${row.a}`).toBe(row.minus)
+      // `=WENN(B-A=0;…)`: Innerhalb einer Formel bleibt der Rest stehen und ist nur dann 0, wenn er genau 0 ist.
+      if (row.minusNull !== undefined) expect(flag(eq(row.b - row.a, 0)), `${row.b} − ${row.a} = 0`).toBe(row.minusNull)
     }
     for (const row of measured.aufrunden) {
       expect(roundUp(row.x), `ROUNDUP(${row.x};0)`).toBe(row.roundUp0)
-      expect(roundUp(row.x, 2), `ROUNDUP(${row.x};2)`).toBeCloseTo(row.roundUp2, 9)
+      expect(roundUp(row.x, 2), `ROUNDUP(${row.x};2)`).toBe(row.roundUp2)
+    }
+    for (const row of measured.summen) {
+      expect(sum(row.werte), `SUMME(${row.werte.join(';')})`).toBe(row.summe)
+      const [a = 0, b = 0, c = 0, d = 0] = row.werte
+      expect(plus(a + b, c + d), `(${a}+${b})+(${c}+${d})`).toBe(row.klammern)
     }
   })
 
@@ -84,6 +98,8 @@ describe('Excel-Semantik', () => {
     expect(matchExact(0.7, [0.6, 0.7, 0.8])).toBe(2)
     expect(matchExact('MITTEL', ['hoch', 'mittel'])).toBe(2)
     expect(() => matchExact(0.75, [0.6, 0.7])).toThrow(FormulaError)
+    // VERGLEICH(…;0) sucht Zahlen genau (Excel, Blatt 03 Fall „Konfidenzniveau 0,7000000000000001“), anders als `=`.
+    expect(() => matchExact(0.7000000000000001, [0.6, 0.7, 0.8])).toThrow(FormulaError)
     expect(() => matchExact(null, [null])).toThrow(FormulaError)
     expect(indexOf([[1, 2], [3, 4]], 2, 1)).toBe(3)
     expect(() => indexOf([[1]], 2, 1)).toThrow(FormulaError)

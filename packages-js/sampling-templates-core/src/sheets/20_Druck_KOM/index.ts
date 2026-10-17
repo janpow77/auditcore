@@ -1,8 +1,8 @@
 /** Blatt 20_Druck_KOM: Druckfassung für die Kommission; liest Blatt 02, das aktive Verfahren und Blatt 18. */
-import { defineSheet, type Adaptation } from '../../model/sheet'
-import type { CellMap } from '../../model/types'
+import { defineSheet, templateNumber, type Adaptation } from '../../model/sheet'
+import type { CellMap, CellValue } from '../../model/types'
 import { compute, headLead } from './compute'
-import { definition } from './definition'
+import { CASE_ROWS, definition } from './definition'
 import { deviations } from './deviations'
 import { webHints } from './hints'
 import { en } from './texts.en'
@@ -44,8 +44,14 @@ const adapted: readonly Adaptation[] = [
   {
     cell: 'A6',
     reason: 'Die Vorlage nennt in der Kopfzeile fest ein bestimmtes Programm; die Webfassung nennt das Programm der Prüfbehörde, die den Bericht erstellt.',
-    fromTemplate: (shown, results) => (typeof shown === 'string' && shown.includes(HEAD_TAIL_START) ? `${headLead(results.W4)}${shown.slice(shown.indexOf(HEAD_TAIL_START))}` : shown),
+    fromTemplate: (shown, results) => (typeof shown === 'string' && shown.includes(HEAD_TAIL_START) ? `${headLead(results.W4)}${shown.slice(shown.indexOf(HEAD_TAIL_START))}` : templateNumber(shown)),
   },
+  // Fehlerquote eines Falls mit Buchwert 0: Die Formel der Vorlage hat kein WENNFEHLER und zeigt #DIV/0!; die Webfassung zeigt keinen Wert und den Hinweis „case-book-value-zero“.
+  ...CASE_ROWS.map((row) => ({
+    cell: `E${row}`,
+    reason: 'Bei Buchwert 0 zeigt die Vorlage den Fehlerwert #DIV/0! (die Formel fängt ihn nicht ab). Die Webfassung zeigt keinen Wert und weist den Fall als nicht bestimmbar aus.',
+    fromTemplate: (shown: CellValue | boolean) => (shown === '#DIV/0!' ? null : templateNumber(shown)),
+  })),
 ]
 
 export const sheet = defineSheet({ id: '20_Druck_KOM', definition, compute, sample: { inputs: sample }, deviations, webHints, adapted, translations: { en } })

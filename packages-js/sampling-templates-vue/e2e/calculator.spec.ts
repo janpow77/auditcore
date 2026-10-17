@@ -294,6 +294,27 @@ test('fehlende Angaben: benannt bzw. als „mit 0 berechnet“ ausgewiesen', asy
   await shot(page, '17_fehlende_angaben')
 })
 
+test('ungültige Eingabe im vorbelegten BV: Ergebnisspalte und Kennzahlenleiste melden sie, kein Rückfall auf Blatt 02', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 })
+  await chooseSheet03(page)
+  await menu(page, 'Beispielwerte laden')
+  await expect(page.locator('[data-kpi-strip]')).toContainText('92 Einheiten')
+  const bookValue = page.getByLabel('Buchwert der angepassten zu prüfenden Grundgesamtheit (positive Einheiten) (BV)')
+  await bookValue.fill('abc')
+  await bookValue.blur()
+  await expect(bookValue).toHaveAttribute('aria-invalid', 'true')
+  await expect(page.locator('[data-cell="C16"] .fa-st__value')).toHaveText('Eingabe ungültig')
+  await expect(page.locator('[data-cell="C27"] .fa-st__value')).toHaveText('—')
+  await expect(page.locator('[data-result="primary"]')).toContainText('Eingabe ungültig')
+  await expect(page.locator('[data-kpi-strip]')).toContainText('Anzuwendender Stichprobenumfang Eingabe ungültig')
+  await expect(page.locator('[data-kpi-strip]')).not.toContainText('92 Einheiten')
+  await shot(page, '17b_vorbelegung_ungueltig')
+  await bookValue.fill('')
+  await bookValue.blur()
+  await expect(page.locator('[data-cell="C7"] [data-link]')).toHaveText('aus Blatt 02_Grundgesamtheit vorbelegt')
+  await expect(page.locator('[data-kpi-strip]')).toContainText('92 Einheiten')
+})
+
 test('ausgefüllte Vorlage: Vorschau nennt Umdeutungen und Abweichungen, Übernahme erst danach; unlesbare Datei wird gemeldet', async ({ page }) => {
   const values: Record<number, number | string> = { 7: 48500000, 8: 420, 9: 'Mittel', 10: 0.7, 11: 'Einseitig', 14: 0.02, 17: 0.007, 20: '0,12', 22: 2, 23: 'NEIN', 24: 'ja', 27: 92, 38: 'k. A.' }
   const rows = Array.from({ length: 40 }, (_, index) => [null, null, values[index + 1] === undefined ? null : { value: values[index + 1]! }])

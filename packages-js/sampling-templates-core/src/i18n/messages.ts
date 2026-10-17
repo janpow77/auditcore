@@ -98,7 +98,7 @@ const de = {
   draftNote: 'Zusätzlich hält dieser Browser einen lokalen Entwurf auf diesem Gerät vor. Er ist eine Bequemlichkeit und ersetzt nicht das Speichern als Datei.',
   draftNoteSession: 'Zusätzlich hält dieser Browser den Zwischenstand für diese Sitzung vor; mit dem Schließen des Tabs ist er weg. Er ersetzt nicht das Speichern als Datei.',
   templateStatus: 'Grundlage ist der Arbeitsentwurf der Stichprobenvorlagen 2021–2027, Fassung 4, Stand Oktober 2026. Die Vorlage ist keine amtliche Fassung.',
-  verificationNote: 'Geprüft ist die Berechnung gegen die Neuberechnung der Vorlage mit LibreOffice 24.2; eine Gegenprobe mit Microsoft Excel steht aus.',
+  verificationNote: 'Geprüft ist die Berechnung gegen die Neuberechnung der Vorlage mit Microsoft Excel (Version 16.0.20326).',
   disclaimer: 'Die Berechnung bildet die Stichprobenvorlagen 2021–2027 nach. Sie ersetzt nicht die fachliche Würdigung der Prüfbehörde und ist kein Dokument der Europäischen Kommission.',
   dropHere: 'Datei hier ablegen, um sie zu öffnen (.json oder .xlsx)',
   saved: 'Arbeitsstand gespeichert.',

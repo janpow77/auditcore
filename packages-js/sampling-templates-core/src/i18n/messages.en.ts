@@ -96,7 +96,7 @@ export const en: Readonly<Partial<Record<MessageKey, string>>> = {
   draftNote: 'In addition, this browser keeps a local draft on this device. It is a convenience and does not replace saving as a file.',
   draftNoteSession: 'In addition, this browser keeps the interim state for this session; it is gone when the tab is closed. It does not replace saving as a file.',
   templateStatus: 'Based on the working draft of the sampling templates 2021–2027, version 4, as of October 2026. The template is not an official version.',
-  verificationNote: 'The calculation has been checked against the recalculation of the template with LibreOffice 24.2; a cross-check with Microsoft Excel is still outstanding.',
+  verificationNote: 'The calculation has been checked against the recalculation of the template in Microsoft Excel (version 16.0.20326).',
   disclaimer: 'The calculation reproduces the sampling templates 2021–2027. It does not replace the professional judgement of the audit authority and is not a document of the European Commission.',
   dropHere: 'Drop a file here to open it (.json or .xlsx)',
   saved: 'Working file saved.',

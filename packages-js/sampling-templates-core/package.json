@@ -1,6 +1,6 @@
 {
   "name": "@auditcore/sampling-templates-core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Framework-freier Kern der Webfassung der Stichprobenvorlagen 2021–2027 nach DelVO (EU) 2023/67: Rechenkerne je Blatt mit den Zelladressen der Vorlage, Methodendefinitionen, Arbeitsstand mit Prüfsumme und Excel-Austausch (MIT)",
   "license": "MIT",
   "repository": {

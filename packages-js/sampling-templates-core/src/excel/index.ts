@@ -64,19 +64,23 @@ export function ifError<T extends CellValue, F extends CellValue>(formula: () =>
 }
 
 /**
- * Toleranz der Tabellenkalkulation bei Vergleichen: Zwei Zahlen gelten als
- * gleich, wenn sie sich um weniger als 2⁻⁴⁸ (rund 3,6 · 10⁻¹⁵) ihres Betrags
- * unterscheiden. Gemessen an LibreOffice 24.2 (`scripts/measure_semantics.py`,
- * `test/fixtures/libreoffice-semantik.json`); Excel vergleicht nach
- * Herstellerangabe mit 15 signifikanten Stellen.
+ * Geltende Dezimalstellen, mit denen Excel Zahlen vergleicht und vor dem
+ * Aufrunden rundet. Gemessen an Microsoft Excel 16.0.20326
+ * (`test/fixtures/excel-semantik.json`): `=`, `<`, `<=`, `>`, `>=` runden beide
+ * Seiten auf 15 geltende Stellen und vergleichen dann genau. Das Fenster, in dem
+ * zwei Zahlen als gleich gelten, hängt deshalb von der Lage der Dezimalstellen
+ * ab: 1 und 1,0000000000000036 sind gleich, 1 und 0,9999999999999993 nicht.
  */
-const COMPARE_EPSILON = 2 ** -48
+const SIGNIFICANT_DIGITS = 15
 
-/** Gleichheit zweier Zahlen wie `=` in der Tabellenkalkulation. */
+/** Zahl auf 15 geltende Dezimalstellen gerundet, wie Excel sie vergleicht. */
+export function toSignificant(value: number, digits = SIGNIFICANT_DIGITS): number {
+  return value === 0 || !Number.isFinite(value) ? value : Number(value.toPrecision(digits))
+}
+
+/** Gleichheit zweier Zahlen wie `=` in Excel. */
 export function eq(a: number, b: number): boolean {
-  if (a === b) return true
-  const difference = Math.abs(a - b)
-  return difference < Math.abs(a) * COMPARE_EPSILON && difference < Math.abs(b) * COMPARE_EPSILON
+  return a === b || toSignificant(a) === toSignificant(b)
 }
 
 /** `<>` */
@@ -86,61 +90,74 @@ export function ne(a: number, b: number): boolean {
 
 /** `<` */
 export function lt(a: number, b: number): boolean {
-  return a < b && !eq(a, b)
+  return a !== b && toSignificant(a) < toSignificant(b)
 }
 
 /** `<=` */
 export function le(a: number, b: number): boolean {
-  return a < b || eq(a, b)
+  return a === b || toSignificant(a) <= toSignificant(b)
 }
 
 /** `>` */
 export function gt(a: number, b: number): boolean {
-  return a > b && !eq(a, b)
+  return a !== b && toSignificant(a) > toSignificant(b)
 }
 
 /** `>=` */
 export function ge(a: number, b: number): boolean {
-  return a > b || eq(a, b)
+  return a === b || toSignificant(a) >= toSignificant(b)
 }
 
-/** `a - b`: Ein Ergebnis innerhalb der Vergleichstoleranz ist genau 0 (kein Rest wie 3 · 10⁻⁹). */
-export function minus(a: number, b: number): number {
-  return eq(a, b) ? 0 : a - b
+/** Exponent zur Basis 2 (wie `frexp`, um eins verschoben): 1 ≤ |x| / 2^e < 2. */
+function binaryExponent(value: number): number {
+  const magnitude = Math.abs(value)
+  const exponent = Math.floor(Math.log2(magnitude))
+  if (2 ** exponent > magnitude) return exponent - 1
+  return 2 ** (exponent + 1) <= magnitude ? exponent + 1 : exponent
 }
 
-/** `a + b`: Heben sich die Summanden innerhalb der Vergleichstoleranz auf, ist das Ergebnis genau 0. */
-export function plus(a: number, b: number): number {
-  return eq(a, -b) ? 0 : a + b
-}
-
-/** Ganze Zahl, wenn der Wert innerhalb der Vergleichstoleranz an ihr liegt; sonst abgerundet. */
-function approxFloor(value: number): number {
-  const nearest = Math.round(value)
-  return eq(value, nearest) ? nearest : Math.floor(value)
-}
-
-/** Signifikante Stellen, auf die die Tabellenkalkulation vor dem Aufrunden kürzt. */
-const ROUND_SIGNIFICANT_DIGITS = 12
+/** Auslöschung, ab der Excel das Ergebnis der letzten Addition oder Subtraktion einer Formel auf 0 setzt (Binärstellen). */
+const CANCELLATION_BITS = 50
 
 /**
- * `AUFRUNDEN` / `ROUNDUP(x;stellen)`: von null weg. Wie die Tabellenkalkulation
- * kürzt die Funktion den Wert zuerst auf zwölf signifikante Stellen (Richtung
- * −∞) und rundet erst dann auf: 100,0000000009 bleibt 100, 100,000000001 wird
- * 101. Das gilt auch oberhalb von zwölf ganzzahligen Stellen: Aus
- * 369.792.900.021.303 wird 369.792.900.021.000 (Stichprobenumfänge dieser Größe
- * entstehen nur, wenn TE − AE fast null ist). Verhalten an LibreOffice 24.2
- * gemessen (`test/fixtures/libreoffice-semantik.json`, Fälle der Abnahme).
+ * Ergebnis der letzten Addition oder Subtraktion einer Formel: Liegt es um
+ * mindestens 50 Binärstellen unter dem kleineren Summanden, setzt Excel es auf
+ * genau 0 (gemessen; 1 − 1,0000000000000013 ergibt 0, 1 − 1,0000000000000018
+ * ergibt 1,8 · 10⁻¹⁵). Innerhalb einer Formel rechnet Excel ohne diese Regel.
+ */
+function settled(result: number, left: number, right: number): number {
+  if (result === 0 || !Number.isFinite(result)) return result
+  const smaller = Math.min(Math.abs(left), Math.abs(right))
+  if (smaller === 0) return result
+  return binaryExponent(smaller) - binaryExponent(result) >= CANCELLATION_BITS ? 0 : result
+}
+
+/** `a - b` als letzte Rechenoperation einer Formel (Auslöschung ergibt genau 0, siehe `settled`). */
+export function minus(a: number, b: number): number {
+  return settled(a - b, a, b)
+}
+
+/** `a + b` als letzte Rechenoperation einer Formel (Auslöschung ergibt genau 0, siehe `settled`). */
+export function plus(a: number, b: number): number {
+  return settled(a + b, a, b)
+}
+
+/** Ganze Zahl bzw. Dezimalzahl `value · 10^digits` ohne Rundungsfehler der Multiplikation. */
+function shiftDecimal(value: number, digits: number): number {
+  const text = String(value)
+  return digits === 0 || text.includes('e') ? value / 10 ** -digits : Number(`${text}e${digits}`)
+}
+
+/**
+ * `AUFRUNDEN` / `ROUNDUP(x;stellen)`: von null weg. Wie Excel rundet die
+ * Funktion den Wert zuerst auf 15 geltende Stellen und rundet erst dann auf:
+ * 100,000000000001 wird 101, 100 · (1 + 16 · 2⁻⁵²) bleibt 100. Gemessen an
+ * Excel 16.0.20326 (`test/fixtures/excel-semantik.json`).
  */
 export function roundUp(value: number, digits = 0): number {
   if (value === 0 || !Number.isFinite(value)) return value
-  const kept = ROUND_SIGNIFICANT_DIGITS - 1 - Math.floor(Math.log10(Math.abs(value)))
-  const truncated = kept >= 0 ? approxFloor(value * 10 ** kept) / 10 ** kept : approxFloor(value / 10 ** -kept) * 10 ** -kept
-  const cut = truncated * 10 ** digits
-  const magnitude = Math.abs(cut)
-  const nearest = Math.round(magnitude)
-  const rounded = eq(magnitude, nearest) ? nearest : Math.ceil(magnitude)
-  return rounded === 0 ? 0 : (Math.sign(cut) * rounded) / 10 ** digits
+  const scaled = toSignificant(toSignificant(value) * 10 ** digits)
+  return Math.sign(scaled) * shiftDecimal(Math.ceil(Math.abs(scaled)), -digits)
 }
 
 /** Division mit `#DIV/0!`. */
@@ -161,21 +178,15 @@ function numbers(values: readonly unknown[]): number[] {
 
 /**
  * `SUMME` / `SUM` über einen Bereich: Text und leere Zellen zählen nicht. Wie
- * die Tabellenkalkulation summiert die Funktion mit Fehlerausgleich
- * (Kahan-Neumaier): Der Rundungsrest jeder Addition wird mitgeführt und am Ende
- * zugeschlagen. Ohne ihn weicht die Summe über mehrere Schichten um eine Stelle
- * in der letzten Ziffer ab – genug, um eine Würdigung genau an der Schwelle zu kippen.
+ * Excel addiert die Funktion der Reihe nach ohne Fehlerausgleich; nur die
+ * letzte Addition folgt der Auslöschungsregel (`plus`): `SUMME(0,1;0,7;0,2;−1)`
+ * ergibt 0, `SUMME(0,1;0,2;−0,3;0)` 5,55 · 10⁻¹⁷ (gemessen).
  */
 export function sum(values: readonly unknown[]): number {
-  let total = 0
-  let rest = 0
-  for (const value of numbers(values)) {
-    const next = total + value
-    rest += Math.abs(total) >= Math.abs(value) ? total - next + value : value - next + total
-    total = next
-  }
-  const result = total + rest
-  return Number.isFinite(result) ? result : total
+  const found = numbers(values)
+  const last = found.pop()
+  if (last === undefined) return 0
+  return found.length === 0 ? last : plus(found.reduce((total, value) => total + value), last)
 }
 
 /** `ANZAHL` / `COUNT`: Anzahl der Zahlen. */
@@ -200,7 +211,7 @@ export function sameText(left: unknown, right: string): boolean {
   return typeof left === 'string' && left.toLowerCase() === right.toLowerCase()
 }
 
-/** Zahlengleichheit zweier Zellwerte mit der Toleranz der Tabellenkalkulation. */
+/** Zahlengleichheit zweier Zellwerte wie `=` in Excel (15 geltende Stellen). */
 export function sameNumber(left: unknown, right: unknown): boolean {
   return isNumber(left) && isNumber(right) && eq(left, right)
 }
@@ -229,9 +240,13 @@ export function sumIf(range: readonly unknown[], criterion: CellValue, values: r
   return sum(values.filter((_, index) => matches(range[index])))
 }
 
-/** `VERGLEICH(x;bereich;0)` / `MATCH`: Position ab 1 oder `#NV`. */
+/**
+ * `VERGLEICH(x;bereich;0)` / `MATCH`: Position ab 1 oder `#NV`. Zahlen sucht
+ * Excel genau, ohne die 15-Stellen-Regel von `=`: 0,7000000000000001 steht
+ * nicht in der Liste 0,6; 0,7; … (gemessen, Blatt 03 C12).
+ */
 export function matchExact(value: unknown, range: readonly unknown[]): number {
-  const index = range.findIndex((candidate) => (typeof value === 'string' ? sameText(candidate, value) : sameNumber(candidate, value)))
+  const index = range.findIndex((candidate) => (typeof value === 'string' ? sameText(candidate, value) : isNumber(value) && candidate === value))
   if (index < 0 || isBlank(value)) throw new FormulaError('#NV')
   return index + 1
 }

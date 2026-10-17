@@ -1,5 +1,23 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.6 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.6 gebunden (Rechensemantik
+und Sollwerte nach Microsoft Excel).
+
+- Vorbelegte Felder (z. B. BV und N aus Blatt 02): Eine nicht lesbare Eingabe
+  („abc“) rechnet nicht mehr still mit dem Wert aus Blatt 02 weiter. Das Feld
+  ist ungültig, abhängige Größen zeigen „—“, Ergebnisspalte und
+  Kennzahlenleiste „Eingabe ungültig“; erst ein geleertes Feld übernimmt
+  wieder die Vorbelegung. Hängt kein Ergebnis am Feld (N in Blatt 03), ist nur
+  das Feld markiert.
+- Summen in 04, 06, 16 bei leerem Formular, unverändert und jetzt genau
+  beschrieben: Die Summen der freiwilligen Gruppen (n_eh, BV_eh, ΣE_eh,
+  Iterationseinheiten) zeigen 0 wie die Vorlage; die Summe der Fehlerquoten
+  der Zufallsschicht (Σ E/BV) ist keine freiwillige Gruppe und zeigt „—“
+  (Angabe fehlt), die Vorlage dort 0.
+- Fußzeile: geprüft gegen die Neuberechnung der Vorlage in Microsoft Excel.
+
 ## 0.1.5 – 2026-10-17
 
 Zusammenführung des Arbeitsassistenten (0.1.3/0.1.4 vom 14.10.2026) mit den

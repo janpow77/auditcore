@@ -2,7 +2,7 @@
  * Blatt 01 der Vorlage als Daten: z-Werte nach Anhang I Nr. 3 DelVO (EU) 2023/67
  * und die Auswahllisten. Das Blatt hat keine Eingaben und keine Formeln.
  */
-import { FormulaError, eq, isNumber, sameText } from '../../excel/index'
+import { indexOf, matchExact, sameText } from '../../excel/index'
 import type { TranslationLocale } from '../../model/texts'
 import type { Parameters } from '../../model/types'
 import { en } from './texts.en'
@@ -64,10 +64,10 @@ export const PARAMETERS: Parameters = {
 /**
  * Koeffizient z bzw. z' zum Konfidenzniveau; entspricht
  * `INDEX(01_Parameter!C5:D9;VERGLEICH(niveau;01_Parameter!B5:B9;0);WENN(testart="einseitig";2;1))`.
- * Ein Konfidenzniveau außerhalb der Tabelle ergibt einen Fehlerwert.
+ * Ein Konfidenzniveau außerhalb der Tabelle ergibt einen Fehlerwert; `VERGLEICH`
+ * sucht genau (0,7000000000000001 ist nicht 0,7, anders als beim Vergleich mit `=`).
  */
 export function zValue(parameters: Parameters, confidence: unknown, testType: unknown): number {
-  const row = isNumber(confidence) ? parameters.zTable.find((entry) => eq(entry.confidence, confidence)) : undefined
-  if (!row) throw new FormulaError('#NV')
+  const row = indexOf(parameters.zTable.map((entry) => [entry]), matchExact(confidence, parameters.zTable.map((entry) => entry.confidence)), 1)
   return sameText(testType, 'einseitig') ? row.oneSided : row.twoSided
 }

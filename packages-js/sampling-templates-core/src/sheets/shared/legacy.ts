@@ -25,7 +25,7 @@
  * Hinweis in Warnfarbe.
  */
 import { FormulaError, eq, guard, gt, isBlank, isNumber, le, lt, required } from '../../excel/index'
-import type { ZeroAssumption } from '../../model/sheet'
+import { templateNumber, type Adaptation, type ZeroAssumption } from '../../model/sheet'
 import { EXTRA_STRATA } from '../../model/strata'
 import type { SheetTexts } from '../../model/texts'
 import type { CellAddress, CellValue, Cells, Deviation, WebHint } from '../../model/types'
@@ -78,12 +78,21 @@ export const LEGACY_EXPANSION_FACTOR: LevelSteps = [
 
 /**
  * Faktor zum Konfidenzniveau. Die Vorlage fragt die fünf Stufen nacheinander
- * ab; trifft keine zu, liefert sie den Wahrheitswert FALSCH, der in der
- * Rechnung 0 zählt (die neu berechnete Mappe speichert ihn als 0).
+ * ab; trifft keine zu, zeigt sie den Wahrheitswert FALSCH (der innersten
+ * `WENN` fehlt der Sonst-Zweig), der in der Rechnung 0 zählt. Die Webfassung
+ * zeigt 0 mit Hinweis (`levelAdaptations`, `levelOutsideSteps`).
  */
 export function levelFactor(level: unknown, steps: LevelSteps): number {
   if (!isNumber(level)) return 0
   return steps.find(([step]) => eq(step, level))?.[1] ?? 0
+}
+
+/** Begründung der Darstellung 0 statt FALSCH (docs/abweichungen.md). */
+const LEVEL_REASON = 'Bei einem Konfidenzniveau außerhalb der fünf Stufen zeigt die Vorlage den Wahrheitswert FALSCH (fehlender Sonst-Zweig der Formel), der in der Rechnung als 0 zählt. Ein Wahrheitswert ist als Faktor nicht lesbar; die Webfassung zeigt die Zahl, mit der die Vorlage rechnet, und weist das Konfidenzniveau als keine Stufe der Altvorlage aus.'
+
+/** Zellen mit dem Faktor zum Konfidenzniveau: Die Webfassung zeigt 0, wo die Vorlage FALSCH zeigt. */
+export function levelAdaptations(cells: readonly CellAddress[]): Adaptation[] {
+  return cells.map((cell) => ({ cell, reason: LEVEL_REASON, fromTemplate: templateNumber }))
 }
 
 /** Mindestumfang: Ein rechnerischer Umfang unter 30 wird 30 (auch ein negativer). */
@@ -175,6 +184,12 @@ function warning(id: string, text: string): WebHint {
   return { id, tone: 'warning', text }
 }
 
+/** Hinweis der Webfassung: Das Konfidenzniveau ist keine der fünf Stufen der Altvorlage (dort FALSCH, gerechnet als 0). */
+export function levelOutsideSteps(level: CellValue | undefined): WebHint[] {
+  if (!isNumber(level) || LEGACY_Z.some(([step]) => eq(step, level))) return []
+  return [warning('level-outside-steps', 'Konfidenzniveau ist keine Stufe der Altvorlage (60, 70, 80, 90 oder 95 %): Die Vorlage zeigt als Faktor FALSCH und rechnet damit wie mit 0, die Webfassung zeigt 0. Stichprobenumfang und Folgegrößen sind nicht belastbar')]
+}
+
 /** Hinweis der Webfassung: Stichprobenumfang größer als die Anzahl der Einheiten. */
 export function sizeExceedsPopulation(size: CellValue | undefined, units: CellValue | undefined): WebHint[] {
   if (!isNumber(size) || !isNumber(units) || !gt(units, 0) || !gt(size, units)) return []
@@ -232,6 +247,7 @@ const WEB_HINTS_EN: Readonly<Record<string, string>> = {
   'size-exceeds-population': 'Sample size exceeds the number of units of the population',
   'tolerable-error-not-above-anticipated': 'TE ≤ AE: the legacy template does not check this. The sample size and the values derived from it are, as far as shown as in the template, not reliable; please check the anticipated error rate',
   'below-three-units': 'Fewer than three sampling units (footnote of the legacy template: minimum of 3)',
+  'level-outside-steps': 'The confidence level is not one of the levels of the legacy template (60, 70, 80, 90 or 95 %): the template shows FALSE as the factor and computes with it as 0, the web version shows 0. Sample size and derived values are not reliable',
 }
 
 /** Englische Fassung der Hinweise je Schicht (`belowThreeUnitsId`) für alle Schichten von X3. */

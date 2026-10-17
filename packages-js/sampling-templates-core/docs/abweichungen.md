@@ -11,7 +11,10 @@ Stellen. Es gilt durchgehend:
 > solange eine Eingabe fehlt, zeigt sie an manchen Stellen **keinen** Wert, wo
 > die Vorlage einen zeigt.
 
-Einzige Ausnahme im Wert: Kopf- und Fußzeile des Berichts (Nr. 12). Fragwürdige
+Ausnahmen in der Darstellung: Kopf- und Fußzeile des Berichts (Nr. 12), der
+Wahrheitswert FALSCH der Altvorlagen (gezeigt als 0, mit dem die Vorlage
+rechnet) und der Fehlerwert `#DIV/0!` in Blatt 20 (kein Wert mit Hinweis;
+beides Nr. 3). Fragwürdige
 Ergebnisse der Vorlage unterdrückt die Webfassung nicht; sie zeigt sie mit
 einem Hinweis in Warnfarbe, und eine bestandene Würdigung steht dann nicht
 uneingeschränkt grün da (Nr. 13).
@@ -602,7 +605,7 @@ ebenfalls `null`; das ist keine Abweichung.
 
 | Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
 |---|---|---|---|---|
-| C5, C6 | C4 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Zuverlässigkeits- und keinen Erweiterungsfaktor. |
+| C5, C6 | C4 | FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Zuverlässigkeits- und keinen Erweiterungsfaktor. |
 | C8 | C1, C7 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt Buchwert und erwartete Fehlerquote voraus. |
 | C10 | C1 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt den Buchwert voraus. |
 | C11, C12, C15 | C4, C7 | Wert auf Grundlage des mit RF = 0 bzw. AE = 0 berechneten Umfangs (z. B. Mindestumfang 30) | Angabe fehlt | Ohne Konfidenzniveau und erwartete Fehlerquote ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
@@ -614,7 +617,7 @@ ebenfalls `null`; das ist keine Abweichung.
 
 | Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
 |---|---|---|---|---|
-| C6 | C5 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
+| C6 | C5 | FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
 | C8 | C1, C7 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt Buchwert und erwartete Fehlerquote voraus. |
 | C10, C23 | C1 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt den Buchwert voraus. |
 | C11, C19, C20 | C3, C4, C5, C7 | Wert auf Grundlage des mit 0 berechneten Umfangs (Mindestumfang 30) | Angabe fehlt | Ohne Umfang der Grundgesamtheit, Standardabweichung, Konfidenzniveau und erwartete Fehlerquote ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
@@ -627,7 +630,7 @@ ebenfalls `null`; das ist keine Abweichung.
 | D1, D14, D30 | E6–K6, AA6–AM6 | Wert ohne den Buchwert der Schicht mit fehlender Angabe | Angabe fehlt | Zu einer belegten Schicht gehören Buchwert, Umfang und Standardabweichung; fehlt eine Angabe, sind die Summen des Blatts nicht bestimmt. |
 | D3 | E7–K7, AA7–AM7 | Summe ohne den Umfang der Schicht mit fehlender Angabe | Angabe fehlt | Zu einer belegten Schicht gehören Buchwert, Umfang und Standardabweichung; fehlt eine Angabe, sind die Summen des Blatts nicht bestimmt. |
 | D4 | E7–K7, AA7–AM7, E8–K8, AA8–AM8 | Wert ohne den Beitrag der Schicht mit fehlender Angabe | Angabe fehlt | Zu einer belegten Schicht gehören Buchwert, Umfang und Standardabweichung; fehlt eine Angabe, sind die Summen des Blatts nicht bestimmt. |
-| D10 | D9 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
+| D10 | D9 | FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
 | D12 | D11, E6–K6, AA6–AM6 | 0 € bzw. Wert ohne den Buchwert der Schicht mit fehlender Angabe | Angabe fehlt | Der voraussichtliche Fehler setzt die erwartete Fehlerquote und den Buchwert jeder belegten Schicht voraus. |
 | D15, D26, D27, E17–K17, AA17–AM17 | D9, D11, E6–K6, AA6–AM6, E7–K7, AA7–AM7, E8–K8, AA8–AM8 | Wert auf Grundlage des mit 0 berechneten Umfangs (mindestens 30) | Angabe fehlt | Ohne Konfidenzniveau, erwartete Fehlerquote und die Angaben jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
 | D23, D24, D25, D28, D29, E20–K20, AA20–AM20, E22–K22, AA22–AM22 | D9, D11, E6–K6, AA6–AM6, E7–K7, AA7–AM7, E8–K8, AA8–AM8, E19–K19, AA19–AM19 | Hochrechnung mit einem Stichprobenfehler von 0 € bzw. auf Grundlage des mit 0 berechneten Umfangs | Angabe fehlt | Die Hochrechnung setzt den Stichprobenumfang und den Fehler der Stichprobe mindestens einer belegten Schicht voraus. |
@@ -640,7 +643,7 @@ ebenfalls `null`; das ist keine Abweichung.
 |---|---|---|---|---|
 | C1, C15 | C3, C4 | Wert auf Grundlage nur eines Buchwerts bzw. 0 € | Angabe fehlt | Der Buchwert der Grundgesamtheit setzt die Buchwerte beider Zeiträume voraus. |
 | C9 | C5, C6, C7, C8 | Wert ohne den Beitrag des Zeitraums mit fehlender Angabe | Angabe fehlt | Das gewichtete Mittel der Varianzen setzt Umfang und Standardabweichung beider Zeiträume voraus. |
-| C11 | C10 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
+| C11 | C10 | FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
 | C13 | C3, C4, C12 | 0 € bzw. Wert auf Grundlage nur eines Buchwerts | Angabe fehlt | Der voraussichtliche Fehler setzt die Buchwerte beider Zeiträume und die erwartete Fehlerquote voraus. |
 | C16, C17, C18 | C3, C4, C5, C6, C7, C8, C10, C12 | Umfang auf Grundlage der mit 0 gerechneten Angabe (z. B. 0) | Angabe fehlt | Ohne die Angaben zur Planung des ersten Zeitraums ist der Stichprobenumfang nicht bestimmt. |
 | C24, C30, C43 | C3, C25 | Wert auf Grundlage nur eines Buchwerts bzw. 0 € | Angabe fehlt | Der Buchwert der Grundgesamtheit setzt die Buchwerte beider Zeiträume voraus. |
@@ -661,57 +664,120 @@ Prüfbehörde eine überschriebene Verknüpfung, gilt wieder der Wert aus Blatt
 02; in Excel bliebe die Zelle leer, weil die Formel überschrieben ist.
 Überschriebene Verknüpfungen sind in der Oberfläche markiert.
 
-## 3. Vergleiche, Differenzen und Aufrunden
+Eine nicht lesbare Eingabe in einem vorbelegten Feld (etwa „abc“ im Buchwert
+von Blatt 03) fällt nicht still auf den Wert aus Blatt 02 zurück: Das Feld
+zählt als ungültig, Ergebnisspalte und Kennzahlenleiste melden „Eingabe
+ungültig“, abhängige Größen zeigen „—“. Erst ein geleertes Feld übernimmt
+wieder die Vorbelegung (`UNREADABLE_INPUT` in `src/model/sheet.ts`). Hängt
+kein Ergebnis an dem Feld (N in Blatt 03 geht in den MUS-Umfang nicht ein),
+ist nur das Feld selbst als ungültig markiert.
 
-Die Tabellenkalkulation rechnet nicht mit rohem Gleitkomma. Gemessen an
-LibreOffice 24.2 (`scripts/measure_semantics.py`, 451 Vergleiche und 81
-Rundungen in `test/fixtures/libreoffice-semantik.json`) gilt:
+## 3. Rechensemantik von Excel: Vergleiche, Differenzen, Aufrunden, Summen
 
-- **Vergleiche** (`=`, `<>`, `<`, `<=`, `>`, `>=`) behandeln zwei Zahlen als
-  gleich, wenn sie sich um weniger als 2⁻⁴⁸ relativ unterscheiden. Die
-  Rechenkerne vergleichen deshalb ausschließlich über `excel.eq`, `ne`, `lt`,
-  `le`, `gt`, `ge`; rohe Vergleiche sind in `src/sheets` per Lint-Regel
-  gesperrt.
-- **Differenzen** fast gleicher Werte ergeben 0 (`excel.minus`, `excel.plus`).
-- **`ROUNDUP`** kürzt den Wert zuerst auf zwölf signifikante Stellen und
-  rundet dann von null weg auf. 100,00000000000004 bleibt 100;
-  100,000000001 wird 101. Das gilt auch oberhalb von zwölf ganzzahligen
-  Stellen: Aus 369.792.900.021.303 wird 369.792.900.021.000 (Abnahme, Blatt
-  03 C21). `excel.roundUp` bildet das nach.
-- **`SUMME`** über einen Bereich summiert mit Fehlerausgleich
-  (Kahan-Neumaier); `excel.sum` tut dasselbe. Ohne ihn weicht die Summe über
-  mehrere Schichten um eine Stelle der letzten Ziffer ab, was eine Würdigung
-  genau an der Schwelle kippen kann (Abnahme, Blatt 09 C62). Einzelne
-  Additionen (`A1+B1`) rechnen wie in der Vorlage ohne Ausgleich.
+Referenz ist die Excel-Vorlage, also gilt das Rechenverhalten von **Microsoft
+Excel** (Microsoft 365, Version 16.0.20326, 64 Bit, de-de). Es ist in einer
+Versuchsmappe gemessen (Excel-Gegenprobe vom 17.10.2026; 451 Vergleiche mit
+eingegebenen und 363 mit berechneten Zahlen, 193 Rundungen, 10 Summen in
+`test/fixtures/excel-semantik.json`) und in `test/excel.spec.ts` Probe für
+Probe nachgeprüft. LibreOffice ist nur noch Hilfsmittel; seine Messung
+(`test/fixtures/libreoffice-semantik.json`, `scripts/measure_semantics.py`)
+bleibt zum Vergleich erhalten.
 
-Die Messwerte sind Bestandteil der Tests (`test/excel.spec.ts`). Der
-Golden-Abgleich vergleicht Zellen mit Ganzzahlformat exakt, die übrigen auf
-1e-9 relativ; bei Eurobeträgen gilt zusätzlich ein Unterschied bis 10⁻⁶ € als
-gleich (Rauschen aus einer Auslöschung in Blatt 20 G43, angezeigt wird in
-beiden Fällen 0,00 €).
+- **Vergleiche** (`=`, `<>`, `<`, `<=`, `>`, `>=`): Excel rundet beide Seiten
+  auf 15 geltende Dezimalstellen und vergleicht dann genau (`excel.eq`, `ne`,
+  `lt`, `le`, `gt`, `ge`; rohe Vergleiche sind in `src/sheets` per
+  Lint-Regel gesperrt). Das Fenster, in dem zwei Zahlen gleich sind, hängt
+  deshalb von der Lage der Dezimalstellen ab: 1 und 1,0000000000000036 sind
+  gleich, 0,9999999999999993 ist kleiner als 1. LibreOffice verglich mit
+  einer festen relativen Toleranz von 2⁻⁴⁸; an Schwellen (Prüfsonden „GFQ =
+  Schwelle ± 3e-15“) würdigt Excel deshalb in 89 Zellen anders.
+- **Differenzen und Summen als letzte Rechenoperation** (`excel.minus`,
+  `excel.plus`): Liegt das Ergebnis der letzten Addition oder Subtraktion
+  einer Formel um mindestens 50 Binärstellen unter dem kleineren Summanden,
+  setzt Excel es auf genau 0 (1 − 1,0000000000000013 ergibt 0,
+  1 − 1,0000000000000018 ergibt 1,8 · 10⁻¹⁵). Innerhalb einer Formel gilt die
+  Regel nicht (`=WENN(B−A=0;…)` sieht den Rest). Die Rechenkerne wenden sie an
+  den Stellen an, an denen sie `minus`/`plus` verwenden, auch wo die
+  Operation in der Vorlage innerhalb einer Formel steht; der Abgleich zeigt
+  dort keine Abweichung.
+- **`AUFRUNDEN`** (`excel.roundUp`): Excel rundet den Wert zuerst auf
+  15 geltende Stellen und rundet dann von null weg auf. 100 · (1 + 10⁻¹⁴)
+  ergibt 101, 100 · (1 + 16 · 2⁻⁵²) bleibt 100. LibreOffice kürzte auf zwölf
+  Stellen; ein Rohumfang mit Rechenrauschen ab etwa 10⁻¹⁴ relativ über einer
+  ganzen Zahl ergibt deshalb in Excel (und jetzt in der Webfassung) **einen
+  Stichprobenumfang mehr** (Prüfsonden „R-off“, „G… n = … + 2e-12“, „K TE−AE
+  relativ …“; Blätter 03, 08, X2).
+- **`VERGLEICH(…;0)`** (`excel.matchExact`, z-Wert in Blatt 01) sucht Zahlen
+  genau, ohne die 15-Stellen-Regel von `=`: Ein Konfidenzniveau
+  0,7000000000000001 steht nicht in der Tabelle, z und alle Folgezellen
+  bleiben leer (Blatt 03, Prüfsonde T06). LibreOffice fand 0,7.
+- **`SUMME`** (`excel.sum`) addiert der Reihe nach ohne Fehlerausgleich; nur die
+  letzte Addition folgt der Regel für Differenzen: `SUMME(0,1;0,7;0,2;−1)`
+  ergibt 0, `SUMME(0,1;0,2;−0,3;0)` 5,55 · 10⁻¹⁷. LibreOffice summierte mit
+  Fehlerausgleich (Kahan-Neumaier). In der Vorlage wirkt das nur auf
+  Rundungsrauschen, zum Beispiel Blatt 02 C30, wo Excel einen Rest bis
+  4,8 · 10⁻⁷ € zeigt; die Abstimmungsprüfung C31 entscheidet gleich.
 
-**Grenzen des geprüften Zahlenbereichs:**
+Wie die Regeln für eine Formel genau greifen, die nicht gemessen ist (etwa
+`SUMME` über Bereiche mit Lücken), ist aus den Messungen abgeleitet, nicht
+einzeln belegt; der Abgleich über alle 728.895 Formelzellen ist der Nachweis
+für die Vorlage.
 
-- Stichprobenumfänge ab 10¹⁵ Einheiten entstehen nur, wenn TE und AE bis auf
-  Rundungsrauschen gleich sind. Dort streuen Vorlage und Webfassung um bis zu
-  einige 10⁻⁵ relativ. Die Webfassung zeigt den Wert und weist ihn mit „…
-  außerhalb des geprüften Zahlenbereichs … nicht belastbar“ in Warnfarbe aus;
-  der Abgleich vergleicht dort nur die Größenordnung.
-- Liegt eine Quote genau auf der Vergleichstoleranz und trägt der Fall eine
-  Eingabe mit 16 oder 17 geltenden Stellen, kann die Würdigung von der
-  Neuberechnung mit LibreOffice abweichen (zwei Prüfsonden der Abnahme: Blatt
-  06 C99, Blatt 12 C138). Ursache ist die letzte Stelle der eingelesenen
-  Eingabe: Mit der um eine Stelle der letzten Ziffer verschobenen Eingabe
-  zeigt die Webfassung in beiden Fällen den Text der Vorlage. Über die
-  Oberfläche lassen sich solche Zahlen nicht eingeben; der Abgleich führt die
-  Zellen getrennt als „Toleranzkante“ und prüft die Erklärung je Zelle.
+**Sollwerte und Toleranz.** Seit Fassung 0.1.6 stammen alle Sollwerte des
+Golden-Abgleichs aus der Neuberechnung der Vorlage in Excel (10.531 Fälle,
+eingetragen über COM, `CalculateFull`; Werkzeugkette der Excel-Gegenprobe).
+Die früheren Sollwerte aus LibreOffice 24.2 liegen in der Versionsgeschichte
+(Fassung 0.1.5, `test/golden/`); sie weichen in 937 Zellen von Excel ab
+(Vergleich an Schwellen 89, `AUFRUNDEN` 723, `VERGLEICH` 21, Wahrheitswert 82,
+`#DIV/0!` 22). Der Abgleich vergleicht Zellen mit Ganzzahlformat genau, die
+übrigen auf 1e-9 relativ: Die Toleranz deckt nur die Reihenfolge der
+Gleitkommaoperationen, die in JavaScript und Excel nicht in jeder Formel
+gleich ist (Unterschiede bis etwa 10⁻¹⁵ relativ), nicht eine abweichende
+Semantik. Bei Eurobeträgen gilt zusätzlich ein Unterschied bis 10⁻⁶ € als
+gleich (Auslöschung in Abstimmungszellen, Blatt 02 C30). Zwei Nebenbefunde der
+Gegenprobe erklären, warum die Toleranz trotzdem nötig ist: LibreOffice
+schrieb Formelergebnisse nur mit 15 geltenden Stellen in die Mappe, die alten
+Sollwerte waren also auf 15 Stellen gerundet; Excel liefert über COM die volle
+Gleitkommazahl. In der Versuchsmappe speicherte Excel Zahlkonstanten nur mit
+16 geltenden Stellen (1,0000000000000002 wurde 1). In der Gegenprobe selbst
+kamen die über COM gesetzten Eingaben dagegen bitgenau an: Mit den
+unveränderten 17-stelligen Prüfeingaben stimmt jede Zelle, mit auf 16 Stellen
+gerundeten Eingaben wichen 24 Zellen ab (Prüfsonden „K TE−AE relativ 1e-4“).
 
-**Offen:** Gemessen ist LibreOffice 24.2, mit dem auch alle Sollwerte
-entstehen. Eine Gegenprobe mit Microsoft Excel steht aus; das steht auch in
-der Fußzeile der Oberfläche und im Kopf von [abgleich.md](abgleich.md). Excel rundet bei der Anzeige und in
-Vergleichen ebenfalls auf 15 Stellen, die genauen Grenzen können abweichen;
-betroffen wären nur Werte, die sich erst jenseits der zwölften Stelle von
-einer Schwelle oder ganzen Zahl unterscheiden.
+**Toleranzkanten** gibt es gegen Excel keine mehr. Die beiden Würdigungen, die
+gegen LibreOffice als „Toleranzkante“ geführt waren (Blatt 06 C99, Blatt 12
+C138, je eine Prüfsonde der Abnahme), zeigt die Webfassung mit der
+Vergleichsregel von Excel genau wie Excel; die Sonderregel des Abgleichs für
+verschobene Eingaben ist entfallen.
+
+**Wahrheitswert und Fehlerwert: bewusst anders dargestellt.** Zwei Fälle zeigt
+die Webfassung bewusst anders als Excel; der Abgleich führt sie als „bewusst
+anders dargestellt“ (`adapted`) und prüft je Zelle, dass die Webfassung genau
+den Wert zeigt, der sich nach der Regel aus dem Wert von Excel ergibt:
+
+- Altvorlagen X1 C5/C6, X2 C6, X3 D10, X4 C11: Bei einem Konfidenzniveau
+  außerhalb der fünf Stufen fehlt der innersten `WENN` der Sonst-Zweig; Excel
+  zeigt den Wahrheitswert FALSCH und rechnet damit wie mit 0. Ein
+  Wahrheitswert ist als Faktor nicht lesbar; die Webfassung zeigt die Zahl, mit
+  der die Vorlage rechnet (0), und den Hinweis „Konfidenzniveau ist keine Stufe
+  der Altvorlage …“ in Warnfarbe. Alle Folgewerte sind gleich.
+- Blatt 20 E20–E27: Bei Buchwert 0 zeigt die Vorlage für die Fehlerquote des
+  Falls `#DIV/0!` (die Formel `=WENN(ODER(C21="";D21="");"";D21/C21)` fängt
+  den Fehler nicht ab). Die Webfassung zeigt keinen Wert und den Hinweis
+  „Fehlerfall …: Buchwert 0 – die Quote ist nicht bestimmbar“. Der alte
+  Sollwert aus LibreOffice war hier leer und entsprach nicht der Vorlage; auch
+  eine frische Neuberechnung mit LibreOffice ergibt `#DIV/0!`.
+
+**Grenze des geprüften Zahlenbereichs:** Stichprobenumfänge ab 10¹⁵ Einheiten
+entstehen nur, wenn TE und AE bis auf Rundungsrauschen gleich sind. Dort
+streuen Vorlage und Webfassung um bis zu einige 10⁻⁵ relativ (gegen Excel
+gemessen: höchstens 5,4 · 10⁻⁵). Die Webfassung zeigt den Wert und weist ihn
+mit „… außerhalb des geprüften Zahlenbereichs … nicht belastbar“ in Warnfarbe
+aus; der Abgleich vergleicht dort nur die Größenordnung (relativ 10⁻³).
+
+**Nicht geprüft** sind Eingaben von Hand über die Oberfläche von Excel (Excel
+schneidet getippte Ziffern ab der 16. Stelle ab), Datenüberprüfung,
+bedingte Formate und das Druckbild der Vorlage.
 
 ## 4. Blatt 03: begrenzter Stichprobenumfang ohne rechnerischen Umfang
 
@@ -925,7 +991,7 @@ Text“). Was die Vorlage nicht als freiwillig erkennen lässt, ist Pflicht. Wo 
 | Umfassende Schicht (Buchwert, Anzahl, davon hochwertige, Fehlersumme) | Bezeichnung „(fakultativ)“ am Buchwert | freiwillig als Gruppe |
 | Anpassung der hochwertigen Schicht in Blatt 18 (C20–C22) | Abschnittstitel „Anhang III, optional“; Vorgabe „Nein“ | freiwillig; ist „Ja“ gewählt, sind C21 und C22 Pflicht |
 | Abgegrenzte systembedingte, nicht berichtigte anomale Fehler | keine Kennzeichnung; leer als 0 gelesen (`N(…)`) | freiwillig, leer = keine (Entscheidung des Inhabers vom 17.10.2026) |
-| Hochwertige Einheiten (Anzahl, Buchwert, Fehler) | keine Kennzeichnung; leer als 0 gelesen (`N(…)`) | freiwillig als Gruppe, leer = keine; in 04, 06, 16 ist die Summe ohne Schicht wie in der Vorlage 0 (Entscheidung des Inhabers vom 17.10.2026) |
+| Hochwertige Einheiten (Anzahl, Buchwert, Fehler) | keine Kennzeichnung; leer als 0 gelesen (`N(…)`) | freiwillig als Gruppe, leer = keine; in 04, 06, 16 sind die Summen n_eh, BV_eh und ΣE_eh ohne Schicht wie in der Vorlage 0 (Entscheidung des Inhabers vom 17.10.2026). Die Summe der Fehlerquoten der Zufallsschicht (Σ E/BV: 04 C46, 06 C48/C82, 16 C26) gehört nicht dazu: Sie ist Ergebnis der Stichprobe, ohne Schicht zeigt die Webfassung „Angabe fehlt“, die Vorlage 0 |
 | Blatt 02: TH-Pauschale, negative Datensätze, Ausschlüsse nach Art. 15 Abs. 5, Wiederaufnahmen, Art.-80-Einheiten | keine Kennzeichnung; leer als 0 gelesen | freiwillig, Anzahl und Betrag je als Gruppe (Entscheidung des Inhabers vom 17.10.2026) |
 | Blatt 20 J6–J8 (geprüfte Ausgaben, Beträge nach Art. 98 Abs. 6, Finanzkorrekturen) | keine Kennzeichnung; J7, J8 leer als 0 gelesen | freiwillig (Entscheidung des Inhabers vom 17.10.2026) |
 | Einheiten der Zufallsschicht mit BV > Auswahlintervall (Iteration; 03 C35, 04 Zeile 43, 05 C43/C77, 07 C46/C85/C119, 15 C20) | keine Kennzeichnung; speist nur den Prüfhinweis „✔ keine weitere Iteration“ | freiwillig (Entscheidung des Inhabers vom 17.10.2026) |

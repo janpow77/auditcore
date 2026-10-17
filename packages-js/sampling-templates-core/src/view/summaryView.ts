@@ -123,7 +123,9 @@ export function buildHints(sheet: AvailableSheet, inputs: CellMap, results: Cell
 /** Warum die Hauptgröße fehlt: Text der Vorlage („TE ≤ AE“) oder die fehlenden Eingaben. */
 function primaryNote(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, reason: CellValue, t: Translate, invalid: ReadonlySet<string>): string {
   if (typeof reason === 'string' && reason) return `${t('notDeterminable')} (${translateValue(sheet.texts, reason)})`
-  const lacking = [...new Set(evaluateSheet(sheet, inputs, context).lacking.get(sheet.definition.summary.primary.cell) ?? [])]
+  const named = [...new Set(evaluateSheet(sheet, inputs, context).lacking.get(sheet.definition.summary.primary.cell) ?? [])]
+  // Zeigt auch die Vorlage ohne die Eingabe keine Hauptgröße (z. B. Buchwert 0), nennt die Übersicht die ungültigen Eingaben des Blatts.
+  const lacking = named.length ? named : [...invalid].filter((cell) => findField(sheet.definition, cell))
   if (lacking.length === 0) return ''
   const names = (list: readonly string[]): string => list.map((input) => inputName(sheet, input)).join('; ')
   const unreadable = lacking.filter((input) => invalid.has(input))
@@ -151,7 +153,8 @@ export function buildSummary(sheet: AvailableSheet, inputs: CellMap, results: Ce
   const value = results[primary.cell] ?? null
   const field = findField(sheet.definition, primary.cell)
   const reason = primary.reason ? results[primary.reason] : null
-  const empty = isEmptyForm(sheet, results, context)
+  // Eine nicht lesbare Eingabe ist eine Angabe: Die Übersicht meldet sie als ungültig, nicht „noch keine Angaben“.
+  const empty = invalid.size === 0 && isEmptyForm(sheet, results, context)
   const note = (): string => (empty ? t('noEntries') : primaryNote(sheet, inputs, context, reason ?? null, t, invalid))
   return {
     primaryLabel: primary.label,

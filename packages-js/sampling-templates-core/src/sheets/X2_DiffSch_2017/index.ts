@@ -2,7 +2,7 @@
 import { isBlank, isNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import type { CellMap, WebHint } from '../../model/types'
-import { TOLERABLE_HINT, sizeExceedsPopulation, tolerableNotAboveAnticipated } from '../shared/legacy'
+import { TOLERABLE_HINT, levelAdaptations, levelOutsideSteps, sizeExceedsPopulation, tolerableNotAboveAnticipated } from '../shared/legacy'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
@@ -13,7 +13,7 @@ const sample: CellMap = { C1: 48500000, C2: 'Vorhaben', C3: 420, C4: 9500, C5: 0
 
 /** Hinweise der Webfassung zu Blatt X2; sie verändern kein Rechenergebnis. */
 function webHints(inputs: CellMap, results: CellMap): WebHint[] {
-  return [...tolerableNotAboveAnticipated(results.C10, results.C8, TOLERABLE_HINT), ...sizeExceedsPopulation(results.C11, results.C3)]
+  return [...tolerableNotAboveAnticipated(results.C10, results.C8, TOLERABLE_HINT), ...sizeExceedsPopulation(results.C11, results.C3), ...levelOutsideSteps(inputs.C5)]
 }
 
 /**
@@ -25,4 +25,4 @@ function zeroAssumed(results: CellMap): ZeroAssumption[] {
   return [{ input: 'C15', cells: ['C19', 'C20', 'C21', 'C22'] }]
 }
 
-export const sheet = defineSheet({ id: 'X2_DiffSch_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed, translations: { en } })
+export const sheet = defineSheet({ id: 'X2_DiffSch_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed, adapted: levelAdaptations(['C6']), translations: { en } })

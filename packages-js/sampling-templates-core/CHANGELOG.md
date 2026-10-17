@@ -1,5 +1,41 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.6 – 2026-10-17
+
+Referenz ist die Excel-Vorlage, also das Rechenverhalten von Microsoft Excel
+(Excel-Gegenprobe vom 17.10.2026, Microsoft 365 Version 16.0.20326). LibreOffice
+ist nur noch Hilfsmittel (noch nicht veröffentlicht).
+
+- Rechensemantik nach Excel, jede Regel an der Messung geprüft
+  (`test/fixtures/excel-semantik.json`, `test/excel.spec.ts`): Vergleiche nach
+  Rundung beider Seiten auf 15 geltende Stellen (statt Toleranz 2⁻⁴⁸);
+  `roundUp` mit Vorrundung auf 15 Stellen (statt Kürzung auf zwölf);
+  `matchExact` und der z-Wert aus Blatt 01 suchen genau (`VERGLEICH(…;0)`);
+  `sum` ohne Fehlerausgleich, nur die letzte Addition mit der
+  Auslöschungsregel; `minus`/`plus` setzen ein Ergebnis 50 Binärstellen unter
+  dem kleineren Summanden auf 0.
+- Golden-Sollwerte aus Excel (10.531 Fälle, 728.895 Zellen). Abgleich: 700.321
+  gleich, 27.944 begründet, 630 bewusst anders dargestellt, 0 Toleranzkanten,
+  0 unbegründet; „wie die Vorlage“ 0 Abweichungen. Die Sonderregel
+  „Toleranzkante“ (verschobene 17-stellige Eingabe) entfällt.
+- Bewusst anders dargestellt (`adapted`, Typ `fromTemplate` nimmt jetzt auch
+  Wahrheitswerte; neu `templateNumber`): Altvorlagen X1 C5/C6, X2 C6, X3 D10,
+  X4 C11 zeigen 0 statt FALSCH mit neuem Hinweis `level-outside-steps`;
+  Blatt 20 E20–E27 zeigt bei Buchwert 0 keinen Wert statt `#DIV/0!` (Hinweis
+  `case-book-value-zero` wie bisher).
+- Geänderte Rechenwerte gegenüber 0.1.5, nur an Prüfsonden der Abnahme
+  (138 Fälle, 760 Zellen): Stichprobenumfang um 1 größer, wenn der Rohumfang
+  ab etwa 10⁻¹⁴ relativ über einer ganzen Zahl liegt (Blätter 03, 08, X2;
+  163 Ganzzahlzellen, 487 Folgezahlen); Würdigung an der Schwelle
+  („GFQ = Schwelle ± 3e-15“, 89 Texte in 03–16 und 18); Konfidenzniveau
+  0,7000000000000001 ergibt in Blatt 03 keinen z-Wert mehr (21 Zellen leer).
+  Übrige Unterschiede liegen unter 10⁻⁹ relativ (Summen ohne Fehlerausgleich).
+- `UNREADABLE_INPUT`: Eine nicht lesbare Eingabe in einem vorbelegten Feld
+  fällt nicht mehr still auf den Wert aus Blatt 02 zurück. `buildSummary`
+  meldet „Eingabe ungültig“ auch dann, wenn die Vorlage ohne die Eingabe
+  keine Hauptgröße zeigt, und nicht mehr „noch keine Angaben“.
+- Prüfvermerk der Oberfläche (`verificationNote`) nennt Excel 16.0.20326.
+
 ## 0.1.5 – 2026-10-17
 
 Zusammenführung: Stand 0.1.3/0.1.4 vom 14.10.2026 (Arbeitsassistent, Hinweise

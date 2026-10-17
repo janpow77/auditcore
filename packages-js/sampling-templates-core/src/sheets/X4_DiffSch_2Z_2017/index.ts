@@ -2,7 +2,7 @@
 import { isBlank, isNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import type { CellMap, WebHint } from '../../model/types'
-import { belowThreeUnits, negativeSize, partialErrorSums, sizeExceedsPopulation, tolerableNotAboveAnticipated } from '../shared/legacy'
+import { belowThreeUnits, levelAdaptations, levelOutsideSteps, negativeSize, partialErrorSums, sizeExceedsPopulation, tolerableNotAboveAnticipated } from '../shared/legacy'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
@@ -29,6 +29,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   ]
   hints.push(
     ...negativeSize(results.C31, 'negative-denominator', NEGATIVE),
+    ...levelOutsideSteps(inputs.C10),
     ...sizeExceedsPopulation(results.C17, results.C5),
     ...(sizeExceedsPopulation(results.C31, results.C26).length ? [{ id: 'size-exceeds-population-2', tone: 'warning' as const, text: 'Neu berechneter Stichprobenumfang übersteigt die Anzahl der Einheiten des zweiten Zeitraums' }] : []),
     ...belowThreeUnits([results.C17, results.C18, results.C31], 'Stichprobe eines Zeitraums mit weniger als drei Einheiten (Fußnote der Altvorlage: mindestens 3)'),
@@ -51,4 +52,4 @@ function zeroAssumed(results: CellMap): ZeroAssumption[] {
   return assumed
 }
 
-export const sheet = defineSheet({ id: 'X4_DiffSch_2Z_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed, translations: { en } })
+export const sheet = defineSheet({ id: 'X4_DiffSch_2Z_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed, adapted: levelAdaptations(['C11']), translations: { en } })
