@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "allowImportingTsExtensions": true,
+    "types": ["node", "vite/client"],
+    "jsx": "preserve",
+    "paths": {
+      "@auditcore/sampling-templates-core": ["../sampling-templates-core/src/index.ts"],
+      "@auditcore/sampling-templates-core/workbook": ["../sampling-templates-core/src/xlsx/index.ts"],
+      "@auditcore/ui": ["../ui/src/index.ts"],
+      "@auditcore/ui-core": ["../ui-core/src/index.ts"],
+      "@auditcore/kanban-core": ["../kanban-core/src/index.ts"],
+      "@auditcore/common": ["../common/src/index.ts"],
+      "@auditcore/common/browser": ["../common/src/browser.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts", "demo/**/*.ts", "demo/**/*.vue", "e2e/**/*.ts", "*.ts", "env.d.ts", "../ui/env.d.ts"]
+}
