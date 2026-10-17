@@ -27,3 +27,6 @@ coverage/
 .lighthouseci/
 .auditcore-runner/
 packages-js/ui-react/visual/dist/
+
+# Ergebnisse der Playwright-Läufe von sampling-templates-vue
+packages-js/sampling-templates-vue/e2e-results/
