@@ -48,14 +48,17 @@ auditcore-invoicesynth build --seed 42 --out ds/   # Pilot: 2 000 Belege
 auditcore-invoicesynth verify ds/                  # Dateien + Datensatz-Hash prüfen
 auditcore-invoicesynth evaluate ds/ --split test_layout_holdout --predictions p.jsonl
 auditcore-invoicesynth build-diagnostics --count 500 --out diag/   # nur T2-gemischt und T2b (Bewertung)
-auditcore-invoicesynth build-diagnostics --sets holdout_c --out t2c/  # versiegelter Unbekannt-Test T2c
+auditcore-invoicesynth build-diagnostics --sets holdout_c --out t2c/  # T2c (ab Stufe 8 bekannt)
+auditcore-invoicesynth build-diagnostics --sets holdout_d --out t2d/  # versiegelter Unbekannt-Test T2d
 ```
 
-**T2c** (`test_layout_holdout_c`) ist der maßgebliche Unbekannt-Test: zwei
-eigene Vorlagen und die Schrift C059, beide in keinem anderen Satz. T2 und T2b
-gelten ab Stufe 7 als bekannt. Hash des versiegelten Satzes:
-`docs/donut-verlauf/holdout-c.json` – erst zur Abschlussbewertung von Stufe 7
-ansehen bzw. bewerten.
+**T2d** (`test_layout_holdout_d`) ist der maßgebliche Unbekannt-Test: zwei
+eigene Vorlagen (Kennungen und Bankverbindung an bisher nirgends genutzten
+Orten, Gesamtbetrag wieder anders gestaltet) und die Schrift IBM Plex Serif,
+beide in keinem anderen Satz. Hash des versiegelten Satzes:
+`docs/donut-verlauf/holdout-d.json` – erst zur Abschlussbewertung von Stufe 8
+ansehen bzw. bewerten. **T2c** (`test_layout_holdout_c`, Schrift C059) gilt ab
+Stufe 8 als bekannt, T2 und T2b ab Stufe 7.
 
 Ab `--variety v3` (Summenorte, waagerechte Kopfdaten mit Beschriftung über dem
 Wert) ist T2 (holdout_kompakt) kein reiner Unbekannt-Test mehr; maßgeblich sind
@@ -185,7 +188,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.augment` | Prozedurales Scanrauschen mit Pillow (Extra ``render``), vollständig seed-bestimmt. |
 | `auditcore_invoicesynth.cli` | Kommandozeile ``auditcore-invoicesynth``: fonts, plan, build, build-diagnostics, verify, evaluate. |
 | `auditcore_invoicesynth.dataset` | Datensatz im Donut-Format: Bilder, ``metadata.jsonl`` je Satz, Manifest, Hash. |
-| `auditcore_invoicesynth.diagnostics` | Diagnosesätze (nur Bewertung, nie Training): T2-gemischt, T2b und T2c. |
+| `auditcore_invoicesynth.diagnostics` | Diagnosesätze (nur Bewertung, nie Training): T2-gemischt, T2b, T2c und T2d. |
 | `auditcore_invoicesynth.enrich` | Anreicherung eines Generator-Datensatzes zu einem vollständigen deutschen Beleg. |
 | `auditcore_invoicesynth.evaluation` | Bewertungswerkzeug (Plan 2d): gleiche Kennzahlen für alle Kandidaten. |
 | `auditcore_invoicesynth.fonts` | Freie Schriften aus Systempaketen oder geprüftem Download – nie eingebettet. |
@@ -196,6 +199,8 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.layout_extra` | Anordnungen der Generatorvariante ``v3``: waagerechte Kopfdaten und Summenstreifen. |
 | `auditcore_invoicesynth.layout_head` | Kopfbereich eines Belegs: Kennzeichnung, Absender, Empfänger, Titel, Kopfdaten. |
 | `auditcore_invoicesynth.layout_holdout_c` | Vorlagen des Diagnosesatzes T2c (versiegelter Unbekannt-Test, nie Training). |
+| `auditcore_invoicesynth.layout_holdout_d` | Vorlagen des Diagnosesatzes T2d (versiegelter Unbekannt-Test, nie Training). |
+| `auditcore_invoicesynth.layout_holdout_d_parts` | Bausteine der T2d-Vorlagen: zentrierte Kopfzeilen, Positionen, Steuertabelle, Absenderfuß. |
 | `auditcore_invoicesynth.layout_model` | Belegvorlagen als Daten: Zeichenfläche, Vorlagenparameter und Formatwahl. |
 | `auditcore_invoicesynth.layout_prose` | Bausteine der T2c-Vorlagen: Fließtext mit Feldern, linienlose Positionsliste, Wendungen. |
 | `auditcore_invoicesynth.layout_v4` | Anordnungen der Generatorvariante ``v4``: Betrag hervorgehoben, Summenfolge, Fußzeile. |
