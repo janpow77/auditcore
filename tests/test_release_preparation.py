@@ -297,7 +297,18 @@ def test_npm_tarballs_fail_closed(tmp_path, change):
         ("0.2.0", "^0.1.0", False),
         ("1.4.0", "^1.0.0", True),
         ("2.0.0", "^1.0.0", False),
+        ("0.5.0", ">=0.4.0 <0.6.0", True),
+        ("0.4.0", ">=0.4.0 <0.6.0", True),
+        ("0.6.0", ">=0.4.0 <0.6.0", False),
+        ("0.3.9", ">=0.4.0 <0.6.0", False),
+        ("0.4.0", ">0.3.0 <=0.4.0", True),
     ],
 )
 def test_internal_npm_ranges(version, spec, expected):
     assert release._npm_version_satisfies(version, spec) is expected
+
+
+@pytest.mark.parametrize("spec", ["~0.1.0", "0.x", ">=0.1.0 || <0.3.0", "", ">=0.1"])
+def test_unsupported_internal_npm_ranges_are_rejected(spec):
+    with pytest.raises(ValueError):
+        release._npm_version_satisfies("0.1.0", spec)
