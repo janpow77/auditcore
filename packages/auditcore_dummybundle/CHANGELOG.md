@@ -1,6 +1,6 @@
 # Changelog auditcore_dummybundle
 
-## 0.2.0 – unveröffentlicht
+## 0.2.0 – 2026-10-17
 
 **Verhaltensänderung:** Gleicher Startwert ergibt andere Daten als 0.1.0.
 

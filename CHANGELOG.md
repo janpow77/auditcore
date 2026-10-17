@@ -2,11 +2,20 @@
 
 ## Unreleased
 
+- Vorbereitung Release v0.14.0 (17.10.2026): `auditcore_dummygenerator` 0.2.0
+  (Namensbaukasten für synthetische Firmennamen), `auditcore_dummybundle` 0.2.0
+  (Firmennamen aus dem Namensbaukasten; gleicher Startwert ergibt andere Daten
+  als 0.1.0) sowie – nur wegen der exakten Bindung an den Feldgenerator –
+  `auditcore_invoicegenerator` 0.2.5 und `auditcore_invoicesynth` 0.3.1, beide
+  ohne Verhaltensänderung. Erstmals als Tarball dabei: npm
+  `@auditcore/sampling-templates-core` 0.1.3 und
+  `@auditcore/sampling-templates-vue` 0.1.4. Alle übrigen Pakete sind gegenüber
+  v0.13.0 unverändert und behalten ihre Version.
 - Vorbereitung Release v0.13.0 (13.10.2026): `auditcore_procurement` 0.3.0,
   `auditcore_dummybundle` 0.1.0 und – nur wegen der exakten Bindung im Extra
   `procurement` – `auditcore_risk` 0.4.1. Alle übrigen Pakete, auch die
   npm-Pakete, sind gegenüber v0.12.0 unverändert und behalten ihre Version.
-- Neues Paket `auditcore_dummybundle` 0.1.0 (vorgesehen für v0.13.0): zusammenhängende
+- Neues Paket `auditcore_dummybundle` 0.1.0 (veröffentlicht mit v0.13.0): zusammenhängende
   synthetische Testbündel Vorhaben → Mittelabrufe → Belege → Zahlungsanträge an
   die Kommission → Rechnungslegung mit Summenbindung in Dezimalrechnung
   (`amounts.allocate`: die eine Fassung der Betragsverteilung mit Restausgleich),
@@ -19,7 +28,7 @@
   kommen aus der Liste des Feldgenerators. Die Köpfe der Vorlagen
   V5 und V6 stammen aus dem Amtsblatt (ABl. L 231 vom 30.6.2021, deutsche
   Fassung, Abruf 13.10.2026). `auditcore_dummygenerator` bleibt unverändert.
-- `auditcore_procurement` 0.3.0 (vorgesehen für v0.13.0): Profil `procurement.hvtg 2026.10.1`
+- `auditcore_procurement` 0.3.0 (veröffentlicht mit v0.13.0): Profil `procurement.hvtg 2026.10.1`
   führt die EU-Schwellenwerte 2014–2027 vollständig – neben öffentlichen Bau-,
   Liefer- und Dienstleistungsaufträgen (RL 2014/24/EU) jetzt Sektorenaufträge
   (RL 2014/25/EU), Konzessionen (RL 2014/23/EU), Verteidigung und Sicherheit

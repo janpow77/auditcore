@@ -1,6 +1,6 @@
 # Changelog auditcore_dummygenerator
 
-## 0.2.0 – unveröffentlicht
+## 0.2.0 – 2026-10-17
 
 Neu: Namensbaukasten für synthetische Firmennamen (`company_names.py`).
 Getrennte Listen für Branchenpräfixe (30), Geschäftsbereiche (24 gewerblich,
