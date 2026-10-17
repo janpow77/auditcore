@@ -18,7 +18,7 @@ from auditcore_extrapolation import (
 def main() -> None:
     """Guidance example 6.4.7 (non-statistical PPS), a MUS run and the RER template example B."""
     package = distribution("auditcore_extrapolation")
-    assert package.version == "0.2.0"
+    assert package.version == "0.2.1"
     assert [r for r in package.requires or [] if "extra ==" not in r] == ["auditcore_common==0.2.1"]
     assert find_spec("auditcore") is None
     exhaustive = tuple(
