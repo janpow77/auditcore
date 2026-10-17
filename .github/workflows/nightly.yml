@@ -73,10 +73,36 @@ jobs:
           [ -n "$names" ] || { echo "::error::Paketindex leer oder nicht erreichbar"; exit 1; }
           python -m venv "$RUNNER_TEMP/index-venv"
           py="$RUNNER_TEMP/index-venv/bin/python"
-          "$py" -m pip install --quiet --upgrade pip
+          "$py" -m pip install --quiet --upgrade pip packaging
           # --index-url (nicht --extra-index-url): kein gleichnamiges Fremdpaket von PyPI.
+          # Die eigenen Pakete kommen ohne Abhängigkeiten nur aus dem Index ...
           # shellcheck disable=SC2086
-          "$py" -m pip install --index-url "$INDEX" $names
+          "$py" -m pip install --index-url "$INDEX" --no-deps $names
+          # ... fremde Abhängigkeiten (numpy u. a.) danach von PyPI, ohne auditcore-*.
+          "$py" - > "$RUNNER_TEMP/fremd.txt" <<'PY'
+          import importlib.metadata as m
+          from packaging.requirements import Requirement
+
+          def eigen(name):
+              return name.lower().replace("_", "-").startswith("auditcore")
+
+          reqs = set()
+          for dist in m.distributions():
+              if not eigen(dist.metadata["Name"]):
+                  continue
+              for raw in dist.requires or []:
+                  req = Requirement(raw)
+                  if req.marker and not req.marker.evaluate({"extra": ""}):
+                      continue
+                  if eigen(req.name):
+                      continue
+                  req.marker = None
+                  reqs.add(str(req))
+          print("\n".join(sorted(reqs)))
+          PY
+          if [ -s "$RUNNER_TEMP/fremd.txt" ]; then
+            "$py" -m pip install --requirement "$RUNNER_TEMP/fremd.txt"
+          fi
           "$py" -m pip check
           echo "## Paketindex (Python ${{ matrix.python }})" >> "$GITHUB_STEP_SUMMARY"
           for name in $names; do
