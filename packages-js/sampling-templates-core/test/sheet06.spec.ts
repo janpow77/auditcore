@@ -179,7 +179,9 @@ describe('Blatt 06_MUS_2Z_S', () => {
   })
 
   it('leeres Formular: keine Summe 0, kein Buchwert 0, kein Umfang 0 – nur feste Texte, die Prüfung der Vorgabe 2 % und die Nullen der Hilfszeilen', () => {
-    const fixed = { C33: 'Nicht angewandt – Anh. I und II gelten', N3: 'MUS-Standardansatz, 2 Zeiträume, geschichtet', N8: 0, N9: 0, ...idleZeros }
+    // Summen der freiwilligen hochwertigen Einheiten: wie in der Vorlage 0 (Entscheidung des Inhabers vom 17.10.2026).
+    const optionalSums = { C41: 0, C42: 0, C47: 0, C75: 0, C76: 0, C81: 0 }
+    const fixed = { C33: 'Nicht angewandt – Anh. I und II gelten', N3: 'MUS-Standardansatz, 2 Zeiträume, geschichtet', N8: 0, N9: 0, ...idleZeros, ...optionalSums }
     expect(shown(evaluateSheet(sheet, defaultInputs(sheet.definition), context).cells)).toEqual({ ...fixed, C18: '✔ ≤ 2 %' })
     expect(shown(evaluateSheet(sheet, {}, context).cells)).toEqual(fixed)
     expect(sheet.webHints?.({}, sheet.compute({}, context), context)).toEqual([])

@@ -8,7 +8,7 @@ import { countRow, stratumCell as at } from '../../model/strata'
 import { unfounded } from '../../model/policy'
 import type { CellValue } from '../../model/types'
 import { type Approach, appliedPeriodSize, checkLimitKept, checkYearMinimum, errorLimits, summary, underestimationFactor } from '../shared/mus'
-import { type Run, checkUnits, fill, has, inputTotals, total } from './run'
+import { type Run, checkUnits, fill, has, inputTotals, total, optionalTotals } from './run'
 
 /**
  * Zeile 69: Umfang Zeitraum 2 je Schicht nach dem gewählten Ansatz, mindestens 3.
@@ -52,7 +52,8 @@ export function periodTwo(run: Run): void {
   fill(run, 79, (column) => checkUnits(run, column, 51, 78))
   fill(run, 80, second((column) => guard(() => divide(required(c[at(column, 77)]), required(c[at(column, 78)])))))
   fill(run, 84, (column) => (has(run, column, 8) ? guard(() => minus(required(c[at(column, 70)]), n(c[at(column, 41)]))) : null))
-  inputTotals(run, [75, 76, 81, 82])
+  optionalTotals(run, [75, 76, 81])
+  inputTotals(run, [82])
   for (const row of [77, 78, 84]) c[`C${row}`] = total(run, row)
 }
 

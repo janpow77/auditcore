@@ -10,7 +10,7 @@ Prüfbehörde gibt ein, lädt Ergebnisse herunter und speichert ihren Arbeitssta
 als Datei; es gibt keinen Server, keine Anmeldung und keine Netzanfragen.
 Gerechnet wird in
 [`@auditcore/sampling-templates-core`](../sampling-templates-core/README.md).
-Stand 0.1.3: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
+Stand 0.1.4: Alle Verfahren der Vorlage sind wählbar (MUS, einfaches
 Zufallsstichprobenverfahren, nichtstatistische Verfahren, Altvorlagen von
 2017), dazu die Arbeitsschritte Grundgesamtheit, Unterstichproben,
 Gesamtfehlerquote und Bericht (Druckfassung: leeres Formular und
@@ -35,7 +35,7 @@ in die `package.json`:
 npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.4.tgz
 ```
 
-Version 0.1.3 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
+Version 0.1.4 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
 und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
@@ -545,9 +545,9 @@ fremde Hosts, Tokens einer Anwendung; je Blattart hell und dunkel, 1280 px und
 
 ## Abhängigkeiten
 
-`@auditcore/sampling-templates-core@0.1.3` (Rechenkerne, Arbeitsstand, Stile),
+`@auditcore/sampling-templates-core@0.1.4` (Rechenkerne, Arbeitsstand, Stile),
 `@auditcore/ui` ab 0.4.0 (`FaButton`, `FaBadge`, `FaDialog`, Sprache),
-`@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.3`
+`@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.4`
 (Download, Web Storage, Zeitsteuerung); Peer `vue@^3.5.0`. Verwendet werden nur
 Bausteine, die zwischen `@auditcore/ui` 0.4.0 und 0.5.0 bzw. `ui-core` 0.3.0
 und 0.4.0 unverändert sind; deshalb sind beide Fassungen zugelassen.

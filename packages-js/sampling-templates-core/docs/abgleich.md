@@ -30,9 +30,9 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 02_Grundgesamtheit | 159 | 3021 | 2948 | 73 | 0 | 0 | 0 |
 | 03_MUS_1Z | 783 | 29754 | 29446 | 308 | 0 | 0 | 0 |
-| 04_MUS_1Z_S | 381 | 46482 | 45466 | 1016 | 0 | 0 | 0 |
+| 04_MUS_1Z_S | 381 | 46482 | 45479 | 1003 | 0 | 0 | 0 |
 | 05_MUS_2Z | 541 | 35165 | 33223 | 1942 | 0 | 0 | 0 |
-| 06_MUS_2Z_S | 635 | 150495 | 147167 | 3327 | 1 | 0 | 0 |
+| 06_MUS_2Z_S | 635 | 150495 | 147228 | 3266 | 1 | 0 | 0 |
 | 07_MUS_3Z | 612 | 56916 | 52646 | 4270 | 0 | 0 | 0 |
 | 08_SRS_1Z | 660 | 24420 | 24210 | 210 | 0 | 0 | 0 |
 | 09_SRS_1Z_S | 421 | 32417 | 31639 | 778 | 0 | 0 | 0 |
@@ -42,7 +42,7 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 13_NS_GW | 399 | 8778 | 8661 | 117 | 0 | 0 | 0 |
 | 14_NS_GW_S | 410 | 16400 | 16099 | 301 | 0 | 0 | 0 |
 | 15_NS_PPS | 406 | 10556 | 10334 | 222 | 0 | 0 | 0 |
-| 16_NS_PPS_S | 412 | 28840 | 28192 | 648 | 0 | 0 | 0 |
+| 16_NS_PPS_S | 412 | 28840 | 28222 | 618 | 0 | 0 | 0 |
 | 17_Unterstichprobe | 102 | 612 | 577 | 35 | 0 | 0 | 0 |
 | 18_GFQ_AnhIII | 677 | 14894 | 14609 | 285 | 0 | 0 | 0 |
 | 20_Druck_KOM | 588 | 19404 | 19161 | 243 | 0 | 0 | 0 |
@@ -50,7 +50,7 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | X2_DiffSch_2017 | 434 | 5642 | 5449 | 193 | 0 | 0 | 0 |
 | X3_DiffSch_S_2017 | 234 | 8424 | 7842 | 582 | 0 | 0 | 0 |
 | X4_DiffSch_2Z_2017 | 241 | 4820 | 4490 | 330 | 0 | 0 | 0 |
-| **Summe** | 10531 | 728895 | 700845 | 28048 | 2 | 0 | 0 |
+| **Summe** | 10531 | 728895 | 700949 | 27944 | 2 | 0 | 0 |
 
 ## 02_Grundgesamtheit
 
@@ -142,10 +142,10 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 | Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 8540 | 8357 | 183 | 0 | 0 | 0 |
+| abnahme-grund | 70 | 8540 | 8362 | 178 | 0 | 0 | 0 |
 | abnahme-luecken | 124 | 15128 | 14872 | 256 | 0 | 0 | 0 |
 | abnahme-schwelle | 60 | 7320 | 7260 | 60 | 0 | 0 | 0 |
-| Hauptsatz | 27 | 3294 | 2877 | 417 | 0 | 0 | 0 |
+| Hauptsatz | 27 | 3294 | 2885 | 409 | 0 | 0 | 0 |
 | zufall | 100 | 12200 | 12100 | 100 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
@@ -166,8 +166,8 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 14 | Gesamtfehlerquote über der Wesentlichkeitsschwelle | 122 | 1 | 0 |
 | 15 | GFQ unter, obere Fehlergrenze über der Schwelle | 122 | 1 | 0 |
 | 16 | Lücke: Schicht 2 leer, Schichten 1 und 3 belegt | 122 | 1 | 0 |
-| 17 | Leeres Formular (nur Vorgaben der Vorlage) | 122 | 21 | 0 |
-| 18 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 122 | 28 | 0 |
+| 17 | Leeres Formular (nur Vorgaben der Vorlage) | 122 | 17 | 0 |
+| 18 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 122 | 24 | 0 |
 | 19 | Teilweise: sieben Schichten, Standardabweichungen fehlen | 122 | 86 | 0 |
 | 20 | Teilweise: sieben Schichten, Standardabweichung nur in Schicht 4 fehlt | 122 | 80 | 0 |
 | 21 | Teilweise: sieben Schichten, voraussichtliche Fehlerquote fehlt | 122 | 78 | 0 |
@@ -270,11 +270,11 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 | Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 110 | 26070 | 25562 | 508 | 0 | 0 | 0 |
+| abnahme-grund | 110 | 26070 | 25587 | 483 | 0 | 0 | 0 |
 | abnahme-luecken | 291 | 68967 | 67339 | 1627 | 1 | 0 | 0 |
 | abnahme-schwelle | 60 | 14220 | 14220 | 0 | 0 | 0 | 0 |
-| fehlend | 14 | 3318 | 2915 | 403 | 0 | 0 | 0 |
-| Hauptsatz | 60 | 14220 | 13431 | 789 | 0 | 0 | 0 |
+| fehlend | 14 | 3318 | 2927 | 391 | 0 | 0 | 0 |
+| Hauptsatz | 60 | 14220 | 13455 | 765 | 0 | 0 | 0 |
 | zufall | 100 | 23700 | 23700 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
@@ -320,11 +320,11 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 39 | Schicht 3 erst im zweiten Zeitraum (kein Buchwert Zeitraum 1) | 237 | 0 | 0 |
 | 40 | Schicht 3 ohne Prognose für Zeitraum 2, keine Neuberechnung | 237 | 25 | 0 |
 | 41 | Schicht 3 ohne Prognose für Zeitraum 2, Erhöhung | 237 | 1 | 0 |
-| 42 | Leeres Formular (nur Vorgaben der Vorlage) | 237 | 39 | 0 |
-| 43 | Leeres Formular ohne Vorgaben | 237 | 39 | 0 |
-| 44 | Teilweise: nur der erste Zeitraum ausgefüllt | 237 | 37 | 0 |
-| 45 | Teilweise: nur der erste Zeitraum ausgefüllt, sieben Schichten, globale Neuberechnung | 237 | 71 | 0 |
-| 46 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 237 | 60 | 0 |
+| 42 | Leeres Formular (nur Vorgaben der Vorlage) | 237 | 33 | 0 |
+| 43 | Leeres Formular ohne Vorgaben | 237 | 33 | 0 |
+| 44 | Teilweise: nur der erste Zeitraum ausgefüllt | 237 | 34 | 0 |
+| 45 | Teilweise: nur der erste Zeitraum ausgefüllt, sieben Schichten, globale Neuberechnung | 237 | 68 | 0 |
+| 46 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 237 | 54 | 0 |
 | 47 | Teilweise: Wesentlichkeitsschwelle geleert | 237 | 49 | 0 |
 | 48 | Teilweise: voraussichtliche Fehlerquote fehlt | 237 | 84 | 0 |
 | 49 | Teilweise: sieben Schichten, voraussichtliche Standardabweichungen Zeitraum 1 und der Stichprobe fehlen | 237 | 174 | 0 |
@@ -1427,10 +1427,10 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 | Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 64 | 4480 | 4400 | 80 | 0 | 0 | 0 |
+| abnahme-grund | 64 | 4480 | 4405 | 75 | 0 | 0 | 0 |
 | abnahme-luecken | 113 | 7910 | 7538 | 372 | 0 | 0 | 0 |
 | abnahme-schwelle | 60 | 4200 | 4200 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 55 | 3850 | 3654 | 196 | 0 | 0 | 0 |
+| Hauptsatz | 55 | 3850 | 3679 | 171 | 0 | 0 | 0 |
 | zufall | 120 | 8400 | 8400 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
@@ -1474,11 +1474,11 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 37 | Fehlende Angabe in nur einer Schicht: Anzahl der Einheiten der Schicht 2 | 70 | 0 | 0 |
 | 38 | Fehlende Angabe in nur einer Schicht: Buchwert der Schicht 2 | 70 | 0 | 0 |
 | 39 | Fehlende Angabe in nur einer Schicht: hochwertige Einheiten der Schicht 1 | 70 | 0 | 0 |
-| 40 | Leeres Formular (nur Vorgaben der Vorlage) | 70 | 18 | 0 |
-| 41 | Leeres Formular, Wesentlichkeitsschwelle geleert | 70 | 18 | 0 |
-| 42 | Teilweise: nur Buchwerte und Einheiten der Schichten | 70 | 26 | 0 |
-| 43 | Teilweise: nur die Buchwerte je Schicht | 70 | 25 | 0 |
-| 44 | Teilweise: nur die Anzahl der Einheiten je Schicht (N ≥ 300) | 70 | 14 | 0 |
+| 40 | Leeres Formular (nur Vorgaben der Vorlage) | 70 | 13 | 0 |
+| 41 | Leeres Formular, Wesentlichkeitsschwelle geleert | 70 | 13 | 0 |
+| 42 | Teilweise: nur Buchwerte und Einheiten der Schichten | 70 | 21 | 0 |
+| 43 | Teilweise: nur die Buchwerte je Schicht | 70 | 20 | 0 |
+| 44 | Teilweise: nur die Anzahl der Einheiten je Schicht (N ≥ 300) | 70 | 9 | 0 |
 | 45 | Teilweise: nur der Stichprobenumfang | 70 | 0 | 0 |
 | 46 | Teilweise: Schichten und Stichprobe, noch keine Prüfergebnisse | 70 | 0 | 0 |
 | 47 | Teilweise: alles ausgefüllt außer dem Stichprobenumfang | 70 | 24 | 0 |

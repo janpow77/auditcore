@@ -16,7 +16,7 @@ import { type Pending, additionalUnits, appliedTotalSize, approachOf, computeTwi
 import { checkConfidence, checkMateriality, checkTolerableError, computedSampleSize, limitedSampleSize } from '../shared/statistical'
 import { finalSizes, periodTwo, projection } from './compute-periods'
 import { definition } from './definition'
-import { type Run, checkUnits, createRun, fill, has, inputTotals, relevantInputs, total, varianceTerm } from './run'
+import { type Run, checkUnits, createRun, fill, has, inputTotals, relevantInputs, total, varianceTerm, optionalTotals } from './run'
 
 /** Standardabweichung (Zeile) zum Buchwert (Zeile), von dem abhängt, ob die Schicht sie braucht. */
 const DEVIATION_OF: readonly (readonly [bookValue: number, deviation: number])[] = [[8, 24], [9, 25], [51, 53]]
@@ -73,7 +73,8 @@ function periodOne(run: Run): void {
   fill(run, 44, first((column) => guard(() => minus(required(c[at(column, 37)]), n(c[at(column, 41)])))))
   fill(run, 45, (column) => checkUnits(run, column, 8, 44))
   fill(run, 46, first((column) => guard(() => divide(required(c[at(column, 43)]), required(c[at(column, 44)])))))
-  inputTotals(run, [41, 42, 47, 48])
+  optionalTotals(run, [41, 42, 47])
+  inputTotals(run, [48])
   c.C43 = total(run, 43)
   c.C44 = total(run, 44)
 }

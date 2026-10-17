@@ -47,10 +47,14 @@ function watchedCells(sheet: AvailableSheet): CellAddress[] {
  *   Schicht (08 B9, 09 B8, 10 B9/B51, 11 B7/B53, 12 B9/B55/B94, 13 B10, 14 B8,
  *   17 B8). Die übrigen Angaben dieser Schicht (Anzahl, davon hochwertige,
  *   Fehlersumme) teilen das als Gruppe: leer nur gemeinsam.
- * - **Ohne Kennzeichnung, Vorlage liest leer als 0** (`N(…)`) – abgegrenzte
- *   systembedingte und nicht berichtigte anomale Fehler sowie Anzahl, Buchwert und
- *   Fehler der hochwertigen Einheiten. Die Vorlage ist hier uneindeutig; die
- *   Einstufung als freiwillig (Gruppe) bleibt bis zur Entscheidung des Inhabers.
+ * - **Ohne Kennzeichnung, Vorlage liest leer als 0** (`N(…)`) – nach
+ *   Entscheidung des Inhabers vom 17.10.2026 freiwillig, leer heißt „keine“:
+ *   abgegrenzte systembedingte und nicht berichtigte anomale Fehler; Anzahl,
+ *   Buchwert und Fehler der hochwertigen Einheiten (Gruppe); die Einheiten der
+ *   Zufallsschicht mit BV > Auswahlintervall (Iteration, z. B. 03 C35); in
+ *   Blatt 02 TH-Pauschale, negative Datensätze, Ausschlüsse nach Art. 15 Abs. 5,
+ *   Wiederaufnahmen und Art.-80-Einheiten; in Blatt 20 J6–J8 (Definitionen).
+ *   Gruppen: Ist ein Teil gefüllt, sind die übrigen Pflicht.
  * - **Von keiner Formel verwendet** (Geschäftsjahr, Programm, Stichprobeneinheit,
  *   Schichtungskriterium, Freitexte; einzelne Zahlenfelder wie N in Blatt 03):
  *   freiwillig, weil kein Ergebnis davon abhängt – die Prüfung unten findet dort
@@ -59,7 +63,8 @@ function watchedCells(sheet: AvailableSheet): CellAddress[] {
  * Die Altvorlagen X1–X4 kennen keine dieser Kennzeichnungen und verwenden ihre
  * Eingaben unmittelbar; dort gilt keine Regel nach dem Feldnamen (`optional: false`).
  */
-const OPTIONAL_ALONE = /^(systemicErrors|anomalousErrors|(updated|final)AnticipatedErrorRate)$/
+/** Für sich freiwillig. */
+const OPTIONAL_ALONE = /^(systemicErrors|anomalousErrors|(updated|final)AnticipatedErrorRate|(stratumI|i)terationUnits(Period\d)?)$/
 /** Freiwillige Gruppen je Zeitraum und Schicht: hochwertige Einheiten und umfassende Schicht. */
 const OPTIONAL_GROUPS: readonly (readonly [RegExp, string])[] = [
   [/^(?:stratumH|ppsH|h)ighValue(?:Units|BookValue|Errors)(Period\d)?$/, 'highValue'],

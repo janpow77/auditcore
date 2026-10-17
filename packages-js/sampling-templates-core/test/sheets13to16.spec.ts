@@ -35,7 +35,8 @@ const EMPTY_FORM: Readonly<Record<string, readonly string[]>> = {
   '13_NS_GW': ['C27', 'C20', 'N3', 'N6', 'N7', 'N8', 'N9'],
   '14_NS_GW_S': ['C34', 'C28', 'N3', 'N6', 'N7', 'N8', 'N9', ...STRATA_COLUMNS.map((column) => `${column}27`)],
   '15_NS_PPS': ['C31', 'C24', 'N3', 'N6', 'N7', 'N8', 'N9'],
-  '16_NS_PPS_S': ['C35', 'N3', 'N7', 'N8', 'N9', ...STRATA_COLUMNS.map((column) => `${column}28`)],
+  // C19, C20, C25, C29, N6: Summen der freiwilligen hochwertigen Einheiten, wie in der Vorlage 0 (Entscheidung des Inhabers vom 17.10.2026).
+  '16_NS_PPS_S': ['C19', 'C20', 'C25', 'C29', 'C35', 'N3', 'N6', 'N7', 'N8', 'N9', ...STRATA_COLUMNS.map((column) => `${column}28`)],
 }
 
 describe.each(SHEETS)('Nichtstatistische Blätter: $id', (sheet) => {

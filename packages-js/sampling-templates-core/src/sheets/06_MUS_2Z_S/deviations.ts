@@ -157,10 +157,11 @@ const SIZE_ROWS = ['C69', 'C78']
  * die eine Schicht belegen, und die Hilfszeile selbst. Die Summen der Zeilen 87
  * und 88 stehen bei den Ergebnissen: Sie sind nur leer, wenn ein Umfang fehlt.
  */
+/* Hochwertige Einheiten und Iteration sind freiwillig (Entscheidung des Inhabers vom 17.10.2026): Ihre Summe ist wie in der Vorlage 0, keine Abweichung. */
 const TOTALS: readonly (readonly [cell: string, cells: readonly number[]])[] = [
-  ['C8', [8]], ['C9', [9]], ['C10', [10]], ['C26', [8, 9]], ['C37', [37]], ['C38', [38]], ['C41', [41]], ['C42', [42]], ['C43', [43]], ['C44', [44]], ['C47', [47]], ['C48', [48]],
-  ['C51', [51]], ['C52', [52]], ['C60', [8, 60]], ['C61', [51, 61]], ['C64', [8, 51]], ['C68', [68]], ['C69', [69]], ['C70', [70]], ['C75', [75]], ['C76', [76]], ['C77', [77]], ['C78', [78]],
-  ['C81', [81]], ['C82', [82]], ['C84', [84]], ['C86', [8, 47, 51, 81]], ['N6', [8, 47, 51, 81]],
+  ['C8', [8]], ['C9', [9]], ['C10', [10]], ['C26', [8, 9]], ['C37', [37]], ['C38', [38]], ['C43', [43]], ['C44', [44]], ['C48', [48]],
+  ['C51', [51]], ['C52', [52]], ['C60', [8, 60]], ['C61', [51, 61]], ['C64', [8, 51]], ['C68', [68]], ['C69', [69]], ['C70', [70]], ['C77', [77]], ['C78', [78]],
+  ['C82', [82]], ['C84', [84]], ['C86', [8, 47, 51, 81]], ['N6', [8, 47, 51, 81]],
 ]
 
 const UNITS_TEMPLATE = '„✔ ≥ 3“ (Excel wertet die leere Textzelle im Vergleich größer als jede Zahl)'

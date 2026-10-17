@@ -1,5 +1,9 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.4 – 2026-10-17
+
+- Kernpaket 0.1.4 (freiwillige Eingaben nach Entscheidung des Inhabers).
+
 ## 0.1.3 – 2026-10-17
 
 - Eine nicht lesbare Eingabe („abc“) meldet auch in den abhängigen Werten und

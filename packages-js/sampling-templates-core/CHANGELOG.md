@@ -1,5 +1,19 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.4 – 2026-10-17
+
+Entscheidung des Inhabers vom 17.10.2026 zu freiwilligen Eingaben (noch nicht
+veröffentlicht). Kein Wert weicht von der Vorlage ab.
+
+- Freiwillig, leer heißt „keine“ (0), ohne Hinweis „Angabe fehlt“:
+  systembedingte und anomale Fehler, hochwertige Einheiten (Gruppe), Einheiten
+  der Zufallsschicht mit BV > Auswahlintervall (Iteration), in Blatt 02
+  TH-Pauschale, negative Datensätze, Ausschlüsse, Wiederaufnahmen und
+  Art.-80-Einheiten, in Blatt 20 J6–J8. Gruppen nur gemeinsam leer.
+- Blätter 04, 06 und 16: Die Summen der hochwertigen Einheiten und der
+  Iteration ohne Eintrag in einer Schicht zeigen wie in der Vorlage 0 statt
+  „kein Wert“; die zugehörigen Abweichungseinträge entfallen.
+
 ## 0.1.3 – 2026-10-17
 
 Freiwillige Eingaben nach der Original-Arbeitsmappe (noch nicht veröffentlicht).
