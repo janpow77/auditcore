@@ -1,13 +1,17 @@
 # Changelog @auditcore/sampling-templates-vue
 
-## 0.1.4 – 2026-10-17
+## 0.1.5 – 2026-10-17
 
-- Kernpaket 0.1.4 (freiwillige Eingaben nach Entscheidung des Inhabers).
+Zusammenführung des Arbeitsassistenten (0.1.3/0.1.4 vom 14.10.2026) mit den
+Regeln für freiwillige Eingaben; exakt an `@auditcore/sampling-templates-core`
+0.1.5 gebunden.
 
-## 0.1.3 – 2026-10-17
+- Eine nicht lesbare Eingabe („abc“) meldet auch in den abhängigen Werten, in
+  der Kennzahlenspalte und in der Kennzahlenleiste „Eingabe ungültig“ statt
+  „Angabe fehlt“.
+- Kernpaket 0.1.5: freiwillige Eingaben nach der Vorlage und nach Entscheidung
+  des Inhabers vom 17.10.2026.
 
-- Eine nicht lesbare Eingabe („abc“) meldet auch in den abhängigen Werten und
-  in der Ergebnisspalte „Eingabe ungültig“ statt „Angabe fehlt“.
 ## 0.1.4 – 2026-10-14
 
 Hinweise der Abnahme des Einbaus (noch nicht veröffentlicht); keine Änderung

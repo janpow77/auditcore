@@ -1,20 +1,11 @@
 # Changelog @auditcore/sampling-templates-core
 
-## 0.1.4 – 2026-10-17
+## 0.1.5 – 2026-10-17
 
-Entscheidung des Inhabers vom 17.10.2026 zu freiwilligen Eingaben (noch nicht
-veröffentlicht). Kein Wert weicht von der Vorlage ab.
-
-- Freiwillig, leer heißt „keine“ (0), ohne Hinweis „Angabe fehlt“:
-  systembedingte und anomale Fehler, hochwertige Einheiten (Gruppe), Einheiten
-  der Zufallsschicht mit BV > Auswahlintervall (Iteration), in Blatt 02
-  TH-Pauschale, negative Datensätze, Ausschlüsse, Wiederaufnahmen und
-  Art.-80-Einheiten, in Blatt 20 J6–J8. Gruppen nur gemeinsam leer.
-- Blätter 04, 06 und 16: Die Summen der hochwertigen Einheiten und der
-  Iteration ohne Eintrag in einer Schicht zeigen wie in der Vorlage 0 statt
-  „kein Wert“; die zugehörigen Abweichungseinträge entfallen.
-
-## 0.1.3 – 2026-10-17
+Zusammenführung: Stand 0.1.3/0.1.4 vom 14.10.2026 (Arbeitsassistent, Hinweise
+der Abnahme) mit den Regeln für freiwillige Eingaben vom 17.10.2026. Die
+Zwischenstände 0.1.3 und 0.1.4 dieses Strangs vom 17.10.2026 wurden nicht
+ausgeliefert; ihr Inhalt steht hier.
 
 Freiwillige Eingaben nach der Original-Arbeitsmappe (noch nicht veröffentlicht).
 Keine Änderung an Rechenwerten; der Abgleich ist unverändert.
@@ -29,6 +20,19 @@ Keine Änderung an Rechenwerten; der Abgleich ist unverändert.
 - Nicht lesbare Eingaben („abc“): `buildSections` und `buildSummary` nehmen die
   Menge der ungültigen Eingaben und melden abhängige Werte als „Eingabe
   ungültig“ mit „Ungültige Eingabe: …“ statt „Angabe fehlt“.
+
+Entscheidung des Inhabers vom 17.10.2026 zu freiwilligen Eingaben (noch nicht
+veröffentlicht). Kein Wert weicht von der Vorlage ab.
+
+- Freiwillig, leer heißt „keine“ (0), ohne Hinweis „Angabe fehlt“:
+  systembedingte und anomale Fehler, hochwertige Einheiten (Gruppe), Einheiten
+  der Zufallsschicht mit BV > Auswahlintervall (Iteration), in Blatt 02
+  TH-Pauschale, negative Datensätze, Ausschlüsse, Wiederaufnahmen und
+  Art.-80-Einheiten, in Blatt 20 J6–J8. Gruppen nur gemeinsam leer.
+- Blätter 04, 06 und 16: Die Summen der hochwertigen Einheiten und der
+  Iteration ohne Eintrag in einer Schicht zeigen wie in der Vorlage 0 statt
+  „kein Wert“; die zugehörigen Abweichungseinträge entfallen.
+
 ## 0.1.3 – 2026-10-14
 
 Nur Stile und Texte der Oberfläche (noch nicht veröffentlicht); keine Änderung
