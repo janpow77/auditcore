@@ -27,6 +27,7 @@ const ampel = computed(() => {
     <span class="fa-st__strip-item"><span class="fa-st__strip-label">{{ summary.primaryLabel }}</span> <strong>{{ primary }}</strong></span>
     <span v-for="row in rows" :key="row.label" class="fa-st__strip-item"><span class="fa-st__strip-label">{{ row.label }}</span> <strong>{{ row.value }}</strong></span>
     <FaBadge v-if="ampel" class="fa-st__strip-ampel" :tone="ampel.tone" :label="ampel.label" />
+    <span v-if="summary.invalidNote" class="fa-st__strip-item fa-st__strip-invalid" data-strip-invalid>{{ summary.invalidNote }}</span>
   </div>
 </template>
 
@@ -51,6 +52,7 @@ const ampel = computed(() => {
   }
   .fa-st__strip-item { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--fa-space-1); min-width: 0; max-width: 100%; }
   .fa-st__strip-item strong { overflow-wrap: anywhere; }
+  .fa-st__strip-invalid { font-size: var(--fa-font-size-sm); overflow-wrap: anywhere; }
   .fa-st__strip-item strong { font-family: var(--fa-font-mono); font-variant-numeric: tabular-nums; }
   .fa-st__strip-label { color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
   .fa-st .fa-st__strip-ampel { white-space: normal; }

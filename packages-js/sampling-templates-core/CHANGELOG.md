@@ -1,5 +1,17 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.12 – 2026-10-18
+
+Rest aus dem Browsertest von 0.1.11 (noch nicht veröffentlicht). Rechenwerte
+unverändert, Golden-Abgleich 0 unbegründet.
+
+- Ergebnisübersicht (`buildSummary`): Eine Kennzahl, die wegen einer ungültigen
+  Eingabe offen ist, zeigt „Eingabe ungültig“ statt „—“; neu
+  `SummaryView.invalidNote` („Eingabe ungültig. Ungültige Eingabe: … (C39)“),
+  sobald eine Kennzahl oder die Skala deswegen offen ist. Größen, die nicht von
+  der Eingabe abhängen (etwa die Gesamtfehlerquote), bleiben sichtbar.
+- Stil `.fa-st__invalid-note`.
+
 ## 0.1.11 – 2026-10-18
 
 Befund aus dem Browsertest von 0.1.10 (noch nicht veröffentlicht). Golden-Abgleich

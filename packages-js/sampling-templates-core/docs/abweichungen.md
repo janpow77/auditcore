@@ -687,6 +687,9 @@ auf „keine“ (freiwillige Felder und Gruppen). `evaluateSheet` ermittelt die
 abhängigen Zellen durch Nachrechnen mit Probewerten (`dependentCells` in
 `src/model/dependence.ts`) und lässt jede offen; sie zeigt „Eingabe ungültig“,
 der Hinweis „mit 0 berechnet“ entfällt, und Werte ohne Grundlage bleiben offen.
+Ergebnisspalte, Kennzahlenleiste und Ansage nennen die ungültige Eingabe
+(`SummaryView.invalidNote`, seit 0.1.12); was nicht von ihr abhängt, bleibt
+sichtbar.
 Ist die obere Fehlergrenze offen, zeigen Skala und Kennzahlenleiste keine Ampel
 (vorher grün aus der Gesamtfehlerquote allein). Ein wirklich leeres Feld folgt
 weiter seiner Leer-Regel. Eigenschaftstest über alle Zahlenfelder der Blätter

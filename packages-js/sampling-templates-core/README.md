@@ -10,7 +10,7 @@ Ergebnisse herunterladen, den Arbeitsstand als Datei speichern und später
 wieder öffnen – ohne Server, ohne Anmeldung, ohne Netzanfragen. Die Oberfläche
 liegt in [`@auditcore/sampling-templates-vue`](../sampling-templates-vue/README.md).
 
-**Stand 0.1.11:** Alle Blätter der Vorlage sind gebaut und gegen sie
+**Stand 0.1.12:** Alle Blätter der Vorlage sind gebaut und gegen sie
 abgeglichen: Grundgesamtheit (02), MUS-Standardansatz (03–07), einfaches
 Zufallsstichprobenverfahren (08–12), nichtstatistische Verfahren (13–16),
 Unterstichproben (17), Gesamtfehlerquote nach Anhang III (18), Bericht (20) und
@@ -44,10 +44,10 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-core-0.1.11.tgz
+npm install @auditcore/sampling-templates-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-core-0.1.12.tgz
 ```
 
-Version 0.1.11 ist noch nicht veröffentlicht (siehe „Lizenz und
+Version 0.1.12 ist noch nicht veröffentlicht (siehe „Lizenz und
 Herkunftsnachweis“). Anleitung mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 

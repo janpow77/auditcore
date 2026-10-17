@@ -1,5 +1,12 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.12 – 2026-10-18
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.12 gebunden. Ergebnisspalte,
+Kennzahlenleiste und die `aria-live`-Ansage nennen eine ungültige Eingabe, die
+eine Kennzahl offen lässt („Eingabe ungültig. Ungültige Eingabe: …“), statt
+nur „—“ zu zeigen.
+
 ## 0.1.11 – 2026-10-18
 
 Exakt an `@auditcore/sampling-templates-core` 0.1.11 gebunden.

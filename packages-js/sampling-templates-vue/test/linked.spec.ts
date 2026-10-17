@@ -1,6 +1,6 @@
 /** Felder mit nicht lesbarer Eingabe: kein stiller Rückfall auf die Vorbelegung (BV und N aus Blatt 02) und nicht auf „leer = 0“. */
 import { mount, type VueWrapper } from '@vue/test-utils'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { SamplingCalculator } from '../src/index'
 import { FOUNDATION_SHEETS } from './sheets'
@@ -65,10 +65,38 @@ describe('Ungültige Eingaben', () => {
       expect(value(wrapper, 'C43'), text).toBe('Eingabe ungültig')
       expect(cell(wrapper, 'C52').text(), text).toContain('Eingabe ungültig')
       expect(wrapper.get('[data-kpi-strip]').text(), text).not.toContain('unter der Signifikanzschwelle')
+      // Ergebnisspalte, Kennzahlenleiste und Ansage nennen den Grund; die Gesamtfehlerquote bleibt sichtbar.
+      expect(wrapper.get('[data-kpis]').text(), text).toContain('Eingabe ungültig')
+      expect(wrapper.get('[data-invalid-note]').text(), text).toMatch(/^Eingabe ungültig\. Ungültige Eingabe: .*\(C39\)$/)
+      expect(wrapper.get('[data-kpi-strip]').text(), text).toContain('Obere Fehlergrenze Eingabe ungültig')
+      expect(wrapper.get('[data-kpi-strip]').text(), text).toContain('(C39)')
+      expect(wrapper.get('[data-kpi-strip]').text(), text).toMatch(/Gesamtfehlerquote \d/)
     }
     await input(wrapper, 'C39').setValue('')
     await input(wrapper, 'C39').trigger('blur')
     expect(value(wrapper, 'C43')).not.toBe('Eingabe ungültig')
     expect(cell(wrapper, 'C43').text()).toContain('Keine Angabe, daher mit 0 berechnet')
+    expect(wrapper.find('[data-invalid-note]').exists()).toBe(false)
+  })
+
+  it('die Ansage (aria-live) nennt den Grund einer ungültigen Eingabe', async () => {
+    vi.useFakeTimers()
+    try {
+      const wrapper = mountCalculator()
+      await wrapper.get('[data-sheet="03_MUS_1Z"]').trigger('click')
+      await menu(wrapper, 'sample')
+      vi.advanceTimersByTime(1600)
+      await nextTick()
+      await input(wrapper, 'C39').setValue('abc')
+      await input(wrapper, 'C39').trigger('blur')
+      vi.advanceTimersByTime(1600)
+      await nextTick()
+      const live = nbsp(wrapper.get('[data-live]').text())
+      expect(live).toContain('Obere Fehlergrenze Eingabe ungültig')
+      expect(live).toMatch(/Eingabe ungültig\. Ungültige Eingabe: .*\(C39\)$/)
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })
+

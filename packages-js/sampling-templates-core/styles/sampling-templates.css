@@ -324,6 +324,7 @@
 
 /* Kennzahlenkarten und Ampel */
 .fa-st__kpis { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: var(--fa-space-2); }
+.fa-st__invalid-note { margin-block: var(--fa-space-2); font-size: var(--fa-font-size-sm); color: var(--fa-color-text); overflow-wrap: anywhere; }
 .fa-st__kpi { display: flex; flex-direction: column; gap: var(--fa-space-1); padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-surface-sunken); }
 .fa-st__kpi dt { font-size: var(--fa-font-size-xs); }
 .fa-st__kpi dd { font-size: var(--fa-font-size-lg); }

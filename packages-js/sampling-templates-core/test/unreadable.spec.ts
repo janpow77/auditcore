@@ -62,8 +62,15 @@ describe('Ungültige Eingaben', () => {
     expect([invalid.cells.C44, invalid.cells.C52, invalid.cells.C53, invalid.cells.N7]).toEqual([null, null, null, null])
     const summary = buildSummary(sheet, invalidInputs, invalid.cells, context, t, new Set(['C39']))
     expect(summary.hints.map((hint) => hint.text).join(' ')).not.toContain('unter der Signifikanzschwelle')
-    const rows = buildSections(sheet, invalidInputs, invalid.cells, context, t, new Set(['C39'])).flatMap((section) => section.rows ?? [])
-    expect(JSON.stringify(rows.filter((row) => ['C44', 'C52', 'C53'].includes(row.cell)))).toContain('Eingabe ungültig')
+    // Ergebnisspalte: offene Kennzahlen „Eingabe ungültig“ mit Nennung der Eingabe; die Gesamtfehlerquote hängt nicht an s_q und bleibt.
+    const rows = Object.fromEntries(summary.rows.map((row) => [row.label, row.value]))
+    expect(Object.values(rows)).toContain('Eingabe ungültig')
+    expect(Object.entries(rows).find(([label]) => label.startsWith('Gesamtfehlerquote'))?.[1]).toMatch(/%$/)
+    expect(summary.invalidNote).toMatch(/^Eingabe ungültig\. Ungültige Eingabe: .*\(s_q\) \(C39\)$/)
+    expect(summary.gauge).toBeNull()
+    expect(buildSummary(sheet, sheet.sample.inputs, sheet.compute(sheet.sample.inputs, context), context, t).invalidNote).toBe('')
+    const formRows = buildSections(sheet, invalidInputs, invalid.cells, context, t, new Set(['C39'])).flatMap((section) => section.rows ?? [])
+    expect(JSON.stringify(formRows.filter((row) => ['C44', 'C52', 'C53'].includes(row.cell)))).toContain('Eingabe ungültig')
     // Wirklich leer: mit 0 gerechnet und ausgewiesen.
     const empty = evaluateSheet(sheet, { ...sheet.sample.inputs, C39: null }, context)
     expect(empty.cells.C44).toBe(0)

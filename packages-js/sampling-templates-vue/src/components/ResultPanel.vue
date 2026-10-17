@@ -31,6 +31,7 @@ const other = computed(() => props.summary.rows.filter((row) => !row.strong))
         <dd class="fa-st__strong">{{ row.value }}</dd>
       </div>
     </dl>
+    <p v-if="summary.invalidNote" class="fa-st__invalid-note" role="note" data-invalid-note>{{ summary.invalidNote }}</p>
     <ErrorGauge v-if="summary.gauge" :gauge="summary.gauge" :t="t" />
     <dl v-if="other.length" class="fa-st__kv fa-st__kv--more" :aria-label="t('kpiMore')">
       <template v-for="row in other" :key="row.label">

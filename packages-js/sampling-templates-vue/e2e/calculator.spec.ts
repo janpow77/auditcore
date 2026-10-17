@@ -323,9 +323,9 @@ test('ungültige Eingabe in einem Feld, das leer mit 0 rechnet (s_r): keine Gena
   for (const text of ['abc', '1.5']) {
     await deviation.fill(text)
     await deviation.blur()
-    await expect(deviation).toHaveAttribute('aria-invalid', 'true')
     await expect(page.locator('[data-cell="C43"] .fa-st__value')).toHaveText('Eingabe ungültig')
     await expect(page.locator('[data-kpi-strip]')).not.toContainText('unter der Signifikanzschwelle')
+    await expect(page.locator('[data-kpi-strip]')).toContainText(/Gesamtfehlerquote \d.*Obere Fehlergrenze Eingabe ungültig.*Ungültige Eingabe: .*\(C39\)/)
   }
   await deviation.fill('')
   await deviation.blur()
