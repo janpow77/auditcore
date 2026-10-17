@@ -71,7 +71,7 @@ function DesignFields({ view }: { view: UseExtrapolation }) {
   )
 }
 
-/** Methode, Konfidenzniveau, Faktorprofil, Umfang und Wesentlichkeit (wie `ExtrapolationSettings.vue`). */
+/** Methode, Konfidenzniveau, Faktorprofil, Umfang und Signifikanzschwelle (wie `ExtrapolationSettings.vue`). */
 export function ExtrapolationSettings({ view }: { view: UseExtrapolation }) {
   const { state, controller, t, method } = view
   const id = useElementId('fa-extrapolation-settings')

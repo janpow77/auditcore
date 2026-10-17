@@ -43,8 +43,8 @@ Das Modul liegt in `auditcore_sampling`, nicht in `auditcore_extrapolation`:
 | σ_r aus MUS-Vorstichprobe | rᵢ = Eᵢ/BVᵢ, über BV/n: Eᵢ/(BV/n) | 6.3.1.2, Fußnote 27 | `error_rates`, `error_rate_sd` |
 | Endlichkeitskorrektur (wahlweise) | n′ = n / (1 + n/N) | Fußnote 25 | `finite_population_correction=True` |
 
-Gemeinsam: TE = Wesentlichkeit × BV (höchstens 2 %, niedriger zulässig),
-AE = erwartete Fehlerquote × BV (kleiner als die Wesentlichkeit), der Umfang
+Gemeinsam: TE = Signifikanzschwelle × BV (höchstens 2 %, niedriger zulässig),
+AE = erwartete Fehlerquote × BV (kleiner als die Signifikanzschwelle), der Umfang
 wird aufgerundet. Proportionale Aufteilungen runden nach dem größten Rest
 (die Summe bleibt n). Hinweise statt stiller Korrekturen: unter 30 Einheiten
 (Fußnote 37), Umfang über 10 % von N ohne Endlichkeitskorrektur, mindestens
