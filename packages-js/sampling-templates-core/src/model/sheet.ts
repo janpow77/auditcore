@@ -2,6 +2,7 @@
  * Ein Blatt der Vorlage als Modul: Definition, Rechenkern, Beispielwerte und
  * begründete Abweichungen. Blätter ohne Rechenkern sind als geplant geführt.
  */
+import { exhaustiveStratumOf } from './exhaustive'
 import { isBlank } from '../excel/index'
 import { PARAMETERS } from '../sheets/01_Parameter/index'
 import { cellsOf, inputFields, type MethodDefinition, type SubsampleRole } from './definition'
@@ -218,5 +219,8 @@ export function summaryOf(sheet: SheetId, results: CellMap): MethodSummary {
   for (const [name, cell] of Object.entries(SUMMARY_CELLS) as [keyof typeof SUMMARY_CELLS, string][]) {
     summary[name] = results[cell] ?? null
   }
+  const exhaustive = exhaustiveStratumOf(sheet, results)
+  summary.exhaustiveUnits = exhaustive.units
+  summary.exhaustiveBookValue = exhaustive.bookValue
   return summary
 }

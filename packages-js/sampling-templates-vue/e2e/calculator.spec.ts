@@ -304,7 +304,7 @@ test('ungültige Eingabe im vorbelegten BV: Ergebnisspalte und Kennzahlenleiste 
   await bookValue.blur()
   await expect(bookValue).toHaveAttribute('aria-invalid', 'true')
   await expect(page.locator('[data-cell="C16"] .fa-st__value')).toHaveText('Eingabe ungültig')
-  await expect(page.locator('[data-cell="C27"] .fa-st__value')).toHaveText('—')
+  await expect(page.locator('[data-cell="C27"] .fa-st__value')).toHaveText('Eingabe ungültig')
   await expect(page.locator('[data-result="primary"]')).toContainText('Eingabe ungültig')
   await expect(page.locator('[data-kpi-strip]')).toContainText('Anzuwendender Stichprobenumfang Eingabe ungültig')
   await expect(page.locator('[data-kpi-strip]')).not.toContainText('92 Einheiten')
@@ -313,6 +313,23 @@ test('ungültige Eingabe im vorbelegten BV: Ergebnisspalte und Kennzahlenleiste 
   await bookValue.blur()
   await expect(page.locator('[data-cell="C7"] [data-link]')).toHaveText('aus Blatt 02_Grundgesamtheit vorbelegt')
   await expect(page.locator('[data-kpi-strip]')).toContainText('92 Einheiten')
+})
+
+test('ungültige Eingabe in einem Feld, das leer mit 0 rechnet (s_r): keine Genauigkeit 0 €, keine grüne Ampel; leer „mit 0 berechnet“', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 })
+  await chooseSheet03(page)
+  await menu(page, 'Beispielwerte laden')
+  const deviation = page.locator('[data-cell="C39"] input')
+  for (const text of ['abc', '1.5']) {
+    await deviation.fill(text)
+    await deviation.blur()
+    await expect(deviation).toHaveAttribute('aria-invalid', 'true')
+    await expect(page.locator('[data-cell="C43"] .fa-st__value')).toHaveText('Eingabe ungültig')
+    await expect(page.locator('[data-kpi-strip]')).not.toContainText('unter der Signifikanzschwelle')
+  }
+  await deviation.fill('')
+  await deviation.blur()
+  await expect(page.locator('[data-cell="C43"]')).toContainText('Keine Angabe, daher mit 0 berechnet')
 })
 
 test('ausgefüllte Vorlage: Vorschau nennt Umdeutungen und Abweichungen, Übernahme erst danach; unlesbare Datei wird gemeldet', async ({ page }) => {

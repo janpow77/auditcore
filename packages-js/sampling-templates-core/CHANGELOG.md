@@ -1,5 +1,26 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.11 – 2026-10-18
+
+Befund aus dem Browsertest von 0.1.10 (noch nicht veröffentlicht). Golden-Abgleich
+unverändert: 0 unbegründet.
+
+- Ungültige Eingaben in jedem Feld: Eine nicht lesbare Eingabe
+  (`UNREADABLE_INPUT`) fiel bei Feldern, die leer mit 0 rechnen (etwa s_q in
+  Blatt 08), still auf 0 zurück – Genauigkeit 0 €, OFG = GFQ, grüne Würdigung.
+  `evaluateSheet` lässt jetzt jede abhängige Zelle offen („Eingabe ungültig“),
+  ohne Hinweis „mit 0 berechnet“ und ohne Werte ohne Grundlage
+  (`dependentCells` in `model/dependence.ts`). Ein wirklich leeres Feld folgt
+  weiter seiner Leer-Regel.
+- Skala und Kennzahlenleiste: keine Ampel, solange die obere Fehlergrenze offen
+  ist (vorher grün aus der Gesamtfehlerquote allein).
+- `MethodSummary` trägt `exhaustiveUnits` (n_e bzw. N_e) und
+  `exhaustiveBookValue` (BV_e), `summaryOf` füllt sie (`model/exhaustive.ts`);
+  Blatt 18 erkennt die umfassende Schicht daran. Die Ersatzregel EE_e ≠ 0 gilt
+  nur noch, wenn ein Aufrufer die Ergebnisübersicht ohne diese Angaben übergibt.
+- Eigenschaftstest `test/unreadable.spec.ts`: Für jedes Zahlenfeld der Blätter
+  02–20 und X1–X4 liefert „ungültig“ nie das Ergebnis von „leer“.
+
 ## 0.1.10 – 2026-10-17
 
 Auflagen der Nachprüfung von 0.1.9 (Freigabe mit Auflagen; noch nicht

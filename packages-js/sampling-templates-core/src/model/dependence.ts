@@ -154,3 +154,23 @@ export function silentInputs(sheet: AvailableSheet, inputs: CellMap, base: CellM
     .filter(({ field, cell }) => depends(field, cell))
     .map(({ cell }) => cell)
 }
+
+/**
+ * Zellen, die von der Eingabe `cell` abhängen: Mit einem Probewert an ihrer
+ * Stelle ändert sich ihr Wert gegenüber `base` (Rechnung mit leerem Feld).
+ * Eingabezellen zählen nicht. Grundlage für ungültige Eingaben
+ * (`UNREADABLE_INPUT`): Ihre Folgegrößen bleiben offen, statt wie beim leeren
+ * Feld weiterzurechnen.
+ */
+export function dependentCells(sheet: AvailableSheet, inputs: CellMap, cell: CellAddress, base: CellMap, context: SheetContext): CellAddress[] {
+  const fields = inputFields(sheet.definition)
+  const field = fields.find((entry) => cellsOf(entry).includes(cell))
+  if (!field) return []
+  const own = new Set(fields.flatMap(cellsOf))
+  const found = new Set<CellAddress>()
+  for (const probe of probesOf(field, context, largeProbe(sheet, base))) {
+    const run = sheet.compute({ ...inputs, [cell]: probe }, context)
+    for (const key of new Set([...Object.keys(base), ...Object.keys(run)])) if (!own.has(key) && differs(base[key], run[key])) found.add(key)
+  }
+  return [...found]
+}

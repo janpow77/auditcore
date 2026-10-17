@@ -679,6 +679,19 @@ wieder die Vorbelegung (`UNREADABLE_INPUT` in `src/model/sheet.ts`). Hängt
 kein Ergebnis an dem Feld (N in Blatt 03 geht in den MUS-Umfang nicht ein),
 ist nur das Feld selbst als ungültig markiert.
 
+Seit 0.1.11 gilt das für **jedes** Eingabefeld, nicht nur für vorbelegte: Eine
+nicht lesbare Eingabe („abc“, zu viele Nachkommastellen, Punkt als
+Dezimaltrenner) fällt auf keine Leer-Regel zurück – weder auf „leer = 0“
+(Standardabweichungen der Stichprobe s_e/s_q/s_r je Zeitraum und Schicht) noch
+auf „keine“ (freiwillige Felder und Gruppen). `evaluateSheet` ermittelt die
+abhängigen Zellen durch Nachrechnen mit Probewerten (`dependentCells` in
+`src/model/dependence.ts`) und lässt jede offen; sie zeigt „Eingabe ungültig“,
+der Hinweis „mit 0 berechnet“ entfällt, und Werte ohne Grundlage bleiben offen.
+Ist die obere Fehlergrenze offen, zeigen Skala und Kennzahlenleiste keine Ampel
+(vorher grün aus der Gesamtfehlerquote allein). Ein wirklich leeres Feld folgt
+weiter seiner Leer-Regel. Eigenschaftstest über alle Zahlenfelder der Blätter
+02–20 und X1–X4: `test/unreadable.spec.ts`.
+
 ## 3. Rechensemantik von Excel: Vergleiche, Differenzen, Aufrunden, Summen
 
 Referenz ist die Excel-Vorlage, also gilt das Rechenverhalten von **Microsoft

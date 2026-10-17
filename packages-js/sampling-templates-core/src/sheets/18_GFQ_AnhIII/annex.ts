@@ -155,34 +155,17 @@ export function adjustedPrecision(c: Cells, context: SheetContext): CellValue {
   return isReplacementTable2(c) ? replacementPrecision(c, context, location) : c.C8
 }
 
-/** Anzahl und Buchwert der hochwertigen bzw. umfassenden Schicht je Methodenblatt (bei Schichten die Summenzellen, je Zeitraum alle). */
-const EXHAUSTIVE_CELLS: Readonly<Record<string, readonly string[]>> = {
-  '03_MUS_1Z': ['C29', 'C30'],
-  '04_MUS_1Z_S': ['C37', 'C38'],
-  '05_MUS_2Z': ['C37', 'C38', 'C71', 'C72'],
-  '06_MUS_2Z_S': ['C41', 'C42', 'C75', 'C76'],
-  '07_MUS_3Z': ['C40', 'C41', 'C79', 'C80', 'C113', 'C114'],
-  '08_SRS_1Z': ['C9', 'C10'],
-  '09_SRS_1Z_S': ['C8', 'C9'],
-  '10_SRS_2Z': ['C9', 'C10', 'C51', 'C52'],
-  '11_SRS_2Z_S': ['C7', 'C8', 'C53', 'C54'],
-  '12_SRS_3Z': ['C9', 'C10', 'C55', 'C56', 'C94', 'C95'],
-  '13_NS_GW': ['C10', 'C11'],
-  '14_NS_GW_S': ['C8', 'C9'],
-  '15_NS_PPS': ['C14', 'C15'],
-  '16_NS_PPS_S': ['C19', 'C20'],
-}
-
 /**
  * Hat das Verfahren eine hochwertige bzw. umfassende Schicht? Maßgeblich sind
- * n_e bzw. N_e und BV_e des Methodenblatts (> 0); EE_e liefern die
- * Methodenblätter auch ohne Schicht als 0. Liegt das Methodenblatt nicht vor
- * (nur die Ergebnisübersicht), zählt ein EE_e ≠ 0.
+ * n_e bzw. N_e und BV_e aus der Ergebnisübersicht (`exhaustiveUnits`,
+ * `exhaustiveBookValue`, > 0); EE_e liefern die Methodenblätter auch ohne
+ * Schicht als 0. Nur wenn ein Aufrufer die Ergebnisübersicht ohne diese
+ * Angaben übergibt, zählt ersatzweise EE_e ≠ 0.
  */
 export function hasExhaustiveStratum(c: CellMap, context: SheetContext): boolean {
-  const sheet = context.method?.sheet
-  const cells = sheet ? EXHAUSTIVE_CELLS[sheet] : undefined
-  const results = sheet ? context.sheets[sheet] : undefined
-  if (cells && results) return cells.some((cell) => isNumber(results[cell]) && gt(results[cell], 0))
+  const method = context.method
+  if (method && (method.exhaustiveUnits !== undefined || method.exhaustiveBookValue !== undefined)) {
+    return [method.exhaustiveUnits, method.exhaustiveBookValue].some((value) => isNumber(value) && gt(value, 0))
+  }
   return isNumber(c.C7) && !eq(c.C7, 0)
 }

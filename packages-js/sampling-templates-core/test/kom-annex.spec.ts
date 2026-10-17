@@ -123,8 +123,9 @@ describe('Anhang III nach KOM-Leitfaden 7.10.3: Belegrechnungen', () => {
 
   it('B1: ohne umfassende Schicht (n_e/N_e/BV_e 0 bzw. leer) ist die Gesamtrechnung exakt – kein Hinweis „nicht KOM-konform“', () => {
     // Methodenblatt 08 ohne umfassende Schicht: EE_e kommt trotzdem als 0.
+    // Ergebnisübersicht mit n_e/N_e und BV_e (summaryOf); ohne Schicht leer.
     const without = (population: CellMap, exhaustive: CellMap = { C9: null, C10: null }): SheetContext =>
-      createContext({ sheets: { '02_Grundgesamtheit': { C20: 0, C39: 10000000, ...population }, '08_SRS_1Z': exhaustive }, method: { sheet: '08_SRS_1Z', method: 'SRS', bookValue: 10000000, projectedError: 120000, exhaustiveError: 0, precision: 60000, systemicErrors: 0, anomalousErrors: 0, sampleSize: 60, totalErrorRate: 0.012 } })
+      createContext({ sheets: { '02_Grundgesamtheit': { C20: 0, C39: 10000000, ...population } }, method: { sheet: '08_SRS_1Z', method: 'SRS', bookValue: 10000000, projectedError: 120000, exhaustiveError: 0, precision: 60000, systemicErrors: 0, anomalousErrors: 0, sampleSize: 60, totalErrorRate: 0.012, exhaustiveUnits: exhaustive.C10 ?? null, exhaustiveBookValue: exhaustive.C9 ?? null } })
     const replaced = run(without({ C47: 40, C48: 500000, C49: REPLACEMENT, C52: 400 }))
     // 60.000 · 360/400 · 10.000.000/9.500.000 = 56.842,11 €
     expect((replaced.cells.C25 as number).toFixed(2)).toBe('56842.11')
@@ -145,6 +146,9 @@ describe('Anhang III nach KOM-Leitfaden 7.10.3: Belegrechnungen', () => {
     }
     const results = computeWorkspace(state)
     expect(results[srs!.id]?.C41).toBe(0)
+    expect(contextFor(total!.id, state, results).method).toMatchObject({ exhaustiveUnits: null, exhaustiveBookValue: null })
+    const withStratum = computeWorkspace({ ...state, sheets: { ...state.sheets, [srs!.id]: srs!.sample.inputs } })
+    expect(contextFor(total!.id, state, withStratum).method).toMatchObject({ exhaustiveUnits: 4, exhaustiveBookValue: 6200000 })
     const hints = (total!.webHints?.({}, results[total!.id] ?? {}, contextFor(total!.id, state, results)) ?? []).map((hint) => hint.id)
     expect(hints).toContain('replacement-precision-reduced')
     expect(hints).not.toContain('replacement-location-missing')

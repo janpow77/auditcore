@@ -1,5 +1,14 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.11 – 2026-10-18
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.11 gebunden.
+
+- Jedes Feld mit nicht lesbarer Eingabe geht als ungültig in die Rechnung
+  (vorher nur vorbelegte Felder): Ergebnisspalte und Kennzahlenleiste melden
+  „Eingabe ungültig“ in allen abhängigen Größen, statt still mit 0 oder „keine“
+  zu rechnen. Ohne obere Fehlergrenze keine Ampel.
+
 ## 0.1.10 – 2026-10-17
 
 Exakt an `@auditcore/sampling-templates-core` 0.1.10 gebunden (Auflagen der

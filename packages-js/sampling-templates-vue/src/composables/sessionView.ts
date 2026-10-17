@@ -79,16 +79,19 @@ const REPORT_SHEET = '20_Druck_KOM'
 const isList = (sheet: AvailableSheet | null): boolean => sheet?.definition.layout === 'list'
 
 /**
- * Arbeitsstand für die Rechnung: Ein vorbelegtes Feld (z. B. BV aus Blatt 02)
- * mit nicht lesbarer Eingabe fällt nicht still auf den Wert des anderen Blatts
- * zurück; es zählt als ungültig, und die Folgegrößen bleiben offen. Erst ein
- * geleertes Feld übernimmt wieder die Vorbelegung.
+ * Arbeitsstand für die Rechnung: Jedes Feld mit nicht lesbarer Eingabe („abc“,
+ * zu viele Nachkommastellen, mehrdeutiger Trenner) zählt als ungültig
+ * (`UNREADABLE_INPUT`), nicht als leer. Es fällt auf keine Leer-Regel zurück –
+ * weder auf die Vorbelegung aus einem anderen Blatt noch auf „leer = 0“ (etwa
+ * Standardabweichungen der Stichprobe) noch auf „keine“ bei freiwilligen
+ * Feldern; alle abhängigen Größen bleiben offen und melden die ungültige
+ * Eingabe. Erst ein geleertes Feld folgt wieder der Leer-Regel.
  */
 function withUnreadable(state: WorkspaceState, sheet: AvailableSheet | null, invalid: ReadonlySet<string>): WorkspaceState {
   if (!sheet || isList(sheet)) return state
-  const linked = [...invalid].filter((cell) => findField(sheet.definition, cell)?.link)
-  if (linked.length === 0) return state
-  return { ...state, sheets: { ...state.sheets, [sheet.id]: { ...ownInputs(state, sheet.id), ...Object.fromEntries(linked.map((cell) => [cell, UNREADABLE_INPUT])) } } }
+  const cells = [...invalid].filter((cell) => findField(sheet.definition, cell))
+  if (cells.length === 0) return state
+  return { ...state, sheets: { ...state.sheets, [sheet.id]: { ...ownInputs(state, sheet.id), ...Object.fromEntries(cells.map((cell) => [cell, UNREADABLE_INPUT])) } } }
 }
 
 export function useSessionView(workspace: ShallowRef<WorkspaceState>, step: Ref<StepId>, selectedUnit: Ref<number>, options: ViewOptions): SessionView {

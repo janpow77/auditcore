@@ -59,13 +59,18 @@ function gaugeLabels(gauge: NonNullable<SummaryDefinition['gauge']>, t: Translat
   return { rateLabel: gauge.rateLabel ?? t('gaugeRate'), upperLabel: gauge.upper ? (gauge.upperLabel ?? t('gaugeUpper')) : null }
 }
 
+/** Skala nur mit Quote und Schwelle; ist die obere Fehlergrenze offen (fehlende oder ungültige Angabe), keine Ampel aus der Quote allein – sie wäre grün ohne Grundlage. */
+function gaugeShown(threshold: CellValue | undefined, rate: CellValue | undefined, hasUpper: boolean, upper: CellValue | undefined): boolean {
+  return isNumber(threshold) && isNumber(rate) && !(hasUpper && isBlank(upper))
+}
+
 function gaugeOf(sheet: AvailableSheet, results: CellMap, t: Translate): GaugeView | null {
   const gauge = sheet.definition.summary.gauge
   if (!gauge) return null
   const threshold = results[gauge.threshold]
   const rate = results[gauge.rate]
   const upper = gauge.upper ? results[gauge.upper] : null
-  if (!isNumber(threshold) || !isNumber(rate)) return null
+  if (!gaugeShown(threshold, rate, gauge.upper !== undefined, upper) || !isNumber(threshold) || !isNumber(rate)) return null
   const top = isNumber(upper) ? upper : rate
   const max = Math.max(threshold * 2, top * 1.15, GAUGE_MIN)
   const position = (value: number): number => Math.min(1, Math.max(0, value) / max)
