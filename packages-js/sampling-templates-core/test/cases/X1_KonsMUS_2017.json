@@ -1,0 +1,311 @@
+[
+ {
+  "name": "Standardfall, Konfidenzniveau 90 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 60 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.6,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 70 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.7,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 80 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.8,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 95 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Leeres Formular",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {}
+ },
+ {
+  "name": "Alles ausgefüllt außer C1",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C4",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C7",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C13",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C14",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C16",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62
+  }
+ },
+ {
+  "name": "Ohne Stichprobeneinheit und Umfang der Grundgesamtheit (C2, C3 werden nicht gelesen)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Nur Planung ausgefüllt, Prüfergebnisse leer",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005
+  }
+ },
+ {
+  "name": "Nur Buchwert ausgefüllt",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000
+  }
+ },
+ {
+  "name": "TE = AE × EF (95 %, erwartete Fehlerquote 1,25 %): Nenner null",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.0125,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Knapp unter TE = AE × EF (95 %, 1,24 %)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.0124,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Knapp über TE = AE × EF (95 %, 1,26 %): negativer Nenner, Umfang 30",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.0126,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Erwartete Fehlerquote über der Wesentlichkeitsschwelle (3 %)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.03,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang genau 150 (95 %, erwartete Fehlerquote 0)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 1000000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0,
+   "C13": 0,
+   "C14": 0.2,
+   "C16": 0
+  }
+ },
+ {
+  "name": "Erwartete Fehlerquote 0 eingetragen",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Keine Fehler in der Stichprobe (Nullen eingetragen)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 0,
+   "C14": 0,
+   "C16": 0
+  }
+ },
+ {
+  "name": "Buchwert 0: Division durch null",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 0,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  }
+ },
+ {
+  "name": "Kleine Grundgesamtheit, Konfidenzniveau 60 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 612345.67,
+   "C2": "Vorhaben",
+   "C3": 35,
+   "C4": 0.6,
+   "C7": 0.002,
+   "C13": 0,
+   "C14": 0.031,
+   "C16": 1250.5
+  }
+ }
+]

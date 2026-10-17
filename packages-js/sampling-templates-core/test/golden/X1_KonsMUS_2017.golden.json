@@ -1,0 +1,671 @@
+[
+ {
+  "name": "Standardfall, Konfidenzniveau 90 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 185,
+   "X1_KonsMUS_2017!C12": 262162.162162162,
+   "X1_KonsMUS_2017!C15": 605594.594594595,
+   "X1_KonsMUS_2017!C17": 700594.594594595,
+   "X1_KonsMUS_2017!C18": 0.0144452493730844,
+   "X1_KonsMUS_2017!C19": 180940.540540541,
+   "X1_KonsMUS_2017!C20": 881535.135135135,
+   "X1_KonsMUS_2017!C21": 0.00373073279465032,
+   "X1_KonsMUS_2017!C22": 0.0181759821677347
+  }
+ },
+ {
+  "name": "Konfidenzniveau 60 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.6,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 0.92,
+   "X1_KonsMUS_2017!C6": 1.1,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 64,
+   "X1_KonsMUS_2017!C12": 757812.5,
+   "X1_KonsMUS_2017!C15": 697187.5,
+   "X1_KonsMUS_2017!C17": 792187.5,
+   "X1_KonsMUS_2017!C18": 0.0163337628865979,
+   "X1_KonsMUS_2017!C19": 488243.75,
+   "X1_KonsMUS_2017!C20": 1280431.25,
+   "X1_KonsMUS_2017!C21": 0.010066881443299,
+   "X1_KonsMUS_2017!C22": 0.0264006443298969
+  }
+ },
+ {
+  "name": "Konfidenzniveau 70 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.7,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 1.21,
+   "X1_KonsMUS_2017!C6": 1.2,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 87,
+   "X1_KonsMUS_2017!C12": 557471.264367816,
+   "X1_KonsMUS_2017!C15": 674540.229885057,
+   "X1_KonsMUS_2017!C17": 769540.229885057,
+   "X1_KonsMUS_2017!C18": 0.0158668088636094,
+   "X1_KonsMUS_2017!C19": 364032.183908046,
+   "X1_KonsMUS_2017!C20": 1133572.4137931,
+   "X1_KonsMUS_2017!C21": 0.00750581822490816,
+   "X1_KonsMUS_2017!C22": 0.0233726270885176
+  }
+ },
+ {
+  "name": "Konfidenzniveau 80 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.8,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 1.61,
+   "X1_KonsMUS_2017!C6": 1.3,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 120,
+   "X1_KonsMUS_2017!C12": 404166.666666667,
+   "X1_KonsMUS_2017!C15": 650708.333333333,
+   "X1_KonsMUS_2017!C17": 745708.333333333,
+   "X1_KonsMUS_2017!C18": 0.0153754295532646,
+   "X1_KonsMUS_2017!C19": 268983.333333333,
+   "X1_KonsMUS_2017!C20": 1014691.66666667,
+   "X1_KonsMUS_2017!C21": 0.00554604810996564,
+   "X1_KonsMUS_2017!C22": 0.0209214776632302
+  }
+ },
+ {
+  "name": "Konfidenzniveau 95 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 3,
+   "X1_KonsMUS_2017!C6": 1.6,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 250,
+   "X1_KonsMUS_2017!C12": 194000,
+   "X1_KonsMUS_2017!C15": 582000,
+   "X1_KonsMUS_2017!C17": 677000,
+   "X1_KonsMUS_2017!C18": 0.0139587628865979,
+   "X1_KonsMUS_2017!C19": 138680,
+   "X1_KonsMUS_2017!C20": 815680,
+   "X1_KonsMUS_2017!C21": 0.00285938144329897,
+   "X1_KonsMUS_2017!C22": 0.0168181443298969
+  }
+ },
+ {
+  "name": "Leeres Formular",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {},
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 0,
+   "X1_KonsMUS_2017!C6": 0,
+   "X1_KonsMUS_2017!C8": 0,
+   "X1_KonsMUS_2017!C10": 0,
+   "X1_KonsMUS_2017!C11": null,
+   "X1_KonsMUS_2017!C12": null,
+   "X1_KonsMUS_2017!C15": null,
+   "X1_KonsMUS_2017!C17": null,
+   "X1_KonsMUS_2017!C18": null,
+   "X1_KonsMUS_2017!C19": null,
+   "X1_KonsMUS_2017!C20": null,
+   "X1_KonsMUS_2017!C21": null,
+   "X1_KonsMUS_2017!C22": null
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C1",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 0,
+   "X1_KonsMUS_2017!C10": 0,
+   "X1_KonsMUS_2017!C11": null,
+   "X1_KonsMUS_2017!C12": null,
+   "X1_KonsMUS_2017!C15": null,
+   "X1_KonsMUS_2017!C17": null,
+   "X1_KonsMUS_2017!C18": null,
+   "X1_KonsMUS_2017!C19": null,
+   "X1_KonsMUS_2017!C20": null,
+   "X1_KonsMUS_2017!C21": null,
+   "X1_KonsMUS_2017!C22": null
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C4",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 0,
+   "X1_KonsMUS_2017!C6": 0,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 30,
+   "X1_KonsMUS_2017!C12": 1616666.66666667,
+   "X1_KonsMUS_2017!C15": 0,
+   "X1_KonsMUS_2017!C17": 95000,
+   "X1_KonsMUS_2017!C18": 0.00195876288659794,
+   "X1_KonsMUS_2017!C19": 1020733.33333333,
+   "X1_KonsMUS_2017!C20": 1115733.33333333,
+   "X1_KonsMUS_2017!C21": 0.0210460481099656,
+   "X1_KonsMUS_2017!C22": 0.0230048109965636
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C7",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 0,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 116,
+   "X1_KonsMUS_2017!C12": 418103.448275862,
+   "X1_KonsMUS_2017!C15": 965818.965517241,
+   "X1_KonsMUS_2017!C17": 1060818.96551724,
+   "X1_KonsMUS_2017!C18": 0.0218725559900462,
+   "X1_KonsMUS_2017!C19": 277624.137931035,
+   "X1_KonsMUS_2017!C20": 1338443.10344828,
+   "X1_KonsMUS_2017!C21": 0.00572420902950587,
+   "X1_KonsMUS_2017!C22": 0.0275967650195521
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C13",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 185,
+   "X1_KonsMUS_2017!C12": 262162.162162162,
+   "X1_KonsMUS_2017!C15": 605594.594594595,
+   "X1_KonsMUS_2017!C17": 700594.594594595,
+   "X1_KonsMUS_2017!C18": 0.0144452493730844,
+   "X1_KonsMUS_2017!C19": 162540.540540541,
+   "X1_KonsMUS_2017!C20": 863135.135135135,
+   "X1_KonsMUS_2017!C21": 0.00335135135135135,
+   "X1_KonsMUS_2017!C22": 0.0177966007244358
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C14",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 185,
+   "X1_KonsMUS_2017!C12": 262162.162162162,
+   "X1_KonsMUS_2017!C15": 605594.594594595,
+   "X1_KonsMUS_2017!C17": 700594.594594595,
+   "X1_KonsMUS_2017!C18": 0.0144452493730844,
+   "X1_KonsMUS_2017!C19": 18400,
+   "X1_KonsMUS_2017!C20": 718994.594594595,
+   "X1_KonsMUS_2017!C21": 0.000379381443298969,
+   "X1_KonsMUS_2017!C22": 0.0148246308163834
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C16",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 185,
+   "X1_KonsMUS_2017!C12": 262162.162162162,
+   "X1_KonsMUS_2017!C15": 605594.594594595,
+   "X1_KonsMUS_2017!C17": 605594.594594595,
+   "X1_KonsMUS_2017!C18": 0.0124864864864865,
+   "X1_KonsMUS_2017!C19": 180940.540540541,
+   "X1_KonsMUS_2017!C20": 786535.135135135,
+   "X1_KonsMUS_2017!C21": 0.00373073279465032,
+   "X1_KonsMUS_2017!C22": 0.0162172192811368
+  }
+ },
+ {
+  "name": "Ohne Stichprobeneinheit und Umfang der Grundgesamtheit (C2, C3 werden nicht gelesen)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 185,
+   "X1_KonsMUS_2017!C12": 262162.162162162,
+   "X1_KonsMUS_2017!C15": 605594.594594595,
+   "X1_KonsMUS_2017!C17": 700594.594594595,
+   "X1_KonsMUS_2017!C18": 0.0144452493730844,
+   "X1_KonsMUS_2017!C19": 180940.540540541,
+   "X1_KonsMUS_2017!C20": 881535.135135135,
+   "X1_KonsMUS_2017!C21": 0.00373073279465032,
+   "X1_KonsMUS_2017!C22": 0.0181759821677347
+  }
+ },
+ {
+  "name": "Nur Planung ausgefüllt, Prüfergebnisse leer",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 185,
+   "X1_KonsMUS_2017!C12": 262162.162162162,
+   "X1_KonsMUS_2017!C15": 605594.594594595,
+   "X1_KonsMUS_2017!C17": 605594.594594595,
+   "X1_KonsMUS_2017!C18": 0.0124864864864865,
+   "X1_KonsMUS_2017!C19": 0,
+   "X1_KonsMUS_2017!C20": 605594.594594595,
+   "X1_KonsMUS_2017!C21": 0,
+   "X1_KonsMUS_2017!C22": 0.0124864864864865
+  }
+ },
+ {
+  "name": "Nur Buchwert ausgefüllt",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 0,
+   "X1_KonsMUS_2017!C6": 0,
+   "X1_KonsMUS_2017!C8": 0,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 30,
+   "X1_KonsMUS_2017!C12": 1616666.66666667,
+   "X1_KonsMUS_2017!C15": 0,
+   "X1_KonsMUS_2017!C17": 0,
+   "X1_KonsMUS_2017!C18": 0,
+   "X1_KonsMUS_2017!C19": 0,
+   "X1_KonsMUS_2017!C20": 0,
+   "X1_KonsMUS_2017!C21": 0,
+   "X1_KonsMUS_2017!C22": 0
+  }
+ },
+ {
+  "name": "TE = AE × EF (95 %, erwartete Fehlerquote 1,25 %): Nenner null",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.0125,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 3,
+   "X1_KonsMUS_2017!C6": 1.6,
+   "X1_KonsMUS_2017!C8": 606250,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": null,
+   "X1_KonsMUS_2017!C12": null,
+   "X1_KonsMUS_2017!C15": null,
+   "X1_KonsMUS_2017!C17": null,
+   "X1_KonsMUS_2017!C18": 0.00195876288659794,
+   "X1_KonsMUS_2017!C19": null,
+   "X1_KonsMUS_2017!C20": null,
+   "X1_KonsMUS_2017!C21": null,
+   "X1_KonsMUS_2017!C22": null
+  }
+ },
+ {
+  "name": "Knapp unter TE = AE × EF (95 %, 1,24 %)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.0124,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 3,
+   "X1_KonsMUS_2017!C6": 1.6,
+   "X1_KonsMUS_2017!C8": 601400,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 18750,
+   "X1_KonsMUS_2017!C12": 2586.66666666667,
+   "X1_KonsMUS_2017!C15": 7760,
+   "X1_KonsMUS_2017!C17": 102760,
+   "X1_KonsMUS_2017!C18": 0.00211876288659794,
+   "X1_KonsMUS_2017!C19": 20003.7333333333,
+   "X1_KonsMUS_2017!C20": 122763.733333333,
+   "X1_KonsMUS_2017!C21": 0.000412448109965636,
+   "X1_KonsMUS_2017!C22": 0.00253121099656357
+  }
+ },
+ {
+  "name": "Knapp über TE = AE × EF (95 %, 1,26 %): negativer Nenner, Umfang 30",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0.0126,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 3,
+   "X1_KonsMUS_2017!C6": 1.6,
+   "X1_KonsMUS_2017!C8": 611100,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 30,
+   "X1_KonsMUS_2017!C12": 1616666.66666667,
+   "X1_KonsMUS_2017!C15": 4850000,
+   "X1_KonsMUS_2017!C17": 4945000,
+   "X1_KonsMUS_2017!C18": 0.101958762886598,
+   "X1_KonsMUS_2017!C19": 1020733.33333333,
+   "X1_KonsMUS_2017!C20": 5965733.33333333,
+   "X1_KonsMUS_2017!C21": 0.0210460481099656,
+   "X1_KonsMUS_2017!C22": 0.123004810996564
+  }
+ },
+ {
+  "name": "Erwartete Fehlerquote über der Wesentlichkeitsschwelle (3 %)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.03,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 1455000,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 30,
+   "X1_KonsMUS_2017!C12": 1616666.66666667,
+   "X1_KonsMUS_2017!C15": 3734500,
+   "X1_KonsMUS_2017!C17": 3829500,
+   "X1_KonsMUS_2017!C18": 0.078958762886598,
+   "X1_KonsMUS_2017!C19": 1020733.33333333,
+   "X1_KonsMUS_2017!C20": 4850233.33333333,
+   "X1_KonsMUS_2017!C21": 0.0210460481099656,
+   "X1_KonsMUS_2017!C22": 0.100004810996564
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang genau 150 (95 %, erwartete Fehlerquote 0)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 1000000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.95,
+   "C7": 0,
+   "C13": 0,
+   "C14": 0.2,
+   "C16": 0
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 3,
+   "X1_KonsMUS_2017!C6": 1.6,
+   "X1_KonsMUS_2017!C8": 0,
+   "X1_KonsMUS_2017!C10": 20000,
+   "X1_KonsMUS_2017!C11": 150,
+   "X1_KonsMUS_2017!C12": 6666.66666666667,
+   "X1_KonsMUS_2017!C15": 20000,
+   "X1_KonsMUS_2017!C17": 20000,
+   "X1_KonsMUS_2017!C18": 0.02,
+   "X1_KonsMUS_2017!C19": 1333.33333333333,
+   "X1_KonsMUS_2017!C20": 21333.3333333333,
+   "X1_KonsMUS_2017!C21": 0.00133333333333333,
+   "X1_KonsMUS_2017!C22": 0.0213333333333333
+  }
+ },
+ {
+  "name": "Erwartete Fehlerquote 0 eingetragen",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 0,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 116,
+   "X1_KonsMUS_2017!C12": 418103.448275862,
+   "X1_KonsMUS_2017!C15": 965818.965517241,
+   "X1_KonsMUS_2017!C17": 1060818.96551724,
+   "X1_KonsMUS_2017!C18": 0.0218725559900462,
+   "X1_KonsMUS_2017!C19": 277624.137931035,
+   "X1_KonsMUS_2017!C20": 1338443.10344828,
+   "X1_KonsMUS_2017!C21": 0.00572420902950587,
+   "X1_KonsMUS_2017!C22": 0.0275967650195521
+  }
+ },
+ {
+  "name": "Keine Fehler in der Stichprobe (Nullen eingetragen)",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 0,
+   "C14": 0,
+   "C16": 0
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 242500,
+   "X1_KonsMUS_2017!C10": 970000,
+   "X1_KonsMUS_2017!C11": 185,
+   "X1_KonsMUS_2017!C12": 262162.162162162,
+   "X1_KonsMUS_2017!C15": 605594.594594595,
+   "X1_KonsMUS_2017!C17": 605594.594594595,
+   "X1_KonsMUS_2017!C18": 0.0124864864864865,
+   "X1_KonsMUS_2017!C19": 0,
+   "X1_KonsMUS_2017!C20": 605594.594594595,
+   "X1_KonsMUS_2017!C21": 0,
+   "X1_KonsMUS_2017!C22": 0.0124864864864865
+  }
+ },
+ {
+  "name": "Buchwert 0: Division durch null",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 0,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 0.9,
+   "C7": 0.005,
+   "C13": 18400,
+   "C14": 0.62,
+   "C16": 95000
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 2.31,
+   "X1_KonsMUS_2017!C6": 1.5,
+   "X1_KonsMUS_2017!C8": 0,
+   "X1_KonsMUS_2017!C10": 0,
+   "X1_KonsMUS_2017!C11": null,
+   "X1_KonsMUS_2017!C12": null,
+   "X1_KonsMUS_2017!C15": null,
+   "X1_KonsMUS_2017!C17": null,
+   "X1_KonsMUS_2017!C18": null,
+   "X1_KonsMUS_2017!C19": null,
+   "X1_KonsMUS_2017!C20": null,
+   "X1_KonsMUS_2017!C21": null,
+   "X1_KonsMUS_2017!C22": null
+  }
+ },
+ {
+  "name": "Kleine Grundgesamtheit, Konfidenzniveau 60 %",
+  "blatt": "X1_KonsMUS_2017",
+  "eingaben": {
+   "C1": 612345.67,
+   "C2": "Vorhaben",
+   "C3": 35,
+   "C4": 0.6,
+   "C7": 0.002,
+   "C13": 0,
+   "C14": 0.031,
+   "C16": 1250.5
+  },
+  "erwartet": {
+   "X1_KonsMUS_2017!C5": 0.92,
+   "X1_KonsMUS_2017!C6": 1.1,
+   "X1_KonsMUS_2017!C8": 1224.69134,
+   "X1_KonsMUS_2017!C10": 12246.9134,
+   "X1_KonsMUS_2017!C11": 52,
+   "X1_KonsMUS_2017!C12": 11775.8782692308,
+   "X1_KonsMUS_2017!C15": 10833.8080076923,
+   "X1_KonsMUS_2017!C17": 12084.3080076923,
+   "X1_KonsMUS_2017!C18": 0.0197344548997828,
+   "X1_KonsMUS_2017!C19": 365.052226346154,
+   "X1_KonsMUS_2017!C20": 12449.3602340385,
+   "X1_KonsMUS_2017!C21": 0.000596153846153846,
+   "X1_KonsMUS_2017!C22": 0.0203306087459367
+  }
+ }
+]

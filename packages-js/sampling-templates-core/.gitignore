@@ -1,0 +1,4 @@
+node_modules/
+dist/
+# Vorlage der Behörde (Arbeitsmappe, Zellbeschreibung): nie versionieren.
+.vorlage/

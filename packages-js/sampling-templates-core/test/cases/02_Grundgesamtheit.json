@@ -1,0 +1,422 @@
+[
+ {
+  "name": "Standardfall: abgestimmt, TH-Pauschale in SFC2021 enthalten",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "TH-Pauschale nicht enthalten",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 48500000,
+   "C16": 48500000,
+   "C20": 700000,
+   "C21": "Nein",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Differenz zum Zahlungsantrag, nicht erläutert",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49150000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Differenz zum Zahlungsantrag, erläutert",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49150000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten",
+   "C18": "Nachbuchung nach Stichtag (Beispiel)"
+  }
+ },
+ {
+  "name": "Anzahl der Datensätze nicht abgestimmt, negative Summe positiv",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 440,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 1500,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Negative Datensätze mit negativer Summe, Datensätze nicht mit SFC2021 abgestimmt",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": -250000,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten",
+   "C57": "gesondertes Stichprobenverfahren"
+  }
+ },
+ {
+  "name": "Spezifische Ziele ausgeschlossen, wieder aufgenommene Ausgaben nicht enthalten",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Nein",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten",
+   "C32": 15,
+   "C33": 1800000,
+   "C34": 6,
+   "C35": 640000
+  }
+ },
+ {
+  "name": "Wieder aufgenommene Ausgaben bereits enthalten (nur nachrichtlich)",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten",
+   "C32": 4,
+   "C33": 350000,
+   "C34": 6,
+   "C35": 640000
+  }
+ },
+ {
+  "name": "Art. 80 Abs. 3: Ausschluss",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "Ausschluss (Art. 3 Abs. 6 Buchst. b)",
+   "C41": 9,
+   "C42": 11,
+   "C43": 1250000,
+   "C44": 3,
+   "C45": 4,
+   "C46": 820000
+  }
+ },
+ {
+  "name": "Art. 80 Abs. 3: Ersetzung",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "Ersetzung (Anh. III)",
+   "C41": 9,
+   "C42": 11,
+   "C43": 1250000
+  }
+ },
+ {
+  "name": "Art. 80 Abs. 3: Einheiten erfasst, aber keine Behandlung gewählt",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten",
+   "C42": 5,
+   "C43": 400000
+  }
+ },
+ {
+  "name": "Art. 80 Abs. 3: Ansatz gewählt, aber keine Einheiten erfasst",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "Ausschluss (Art. 3 Abs. 6 Buchst. b)"
+  }
+ },
+ {
+  "name": "Weniger als 300 Einheiten: nichtstatistisches Verfahren zulässig",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 18000000,
+   "C16": 18000000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 260,
+   "C24": 251,
+   "C25": 17300000,
+   "C26": 9,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Genau 300 Einheiten und Mindestumfang mit Aufrundung (N = 301)",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 313,
+   "C24": 301,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Leeres Formular (nur Vorgaben der Vorlage)",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {}
+ },
+ {
+  "name": "Teilweise: nur Zahlungsantrag",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C15": 49200000,
+   "C16": 49200000
+  }
+ },
+ {
+  "name": "Teilweise: nur Datensätze, Zahlungsantrag fehlt",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer der Summe der positiven Datensätze",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer der Anzahl der positiven Datensätze",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer dem Betrag laut SFC2021",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C20": 700000,
+   "C21": "Ja",
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": "Ja",
+   "C40": 400000,
+   "C49": "keine betroffenen Einheiten"
+  }
+ },
+ {
+  "name": "Teilweise: Vorgaben geleert (TH enthalten, Wiederaufnahme, Schwellenwert, Behandlung)",
+  "blatt": "02_Grundgesamtheit",
+  "eingaben": {
+   "C9": "Beispiel-CCI",
+   "C10": "EFRE",
+   "C12": "2025/2026",
+   "C15": 49200000,
+   "C16": 49200000,
+   "C20": 700000,
+   "C21": null,
+   "C23": 432,
+   "C24": 420,
+   "C25": 48500000,
+   "C26": 12,
+   "C27": 0,
+   "C36": null,
+   "C40": null,
+   "C49": null
+  }
+ }
+]

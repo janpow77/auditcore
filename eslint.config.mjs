@@ -72,6 +72,28 @@ export default tseslint.config(
       'max-lines': ['error', { max: 250, skipBlankLines: false, skipComments: false }],
     },
   },
+  // Stichprobenvorlagen: Kern und Vue-Bindung von Anfang an mit den Maßstäben für neue Module.
+  {
+    files: ['packages-js/sampling-templates-core/src/**/*.ts', 'packages-js/sampling-templates-vue/src/**/*.{ts,vue}'],
+    rules: {
+      complexity: ['error', 10],
+      'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
+    },
+  },
+  // Rechenkerne der Stichprobenvorlagen: Vergleiche auf Rechenwerten nur mit der Toleranz der
+  // Tabellenkalkulation (eq, ne, lt, le, gt, ge aus src/excel), nie mit den Operatoren der Sprache.
+  {
+    files: ['packages-js/sampling-templates-core/src/sheets/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        { selector: 'Program > :first-child[type="EmptyStatement"]', message: 'Leere Anweisung am Dateianfang' },
+        { selector: 'BinaryExpression[operator=/^(<|>|<=|>=)$/]', message: 'Vergleich wie in der Tabellenkalkulation: lt, le, gt, ge aus src/excel verwenden.' },
+        { selector: 'BinaryExpression[operator=/^[!=]==$/][right.type="Literal"][right.raw=/^-?[0-9]/]', message: 'Zahlenvergleich wie in der Tabellenkalkulation: eq, ne oder sameNumber aus src/excel verwenden.' },
+        { selector: 'BinaryExpression[operator=/^[!=]==$/][left.type="Literal"][left.raw=/^-?[0-9]/]', message: 'Zahlenvergleich wie in der Tabellenkalkulation: eq, ne oder sameNumber aus src/excel verwenden.' },
+      ],
+    },
+  },
   {
     files: ['packages-js/**/src/**/*.tsx'],
     rules: {
