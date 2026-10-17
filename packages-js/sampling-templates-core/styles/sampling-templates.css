@@ -1,0 +1,402 @@
+/*
+ * Stichprobenrechner (Webfassung der Stichprobenvorlagen 2021–2027) – gemeinsam für
+ * alle Oberflächenbindungen. Es werden ausschließlich die FlowAudit-Designtoken
+ * (--fa-*) gelesen; Hell und Dunkel ergeben sich aus den Token. Die Breite richtet
+ * sich nach dem Behälter (Container-Abfragen), nicht nach dem Fenster.
+ */
+@import './report.css';
+
+.fa-st {
+  container: fa-st / inline-size;
+  position: relative;
+  font: var(--fa-font-size-md) / var(--fa-line-height) var(--fa-font-sans);
+  color: var(--fa-color-text);
+  background: var(--fa-color-bg);
+}
+.fa-st *,
+.fa-st *::before,
+.fa-st *::after { box-sizing: border-box; }
+.fa-st :is(h2, h3, p, dl, dd, ul, ol) { margin: 0; padding: 0; }
+.fa-st :is(ul, ol) { list-style: none; }
+.fa-st__inner { max-width: 76rem; margin: 0 auto; padding: 0 var(--fa-space-4); }
+.fa-st__sheet:focus { outline: none; }
+.fa-st__muted { color: var(--fa-color-text-muted); font-size: var(--fa-font-size-sm); }
+.fa-st__mono { font-family: var(--fa-font-mono); font-variant-numeric: tabular-nums; }
+
+/* Kopfzeile */
+.fa-st__bar { position: sticky; top: 0; z-index: 5; background: var(--fa-color-surface); border-bottom: 1px solid var(--fa-color-border); }
+.fa-st__bar-inner { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-2) var(--fa-space-3); padding-block: var(--fa-space-3); }
+.fa-st__brand { flex: 1 1 14rem; min-width: 0; }
+.fa-st__title { font-size: var(--fa-font-size-md); font-weight: 600; }
+.fa-st__status { display: inline-flex; align-items: center; gap: var(--fa-space-2); font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
+.fa-st__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--fa-color-border-strong); }
+.fa-st__status--changed .fa-st__dot { background: var(--fa-color-warning); }
+.fa-st__status--saved .fa-st__dot { background: var(--fa-color-success); }
+
+/* Menü Arbeitsstand */
+.fa-st__menu-wrap { position: relative; }
+.fa-st__menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--fa-space-1));
+  z-index: 10;
+  min-width: 16rem;
+  padding: var(--fa-space-1);
+  background: var(--fa-color-surface);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius);
+  box-shadow: var(--fa-shadow-lg);
+}
+.fa-st__menu-item {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--fa-space-3);
+  width: 100%;
+  padding: var(--fa-space-2) var(--fa-space-3);
+  border: 0;
+  border-radius: var(--fa-radius-sm);
+  background: none;
+  color: var(--fa-color-text);
+  font: inherit;
+  font-size: var(--fa-font-size-sm);
+  text-align: left;
+  cursor: pointer;
+}
+.fa-st__menu-item:hover,
+.fa-st__menu-item:focus-visible { background: var(--fa-color-surface-sunken); outline: none; }
+.fa-st__menu-item:focus-visible { box-shadow: var(--fa-focus-ring); }
+.fa-st__menu-sep { height: 1px; margin: var(--fa-space-1) 0; background: var(--fa-color-border); }
+
+/* Verfahrensauswahl: Filter Methode → Zeiträume → Schichtung, daraus genau ein Verfahren */
+.fa-st__picker { padding-block: var(--fa-space-4) var(--fa-space-5); }
+.fa-st__question { font-size: 1.375rem; line-height: 1.25; font-weight: 600; }
+.fa-st__picker-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem); gap: var(--fa-space-5); align-items: start; margin-top: var(--fa-space-4); }
+.fa-st__picker-main,
+.fa-st__variants { display: flex; flex-direction: column; gap: var(--fa-space-4); min-width: 0; }
+.fa-st__picker-side { display: flex; flex-direction: column; gap: var(--fa-space-3); min-width: 0; }
+.fa-st__picker-side .fa-st__guide { margin-top: 0; }
+.fa-st__filter { display: flex; flex-direction: column; gap: var(--fa-space-2); min-width: 0; }
+.fa-st__filter-label { font-size: var(--fa-font-size-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fa-color-text-muted); }
+.fa-st__families,
+.fa-st__segmented { display: flex; flex-wrap: wrap; gap: var(--fa-space-2); }
+.fa-st__family,
+.fa-st__segment {
+  min-height: 2.375rem;
+  padding: var(--fa-space-1) var(--fa-space-3);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius-lg);
+  background: var(--fa-color-surface);
+  color: var(--fa-color-text);
+  font: inherit;
+  font-size: var(--fa-font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--fa-transition), background var(--fa-transition);
+}
+.fa-st__family:hover,
+.fa-st__segment:hover { border-color: var(--fa-color-accent); }
+.fa-st__family[aria-selected='true'],
+.fa-st__segment[aria-pressed='true'] { border-color: var(--fa-color-accent); background: var(--fa-color-accent); color: var(--fa-color-accent-contrast); }
+.fa-st__family:focus-visible,
+.fa-st__segment:focus-visible,
+.fa-st__tile:focus-visible,
+.fa-st__step:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-st__match { display: flex; flex-direction: column; gap: var(--fa-space-1); padding: var(--fa-space-4); border-left: 4px solid var(--fa-color-accent); }
+.fa-st__match-name { font-size: var(--fa-font-size-lg); font-weight: 600; }
+.fa-st__match-actions { margin-top: var(--fa-space-3); }
+.fa-st__family-ref { margin-top: calc(-1 * var(--fa-space-2)); }
+.fa-st__variant-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: var(--fa-space-2); }
+.fa-st__tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fa-space-1);
+  width: 100%;
+  height: 100%;
+  padding: var(--fa-space-3);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius);
+  background: var(--fa-color-surface);
+  color: var(--fa-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--fa-transition);
+}
+.fa-st__tile:hover { border-color: var(--fa-color-accent); }
+.fa-st__tile[aria-disabled='true'] { background: var(--fa-color-surface-sunken); color: var(--fa-color-text-muted); cursor: not-allowed; }
+.fa-st__tile[aria-disabled='true']:hover { border-color: var(--fa-color-border); }
+.fa-st__tile-name { font-weight: 600; font-size: var(--fa-font-size-sm); }
+.fa-st__tile-ref { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-st__callout {
+  padding: var(--fa-space-3);
+  border-radius: var(--fa-radius);
+  background: var(--fa-color-warning-soft);
+  color: var(--fa-color-text);
+  font-size: var(--fa-font-size-sm);
+}
+.fa-st__glossary { display: flex; flex-direction: column; gap: var(--fa-space-1); padding: var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); }
+.fa-st__glossary-item summary { padding-block: var(--fa-space-1); font-size: var(--fa-font-size-sm); font-weight: 500; cursor: pointer; }
+.fa-st__glossary-item summary:focus-visible { outline: none; border-radius: var(--fa-radius-sm); box-shadow: var(--fa-focus-ring); }
+.fa-st__glossary-item p { padding: 0 0 var(--fa-space-2) var(--fa-space-4); font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
+
+/* Schrittleiste des Assistenten und gewähltes Verfahren */
+.fa-st__methodbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-2) var(--fa-space-4); padding-block: var(--fa-space-3); }
+.fa-st__chip {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fa-space-2) var(--fa-space-3);
+  padding: var(--fa-space-1) var(--fa-space-1) var(--fa-space-1) var(--fa-space-3);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius-lg);
+  background: var(--fa-color-surface);
+}
+.fa-st__stepnav { flex: 1 1 100%; min-width: 0; max-width: 100%; }
+.fa-st__steps { display: flex; gap: var(--fa-space-1); max-width: 100%; overflow-x: auto; }
+.fa-st__step {
+  /* Bezugsrahmen für den nur vorgelesenen Zusatz, damit er im Rollbereich bleibt. */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fa-space-2);
+  padding: var(--fa-space-1) var(--fa-space-3) var(--fa-space-1) var(--fa-space-1);
+  border: 0;
+  border-radius: var(--fa-radius-lg);
+  background: none;
+  color: var(--fa-color-text-muted);
+  font: inherit;
+  font-size: var(--fa-font-size-sm);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.fa-st__step-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--fa-color-border-strong);
+  border-radius: 50%;
+  font-size: var(--fa-font-size-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.fa-st__step:hover { background: var(--fa-color-surface-sunken); }
+.fa-st__step[aria-current='step'] { color: var(--fa-color-text); font-weight: 600; }
+.fa-st__step[aria-current='step'] .fa-st__step-no { border-color: var(--fa-color-accent); background: var(--fa-color-accent); color: var(--fa-color-accent-contrast); }
+.fa-st__step[aria-disabled='true'] { cursor: not-allowed; opacity: 0.7; }
+.fa-st__substeps { display: inline-flex; align-items: center; gap: var(--fa-space-2); font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
+.fa-st__substep[aria-current='step'] { color: var(--fa-color-accent); font-weight: 600; }
+
+/* Hinweise oberhalb des Rechenblatts */
+.fa-st__notices { display: flex; flex-direction: column; gap: var(--fa-space-2); margin-bottom: var(--fa-space-3); }
+.fa-st__notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fa-space-2) var(--fa-space-3);
+  padding: var(--fa-space-3) var(--fa-space-4);
+  border-radius: var(--fa-radius);
+  background: var(--fa-color-accent-soft);
+  font-size: var(--fa-font-size-sm);
+}
+.fa-st__notice--warning { background: var(--fa-color-warning-soft); }
+.fa-st__notice--danger { background: var(--fa-color-danger-soft); }
+.fa-st__notice p { flex: 1 1 16rem; min-width: 0; overflow-wrap: anywhere; }
+
+/* Rechenblatt: Formular links, Ergebnisspalte rechts */
+.fa-st__main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem); gap: var(--fa-space-4); align-items: start; padding-bottom: var(--fa-space-5); }
+.fa-st__card { border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); }
+.fa-st__section { padding: var(--fa-space-4) var(--fa-space-4) var(--fa-space-2); }
+.fa-st__section + .fa-st__section { border-top: 1px solid var(--fa-color-border); }
+.fa-st__section-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--fa-space-1) var(--fa-space-3); margin-bottom: var(--fa-space-2); }
+.fa-st__section-title,
+.fa-st__caption { font-size: var(--fa-font-size-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fa-color-text-muted); }
+.fa-st__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(11rem, 15rem); gap: var(--fa-space-1) var(--fa-space-4); align-items: center; padding-block: var(--fa-space-2); }
+.fa-st__label { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
+.fa-st__label-text { font-size: var(--fa-font-size-sm); font-weight: 500; }
+.fa-st__row--output .fa-st__label-text { color: var(--fa-color-text-muted); }
+.fa-st__row--key .fa-st__label-text { color: var(--fa-color-text); font-weight: 600; }
+.fa-st__formula { font: var(--fa-font-size-xs) var(--fa-font-mono); color: var(--fa-color-text-muted); }
+.fa-st__hint { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-st__tag { align-self: flex-start; }
+.fa-st__control { min-width: 0; }
+.fa-st__input {
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0 var(--fa-space-3);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius);
+  background: var(--fa-color-surface-raised);
+  color: var(--fa-color-text);
+  font: var(--fa-font-size-sm) var(--fa-font-sans);
+}
+.fa-st__input--number { font-family: var(--fa-font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.fa-st__input:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
+.fa-st__input[aria-invalid='true'] { border-color: var(--fa-color-danger); }
+.fa-st__error { margin-top: var(--fa-space-1); font-size: var(--fa-font-size-xs); color: var(--fa-color-danger); }
+.fa-st__value { font: var(--fa-font-size-sm) var(--fa-font-mono); font-variant-numeric: tabular-nums; text-align: right; overflow-wrap: anywhere; }
+.fa-st__row--key .fa-st__value { font-weight: 700; }
+.fa-st__value--missing { font-family: var(--fa-font-sans); color: var(--fa-color-text-muted); font-style: italic; }
+.fa-st__check { display: flex; justify-content: flex-end; }
+.fa-st__note { margin-top: var(--fa-space-1); font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); text-align: right; overflow-wrap: anywhere; }
+.fa-st__note--warning { padding: var(--fa-space-1) var(--fa-space-2); border-radius: var(--fa-radius-sm); background: var(--fa-color-warning-soft); color: var(--fa-color-text); text-align: left; }
+.fa-st__import { display: flex; flex-direction: column; gap: var(--fa-space-3); }
+.fa-st__import-notes { list-style: none; margin: 0; padding: 0; }
+.fa-st__import-explained summary { cursor: pointer; color: var(--fa-color-text-muted); margin-bottom: var(--fa-space-2); }
+.fa-st .fa-st__pill { position: relative; border-radius: var(--fa-radius); padding: var(--fa-space-1) var(--fa-space-2); font-weight: 500; line-height: 1.35; white-space: normal; text-align: left; }
+
+/* Schichttabelle und Liste der Einheiten: eigener waagerechter Rollbereich */
+.fa-st__strata { margin-block: var(--fa-space-2); }
+.fa-st__strata-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); }
+.fa-st__strata-scroll:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-st__strata-table,
+.fa-st__units-table { width: 100%; border-collapse: collapse; font-size: var(--fa-font-size-sm); }
+.fa-st__strata-table :is(th, td),
+.fa-st__units-table :is(th, td) { padding: var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: right; vertical-align: top; }
+.fa-st__strata-table tr:last-child :is(th, td),
+.fa-st__units-table tbody tr:last-child :is(th, td) { border-bottom: 0; }
+.fa-st__strata-table thead th,
+.fa-st__units-table thead th { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); white-space: nowrap; }
+/* Breite für einen Betrag wie 999.999.999,99 € im Feld, ohne dass Ziffern angeschnitten werden. */
+.fa-st__strata-table td { min-width: 10.5rem; }
+.fa-st__strata-table .fa-st__input { padding: 0 var(--fa-space-2); }
+.fa-st__strata-table .fa-st__strata-label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 13rem;
+  max-width: 18rem;
+  background: var(--fa-color-surface);
+  text-align: left;
+  font-weight: 400;
+}
+.fa-st__strata-label > span { display: block; }
+.fa-st__strata-actions,
+.fa-st__units-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-2); margin-top: var(--fa-space-2); }
+.fa-st__units { margin-bottom: var(--fa-space-4); padding: var(--fa-space-4); }
+.fa-st__units-actions { margin-top: 0; }
+.fa-st__units-table :is(th, td) { text-align: left; }
+.fa-st__units-table tr[aria-current='true'] { background: var(--fa-color-accent-soft); }
+.fa-st__unit-select {
+  min-width: 2rem;
+  min-height: 1.75rem;
+  border: 1px solid var(--fa-color-border-strong);
+  border-radius: var(--fa-radius-sm);
+  background: var(--fa-color-surface);
+  color: var(--fa-color-text);
+  font: inherit;
+  cursor: pointer;
+}
+.fa-st__unit-select[aria-pressed='true'] { border-color: var(--fa-color-accent); background: var(--fa-color-accent); color: var(--fa-color-accent-contrast); }
+.fa-st__unit-select:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-st__units-totals { display: flex; flex-direction: column; align-items: flex-start; gap: var(--fa-space-2); margin-top: var(--fa-space-4); }
+.fa-st__units-totals .fa-st__kv { width: 100%; }
+.fa-st__textarea { min-height: 10rem; padding: var(--fa-space-2) var(--fa-space-3); font-family: var(--fa-font-mono); }
+.fa-st__guide { margin-top: var(--fa-space-4); padding: var(--fa-space-4); }
+
+/* Mitlaufende Ergebnisspalte */
+.fa-st__aside { position: sticky; top: 5rem; display: flex; flex-direction: column; gap: var(--fa-space-3); }
+.fa-st__summary,
+.fa-st__hints { padding: var(--fa-space-4); }
+.fa-st__big { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--fa-space-2); margin-block: var(--fa-space-1) var(--fa-space-3); font-size: 2.25rem; line-height: 1.1; font-weight: 700; font-variant-numeric: tabular-nums; }
+.fa-st__big small { font-size: var(--fa-font-size-sm); font-weight: 500; color: var(--fa-color-text-muted); }
+.fa-st__kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--fa-space-2) var(--fa-space-3); font-size: var(--fa-font-size-sm); }
+.fa-st__kv dt { color: var(--fa-color-text-muted); }
+.fa-st__kv dd { font-family: var(--fa-font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.fa-st__kv dd.fa-st__strong { font-weight: 700; }
+.fa-st__gauge { display: block; width: 100%; height: auto; margin-top: var(--fa-space-3); }
+.fa-st__gauge-track { fill: var(--fa-color-surface-sunken); }
+.fa-st__gauge-range { fill: var(--fa-color-accent-soft); }
+.fa-st__gauge-rate { fill: var(--fa-color-accent); }
+.fa-st__gauge-upper { fill: var(--fa-color-surface); stroke: var(--fa-color-accent); stroke-width: 1.5; }
+.fa-st__gauge-threshold { stroke: var(--fa-color-danger); stroke-width: 1.5; }
+.fa-st__gauge-text { fill: var(--fa-color-text-muted); font: 9.5px var(--fa-font-sans); }
+.fa-st__gauge-text--threshold { fill: var(--fa-color-danger); }
+.fa-st__hint-list { display: flex; flex-direction: column; gap: var(--fa-space-2); margin-top: var(--fa-space-2); }
+.fa-st__hint-list li { display: flex; flex-direction: column; gap: 0.125rem; }
+.fa-st__web { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-st__footer { padding-block: var(--fa-space-3) var(--fa-space-5); border-top: 1px solid var(--fa-color-border); }
+.fa-st__flash { font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
+
+/* Kennzahlenkarten und Ampel */
+.fa-st__kpis { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: var(--fa-space-2); }
+.fa-st__kpi { display: flex; flex-direction: column; gap: var(--fa-space-1); padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-surface-sunken); }
+.fa-st__kpi dt { font-size: var(--fa-font-size-xs); }
+.fa-st__kpi dd { font-size: var(--fa-font-size-lg); }
+.fa-st__kv--more { margin-top: var(--fa-space-3); padding-top: var(--fa-space-3); border-top: 1px solid var(--fa-color-border); }
+.fa-st__gauge-wrap { margin-top: var(--fa-space-3); }
+.fa-st__gauge-wrap .fa-st__gauge { margin-top: var(--fa-space-1); }
+.fa-st .fa-st__ampel { white-space: normal; }
+.fa-st__gauge-safe { fill: var(--fa-color-success-soft); }
+.fa-st__gauge--over .fa-st__gauge-rate { fill: var(--fa-color-danger); }
+.fa-st__gauge--over .fa-st__gauge-upper { stroke: var(--fa-color-danger); }
+.fa-st__gauge--over .fa-st__gauge-range { fill: var(--fa-color-danger-soft); }
+
+/* Ziehen und Ablegen */
+.fa-st__drop {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--fa-space-5);
+  border: 2px dashed var(--fa-color-accent);
+  background: var(--fa-color-overlay);
+  color: var(--fa-color-accent-contrast);
+  font-size: var(--fa-font-size-lg);
+  font-weight: 600;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Schmale Behälter: eine Spalte, Ergebnisspalte oben */
+@container fa-st (max-width: 56rem) {
+  .fa-st__main { grid-template-columns: minmax(0, 1fr); }
+  .fa-st__aside { position: static; order: -1; }
+  .fa-st__picker-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@container fa-st (max-width: 35rem) {
+  /* Kopfzeile: nicht klebend und verdichtet – auf einem Telefon nähme sie sonst ein Viertel der Höhe. */
+  .fa-st__bar { position: static; }
+  .fa-st__bar-inner { position: relative; gap: var(--fa-space-1) var(--fa-space-2); padding-block: var(--fa-space-2); }
+  .fa-st__brand { flex-basis: 100%; }
+  .fa-st__brand .fa-st__muted { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fa-st__status { flex: 1 1 100%; font-size: var(--fa-font-size-xs); }
+  /* Menü „Arbeitsstand“: an der Kopfzeile ausgerichtet statt am Knopf, damit es nicht aus dem Bild ragt. */
+  .fa-st__menu-wrap { position: static; }
+  .fa-st__menu { right: var(--fa-space-4); left: var(--fa-space-4); min-width: 0; }
+  .fa-st__row { grid-template-columns: minmax(0, 1fr); }
+  .fa-st__value { text-align: left; }
+  .fa-st__check { justify-content: flex-start; }
+  .fa-st__big { font-size: 1.875rem; }
+  .fa-st__question { font-size: 1.25rem; }
+  .fa-st__picker { padding-top: var(--fa-space-3); }
+  .fa-st__steps { flex-wrap: wrap; overflow-x: visible; }
+  .fa-st__segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+  .fa-st__segment { padding-inline: var(--fa-space-2); }
+}
+
+@media print {
+  .fa-st__bar { position: static; }
+  .fa-st__menu-wrap,
+  .fa-st__drop { display: none; }
+}
+
+/* Datenmarke der Anwendung (Slot `mark`) und Kennzeichnung noch folgender Arbeitsschritte. */
+.fa-st__mark { display: inline-flex; align-items: center; gap: var(--fa-space-2); font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
+.fa-st__step-note { font-weight: 400; }
+
+/* Nachschlagetabelle der Vorlage (Blatt X1a): eigener Rollbereich, klebende Kopfzeile und Zeilenüberschrift. */
+.fa-st__datatable { display: grid; gap: var(--fa-space-3); min-width: 0; }
+.fa-st__datatable-scroll { overflow: auto; max-height: 60vh; border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); }
+.fa-st__datatable-scroll:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-st__datatable-table { border-collapse: collapse; width: 100%; font: var(--fa-font-size-sm) / 1.3 var(--fa-font-mono); font-variant-numeric: tabular-nums; }
+.fa-st__datatable-table th,
+.fa-st__datatable-table td { padding: var(--fa-space-1) var(--fa-space-3); text-align: right; white-space: nowrap; border-bottom: 1px solid var(--fa-color-border); }
+.fa-st__datatable-table thead th,
+.fa-st__datatable-table thead td { position: sticky; top: 0; background: var(--fa-color-surface-sunken); color: var(--fa-color-text); font-family: var(--fa-font-sans); }
+.fa-st__datatable-table thead tr + tr th { top: 1.9em; }
+.fa-st__datatable-table tbody th { position: sticky; left: 0; background: var(--fa-color-surface); color: var(--fa-color-text); font-weight: 600; }

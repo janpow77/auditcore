@@ -1,0 +1,43 @@
+/* Demo-Seite: nur Seitenrahmen; der Rechner selbst liest ausschließlich die --fa-*-Token. */
+html,
+body { margin: 0; background: var(--fa-color-bg); }
+.demo__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fa-space-2) var(--fa-space-3);
+  padding: var(--fa-space-2) var(--fa-space-4);
+  font: var(--fa-font-size-sm) var(--fa-font-sans);
+  color: var(--fa-color-text-muted);
+  background: var(--fa-color-surface-sunken);
+}
+.demo__bar strong { color: var(--fa-color-text); }
+.demo__spacer { flex: 1; }
+
+/*
+ * Beispiel für eine Anwendung mit eigenen Tokens: Sie ordnet ihre Variablen den
+ * --fa-*-Token zu (hier erfundene Werte eines Indigo-Schemas mit Serifenschrift).
+ */
+.demo--app-tokens {
+  --app-accent: #4a4fc4;
+  --app-accent-strong: #3a3d9c;
+  --app-accent-soft: #eef0ff;
+  --app-surface: #ffffff;
+  --app-bg: #f7f7fb;
+  --app-border: #e2e2ee;
+  --app-text: #1a1a2e;
+  --app-text-muted: #5c5c78;
+
+  --fa-color-accent: var(--app-accent);
+  --fa-color-accent-hover: var(--app-accent-strong);
+  --fa-color-accent-soft: var(--app-accent-soft);
+  --fa-color-surface: var(--app-surface);
+  --fa-color-surface-raised: var(--app-surface);
+  --fa-color-bg: var(--app-bg);
+  --fa-color-border: var(--app-border);
+  --fa-color-text: var(--app-text);
+  --fa-color-text-muted: var(--app-text-muted);
+  --fa-focus-ring: 0 0 0 3px rgb(74 79 196 / 0.35);
+  --fa-radius: 10px;
+  --fa-radius-lg: 16px;
+}

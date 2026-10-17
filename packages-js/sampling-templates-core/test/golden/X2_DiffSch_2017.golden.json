@@ -1,0 +1,812 @@
+[
+ {
+  "name": "Standardfall, Konfidenzniveau 90 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 82,
+   "X2_DiffSch_2017!C14": 463.414634146342,
+   "X2_DiffSch_2017!C16": 194634.146341463,
+   "X2_DiffSch_2017!C17": 0.00401307518229822,
+   "X2_DiffSch_2017!C18": 48305365.8536585,
+   "X2_DiffSch_2017!C19": 221261.709958823,
+   "X2_DiffSch_2017!C20": 0.00456209711255306,
+   "X2_DiffSch_2017!C21": 0.00857517229485127,
+   "X2_DiffSch_2017!C22": 48084104.1436997,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 60 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.6,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 0.842,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 1266.66666666667,
+   "X2_DiffSch_2017!C16": 532000,
+   "X2_DiffSch_2017!C17": 0.0109690721649485,
+   "X2_DiffSch_2017!C18": 47968000,
+   "X2_DiffSch_2017!C19": 187240.051728256,
+   "X2_DiffSch_2017!C20": 0.00386061962326301,
+   "X2_DiffSch_2017!C21": 0.0148296917882115,
+   "X2_DiffSch_2017!C22": 47780759.9482717,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 70 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.7,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.036,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 33,
+   "X2_DiffSch_2017!C14": 1151.51515151515,
+   "X2_DiffSch_2017!C16": 483636.363636364,
+   "X2_DiffSch_2017!C17": 0.00997188378631678,
+   "X2_DiffSch_2017!C18": 48016363.6363636,
+   "X2_DiffSch_2017!C19": 219659.542012385,
+   "X2_DiffSch_2017!C20": 0.00452906272190485,
+   "X2_DiffSch_2017!C21": 0.0145009465082216,
+   "X2_DiffSch_2017!C22": 47796704.0943513,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 80 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.8,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.282,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 50,
+   "X2_DiffSch_2017!C14": 760,
+   "X2_DiffSch_2017!C16": 319200,
+   "X2_DiffSch_2017!C17": 0.00658144329896907,
+   "X2_DiffSch_2017!C18": 48180800,
+   "X2_DiffSch_2017!C19": 220826.053652009,
+   "X2_DiffSch_2017!C20": 0.00455311450828885,
+   "X2_DiffSch_2017!C21": 0.0111345578072579,
+   "X2_DiffSch_2017!C22": 47959973.946348,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Konfidenzniveau 95 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.95,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.96,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 116,
+   "X2_DiffSch_2017!C14": 327.586206896552,
+   "X2_DiffSch_2017!C16": 137586.206896552,
+   "X2_DiffSch_2017!C17": 0.00283682900817632,
+   "X2_DiffSch_2017!C18": 48362413.7931035,
+   "X2_DiffSch_2017!C19": 221653.383461656,
+   "X2_DiffSch_2017!C20": 0.00457017285487951,
+   "X2_DiffSch_2017!C21": 0.00740700186305583,
+   "X2_DiffSch_2017!C22": 48140760.4096418,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Leeres Formular",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {},
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 0,
+   "X2_DiffSch_2017!C8": 0,
+   "X2_DiffSch_2017!C10": 0,
+   "X2_DiffSch_2017!C11": null,
+   "X2_DiffSch_2017!C14": null,
+   "X2_DiffSch_2017!C16": null,
+   "X2_DiffSch_2017!C17": null,
+   "X2_DiffSch_2017!C18": null,
+   "X2_DiffSch_2017!C19": null,
+   "X2_DiffSch_2017!C20": null,
+   "X2_DiffSch_2017!C21": null,
+   "X2_DiffSch_2017!C22": null,
+   "X2_DiffSch_2017!C23": 0
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C1",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 0,
+   "X2_DiffSch_2017!C10": 0,
+   "X2_DiffSch_2017!C11": null,
+   "X2_DiffSch_2017!C14": null,
+   "X2_DiffSch_2017!C16": null,
+   "X2_DiffSch_2017!C17": null,
+   "X2_DiffSch_2017!C18": null,
+   "X2_DiffSch_2017!C19": null,
+   "X2_DiffSch_2017!C20": null,
+   "X2_DiffSch_2017!C21": null,
+   "X2_DiffSch_2017!C22": null,
+   "X2_DiffSch_2017!C23": 0
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C3",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 1266.66666666667,
+   "X2_DiffSch_2017!C16": 0,
+   "X2_DiffSch_2017!C17": 0,
+   "X2_DiffSch_2017!C18": 48500000,
+   "X2_DiffSch_2017!C19": 0,
+   "X2_DiffSch_2017!C20": 0,
+   "X2_DiffSch_2017!C21": 0,
+   "X2_DiffSch_2017!C22": 48500000,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C4",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 1266.66666666667,
+   "X2_DiffSch_2017!C16": 532000,
+   "X2_DiffSch_2017!C17": 0.0109690721649485,
+   "X2_DiffSch_2017!C18": 47968000,
+   "X2_DiffSch_2017!C19": 365807.464480975,
+   "X2_DiffSch_2017!C20": 0.00754242194806135,
+   "X2_DiffSch_2017!C21": 0.0185114941130098,
+   "X2_DiffSch_2017!C22": 47602192.535519,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C5",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 0,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 1266.66666666667,
+   "X2_DiffSch_2017!C16": 532000,
+   "X2_DiffSch_2017!C17": 0.0109690721649485,
+   "X2_DiffSch_2017!C18": 47968000,
+   "X2_DiffSch_2017!C19": 0,
+   "X2_DiffSch_2017!C20": 0,
+   "X2_DiffSch_2017!C21": 0.0109690721649485,
+   "X2_DiffSch_2017!C22": 47968000,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C7",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 0,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 46,
+   "X2_DiffSch_2017!C14": 826.086956521739,
+   "X2_DiffSch_2017!C16": 346956.52173913,
+   "X2_DiffSch_2017!C17": 0.00715374271627073,
+   "X2_DiffSch_2017!C18": 48153043.4782609,
+   "X2_DiffSch_2017!C19": 295416.177771513,
+   "X2_DiffSch_2017!C20": 0.00609105521178378,
+   "X2_DiffSch_2017!C21": 0.0132447979280545,
+   "X2_DiffSch_2017!C22": 47857627.3004894,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C13",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 82,
+   "X2_DiffSch_2017!C14": 0,
+   "X2_DiffSch_2017!C16": 0,
+   "X2_DiffSch_2017!C17": 0,
+   "X2_DiffSch_2017!C18": 48500000,
+   "X2_DiffSch_2017!C19": 221261.709958823,
+   "X2_DiffSch_2017!C20": 0.00456209711255306,
+   "X2_DiffSch_2017!C21": 0.00456209711255306,
+   "X2_DiffSch_2017!C22": 48278738.2900412,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C15",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 82,
+   "X2_DiffSch_2017!C14": 463.414634146342,
+   "X2_DiffSch_2017!C16": 194634.146341463,
+   "X2_DiffSch_2017!C17": 0.00401307518229822,
+   "X2_DiffSch_2017!C18": 48305365.8536585,
+   "X2_DiffSch_2017!C19": 0,
+   "X2_DiffSch_2017!C20": 0,
+   "X2_DiffSch_2017!C21": 0.00401307518229822,
+   "X2_DiffSch_2017!C22": 48305365.8536585,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Ohne Stichprobeneinheit und Ausgaben der Stichprobe (C2, C12 werden nicht gelesen)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 82,
+   "X2_DiffSch_2017!C14": 463.414634146342,
+   "X2_DiffSch_2017!C16": 194634.146341463,
+   "X2_DiffSch_2017!C17": 0.00401307518229822,
+   "X2_DiffSch_2017!C18": 48305365.8536585,
+   "X2_DiffSch_2017!C19": 221261.709958823,
+   "X2_DiffSch_2017!C20": 0.00456209711255306,
+   "X2_DiffSch_2017!C21": 0.00857517229485127,
+   "X2_DiffSch_2017!C22": 48084104.1436997,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Nur Planung ausgefüllt, Prüfergebnisse leer",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 82,
+   "X2_DiffSch_2017!C14": 0,
+   "X2_DiffSch_2017!C16": 0,
+   "X2_DiffSch_2017!C17": 0,
+   "X2_DiffSch_2017!C18": 48500000,
+   "X2_DiffSch_2017!C19": 0,
+   "X2_DiffSch_2017!C20": 0,
+   "X2_DiffSch_2017!C21": 0,
+   "X2_DiffSch_2017!C22": 48500000,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Nur Buchwert ausgefüllt",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 0,
+   "X2_DiffSch_2017!C8": 0,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 0,
+   "X2_DiffSch_2017!C16": 0,
+   "X2_DiffSch_2017!C17": 0,
+   "X2_DiffSch_2017!C18": 48500000,
+   "X2_DiffSch_2017!C19": 0,
+   "X2_DiffSch_2017!C20": 0,
+   "X2_DiffSch_2017!C21": 0,
+   "X2_DiffSch_2017!C22": 48500000,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "TE = AE (erwartete Fehlerquote 2 %): Nenner null",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.02,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 970000,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": null,
+   "X2_DiffSch_2017!C14": null,
+   "X2_DiffSch_2017!C16": null,
+   "X2_DiffSch_2017!C17": null,
+   "X2_DiffSch_2017!C18": null,
+   "X2_DiffSch_2017!C19": null,
+   "X2_DiffSch_2017!C20": null,
+   "X2_DiffSch_2017!C21": null,
+   "X2_DiffSch_2017!C22": null,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Knapp unter TE = AE (1,99 %)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.0199,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 965150,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 1831447,
+   "X2_DiffSch_2017!C14": 0.0207486211722207,
+   "X2_DiffSch_2017!C16": 8.71442089233267,
+   "X2_DiffSch_2017!C17": 1.7967878128521e-07,
+   "X2_DiffSch_2017!C18": 48499991.2855791,
+   "X2_DiffSch_2017!C19": 1480.52591275351,
+   "X2_DiffSch_2017!C20": 3.05263074794538e-05,
+   "X2_DiffSch_2017!C21": 3.07059862607391e-05,
+   "X2_DiffSch_2017!C22": 48498510.7596664,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Knapp über TE = AE (2,01 %): negativer Nenner wird quadriert",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.0201,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 974850,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 1831447,
+   "X2_DiffSch_2017!C14": 0.0207486211722207,
+   "X2_DiffSch_2017!C16": 8.71442089233267,
+   "X2_DiffSch_2017!C17": 1.7967878128521e-07,
+   "X2_DiffSch_2017!C18": 48499991.2855791,
+   "X2_DiffSch_2017!C19": 1480.52591275351,
+   "X2_DiffSch_2017!C20": 3.05263074794538e-05,
+   "X2_DiffSch_2017!C21": 3.07059862607391e-05,
+   "X2_DiffSch_2017!C22": 48498510.7596664,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang unter 30: Mindestumfang 30",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 2500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 1266.66666666667,
+   "X2_DiffSch_2017!C16": 532000,
+   "X2_DiffSch_2017!C17": 0.0109690721649485,
+   "X2_DiffSch_2017!C18": 47968000,
+   "X2_DiffSch_2017!C19": 365807.464480975,
+   "X2_DiffSch_2017!C20": 0.00754242194806135,
+   "X2_DiffSch_2017!C21": 0.0185114941130098,
+   "X2_DiffSch_2017!C22": 47602192.535519,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang genau 100 (95 %)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 1960000,
+   "C2": "Vorhaben",
+   "C3": 100,
+   "C4": 1000,
+   "C5": 0.95,
+   "C7": 0.01,
+   "C12": 400000,
+   "C13": 2500,
+   "C15": 310
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.96,
+   "X2_DiffSch_2017!C8": 19600,
+   "X2_DiffSch_2017!C10": 39200,
+   "X2_DiffSch_2017!C11": 100,
+   "X2_DiffSch_2017!C14": 25,
+   "X2_DiffSch_2017!C16": 2500,
+   "X2_DiffSch_2017!C17": 0.00127551020408163,
+   "X2_DiffSch_2017!C18": 1957500,
+   "X2_DiffSch_2017!C19": 6076,
+   "X2_DiffSch_2017!C20": 0.0031,
+   "X2_DiffSch_2017!C21": 0.00437551020408163,
+   "X2_DiffSch_2017!C22": 1951424,
+   "X2_DiffSch_2017!C23": 1920800
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang genau 30",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 1000000,
+   "C2": "Vorhaben",
+   "C3": 100,
+   "C4": 547.722557505166,
+   "C5": 0.95,
+   "C7": 0.0004,
+   "C12": 300000,
+   "C13": 900,
+   "C15": 120
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.96,
+   "X2_DiffSch_2017!C8": 400,
+   "X2_DiffSch_2017!C10": 20000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 30,
+   "X2_DiffSch_2017!C16": 3000,
+   "X2_DiffSch_2017!C17": 0.003,
+   "X2_DiffSch_2017!C18": 997000,
+   "X2_DiffSch_2017!C19": 4294.1448508405,
+   "X2_DiffSch_2017!C20": 0.0042941448508405,
+   "X2_DiffSch_2017!C21": 0.0072941448508405,
+   "X2_DiffSch_2017!C22": 992705.855149159,
+   "X2_DiffSch_2017!C23": 980000
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang knapp über 30: 31",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 1000000,
+   "C2": "Vorhaben",
+   "C3": 100,
+   "C4": 548,
+   "C5": 0.95,
+   "C7": 0.0004,
+   "C12": 300000,
+   "C13": 900,
+   "C15": 120
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.96,
+   "X2_DiffSch_2017!C8": 400,
+   "X2_DiffSch_2017!C10": 20000,
+   "X2_DiffSch_2017!C11": 31,
+   "X2_DiffSch_2017!C14": 29.0322580645161,
+   "X2_DiffSch_2017!C16": 2903.22580645161,
+   "X2_DiffSch_2017!C17": 0.00290322580645161,
+   "X2_DiffSch_2017!C18": 997096.774193548,
+   "X2_DiffSch_2017!C19": 4224.31670366975,
+   "X2_DiffSch_2017!C20": 0.00422431670366975,
+   "X2_DiffSch_2017!C21": 0.00712754251012136,
+   "X2_DiffSch_2017!C22": 992872.457489879,
+   "X2_DiffSch_2017!C23": 980000
+  }
+ },
+ {
+  "name": "Erwartete Fehlerquote 0 eingetragen",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 0,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 46,
+   "X2_DiffSch_2017!C14": 826.086956521739,
+   "X2_DiffSch_2017!C16": 346956.52173913,
+   "X2_DiffSch_2017!C17": 0.00715374271627073,
+   "X2_DiffSch_2017!C18": 48153043.4782609,
+   "X2_DiffSch_2017!C19": 295416.177771513,
+   "X2_DiffSch_2017!C20": 0.00609105521178378,
+   "X2_DiffSch_2017!C21": 0.0132447979280545,
+   "X2_DiffSch_2017!C22": 47857627.3004894,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Keine Fehler in der Stichprobe (Nullen eingetragen)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 0,
+   "C15": 0
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 82,
+   "X2_DiffSch_2017!C14": 0,
+   "X2_DiffSch_2017!C16": 0,
+   "X2_DiffSch_2017!C17": 0,
+   "X2_DiffSch_2017!C18": 48500000,
+   "X2_DiffSch_2017!C19": 0,
+   "X2_DiffSch_2017!C20": 0,
+   "X2_DiffSch_2017!C21": 0,
+   "X2_DiffSch_2017!C22": 48500000,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Buchwert 0: Division durch null",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 0,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 0,
+   "X2_DiffSch_2017!C10": 0,
+   "X2_DiffSch_2017!C11": null,
+   "X2_DiffSch_2017!C14": null,
+   "X2_DiffSch_2017!C16": null,
+   "X2_DiffSch_2017!C17": null,
+   "X2_DiffSch_2017!C18": null,
+   "X2_DiffSch_2017!C19": null,
+   "X2_DiffSch_2017!C20": null,
+   "X2_DiffSch_2017!C21": null,
+   "X2_DiffSch_2017!C22": null,
+   "X2_DiffSch_2017!C23": 0
+  }
+ },
+ {
+  "name": "Umfang der Grundgesamtheit 0",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 0,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 30,
+   "X2_DiffSch_2017!C14": 1266.66666666667,
+   "X2_DiffSch_2017!C16": 0,
+   "X2_DiffSch_2017!C17": 0,
+   "X2_DiffSch_2017!C18": 48500000,
+   "X2_DiffSch_2017!C19": 0,
+   "X2_DiffSch_2017!C20": 0,
+   "X2_DiffSch_2017!C21": 0,
+   "X2_DiffSch_2017!C22": 48500000,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ },
+ {
+  "name": "Fehler zugunsten des Haushalts überwiegen (negativer Stichprobenfehler)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": -12500,
+   "C15": 2900
+  },
+  "erwartet": {
+   "X2_DiffSch_2017!C6": 1.645,
+   "X2_DiffSch_2017!C8": 242500,
+   "X2_DiffSch_2017!C10": 970000,
+   "X2_DiffSch_2017!C11": 82,
+   "X2_DiffSch_2017!C14": -152.439024390244,
+   "X2_DiffSch_2017!C16": -64024.3902439024,
+   "X2_DiffSch_2017!C17": -0.00132009052049283,
+   "X2_DiffSch_2017!C18": 48564024.3902439,
+   "X2_DiffSch_2017!C19": 221261.709958823,
+   "X2_DiffSch_2017!C20": 0.00456209711255306,
+   "X2_DiffSch_2017!C21": 0.00324200659206022,
+   "X2_DiffSch_2017!C22": 48342762.6802851,
+   "X2_DiffSch_2017!C23": 47530000
+  }
+ }
+]

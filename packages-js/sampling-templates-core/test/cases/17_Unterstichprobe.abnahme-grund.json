@@ -1,0 +1,969 @@
+[
+ {
+  "name": "Abnahme 1: A000 gw",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-000",
+   "C6": 106663.92,
+   "C7": 9,
+   "C10": 4,
+   "C11": 24921.14,
+   "C12": 4419.59
+  }
+ },
+ {
+  "name": "Abnahme 1: A001 pps",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-001",
+   "C6": 81957.72,
+   "C7": 87,
+   "C15": 6,
+   "C17": 0,
+   "C18": 17678.16,
+   "C19": 213.75,
+   "C21": 0.1105
+  }
+ },
+ {
+  "name": "Abnahme 1: A002 beide",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-002",
+   "C6": 357585.92,
+   "C7": 8,
+   "C10": 12,
+   "C11": 153442.08,
+   "C12": 16168.1,
+   "C15": 23,
+   "C17": 3,
+   "C18": 76588.71,
+   "C19": 5090.03,
+   "C21": 0.8664
+  }
+ },
+ {
+  "name": "Abnahme 1: A003 gw_exh",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-003",
+   "C6": 1082478.82,
+   "C7": 47,
+   "C8": 481175.74,
+   "C9": 36109.33,
+   "C10": 22,
+   "C11": 498342.7,
+   "C12": 57375.89
+  }
+ },
+ {
+  "name": "Abnahme 1: A004 pps_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-004",
+   "C6": 2445.73,
+   "C7": 345,
+   "C15": 10,
+   "C17": 1,
+   "C18": 1173.39,
+   "C19": 70.99,
+   "C21": 2.6863
+  }
+ },
+ {
+  "name": "Abnahme 1: A005 huge",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-005",
+   "C6": 98318411506.16,
+   "C7": 67,
+   "C8": 40147941384.05,
+   "C9": 2891056112.02,
+   "C10": 54,
+   "C11": 30551376334.01,
+   "C12": 5352604624.02,
+   "C15": 56,
+   "C21": 1.2954
+  }
+ },
+ {
+  "name": "Abnahme 1: A006 tiny",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-006",
+   "C6": 31.72,
+   "C7": 11,
+   "C10": 17,
+   "C11": 14.21,
+   "C12": 0.29,
+   "C15": 19,
+   "C21": 0.1305
+  }
+ },
+ {
+  "name": "Abnahme 1: A007 gw_zero_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-007",
+   "C6": 5913.04,
+   "C7": 22,
+   "C10": 5,
+   "C11": 0,
+   "C12": 10.0
+  }
+ },
+ {
+  "name": "Abnahme 1: A008 pps_all_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-008",
+   "C6": 6204.05,
+   "C7": 88,
+   "C15": 4,
+   "C17": 4,
+   "C18": 6204.05,
+   "C19": 12.34,
+   "C21": 0.5
+  }
+ },
+ {
+  "name": "Abnahme 1: A009 no_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-009",
+   "C7": 12,
+   "C10": 5,
+   "C11": 100.0,
+   "C12": 1.0,
+   "C15": 5,
+   "C21": 0.1
+  }
+ },
+ {
+  "name": "Abnahme 1: A010 only_id",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "nur Kennung"
+  }
+ },
+ {
+  "name": "Abnahme 1: A011 err_missing",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-011",
+   "C6": 217620.38,
+   "C7": 36,
+   "C10": 6,
+   "C11": 65286.11,
+   "C15": 6
+  }
+ },
+ {
+  "name": "Abnahme 1: A012 gw",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-012",
+   "C6": 789049.57,
+   "C7": 242,
+   "C8": 133375.89,
+   "C9": 3833.84,
+   "C10": 4,
+   "C11": 346624.65,
+   "C12": 22828.69
+  }
+ },
+ {
+  "name": "Abnahme 1: A013 pps",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-013",
+   "C6": 4462180.79,
+   "C7": 10,
+   "C15": 6,
+   "C17": 1,
+   "C18": 1047509.34,
+   "C19": 57583.54,
+   "C21": 2.673
+  }
+ },
+ {
+  "name": "Abnahme 1: A014 beide",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-014",
+   "C6": 353386.38,
+   "C7": 20,
+   "C8": 37428.96,
+   "C9": 1761.6,
+   "C10": 13,
+   "C11": 187810.11,
+   "C12": 24831.86,
+   "C15": 4,
+   "C17": 3,
+   "C18": 167074.15,
+   "C19": 893.34,
+   "C21": 1.0233
+  }
+ },
+ {
+  "name": "Abnahme 1: A015 gw_exh",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-015",
+   "C6": 33936.2,
+   "C7": 22,
+   "C8": 12180.65,
+   "C9": 1171.46,
+   "C10": 12,
+   "C11": 17687.75,
+   "C12": 2561.15
+  }
+ },
+ {
+  "name": "Abnahme 1: A016 pps_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-016",
+   "C6": 403876.64,
+   "C7": 4,
+   "C15": 3,
+   "C17": 2,
+   "C18": 192360.36,
+   "C19": 15129.83,
+   "C21": 2.6034
+  }
+ },
+ {
+  "name": "Abnahme 1: A017 huge",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-017",
+   "C6": 176623582868.61,
+   "C7": 614,
+   "C10": 9,
+   "C11": 45122843405.43,
+   "C12": 3782310274.21,
+   "C15": 10,
+   "C21": 2.0285
+  }
+ },
+ {
+  "name": "Abnahme 1: A018 tiny",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-018",
+   "C6": 22.64,
+   "C7": 4,
+   "C10": 5,
+   "C11": 6.79,
+   "C12": 1.02,
+   "C15": 6,
+   "C21": 1.6527
+  }
+ },
+ {
+  "name": "Abnahme 1: A019 gw_zero_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-019",
+   "C6": 15201.95,
+   "C7": 24,
+   "C10": 5,
+   "C11": 0,
+   "C12": 10.0
+  }
+ },
+ {
+  "name": "Abnahme 1: A020 pps_all_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-020",
+   "C6": 2937025.08,
+   "C7": 484,
+   "C15": 4,
+   "C17": 4,
+   "C18": 2937025.08,
+   "C19": 12.34,
+   "C21": 0.5
+  }
+ },
+ {
+  "name": "Abnahme 1: A021 no_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-021",
+   "C7": 37,
+   "C10": 5,
+   "C11": 100.0,
+   "C12": 1.0,
+   "C15": 5,
+   "C21": 0.1
+  }
+ },
+ {
+  "name": "Abnahme 1: A022 only_id",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "nur Kennung"
+  }
+ },
+ {
+  "name": "Abnahme 1: A023 err_missing",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-023",
+   "C6": 482621.16,
+   "C7": 813,
+   "C10": 6,
+   "C11": 144786.35,
+   "C15": 6
+  }
+ },
+ {
+  "name": "Abnahme 1: A024 gw",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-024",
+   "C6": 4576648.68,
+   "C7": 4,
+   "C10": 12,
+   "C11": 2325405.29,
+   "C12": 43362.76
+  }
+ },
+ {
+  "name": "Abnahme 1: A025 pps",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-025",
+   "C6": 1391671.43,
+   "C7": 96,
+   "C15": 20,
+   "C17": 1,
+   "C18": 522247.63,
+   "C19": 50854.61,
+   "C21": 1.9981
+  }
+ },
+ {
+  "name": "Abnahme 1: A026 beide",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-026",
+   "C6": 867165.8,
+   "C7": 47,
+   "C10": 13,
+   "C11": 498352.93,
+   "C12": 12156.22,
+   "C15": 10,
+   "C17": 3,
+   "C18": 311715.52,
+   "C19": 12454.45,
+   "C21": 1.5092
+  }
+ },
+ {
+  "name": "Abnahme 1: A027 gw_exh",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-027",
+   "C6": 77811.75,
+   "C7": 30,
+   "C8": 21284.7,
+   "C9": 1343.31,
+   "C10": 24,
+   "C11": 12566.45,
+   "C12": 9.63
+  }
+ },
+ {
+  "name": "Abnahme 1: A028 pps_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-028",
+   "C6": 799142.26,
+   "C7": 23,
+   "C15": 8,
+   "C17": 2,
+   "C18": 76501.61,
+   "C19": 766.83,
+   "C21": 2.6464
+  }
+ },
+ {
+  "name": "Abnahme 1: A029 huge",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-029",
+   "C6": 26600798091.12,
+   "C7": 344,
+   "C8": 11550840422.58,
+   "C9": 94096854.92,
+   "C10": 21,
+   "C11": 4743878113.37,
+   "C12": 574536913.26,
+   "C15": 4,
+   "C17": 1,
+   "C18": 8225580438.72,
+   "C19": 515643922.78,
+   "C21": 0.6671
+  }
+ },
+ {
+  "name": "Abnahme 1: A030 tiny",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-030",
+   "C6": 25.5,
+   "C7": 8,
+   "C10": 5,
+   "C11": 4.03,
+   "C12": 0.78,
+   "C15": 22,
+   "C17": 0,
+   "C18": 8.25,
+   "C19": 0.53,
+   "C21": 2.5915
+  }
+ },
+ {
+  "name": "Abnahme 1: A031 gw_zero_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-031",
+   "C6": 2720828.9,
+   "C7": 177,
+   "C10": 5,
+   "C11": 0,
+   "C12": 10.0
+  }
+ },
+ {
+  "name": "Abnahme 1: A032 pps_all_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-032",
+   "C6": 3904418.16,
+   "C7": 533,
+   "C15": 4,
+   "C17": 4,
+   "C18": 3904418.16,
+   "C19": 12.34,
+   "C21": 0.5
+  }
+ },
+ {
+  "name": "Abnahme 1: A033 no_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-033",
+   "C7": 63,
+   "C10": 5,
+   "C11": 100.0,
+   "C12": 1.0,
+   "C15": 5,
+   "C21": 0.1
+  }
+ },
+ {
+  "name": "Abnahme 1: A034 only_id",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "nur Kennung"
+  }
+ },
+ {
+  "name": "Abnahme 1: A035 err_missing",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-035",
+   "C6": 8079.76,
+   "C7": 15,
+   "C10": 6,
+   "C11": 2423.93,
+   "C15": 6
+  }
+ },
+ {
+  "name": "Abnahme 1: A036 gw",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-036",
+   "C6": 22114.91,
+   "C7": 24,
+   "C8": 3494.03,
+   "C9": 233.84,
+   "C10": 4,
+   "C11": 1314.95,
+   "C12": 66.01
+  }
+ },
+ {
+  "name": "Abnahme 1: A037 pps",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-037",
+   "C6": 149659.14,
+   "C7": 70,
+   "C15": 16,
+   "C21": 0.2445
+  }
+ },
+ {
+  "name": "Abnahme 1: A038 beide",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-038",
+   "C6": 234361.49,
+   "C7": 20,
+   "C10": 6,
+   "C11": 23856.44,
+   "C12": 2784.44,
+   "C15": 3,
+   "C17": 2,
+   "C18": 106680.89,
+   "C19": 9114.07,
+   "C21": 2.5077
+  }
+ },
+ {
+  "name": "Abnahme 1: A039 gw_exh",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-039",
+   "C6": 522035.4,
+   "C7": 7,
+   "C8": 36213.55,
+   "C9": 1014.66,
+   "C10": 4,
+   "C11": 226142.52,
+   "C12": 41749.54
+  }
+ },
+ {
+  "name": "Abnahme 1: A040 pps_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-040",
+   "C6": 109104.91,
+   "C7": 24,
+   "C15": 3,
+   "C17": 1,
+   "C18": 15679.98,
+   "C19": 327.57,
+   "C21": 1.2883
+  }
+ },
+ {
+  "name": "Abnahme 1: A041 huge",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-041",
+   "C6": 8979714636.86,
+   "C7": 830,
+   "C10": 13,
+   "C11": 1055767331.49,
+   "C12": 25221575.57,
+   "C15": 55,
+   "C17": 1,
+   "C18": 2225179434.71,
+   "C19": 8491855.95,
+   "C21": 0.5844
+  }
+ },
+ {
+  "name": "Abnahme 1: A042 tiny",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-042",
+   "C6": 5.83,
+   "C7": 12,
+   "C8": 2.09,
+   "C9": 0.12,
+   "C10": 22,
+   "C11": 2.22,
+   "C12": 0.16,
+   "C15": 8,
+   "C17": 1,
+   "C18": 0.41,
+   "C19": 0.02,
+   "C21": 1.3395
+  }
+ },
+ {
+  "name": "Abnahme 1: A043 gw_zero_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-043",
+   "C6": 6152.8,
+   "C7": 52,
+   "C10": 5,
+   "C11": 0,
+   "C12": 10.0
+  }
+ },
+ {
+  "name": "Abnahme 1: A044 pps_all_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-044",
+   "C6": 57934.96,
+   "C7": 5,
+   "C15": 4,
+   "C17": 4,
+   "C18": 57934.96,
+   "C19": 12.34,
+   "C21": 0.5
+  }
+ },
+ {
+  "name": "Abnahme 1: A045 no_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-045",
+   "C7": 340,
+   "C10": 5,
+   "C11": 100.0,
+   "C12": 1.0,
+   "C15": 5,
+   "C21": 0.1
+  }
+ },
+ {
+  "name": "Abnahme 1: A046 only_id",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "nur Kennung"
+  }
+ },
+ {
+  "name": "Abnahme 1: A047 err_missing",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-047",
+   "C6": 6693.13,
+   "C7": 32,
+   "C10": 6,
+   "C11": 2007.94,
+   "C15": 6
+  }
+ },
+ {
+  "name": "Abnahme 1: A048 gw",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-048",
+   "C6": 4903705.91,
+   "C7": 821,
+   "C10": 4,
+   "C11": 2688207.92,
+   "C12": 23336.14
+  }
+ },
+ {
+  "name": "Abnahme 1: A049 pps",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-049",
+   "C6": 15691.19,
+   "C7": 218,
+   "C15": 24,
+   "C17": 3,
+   "C18": 1138.64,
+   "C19": 105.77,
+   "C21": 2.9118
+  }
+ },
+ {
+  "name": "Abnahme 1: A050 beide",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-050",
+   "C6": 4393.12,
+   "C7": 8,
+   "C10": 9,
+   "C11": 2031.14,
+   "C12": 177.57,
+   "C15": 14,
+   "C21": 0.9576
+  }
+ },
+ {
+  "name": "Abnahme 1: A051 gw_exh",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-051",
+   "C6": 57197.77,
+   "C7": 135,
+   "C8": 20326.53,
+   "C9": 411.62,
+   "C10": 11,
+   "C11": 30874.08,
+   "C12": 227.48
+  }
+ },
+ {
+  "name": "Abnahme 1: A052 pps_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-052",
+   "C6": 110097.56,
+   "C7": 8,
+   "C15": 30,
+   "C17": 3,
+   "C18": 12474.31,
+   "C19": 882.91,
+   "C21": 2.745
+  }
+ },
+ {
+  "name": "Abnahme 1: A053 huge",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-053",
+   "C6": 18401696179.55,
+   "C7": 317,
+   "C10": 29,
+   "C11": 2798949134.27,
+   "C12": 152878293.56,
+   "C15": 14,
+   "C21": 1.7594
+  }
+ },
+ {
+  "name": "Abnahme 1: A054 tiny",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-054",
+   "C6": 270.92,
+   "C7": 11,
+   "C8": 127.93,
+   "C9": 11.46,
+   "C10": 27,
+   "C11": 23.9,
+   "C12": 3.4,
+   "C15": 7,
+   "C21": 0.1578
+  }
+ },
+ {
+  "name": "Abnahme 1: A055 gw_zero_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-055",
+   "C6": 97753.32,
+   "C7": 9,
+   "C10": 5,
+   "C11": 0,
+   "C12": 10.0
+  }
+ },
+ {
+  "name": "Abnahme 1: A056 pps_all_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-056",
+   "C6": 83115.89,
+   "C7": 73,
+   "C15": 4,
+   "C17": 4,
+   "C18": 83115.89,
+   "C19": 12.34,
+   "C21": 0.5
+  }
+ },
+ {
+  "name": "Abnahme 1: A057 no_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-057",
+   "C7": 11,
+   "C10": 5,
+   "C11": 100.0,
+   "C12": 1.0,
+   "C15": 5,
+   "C21": 0.1
+  }
+ },
+ {
+  "name": "Abnahme 1: A058 only_id",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "nur Kennung"
+  }
+ },
+ {
+  "name": "Abnahme 1: A059 err_missing",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-059",
+   "C6": 144819.64,
+   "C7": 3,
+   "C10": 6,
+   "C11": 43445.89,
+   "C15": 6
+  }
+ },
+ {
+  "name": "Abnahme 1: A060 gw",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-060",
+   "C6": 108429.53,
+   "C7": 60,
+   "C8": 9971.71,
+   "C9": 185.03,
+   "C10": 19,
+   "C11": 63341.54,
+   "C12": 11122.09
+  }
+ },
+ {
+  "name": "Abnahme 1: A061 pps",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-061",
+   "C6": 3258.29,
+   "C7": 32,
+   "C15": 11,
+   "C21": 0.713
+  }
+ },
+ {
+  "name": "Abnahme 1: A062 beide",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-062",
+   "C6": 9903.0,
+   "C7": 6,
+   "C8": 4051.14,
+   "C9": 362.49,
+   "C10": 5,
+   "C11": 3332.18,
+   "C12": 147.77,
+   "C15": 36,
+   "C21": 0.6543
+  }
+ },
+ {
+  "name": "Abnahme 1: A063 gw_exh",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-063",
+   "C6": 1079434.67,
+   "C7": 93,
+   "C8": 249796.56,
+   "C9": 6242.3,
+   "C10": 16,
+   "C11": 378745.99,
+   "C12": 73747.98
+  }
+ },
+ {
+  "name": "Abnahme 1: A064 pps_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-064",
+   "C6": 8397.33,
+   "C7": 7,
+   "C15": 4,
+   "C17": 1,
+   "C18": 1815.81,
+   "C19": 126.12,
+   "C21": 0.0844
+  }
+ },
+ {
+  "name": "Abnahme 1: A065 huge",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-065",
+   "C6": 9671353438.51,
+   "C7": 4,
+   "C8": 1617942493.1,
+   "C9": 6429333.84,
+   "C10": 39,
+   "C11": 1610496989.43,
+   "C12": 130527714.69,
+   "C15": 27,
+   "C17": 2,
+   "C18": 3772679691.55,
+   "C19": 103000983.5,
+   "C21": 0.4753
+  }
+ },
+ {
+  "name": "Abnahme 1: A066 tiny",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-066",
+   "C6": 40.96,
+   "C7": 19,
+   "C8": 17.55,
+   "C9": 0.76,
+   "C10": 4,
+   "C11": 9.53,
+   "C12": 0.65,
+   "C15": 37,
+   "C21": 1.5907
+  }
+ },
+ {
+  "name": "Abnahme 1: A067 gw_zero_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-067",
+   "C6": 3610390.24,
+   "C7": 189,
+   "C10": 5,
+   "C11": 0,
+   "C12": 10.0
+  }
+ },
+ {
+  "name": "Abnahme 1: A068 pps_all_high",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-068",
+   "C6": 1913003.2,
+   "C7": 34,
+   "C15": 4,
+   "C17": 4,
+   "C18": 1913003.2,
+   "C19": 12.34,
+   "C21": 0.5
+  }
+ },
+ {
+  "name": "Abnahme 1: A069 no_bv",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-069",
+   "C7": 355,
+   "C10": 5,
+   "C11": 100.0,
+   "C12": 1.0,
+   "C15": 5,
+   "C21": 0.1
+  }
+ },
+ {
+  "name": "Abnahme 1: A070 only_id",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "nur Kennung"
+  }
+ },
+ {
+  "name": "Abnahme 1: A071 err_missing",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "VP-071",
+   "C6": 119551.26,
+   "C7": 385,
+   "C10": 6,
+   "C11": 35865.38,
+   "C15": 6
+  }
+ }
+]
