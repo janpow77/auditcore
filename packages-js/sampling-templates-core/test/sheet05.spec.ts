@@ -8,6 +8,7 @@ import type { CellValue } from '../src/model/types'
 import { sheet } from '../src/sheets/05_MUS_2Z/index'
 import { isQualified, limitationsOf, type Limitation } from '../src/view/limits'
 import { loadGolden, sameValue } from './golden'
+import { officialWording } from '../src/model/terms'
 
 const context = createContext()
 const GLOBAL = 'Global (Art. 5 Abs. 6 Buchst. b)'
@@ -82,7 +83,7 @@ describe('Blatt 05_MUS_2Z', () => {
 
   it('Auslegung der Vorlage: Faktor und erhöhter Umfang sind gekennzeichnet', () => {
     const marked = fieldsOf(sheet.definition).filter((field) => field.interpretation).map((field) => field.cell)
-    expect(marked).toEqual(['C64', 'C65'])
+    expect(marked).toEqual(['C27', 'C40', 'C64', 'C65', 'C95'])
   })
 
   it('fehlt eine Angabe, bleibt der Umfang offen – auch dort, wo die Vorlage auf den begrenzten Umfang oder die Untergrenzen fiele', () => {
@@ -151,7 +152,7 @@ describe('Blatt 05_MUS_2Z', () => {
     const inputs = sample({ C47: 0.9 })
     const current = evaluateSheet(sheet, inputs, context)
     expect(current.complete).toBe(true)
-    expect(current.cells).toMatchObject({ C67: 3, C69: '✔ ≥ 30 Einheiten', C74: 1, C75: '✖ < 3 Einheiten (Art. 5 Abs. 5)', C95: '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle', N10: 53 })
+    expect(current.cells).toMatchObject({ C67: 3, C69: '✔ ≥ 30 Einheiten', C74: 1, C75: '✖ < 3 Einheiten (Art. 5 Abs. 5)', C95: '✖ Gesamtfehlerquote über der Signifikanzschwelle', N10: 53 })
     expect(current.cells).toEqual(evaluateSheet(sheet, inputs, likeTemplate).cells)
     expect(current.withoutBasis).toEqual(expect.arrayContaining(['C67', 'C74', 'C75', 'C93', 'C95', 'N10']))
     expect(current.lacking.size).toBe(0)
@@ -235,9 +236,9 @@ describe('Blatt 05_MUS_2Z', () => {
     expect(Object.keys(texts?.fields ?? {}).filter((cell) => !fields.some((field) => field.cell === cell))).toEqual([])
     expect(sheet.definition.sections.filter((section) => !texts?.sections?.[section.id]?.title || (section.reference && !texts.sections[section.id]?.reference)).map((section) => section.id)).toEqual([])
     expect(sheet.definition.summary.rows.filter((row) => !texts?.summary?.rows?.[row.cell]).map((row) => row.cell)).toEqual([])
-    const produced = new Set(loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string')))
+    const produced = new Set(loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').map((value) => officialWording(value))))
     expect([...produced].filter((value) => !texts?.values?.[value])).toEqual([])
-    const hints = [sample({ C47: 0.9 }), sample({ C47: 0.9, C26: GLOBAL }), sample({ C13: 0.95, C9: 10 }), sample({ C13: null, C30: 'Ja' })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
+    const hints = [sample({ C47: 0.9 }), sample({ C47: 0.9, C26: GLOBAL }), sample({ C26: GLOBAL, C51: 0.03 }), sample({ C13: 0.95, C9: 10 }), sample({ C13: null, C30: 'Ja' })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts?.webHints ?? {})))
     expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – two sampling periods, non-stratified')
   })

@@ -12,6 +12,7 @@ import { INCREASE_INTERPRETATION } from '../src/sheets/shared/srs'
 import { isQualified, limitationsOf } from '../src/view/limits'
 import { strataRows } from '../src/view/sheetView'
 import { buildSummary } from '../src/view/summaryView'
+import { EXHAUSTIVE_MINIMUM_INTERPRETATION, PERIOD2_ALLOCATION_INTERPRETATION, ROUNDING_INTERPRETATION, UPPER_LIMIT_INTERPRETATION } from '../src/sheets/shared/interpretations'
 
 type Inputs = Record<string, CellValue>
 
@@ -108,7 +109,12 @@ describe('Blatt 11_SRS_2Z_S: Aufbau', () => {
   })
 
   it('die Erhöhung bei begrenztem Umfang ist als Auslegung der Vorlage gekennzeichnet', () => {
-    expect(fieldsOf(sheet.definition).filter((field) => field.interpretation).map((field) => [field.cell, field.interpretation])).toEqual([['D77', INCREASE_INTERPRETATION]])
+    expect(fieldsOf(sheet.definition).filter((field) => field.interpretation).map((field) => [field.cell, field.interpretation])).toEqual([
+      ['C34', ROUNDING_INTERPRETATION],
+      ['C40', EXHAUSTIVE_MINIMUM_INTERPRETATION],
+      ['D77', `${INCREASE_INTERPRETATION} ${PERIOD2_ALLOCATION_INTERPRETATION}`],
+      ['C102', UPPER_LIMIT_INTERPRETATION],
+    ])
   })
 })
 

@@ -76,7 +76,7 @@ describe('Mitlaufende Ergebnisspalte', () => {
       '✔ GFQ und obere Fehlergrenze unter der Schwelle',
     ])
     expect(summary.gauge).toMatchObject({ threshold: 0.5 })
-    expect(nbsp(summary.gauge?.description ?? '')).toBe('Gesamtfehlerquote 0,65 %, obere Fehlergrenze 1,09 %, Wesentlichkeitsschwelle 2,00 %')
+    expect(nbsp(summary.gauge?.description ?? '')).toBe('Gesamtfehlerquote 0,65 %, obere Fehlergrenze 1,09 %, Signifikanzschwelle 2,00 %')
   })
 
   it('TE ≤ AE: Umfang nicht bestimmbar, mit Grund', () => {

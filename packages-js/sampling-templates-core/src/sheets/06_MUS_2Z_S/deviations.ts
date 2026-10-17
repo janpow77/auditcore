@@ -4,7 +4,7 @@
  * das nur, solange eine Pflichteingabe fehlt. Sind alle Pflichteingaben
  * vorhanden, zeigt sie jeden Wert wie die Vorlage.
  *
- * Pflichteingaben (ohne `kind`): Wesentlichkeitsschwelle, voraussichtliche
+ * Pflichteingaben (ohne `kind`): Signifikanzschwelle, voraussichtliche
  * Fehlerquote und die Standardabweichungen einer belegten Schicht (Zeilen 24, 25
  * und 53; die Vorlage rechnet sie dort mit `N(…)` als 0). `whenEmpty` nennt je
  * Zelle die Eingaben, deren Fehlen in den Golden-Fällen die Abweichung auslöst.
@@ -49,7 +49,7 @@ const SECOND_TEMPLATE = 'Wert auf Grundlage von σ_rh = 0 bzw. AE = 0 (z. B. Umf
 const FINAL_SIZES = 'Ohne die Angaben zum Gesamtumfang und zur Neuberechnung sind die endgültigen Umfänge nicht bestimmt; Hochrechnung und Würdigung bleiben offen.'
 
 const required: readonly Deviation[] = [
-  ...entries(['C19', 'C56'], ['C17'], ZERO, 'Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C19', 'C56'], ['C17'], ZERO, 'Der zulässige Fehler setzt die Signifikanzschwelle voraus.'),
   ...entries(['C21', 'C57'], ['C20'], ZERO, 'Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus.'),
   ...perStratum(26, [24, 25], TERM, SIGMA),
   ...entries(['C26', 'C27'], [...SIGMA1, ...SIGMA2], 'Wert ohne den Beitrag der Schicht mit fehlender Standardabweichung', SIGMA),

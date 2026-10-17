@@ -36,6 +36,8 @@ interface Counts {
   explained: number
   /** Zellen, die die Webfassung bewusst anders darstellt (`adapted`). */
   adapted: number
+  /** Texte mit dem amtlichen Begriff statt des Begriffs der Vorlage. */
+  terms: number
   unexplained: number
   /** Abweichungen unter der Richtlinie „wie die Vorlage“. */
   template: number
@@ -48,6 +50,7 @@ function countsOf(sheet: AvailableSheet, cases: readonly GoldenCase[]): Counts &
     compared: total(list, (report) => report.compared),
     explained: total(list, (report) => report.explained.length),
     adapted: total(list, (report) => report.adapted.length),
+    terms: total(list, (report) => report.terms.length),
     unexplained: total(list, (report) => report.unexplained.length),
     template: cases.reduce((sum, golden) => sum + templateMismatches(sheet, golden).length, 0),
     reports: list,
@@ -59,15 +62,16 @@ const add = (left: Counts, right: Counts): Counts => ({
   compared: left.compared + right.compared,
   explained: left.explained + right.explained,
   adapted: left.adapted + right.adapted,
+  terms: left.terms + right.terms,
   unexplained: left.unexplained + right.unexplained,
   template: left.template + right.template,
 })
 
 const row = (name: string, counts: Counts): string =>
-  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.adapted - counts.unexplained} | ${counts.explained} | ${counts.adapted} | ${counts.unexplained} | ${counts.template} |`
+  `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.adapted - counts.terms - counts.unexplained} | ${counts.explained} | ${counts.adapted} | ${counts.terms} | ${counts.unexplained} | ${counts.template} |`
 
-const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, adapted: 0, unexplained: 0, template: 0 }
-const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|']
+const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, adapted: 0, terms: 0, unexplained: 0, template: 0 }
+const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|---:|']
 
 function comparison(): string {
   const lines = [
@@ -102,6 +106,8 @@ function comparison(): string {
     '  Webfassung kein Wert mit Hinweis) und der Faktor zu einem Konfidenzniveau außerhalb der Stufen der Altvorlagen',
     '  (X1 C5/C6, X2 C6, X3 D10, X4 C11: Excel FALSCH, Webfassung 0 mit Hinweis). Geprüft ist je Zelle, dass die Webfassung',
     '  genau den Wert zeigt, der sich nach dieser Regel aus dem Wert von Excel ergibt.',
+    '- **Amtlicher Begriff** sind Texte, in denen die Webfassung statt „Signifikanzschwelle“ der Vorlage den amtlichen',
+    '  Begriff „Signifikanzschwelle“ zeigt (Anhang I Nr. 1 DelVO (EU) 2023/67); sonst ist der Text wortgleich.',
     '- **Toleranzkanten** gibt es gegen Excel keine mehr: Die beiden Würdigungen, die gegen LibreOffice an der',
     '  Vergleichstoleranz hingen (Blatt 06 C99, Blatt 12 C138), zeigt die Webfassung mit der Vergleichsregel von Excel',
     '  genau wie Excel.',

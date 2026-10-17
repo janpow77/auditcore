@@ -13,6 +13,7 @@ import { sheet as sheet16 } from '../src/sheets/16_NS_PPS_S/index'
 import { checkAdmissibility, checkCoverage, minimumCoverage, stratumSampleSize } from '../src/sheets/shared/nonstatistical'
 import { buildSummary } from '../src/view/summaryView'
 import { compareCase, loadGolden } from './golden'
+import { officialWording } from '../src/model/terms'
 
 const context = createContext()
 const t = createTranslate()
@@ -25,7 +26,7 @@ const strict = createContext({ policy: STRICT_POLICY })
 const evaluate = (sheet: AvailableSheet, changes: Record<string, CellValue>, policy = context): ReturnType<typeof evaluateSheet> => evaluateSheet(sheet, { ...sheet.sample.inputs, ...changes }, policy)
 
 /**
- * Zellen, die das leere Formular zeigen darf: die Vorgabe der Wesentlichkeitsschwelle,
+ * Zellen, die das leere Formular zeigen darf: die Vorgabe der Signifikanzschwelle,
  * feste Texte (N3, N7), die freiwilligen Einzelbeträge (Fehler der umfassenden Schicht
  * bzw. der hochwertigen Einheiten aus `N(...)`, N6, N8, N9) und in den geschichteten
  * Blättern die Zeile des extrapolierten Fehlers je Schicht, die in der Vorlage für
@@ -63,12 +64,12 @@ describe.each(SHEETS)('Nichtstatistische Blätter: $id', (sheet) => {
     expect(summary.precision).toBe('n. a. (Art. 8 Abs. 2)')
     expect(summary.totalErrorRate).toBeGreaterThan(0)
     expect(summary.totalErrorRate).toBeLessThan(0.02)
-    expect(named(sheet.definition, run(sheet)).assessment).toBe('✔ Gesamtfehlerquote unter der Wesentlichkeitsschwelle')
+    expect(named(sheet.definition, run(sheet)).assessment).toBe('✔ Gesamtfehlerquote unter der Signifikanzschwelle')
     expect(sheet.webHints?.(sheet.sample.inputs, run(sheet), context).filter((hint) => hint.id !== 'strata-sum-exceeds-size')).toEqual([])
     expect(sheet.zeroAssumed?.(run(sheet)) ?? []).toEqual([])
   })
 
-  it('einzige Vorgabe der Vorlage ist die Wesentlichkeitsschwelle von 2 %', () => {
+  it('einzige Vorgabe der Vorlage ist die Signifikanzschwelle von 2 %', () => {
     expect(Object.values(defaultInputs(sheet.definition))).toEqual([0.02])
   })
 
@@ -102,7 +103,7 @@ describe.each(SHEETS)('Nichtstatistische Blätter: $id', (sheet) => {
   it('die englische Arbeitsübersetzung deckt jedes Feld und jeden Text des Rechenkerns ab', () => {
     const texts = sheet.translations?.en
     for (const field of fieldsOf(sheet.definition)) expect(texts?.fields?.[field.cell]?.label, field.cell).toBeTruthy()
-    const produced = loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string'))
+    const produced = loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').map((value) => officialWording(value)))
     for (const value of new Set(produced)) expect(texts?.values?.[value], value).toBeTruthy()
     expect(localizeSheet(sheet, 'en').definition.title).toBe(texts?.title)
   })

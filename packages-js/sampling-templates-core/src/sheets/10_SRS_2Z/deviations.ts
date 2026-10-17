@@ -4,7 +4,7 @@
  * (`null`), nie einen anderen Wert als die Vorlage. `whenEmpty` nennt je Zelle die Eingaben,
  * deren Fehlen in den Golden-Fällen die Abweichung auslöst – jede ist durch
  * einen Fall „alles ausgefüllt außer …“ belegt. Wo die Vorlage bei einer
- * fehlenden Eingabe selbst nichts zeigt (z. B. C33 ohne Wesentlichkeitsschwelle),
+ * fehlenden Eingabe selbst nichts zeigt (z. B. C33 ohne Signifikanzschwelle),
  * steht die Eingabe nicht in der Liste. Dazu die Werte ohne Grundlage
  * (`kind: 'withoutBasis'`): der anzuwendende Umfang für Zeitraum 2 aus den bloßen
  * Untergrenzen und die Hochrechnung 0, solange kein Zeitraum eine Fehlersumme trägt.
@@ -34,7 +34,7 @@ const FINAL = 'Ohne die Angaben zum Gesamtumfang und zur Neuberechnung für Zeit
 
 /** Eingaben, von denen der Gesamtumfang des ersten Zeitraums und seine Aufteilung abhängen. */
 const SIZE_INPUTS = ['C7', 'C8', 'C14', 'C15', 'C26', 'C29', 'C30']
-/** Dazu die Wesentlichkeitsschwelle und die Eingaben der Neuberechnung für Zeitraum 2. */
+/** Dazu die Signifikanzschwelle und die Eingaben der Neuberechnung für Zeitraum 2. */
 const ALL_INPUTS = ['C7', 'C8', 'C14', 'C15', 'C23', 'C26', 'C29', 'C30', 'C49', 'C50', 'C56']
 
 export const deviations: readonly Deviation[] = [
@@ -42,7 +42,7 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C13'], ['C8'], '0 abzüglich der Einheiten der umfassenden Schicht', UNITS),
   ...entries(['C16'], ['C7', 'C14'], ZERO, BOOK_VALUE),
   ...entries(['C17'], ['C8', 'C15'], ZERO, UNITS),
-  ...entries(['C25'], ['C7', 'C14', 'C23'], ZERO, 'Der zulässige Fehler setzt beide Buchwerte und die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C25'], ['C7', 'C14', 'C23'], ZERO, 'Der zulässige Fehler setzt beide Buchwerte und die Signifikanzschwelle voraus.'),
   ...entries(['C27'], ['C7', 'C14', 'C26'], ZERO, 'Der voraussichtliche Fehler setzt beide Buchwerte und die voraussichtliche Fehlerquote voraus.'),
   ...entries(['C28'], ['C7', 'C14'], 'Prüfhinweis auf Grundlage nur eines Buchwerts', BOOK_VALUE),
   ...entries(['C31'], ['C8', 'C15', 'C29', 'C30'], 'gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle', DEVIATION),
@@ -50,7 +50,7 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C54'], ['C49'], '0 € abzüglich des Buchwerts der umfassenden Schicht', BOOK_VALUE),
   ...entries(['C55'], ['C50'], '0 abzüglich der Einheiten der umfassenden Schicht', UNITS),
   ...entries(['C58', 'N4'], ['C7', 'C49'], ZERO, BOOK_VALUE),
-  ...entries(['C59'], ['C7', 'C23', 'C49'], ZERO, 'Der aktualisierte zulässige Fehler setzt beide Ist-Buchwerte und die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C59'], ['C7', 'C23', 'C49'], ZERO, 'Der aktualisierte zulässige Fehler setzt beide Ist-Buchwerte und die Signifikanzschwelle voraus.'),
   ...entries(['C60'], ['C7', 'C26', 'C49'], ZERO, 'Der aktualisierte voraussichtliche Fehler setzt beide Ist-Buchwerte und eine voraussichtliche Fehlerquote voraus.'),
   ...entries(['C61'], ['C29'], '0,00 € (leere Zelle zählt als 0)', 'Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für Zeitraum 1.'),
   ...entries(['C62'], ['C7', 'C8', 'C14', 'C15', 'C23', 'C26', 'C29', 'C30', 'C49'], 'Nenner auf Grundlage des mit 0 gerechneten Werts', SECOND),

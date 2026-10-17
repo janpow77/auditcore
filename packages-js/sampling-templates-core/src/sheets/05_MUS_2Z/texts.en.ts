@@ -5,6 +5,9 @@
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, INCREASE_INTERPRETATION_EN, VALUES_EN, findingsEn, periodExceedsEn, selectionEn } from '../shared/mus'
+import { delvoHintsEn, globalMarginId, withNotApplicableNoteEn } from '../shared/delvo'
+import { ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { HIGH_VALUE_INTERPRETATION_EN } from '../shared/interpretations'
 
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 
@@ -47,7 +50,7 @@ export const en: SheetTexts = {
     C24: { label: 'Anticipated standard deviation of error rates in period 2 (σ_r2)', hint: 'Where different approximations cannot be obtained, the same value applies to all periods (Annex II point 1.2, notes).' },
     C25: { label: 'Weighted standard deviation √(BV₁/BV₁₊₂·σ²_r1 + BV₂/BV₁₊₂·σ²_r2) (σ_rw1+2)' },
     C26: { label: 'Approach to the recalculation of the sample size', hint: 'Art. 5(6)(a) (standard) or (b) (global); with a capped sample size also Art. 5(7), fourth subparagraph, point (a) (increase).' },
-    C27: { label: 'Calculated total sample size n₁₊₂ = (z·BV₁₊₂·σ_rw / (TE − AE))² (n_1+2)' },
+    C27: { label: 'Calculated total sample size n₁₊₂ = (z·BV₁₊₂·σ_rw / (TE − AE))² (n_1+2)', interpretation: ROUNDING_INTERPRETATION_EN },
     C28: { label: 'Category of the programme under Table 2 of Annex XI to Regulation (EU) 2021/1060 (1–4)', hint: 'Art. 5(7), first subparagraph DR; recital 10.' },
     C29: { label: 'Enhanced proportionate arrangements pursuant to Art. 83 of Regulation (EU) 2021/1060 (Yes/No)', hint: 'Annex I point (a) DR: sample of 30 sampling units.' },
     C30: { label: 'Apply the capped sample size (Yes/No)', hint: 'Art. 5(7): applied to a sample for the whole population (second subparagraph).' },
@@ -57,6 +60,7 @@ export const en: SheetTexts = {
     C34: { label: 'Sample size for period 1 (BV₁/BV₁₊₂ · n₁₊₂) (n_1)' },
     C35: { label: 'Planned sample size for period 2 (BV₂/BV₁₊₂ · n₁₊₂) (n_2)' },
     ...selectionEn(36, 1),
+    C40: { label: 'Number of units to be selected in the random stratum (n_s)', interpretation: HIGH_VALUE_INTERPRETATION_EN },
     ...findingsEn(45),
     C48: { label: 'Book value of period 2 (actual) (BV_2)' },
     C49: { label: 'Number of sampling units in period 2 (actual) (N_2)' },
@@ -95,7 +99,7 @@ export const en: SheetTexts = {
     C92: { label: 'Extrapolated random error rate (EE / BV)' },
     C93: { label: 'Total error rate ((EE + delimited systemic + uncorrected anomalous errors) / BV)', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C94: { label: 'Upper error limit in % of BV' },
-    C95: { label: 'Assessment against the materiality threshold' },
+    C95: { label: 'Assessment against the materiality threshold', interpretation: UPPER_LIMIT_INTERPRETATION_EN },
   },
   summary: {
     primary: 'Total sample size to be applied',
@@ -108,12 +112,13 @@ export const en: SheetTexts = {
     '✖ nicht anwendbar (Nenner ≤ 0) – globale Neuberechnung': '✖ not applicable (denominator ≤ 0) – global recalculation',
     '⚠ Umfang überschritten – Art. 5 Abs. 7 UAbs. 4 Buchst. a oder b': '⚠ sample size exceeded – Art. 5(7), fourth subparagraph, point (a) or (b)',
   },
-  webHints: {
+  webHints: withNotApplicableNoteEn({
+    ...delvoHintsEn(globalMarginId()),
     'limited-size-open': HINTS_EN['limited-size-open'],
     'size-exceeds-population-1': periodExceedsEn(1),
     'size-exceeds-population-2': periodExceedsEn(2),
     'negative-denominator':
       'Denominator of the standard recalculation is not positive: the standard approach yields no sample size for period 2. Where all required inputs are present, the web version shows, like the template, only the minimum size of 3 or the top-up to 30 and continues to calculate with it; the result is not reliable. Recommended: global recalculation',
     'confidence-outside-annex': HINTS_EN['confidence-outside-annex'],
-  },
+  }),
 }

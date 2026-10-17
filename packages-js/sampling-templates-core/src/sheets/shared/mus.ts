@@ -243,7 +243,7 @@ export const VALUES_EN: Readonly<Record<string, string>> = {
   '✔ keine weitere Iteration': '✔ no further iteration',
   '⚠ Einheiten umgliedern und Intervall neu berechnen': '⚠ reassign units and recalculate the interval',
   'n. a. (einseitiger Test)': 'n/a (unilateral testing)',
-  '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle': '✖ total error rate above the materiality threshold',
+  '✖ Gesamtfehlerquote über der Signifikanzschwelle': '✖ total error rate above the materiality threshold',
   '⚠ GFQ unter, obere Fehlergrenze über der Schwelle – weitere Würdigung': '⚠ total error rate below, upper error limit above the threshold – further assessment',
   '✔ GFQ und obere Fehlergrenze unter der Schwelle': '✔ total error rate and upper error limit below the threshold',
   [NOT_APPLICABLE]: '✖ not applicable (denominator ≤ 0)',

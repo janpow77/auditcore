@@ -106,14 +106,14 @@ function upperLimit(c: Cells, context: SheetContext): CellValue {
   return guard(() => divide(plus(plus(plus(required(c.C24), required(c.C25)), n(c.C9)), n(c.C10)), required(c.C14)))
 }
 
-/** C30: Würdigung gegen die Wesentlichkeitsschwelle. */
+/** C30: Würdigung gegen die Signifikanzschwelle. */
 function assessment(c: Cells, context: SheetContext): CellValue {
   if (!isNumber(c.C26) || !isNumber(c.C29)) return null
-  if (gt(c.C26, c.C29)) return '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle'
-  if (isNumber(c.C28)) return gt(c.C28, c.C29) ? '⚠ GFQ unter, obere Fehlergrenze über der Schwelle' : '✔ unter der Wesentlichkeitsschwelle'
+  if (gt(c.C26, c.C29)) return '✖ Gesamtfehlerquote über der Signifikanzschwelle'
+  if (isNumber(c.C28)) return gt(c.C28, c.C29) ? '⚠ GFQ unter, obere Fehlergrenze über der Schwelle' : '✔ unter der Signifikanzschwelle'
   // Ohne obere Fehlergrenze (Text „n. a.“) prüft die Vorlage nur die Gesamtfehlerquote. Fehlt sie nur, weil das
   // Methodenblatt noch keine Genauigkeit liefert, hätte der bestandene Hinweis keine Grundlage.
-  return isBlank(c.C28) ? unfounded(context, '✔ unter der Wesentlichkeitsschwelle') : '✔ unter der Wesentlichkeitsschwelle'
+  return isBlank(c.C28) ? unfounded(context, '✔ unter der Signifikanzschwelle') : '✔ unter der Signifikanzschwelle'
 }
 
 /** Abschnitte C bis E: hochwertige Schicht, Anpassung nach Anhang III, Gesamtfehlerquote und Würdigung (C23–C30). */

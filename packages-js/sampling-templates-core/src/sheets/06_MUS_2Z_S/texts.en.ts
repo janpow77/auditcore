@@ -6,6 +6,8 @@
 import { STRATA_COLUMNS } from '../../model/strata'
 import type { FieldTexts, SheetTexts } from '../../model/texts'
 import { HINTS_EN, INCREASE_INTERPRETATION_EN, VALUES_EN } from '../shared/mus'
+import { delvoHintsEn, globalMarginId, withNotApplicableNoteEn } from '../shared/delvo'
+import { HIGH_VALUE_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
 
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 const INCREASE_NOTE = `Approach “increase” – ${INCREASE_INTERPRETATION_EN}`
@@ -73,7 +75,7 @@ export const en: SheetTexts = {
       hint: 'Art. 5(6)(a) (standard) or (b) (global); with a capped sample size also Art. 5(7), fourth subparagraph, point (a) (increase).',
       interpretation: INCREASE_NOTE,
     },
-    C29: { label: 'Calculated total sample size (n_1+2)' },
+    C29: { label: 'Calculated total sample size (n_1+2)', interpretation: ROUNDING_INTERPRETATION_EN },
     C30: { label: 'Category of the programme under Table 2 of Annex XI to Regulation (EU) 2021/1060 (1–4)', hint: 'Art. 5(7), first subparagraph DR; recital 10.' },
     C31: { label: 'Enhanced proportionate arrangements pursuant to Art. 83 of Regulation (EU) 2021/1060 (Yes/No)', hint: 'Annex I point (a) DR: sample of 30 sampling units.' },
     C32: { label: 'Apply the capped sample size (Yes/No)', hint: 'Art. 5(7): applied to a sample for the whole population (second subparagraph).' },
@@ -83,6 +85,7 @@ export const en: SheetTexts = {
     D37: { label: 'Sample size for period 1 per stratum (BV_h1/BV · n) (n_h1)' },
     D38: { label: 'Planned sample size for period 2 per stratum (n_h2)' },
     ...period(40, 1),
+    D44: { label: 'Random units to be selected (n_hs)', interpretation: HIGH_VALUE_INTERPRETATION_EN },
     D51: { label: 'Book value of period 2 (actual) (BV_h2)' },
     D52: { label: 'Number of units in period 2 (actual) (N_h2)' },
     D53: { label: 'Updated standard deviation for period 2 (σ_rh2)' },
@@ -118,7 +121,7 @@ export const en: SheetTexts = {
     C96: { label: 'Extrapolated random error rate (EE / BV)' },
     C97: { label: 'Total error rate ((EE + delimited systemic + uncorrected anomalous errors) / BV)', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C98: { label: 'Upper error limit in % of BV' },
-    C99: { label: 'Assessment against the materiality threshold' },
+    C99: { label: 'Assessment against the materiality threshold', interpretation: UPPER_LIMIT_INTERPRETATION_EN },
   },
   summary: {
     primary: 'Total sample size to be applied',
@@ -126,7 +129,8 @@ export const en: SheetTexts = {
     rows: { C70: 'Sample size for period 1 (sum of n_h1)', C69: 'Sample size for period 2 (sum of n_h2)', C89: 'Extrapolated error', C90: 'Sampling precision SE', C97: 'Total error rate', C98: 'Upper error limit' },
   },
   values: { ...VALUES_EN, 'MUS-Standardansatz, 2 Zeiträume, geschichtet': 'MUS standard approach, 2 periods, stratified' },
-  webHints: {
+  webHints: withNotApplicableNoteEn({
+    ...delvoHintsEn(globalMarginId()),
     'limited-size-open': HINTS_EN['limited-size-open'],
     'strata-sum-exceeds-size': HINTS_EN['strata-sum-exceeds-size'],
     ...perStratum('size-exceeds-population-2', 'sample size for period 2 exceeds the number of units of the stratum'),
@@ -140,5 +144,5 @@ export const en: SheetTexts = {
       'No actual book value has been entered for period 2: the template continues to calculate with period 1 alone. Where all required inputs are present, the web version shows the same values; recalculation, extrapolation and total error rate are then not reliable. Where a required input is missing, they remain open',
     'confidence-outside-annex': HINTS_EN['confidence-outside-annex'],
     'strata-beyond-template': HINTS_EN['strata-beyond-template'],
-  },
+  }),
 }

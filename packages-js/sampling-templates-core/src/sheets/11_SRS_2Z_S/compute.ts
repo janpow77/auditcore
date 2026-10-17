@@ -26,7 +26,7 @@ const row = (number: number): CellAddress[] => STRATA_COLUMNS.map((column) => at
 
 /**
  * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet; die Webfassung zeigt
- * in den abhängigen Zellen „Angabe fehlt“ (deviations.ts): Wesentlichkeitsschwelle,
+ * in den abhängigen Zellen „Angabe fehlt“ (deviations.ts): Signifikanzschwelle,
  * voraussichtliche Fehlerquote, Buchwerte der Schichten (Zeilen 12, 58) und die
  * Standardabweichungen für den Stichprobenumfang (Zeilen 29, 30, 59). Keine
  * dieser Zellen wird in der Vorlage auf `""` geprüft, außer C22 und C25 in

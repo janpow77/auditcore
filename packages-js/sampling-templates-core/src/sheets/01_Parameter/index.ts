@@ -25,7 +25,7 @@ export const PARAMETERS: Parameters = {
     },
   ],
   notes: {
-    materiality: 'Wesentlichkeitsschwelle: höchstens 2 % (Anh. I Nr. 1 i. V. m. Anh. XX Nr. 5.9 VO (EU) 2021/1060).',
+    materiality: 'Signifikanzschwelle: höchstens 2 % (Anh. I Nr. 1 i. V. m. Anh. XX Nr. 5.9 VO (EU) 2021/1060).',
     minimumSize: 'Mindeststichprobenumfang: 30 Einheiten, mindestens 3 je Zufallsschicht eines Stichprobenzeitraums (Art. 5 Abs. 5).',
     limitedSize: 'Begrenzter Stichprobenumfang: 50 Einheiten für Programme der Kategorie 1 oder 2 ohne Art. 83 (Art. 5 Abs. 7); 30 Einheiten bei Art. 83.',
   },

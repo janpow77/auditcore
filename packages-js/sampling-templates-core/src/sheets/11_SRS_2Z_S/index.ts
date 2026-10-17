@@ -2,8 +2,9 @@
 import { gt, isBlank, isNumber, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import { STRATA_COLUMNS, TEMPLATE_STRATA, stratumCell, usedStrata } from '../../model/strata'
-import type { CellMap, WebHint } from '../../model/types'
+import type { CellMap, SheetContext, WebHint } from '../../model/types'
 import { NOT_APPLICABLE, precisionCells, projectionCells, recalculationOf } from '../shared/srs'
+import { exclusionReference, globalWithoutMargin, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
@@ -60,7 +61,7 @@ function negativeDenominator(results: CellMap): WebHint[] {
 }
 
 /** Hinweise der Webfassung zu Blatt 11; sie verändern kein Rechenergebnis. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints: WebHint[] = []
   const { C42: size, C44: first, C45: second } = results
   if (isNumber(size) && isNumber(first) && isNumber(second) && gt(first + second, size)) {
@@ -71,7 +72,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   if (gt(usedStrata(inputs, [UNITS.period1, UNITS.forecast2, UNITS.period2]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return hints
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C33', { size: 'C72', tolerable: 'C62', anticipated: 'C63' }), ...exclusionReference(context)])
 }
 
 /** Je Zeitraum: Zeile der Einheiten, der Standardabweichung der Variablen q (s_qh) und der Fehlersumme (Σ E_i). */

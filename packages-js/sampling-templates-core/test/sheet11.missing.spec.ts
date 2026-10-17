@@ -94,7 +94,7 @@ describe('Blatt 11_SRS_2Z_S: fehlende Angaben', () => {
     expect(none.C93).toBeGreaterThan(0)
   })
 
-  it('fehlen Wesentlichkeitsschwelle oder voraussichtliche Fehlerquote, bleiben die Umfänge offen', () => {
+  it('fehlen Signifikanzschwelle oder voraussichtliche Fehlerquote, bleiben die Umfänge offen', () => {
     const rate = run({ C25: null })
     expect([rate.C26, rate.C34, rate.C42, rate.C63, rate.C68, rate.C69, rate.C72, rate.C74, rate.C77, rate.C80, rate.N10]).toEqual(nulls(11))
     const threshold = run({ C22: null })
@@ -114,7 +114,7 @@ describe('Blatt 11_SRS_2Z_S: fehlende Angaben', () => {
   })
 
   it('eine Gesamtfehlerquote über der Schwelle wird auch bei offener Genauigkeit gewürdigt', () => {
-    expect(run({ C25: null, D50: 60000, E50: 31000, D85: 45000 }).C102).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(run({ C25: null, D50: 60000, E50: 31000, D85: 45000 }).C102).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('nur Zeitraum 1 ausgefüllt: Umfänge für Zeitraum 1, aber kein Ergebnis für das Geschäftsjahr allein aus Zeitraum 1', () => {

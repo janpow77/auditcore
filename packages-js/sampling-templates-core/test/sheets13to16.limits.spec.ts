@@ -22,7 +22,7 @@ type Inputs = Record<string, CellValue>
 
 const context = createContext()
 const t = createTranslate()
-const PASSED = '✔ Gesamtfehlerquote unter der Wesentlichkeitsschwelle'
+const PASSED = '✔ Gesamtfehlerquote unter der Signifikanzschwelle'
 
 interface Shown {
   evaluation: SheetEvaluation

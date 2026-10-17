@@ -4,7 +4,7 @@
  *
  * Zwei Fallarten kommen vor:
  * - Eigene Pflichteingaben (Buchwert der ursprünglichen hochwertigen Schicht,
- *   Wesentlichkeitsschwelle, Behandlung nach Art. 80 Abs. 3 aus Blatt 02): Die
+ *   Signifikanzschwelle, Behandlung nach Art. 80 Abs. 3 aus Blatt 02): Die
  *   Vorlage rechnet mit der leeren Zelle als 0, die Webfassung zeigt „Angabe fehlt“.
  * - Werte ohne Grundlage (`withoutBasis`): Blatt 02 oder das Methodenblatt zeigen
  *   in der Webfassung „Angabe fehlt“, während die Vorlage dort mit 0 weiterrechnet
@@ -47,7 +47,7 @@ export const deviations: readonly Deviation[] = [
   ...UPSTREAM.map(([cell, whenEmpty]): Deviation => ({ cell, whenEmpty, template: UPSTREAM_TEMPLATE, reason: UPSTREAM_REASON, kind: 'withoutBasis' })),
   ...entries(['C15'], ['02_Grundgesamtheit!C49'], '0 (Bezug auf die leere Auswahlzelle in Blatt 02)', 'Ohne Auswahl in Blatt 02 ist die Behandlung der nicht prüfbaren Einheiten unbekannt, nicht 0.'),
   // Die Schwelle steht vor der hochwertigen Schicht: Der Abgleich nennt die erste zutreffende Zeile, und BV_e,u ist meist leer.
-  ...entries(['C30'], ['C29'], 'Würdigung gegen eine Schwelle von 0 %', 'Ohne Wesentlichkeitsschwelle gibt es nichts zu würdigen.'),
+  ...entries(['C30'], ['C29'], 'Würdigung gegen eine Schwelle von 0 %', 'Ohne Signifikanzschwelle gibt es nichts zu würdigen.'),
   ...entries(['C23'], ['C21'], '0,00 € (leere Zelle zählt als 0)', HIGH_VALUE),
   ...entries(['C24', 'C26', 'C27', 'C28', 'C30'], ['C21'], 'Wert ohne den Fehler der umfassenden Schicht (EE_e = 0), wenn die Anpassung mit „Ja“ gewählt ist', HIGH_VALUE),
 ]

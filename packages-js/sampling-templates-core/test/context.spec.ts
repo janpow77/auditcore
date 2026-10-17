@@ -13,6 +13,7 @@ import { buildSummary } from '../src/view/summaryView'
 import { computeWorkspace } from '../src/workspace/compute'
 import { emptyWorkspace, type WorkspaceState } from '../src/workspace/types'
 import { loadGolden } from './golden'
+import { officialWording } from '../src/model/terms'
 
 const t = createTranslate()
 const nbsp = (text: string): string => text.replaceAll(String.fromCharCode(160), ' ')
@@ -96,7 +97,7 @@ describe('Arbeitsübersetzung Englisch', () => {
     })
 
     it(`${sheet.id}: jeder Text der Golden-Fälle (Prüfhinweise, Methodenname) hat eine Übersetzung`, () => {
-      const values = loadGolden(sheet.id).flatMap((golden) => Object.entries(golden.erwartet))
+      const values = loadGolden(sheet.id).flatMap((golden) => Object.entries(golden.erwartet).map(([reference, value]) => [reference, officialWording(value)] as const))
       const strings = new Set(values.filter(([reference, value]) => reference.startsWith(sheet.id) && typeof value === 'string').map(([, value]) => String(value)))
       expect([...strings].filter((text) => !(text in (texts?.values ?? {})))).toEqual([])
     })

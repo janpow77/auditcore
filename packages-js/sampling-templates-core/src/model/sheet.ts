@@ -8,6 +8,7 @@ import { cellsOf, inputFields, type MethodDefinition, type SubsampleRole } from 
 import type { DataTable } from './table'
 import { localizeDefinition, type SheetTexts, type SheetTranslations, type TranslationLocale } from './texts'
 import type { CellAddress, CellMap, CellValue, Cells, Compute, Deviation, MethodSummary, SheetContext, SheetId, WebHint } from './types'
+import { withTemplateTerm } from './terms'
 
 /** Erfundene Beispielwerte eines Blatts; die Oberfläche kennzeichnet sie als Beispiel. */
 export interface SampleInputs {
@@ -123,7 +124,7 @@ export function tableSheet(id: SheetId, table: DataTable): PlannedSheet {
 
 /** Blatt mit Rechenkern anmelden. */
 export function defineSheet(sheet: Omit<AvailableSheet, 'available'>): AvailableSheet {
-  return { ...sheet, available: true }
+  return { ...sheet, definition: withTemplateTerm(sheet.definition), available: true }
 }
 
 /**

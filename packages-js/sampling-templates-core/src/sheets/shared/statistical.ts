@@ -1,7 +1,7 @@
 /**
  * Formeln, die in den statistischen Blättern 03–12 wortgleich vorkommen
  * (nur die Zellbezüge unterscheiden sich): Prüfhinweise zu Konfidenzniveau,
- * Wesentlichkeitsschwelle und TE > AE, rechnerischer und anzuwendender
+ * Signifikanzschwelle und TE > AE, rechnerischer und anzuwendender
  * Stichprobenumfang, begrenzter Umfang, untere Fehlergrenze und Würdigung.
  * Jedes Blatt ruft sie mit seinen Zellen auf; so stehen die Texte der Vorlage
  * genau einmal im Quelltext.
@@ -18,7 +18,7 @@ export function checkConfidence(reliability: CellValue | undefined, confidence: 
   return gt(confidence, 0.6) && lt(confidence, 0.9) ? '✔ mittel: Wert zwischen den Eckwerten' : '⚠ mittel: Wert zwischen 60 % und 90 % begründen'
 }
 
-/** Prüfung Wesentlichkeitsschwelle (höchstens 2 %). */
+/** Prüfung Signifikanzschwelle (höchstens 2 %). */
 export function checkMateriality(materiality: CellValue | undefined): CellValue {
   if (!isNumber(materiality)) return null
   return le(materiality, 0.02) ? '✔ ≤ 2 %' : '✖ unzulässig: höchstens 2 %'
@@ -106,10 +106,10 @@ export function lowerErrorLimit(testType: CellValue | undefined, projected: Cell
   return guard(() => required(projected) - required(precision) + n(systemic) + n(anomalous))
 }
 
-/** Würdigung gegen die Wesentlichkeitsschwelle. */
+/** Würdigung gegen die Signifikanzschwelle. */
 export function assessment(totalErrorRate: CellValue | undefined, upperLimitRate: CellValue | undefined, materiality: CellValue | undefined): CellValue {
   if (!isNumber(totalErrorRate)) return null
-  if (gt(totalErrorRate, n(materiality))) return '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle'
+  if (gt(totalErrorRate, n(materiality))) return '✖ Gesamtfehlerquote über der Signifikanzschwelle'
   // Wie in der Vorlage: Ein Text (hier die leere Zelle der oberen Fehlergrenze) ist im Vergleich größer als jede Zahl.
   if (!isNumber(upperLimitRate) || gt(upperLimitRate, n(materiality))) return '⚠ GFQ unter, obere Fehlergrenze über der Schwelle – weitere Würdigung'
   return '✔ GFQ und obere Fehlergrenze unter der Schwelle'

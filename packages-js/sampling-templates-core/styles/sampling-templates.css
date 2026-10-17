@@ -221,6 +221,8 @@
 .fa-st__formula { font: var(--fa-font-size-xs) var(--fa-font-mono); color: var(--fa-color-text-muted); }
 .fa-st__hint { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
 .fa-st__tag { align-self: flex-start; }
+/* Kennzeichen „Auslegung der Vorlage“: Schrift in Textfarbe auf dem hellen Akzentgrund – der Akzent selbst erreicht dort nicht in jedem Farbschema einer Anwendung den Mindestkontrast. */
+.fa-st .fa-st__tag.fa-badge--accent { color: var(--fa-color-text); }
 .fa-st__control { min-width: 0; }
 .fa-st__input {
   width: 100%;

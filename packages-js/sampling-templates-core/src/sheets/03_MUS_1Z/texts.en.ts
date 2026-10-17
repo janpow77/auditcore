@@ -4,6 +4,7 @@
  * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import type { SheetTexts } from '../../model/texts'
+import { HIGH_VALUE_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
 
 export const en: SheetTexts = {
   title: 'MUS standard approach – one sampling period, non-stratified',
@@ -35,7 +36,7 @@ export const en: SheetTexts = {
     C18: { label: 'Anticipated error', formula: 'AE = anticipated error rate × BV' },
     C19: { label: 'Check TE > AE' },
     C20: { label: 'Anticipated standard deviation of error rates (σ_r)', hint: 'Annex I point 4.' },
-    C21: { label: 'Calculated sample size', hint: 'Annex II point 1.1, non-stratified.' },
+    C21: { label: 'Calculated sample size', hint: 'Annex II point 1.1, non-stratified.', interpretation: ROUNDING_INTERPRETATION_EN },
     C22: { label: 'Category of the programme under Table 2 of Annex XI to Regulation (EU) 2021/1060 (1–4)', hint: 'Art. 5(7), first subparagraph DR; recital 10.' },
     C23: { label: 'Enhanced proportionate arrangements pursuant to Art. 83 of Regulation (EU) 2021/1060 (Yes/No)', hint: 'Annex I point (a) DR: sample of 30 sampling units.' },
     C24: { label: 'Apply the capped sample size (Yes/No)', hint: 'Art. 5(7): applied to a sample for the whole population (second subparagraph).' },
@@ -46,7 +47,7 @@ export const en: SheetTexts = {
     C29: { label: 'Number of high value units (BV > cut-off value) (n_e)' },
     C30: { label: 'Book value of the high value units (BV_e)' },
     C31: { label: 'Book value of the random stratum (low value units) (BV_s)' },
-    C32: { label: 'Number of units to be selected in the random stratum (n_s)' },
+    C32: { label: 'Number of units to be selected in the random stratum (n_s)', interpretation: HIGH_VALUE_INTERPRETATION_EN },
     C33: { label: 'At least three units in the random stratum' },
     C34: { label: 'Interval of selection (SI)', hint: 'Art. 2(9); Art. 5(2), second subparagraph DR.' },
     C35: { label: 'Units of the random stratum with BV > interval of selection (iteration)', hint: 'Such units are to be assigned to the high value stratum; cut-off value and interval are to be recalculated.' },
@@ -66,7 +67,7 @@ export const en: SheetTexts = {
     C49: { label: 'Extrapolated random error rate' },
     C50: { label: 'Total error rate', formula: '(EE + delimited systemic + uncorrected anomalous errors) / BV', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C51: { label: 'Upper error limit in % of BV' },
-    C52: { label: 'Assessment against the materiality threshold' },
+    C52: { label: 'Assessment against the materiality threshold', interpretation: UPPER_LIMIT_INTERPRETATION_EN },
   },
   summary: {
     primary: 'Sample size to be applied',
@@ -95,7 +96,7 @@ export const en: SheetTexts = {
     '✔ keine weitere Iteration': '✔ no further iteration',
     '⚠ Einheiten umgliedern und Intervall neu berechnen': '⚠ reassign units and recalculate the interval',
     'n. a. (einseitiger Test)': 'n/a (unilateral testing)',
-    '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle': '✖ total error rate above the materiality threshold',
+    '✖ Gesamtfehlerquote über der Signifikanzschwelle': '✖ total error rate above the materiality threshold',
     '⚠ GFQ unter, obere Fehlergrenze über der Schwelle – weitere Würdigung': '⚠ total error rate below, upper error limit above the threshold – further assessment',
     '✔ GFQ und obere Fehlergrenze unter der Schwelle': '✔ total error rate and upper error limit below the threshold',
   },

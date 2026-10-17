@@ -7,6 +7,7 @@
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, STRATA_HINTS_EN, VALUES_EN } from '../shared/nonstatistical'
+import { NONSTATISTICAL_ALLOCATION_INTERPRETATION_EN } from '../shared/interpretations'
 
 export const en: SheetTexts = {
   title: 'Non-statistical sampling – PPS selection, stratified',
@@ -27,7 +28,7 @@ export const en: SheetTexts = {
     C11: { label: 'Number of units of the population (N)' },
     C12: { label: 'Admissibility of non-statistical sampling (N < 300)' },
     C13: { label: 'Sample size (professional judgement)' },
-    D15: { label: 'Sample size per stratum' },
+    D15: { label: 'Sample size per stratum', interpretation: NONSTATISTICAL_ALLOCATION_INTERPRETATION_EN },
     C16: { label: 'Minimum coverage 10 % of the sampling units (rounded up)', hint: 'Art. 79(2) of Regulation (EU) 2021/1060; Art. 6(2) DR: units of exhaustive strata are included. Where the method is changed under Art. 6(3), the minimum size refers to the whole accounting year.' },
     C17: { label: 'Check of minimum coverage' },
     D18: { label: 'Cut-off value per stratum (BV/n)' },

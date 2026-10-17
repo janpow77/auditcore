@@ -6,7 +6,7 @@ import { computed } from 'vue'
 /**
  * Kompakte Kennzahlenleiste für schmale Behälter: Hauptgröße, hervorgehobene
  * Kennzahlen (Gesamtfehlerquote, obere Fehlergrenze) und Ampel gegen die
- * Wesentlichkeitsschwelle. Sie klebt beim Rollen oben, damit die Ampel beim
+ * Signifikanzschwelle. Sie klebt beim Rollen oben, damit die Ampel beim
  * Ausfüllen sichtbar bleibt. Für Hilfstechniken ausgeblendet: Dieselben Werte
  * stehen in der Kennzahlenspalte und werden bei Änderung angesagt.
  */

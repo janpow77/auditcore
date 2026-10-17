@@ -10,6 +10,7 @@
  * nennt sie allgemein, weil `SheetTexts` je Kennung nur einen festen Text trägt.
  */
 import type { SheetTexts } from '../../model/texts'
+import { UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
 
 export const en: SheetTexts = {
   title: 'Total error rate, technical assistance and single audit arrangements',
@@ -57,7 +58,7 @@ export const en: SheetTexts = {
     C27: { label: 'Amount of error in relation to the audit population including TA' },
     C28: { label: 'Upper error limit in % (including sampling precision)', hint: 'Art. 2(20).' },
     C29: { label: 'Materiality threshold' },
-    C30: { label: 'Assessment' },
+    C30: { label: 'Assessment', interpretation: UPPER_LIMIT_INTERPRETATION_EN },
   },
   summary: {
     primary: 'Total error rate',
@@ -75,9 +76,9 @@ export const en: SheetTexts = {
     'Tabelle 2 (SRS/gleiche Wahrscheinlichkeit)': 'Table 2 (SRS/equal probability selection)',
     '✔ Basis stimmt mit der erwarteten Grundgesamtheit überein': '✔ basis agrees with the expected population',
     '⚠ Basis weicht ab – Ausschluss: reduzierte, Ersetzung/keine: ursprüngliche Grundgesamtheit': '⚠ basis differs – exclusion: reduced population; replacement/none: original population',
-    '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle': '✖ total error rate above the materiality threshold',
+    '✖ Gesamtfehlerquote über der Signifikanzschwelle': '✖ total error rate above the materiality threshold',
     '⚠ GFQ unter, obere Fehlergrenze über der Schwelle': '⚠ total error rate below, upper error limit above the threshold',
-    '✔ unter der Wesentlichkeitsschwelle': '✔ below the materiality threshold',
+    '✔ unter der Signifikanzschwelle': '✔ below the materiality threshold',
     'n. a.': 'n/a',
     'n. a. (Art. 8 Abs. 2)': 'n/a (Art. 8(2))',
   },
@@ -92,7 +93,9 @@ export const en: SheetTexts = {
       'No treatment of the units that cannot be audited under Art. 80(3) has been chosen in sheet 02; as in the template, the calculation is made without exclusion and without replacement',
     'reduced-population-not-positive': 'The reduced population (BV_r) is not positive; the adjustment factor is then not meaningful',
     'replacement-precision-not-scaled':
-      'Replacement with a method of Table 2: according to the note of the template, the precision is to be adjusted by the adjustment factor; the formula of the template does not do so (its comparison with “Tabelle 2” never matches). The web version calculates like the template – assess the adjusted precision and the upper error limit with professional judgement',
+      'Replacement with a method of Table 2: under Annex III, Table 2, to Delegated Regulation (EU) 2023/67 the precision is to be calculated for the reduced population and then adjusted by the ratio BV original / BV reduced, even where no affected unit has been drawn. The template takes over the precision of the method sheet, calculated there for the original population, without adjustment (its comparison with “Tabelle 2” never matches). Effect: precision and upper error limit do not follow the calculation path of the Delegated Regulation. The web version calculates like the template – assess the adjusted precision and the upper error limit with professional judgement',
+    'stratified-single-factor':
+      'Stratified method with exclusion or replacement under Art. 80(3): Annex III to Delegated Regulation (EU) 2023/67 describes the adjustment by the ratio “BV(h) original” / “BV(h) reduced”, i.e. per stratum. The template uses a single adjustment factor for the whole population; where the affected units are unevenly distributed over the strata, the result departs from the calculation path of the Delegated Regulation. The web version calculates like the template',
     'high-value-incomplete': 'Adjustment of the high value stratum chosen, but the book value of the original (BV_e,u) or of the audited high value stratum (BV_e,r) is missing',
   },
 }

@@ -4,6 +4,7 @@ import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import { STRATA_COLUMNS, TEMPLATE_STRATA, countRow, stratumCell, usedStrata } from '../../model/strata'
 import type { CellMap, WebHint } from '../../model/types'
 import { approachOf, errorDependents, limitWithoutSize, partialErrorSums } from '../shared/mus'
+import { globalWithoutMargin, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
@@ -91,7 +92,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   if (gt(usedStrata(inputs, [8, 9, 51]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return hints
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C28', { size: 'C65', tolerable: 'C56', anticipated: 'C57' })])
 }
 
 /** Zellen, die von der Genauigkeit abhängen (ohne die Hilfszelle der Schicht). */

@@ -61,7 +61,7 @@ const withoutBasis: readonly Deviation[] = [
 export const deviations: readonly Deviation[] = [
   // Der Abgleich mit Blatt 02 betrifft nur diese Zelle, nicht das Ergebnis: Das Blatt gilt auch ohne Blatt 02 als vollständig ausgefüllt (`local`).
   ...entries(['C15'], ['02_Grundgesamtheit!C51'], 'Buchwert der Grundgesamtheit abzüglich 0 € (leeres Blatt 02)', 'Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen.').map((entry) => ({ ...entry, local: true })),
-  ...entries(['C23'], ['C21'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C23'], ['C21'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt die Signifikanzschwelle voraus.'),
   ...entries(['C25'], ['C24'], '0,00 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus.'),
   ...perStratum(29, 28, '0 (σ_eh einer belegten Schicht zählt als 0)', SIGMA_REASON),
   ...entries(['C29', 'C30'], SIGMA, 'Wert ohne den Beitrag der Schicht mit fehlender Standardabweichung', SIGMA_REASON),

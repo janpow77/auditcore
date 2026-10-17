@@ -50,7 +50,7 @@ describe('Bericht (Blatt 20)', () => {
     expect(page.find('[data-report-authority-missing]').exists()).toBe(false)
     expect(page.text()).toContain(t('disclaimer'))
     expect(page.text()).toContain(t('templateStatus'))
-    expect(page.get('[data-report-statement]').text()).toBe('Die Gesamtfehlerquote liegt unter der Wesentlichkeitsschwelle.')
+    expect(page.get('[data-report-statement]').text()).toBe('Die Gesamtfehlerquote liegt unter der Signifikanzschwelle.')
   })
 
   it('Tabellen sind zugänglich: Beschriftung, Spalten- und Zeilenköpfe mit scope', () => {

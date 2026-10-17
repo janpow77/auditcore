@@ -61,7 +61,7 @@ export const deviations: readonly Deviation[] = [
   ...withoutTotal(['C53', 'C57', 'C58', 'C60', 'C61', 'C62', 'C63', 'N5', 'N11'], 'C51', 'Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine Schicht einen Stichprobenumfang hat (z. B. bei „TE ≤ AE“)'),
   // Der Abgleich mit Blatt 02 betrifft nur C11; ohne ihn ist Blatt 04 trotzdem vollständig ausgefüllt.
   ...entries(['C11'], ['02_Grundgesamtheit!C51'], 'Summe der Schichten abzüglich 0 € (leeres Blatt 02)', 'Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen.').map((entry) => ({ ...entry, local: true })),
-  ...entries(['C19'], ['C17'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C19'], ['C17'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt die Signifikanzschwelle voraus.'),
   ...entries(['C21'], ['C20'], '0,00 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus.'),
   ...STRATA_COLUMNS.flatMap((column) =>
     entries([stratumCell(column, 25)], [stratumCell(column, 24)], '0 (σ_rh einer belegten Schicht zählt als 0)', 'Fehlt die Standardabweichung einer belegten Schicht, ist die gewichtete Standardabweichung nicht bestimmt.'),

@@ -12,7 +12,7 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 
 ## Was aus der Vorlage im Paket steckt
 
-| Inhalt | Ort | Umfang in 0.1.6 |
+| Inhalt | Ort | Umfang in 0.1.7 |
 |---|---|---|
 | Rechenwege (Formeln als TypeScript, Zelle für Zelle) | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter: 02–18, 20, X1–X4 |
 | Bezeichnungen (Spalte B), Fundstellen und Hinweise (Spalte D bzw. K), Abschnittstitel, Zahlenformate, Vorgaben | `src/sheets/<Blatt>/definition*.ts` | alle Blätter, wörtlich; Bezeichnungen mit Formel in Bezeichnung und Kurzformel getrennt. Altvorlagen: englischer Wortlaut der Vorlage von 2017 |

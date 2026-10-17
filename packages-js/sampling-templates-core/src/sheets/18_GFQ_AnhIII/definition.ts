@@ -8,6 +8,7 @@
  * der Vorlage („Auswahlliste; …“) bleibt wörtlich stehen.
  */
 import type { FieldDefinition, MethodDefinition } from '../../model/definition'
+import { UPPER_LIMIT_INTERPRETATION } from '../shared/interpretations'
 
 const EUR = '#,##0.00" €"'
 const RATE = '0.00%'
@@ -59,8 +60,8 @@ const totalErrorRate: FieldDefinition[] = [
   { cell: 'C26', alias: 'totalErrorRate', kind: 'result', type: 'percent', format: RATE, label: 'Gesamtfehlerquote', formula: '(EE + systembedingte + nicht berichtigte anomale Fehler) / BV ohne TH', hint: 'Art. 8 Abs. 1; nach Art. 8 Abs. 5 gilt die Quote auch für die Grundgesamtheit einschließlich TH.' },
   { cell: 'C27', alias: 'errorAmountIncludingFlatRate', kind: 'result', type: 'amount', format: EUR, label: 'Fehlerbetrag bezogen auf die zu prüfende Grundgesamtheit einschließlich TH' },
   { cell: 'C28', alias: 'upperErrorLimitRate', kind: 'formula', type: 'percent', format: RATE, label: 'Obere Fehlergrenze in % (inkl. Genauigkeit)', hint: 'Art. 2 Nr. 20.' },
-  { cell: 'C29', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Wesentlichkeitsschwelle' },
-  { cell: 'C30', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung' },
+  { cell: 'C29', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Signifikanzschwelle' },
+  { cell: 'C30', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung', interpretation: UPPER_LIMIT_INTERPRETATION },
 ]
 
 export const definition: MethodDefinition = {

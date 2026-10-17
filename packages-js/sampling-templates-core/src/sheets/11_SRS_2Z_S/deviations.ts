@@ -42,12 +42,12 @@ const SIGMA_REASON = 'Fehlt die Standardabweichung einer für den Zeitraum beleg
 const FIRST_TEMPLATE = 'Wert auf Grundlage des mit AE = 0 bzw. σ_eh = 0 berechneten Gesamtumfangs (mindestens der Mindestumfang)'
 const FIRST_REASON = 'Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Gesamtumfang nicht bestimmt; seine Aufteilung und alle Folgegrößen bleiben offen.'
 const SECOND_TEMPLATE = 'Wert auf Grundlage von TE = 0, AE = 0 bzw. σ_eh = 0 (z. B. Umfang 3 je Schicht oder der Mindestumfang)'
-const SECOND_REASON = 'Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen.'
+const SECOND_REASON = 'Ohne Signifikanzschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen.'
 const BOOK_VALUE_TEMPLATE = 'Wert ohne den Beitrag der Schicht mit fehlendem Buchwert'
 const BOOK_VALUE_REASON = 'Fehlt der Buchwert einer belegten Schicht, lässt sich ihr Fehler nicht hochrechnen; die Vorlage rechnet für diese Schicht mit 0 €.'
 
 export const deviations: readonly Deviation[] = [
-  ...entries(['C24', 'C62'], ['C22'], ZERO, 'Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C24', 'C62'], ['C22'], ZERO, 'Der zulässige Fehler setzt die Signifikanzschwelle voraus.'),
   ...entries(['C26', 'C63'], ['C25'], ZERO, 'Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus.'),
   ...perStratum(31, [29, 30], '0 bzw. nur der Beitrag des anderen Zeitraums (σ_eh einer belegten Schicht zählt als 0)', SIGMA_REASON),
   ...entries(['C31', 'C32'], [...SIGMA1, ...SIGMA2_FORECAST], SIGMA_TEMPLATE, SIGMA_REASON),

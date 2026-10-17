@@ -170,7 +170,7 @@ export const en: SheetTexts = {
     'Beträge nach Artikel 98 Absatz 6 VO (EU) 2021/1060 (E)': FIGURES.article98,
     'Finanzkorrekturen (H)': FIGURES.corrections,
     'Restfehlerquote nach Finanzkorrekturen': FIGURES.residualRate,
-    'Hochgerechnete Finanzkorrektur bis zur Wesentlichkeitsschwelle von 2 %': FIGURES.extrapolatedCorrection,
+    'Hochgerechnete Finanzkorrektur bis zur Signifikanzschwelle von 2 %': FIGURES.extrapolatedCorrection,
     // Kopfzeile: Wörter zwischen den Angaben; Programm und Prüfbehörde sind Eingaben und bleiben, wie sie eingegeben sind.
     Geschäftsjahr: 'Accounting year',
     vorläufig: 'preliminary',
@@ -180,8 +180,8 @@ export const en: SheetTexts = {
     'davon vorläufig: ': 'of which preliminary: ',
     [NOT_CALCULATED]: 'not calculated',
     'nicht erforderlich': 'not required',
-    'Die Gesamtfehlerquote liegt über der Wesentlichkeitsschwelle.': 'The total error rate is above the materiality threshold.',
-    'Die Gesamtfehlerquote liegt unter der Wesentlichkeitsschwelle.': 'The total error rate is below the materiality threshold.',
+    'Die Gesamtfehlerquote liegt über der Signifikanzschwelle.': 'The total error rate is above the materiality threshold.',
+    'Die Gesamtfehlerquote liegt unter der Signifikanzschwelle.': 'The total error rate is below the materiality threshold.',
   },
   webHints: {
     'own-header': 'Header and footer name the programme and the audit authority as you enter them. The template carries fixed details in these places; the web version deliberately deviates from it',

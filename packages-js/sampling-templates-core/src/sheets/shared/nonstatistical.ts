@@ -86,13 +86,13 @@ export function totalErrorRate(error: Value, systemic: Value, anomalous: Value, 
 }
 
 /**
- * Würdigung gegen die Wesentlichkeitsschwelle:
+ * Würdigung gegen die Signifikanzschwelle:
  * `=IF(GFQ="";"";IF(GFQ>Schwelle;"✖ …";"✔ …"))`. Ohne Schwelle vergliche die
  * Vorlage gegen 0; die Webfassung zeigt „Angabe fehlt“.
  */
 export function assessment(rate: Value, materiality: Value): CellValue {
   if (!isNumber(rate) || !isNumber(materiality)) return null
-  return gt(rate, materiality) ? '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle' : '✔ Gesamtfehlerquote unter der Wesentlichkeitsschwelle'
+  return gt(rate, materiality) ? '✖ Gesamtfehlerquote über der Signifikanzschwelle' : '✔ Gesamtfehlerquote unter der Signifikanzschwelle'
 }
 
 /** Zellen eines Blatts, aus denen die Ergebnisübersicht N3–N11 entsteht. */
@@ -227,6 +227,6 @@ export const VALUES_EN: Readonly<Record<string, string>> = {
   '✖ < 3 Einheiten (Art. 5 Abs. 5)': '✖ < 3 units (Art. 5(5))',
   '✔ keine weitere Iteration': '✔ no further iteration',
   '⚠ Einheiten umgliedern und Intervall neu berechnen': '⚠ reassign units and recalculate the interval',
-  '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle': '✖ total error rate above the materiality threshold',
-  '✔ Gesamtfehlerquote unter der Wesentlichkeitsschwelle': '✔ total error rate below the materiality threshold',
+  '✖ Gesamtfehlerquote über der Signifikanzschwelle': '✖ total error rate above the materiality threshold',
+  '✔ Gesamtfehlerquote unter der Signifikanzschwelle': '✔ total error rate below the materiality threshold',
 }

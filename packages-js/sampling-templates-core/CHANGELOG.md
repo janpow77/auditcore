@@ -1,5 +1,38 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.7 – 2026-10-17
+
+DelVO-Abgleich vom 17.10.2026 (noch nicht veröffentlicht). Keine Rechenänderung:
+Golden-Abgleich gegen Excel 0 unbegründet.
+
+- Amtlicher Begriff „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“
+  (Anhang I Nr. 1 DelVO; Anhang XX Nr. 5.9 VO (EU) 2021/1060) in
+  Bezeichnungen, Texten des Rechenkerns, Hinweisen, Bericht und Export; beim
+  ersten Vorkommen je Blatt „Signifikanzschwelle (Vorlage:
+  Wesentlichkeitsschwelle)“. Neu `model/terms.ts` (`officialWording`,
+  `withTemplateTerm`, Konstanten). Der Vergleich beim Öffnen einer Arbeitsmappe
+  liest beide Begriffe gleich. Englisch bleibt „materiality threshold“.
+- Hinweise in Warnfarbe mit DelVO-Fundstelle, wo die Vorlage abweicht
+  (`sheets/shared/delvo.ts`, Blatt 18): globale Neuberechnung bei AE ≥ TE
+  (`global-te-not-above-ae`), Zusatz „Standardansatz nicht anwendbar“ an den
+  Hinweisen zum nicht positiven Nenner, ein Anpassungsfaktor bei Schichtung
+  (`stratified-single-factor`), Bezugsgröße beim Ausschluss als Auslegungsfrage
+  (`exclusion-reference-population`, nur einfache Zufallsstichprobe); Wortlaut
+  von `replacement-precision-not-scaled` mit Fundstelle und Wirkung. Alle auch
+  englisch.
+- Bisher nicht gekennzeichnete Auslegungen der Vorlage sind am Feld
+  gekennzeichnet (`sheets/shared/interpretations.ts`): Aufrunden der Umfänge,
+  Vergleich der oberen Fehlergrenze in der Würdigung, n einschließlich
+  hochwertiger Einheiten, Anrechnung der umfassenden Schicht auf 30, Aufteilung
+  von Zeitraum 2 in Blatt 11, proportionale Aufteilung in 14 und 16,
+  „mindestens 3“ in Blatt 15. Diese allgemeinen Auslegungen stehen am Blatt
+  und reisen nicht mit (`Limitation.local`), damit der Bericht auf einer
+  A4-Seite bleibt.
+- Kennzeichen „Auslegung der Vorlage“ in Textfarbe auf Akzentgrund (Kontrast im
+  dunklen Farbschema einer Anwendung).
+- `docs/abweichungen.md` Nr. 16 „Abgleich mit der DelVO“ mit den
+  Redaktionsversehen der deutschen Fassung von Anhang II.
+
 ## 0.1.6 – 2026-10-17
 
 Referenz ist die Excel-Vorlage, also das Rechenverhalten von Microsoft Excel

@@ -8,6 +8,7 @@
 import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isNumber } from '../src/excel/index'
+import { officialWording } from '../src/model/terms'
 import { defaultInputs, findField } from '../src/model/definition'
 import { evaluateSheet } from '../src/model/evaluate'
 import { MISSING_POLICY, TEMPLATE_POLICY } from '../src/model/policy'
@@ -45,6 +46,8 @@ export interface CaseReport {
   unexplained: Mismatch[]
   /** Zellen, die die Webfassung bewusst anders darstellt (`sheet.adapted`): Kopfzeile, Wahrheitswert FALSCH, `#DIV/0!`. */
   adapted: Mismatch[]
+  /** Texte, die nur den amtlichen Begriff statt des Begriffs der Vorlage tragen („Signifikanzschwelle“). */
+  terms: Mismatch[]
 }
 
 const GOLDEN_DIRECTORY = fileURLToPath(new URL('./golden/', import.meta.url))
@@ -258,13 +261,15 @@ export function caseResults(sheet: AvailableSheet, golden: GoldenCase): CellMap 
  */
 function asShownByWeb(sheet: AvailableSheet, cell: string, expected: Expected, results: CellMap): Expected {
   const adaptation = sheet.adapted?.find((entry) => entry.cell === cell)
-  return adaptation ? adaptation.fromTemplate(expected, results) : expected
+  // Amtlicher Begriff statt des Begriffs der Vorlage (`model/terms.ts`), danach die bewusst anders gebildeten Zellen.
+  const official = officialWording(expected)
+  return adaptation ? adaptation.fromTemplate(official, results) : official
 }
 
 export function compareCase(sheet: AvailableSheet, golden: GoldenCase): CaseReport {
   const all = caseWorkspace(sheet, golden)
   const results = all[sheet.id] ?? {}
-  const report: CaseReport = { name: golden.name, compared: 0, explained: [], unexplained: [], adapted: [] }
+  const report: CaseReport = { name: golden.name, compared: 0, explained: [], unexplained: [], adapted: [], terms: [] }
   for (const [reference, expected] of Object.entries(golden.erwartet)) {
     const [name, cell] = reference.split('!') as [string, string]
     if (name !== sheet.id) continue
@@ -273,7 +278,8 @@ export function compareCase(sheet: AvailableSheet, golden: GoldenCase): CaseRepo
     const target = asShownByWeb(sheet, cell, expected, results)
     const exact = isIntegerCell(sheet, cell)
     if (sameValue(target, actual, exact, absoluteTolerance(sheet, cell))) {
-      if (!sameValue(expected, actual, exact, absoluteTolerance(sheet, cell))) report.adapted.push({ cell, expected, actual })
+      if (sameValue(officialWording(expected), actual, exact, absoluteTolerance(sheet, cell)) && !sameValue(expected, actual)) report.terms.push({ cell, expected, actual })
+      else if (!sameValue(expected, actual, exact, absoluteTolerance(sheet, cell))) report.adapted.push({ cell, expected, actual })
       continue
     }
     // Die Gegenproben vergleichen mit dem Wert, den die Webfassung für den Wert der Vorlage zeigt (FALSCH als 0).

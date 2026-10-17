@@ -1,6 +1,6 @@
 /**
  * Anzeigemodell der mitlaufenden Ergebnisspalte: Hauptgröße, Kennzahlen,
- * Skala gegen die Wesentlichkeitsschwelle und alle Prüfhinweise.
+ * Skala gegen die Signifikanzschwelle und alle Prüfhinweise.
  */
 import { formatPercent } from '@auditcore/common'
 import { isBlank, isNumber, toneOf } from '../excel/index'

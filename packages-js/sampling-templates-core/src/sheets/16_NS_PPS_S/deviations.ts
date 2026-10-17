@@ -10,7 +10,7 @@
  *   solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn
  *   wie die Vorlage mit Hinweis.
  * - Pflichteingabe fehlt (ohne `kind`): Stichprobenumfang und
- *   Wesentlichkeitsschwelle.
+ *   Signifikanzschwelle.
  */
 import { STRATA_COLUMNS, stratumCell } from '../../model/strata'
 import type { Deviation } from '../../model/types'
@@ -67,5 +67,5 @@ export const deviations: readonly Deviation[] = [
   ...withoutTotal(['C30', 'C33', 'C34', 'C36', 'N5', 'N11'], ['C28'], 'Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann'),
   ...entries([...row(15), ...row(18), ...row(22), ...row(23), ...row(28), 'C15', 'C22', 'C28', 'C30', 'C33', 'C34', 'N5', 'N10', 'N11'], ['C13'], SIZE_TEMPLATE, SIZE),
   ...entries(['C17'], ['C13'], 'Prüfhinweis auf der Grundlage von einer Einheit je belegter Schicht', 'Die Prüfung der Mindesterfassung setzt den Stichprobenumfang voraus.'),
-  ...entries(['C36'], ['C13', 'C35'], 'Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage von einer Einheit je belegter Schicht', 'Die Würdigung setzt die Wesentlichkeitsschwelle und den Stichprobenumfang voraus.'),
+  ...entries(['C36'], ['C13', 'C35'], 'Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage von einer Einheit je belegter Schicht', 'Die Würdigung setzt die Signifikanzschwelle und den Stichprobenumfang voraus.'),
 ]

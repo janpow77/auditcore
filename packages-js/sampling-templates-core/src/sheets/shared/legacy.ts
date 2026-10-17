@@ -40,7 +40,7 @@ export const LEGACY_NOTICE_LABEL = 'Altvorlage 2014–2020 (Fassung 30.06.2017)'
 /** Rechtsgrundlage laut Blatt 00, Zeile „X1–X4 (grau)“. */
 export const LEGACY_LEGAL_BASIS = 'nur Art. 79 VO (EU) 2021/1060 (ErwG 15)'
 
-/** Wesentlichkeitsschwelle: in den Altvorlagen eine feste Zelle (2 %), keine Eingabe. */
+/** Signifikanzschwelle: in den Altvorlagen eine feste Zelle (2 %), keine Eingabe. */
 export const LEGACY_MATERIALITY = 0.02
 
 /** Mindeststichprobenumfang der Altvorlagen X1–X3. */

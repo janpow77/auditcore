@@ -31,7 +31,7 @@ export interface FieldDefinition {
   list?: ListKey
   /** Eigene Auswahl eines Felds der Webfassung (statt einer Liste aus Blatt 01). */
   options?: readonly (string | number)[]
-  /** Vorgabe der Vorlage (z. B. Wesentlichkeitsschwelle 2 %). */
+  /** Vorgabe der Vorlage (z. B. Signifikanzschwelle 2 %). */
   default?: CellValue
   /** Verknüpfung: vorbelegt aus einem anderen Blatt, überschreibbar. */
   link?: { sheet: SheetId; cell: CellAddress }
@@ -87,13 +87,13 @@ export interface SummaryRow {
   strong?: boolean
 }
 
-/** Mitlaufende Ergebnisspalte: Hauptgröße, Kennzahlen und Skala gegen die Wesentlichkeitsschwelle. */
+/** Mitlaufende Ergebnisspalte: Hauptgröße, Kennzahlen und Skala gegen die Signifikanzschwelle. */
 export interface SummaryDefinition {
   /** `reason`: Zelle, deren Text erklärt, warum die Hauptgröße fehlt (z. B. „TE ≤ AE“). */
   primary: { cell: CellAddress; label: string; unit: string; reason?: CellAddress }
   rows: readonly SummaryRow[]
   /**
-   * Skala gegen die Wesentlichkeitsschwelle. `upper` entfällt, wo es keine obere
+   * Skala gegen die Signifikanzschwelle. `upper` entfällt, wo es keine obere
    * Fehlergrenze gibt (nichtstatistische Verfahren). `rateLabel`/`upperLabel`:
    * Begriffe des Blatts, wenn sie von „Gesamtfehlerquote“/„obere Fehlergrenze“
    * abweichen (Altvorlagen).

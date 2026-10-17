@@ -1,5 +1,15 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.7 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.7 gebunden (DelVO-Abgleich).
+
+- Amtlicher Begriff „Signifikanzschwelle“ auch in Kennzahlenleiste, Skala und
+  Ampel („unter/über der Signifikanzschwelle“).
+- Neue Hinweise zu Abweichungen der Vorlage von der DelVO und die neu
+  gekennzeichneten Auslegungen erscheinen ohne Änderung an der Komponente in
+  Ergebnisspalte, Bericht und Export.
+
 ## 0.1.6 – 2026-10-17
 
 Exakt an `@auditcore/sampling-templates-core` 0.1.6 gebunden (Rechensemantik

@@ -35,7 +35,7 @@ describe('Blatt 18: Gesamtfehlerquote nach Anhang III', () => {
     expect(c.C26).toBeCloseTo(126000 / 10000000, 12)
     expect(c.C27).toBeCloseTo(0.0126 * 10200000, 6)
     expect(c.C28).toBeCloseTo(186000 / 10000000, 12)
-    expect(c.C30).toBe('✔ unter der Wesentlichkeitsschwelle')
+    expect(c.C30).toBe('✔ unter der Signifikanzschwelle')
   })
 
   it('im Arbeitsstand: C4 zeigt das gewählte Verfahren, die Werte kommen aus dessen Ergebnisübersicht N3–N11', () => {
@@ -76,14 +76,14 @@ describe('Blatt 18: Gesamtfehlerquote nach Anhang III', () => {
 
   it('nichtstatistisches Verfahren: Der Text in N7 bleibt Text, Genauigkeit und obere Fehlergrenze sind „n. a.“', () => {
     const c = compute({}, context({ sheet: '13_NS_GW', precision: 'n. a. (Art. 8 Abs. 2)' }))
-    expect(c).toMatchObject({ C8: 'n. a. (Art. 8 Abs. 2)', C25: 'n. a.', C28: 'n. a.', C30: '✔ unter der Wesentlichkeitsschwelle', C11: 'Tabelle 2 (SRS/gleiche Wahrscheinlichkeit)' })
+    expect(c).toMatchObject({ C8: 'n. a. (Art. 8 Abs. 2)', C25: 'n. a.', C28: 'n. a.', C30: '✔ unter der Signifikanzschwelle', C11: 'Tabelle 2 (SRS/gleiche Wahrscheinlichkeit)' })
     expect(compute({}, context({ sheet: '15_NS_PPS' })).C11).toBe('Tabelle 1 (MUS/PPS)')
   })
 
   it('Würdigung: über der Schwelle, obere Fehlergrenze über der Schwelle, unter der Schwelle', () => {
-    expect(compute({ C29: 0.01 }).C30).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(compute({ C29: 0.01 }).C30).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
     expect(compute({ C29: 0.015 }).C30).toBe('⚠ GFQ unter, obere Fehlergrenze über der Schwelle')
-    expect(compute({ C29: 0.02 }).C30).toBe('✔ unter der Wesentlichkeitsschwelle')
+    expect(compute({ C29: 0.02 }).C30).toBe('✔ unter der Signifikanzschwelle')
   })
 
   it('kein Verfahren, Altvorlage oder Blatt 17 aktiv: keine Übernahme, C4–C11 leer, Hinweis der Webfassung', () => {
@@ -117,14 +117,14 @@ describe('Blatt 18: Gesamtfehlerquote nach Anhang III', () => {
     expect(hintIds(inputs, context())).toContain('high-value-incomplete')
   })
 
-  it('Wesentlichkeitsschwelle fehlt: Würdigung offen; die Vorlage vergliche gegen 0 %', () => {
+  it('Signifikanzschwelle fehlt: Würdigung offen; die Vorlage vergliche gegen 0 %', () => {
     const inputs = { ...defaults, C29: null }
     const current = evaluateSheet(sheet, inputs, context())
     expect(current.cells.C30).toBeNull()
     // Die Abweichungen kennen keine Bedingung: BV_e,u (nur bei „Ja“ nötig) wird mitgenannt, solange es leer ist.
     expect(current.lacking.get('C30')).toEqual(['C29', 'C21'])
     expect(evaluateSheet(sheet, { ...inputs, C21: 3000000 }, context()).lacking.get('C30')).toEqual(['C29'])
-    expect(evaluateSheet(sheet, inputs, context({}, {}, TEMPLATE_POLICY)).cells.C30).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(evaluateSheet(sheet, inputs, context({}, {}, TEMPLATE_POLICY)).cells.C30).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('Wert ohne Grundlage: Liefert das Methodenblatt keine Genauigkeit, bleiben „n. a.“ und der bestandene Hinweis aus', () => {
@@ -134,9 +134,9 @@ describe('Blatt 18: Gesamtfehlerquote nach Anhang III', () => {
     expect(current.cells.C26).toBeCloseTo(0.0126, 12)
     expect(current.assumed).toEqual([])
     expect(hintIds(defaults, ctx)).toEqual(['method-incomplete'])
-    expect(evaluateSheet(sheet, defaults, context({ precision: null }, {}, TEMPLATE_POLICY)).cells).toMatchObject({ C25: 'n. a.', C28: 'n. a.', C30: '✔ unter der Wesentlichkeitsschwelle' })
+    expect(evaluateSheet(sheet, defaults, context({ precision: null }, {}, TEMPLATE_POLICY)).cells).toMatchObject({ C25: 'n. a.', C28: 'n. a.', C30: '✔ unter der Signifikanzschwelle' })
     // Über der Schwelle steht die Würdigung auch ohne obere Fehlergrenze fest.
-    expect(evaluateSheet(sheet, { ...defaults, C29: 0.01 }, ctx).cells.C30).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(evaluateSheet(sheet, { ...defaults, C29: 0.01 }, ctx).cells.C30).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('Blatt 02 leer oder ohne Behandlung nach Art. 80 Abs. 3: nichts wird mit 0 gerechnet, Hinweise der Webfassung', () => {

@@ -13,6 +13,7 @@ import { sheet } from '../src/sheets/06_MUS_2Z_S/index'
 import { isQualified, limitationsOf, type Limitation } from '../src/view/limits'
 import { buildSections, strataRows } from '../src/view/sheetView'
 import { loadGolden, sameValue } from './golden'
+import { officialWording } from '../src/model/terms'
 
 const context = createContext()
 const GLOBAL = 'Global (Art. 5 Abs. 6 Buchst. b)'
@@ -48,7 +49,7 @@ function expectTranslated(target: AvailableSheet, texts: SheetTexts | undefined)
   expect(Object.keys(texts?.fields ?? {}).filter((cell) => !fields.some((field) => field.cell === cell))).toEqual([])
   expect(target.definition.sections.filter((section) => !texts?.sections?.[section.id]?.title || (section.reference && !texts.sections[section.id]?.reference)).map((section) => section.id)).toEqual([])
   expect(target.definition.summary.rows.filter((row) => !texts?.summary?.rows?.[row.cell]).map((row) => row.cell)).toEqual([])
-  const produced = new Set(loadGolden(target.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string')))
+  const produced = new Set(loadGolden(target.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').map((value) => officialWording(value))))
   expect([...produced].filter((value) => !texts?.values?.[value])).toEqual([])
 }
 /** Eingaben einer Schichtspalte in eine andere Spalte verschieben. */
@@ -161,7 +162,7 @@ describe('Blatt 06_MUS_2Z_S', () => {
 
   it('Auslegung der Vorlage: die Auswahl des Ansatzes und die Zeile mit der Erhöhung sind gekennzeichnet', () => {
     const marked = fieldsOf(sheet.definition).filter((field) => field.interpretation)
-    expect(marked.map((field) => field.cell)).toEqual(['C28', 'D69'])
+    expect(marked.map((field) => field.cell)).toEqual(['C28', 'C29', 'D44', 'D69', 'C99'])
     expect(marked[0]?.interpretation).toContain('Art. 5 Abs. 7 UAbs. 4 Buchst. a')
   })
 
@@ -325,7 +326,7 @@ describe('Blatt 06_MUS_2Z_S', () => {
     const firstOnly = withoutRows(51, 52, 53, 75, 76, 81, 82, 83)
     const twenty: Record<string, CellValue> = { ...sheet.sample.inputs, C28: 'keine Neuberechnung' }
     for (const column of STRATA_COLUMNS) Object.assign(twenty, moveStratum(Object.fromEntries(Object.entries(sheet.sample.inputs).filter(([cell]) => cell.startsWith('D'))), 'D', column), { [`${column}9`]: null, [`${column}52`]: 1 })
-    const cases = [sample({ D49: 0.9, E49: 0.9, F49: 0.9 }), firstOnly, sample({ C13: 0.95 }), { C30: 2, C32: 'Ja' }, twenty, { ...twenty, C28: 'Standard (Art. 5 Abs. 6 Buchst. a)', D9: 11000000, D25: 0.1 }]
+    const cases = [sample({ D49: 0.9, E49: 0.9, F49: 0.9 }), sample({ C28: GLOBAL, C54: 0.03 }), firstOnly, sample({ C13: 0.95 }), { C30: 2, C32: 'Ja' }, twenty, { ...twenty, C28: 'Standard (Art. 5 Abs. 6 Buchst. a)', D9: 11000000, D25: 0.1 }]
     const hints = cases.flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts?.webHints ?? {})))
     expect(texts?.webHints?.['no-planned-size-20']).toMatch(/^Stratum 20: /)

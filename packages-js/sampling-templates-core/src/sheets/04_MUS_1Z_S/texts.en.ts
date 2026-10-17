@@ -5,6 +5,7 @@
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, VALUES_EN } from '../shared/mus'
+import { HIGH_VALUE_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
 
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 
@@ -42,7 +43,7 @@ export const en: SheetTexts = {
     D24: { label: 'Anticipated standard deviation of error rates per stratum (σ_rh)', hint: 'Annex I point 4.' },
     D25: { label: 'Auxiliary row BV_h · σ²_rh' },
     C26: { label: 'Weighted standard deviation √(Σ BV_h/BV · σ²_rh) (σ_rw)', hint: 'Annex II point 1.1, stratified.' },
-    C27: { label: 'Calculated sample size' },
+    C27: { label: 'Calculated sample size', interpretation: ROUNDING_INTERPRETATION_EN },
     C28: { label: 'Category of the programme under Table 2 of Annex XI to Regulation (EU) 2021/1060 (1–4)', hint: 'Art. 5(7), first subparagraph DR; recital 10.' },
     C29: { label: 'Enhanced proportionate arrangements pursuant to Art. 83 of Regulation (EU) 2021/1060 (Yes/No)', hint: 'Annex I point (a) DR: sample of 30 sampling units.' },
     C30: { label: 'Apply the capped sample size (Yes/No)', hint: 'Art. 5(7): applied to a sample for the whole population (second subparagraph).' },
@@ -54,7 +55,7 @@ export const en: SheetTexts = {
     D37: { label: 'Number of high value units per stratum (n_eh)' },
     D38: { label: 'Book value of the high value units per stratum (BV_eh)' },
     D39: { label: 'Book value of the random stratum per stratum (BV_hs)' },
-    D40: { label: 'Units to be selected in the random stratum (n_hs)' },
+    D40: { label: 'Units to be selected in the random stratum (n_hs)', interpretation: HIGH_VALUE_INTERPRETATION_EN },
     D41: { label: 'At least three units in each random stratum', hint: 'Art. 5(5) DR.' },
     D42: { label: 'Interval of selection per stratum (BV_hs / n_hs) (SI_h)' },
     D43: { label: 'Units with BV > interval of selection (iteration)', hint: 'Reassign and recalculate where necessary.' },
@@ -75,7 +76,7 @@ export const en: SheetTexts = {
     C60: { label: 'Extrapolated random error rate (EE / BV)' },
     C61: { label: 'Total error rate ((EE + delimited systemic + uncorrected anomalous errors) / BV)', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C62: { label: 'Upper error limit in % of BV' },
-    C63: { label: 'Assessment against the materiality threshold' },
+    C63: { label: 'Assessment against the materiality threshold', interpretation: UPPER_LIMIT_INTERPRETATION_EN },
   },
   summary: {
     primary: 'Sample size to be applied',

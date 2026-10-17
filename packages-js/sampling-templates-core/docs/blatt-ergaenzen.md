@@ -119,7 +119,7 @@ Der Entwurf nennt ein Feld je Zeile; Schichtzeilen tragen
   an den Eingaben, in die Summen aus Blatt 17 übernommen werden; bei
   Schichtzeilen erfolgt die Übernahme je Schicht, mit `period: 1 | 2 | 3` je
   Stichprobenzeitraum.
-- `summary.gauge`: Skala gegen die Wesentlichkeitsschwelle; `upper` entfällt,
+- `summary.gauge`: Skala gegen die Signifikanzschwelle; `upper` entfällt,
   wo es keine obere Fehlergrenze gibt, `rateLabel`/`upperLabel` tragen die
   Begriffe des Blatts, wenn sie abweichen (Altvorlagen).
 - `summary`: Hauptgröße, Kennzahlen und Skala der Ergebnisspalte.
@@ -263,7 +263,7 @@ hochwertigen Einheiten, systembedingte und anomale Fehler), zählen still 0.
 
 ```ts
 // Pflichteingabe
-{ cell: 'C16', whenEmpty: ['C7', 'C14'], template: '0,00 € (leere Zelle zählt als 0)', reason: 'Der zulässige Fehler setzt Buchwert und Wesentlichkeitsschwelle voraus.' }
+{ cell: 'C16', whenEmpty: ['C7', 'C14'], template: '0,00 € (leere Zelle zählt als 0)', reason: 'Der zulässige Fehler setzt Buchwert und Signifikanzschwelle voraus.' }
 
 // Wert ohne Grundlage
 c.D41 = used ? checkStratumUnits(c.D40, pending, context) : null

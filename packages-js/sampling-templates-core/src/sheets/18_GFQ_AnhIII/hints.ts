@@ -36,7 +36,7 @@ function populationHints(results: CellMap): WebHint[] {
 function adjustmentHints(results: CellMap): WebHint[] {
   const hints: WebHint[] = []
   if (isNumber(results.C8) && sameText(left(results.C15, 9), 'Ersetzung') && sameText(left(results.C11, 9), 'Tabelle 2')) {
-    hints.push(warning('replacement-precision-not-scaled', 'Ersetzung bei einem Verfahren der Tabelle 2: Nach dem Hinweis der Vorlage ist die Genauigkeit mit dem Anpassungsfaktor anzupassen; die Formel der Vorlage tut das nicht (ihr Vergleich mit „Tabelle 2“ trifft nie zu). Die Webfassung rechnet wie die Vorlage – angepasste Genauigkeit und obere Fehlergrenze fachlich würdigen'))
+    hints.push(warning('replacement-precision-not-scaled', 'Ersetzung bei einem Verfahren der Tabelle 2: Nach Anhang III Tabelle 2 DelVO (EU) 2023/67 ist die Genauigkeit für die reduzierte Grundgesamtheit zu berechnen und danach mit dem Verhältnis BV ursprünglich / BV reduziert anzupassen, auch wenn keine berührte Einheit gezogen wurde. Die Vorlage übernimmt die Genauigkeit des Methodenblatts, die dort für die ursprüngliche Grundgesamtheit gerechnet ist, ohne Anpassung (ihr Vergleich mit „Tabelle 2“ trifft nie zu). Wirkung: Genauigkeit und obere Fehlergrenze beruhen nicht auf dem Rechenweg der DelVO. Die Webfassung rechnet wie die Vorlage – angepasste Genauigkeit und obere Fehlergrenze fachlich würdigen'))
   }
   if (sameText(results.C20, 'Ja') && (isBlank(results.C21) || isBlank(results.C22))) {
     hints.push(warning('high-value-incomplete', 'Anpassung der hochwertigen Schicht gewählt, aber der Buchwert der ursprünglichen (BV_e,u) oder der geprüften hochwertigen Schicht (BV_e,r) fehlt'))
@@ -44,7 +44,17 @@ function adjustmentHints(results: CellMap): WebHint[] {
   return hints
 }
 
+/** Geschichtete Verfahren: Die Vorlage passt mit einem einzigen Faktor für die ganze Grundgesamtheit an. */
+const STRATIFIED: ReadonlySet<string> = new Set(['04_MUS_1Z_S', '06_MUS_2Z_S', '09_SRS_1Z_S', '11_SRS_2Z_S', '14_NS_GW_S', '16_NS_PPS_S'])
+
+/** Nr. 4 des DelVO-Abgleichs: Ausschluss oder Ersetzung bei einem geschichteten Verfahren. */
+function stratifiedFactorHints(results: CellMap, context: SheetContext): WebHint[] {
+  const treated = sameText(left(results.C15, 10), 'Ausschluss') || sameText(left(results.C15, 9), 'Ersetzung')
+  if (!context.method || !STRATIFIED.has(context.method.sheet) || !treated || !isNumber(results.C18)) return []
+  return [warning('stratified-single-factor', 'Geschichtetes Verfahren mit Ausschluss bzw. Ersetzung nach Art. 80 Abs. 3: Anhang III DelVO (EU) 2023/67 beschreibt die Anpassung mit dem Verhältnis „BV(h) ursprünglich“ / „BV(h) reduziert“, also je Schicht. Die Vorlage verwendet einen einzigen Anpassungsfaktor für die ganze Grundgesamtheit; sind die berührten Einheiten ungleich auf die Schichten verteilt, weicht das Ergebnis vom Rechenweg der DelVO ab. Die Webfassung rechnet wie die Vorlage')]
+}
+
 /** Hinweise der Webfassung zu Blatt 18. */
 export function webHints(_inputs: CellMap, results: CellMap, context: SheetContext): WebHint[] {
-  return [...methodHints(results, context), ...populationHints(results), ...adjustmentHints(results)]
+  return [...methodHints(results, context), ...populationHints(results), ...adjustmentHints(results), ...stratifiedFactorHints(results, context)]
 }

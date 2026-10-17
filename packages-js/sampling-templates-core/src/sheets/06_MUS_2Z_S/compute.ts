@@ -22,7 +22,7 @@ import { type Run, checkUnits, createRun, fill, has, inputTotals, relevantInputs
 const DEVIATION_OF: readonly (readonly [bookValue: number, deviation: number])[] = [[8, 24], [9, 25], [51, 53]]
 
 /**
- * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet: Wesentlichkeitsschwelle,
+ * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet: Signifikanzschwelle,
  * voraussichtliche Fehlerquote und je Schicht die Standardabweichungen (Zeilen 24,
  * 25 und 53), soweit die Schicht im jeweiligen Zeitraum einen Buchwert hat. Die
  * Webfassung zeigt in den abhängigen Zellen „Angabe fehlt“ (deviations.ts).

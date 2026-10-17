@@ -7,7 +7,7 @@ import ErrorGauge from './ErrorGauge.vue'
 /**
  * Kennzahlenspalte: Hauptgröße als große Karte, die hervorgehobenen Kennzahlen
  * (Gesamtfehlerquote, obere Fehlergrenze) als eigene Karten, die übrigen als
- * kompaktes Raster; darunter die Skala mit Ampel gegen die Wesentlichkeitsschwelle
+ * kompaktes Raster; darunter die Skala mit Ampel gegen die Signifikanzschwelle
  * und alle Prüfhinweise als Text und Farbe.
  */
 const props = defineProps<{ summary: SummaryView; t: Translate }>()

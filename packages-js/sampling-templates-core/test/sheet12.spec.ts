@@ -126,7 +126,7 @@ describe('Blatt 12_SRS_3Z', () => {
     expect(pick(run({ C35: INCREASE, C53: 17600000, C92: 14300000 }), ['C83', 'C84', 'C85', 'C115', 'C118'])).toEqual([17, 17, 11, 13, 13])
     expect(pick(run({ C35: INCREASE, C54: 190, C93: 150 }), ['C83', 'C84', 'C115', 'C118'])).toEqual([19, 19, 15, 15])
     const marked = fieldsOf(sheet.definition).filter((field) => field.interpretation)
-    expect(marked.map((field) => field.cell)).toEqual(['C83', 'C115'])
+    expect(marked.map((field) => field.cell)).toEqual(['C36', 'C42', 'C83', 'C115', 'C118', 'C138'])
   })
 
   it('keine Neuberechnung: Die geplanten Umfänge aus J gelten weiter', () => {
@@ -181,7 +181,7 @@ describe('Blatt 12_SRS_3Z', () => {
   it('eine Gesamtfehlerquote über der Schwelle wird auch bei offener Genauigkeit gewürdigt', () => {
     const results = run({ C99: null, C49: 60000, C88: 41000 })
     expect(results.C129).toBeNull()
-    expect(results.C138).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(results.C138).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('die Unterstichproben kennen keine Zeiträume: Kein Feld übernimmt Summen aus Blatt 17', () => {

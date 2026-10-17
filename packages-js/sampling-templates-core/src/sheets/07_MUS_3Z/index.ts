@@ -3,6 +3,7 @@ import { gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import type { CellMap, WebHint } from '../../model/types'
 import { approachOf, errorDependents, limitWithoutSize, partialErrorSums } from '../shared/mus'
+import { globalWithoutMargin, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
@@ -48,7 +49,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
     ...negativeDenominator(results, 'C98', 'negative-denominator-3', 'Zeitraum 3'),
   ]
   if (sameNumber(results.C14, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return hints
+  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C28', { size: 'C69', tolerable: 'C59', anticipated: 'C60' }, 2), ...globalWithoutMargin(results, 'C28', { size: 'C101', tolerable: 'C95', anticipated: 'C96' }, 3)])
 }
 
 /** Zellen, die von der Genauigkeit abhängen: SE, Fehlergrenzen, relative Genauigkeit, obere Grenze in %, Würdigung. */

@@ -102,7 +102,7 @@ export const REPORT_LAYOUT = {
             figure('Beträge nach Artikel 98 Absatz 6 VO (EU) 2021/1060 (E)', 'G40'),
             figure('Finanzkorrekturen (H)', 'G41'),
             figure('Restfehlerquote nach Finanzkorrekturen', 'G42'),
-            figure('Hochgerechnete Finanzkorrektur bis zur Wesentlichkeitsschwelle von 2 %', 'G43'),
+            figure('Hochgerechnete Finanzkorrektur bis zur Signifikanzschwelle von 2 %', 'G43'),
           ],
         },
         { kind: 'text', cell: 'A45' },
