@@ -40,6 +40,8 @@ import { computed, type ComputedRef, type Ref, type ShallowRef } from 'vue'
 export type StepId = WorkflowStep['id']
 
 export interface ViewOptions {
+  /** Eingaben, deren Text nicht lesbar ist; die Anzeige meldet sie als ungültig. */
+  invalid?: ReadonlySet<string>
   sheets: () => readonly SheetModule[]
   locale: () => 'de' | 'en'
   t: Translate
@@ -93,13 +95,15 @@ export function useSessionView(workspace: ShallowRef<WorkspaceState>, step: Ref<
     return row ? { sheet, inputs: row, cells: sheet.compute(row, context.value) } : null
   })
   const strata = computed(() => (form.value ? strataRows(form.value.sheet) : []))
+  /** Abzug der reaktiven Menge: Die Ansicht rechnet neu, sobald ein Feld ungültig oder wieder gültig wird. */
+  const invalid = (): ReadonlySet<string> => new Set(options.invalid ?? [])
   return {
     find,
     activeSheet,
     currentSheet,
     context,
-    sections: computed(() => (form.value ? buildSections(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t) : [])),
-    summary: computed(() => (form.value ? buildSummary(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t) : null)),
+    sections: computed(() => (form.value ? buildSections(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t, invalid()) : [])),
+    summary: computed(() => (form.value ? buildSummary(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t, invalid()) : null)),
     guide: computed(() => buildGuide(find(POPULATION_SHEET) ?? undefined, results.value[POPULATION_SHEET], context.value.parameters, options.t)),
     hasStrata: computed(() => strata.value.length > 0),
     usedStrata: computed(() => (form.value ? usedStrata(form.value.inputs, strata.value, strataColumnsOf(form.value.sheet.definition)) : 0)),

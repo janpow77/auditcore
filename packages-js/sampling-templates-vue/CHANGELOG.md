@@ -1,5 +1,9 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.3 – 2026-10-17
+
+- Eine nicht lesbare Eingabe („abc“) meldet auch in den abhängigen Werten und
+  in der Ergebnisspalte „Eingabe ungültig“ statt „Angabe fehlt“.
 ## 0.1.4 – 2026-10-14
 
 Hinweise der Abnahme des Einbaus (noch nicht veröffentlicht); keine Änderung

@@ -34,19 +34,45 @@ function watchedCells(sheet: AvailableSheet): CellAddress[] {
   return [...new Set([...resultCellsOf(sheet), sheet.definition.summary.primary.cell])]
 }
 
-/** Für sich freiwillige Eingaben der Verfahrensblätter: Leer heißt „keine“ bzw. „Wert der Planung“. */
+/**
+ * Freiwillige Eingaben nach der Original-Arbeitsmappe der Vorlage. Maßgeblich ist,
+ * was die Vorlage selbst als freiwillig erkennen lässt; alles andere ist Pflicht,
+ * sobald ein gezeigtes Ergebnis davon abhängt. Ausgewertet sind Bezeichnungen,
+ * Kommentare, Datenüberprüfungen, bedingte Formatierungen, Farblegende und
+ * Formeln (Tabelle in `docs/abweichungen.md`, Nr. 13):
+ *
+ * - **Gekennzeichnet** – „(leer = Wert aus I)“ bzw. „(leer = vorheriger Wert)“ an
+ *   der aktualisierten voraussichtlichen Fehlerquote (05 B51, 06 B54, 07 B57/B93,
+ *   10 B57, 11 B60, 12 B64/B100) und „(fakultativ)“ am Buchwert der umfassenden
+ *   Schicht (08 B9, 09 B8, 10 B9/B51, 11 B7/B53, 12 B9/B55/B94, 13 B10, 14 B8,
+ *   17 B8). Die übrigen Angaben dieser Schicht (Anzahl, davon hochwertige,
+ *   Fehlersumme) teilen das als Gruppe: leer nur gemeinsam.
+ * - **Ohne Kennzeichnung, Vorlage liest leer als 0** (`N(…)`) – abgegrenzte
+ *   systembedingte und nicht berichtigte anomale Fehler sowie Anzahl, Buchwert und
+ *   Fehler der hochwertigen Einheiten. Die Vorlage ist hier uneindeutig; die
+ *   Einstufung als freiwillig (Gruppe) bleibt bis zur Entscheidung des Inhabers.
+ * - **Von keiner Formel verwendet** (Geschäftsjahr, Programm, Stichprobeneinheit,
+ *   Schichtungskriterium, Freitexte; einzelne Zahlenfelder wie N in Blatt 03):
+ *   freiwillig, weil kein Ergebnis davon abhängt – die Prüfung unten findet dort
+ *   nie eine Abhängigkeit, Textfelder prüft sie gar nicht.
+ *
+ * Die Altvorlagen X1–X4 kennen keine dieser Kennzeichnungen und verwenden ihre
+ * Eingaben unmittelbar; dort gilt keine Regel nach dem Feldnamen (`optional: false`).
+ */
 const OPTIONAL_ALONE = /^(systemicErrors|anomalousErrors|(updated|final)AnticipatedErrorRate)$/
-/** Freiwillige Gruppen der Verfahrensblätter je Zeitraum: hochwertige Einheiten und umfassende Schicht. */
+/** Freiwillige Gruppen je Zeitraum und Schicht: hochwertige Einheiten und umfassende Schicht. */
 const OPTIONAL_GROUPS: readonly (readonly [RegExp, string])[] = [
   [/^(?:stratumH|ppsH|h)ighValue(?:Units|BookValue|Errors)(Period\d)?$/, 'highValue'],
   [/^exhaustive(?:BookValue|Units|HighValueUnits|Errors)(Period\d)?$/, 'exhaustive'],
 ]
 
 /**
- * Freiwilligkeit eines Felds: die Angabe der Definition (`optional`), sonst nach
- * dem Namen des Felds – die Verfahrensblätter benennen gleiche Größen gleich.
+ * Freiwilligkeit eines Felds: die Angabe der Definition (`optional`; `false` heißt
+ * Pflicht trotz des Namens), sonst nach dem Namen des Felds – die Verfahrensblätter
+ * benennen gleiche Größen gleich.
  */
 export function optionalOf(field: FieldDefinition): true | string | undefined {
+  if (field.optional === false) return undefined
   if (field.optional !== undefined) return field.optional
   if (OPTIONAL_ALONE.test(field.alias)) return true
   for (const [pattern, name] of OPTIONAL_GROUPS) {

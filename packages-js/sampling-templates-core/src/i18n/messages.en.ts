@@ -64,6 +64,8 @@ export const en: Readonly<Partial<Record<MessageKey, string>>> = {
   overridden: 'pre-filled value overwritten',
   missing: 'input missing',
   missingInputs: 'Missing: {inputs}',
+  invalidInput: 'invalid input',
+  invalidInputs: 'Invalid input: {inputs}',
   zeroAssumed: 'Not provided, therefore calculated with 0.',
   withoutBasisHint: 'Shown as in the template although the basis is missing: {fields}. The result is not reliable',
   andMore: 'and {count} more',

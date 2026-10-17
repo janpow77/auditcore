@@ -66,6 +66,8 @@ const de = {
   overridden: 'Vorbelegung überschrieben',
   missing: 'Angabe fehlt',
   missingInputs: 'Es fehlt: {inputs}',
+  invalidInput: 'Eingabe ungültig',
+  invalidInputs: 'Ungültige Eingabe: {inputs}',
   zeroAssumed: 'Keine Angabe, daher mit 0 berechnet.',
   withoutBasisHint: 'Wie in der Vorlage gezeigt, obwohl die Grundlage fehlt: {fields}. Das Ergebnis ist nicht belastbar',
   andMore: 'und {count} weitere',

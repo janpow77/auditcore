@@ -59,8 +59,9 @@ export interface FieldDefinition {
    * gehören zusammen (z. B. Anzahl, Buchwert und Fehler der hochwertigen
    * Einheiten) – leer dürfen sie nur gemeinsam sein. Alle anderen Eingaben sind
    * Pflicht, sobald ein gezeigtes Ergebnis von ihnen abhängt (`model/dependence.ts`).
+   * `false`: Pflicht, auch wenn der Name des Felds sonst auf eine freiwillige Angabe deutet.
    */
-  optional?: true | string
+  optional?: boolean | string
 }
 
 /**

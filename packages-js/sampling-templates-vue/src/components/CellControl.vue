@@ -2,6 +2,7 @@
 import { INPUT_FAILURE_HINTS, choiceValue, parseFieldInput, type CellAddress, type CellValue, type CellView, type RowView, type Translate } from '@auditcore/sampling-templates-core'
 import { FaBadge } from '@auditcore/ui'
 import { computed, nextTick, ref, watch } from 'vue'
+import { useInvalidMark } from '../composables/invalidInputs'
 
 /**
  * Bedienelement einer Zelle: Eingabe, Auswahl, berechneter Wert oder Prüfhinweis.
@@ -15,6 +16,7 @@ const error = ref('')
 /** Fehler erst zeigen, wenn das Feld einmal verlassen wurde – nicht bei jedem Tastendruck. */
 const touched = ref(false)
 const focused = ref(false)
+const markInvalid = useInvalidMark(() => props.cell.cell)
 const shownError = computed(() => (touched.value ? error.value : ''))
 const described = computed(() => [props.describedBy ?? '', shownError.value ? `${props.id}-error` : ''].filter(Boolean).join(' ') || undefined)
 
@@ -29,6 +31,7 @@ function onInput(event: Event): void {
   text.value = (event.target as HTMLInputElement).value
   const result = parseFieldInput(props.row, text.value)
   error.value = result.ok ? '' : props.t('errorInput', { reason: INPUT_FAILURE_HINTS[result.reason] })
+  markInvalid(!result.ok)
   emit('update', props.cell.cell, result.ok ? result.value : null)
 }
 

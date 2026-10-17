@@ -917,15 +917,34 @@ sagt aber dazu, wenn ein gezeigtes Ergebnis nicht belastbar ist
 Blätter durch Nachrechnen: Das Blatt wird mit Probewerten an der Stelle der
 leeren Eingabe noch einmal gerechnet; ändert sich eine Ergebniszelle
 (extrapolierter Fehler, Fehlerquote, obere Fehlergrenze, Stichprobenumfang),
-hängt sie davon ab. Bei Schichtzeilen zählen nur belegte Schichten. Freiwillig
-sind systembedingte und anomale Fehler, die aktualisierte voraussichtliche
-Fehlerquote („leer = Wert aus I“) und – jeweils als Gruppe, die nur gemeinsam
-leer sein darf – die Angaben der hochwertigen Einheiten bzw. der umfassenden
-Schicht je Zeitraum und Schicht; in Blatt 02 und im Bericht sind die
-freiwilligen Angaben in der Definition gekennzeichnet (`optional`). Die Regel
+hängt sie davon ab. Bei Schichtzeilen zählen nur belegte Schichten. Die Regel
 ist als Eigenschaft geprüft (`test/properties.spec.ts`): Für jede Einzellücke
-der Abnahme, die in der Vorlage ein Ergebnis ändert, ist dieses Ergebnis in
-der Webfassung offen oder trägt einen Hinweis in Warnfarbe.
+der Abnahme, die in der Vorlage ein Ergebnis ändert, ist dieses Ergebnis in der
+Webfassung offen oder trägt einen Hinweis in Warnfarbe.
+
+**Welche Eingaben freiwillig sind, richtet sich nach der Original-Arbeitsmappe.**
+Ausgewertet sind Bezeichnungen, Kommentare, Datenüberprüfungen, bedingte
+Formatierungen, die Farblegende (Blatt 00, B5–C8: alle Eingaben gleich „gelb
+hinterlegt, blaue Schrift: von der Prüfbehörde auszufüllen“) und die Formeln,
+die eine leere Zelle abfangen. Datenüberprüfungen erlauben überall leere Zellen
+(Standard der Auswahllisten), bedingte Formatierungen färben nur die
+Prüfhinweise (✔/⚠/✖), Kommentare gibt es nur in Blatt 20 („Frei editierbarer
+Text“). Was die Vorlage nicht als freiwillig erkennen lässt, ist Pflicht.
+
+| Eingabe | Kennzeichnung in der Vorlage | Einstufung |
+|---|---|---|
+| Geschäftsjahr, Programm, CCI, Stichprobeneinheit, Schichtungskriterium, Datenquelle | keine; von keiner Formel verwendet (Blatt 02 C12 nur im Kopf des Berichts) | freiwillig – kein Ergebnis hängt davon ab |
+| Freitexte und Fehlerfälle in Blatt 20 | Kommentare A9, A18, A31, A45 „Frei editierbarer Text“; A20 „Fehlerfälle von Hand eintragen“ | freiwillig; Buchwert und Fehler eines Falls nur gemeinsam |
+| Aktualisierte bzw. endgültige voraussichtliche Fehlerquote | Bezeichnung „(leer = Wert aus I)“ bzw. „(leer = vorheriger Wert)“ | freiwillig |
+| Umfassende Schicht (Buchwert, Anzahl, davon hochwertige, Fehlersumme) | Bezeichnung „(fakultativ)“ am Buchwert | freiwillig als Gruppe |
+| Anpassung der hochwertigen Schicht in Blatt 18 (C20–C22) | Abschnittstitel „Anhang III, optional“; Vorgabe „Nein“ | freiwillig; ist „Ja“ gewählt, sind C21 und C22 Pflicht |
+| Abgegrenzte systembedingte, nicht berichtigte anomale Fehler | keine Kennzeichnung; leer als 0 gelesen (`N(…)`) | freiwillig (unverändert, Entscheidung des Inhabers offen) |
+| Hochwertige Einheiten (Anzahl, Buchwert, Fehler) | keine Kennzeichnung; leer als 0 gelesen (`N(…)`) | freiwillig als Gruppe (unverändert, Entscheidung offen) |
+| Blatt 02: TH-Pauschale, Abzüge, Wiederaufnahmen, Art. 80-Einheiten | keine Kennzeichnung; leer als 0 gelesen | freiwillig (unverändert, Entscheidung offen) |
+| Konfidenzniveau, Systembewertung, Wesentlichkeitsschwelle, voraussichtliche Fehlerquote | keine; unmittelbar in den Formeln | Pflicht |
+| Voraussichtliche Standardabweichung (σ_r, σ_e; z. B. 03 C20, 08 C25) | keine; die Vorlage rechnet leer mit 0 und zeigt den Mindestumfang 30 | Pflicht – „Angabe fehlt“ |
+| Standardabweichung der Stichprobe in der Auswertung | keine | Pflicht, auf Entscheidung des Auftraggebers mit 0 gerechnet und ausgewiesen |
+| Altvorlage X1 C13 (Fehler der hochwertigen Einheiten) | keine; unmittelbar in der Formel | Pflicht (bisher nach dem Feldnamen freiwillig) |
 
 **Die Hinweise reisen mit.** Blatt 18 führt die Einschränkungen des Blatts 02
 und des gewählten Verfahrens mit der Blattnummer davor („Blatt 03: …“), der

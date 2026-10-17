@@ -121,10 +121,16 @@ export function buildHints(sheet: AvailableSheet, inputs: CellMap, results: Cell
 }
 
 /** Warum die Hauptgröße fehlt: Text der Vorlage („TE ≤ AE“) oder die fehlenden Eingaben. */
-function primaryNote(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, reason: CellValue, t: Translate): string {
+function primaryNote(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, reason: CellValue, t: Translate, invalid: ReadonlySet<string>): string {
   if (typeof reason === 'string' && reason) return `${t('notDeterminable')} (${translateValue(sheet.texts, reason)})`
-  const lacking = evaluateSheet(sheet, inputs, context).lacking.get(sheet.definition.summary.primary.cell) ?? []
-  return lacking.length ? `${t('missing')}. ${t('missingInputs', { inputs: [...new Set(lacking)].map((input) => inputName(sheet, input)).join('; ') })}` : ''
+  const lacking = [...new Set(evaluateSheet(sheet, inputs, context).lacking.get(sheet.definition.summary.primary.cell) ?? [])]
+  if (lacking.length === 0) return ''
+  const names = (list: readonly string[]): string => list.map((input) => inputName(sheet, input)).join('; ')
+  const unreadable = lacking.filter((input) => invalid.has(input))
+  const missing = lacking.filter((input) => !invalid.has(input))
+  // Eine nicht lesbare Eingabe ist ungültig, nicht fehlend.
+  const lead = t(unreadable.length ? 'invalidInput' : 'missing')
+  return [`${lead}.`, unreadable.length ? t('invalidInputs', { inputs: names(unreadable) }) : '', missing.length ? t('missingInputs', { inputs: names(missing) }) : ''].filter(Boolean).join(' ')
 }
 
 /**
@@ -140,13 +146,13 @@ export function isEmptyForm(sheet: AvailableSheet, results: CellMap, context?: S
 }
 
 /** Mitlaufende Ergebnisspalte eines Blatts. */
-export function buildSummary(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate): SummaryView {
+export function buildSummary(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate, invalid: ReadonlySet<string> = new Set()): SummaryView {
   const { primary, rows } = sheet.definition.summary
   const value = results[primary.cell] ?? null
   const field = findField(sheet.definition, primary.cell)
   const reason = primary.reason ? results[primary.reason] : null
   const empty = isEmptyForm(sheet, results, context)
-  const note = (): string => (empty ? t('noEntries') : primaryNote(sheet, inputs, context, reason ?? null, t))
+  const note = (): string => (empty ? t('noEntries') : primaryNote(sheet, inputs, context, reason ?? null, t, invalid))
   return {
     primaryLabel: primary.label,
     primaryValue: isNumber(value) && field ? formatFieldValue(field, value) : '',

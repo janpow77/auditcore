@@ -159,8 +159,11 @@ describe('Rechenblatt', () => {
     await sigma.trigger('blur')
     expect(sigma.attributes('aria-invalid')).toBe('true')
     expect(field(wrapper, 'C20').get('[role="alert"]').text()).toContain('mehrdeutig')
-    expect(valueOf(wrapper, 'C21')).toBe('Angabe fehlt')
+    // Abhängige Werte melden die Eingabe als ungültig, nicht als fehlend (N4); wirklich leer heißt wieder „Angabe fehlt“.
+    expect([valueOf(wrapper, 'C21'), field(wrapper, 'C21').get('[data-missing-note]').text()]).toEqual(['Eingabe ungültig', expect.stringContaining('Ungültige Eingabe: ')])
     expect(sigma.element.value).toBe('1.5')
+    await sigma.setValue('')
+    expect(valueOf(wrapper, 'C21')).toBe('Angabe fehlt')
   })
 
   it('Prozentfelder werden in Prozent eingegeben, Auswahlfelder behalten ihren Zahlenwert', async () => {

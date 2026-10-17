@@ -436,7 +436,7 @@ Microsoft Excel ist nicht gegengeprüft. Vollständig:
 
 ## Abhängigkeiten
 
-`@auditcore/common@0.1.2` (Zahleneingabe und -ausgabe, Datum), `fflate@^0.8.3`
+`@auditcore/common@0.1.3` (Zahleneingabe und -ausgabe, Datum), `fflate@^0.8.3`
 (MIT, ohne eigene Abhängigkeiten; nur im Einstieg `./workbook`). Bewusst keine
 Tabellenkalkulationsbibliothek: ExcelJS besteht die Lizenzprüfung des
 Repositorys nicht und bringt 193 Pakete mit, die Community-Fassung von SheetJS

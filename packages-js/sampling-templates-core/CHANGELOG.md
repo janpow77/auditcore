@@ -1,5 +1,20 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.3 – 2026-10-17
+
+Freiwillige Eingaben nach der Original-Arbeitsmappe (noch nicht veröffentlicht).
+Keine Änderung an Rechenwerten; der Abgleich ist unverändert.
+
+- Die Einstufung freiwilliger Eingaben (`optionalOf`, `model/dependence.ts`)
+  ist jetzt an der Vorlage begründet: Kennzeichnungen „(leer = …)“ und
+  „(fakultativ)“, Abschnitt „optional“ in Blatt 18, Kommentare in Blatt 20;
+  Felder, die keine Formel verwendet (z. B. das Geschäftsjahr), lösen nie einen
+  Hinweis aus. Tabelle in `docs/abweichungen.md`, Nr. 13.
+- `FieldDefinition.optional` kann `false` sein (Pflicht trotz des Feldnamens);
+  so in der Altvorlage X1 für C13, die die Vorlage unmittelbar verwendet.
+- Nicht lesbare Eingaben („abc“): `buildSections` und `buildSummary` nehmen die
+  Menge der ungültigen Eingaben und melden abhängige Werte als „Eingabe
+  ungültig“ mit „Ungültige Eingabe: …“ statt „Angabe fehlt“.
 ## 0.1.3 – 2026-10-14
 
 Nur Stile und Texte der Oberfläche (noch nicht veröffentlicht); keine Änderung

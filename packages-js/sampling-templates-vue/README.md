@@ -545,9 +545,9 @@ fremde Hosts, Tokens einer Anwendung; je Blattart hell und dunkel, 1280 px und
 
 ## Abhängigkeiten
 
-`@auditcore/sampling-templates-core@0.1.2` (Rechenkerne, Arbeitsstand, Stile),
+`@auditcore/sampling-templates-core@0.1.3` (Rechenkerne, Arbeitsstand, Stile),
 `@auditcore/ui` ab 0.4.0 (`FaButton`, `FaBadge`, `FaDialog`, Sprache),
-`@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.2`
+`@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.3`
 (Download, Web Storage, Zeitsteuerung); Peer `vue@^3.5.0`. Verwendet werden nur
 Bausteine, die zwischen `@auditcore/ui` 0.4.0 und 0.5.0 bzw. `ui-core` 0.3.0
 und 0.4.0 unverändert sind; deshalb sind beide Fassungen zugelassen.
