@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.1.0",
+ "library": "auditcore_extrapolation 0.2.0",
  "fingerprint": "a3f9d751484ff693ebf6bbec5a7439dd1fd3f6e8255981f53d9576e2ca79ab90",
  "attributes": {
   "deviations": 3,

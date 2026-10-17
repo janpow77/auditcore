@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.1.0",
+ "library": "auditcore_extrapolation 0.2.0",
  "fingerprint": "5e3fb7fe4368bc7807191feefa56c2ec5667e8b7b64f896f03989a084821d34e",
  "method": {
   "id": "mus.standard",
@@ -182,13 +182,13 @@
   "upper_limit_rate": 0.017549868927869562,
   "conclusion": "not_material",
   "explanation": [
-   "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Wesentlichkeitsschwelle.",
+   "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
    "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
   ],
   "steps": [
    {
     "label": "Tolerierbarer Fehler",
-    "formula": "TE = Wesentlichkeit × BV",
+    "formula": "TE = Signifikanzschwelle × BV",
     "value": 48000.0,
     "source": "EGESIF_16-0014-01, Abschn. 4.10"
    },
@@ -462,13 +462,13 @@
     "upper_limit_rate": 0.020034995468961463,
     "conclusion": "inconclusive",
     "explanation": [
-     "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Wesentlichkeitsschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
+     "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Signifikanzschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
      "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
     ],
     "steps": [
      {
       "label": "Tolerierbarer Fehler",
-      "formula": "TE = Wesentlichkeit × BV",
+      "formula": "TE = Signifikanzschwelle × BV",
       "value": 30000.0,
       "source": "EGESIF_16-0014-01, Abschn. 4.10"
      },
@@ -630,13 +630,13 @@
     "upper_limit_rate": 0.021703488189530044,
     "conclusion": "inconclusive",
     "explanation": [
-     "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Wesentlichkeitsschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
+     "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Signifikanzschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
      "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
     ],
     "steps": [
      {
       "label": "Tolerierbarer Fehler",
-      "formula": "TE = Wesentlichkeit × BV",
+      "formula": "TE = Signifikanzschwelle × BV",
       "value": 18000.0,
       "source": "EGESIF_16-0014-01, Abschn. 4.10"
      },

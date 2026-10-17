@@ -1032,7 +1032,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `flagState` | Funktion | – | `risk/state` |
 | `@auditcore/ui-core` | `focusRow` | Funktion | Zeile fokussieren und sichtbar machen; Zeilen tragen `data-row-id` und `tabindex="-1"`. | `synopsis/navigation` |
 | `@auditcore/ui-core` | `focusableWithin` | Funktion | – | `focus` |
-| `@auditcore/ui-core` | `formFor` | Funktion | Anfangswerte bei Methodenwechsel: sichtbar vorbelegt ist nur die Wesentlichkeit von 2 %. | `samplesize/model` |
+| `@auditcore/ui-core` | `formFor` | Funktion | Anfangswerte bei Methodenwechsel: sichtbar vorbelegt ist nur die Signifikanzschwelle von 2 %. | `samplesize/model` |
 | `@auditcore/ui-core` | `formFromRequest` | Funktion | Formular aus einer Anfrage (Vorbelegung über die Eigenschaft `request`). | `samplesize/model` |
 | `@auditcore/ui-core` | `formProblems` | Funktion | Alle Befunde in Formularreihenfolge; leer heißt: absendbar. | `documents/form` |
 | `@auditcore/ui-core` | `formatAge` | Funktion | – | `screening/view` |

@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.1.0",
+ "library": "auditcore_extrapolation 0.2.0",
  "fingerprint": "4af5e8e385c43abef4dedd4e0113d3de9cf0608096979a64fb32b77787aba807",
  "method": {
   "id": "srs.mean_per_unit",
@@ -101,13 +101,13 @@
   "upper_limit_rate": 0.010138871680473591,
   "conclusion": "not_material",
   "explanation": [
-   "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Wesentlichkeitsschwelle.",
+   "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
    "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
   ],
   "steps": [
    {
     "label": "Tolerierbarer Fehler",
-    "formula": "TE = Wesentlichkeit × BV",
+    "formula": "TE = Signifikanzschwelle × BV",
     "value": 16000.0,
     "source": "EGESIF_16-0014-01, Abschn. 4.10"
    },
@@ -218,13 +218,13 @@
     "upper_limit_rate": 0.015944263439740654,
     "conclusion": "not_material",
     "explanation": [
-     "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Wesentlichkeitsschwelle.",
+     "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
      "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
     ],
     "steps": [
      {
       "label": "Tolerierbarer Fehler",
-      "formula": "TE = Wesentlichkeit × BV",
+      "formula": "TE = Signifikanzschwelle × BV",
       "value": 10000.0,
       "source": "EGESIF_16-0014-01, Abschn. 4.10"
      },
@@ -324,13 +324,13 @@
     "upper_limit_rate": 0.0023770833333333335,
     "conclusion": "not_material",
     "explanation": [
-     "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Wesentlichkeitsschwelle.",
+     "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
      "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
     ],
     "steps": [
      {
       "label": "Tolerierbarer Fehler",
-      "formula": "TE = Wesentlichkeit × BV",
+      "formula": "TE = Signifikanzschwelle × BV",
       "value": 6000.0,
       "source": "EGESIF_16-0014-01, Abschn. 4.10"
      },

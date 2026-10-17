@@ -38,7 +38,7 @@ describe('FlowauditExtrapolation (nativ)', () => {
     await flush()
     expect(port.calls.residual[0]).toMatchObject({ audit_population: 1_000_000, total_error_rate: 0.016, financial_corrections: 2.1 })
     expect(onResidual).toHaveBeenCalledWith(residualResult)
-    expect(screen.getByTestId('extrapolation-rer').textContent).toContain('über der Wesentlichkeitsschwelle')
+    expect(screen.getByTestId('extrapolation-rer').textContent).toContain('über der Signifikanzschwelle')
     fireEvent.click(screen.getByTestId('extrapolation-export-json'))
     await flush()
     expect(port.calls.export[0]?.[1]).toBe('json')
