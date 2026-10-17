@@ -1,5 +1,11 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.10 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.10 gebunden (Auflagen der
+Nachprüfung: Erkennung der umfassenden Schicht, Plausibilität von Abschnitt F,
+neue Prüfzelle C39, Hinweise). Ohne eigene Änderung an der Komponente.
+
 ## 0.1.9 – 2026-10-17
 
 Exakt an `@auditcore/sampling-templates-core` 0.1.9 gebunden. Der Kern rechnet

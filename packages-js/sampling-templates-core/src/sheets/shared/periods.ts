@@ -128,8 +128,8 @@ export function globalBlocked(computed: Value): boolean {
 const SIZE_DEPENDENT_SUMMARY: readonly CellAddress[] = ['N5', 'N7', 'N10', 'N11']
 
 /**
- * Geschichtete Blätter (06, 11): Ist der gewählte globale Ansatz nach der DelVO
- * nicht anwendbar, sind alle Formelzellen nach der globalen Neuberechnung
+ * Geschichtete Blätter (06, 11): Ist der gewählte globale Ansatz bei AE = TE
+ * nicht anwendbar (Division durch null), sind alle Formelzellen nach der globalen Neuberechnung
  * (`row`) Folgegrößen ohne bestimmbaren Umfang: Sie bleiben offen („—“), auch
  * Summen über Schichten, die sonst wie in der Vorlage 0 zeigten.
  */
@@ -142,7 +142,7 @@ export function clearAfterGlobal(c: Cells, definition: MethodDefinition, row: nu
 }
 
 /**
- * Ist der gewählte globale Ansatz nach der DelVO nicht anwendbar – oder offen,
+ * Ist der gewählte globale Ansatz bei AE = TE nicht anwendbar – oder offen,
  * weil eine Angabe fehlt –, gibt es keine Würdigung: Sie bliebe sonst wie in der
  * Vorlage gegen leere Zellen stehen („⚠“ oder „✔“ ohne Grundlage).
  */
@@ -151,9 +151,9 @@ export function withoutGlobalAssessment(c: Cells, approach: string, sizes: reado
 }
 
 /**
- * Globale Neuberechnung in `cell` nach der DelVO nicht anwendbar – auch dann,
- * wenn sie nur offen ist, weil eine Pflichteingabe fehlt, und mit dieser als 0
- * (wie die Vorlage) nicht anwendbar wäre (etwa TE = 0 bei fehlender Schwelle).
+ * Globale Neuberechnung in `cell` bei AE = TE nicht anwendbar (Division durch
+ * null) – auch dann, wenn sie nur offen ist, weil eine Pflichteingabe fehlt, und
+ * mit dieser als 0 (wie die Vorlage) nicht anwendbar wäre (TE = AE ≠ 0).
  */
 export function blockedGlobal(c: Cells, cell: CellAddress, pending: Pending): boolean {
   return globalBlocked(c[cell]) || (pending(cell) && pending.likeTemplate?.(cell) === SIZE_NOT_APPLICABLE)

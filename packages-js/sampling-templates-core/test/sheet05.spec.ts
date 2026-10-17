@@ -1,3 +1,4 @@
+import { REPLACED_BY_KOM } from './delvoGolden'
 import { describe, expect, it } from 'vitest'
 import { createTranslate } from '../src/i18n/messages'
 import { defaultInputs, fieldsOf, inputCells, inputFields, named } from '../src/model/definition'
@@ -236,7 +237,7 @@ describe('Blatt 05_MUS_2Z', () => {
     expect(Object.keys(texts?.fields ?? {}).filter((cell) => !fields.some((field) => field.cell === cell))).toEqual([])
     expect(sheet.definition.sections.filter((section) => !texts?.sections?.[section.id]?.title || (section.reference && !texts.sections[section.id]?.reference)).map((section) => section.id)).toEqual([])
     expect(sheet.definition.summary.rows.filter((row) => !texts?.summary?.rows?.[row.cell]).map((row) => row.cell)).toEqual([])
-    const produced = new Set(loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').map((value) => officialWording(value))))
+    const produced = new Set(loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').filter((value) => !REPLACED_BY_KOM.has(value)).map((value) => officialWording(value))))
     expect([...produced].filter((value) => !texts?.values?.[value])).toEqual([])
     const hints = [sample({ C47: 0.9 }), sample({ C47: 0.9, C26: GLOBAL }), sample({ C26: GLOBAL, C51: 0.03 }), sample({ C13: 0.95, C9: 10 }), sample({ C13: null, C30: 'Ja' }), sample({ C20: 0.05 }), sample({ C26: GLOBAL, C51: 0.05 }), sample({ C26: GLOBAL, C51: 0.02 })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
     const excluded = createContext({ sheets: { '02_Grundgesamtheit': { C47: 2, C49: 'Ausschluss (Art. 3 Abs. 6 Buchst. b)' } } })

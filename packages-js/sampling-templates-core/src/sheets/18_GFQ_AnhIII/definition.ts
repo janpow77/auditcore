@@ -53,6 +53,7 @@ const location: FieldDefinition[] = [
   { cell: 'C36', alias: 'randomStratumOriginalBookValue', kind: 'formula', type: 'amount', format: EUR, label: 'Buchwert der Zufallsschicht, ursprünglich (BV_s)', formula: 'BV_s = BV_u − BV_e' },
   { cell: 'C37', alias: 'randomStratumReducedBookValue', kind: 'formula', type: 'amount', format: EUR, label: 'Buchwert der Zufallsschicht, reduziert (BV_s,r)', formula: 'BV_s,r = BV_s − (BV_A − BV_A,e)' },
   { cell: 'C38', alias: 'randomStratumFactor', kind: 'formula', type: 'decimal', format: '0.0000', label: 'Anpassungsfaktor der Zufallsschicht BV_s / BV_s,r', hint: 'KOM-Leitfaden EGESIF_16-0014-01, 7.10.2 und 7.10.3.' },
+  { cell: 'C39', alias: 'locationCheck', kind: 'formula', type: 'check', label: 'Prüfung der Lage (A_e ≤ A, BV_A,e ≤ BV_A, A_e ≤ N_e, BV_A,e ≤ BV_e, BV_e ≤ BV_u)', hint: 'Bei unplausibler Lage bleiben angepasster Fehler und angepasste Genauigkeit offen; welche Bedingung verletzt ist, nennt der Hinweis.' },
 ]
 
 const adjusted: FieldDefinition[] = [
@@ -66,7 +67,7 @@ const adjusted: FieldDefinition[] = [
     hint: 'Ausschluss: EE × Faktor; Ersetzung: Hochrechnung auf die ursprüngliche Grundgesamtheit. Bei Anwendung von C wird nur der Zufallsteil skaliert (Auslegung).',
     interpretation: 'Bei Anwendung von Abschnitt C wird nur der Zufallsteil des extrapolierten Fehlers mit dem Anpassungsfaktor skaliert.',
   },
-  { cell: 'C25', alias: 'adjustedPrecision', kind: 'result', type: 'amount', format: EUR, label: 'Angepasste Genauigkeit (SE)', hint: 'Tabelle 2, Ersetzung: Genauigkeit für die reduzierte Grundgesamtheit berechnen und mit dem Faktor anpassen. Die Webfassung rechnet nach der DelVO: SE · N_r/N · BV/BV_r (die Vorlage passt nicht an).' },
+  { cell: 'C25', alias: 'adjustedPrecision', kind: 'result', type: 'amount', format: EUR, label: 'Angepasste Genauigkeit (SE)', hint: 'Tabelle 2, Ersetzung: Genauigkeit für die reduzierte Grundgesamtheit berechnen und mit dem Faktor anpassen. Die Webfassung rechnet nach den Vorgaben der KOM: mit erfasster Lage (Abschnitt F) je Zufallsschicht SE · (N_s − A_s)/N_s · BV_s/BV_s,r, sonst SE · (N − A)/N · BV/BV_r; Ausschluss mit Lage SE · BV_s/BV_s,r (die Vorlage passt bei Ersetzung nicht an).' },
 ]
 
 const totalErrorRate: FieldDefinition[] = [

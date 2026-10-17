@@ -1094,8 +1094,12 @@ durch den Bezug auf die Zufallsschicht.
   Die Webfassung rechnet daher bei AE > TE den Umfang wie die Formel
   (quadriert, also mit |TE − AE|), mit neutralem Hinweis
   `anticipated-above-tolerable` (globale Neuberechnung `-global`, `-global-3`);
-  ab 4 % zusätzlich der neutrale Hinweis `anticipated-at-least-4` – der
-  eingegebene Wert wird nicht ersetzt. Im ersten Zeitraum weicht das von der
+  ab dem Doppelten der Signifikanzschwelle zusätzlich der neutrale Hinweis
+  `anticipated-at-least-4` (Auslegung der Webfassung: Der Leitfaden nennt
+  4,0 % bei 2 % Schwelle; bei niedrigerer Schwelle löst der Hinweis beim
+  Doppelten aus) – der eingegebene Wert wird nicht ersetzt. Die
+  Standardneuberechnung trägt denselben Hinweis (`-standard`, `-standard-3`):
+  Ihr Nenner (TE − AE)² − … beruht ebenso auf |TE − AE|. Im ersten Zeitraum weicht das von der
   Vorlage ab (sie zeigt „TE ≤ AE“ und keinen Umfang, Prüfhinweis „✖ TE ≤ AE“);
   die Webfassung zeigt den Umfang und als Prüfhinweis „⚠ AE > TE: Umfang mit der
   geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)“. In
@@ -1125,8 +1129,9 @@ durch den Bezug auf die Zufallsschicht.
     SE = SE · BV_s/BV_s,r (Leitfaden 7.10.3.2, 7.10.3.4; Hinweis
     `exclusion-by-stratum`). Ohne Lage wie die Vorlage mit dem Gesamtfaktor
     BV/BV_r (mit Abschnitt C nur für den Zufallsteil); gibt es eine umfassende
-    Schicht, mit Warnhinweis `exclusion-location-missing` (nicht KOM-konform,
-    Beispiel 7.10.3.4: 1,44 % statt 1,50 %).
+    Schicht, mit Warnhinweis `exclusion-location-missing` (nicht KOM-konform;
+    Beispiel 7.10.3.4: nach KOM 1,44 %, wie die Vorlage ohne Abschnitt C
+    1,49 %, mit Abschnitt C 1,50 %).
   - Ersetzung bei Tabelle 2 (DelVO Anhang III Tabelle 2: Genauigkeit für die
     reduzierte Grundgesamtheit, dann mal BV(h) ursprünglich / BV(h) reduziert;
     Leitfaden 7.10.2 mit Fußnote 70): mit Lage
@@ -1137,6 +1142,19 @@ durch den Bezug auf die Zufallsschicht.
     `replacement-precision-reduced`), sonst nicht KOM-konform (Warnhinweis
     `replacement-location-missing`). Hochrechnung bei Ersetzung: Zufallsteil
     unverändert, umfassende Schicht mit Lage über EE_e (Beispiel 7.10.3.1 b).
+  - Ob es eine umfassende Schicht gibt, bestimmt Blatt 18 aus n_e bzw. N_e und
+    BV_e des Methodenblatts (> 0), nicht aus EE_e: Die Methodenblätter liefern
+    EE_e auch ohne Schicht als 0 (Fassung 0.1.10).
+  - Plausibilität von Abschnitt F (Prüfzelle C39): A_e ≤ A (Blatt 02 C47),
+    BV_A,e ≤ BV_A (C16), A_e ≤ N_e, BV_A,e ≤ BV_e, BV_e ≤ BV_u (C14). Bei einem
+    Verstoß „✖ Eingabe unplausibel“, Hinweis `location-implausible` mit den
+    verletzten Bedingungen; angepasster Fehler und Genauigkeit bleiben „—“,
+    es wird weder nach Lage noch wie die Vorlage weitergerechnet.
+  - Alle Einheiten der umfassenden Schicht berührt (BV_e = BV_A,e): BV_e,r = 0,
+    EE_e = EE_e,r · BV_e/BV_e,r ist nicht bestimmbar. Der angepasste Fehler
+    bleibt „—“, Hinweis `exhaustive-all-affected` nach Leitfaden 7.10.3.1 b
+    (berührte Einheiten der hochwertigen Schicht werden durch Einheiten der
+    Zufallsschicht ersetzt).
     Die Vorlage übernimmt SE unverändert (`LEFT($C$11;10)="Tabelle 2"` trifft
     nie zu).
   - Ersetzung bei Tabelle 1 (MUS): ohne Anpassung, wie Vorlage und Leitfaden
@@ -1156,8 +1174,8 @@ durch den Bezug auf die Zufallsschicht.
 
 | Nr. | Abweichung | Blätter | Hinweis | Fundstelle |
 |---|---|---|---|---|
-| 1 | Anhang III je Schicht – **nach KOM gerechnet** | 18 | `exclusion-by-stratum`, `exclusion-location-missing`, `replacement-precision-not-scaled`, `replacement-precision-reduced`, `replacement-location-missing` | Anhang III Tabellen 1 und 2; Leitfaden 7.10.2, 7.10.3 |
-| 2 | Umfang bei AE > TE mit \|TE − AE\|, bei AE = TE nicht anwendbar – **nach KOM gerechnet** | 03–12 | `anticipated-above-tolerable[-global[-3]]`, `anticipated-at-least-4[…]` (neutral), `size-not-applicable-global[-3]` | Anhang II; Leitfaden 7.1, S. 183; Art. 5 Abs. 7 UAbs. 4 Buchst. a |
+| 1 | Anhang III je Schicht – **nach KOM gerechnet** | 18 | `exclusion-by-stratum`, `exclusion-location-missing`, `replacement-precision-not-scaled`, `replacement-precision-reduced`, `replacement-location-missing`, `location-implausible`, `exhaustive-all-affected` | Anhang III Tabellen 1 und 2; Leitfaden 7.10.2, 7.10.3 |
+| 2 | Umfang bei AE > TE mit \|TE − AE\|, bei AE = TE nicht anwendbar – **nach KOM gerechnet** | 03–12 | `anticipated-above-tolerable[-global[-3]\|-standard[-3]]`, `anticipated-at-least-4[…]` (neutral), `size-not-applicable-global[-3]` | Anhang II; Leitfaden 7.1, S. 183; Art. 5 Abs. 7 UAbs. 4 Buchst. a |
 | 3 | nicht anwendbare Standardneuberechnung (Nenner ≤ 0): Umfang aus den Untergrenzen | 05, 06, 07, 10, 11, 12 | bestehender Hinweis `negative-denominator…` mit Zusatz „Standardansatz nicht anwendbar … Untergrenze“ | Anhang II, Anmerkungen zu Nr. 1.2 und 2.2 |
 | 4 | anteilige Näherung bei mehreren Schichten oder Zeiträumen | 04–07, 09–12; 18 bei 04–07, 09–12, 14, 16 | `annex-iii-approximation` | Anhang III, „BV(h)“; Leitfaden 7.10.2 |
 | 5 | Umfangsparameter bei Ausschluss aus der reduzierten Grundgesamtheit (Auslegungsfrage) | 08–12 (nur einfache Zufallsstichprobe; bei MUS kürzt sich BV heraus) | `exclusion-reference-population`, wenn in Blatt 02 der Ausschluss gewählt und eine Einheit betroffen ist | Anhang III Tabellen 1 und 2 |

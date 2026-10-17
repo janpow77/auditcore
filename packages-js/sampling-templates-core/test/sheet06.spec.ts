@@ -1,3 +1,4 @@
+import { REPLACED_BY_KOM } from './delvoGolden'
 import { describe, expect, it } from 'vitest'
 import { createTranslate } from '../src/i18n/messages'
 import { defaultInputs, fieldsOf, findField, inputCells, named } from '../src/model/definition'
@@ -49,7 +50,7 @@ function expectTranslated(target: AvailableSheet, texts: SheetTexts | undefined)
   expect(Object.keys(texts?.fields ?? {}).filter((cell) => !fields.some((field) => field.cell === cell))).toEqual([])
   expect(target.definition.sections.filter((section) => !texts?.sections?.[section.id]?.title || (section.reference && !texts.sections[section.id]?.reference)).map((section) => section.id)).toEqual([])
   expect(target.definition.summary.rows.filter((row) => !texts?.summary?.rows?.[row.cell]).map((row) => row.cell)).toEqual([])
-  const produced = new Set(loadGolden(target.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').map((value) => officialWording(value))))
+  const produced = new Set(loadGolden(target.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').filter((value) => !REPLACED_BY_KOM.has(value)).map((value) => officialWording(value))))
   expect([...produced].filter((value) => !texts?.values?.[value])).toEqual([])
 }
 /** Eingaben einer Schichtspalte in eine andere Spalte verschieben. */

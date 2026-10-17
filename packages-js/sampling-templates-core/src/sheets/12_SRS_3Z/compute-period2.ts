@@ -63,7 +63,7 @@ function applied(c: Cells, pending: Pending, approach: Recalculation, context: S
   c.C83 = guard(() => increasedSize(c.C46, [[c.C53, c.C14], [c.C59, c.C15]]))
   const chosen = c[CHOSEN[approach]]
   const notApplicable = approach === 'standard' && typeof c.C72 === 'string'
-  // Globaler Ansatz nach der DelVO nicht anwendbar (AE ≥ TE): Umfang offen statt Untergrenze.
+  // Globaler Ansatz bei AE = TE nicht anwendbar (Division durch null): Umfang offen statt Untergrenze.
   const blocked = approach === 'global' && blockedGlobal(c, 'C77', pending)
   c.C84 = periodSize(chosen, { open: pending(CHOSEN[approach]) || blocked, notApplicable }, context)
   c.C85 = c[PLANNED[approach]] ?? null

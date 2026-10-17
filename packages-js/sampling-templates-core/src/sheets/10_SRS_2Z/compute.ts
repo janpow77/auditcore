@@ -108,7 +108,7 @@ function finalSizes(c: Cells, pending: Pending, context: SheetContext): void {
   const approach = recalculationOf(c.C32)
   const chosen = c[CHOSEN[approach]]
   c.C72 = guard(() => required(c.C42) + (approach === 'global' ? required(c.C69) : 0))
-  // Globaler Ansatz nach der DelVO nicht anwendbar (AE ≥ TE): Umfang offen statt Untergrenzen.
+  // Globaler Ansatz bei AE = TE nicht anwendbar (Division durch null): Umfang offen statt Untergrenzen.
   const blocked = approach === 'global' && blockedGlobal(c, 'C66', pending)
   c.C73 = periodSize(chosen, { open: pending(CHOSEN[approach]) || blocked, notApplicable: typeof chosen === 'string' }, context, () => minus(minus(minus(30, required(c.C72)), n(c.C10)), n(c.C52)))
   c.C74 = guard(() => required(c.C72) + required(c.C73) + n(c.C10) + n(c.C52))

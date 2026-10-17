@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { defaultInputs } from '../src/model/definition'
 import { createContext } from '../src/model/sheet'
+import { findAvailableSheet } from '../src/sheets/registry'
+import { computeWorkspace, contextFor } from '../src/workspace/compute'
+import { emptyWorkspace, type WorkspaceState } from '../src/workspace/types'
 import type { CellMap, MethodSummary, SheetContext } from '../src/model/types'
 import { sheet } from '../src/sheets/18_GFQ_AnhIII/index'
 import { en } from '../src/sheets/18_GFQ_AnhIII/texts.en'
@@ -93,6 +96,7 @@ describe('Anhang III nach KOM-Leitfaden 7.10.3: Belegrechnungen', () => {
     // Mit Abschnitt C (Anpassung der hochwertigen Schicht): nur der Zufallsteil mit dem Gesamtfaktor, EE_e über C21/C22.
     const sectionC = run(example4, { C20: 'Ja', C21: 295006242, C22: 203577481 })
     expect((sectionC.cells.C23 as number).toFixed(2)).toBe('680068.95')
+    expect((sectionC.cells.C26 as number).toFixed(4)).toBe('0.0150')
     expect(sectionC.hints).toContain('exclusion-location-missing')
   })
 
@@ -116,4 +120,68 @@ describe('Anhang III nach KOM-Leitfaden 7.10.3: Belegrechnungen', () => {
       expect(en.webHints?.[id], id).toMatch(/EGESIF_16-0014-01|Annex III/)
     }
   })
+
+  it('B1: ohne umfassende Schicht (n_e/N_e/BV_e 0 bzw. leer) ist die Gesamtrechnung exakt – kein Hinweis „nicht KOM-konform“', () => {
+    // Methodenblatt 08 ohne umfassende Schicht: EE_e kommt trotzdem als 0.
+    const without = (population: CellMap, exhaustive: CellMap = { C9: null, C10: null }): SheetContext =>
+      createContext({ sheets: { '02_Grundgesamtheit': { C20: 0, C39: 10000000, ...population }, '08_SRS_1Z': exhaustive }, method: { sheet: '08_SRS_1Z', method: 'SRS', bookValue: 10000000, projectedError: 120000, exhaustiveError: 0, precision: 60000, systemicErrors: 0, anomalousErrors: 0, sampleSize: 60, totalErrorRate: 0.012 } })
+    const replaced = run(without({ C47: 40, C48: 500000, C49: REPLACEMENT, C52: 400 }))
+    // 60.000 · 360/400 · 10.000.000/9.500.000 = 56.842,11 €
+    expect((replaced.cells.C25 as number).toFixed(2)).toBe('56842.11')
+    expect(replaced.hints).toContain('replacement-precision-reduced')
+    expect(replaced.hints).not.toContain('replacement-location-missing')
+    expect(run(without({ C47: 40, C48: 500000, C49: EXCLUSION, C52: 400 })).hints.filter((id) => id.startsWith('exclusion-'))).toEqual([])
+    // Mit umfassender Schicht (N_e = 4) dagegen der Warnhinweis.
+    expect(run(without({ C47: 40, C48: 500000, C49: REPLACEMENT, C52: 400 }, { C9: 6200000, C10: 4 })).hints).toContain('replacement-location-missing')
+    expect(run(without({ C47: 40, C48: 500000, C49: EXCLUSION, C52: 400 }, { C9: 6200000, C10: 4 })).hints).toContain('exclusion-location-missing')
+  })
+
+  it('B1 im Arbeitsstand: Blatt 08 ohne umfassende Schicht liefert EE_e = 0, Blatt 18 warnt nicht', () => {
+    const [population, srs, total] = ['02_Grundgesamtheit', '08_SRS_1Z', '18_GFQ_AnhIII'].map((id) => findAvailableSheet(id)!)
+    const state: WorkspaceState = {
+      ...emptyWorkspace(),
+      activeMethod: srs!.id,
+      sheets: { [population!.id]: { ...population!.sample.inputs, C41: 2, C42: 3, C43: 500000, C49: 'Ersetzung (Anh. III)' }, [srs!.id]: { ...srs!.sample.inputs, C9: null, C10: null, C11: null, C40: null }, [total!.id]: {} },
+    }
+    const results = computeWorkspace(state)
+    expect(results[srs!.id]?.C41).toBe(0)
+    const hints = (total!.webHints?.({}, results[total!.id] ?? {}, contextFor(total!.id, state, results)) ?? []).map((hint) => hint.id)
+    expect(hints).toContain('replacement-precision-reduced')
+    expect(hints).not.toContain('replacement-location-missing')
+  })
+
+  it('B2: unplausible Lage – „Eingabe unplausibel“ mit Feldangabe, Folgegrößen offen, kein exclusion-by-stratum', () => {
+    const cases: [CellMap, string][] = [
+      [{ ...LOCATION4, C33: 7 }, 'Blatt 02 C47'],
+      [{ ...LOCATION4, C34: 93598482 }, '(C16)'],
+      [{ ...LOCATION4, C33: 4 }, '(C31)'],
+      [{ ...LOCATION4, C34: 295006243 }, '(C32)'],
+      [{ ...LOCATION4, C32: 2301882971, C34: 0 }, '(C14)'],
+    ]
+    for (const [inputs, field] of cases) {
+      const cells = sheet.compute({ ...defaults, ...inputs }, example4)
+      const hints = sheet.webHints?.({ ...defaults, ...inputs }, cells, example4) ?? []
+      expect(cells.C39, field).toBe('✖ Eingabe unplausibel')
+      expect([cells.C24, cells.C25, cells.C26, cells.C35, cells.C38], field).toEqual([null, null, null, null, null])
+      expect(hints.find((hint) => hint.id === 'location-implausible')?.text, field).toContain(field)
+      expect(hints.map((hint) => hint.id), field).not.toContain('exclusion-by-stratum')
+    }
+    expect(run(example4, LOCATION4).cells.C39).toBe('✔ Lage plausibel')
+    expect(run(example4).cells.C39).toBeNull()
+  })
+
+  it('B3: alle Einheiten der umfassenden Schicht berührt (BV_e = BV_A,e) – keine Division durch null, „—“ mit Hinweis nach 7.10.3.1 b', () => {
+    const ctx = context(
+      { sheet: '08_SRS_1Z', method: 'SRS', bookValue: 2301882970, projectedError: 33000000, exhaustiveError: 0, precision: SE_EXAMPLE4 },
+      { C39: 2301882970, C47: 6, C48: 93598481, C49: EXCLUSION, C52: 3520 },
+    )
+    const { cells, hints } = run(ctx, { C31: 1, C32: 50000000, C33: 1, C34: 50000000 })
+    expect(cells.C39).toBe('✔ Lage plausibel')
+    expect([cells.C24, cells.C26, cells.C28]).toEqual([null, null, null])
+    expect(Number.isFinite(cells.C38 as number)).toBe(true)
+    expect(hints).toContain('exhaustive-all-affected')
+    expect(en.webHints?.['exhaustive-all-affected']).toContain('7.10.3.1 b')
+    expect(en.webHints?.['location-implausible']).toContain('section F')
+  })
 })
+

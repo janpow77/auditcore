@@ -12,7 +12,7 @@
  * BV / BV_r (Ausschluss) bzw. mit der Gesamt-Näherung (Ersetzung, Tabelle 2)
  * und weist darauf hin.
  */
-import { divide, eq, guard, isBlank, isNumber, left, minus, n, plus, required, sameText } from '../../excel/index'
+import { divide, eq, gt, guard, isBlank, isNumber, left, minus, n, plus, required, sameText } from '../../excel/index'
 import { unfounded } from '../../model/policy'
 import type { CellMap, CellValue, Cells, SheetContext } from '../../model/types'
 
@@ -44,6 +44,38 @@ export function locationOf(c: CellMap): Location | null {
   return { units, bookValue, affectedUnits, affectedBookValue }
 }
 
+/** Prüfwert C39, wenn die Lage plausibel ist. */
+export const LOCATION_PLAUSIBLE = '✔ Lage plausibel'
+/** Prüfwert C39 bei einer unplausiblen Lage; welche Bedingung verletzt ist, nennt der Hinweis. */
+export const LOCATION_IMPLAUSIBLE = '✖ Eingabe unplausibel'
+
+/**
+ * Plausibilität von Abschnitt F: A_e ≤ A (Blatt 02 C47), BV_A,e ≤ BV_A (C16),
+ * A_e ≤ N_e, BV_A,e ≤ BV_e, BV_e ≤ BV_u (C14). Liefert die verletzten
+ * Bedingungen mit Feldangabe; leer, wenn alles plausibel ist.
+ */
+export function locationViolations(c: CellMap, context: SheetContext): string[] {
+  const location = locationOf(c)
+  if (!location) return []
+  const affected = (context.sheets[POPULATION_SHEET] ?? {}).C47
+  const checks: [boolean, string][] = [
+    [isNumber(affected) && gt(location.affectedUnits, affected), 'berührte Einheiten der umfassenden Schicht (C33) größer als alle berührten Einheiten (Blatt 02 C47)'],
+    [isNumber(c.C16) && gt(location.affectedBookValue, c.C16), 'berührter Buchwert der umfassenden Schicht (C34) größer als der berührte Buchwert insgesamt (C16)'],
+    [gt(location.affectedUnits, location.units), 'berührte Einheiten (C33) größer als die Einheiten der umfassenden Schicht (C31)'],
+    [gt(location.affectedBookValue, location.bookValue), 'berührter Buchwert (C34) größer als der Buchwert der umfassenden Schicht (C32)'],
+    [isNumber(c.C14) && gt(location.bookValue, c.C14), 'Buchwert der umfassenden Schicht (C32) größer als die Hochrechnungsbasis (C14)'],
+  ]
+  return checks.filter(([violated]) => violated).map(([, text]) => text)
+}
+
+/** Alle Einheiten der umfassenden Schicht berührt (BV_e = BV_A,e > 0): BV_e,r = 0, EE_e = EE_e,r · BV_e / BV_e,r nicht bestimmbar. */
+export const allExhaustiveAffected = (location: Location | null): boolean => location !== null && gt(location.bookValue, 0) && eq(location.bookValue, location.affectedBookValue)
+
+/** Lage, mit der gerechnet wird: nur erfasst und plausibel. */
+function usableLocation(c: CellMap, context: SheetContext): Location | null {
+  return locationViolations(c, context).length ? null : locationOf(c)
+}
+
 /**
  * Abschnitt F, abgeleitete Größen (C35–C38): berührte Einheiten der
  * Zufallsschicht A_s = A − A_e, Buchwert der Zufallsschicht ursprünglich
@@ -51,8 +83,9 @@ export function locationOf(c: CellMap): Location | null {
  * der Zufallsschicht BV_s / BV_s,r.
  */
 export function randomStratum(c: Cells, context: SheetContext): void {
-  const location = locationOf(c)
+  const location = usableLocation(c, context)
   const population = context.sheets[POPULATION_SHEET] ?? {}
+  c.C39 = locationOf(c) ? (location ? LOCATION_PLAUSIBLE : LOCATION_IMPLAUSIBLE) : null
   c.C35 = location ? guard(() => minus(required(population.C47), location.affectedUnits)) : null
   c.C36 = location ? guard(() => minus(required(c.C14), location.bookValue)) : null
   c.C37 = location ? guard(() => minus(required(c.C36), minus(required(c.C16), location.affectedBookValue))) : null
@@ -66,6 +99,8 @@ function exhaustiveFactor(location: Location): number {
 
 /** C24 nach KOM mit erfasster Lage: EE_e · BV_e/BV_e,r + Zufallsteil, beim Ausschluss mal BV_s/BV_s,r. */
 function errorByStratum(c: Cells, location: Location): CellValue {
+  // Alle Einheiten der umfassenden Schicht berührt: keine geprüfte Einheit, aus der EE_e hochgerechnet werden könnte (Hinweis).
+  if (allExhaustiveAffected(location)) return null
   return guard(() => {
     const random = minus(required(c.C6), required(c.C7))
     return plus(required(c.C7) * exhaustiveFactor(location), isExclusion(c) ? random * required(c.C38) : random)
@@ -82,8 +117,9 @@ function errorLikeTemplate(c: Cells): CellValue {
   })
 }
 
-/** C24: angepasster extrapolierter Fehler nach Anhang III. */
-export function adjustedError(c: Cells): CellValue {
+/** C24: angepasster extrapolierter Fehler nach Anhang III; bei unplausibler Lage offen. */
+export function adjustedError(c: Cells, context: SheetContext): CellValue {
+  if (locationViolations(c, context).length) return null
   const location = locationOf(c)
   return location ? errorByStratum(c, location) : errorLikeTemplate(c)
 }
@@ -111,9 +147,42 @@ export function adjustedPrecision(c: Cells, context: SheetContext): CellValue {
   // Ohne Wert in C8 zeigt die Vorlage „n. a.“ – auch dann, wenn das Methodenblatt nur noch keine Genauigkeit liefert.
   if (isBlank(c.C8)) return unfounded(context, NOT_APPLICABLE)
   if (!isNumber(c.C8)) return NOT_APPLICABLE
+  if (locationViolations(c, context).length) return null
   const location = locationOf(c)
   // Ausschluss: Genauigkeit der reduzierten Grundgesamtheit mal BV_s/BV_s,r (mit Lage) bzw. BV/BV_r wie die Vorlage.
   if (isExclusion(c)) return guard(() => required(c.C8) * required(location ? c.C38 : c.C18))
   // Ersetzung, Tabelle 1: für die ursprüngliche Grundgesamtheit, ohne Anpassung.
   return isReplacementTable2(c) ? replacementPrecision(c, context, location) : c.C8
+}
+
+/** Anzahl und Buchwert der hochwertigen bzw. umfassenden Schicht je Methodenblatt (bei Schichten die Summenzellen, je Zeitraum alle). */
+const EXHAUSTIVE_CELLS: Readonly<Record<string, readonly string[]>> = {
+  '03_MUS_1Z': ['C29', 'C30'],
+  '04_MUS_1Z_S': ['C37', 'C38'],
+  '05_MUS_2Z': ['C37', 'C38', 'C71', 'C72'],
+  '06_MUS_2Z_S': ['C41', 'C42', 'C75', 'C76'],
+  '07_MUS_3Z': ['C40', 'C41', 'C79', 'C80', 'C113', 'C114'],
+  '08_SRS_1Z': ['C9', 'C10'],
+  '09_SRS_1Z_S': ['C8', 'C9'],
+  '10_SRS_2Z': ['C9', 'C10', 'C51', 'C52'],
+  '11_SRS_2Z_S': ['C7', 'C8', 'C53', 'C54'],
+  '12_SRS_3Z': ['C9', 'C10', 'C55', 'C56', 'C94', 'C95'],
+  '13_NS_GW': ['C10', 'C11'],
+  '14_NS_GW_S': ['C8', 'C9'],
+  '15_NS_PPS': ['C14', 'C15'],
+  '16_NS_PPS_S': ['C19', 'C20'],
+}
+
+/**
+ * Hat das Verfahren eine hochwertige bzw. umfassende Schicht? Maßgeblich sind
+ * n_e bzw. N_e und BV_e des Methodenblatts (> 0); EE_e liefern die
+ * Methodenblätter auch ohne Schicht als 0. Liegt das Methodenblatt nicht vor
+ * (nur die Ergebnisübersicht), zählt ein EE_e ≠ 0.
+ */
+export function hasExhaustiveStratum(c: CellMap, context: SheetContext): boolean {
+  const sheet = context.method?.sheet
+  const cells = sheet ? EXHAUSTIVE_CELLS[sheet] : undefined
+  const results = sheet ? context.sheets[sheet] : undefined
+  if (cells && results) return cells.some((cell) => isNumber(results[cell]) && gt(results[cell], 0))
+  return isNumber(c.C7) && !eq(c.C7, 0)
 }

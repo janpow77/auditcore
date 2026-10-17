@@ -1,3 +1,4 @@
+import { REPLACED_BY_KOM } from './delvoGolden'
 /**
  * Englische Arbeitsübersetzung: Vollständigkeit je Blatt und einheitliche
  * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU)
@@ -159,7 +160,7 @@ describe('Englische Arbeitsübersetzung der Blätter', () => {
     it(`${sheet.id}: jeder Text des Rechenkerns aus den Golden-Fällen hat eine Übersetzung`, () => {
       const values = loadGolden(sheet.id).flatMap((golden) => Object.entries(golden.erwartet))
       // Fehlerwerte von Excel (`#DIV/0!`) zeigt die Webfassung nicht (Blatt 20 E20–E27, `adapted`); sie sind kein Text des Rechenkerns.
-      const strings = new Set(values.filter(([reference, value]) => reference.startsWith(`${sheet.id}!`) && typeof value === 'string' && value !== '' && !value.startsWith('#')).map(([, value]) => officialWording(String(value))))
+      const strings = new Set(values.filter(([reference, value]) => reference.startsWith(`${sheet.id}!`) && typeof value === 'string' && value !== '' && !value.startsWith('#') && !REPLACED_BY_KOM.has(value)).map(([, value]) => officialWording(String(value))))
       expect([...strings].filter((text) => !translated(texts, text) && !UNTRANSLATED.some((entry) => entry.matches(text)))).toEqual([])
     })
 

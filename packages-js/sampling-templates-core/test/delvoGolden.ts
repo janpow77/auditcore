@@ -45,3 +45,11 @@ export function delvoVerdict(entry: DelvoEntry | undefined, cell: string, actual
   if (cell in entry.cells) return same(officialWording(entry.cells[cell] ?? null) as CellValue, actual) ? 'delvo' : 'wrong'
   return 'others' in entry && (actual === null || NO_VALUE.has(String(actual))) ? 'delvo' : 'none'
 }
+
+/**
+ * Texte der Vorlage, die die Webfassung nach den Vorgaben der KOM nicht mehr
+ * bildet: Bei AE > TE rechnet sie einen Umfang, bei AE = TE zeigt sie
+ * „✖ nicht anwendbar (Division durch null)“. Sie stehen in den Excel-Sollwerten,
+ * sind aber kein Text des Rechenkerns und brauchen keine Übersetzung.
+ */
+export const REPLACED_BY_KOM: ReadonlySet<string> = new Set(['TE ≤ AE', '✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar'])

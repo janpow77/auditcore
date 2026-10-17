@@ -135,8 +135,17 @@ describe('Abweichungen der Vorlage von der DelVO: Hinweise in Warnfarbe', () => 
     expect(hints.filter((hint) => hint.id.startsWith('anticipated-')).map((hint) => [hint.id, hint.tone])).toEqual([
       ['anticipated-above-tolerable', 'neutral'],
       ['anticipated-at-least-4', 'neutral'],
+      // Standardansatz (Vorgabe): Die aktualisierte Fehlerquote fehlt, es gilt die erste – derselbe EGESIF-Hinweis (B5).
+      ['anticipated-above-tolerable-standard', 'neutral'],
+      ['anticipated-at-least-4-standard', 'neutral'],
     ])
-    expect(textOf(hints, 'anticipated-at-least-4')).toContain('ersetzt ihn nicht')
+    expect(textOf(hints, 'anticipated-above-tolerable-standard')).toContain('Standardneuberechnung')
+    expect(textOf(hints, 'anticipated-at-least-4')).toMatch(/^Auslegung der Webfassung – .*4,0 % bei 2 % Schwelle.*ersetzt ihn nicht$/)
+    // Auslöser beim Doppelten der Signifikanzschwelle: bei 1 % ab 2 %, bei 2 % ab 4 %.
+    const ids = async (changes: CellMap): Promise<string[]> => (await trace(stateWith(sheet, changes))).method.map((hint) => hint.id)
+    expect(await ids({ C17: 0.01, C20: 0.02 })).toContain('anticipated-at-least-4')
+    expect(await ids({ C17: 0.01, C20: 0.019 })).not.toContain('anticipated-at-least-4')
+    expect(await ids({ C20: 0.039 })).not.toContain('anticipated-at-least-4')
     const equal = sheet.compute({ ...sheet.sample.inputs, C20: 0.02 }, createContext())
     expect([equal.C27, equal.C22]).toEqual(['✖ nicht anwendbar (Division durch null)', '✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)'])
   })
@@ -179,7 +188,8 @@ describe('Abweichungen der Vorlage von der DelVO: Hinweise in Warnfarbe', () => 
     expect(english('11_SRS_2Z_S', 'exclusion-reference-population')).toContain('Annex III, Tables 1 and 2')
     expect(english('11_SRS_2Z_S', 'annex-iii-approximation')).toContain('EGESIF_16-0014-01 (section 7.10.2)')
     expect(english('18_GFQ_AnhIII', 'replacement-precision-not-scaled')).toContain('Annex III, Table 2')
-    expect(english('18_GFQ_AnhIII', 'exclusion-location-missing')).toContain('1.44 % instead of 1.50 %')
+    expect(english('18_GFQ_AnhIII', 'exclusion-location-missing')).toContain('1.44 % in accordance with the Commission; as in the template 1.49 % without section C, 1.50 % with section C')
+    expect(english('05_MUS_2Z', 'anticipated-above-tolerable-standard')).toContain('standard recalculation')
   })
 
   it('allgemeine Auslegungen stehen am Blatt und reisen nicht mit; die übrigen Auslegungen reisen mit', async () => {

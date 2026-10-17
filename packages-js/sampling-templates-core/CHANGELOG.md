@@ -1,5 +1,32 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.10 – 2026-10-17
+
+Auflagen der Nachprüfung von 0.1.9 (Freigabe mit Auflagen; noch nicht
+veröffentlicht). Golden-Abgleich unverändert: 13.399 bewusst nach KOM,
+0 unbegründet.
+
+- B1: Blatt 18 erkennt die umfassende Schicht an n_e bzw. N_e und BV_e des
+  Methodenblatts (> 0, `hasExhaustiveStratum`), nicht mehr an EE_e – das liefern
+  die Methodenblätter auch ohne Schicht als 0. Ohne Schicht kein Hinweis
+  „nicht KOM-konform“; `replacement-precision-reduced` greift wieder
+  (Beispiel 08: 60.000 · 360/400 · 10/9,5 Mio. = 56.842,11 €).
+- B2: Plausibilität von Abschnitt F (neue Prüfzelle C39): A_e ≤ A, BV_A,e ≤ BV_A,
+  A_e ≤ N_e, BV_A,e ≤ BV_e, BV_e ≤ BV_u; bei Verstoß „✖ Eingabe unplausibel“,
+  Hinweis `location-implausible` mit Feldangabe, C24/C25 und Folgegrößen „—“.
+- B3: BV_e = BV_A,e (alle Einheiten der umfassenden Schicht berührt): keine
+  Division durch null; C24 „—“ mit Hinweis `exhaustive-all-affected` nach
+  Leitfaden 7.10.3.1 b.
+- B4: Texte berichtigt (Beispiel 7.10.3.4: nach KOM 1,44 %, wie die Vorlage
+  ohne Abschnitt C 1,49 %, mit C 1,50 %; Feldhinweis C25 je Zufallsschicht;
+  Näherungshinweis „ganze Grundgesamtheit“ ohne Lage; Kommentare zu AE = TE).
+  Die nicht mehr gebildeten Vorlagentexte „TE ≤ AE“ und „✖ TE ≤ AE: …“ haben
+  keine Übersetzung mehr.
+- B5: Standardneuberechnung bei AE > TE mit demselben EGESIF-Hinweis
+  (`anticipated-above-tolerable-standard[-3]`).
+- B6: Empfehlung des Leitfadens (4,0 % bei 2 % Schwelle) als Auslegung
+  gekennzeichnet; der Hinweis löst beim Doppelten der Signifikanzschwelle aus.
+
 ## 0.1.9 – 2026-10-17
 
 Entscheidung des Inhabers vom 17.10.2026: „Es gelten die Vorgaben der KOM“

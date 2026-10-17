@@ -10,7 +10,7 @@ export const WORKSPACE_FORMAT = 'flowaudit-stichprobe'
 /** Aktuelle Fassung des Dateiformats; ältere werden angehoben, neuere abgelehnt. */
 export const WORKSPACE_FORMAT_VERSION = 1
 /** Fassung des Rechenkerns (gleich der Paketversion); steht in jeder Datei. */
-export const ENGINE_VERSION = '0.1.9'
+export const ENGINE_VERSION = '0.1.10'
 /** Nachgebildete Vorlage. */
 export const TEMPLATE_NAME = 'Stichprobenvorlagen 2021–2027, Fassung 4'
 /** Rechtsstand der Vorlage. */

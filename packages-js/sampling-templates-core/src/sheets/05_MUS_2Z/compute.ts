@@ -97,7 +97,7 @@ const CHOSEN: Readonly<Record<ReturnType<typeof approachOf>, CellAddress>> = { s
 function finalSizes(c: Cells, pending: Pending, limit: number | null, context: SheetContext): void {
   const approach = approachOf(c.C26)
   c.C66 = guard(() => required(c.C34) + (approach === 'global' ? required(c.C62) : 0))
-  // Globaler Ansatz nach der DelVO nicht anwendbar (AE ≥ TE): Der Umfang für Zeitraum 2 bleibt offen, statt auf die Untergrenzen zu fallen.
+  // Globaler Ansatz bei AE = TE nicht anwendbar (Division durch null): Der Umfang für Zeitraum 2 bleibt offen, statt auf die Untergrenzen zu fallen.
   const blocked = approach === 'global' && blockedGlobal(c, 'C59', pending)
   c.C67 = appliedPeriodSize(c[CHOSEN[approach]], pending(CHOSEN[approach]) || blocked, context, () => minus(30, required(c.C66)))
   const total = (): number => required(c.C66) + required(c.C67)

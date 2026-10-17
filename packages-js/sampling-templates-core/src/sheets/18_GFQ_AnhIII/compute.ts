@@ -98,7 +98,7 @@ function assessment(c: Cells, context: SheetContext): CellValue {
 function totalErrorRate(c: Cells, context: SheetContext): void {
   c.C23 = guard(() => divide(required(c.C7) * required(c.C21), required(c.C22)))
   randomStratum(c, context)
-  c.C24 = adjustedError(c)
+  c.C24 = adjustedError(c, context)
   c.C25 = adjustedPrecision(c, context)
   c.C26 = guard(() => divide(plus(plus(required(c.C24), n(c.C9)), n(c.C10)), required(c.C14)))
   c.C27 = guard(() => required(c.C26) * required(c.C12))

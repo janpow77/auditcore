@@ -103,7 +103,7 @@ function secondSizes(c: Cells, run: Run): void {
   c.C72 = share(c.C51, c.C58, c.C70)
   c.C73 = share(c.C53, c.C58, c.C70)
   c.C74 = guard(() => roundUp(required(c.C37) * underestimationFactor(c.C51, c.C8, c.C52, c.C10)))
-  // Globaler Ansatz nach der DelVO nicht anwendbar (AE ≥ TE): Umfang offen statt Untergrenze.
+  // Globaler Ansatz bei AE = TE nicht anwendbar (Division durch null): Umfang offen statt Untergrenze.
   const blocked = run.approach === 'global' && blockedGlobal(c, 'C69', run.pending)
   c.C75 = appliedPeriodSize(c[PERIOD2[run.approach]], run.pending(PERIOD2[run.approach]) || blocked, run.context)
   c.C76 = c[PLANNED3[run.approach]] ?? null
