@@ -1,0 +1,59 @@
+{
+  "name": "@auditcore/sampling-templates-core",
+  "version": "0.1.3",
+  "description": "Framework-freier Kern der Webfassung der Stichprobenvorlagen 2021–2027 nach DelVO (EU) 2023/67: Rechenkerne je Blatt mit den Zelladressen der Vorlage, Methodendefinitionen, Arbeitsstand mit Prüfsumme und Excel-Austausch (MIT)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/sampling-templates-core"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/sampling-templates-core#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./workbook": {
+      "types": "./dist/xlsx/index.d.ts",
+      "import": "./dist/workbook.js"
+    },
+    "./style.css": "./styles/sampling-templates.css",
+    "./arbeitsstand.schema.json": "./schema/arbeitsstand.schema.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles",
+    "schema",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "docs:write": "SAMPLING_TEMPLATES_WRITE_DOCS=1 vitest run test/docs.spec.ts"
+  },
+  "dependencies": {
+    "@auditcore/common": "0.1.1",
+    "fflate": "^0.8.3"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

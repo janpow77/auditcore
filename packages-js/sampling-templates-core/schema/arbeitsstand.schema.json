@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/janpow77/auditcore/blob/main/packages-js/sampling-templates-core/schema/arbeitsstand.schema.json",
+  "title": "Arbeitsstand des Stichprobenrechners DelVO (EU) 2023/67",
+  "description": "Datei, die die Webfassung der Stichprobenvorlagen 2021–2027 speichert und wieder öffnet. Eingaben tragen die Zelladressen der Vorlage. Unbekannte Felder der obersten Ebene und des Kopfs werden beim Öffnen ignoriert und gemeldet.",
+  "type": "object",
+  "required": [
+    "format",
+    "formatVersion",
+    "rechenkern",
+    "vorlage",
+    "rechtsstand",
+    "gespeichertAm",
+    "kopf",
+    "aktiveMethode",
+    "blaetter",
+    "ergebnisse",
+    "pruefsumme"
+  ],
+  "properties": {
+    "format": {
+      "const": "flowaudit-stichprobe"
+    },
+    "formatVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "rechenkern": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Fassung des Rechenkerns, mit der gespeichert wurde."
+    },
+    "vorlage": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "rechtsstand": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "gespeichertAm": {
+      "type": "string",
+      "format": "date-time",
+      "maxLength": 2000
+    },
+    "kopf": {
+      "type": "object",
+      "properties": {
+        "programm": {
+          "$ref": "#/$defs/text"
+        },
+        "cci": {
+          "$ref": "#/$defs/text"
+        },
+        "geschaeftsjahr": {
+          "$ref": "#/$defs/text"
+        },
+        "bearbeitung": {
+          "$ref": "#/$defs/text"
+        },
+        "aktenzeichen": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "aktiveMethode": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/sheetId"
+        }
+      ]
+    },
+    "blaetter": {
+      "type": "object",
+      "maxProperties": 100,
+      "propertyNames": {
+        "$ref": "#/$defs/sheetId"
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/cells"
+          },
+          {
+            "type": "array",
+            "maxItems": 2000,
+            "items": {
+              "$ref": "#/$defs/row"
+            }
+          }
+        ]
+      }
+    },
+    "ergebnisse": {
+      "type": "object",
+      "maxProperties": 100,
+      "propertyNames": {
+        "$ref": "#/$defs/sheetId"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/cells"
+      },
+      "description": "Informativ; beim Öffnen wird immer neu gerechnet."
+    },
+    "pruefsumme": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "SHA-256 über die kanonisch sortierten Eingaben (kopf, aktiveMethode, blaetter). Zeitstempel, Rechenkern-Fassung, Ergebnisse und Hinweise gehen bewusst nicht ein: Dieselben Eingaben ergeben immer dieselbe Prüfsumme."
+    },
+    "hinweise": {
+      "type": "object",
+      "maxProperties": 100,
+      "propertyNames": {
+        "$ref": "#/$defs/sheetId"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "text"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/text"
+            },
+            "text": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        }
+      },
+      "description": "Informativ: Hinweise der Webfassung zum Zeitpunkt des Speicherns (z. B. „Keine Angabe, daher mit 0 berechnet“); beim Öffnen neu ermittelt."
+    }
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "sheetId": {
+      "type": "string",
+      "pattern": "^[0-9A-Za-z_]{1,40}$"
+    },
+    "value": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "maxLength": 2000
+        }
+      ]
+    },
+    "cells": {
+      "type": "object",
+      "maxProperties": 5000,
+      "propertyNames": {
+        "pattern": "^[A-Z]{1,3}[1-9][0-9]{0,3}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/value"
+      }
+    },
+    "row": {
+      "type": "object",
+      "maxProperties": 5000,
+      "propertyNames": {
+        "pattern": "^([A-Z]{1,3}[1-9][0-9]{0,3}|kennung)$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/value"
+      }
+    }
+  }
+}

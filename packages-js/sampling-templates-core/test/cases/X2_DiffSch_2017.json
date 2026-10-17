@@ -1,0 +1,392 @@
+[
+ {
+  "name": "Standardfall, Konfidenzniveau 90 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Konfidenzniveau 60 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.6,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Konfidenzniveau 70 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.7,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Konfidenzniveau 80 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.8,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Konfidenzniveau 95 %",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.95,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Leeres Formular",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {}
+ },
+ {
+  "name": "Alles ausgefüllt außer C1",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C3",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C4",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C5",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C7",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C13",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Alles ausgefüllt außer C15",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000
+  }
+ },
+ {
+  "name": "Ohne Stichprobeneinheit und Ausgaben der Stichprobe (C2, C12 werden nicht gelesen)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Nur Planung ausgefüllt, Prüfergebnisse leer",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005
+  }
+ },
+ {
+  "name": "Nur Buchwert ausgefüllt",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000
+  }
+ },
+ {
+  "name": "TE = AE (erwartete Fehlerquote 2 %): Nenner null",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.02,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Knapp unter TE = AE (1,99 %)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.0199,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Knapp über TE = AE (2,01 %): negativer Nenner wird quadriert",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.0201,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang unter 30: Mindestumfang 30",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 2500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang genau 100 (95 %)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 1960000,
+   "C2": "Vorhaben",
+   "C3": 100,
+   "C4": 1000,
+   "C5": 0.95,
+   "C7": 0.01,
+   "C12": 400000,
+   "C13": 2500,
+   "C15": 310
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang genau 30",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 1000000,
+   "C2": "Vorhaben",
+   "C3": 100,
+   "C4": 547.722557505166,
+   "C5": 0.95,
+   "C7": 0.0004,
+   "C12": 300000,
+   "C13": 900,
+   "C15": 120
+  }
+ },
+ {
+  "name": "Rechnerischer Umfang knapp über 30: 31",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 1000000,
+   "C2": "Vorhaben",
+   "C3": 100,
+   "C4": 548,
+   "C5": 0.95,
+   "C7": 0.0004,
+   "C12": 300000,
+   "C13": 900,
+   "C15": 120
+  }
+ },
+ {
+  "name": "Erwartete Fehlerquote 0 eingetragen",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Keine Fehler in der Stichprobe (Nullen eingetragen)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 0,
+   "C15": 0
+  }
+ },
+ {
+  "name": "Buchwert 0: Division durch null",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 0,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Umfang der Grundgesamtheit 0",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 0,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": 38000,
+   "C15": 2900
+  }
+ },
+ {
+  "name": "Fehler zugunsten des Haushalts überwiegen (negativer Stichprobenfehler)",
+  "blatt": "X2_DiffSch_2017",
+  "eingaben": {
+   "C1": 48500000,
+   "C2": "Vorhaben",
+   "C3": 420,
+   "C4": 9500,
+   "C5": 0.9,
+   "C7": 0.005,
+   "C12": 9200000,
+   "C13": -12500,
+   "C15": 2900
+  }
+ }
+]
