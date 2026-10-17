@@ -1,0 +1,194 @@
+[
+ {
+  "name": "Variante 1: Standardfall",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel-Vorhaben A",
+   "C6": 250000,
+   "C7": 140,
+   "C10": 30,
+   "C11": 61000,
+   "C12": 915
+  }
+ },
+ {
+  "name": "Variante 1: mit umfassend geprüften Unterstichprobeneinheiten",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel B",
+   "C6": 980000,
+   "C7": 320,
+   "C8": 410000,
+   "C9": 12400,
+   "C10": 25,
+   "C11": 88000,
+   "C12": 2310.5
+  }
+ },
+ {
+  "name": "Variante 1: ohne Fehler",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel C",
+   "C6": 120000,
+   "C7": 60,
+   "C10": 20,
+   "C11": 45000,
+   "C12": 0
+  }
+ },
+ {
+  "name": "Variante 1: nur umfassend geprüfte Einheiten mit Fehler, Zufallsteil ohne Fehlerangabe",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel D",
+   "C6": 300000,
+   "C7": 90,
+   "C8": 150000,
+   "C9": 7000,
+   "C10": 15,
+   "C11": 52000
+  }
+ },
+ {
+  "name": "Variante 2: Standardfall PPS",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel E",
+   "C6": 640000,
+   "C7": 210,
+   "C15": 30,
+   "C21": 0.84
+  }
+ },
+ {
+  "name": "Variante 2: mit hochwertigen Unterstichprobeneinheiten",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel F",
+   "C6": 1500000,
+   "C7": 400,
+   "C15": 40,
+   "C17": 6,
+   "C18": 520000,
+   "C19": 18300,
+   "C21": 1.27
+  }
+ },
+ {
+  "name": "Variante 2: alle Unterstichprobeneinheiten hochwertig (m = m_e)",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel G",
+   "C6": 800000,
+   "C7": 12,
+   "C15": 12,
+   "C17": 12,
+   "C18": 800000,
+   "C19": 4100,
+   "C21": 0
+  }
+ },
+ {
+  "name": "Variante 2: ohne Fehler",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel H",
+   "C6": 410000,
+   "C7": 95,
+   "C15": 30,
+   "C17": 2,
+   "C18": 90000,
+   "C19": 0,
+   "C21": 0
+  }
+ },
+ {
+  "name": "Beide Varianten ausgefüllt",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel I",
+   "C6": 520000,
+   "C7": 180,
+   "C8": 60000,
+   "C9": 900,
+   "C10": 30,
+   "C11": 70000,
+   "C12": 1400,
+   "C15": 35,
+   "C17": 3,
+   "C18": 140000,
+   "C19": 2600,
+   "C21": 0.66
+  }
+ },
+ {
+  "name": "Fehler über dem Buchwert der Unterstichprobe (Fehlerquote über 100 %)",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel J",
+   "C6": 90000,
+   "C7": 40,
+   "C10": 10,
+   "C11": 20000,
+   "C12": 26000
+  }
+ },
+ {
+  "name": "Leeres Formular",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {}
+ },
+ {
+  "name": "Teilweise: nur Kennung und Buchwert",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel K",
+   "C6": 250000
+  }
+ },
+ {
+  "name": "Teilweise: Variante 1 ohne Buchwert der Stichprobeneinheit",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel L",
+   "C7": 140,
+   "C10": 30,
+   "C11": 61000,
+   "C12": 915
+  }
+ },
+ {
+  "name": "Teilweise: Variante 1 ohne Summe der Buchwerte der Unterstichprobe",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel M",
+   "C6": 250000,
+   "C7": 140,
+   "C10": 30,
+   "C12": 915
+  }
+ },
+ {
+  "name": "Teilweise: Variante 2 ohne Umfang der Unterstichprobe",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel N",
+   "C6": 640000,
+   "C7": 210,
+   "C21": 0.84
+  }
+ },
+ {
+  "name": "Teilweise: Variante 2 ohne Buchwert der Stichprobeneinheit",
+  "blatt": "17_Unterstichprobe",
+  "eingaben": {
+   "C5": "Beispiel O",
+   "C15": 30,
+   "C17": 2,
+   "C18": 90000,
+   "C19": 500,
+   "C21": 0.84
+  }
+ }
+]

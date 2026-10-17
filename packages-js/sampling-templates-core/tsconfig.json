@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "types": ["node"],
+    "paths": {
+      "@auditcore/common": ["../common/src/index.ts"],
+      "@auditcore/common/browser": ["../common/src/browser.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "vite.config.ts", "vitest.config.ts"]
+}

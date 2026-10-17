@@ -1,0 +1,915 @@
+[
+ {
+  "name": "Standardfall: N = 180, umfassende Schicht mit vier Einheiten",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "N = 299: knapp unter der Schwelle des Art. 79 Abs. 2",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 299,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 30,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "N = 300: genau auf der Schwelle (nur im Fall des Art. 6 Abs. 3)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 300,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 30,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "N = 301: knapp über der Schwelle",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 301,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 30,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "N = 450: Wechsel nach Art. 6 Abs. 3",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 450,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 45,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Mindesterfassung genau erreicht (18 von 180)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 14,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Mindesterfassung knapp verfehlt (17 von 180)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 13,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Mindesterfassung aufgerundet: N = 181 verlangt 19 Einheiten, 19 geprüft",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 181,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 15,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Mindesterfassung aufgerundet: N = 181 verlangt 19 Einheiten, 18 geprüft",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 181,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 14,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Mindesterfassung bei N = 30 (0,1 · 30 ist im Gleitkomma knapp über 3)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 30,
+   "C10": 620000,
+   "C11": 0,
+   "C13": 3,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Mindesterfassung bei N = 70 (0,1 · 70 ist im Gleitkomma knapp über 7)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 70,
+   "C10": 620000,
+   "C11": 1,
+   "C13": 6,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Mindesterfassung bei N = 290, eine Einheit zu wenig",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 290,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 24,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Ohne umfassende Schicht",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Umfassende Schicht mit 0 angegeben",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 0,
+   "C11": 0,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 0,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Systembedingte und anomale Fehler",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 18000,
+   "C24": 4200,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Nur systembedingte Fehler",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 18000,
+   "C24": null,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Nur anomale Fehler",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": null,
+   "C24": 4200,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Gesamtfehlerquote genau auf der Wesentlichkeitsschwelle (2,00 %)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 1000000,
+   "C8": 100,
+   "C13": 12,
+   "C17": 100000,
+   "C18": 2000,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Gesamtfehlerquote knapp über der Wesentlichkeitsschwelle",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 1000000,
+   "C8": 100,
+   "C13": 12,
+   "C17": 100000,
+   "C18": 2000.01,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Gesamtfehlerquote knapp unter der Wesentlichkeitsschwelle",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 1000000,
+   "C8": 100,
+   "C13": 12,
+   "C17": 100000,
+   "C18": 1999.99,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Gesamtfehlerquote über der Schwelle durch systembedingte Fehler",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 1000000,
+   "C8": 100,
+   "C13": 12,
+   "C17": 100000,
+   "C18": 1500,
+   "C23": 9000,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Gesamtfehlerquote deutlich über der Wesentlichkeitsschwelle",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 31000,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Wesentlichkeitsschwelle 1 %: Gesamtfehlerquote darüber",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 9500,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.01
+  }
+ },
+ {
+  "name": "Keine Fehler festgestellt (Σ E = 0)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 0,
+   "C19": 0,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Fehler der umfassenden Schicht und der Zufallsschicht heben sich auf",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 1000000,
+   "C8": 100,
+   "C13": 12,
+   "C17": 100000,
+   "C18": -100,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02,
+   "C10": 0,
+   "C11": 0,
+   "C19": 1000
+  }
+ },
+ {
+  "name": "Umfassende Schicht umfasst die gesamte Grundgesamtheit (BV_s = 0)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 4850000,
+   "C11": 180,
+   "C13": 0,
+   "C17": 0,
+   "C18": 0,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Summe der Buchwerte der Stichprobe = 0 (Division durch null)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 0,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Leeres Formular (nur Vorgaben der Vorlage)",
+  "blatt": "13_NS_GW",
+  "eingaben": {}
+ },
+ {
+  "name": "Leeres Formular, Wesentlichkeitsschwelle geleert",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C27": null
+  }
+ },
+ {
+  "name": "Teilweise: nur Grundgesamtheit",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180
+  }
+ },
+ {
+  "name": "Teilweise: nur die Anzahl der Einheiten (N ≥ 300)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C8": 320
+  }
+ },
+ {
+  "name": "Teilweise: Grundgesamtheit und Stichprobe, noch keine Prüfergebnisse",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: umfassende Schicht ohne Umfang der Zufallsstichprobe",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer dem Buchwert der Grundgesamtheit",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer der Anzahl der Einheiten",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer Buchwert und Anzahl der Einheiten",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer dem Umfang der Zufallsstichprobe",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer der Summe der Buchwerte der Stichprobe",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer der Summe der Fehler der Stichprobe",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer den Fehlern der umfassenden Schicht",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: alles ausgefüllt außer systembedingten und anomalen Fehlern",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Teilweise: Wesentlichkeitsschwelle geleert, sonst vollständig",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4850000,
+   "C8": 180,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": null
+  }
+ },
+ {
+  "name": "Buchwert und Anzahl aus Blatt 02 übernommen (Verknüpfung)",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "02_Grundgesamtheit!C9": "Beispiel-CCI",
+   "02_Grundgesamtheit!C10": "EFRE",
+   "02_Grundgesamtheit!C12": "2025/2026",
+   "02_Grundgesamtheit!C15": 4920000,
+   "02_Grundgesamtheit!C16": 4920000,
+   "02_Grundgesamtheit!C20": 70000,
+   "02_Grundgesamtheit!C21": "Ja",
+   "02_Grundgesamtheit!C23": 232,
+   "02_Grundgesamtheit!C24": 220,
+   "02_Grundgesamtheit!C25": 4850000,
+   "02_Grundgesamtheit!C26": 12,
+   "02_Grundgesamtheit!C27": 0,
+   "02_Grundgesamtheit!C36": "Ja",
+   "02_Grundgesamtheit!C40": 40000,
+   "02_Grundgesamtheit!C49": "keine betroffenen Einheiten",
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Blatt 02 ausgefüllt, Buchwert im Methodenblatt überschrieben",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "02_Grundgesamtheit!C9": "Beispiel-CCI",
+   "02_Grundgesamtheit!C10": "EFRE",
+   "02_Grundgesamtheit!C12": "2025/2026",
+   "02_Grundgesamtheit!C15": 4920000,
+   "02_Grundgesamtheit!C16": 4920000,
+   "02_Grundgesamtheit!C20": 70000,
+   "02_Grundgesamtheit!C21": "Ja",
+   "02_Grundgesamtheit!C23": 232,
+   "02_Grundgesamtheit!C24": 220,
+   "02_Grundgesamtheit!C25": 4850000,
+   "02_Grundgesamtheit!C26": 12,
+   "02_Grundgesamtheit!C27": 0,
+   "02_Grundgesamtheit!C36": "Ja",
+   "02_Grundgesamtheit!C40": 40000,
+   "02_Grundgesamtheit!C49": "keine betroffenen Einheiten",
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C7": 4700000,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Blatt 02 ausgefüllt, Anzahl im Methodenblatt überschrieben",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "02_Grundgesamtheit!C9": "Beispiel-CCI",
+   "02_Grundgesamtheit!C10": "EFRE",
+   "02_Grundgesamtheit!C12": "2025/2026",
+   "02_Grundgesamtheit!C15": 4920000,
+   "02_Grundgesamtheit!C16": 4920000,
+   "02_Grundgesamtheit!C20": 70000,
+   "02_Grundgesamtheit!C21": "Ja",
+   "02_Grundgesamtheit!C23": 232,
+   "02_Grundgesamtheit!C24": 220,
+   "02_Grundgesamtheit!C25": 4850000,
+   "02_Grundgesamtheit!C26": 12,
+   "02_Grundgesamtheit!C27": 0,
+   "02_Grundgesamtheit!C36": "Ja",
+   "02_Grundgesamtheit!C40": 40000,
+   "02_Grundgesamtheit!C49": "keine betroffenen Einheiten",
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C8": 210,
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Blatt 02 mit Ausschluss nach Art. 80 Abs. 3: angepasste Grundgesamtheit fließt ein",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "02_Grundgesamtheit!C9": "Beispiel-CCI",
+   "02_Grundgesamtheit!C10": "EFRE",
+   "02_Grundgesamtheit!C12": "2025/2026",
+   "02_Grundgesamtheit!C15": 4920000,
+   "02_Grundgesamtheit!C16": 4920000,
+   "02_Grundgesamtheit!C20": 70000,
+   "02_Grundgesamtheit!C21": "Ja",
+   "02_Grundgesamtheit!C23": 232,
+   "02_Grundgesamtheit!C24": 220,
+   "02_Grundgesamtheit!C25": 4850000,
+   "02_Grundgesamtheit!C26": 12,
+   "02_Grundgesamtheit!C27": 0,
+   "02_Grundgesamtheit!C36": "Ja",
+   "02_Grundgesamtheit!C40": 40000,
+   "02_Grundgesamtheit!C49": "Ausschluss (Art. 3 Abs. 6 Buchst. b)",
+   "02_Grundgesamtheit!C42": 11,
+   "02_Grundgesamtheit!C43": 125000,
+   "C4": "Beispiel – EFRE-Programm",
+   "C5": "2025/2026",
+   "C6": "Vorhaben",
+   "C10": 620000,
+   "C11": 4,
+   "C13": 22,
+   "C17": 640000,
+   "C18": 5300,
+   "C19": 1200,
+   "C23": 0,
+   "C24": 0,
+   "C27": 0.02
+  }
+ },
+ {
+  "name": "Blatt 02 ausgefüllt, Methodenblatt sonst leer",
+  "blatt": "13_NS_GW",
+  "eingaben": {
+   "02_Grundgesamtheit!C9": "Beispiel-CCI",
+   "02_Grundgesamtheit!C10": "EFRE",
+   "02_Grundgesamtheit!C12": "2025/2026",
+   "02_Grundgesamtheit!C15": 4920000,
+   "02_Grundgesamtheit!C16": 4920000,
+   "02_Grundgesamtheit!C20": 70000,
+   "02_Grundgesamtheit!C21": "Ja",
+   "02_Grundgesamtheit!C23": 232,
+   "02_Grundgesamtheit!C24": 220,
+   "02_Grundgesamtheit!C25": 4850000,
+   "02_Grundgesamtheit!C26": 12,
+   "02_Grundgesamtheit!C27": 0,
+   "02_Grundgesamtheit!C36": "Ja",
+   "02_Grundgesamtheit!C40": 40000,
+   "02_Grundgesamtheit!C49": "keine betroffenen Einheiten"
+  }
+ }
+]

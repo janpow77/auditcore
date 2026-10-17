@@ -1,0 +1,955 @@
+# Abweichungen vom Verhalten der Vorlage
+
+Die Rechenkerne bilden die Formeln der Excel-Vorlage Zelle für Zelle nach.
+Rundung, Schwellen und Rechenreihenfolge sind unverändert; für vollständig
+ausgefüllte Blätter stimmen alle Formelzellen mit der Vorlage überein
+([abgleich.md](abgleich.md)). Abweichungen gibt es nur an den hier genannten
+Stellen. Es gilt durchgehend:
+
+> Die Webfassung zeigt nie einen anderen Wert als die Vorlage. Sind alle
+> Pflichteingaben vorhanden, zeigt sie **immer**, was die Vorlage zeigt. Nur
+> solange eine Eingabe fehlt, zeigt sie an manchen Stellen **keinen** Wert, wo
+> die Vorlage einen zeigt.
+
+Einzige Ausnahme im Wert: Kopf- und Fußzeile des Berichts (Nr. 12). Fragwürdige
+Ergebnisse der Vorlage unterdrückt die Webfassung nicht; sie zeigt sie mit
+einem Hinweis in Warnfarbe, und eine bestandene Würdigung steht dann nicht
+uneingeschränkt grün da (Nr. 13).
+
+## 1. Fehlende Angaben: die Richtlinie und ihre zwei Varianten
+
+Excel behandelt eine leere Zelle in einer Rechnung als 0. Die Vorlage zeigt
+deshalb bei unvollständig ausgefüllten Blättern Werte, die wie Ergebnisse
+aussehen – einen Stichprobenumfang von 30, solange die voraussichtliche
+Standardabweichung fehlt, oder die Würdigung „✔ GFQ und obere Fehlergrenze
+unter der Schwelle“ bei „TE ≤ AE“, obwohl es keine Stichprobe gibt.
+
+Was die Webfassung in diesen Fällen zeigt, steht an **einer** Stelle:
+`src/model/policy.ts`, Konstante `MISSING_POLICY`. Die Blätter kennen nur die
+Fallart; die Anzeige entscheidet `evaluateSheet` (`src/model/evaluate.ts`)
+anhand dieser Tabelle. Zum Umstellen wird dort ein Wert geändert, kein Blatt.
+
+| Fallart | Bedeutung | geltend (vorläufige Vorgabe) | Alternative |
+|---|---|---|---|
+| `requiredInput` | Eine Pflichteingabe fehlt, die Vorlage rechnet mit 0 weiter (Buchwert, Anzahl, Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung, Umfänge, Angaben der Planung und der Neuberechnung). | `missing`: „Angabe fehlt“, die fehlende Eingabe wird genannt | `zero`: wie die Vorlage mit 0 gerechnet, an jedem betroffenen Wert „Keine Angabe, daher mit 0 berechnet.“ |
+| `sampleDeviation` | Die Standardabweichung der Stichprobe (s_r, s_q, s der Differenzen) fehlt in der Auswertung; ohne sie ist nur die Genauigkeit 0. | `zero` (vom Auftraggeber entschieden) | `missing` |
+| `partialErrorSum` | Die Fehlersumme bzw. Summe der Fehlerquoten einer von mehreren belegten Schichten oder eines von mehreren Zeiträumen fehlt, eine andere ist eingetragen; die Vorlage zeigt ein Ergebnis. | `zero`, ausgewiesen wie oben | `missing` |
+| `withoutBasis` | Die Vorlage zeigt einen Wert ohne Grundlage: einen bestandenen Prüfhinweis („✔“), obwohl die geprüfte Größe fehlt, die Summe 0 über Schichten ohne Wert samt allem, was darauf aufbaut, oder die Untergrenze 3 als Umfang, wenn die Standardneuberechnung nicht anwendbar ist. | `open`, **aber nur, solange eine Pflichteingabe fehlt**; sind alle Pflichteingaben vorhanden, wie die Vorlage mit Hinweis in Warnfarbe | `template`: immer wie die Vorlage |
+
+**Verbindliche Regel zu `withoutBasis`** (Entscheidung des Auftraggebers nach
+der Gesamtabnahme): Sind alle Pflichteingaben vorhanden, zeigt die Webfassung
+immer, was die Vorlage zeigt – einheitlich in allen Blättern, auch in 05, 06,
+07, 10, 11 und 12 bei nicht anwendbarer Standardneuberechnung und in den
+geschichteten Blättern bei „TE ≤ AE“. Die so gezeigten Zellen führt
+`evaluateSheet` in `withoutBasis`; die Ergebnisspalte nennt sie im Hinweis
+„Wie in der Vorlage gezeigt, obwohl die Grundlage fehlt: … Das Ergebnis ist
+nicht belastbar“, und die Würdigung trägt den Zusatz „Nicht uneingeschränkt:
+siehe Hinweise der Webfassung“. Offen bleibt ein Wert ohne Grundlage
+ausschließlich, solange eine Pflichteingabe fehlt. Pflichteingaben sind die
+Eingaben, die das Blatt in der Tabelle unten als Auslöser einer Abweichung
+der Fallart `requiredInput` nennt (bei Schichtzeilen nur für belegte
+Schichten); der Abgleich mit einem leeren Blatt 02 zählt nicht dazu. Geprüft
+ist die Regel als Eigenschaft über alle Blätter (`test/properties.spec.ts`):
+In keiner vollständigen Zufallsbelegung ist eine Zelle offen, die in der
+Vorlage einen Wert hat.
+
+Nicht ausgewiesen wird, was fachlich „keine“ bedeutet: abgegrenzte
+systembedingte und nicht berichtigte anomale Fehler sowie die Angaben der
+hochwertigen Einheiten bzw. der umfassenden Schicht, solange dort gar nichts
+eingetragen ist. Sie zählen wie in der Vorlage 0. Ist die Schicht dagegen
+erklärt (Anzahl oder Buchwert eingetragen) und fehlt ihre Fehlersumme, weist
+die Webfassung das aus (Nr. 13).
+
+**Folgen der beiden Grundsatzvarianten** für fehlende Pflichteingaben:
+
+- *Geltend („Angabe fehlt“):* Ein unvollständiges Blatt zeigt keine
+  Scheinergebnisse; die Ergebnisspalte nennt, welche Eingabe fehlt. Dafür
+  weicht die Anzeige bei Teilbelegungen von einer daneben geöffneten Vorlage
+  ab (dort stehen Zahlen). Der Abgleich weist diese Zellen als „begründet“ aus.
+- *Variante „mit 0 berechnet“* (`TEMPLATE_POLICY`: alle vier Fallarten wie die
+  Vorlage): Die Webfassung zeigt in jeder Zelle genau den Wert der Vorlage,
+  auch den Stichprobenumfang 30 ohne Standardabweichung und die grüne
+  Würdigung ohne Stichprobe; jeder so entstandene Wert trägt den Hinweis
+  „Keine Angabe, daher mit 0 berechnet: …“ in Warnfarbe, ebenso Ergebnisspalte,
+  Export, Arbeitsstand und Bericht. Diese Variante ist für jedes Blatt und
+  jeden Fall des Abgleichs geprüft (`test/policy.spec.ts`; Spalte „wie die
+  Vorlage“ in [abgleich.md](abgleich.md): 0 Abweichungen).
+- Mischformen sind möglich (z. B. nur `withoutBasis: 'template'`).
+
+Was die Blätter dafür tun:
+
+- Pflichteingabe: Der Rechenkern verlangt sie (`required`) und liefert sonst
+  `null`; die Zelle steht in `src/sheets/<Blatt>/deviations.ts` mit den
+  auslösenden Eingaben. Der Abgleich lässt die Abweichung nur zu, wenn die
+  Gegenprobe stimmt: Mit 0 statt der leeren Eingaben liefert der Rechenkern
+  den Wert der Vorlage.
+- Mit 0 gerechnete Eingabe: Der Rechenkern rechnet wie die Vorlage; das Blatt
+  meldet Eingabe und betroffene Zellen über `zeroAssumed`.
+- Wert ohne Grundlage: Der Rechenkern gibt den Wert der Vorlage über
+  `unfounded(context, wert)` bzw. `totalRow(…)` zurück; die Zelle steht mit
+  `kind: 'withoutBasis'` in den Abweichungen. `evaluateSheet` rechnet bei
+  vollständigen Pflichteingaben mit dem Wert der Vorlage und kennzeichnet ihn,
+  sonst bleibt er offen. Gegenprobe: Unter `TEMPLATE_POLICY` liefert der
+  Rechenkern den Wert der Vorlage.
+
+Jede Zeile der folgenden Tabelle ist durch mindestens einen Golden-Fall belegt
+(`test/deviations.spec.ts`): entweder bleibt die Zelle in einem Fall begründet
+offen, oder – bei Werten ohne Grundlage – ein Fall zeigt sie bei vollständigen
+Pflichteingaben wie die Vorlage. Bei Schichtzeilen genügt der Beleg in einer
+Schichtspalte, die Abweichung gilt für alle bis zu 20 Schichten. In der
+Spalte „Webfassung zeigt“ steht, was gilt, solange eine Eingabe fehlt.
+
+Wo die Vorlage bei fehlenden Angaben `""` zeigt, liefert die Webfassung
+ebenfalls `null`; das ist keine Abweichung.
+
+<!-- abweichungen:start – erzeugt mit `npm run docs:write`, nicht von Hand ändern -->
+
+### 02_Grundgesamtheit
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C17 | C15, C16 | Differenz gegen 0 (leere Zelle zählt als 0) | Angabe fehlt | Ohne den Betrag laut SFC2021 bzw. laut Datenbestand gibt es nichts abzustimmen; eine Differenz gegen 0 wäre irreführend. |
+| C22, C30 | C16 | Betrag bzw. Differenz auf Grundlage von 0 € | Angabe fehlt | Ohne den Betrag laut SFC2021 bzw. laut Datenbestand gibt es nichts abzustimmen; eine Differenz gegen 0 wäre irreführend. |
+| C37, C39, C51 | C25 | 0 € bzw. nur die TH-Pauschale | Angabe fehlt | Ohne die Datensätze mit positivem Wert ist die Grundgesamtheit unbekannt, nicht null. |
+| C38, C52 | C24 | 0 Einheiten | Angabe fehlt | Ohne die Datensätze mit positivem Wert ist die Grundgesamtheit unbekannt, nicht null. |
+| C53, C54 | C24 | Prüfhinweis und Mindestumfang auf Grundlage von 0 Einheiten abzüglich der Abzüge (bei vorhandenen Abzügen eine negative Anzahl, z. B. „✔ weniger als 300 Einheiten“ und Mindestumfang −1) | Angabe fehlt | Ohne die Datensätze mit positivem Wert ist die Grundgesamtheit unbekannt, nicht null. |
+
+### 03_MUS_1Z
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C7, N4 | C7 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis von 0 € wäre irreführend. |
+| C8 | C8 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Angabe ist der Umfang der Grundgesamtheit unbekannt, nicht null. |
+| C16 | C7, C14 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt Buchwert und Wesentlichkeitsschwelle voraus. |
+| C18 | C7, C17 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt Buchwert und voraussichtliche Fehlerquote voraus. |
+| C31 | C7 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis von 0 € wäre irreführend. |
+| C21 | C17, C20 | Umfang mit AE = 0 bzw. σ_r = 0 (z. B. 0 oder 39) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C27, N10 | C17, C20 | Mindestumfang 30 bzw. der mit AE = 0 berechnete Umfang | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C28, C34, C41, C42, C43, C46, C47, N5, N7 | C7, C17, C20 | Wert auf Grundlage des mit 0 gerechneten Buchwerts bzw. Umfangs (bei leerem Buchwert auch negative Beträge) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C32, C33, C48, C49, C50, C51, C52, N11 | C17, C20 | Wert auf Grundlage des mit AE = 0 bzw. σ_r = 0 berechneten Umfangs | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C41 | C38 | 0,00 € (die Fehlersumme der Stichprobe fehlt; N(…) zählt sie als 0) | kein Wert | Ohne Fehlersumme der Stichprobe gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 04_MUS_1Z_S
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C9, C25, C52, N4 | D9–J9, AA9–AM9 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C10 | D10–J10, AA10–AM10 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C35, N10 | D35–J35, AA35–AM35 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C37 | D37–J37, AA37–AM37 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C38 | D38–J38, AA38–AM38 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C39 | D39–J39, AA39–AM39 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C40 | D40–J40, AA40–AM40 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C43 | D43–J43, AA43–AM43 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C45 | D45–J45, AA45–AM45 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C46 | D46–J46, AA46–AM46 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C49 | D49–J49, AA49–AM49 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C50 | D50–J50, AA50–AM50 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C51 | D51–J51, AA51–AM51 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C11, C19, C21 | C9 | 0 € (Summe der Buchwerte ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| N6 | C49 | 0 € (Summe ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C53, C57, C58, C60, C61, C62, C63, N5, N11 | C51 | Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine Schicht einen Stichprobenumfang hat (z. B. bei „TE ≤ AE“) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C11 | 02_Grundgesamtheit!C51 | Summe der Schichten abzüglich 0 € (leeres Blatt 02) | Angabe fehlt | Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen. |
+| C19 | C17 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus. |
+| C21 | C20 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus. |
+| D25–J25, AA25–AM25 | D24–J24, AA24–AM24 | 0 (σ_rh einer belegten Schicht zählt als 0) | Angabe fehlt | Fehlt die Standardabweichung einer belegten Schicht, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C25, C26 | D24–J24, AA24–AM24 | Wert ohne den Beitrag der Schicht mit fehlender Standardabweichung | Angabe fehlt | Fehlt die Standardabweichung einer belegten Schicht, ist die gewichtete Standardabweichung nicht bestimmt. |
+| D41–J41, AA41–AM41 | D40–J40, AA40–AM40 | „✔ ≥ 3“ (Excel wertet die leere Textzelle im Vergleich größer als jede Zahl) | kein Wert | Ohne Einheiten der Zufallsschicht gibt es nichts zu prüfen; ein bestandener Prüfhinweis wäre irreführend. |
+| C27, C33, C35, C40, C50, C51, C52, C53, C54, C57, C58, C59, C60, C61, C62, C63, N5, N7, N10, N11 | C20, D24–J24, AA24–AM24 | Wert auf Grundlage des mit AE = 0 bzw. σ_rh = 0 berechneten Umfangs (mindestens 30) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| D35–J35, AA35–AM35, D36–J36, AA36–AM36, D40–J40, AA40–AM40, D41–J41, AA41–AM41, D42–J42, AA42–AM42, D50–J50, AA50–AM50, D51–J51, AA51–AM51, D52–J52, AA52–AM52 | C20, D24–J24, AA24–AM24 | Wert auf Grundlage des mit AE = 0 bzw. σ_rh = 0 berechneten Umfangs (mindestens 30) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+
+### 05_MUS_2Z
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C11 | C7, C8 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C19 | C7, C8, C17 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der zulässige Fehler setzt beide Buchwerte und die Wesentlichkeitsschwelle voraus. |
+| C21 | C7, C8, C20 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der voraussichtliche Fehler setzt beide Buchwerte und die voraussichtliche Fehlerquote voraus. |
+| C22 | C7, C8 | Prüfhinweis auf Grundlage nur eines Buchwerts | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C25 | C7, C8, C23, C24 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Die gewichtete Standardabweichung setzt Buchwert und Standardabweichung beider Zeiträume voraus. |
+| C27, C33, C34, C35, C40, C41, C42 | C7, C8, C20, C23, C24 | Wert auf Grundlage des mit 0 gerechneten Buchwerts, AE = 0 bzw. σ_r = 0 (Gesamtumfang mindestens 30) | Angabe fehlt | Ohne Buchwerte, voraussichtliche Fehlerquote und Standardabweichungen beider Zeiträume ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C36 | C8, C20, C23, C24 | Wert auf Grundlage des mit 0 gerechneten Buchwerts, AE = 0 bzw. σ_r = 0 (Gesamtumfang mindestens 30) | Angabe fehlt | Ohne Buchwerte, voraussichtliche Fehlerquote und Standardabweichungen beider Zeiträume ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C39 | C7 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C52, N4 | C7, C48 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C53 | C7, C17, C48 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte zulässige Fehler setzt beide Ist-Buchwerte und die Wesentlichkeitsschwelle voraus. |
+| C54 | C7, C20, C48 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte voraussichtliche Fehler setzt beide Ist-Buchwerte und eine voraussichtliche Fehlerquote voraus. |
+| C55 | C23 | 0,0000 (leere Zelle zählt als 0) | Angabe fehlt | Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für Zeitraum 1. |
+| C56 | C8, C20, C23, C24, C48 | Nenner auf Grundlage des mit 0 gerechneten Werts | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des zweiten Zeitraums ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C57 | C8, C20, C23, C24, C48, C50 | Wert auf Grundlage von BV₂ = 0 bzw. σ_r2 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des zweiten Zeitraums ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C58 | C7, C23, C48, C50 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des zweiten Zeitraums ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C59, C60, C61, C63 | C7, C17, C20, C23, C48, C50 | Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des zweiten Zeitraums ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C64 | C8, C48 | Faktor 1 bzw. der Faktor allein aus dem Verhältnis der Anzahlen (ein leerer Buchwert zählt als 0) | Angabe fehlt | Der Faktor der Unterschätzung vergleicht den Ist-Buchwert des zweiten Zeitraums mit seiner Prognose; ohne beide ist die Erhöhung nicht bestimmt. |
+| C65 | C7, C8, C20, C23, C24, C48 | geplanter Umfang mal Faktor 1 bzw. mal dem Faktor allein aus dem Verhältnis der Anzahlen | Angabe fehlt | Der Faktor der Unterschätzung vergleicht den Ist-Buchwert des zweiten Zeitraums mit seiner Prognose; ohne beide ist die Erhöhung nicht bestimmt. |
+| C73 | C48 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C62, C66, C67, C68, C69, C70, C74, C75, C76, C79, C84, C85, C86, C89, C90, C91, C92, C93, C94, C95, N5, N7, N10, N11 | C7, C8, C20, C23, C24, C48, C50 | Wert auf Grundlage von BV₂ = 0 bzw. σ_r2 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne die Angaben zum Gesamtumfang und zur Neuberechnung für Zeitraum 2 sind die endgültigen Umfänge nicht bestimmt; Auswahl, Hochrechnung und Würdigung bleiben offen. |
+| C33 | C27 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
+| C60 | C59 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
+| C34, C35, C36, C40, C41, C42, C56, C57, C61, C62, C63, C65, C66, C67, C79, C68, C69, C70, C74, C75, C76, C84, C85, C86, C89, C90, C91, C92, C93, C94, C95, N5, N7, N10, N11 | C27, C59 | Wert auf Grundlage eines begrenzten Umfangs, den kein rechnerischer Umfang trägt | kein Wert | Der Wert baut auf dem begrenzten Umfang auf; ohne rechnerischen Umfang ist er nicht bestimmt. |
+| C67 | C67 | Untergrenze 3 bzw. Auffüllung auf 30 (MAX übergeht den Text bzw. die leere Zelle des gewählten Umfangs) | kein Wert | Liefert der gewählte Ansatz keinen Umfang für Zeitraum 2, gibt es nichts, was die Untergrenzen sichern könnten; ein Umfang von 3 bzw. die Auffüllung auf 30 sähe wie ein Ergebnis der Neuberechnung aus. |
+| C68, C69, C70, C74, C75, C76, C84, C85, C86, C89, C90, C91, C92, C93, C94, C95, N5, N7, N10, N11 | C67 | Wert auf Grundlage eines Umfangs für Zeitraum 2, der nur aus den Untergrenzen besteht | kein Wert | Der Wert baut auf einem Umfang für Zeitraum 2 auf, den keine Neuberechnung ergeben hat; ohne ihn ist er nicht bestimmt. |
+| C84 | C46, C81 | 0,00 € (die Fehlersumme der Stichprobe fehlt; N(…) zählt sie als 0) | kein Wert | Ohne Fehlersumme der Stichprobe gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 06_MUS_2Z_S
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C19, C56 | C17 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus. |
+| C21, C57 | C20 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus. |
+| D26–J26, AA26–AM26 | D24–J24, AA24–AM24, D25–J25, AA25–AM25 | Hilfswert ohne den Beitrag der fehlenden Standardabweichung (σ zählt als 0) | Angabe fehlt | Fehlt die Standardabweichung einer belegten Schicht, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C26, C27 | D24–J24, AA24–AM24, D25–J25, AA25–AM25 | Wert ohne den Beitrag der Schicht mit fehlender Standardabweichung | Angabe fehlt | Fehlt die Standardabweichung einer belegten Schicht, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C29, C35, C37, C38, C44, C60 | C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25 | Wert auf Grundlage des mit AE = 0 bzw. σ_rh = 0 berechneten Umfangs (mindestens 30) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| D37–J37, AA37–AM37, D38–J38, AA38–AM38, D40–J40, AA40–AM40, D44–J44, AA44–AM44, D45–J45, AA45–AM45, D46–J46, AA46–AM46, D60–J60, AA60–AM60 | C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25 | Wert auf Grundlage des mit AE = 0 bzw. σ_rh = 0 berechneten Umfangs (mindestens 30) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| D59–J59, AA59–AM59 | D24–J24, AA24–AM24 | 0,0000 (leere Zelle zählt als 0) | Angabe fehlt | Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für die Schicht. |
+| D61–J61, AA61–AM61 | D53–J53, AA53–AM53 | Hilfswert ohne den Beitrag der fehlenden Standardabweichung (σ zählt als 0) | Angabe fehlt | Ohne aktualisierte Standardabweichung jeder im zweiten Zeitraum belegten Schicht ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C61 | D53–J53, AA53–AM53 | Hilfswert ohne den Beitrag der fehlenden Standardabweichung (σ zählt als 0) | Angabe fehlt | Ohne aktualisierte Standardabweichung jeder im zweiten Zeitraum belegten Schicht ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C62 | C17, C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25 | Nenner auf Grundlage des mit 0 gerechneten Werts | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| D64–J64, AA64–AM64 | D24–J24, AA24–AM24, D53–J53, AA53–AM53 | Hilfswert ohne den Beitrag der fehlenden Standardabweichung (σ zählt als 0) | Angabe fehlt | Ohne aktualisierte Standardabweichung jeder im zweiten Zeitraum belegten Schicht ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C64 | D24–J24, AA24–AM24, D53–J53, AA53–AM53 | Hilfswert ohne den Beitrag der fehlenden Standardabweichung (σ zählt als 0) | Angabe fehlt | Ohne aktualisierte Standardabweichung jeder im zweiten Zeitraum belegten Schicht ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C65, C66 | C17, C20, D24–J24, AA24–AM24, D53–J53, AA53–AM53 | Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30) | Angabe fehlt | Ohne aktualisierte Standardabweichung jeder im zweiten Zeitraum belegten Schicht ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C63, C69, C72, C78, N10 | C17, C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25, D53–J53, AA53–AM53 | Wert auf Grundlage von σ_rh = 0 bzw. AE = 0 (z. B. Umfang 0 oder 3 je Schicht) | Angabe fehlt | Ohne aktualisierte Standardabweichung jeder im zweiten Zeitraum belegten Schicht ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| D69–J69, AA69–AM69, D74–J74, AA74–AM74, D78–J78, AA78–AM78, D79–J79, AA79–AM79, D80–J80, AA80–AM80 | C17, C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25, D53–J53, AA53–AM53 | Wert auf Grundlage von σ_rh = 0 bzw. AE = 0 (z. B. Umfang 0 oder 3 je Schicht) | Angabe fehlt | Ohne aktualisierte Standardabweichung jeder im zweiten Zeitraum belegten Schicht ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C68, C70, C71, C84 | C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25, D53–J53, AA53–AM53 | Wert auf Grundlage von σ_rh = 0 bzw. AE = 0 (z. B. Umfang 0 oder 3 je Schicht) | Angabe fehlt | Ohne die Angaben zum Gesamtumfang und zur Neuberechnung sind die endgültigen Umfänge nicht bestimmt; Hochrechnung und Würdigung bleiben offen. |
+| D68–J68, AA68–AM68, D70–J70, AA70–AM70, D84–J84, AA84–AM84, D87–J87, AA87–AM87, D88–J88, AA88–AM88 | C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25, D53–J53, AA53–AM53 | Wert auf Grundlage von σ_rh = 0 bzw. AE = 0 (z. B. Umfang 0 oder 3 je Schicht) | Angabe fehlt | Ohne die Angaben zum Gesamtumfang und zur Neuberechnung sind die endgültigen Umfänge nicht bestimmt; Hochrechnung und Würdigung bleiben offen. |
+| C87, C88, C89, C90, C93, C94, C95, C96, C97, C98, C99, N5, N7, N11 | C17, C20, D24–J24, AA24–AM24, D25–J25, AA25–AM25, D53–J53, AA53–AM53 | Wert auf Grundlage von σ_rh = 0 bzw. AE = 0 (z. B. Umfang 0 oder 3 je Schicht) | Angabe fehlt | Ohne die Angaben zum Gesamtumfang und zur Neuberechnung sind die endgültigen Umfänge nicht bestimmt; Hochrechnung und Würdigung bleiben offen. |
+| C11, C19, C21, C22, C27, C29, C35, C37, C38, C44, C55, C56, C57, C60, N4, C62, C63, C69, C72, C78, N10, C65, C66, C68, C70, C71, C84, C87, C88, C89, C90, C93, C94, C95, C96, C97, C98, C99, N5, N7, N11 | C8, C9 | Wert auf Grundlage einer Summe der Buchwerte bzw. der Prognose von 0 €, weil keine Schicht einen Buchwert für Zeitraum 1 bzw. eine Prognose für Zeitraum 2 trägt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D37–J37, AA37–AM37, D38–J38, AA38–AM38, D40–J40, AA40–AM40, D44–J44, AA44–AM44, D45–J45, AA45–AM45, D46–J46, AA46–AM46, D60–J60, AA60–AM60, D69–J69, AA69–AM69, D74–J74, AA74–AM74, D78–J78, AA78–AM78, D79–J79, AA79–AM79, D80–J80, AA80–AM80, D68–J68, AA68–AM68, D70–J70, AA70–AM70, D84–J84, AA84–AM84, D87–J87, AA87–AM87, D88–J88, AA88–AM88 | C8, C9 | Wert auf Grundlage einer Summe der Buchwerte bzw. der Prognose von 0 €, weil keine Schicht einen Buchwert für Zeitraum 1 bzw. eine Prognose für Zeitraum 2 trägt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C55, C56, C57, C62, C63, N4, N10, C65, C66, C68, C70, C71, C84, C87, C88, C89, C90, C93, C94, C95, C96, C97, C98, C99, N5, N7, N11 | C51 | Wert allein aus dem ersten Zeitraum, weil die Summe der Ist-Buchwerte des zweiten Zeitraums 0 € ist | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D68–J68, AA68–AM68, D70–J70, AA70–AM70, D84–J84, AA84–AM84, D87–J87, AA87–AM87, D88–J88, AA88–AM88 | C51 | Wert allein aus dem ersten Zeitraum, weil die Summe der Ist-Buchwerte des zweiten Zeitraums 0 € ist | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C35 | C29 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
+| C66 | C65 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
+| C37, C38, C44, C60, C62, C63, C69, C72, C78, N10, C68, C70, C71, C84, C87, C88, C89, C90, C93, C94, C95, C96, C97, C98, C99, N5, N7, N11 | C29, C65 | Wert auf Grundlage eines begrenzten Umfangs, den kein rechnerischer Umfang trägt | kein Wert | Der Wert baut auf dem begrenzten Umfang auf; ohne rechnerischen Umfang ist er nicht bestimmt. |
+| D37–J37, AA37–AM37, D38–J38, AA38–AM38, D40–J40, AA40–AM40, D44–J44, AA44–AM44, D45–J45, AA45–AM45, D46–J46, AA46–AM46, D60–J60, AA60–AM60, D69–J69, AA69–AM69, D74–J74, AA74–AM74, D78–J78, AA78–AM78, D79–J79, AA79–AM79, D80–J80, AA80–AM80, D68–J68, AA68–AM68, D70–J70, AA70–AM70, D84–J84, AA84–AM84, D87–J87, AA87–AM87, D88–J88, AA88–AM88 | C29, C65 | Wert auf Grundlage eines begrenzten Umfangs, den kein rechnerischer Umfang trägt | kein Wert | Der Wert baut auf dem begrenzten Umfang auf; ohne rechnerischen Umfang ist er nicht bestimmt. |
+| C62, C63, C69, C72, C78, N10, C87, C88, C89, C90, C93, C94, C95, C96, C97, C98, C99, N5, N7, N11 | C37, C60 | Wert auf Grundlage einer Hilfssumme von 0, obwohl keine Schicht einen Umfang für Zeitraum 1 hat (z. B. bei „TE ≤ AE“) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D69–J69, AA69–AM69, D74–J74, AA74–AM74, D78–J78, AA78–AM78, D79–J79, AA79–AM79, D80–J80, AA80–AM80 | C37, C60 | Wert auf Grundlage einer Hilfssumme von 0, obwohl keine Schicht einen Umfang für Zeitraum 1 hat (z. B. bei „TE ≤ AE“) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D45–J45, AA45–AM45 | D44–J44, AA44–AM44 | „✔ ≥ 3“ (Excel wertet die leere Textzelle im Vergleich größer als jede Zahl) | kein Wert | Ohne Einheiten der Zufallsschicht gibt es nichts zu prüfen; ein bestandener Prüfhinweis wäre irreführend. |
+| D79–J79, AA79–AM79 | D78–J78, AA78–AM78 | „✔ ≥ 3“ (Excel wertet die leere Textzelle im Vergleich größer als jede Zahl) | kein Wert | Ohne Einheiten der Zufallsschicht gibt es nichts zu prüfen; ein bestandener Prüfhinweis wäre irreführend. |
+| D69–J69, AA69–AM69 | D38–J38, AA38–AM38 | Untergrenze 3 (MAX übergeht den leeren Planumfang der Schicht) | kein Wert | Ohne Planumfang der Schicht gibt es nichts, was die Untergrenze sichern könnte; ein Umfang von 3 sähe wie ein Ergebnis aus. |
+| D74–J74, AA74–AM74, D78–J78, AA78–AM78, D80–J80, AA80–AM80, D87–J87, AA87–AM87, D88–J88, AA88–AM88 | D69–J69, AA69–AM69 | Wert auf Grundlage der Untergrenze 3 als Umfang der Schicht für Zeitraum 2 | kein Wert | Ohne Planumfang der Schicht gibt es nichts, was die Untergrenze sichern könnte; ein Umfang von 3 sähe wie ein Ergebnis aus. |
+| C71, C72, N10, C87, C88, C89, C90, C93, C94, C95, C96, C97, C98, C99, N5, N7, N11 | C69, C78 | Wert auf Grundlage eines Umfangs für Zeitraum 2, den keine Neuberechnung ergeben hat (0 bei nicht anwendbarer Standardneuberechnung, Untergrenze 3 ohne Planumfang) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C8 | D8–J8, AA8–AM8 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C9 | D9–J9, AA9–AM9 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C10 | D10–J10, AA10–AM10 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C26 | D8–J8, AA8–AM8, D9–J9, AA9–AM9 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C37 | D37–J37, AA37–AM37 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C38 | D38–J38, AA38–AM38 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C41 | D41–J41, AA41–AM41 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C42 | D42–J42, AA42–AM42 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C43 | D43–J43, AA43–AM43 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C44 | D44–J44, AA44–AM44 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C47 | D47–J47, AA47–AM47 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C48 | D48–J48, AA48–AM48 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C51 | D51–J51, AA51–AM51 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C52 | D52–J52, AA52–AM52 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C60 | D8–J8, AA8–AM8, D60–J60, AA60–AM60 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C61 | D51–J51, AA51–AM51, D61–J61, AA61–AM61 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C64 | D8–J8, AA8–AM8, D51–J51, AA51–AM51 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C68 | D68–J68, AA68–AM68 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C69 | D69–J69, AA69–AM69 | 0 (Summe über Schichten ohne Wert) bzw. Summe mit der Untergrenze 3 einer Schicht ohne Planumfang | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C70 | D70–J70, AA70–AM70 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C75 | D75–J75, AA75–AM75 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C76 | D76–J76, AA76–AM76 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C77 | D77–J77, AA77–AM77 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C78 | D78–J78, AA78–AM78 | 0 (Summe über Schichten ohne Wert) bzw. Summe mit der Untergrenze 3 einer Schicht ohne Planumfang | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C81 | D81–J81, AA81–AM81 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C82 | D82–J82, AA82–AM82 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C84 | D84–J84, AA84–AM84 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C86, N6 | D8–J8, AA8–AM8, D47–J47, AA47–AM47, D51–J51, AA51–AM51, D81–J81, AA81–AM81 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+
+### 07_MUS_3Z
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C12, C23 | C7, C8, C9 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C20 | C7, C8, C9, C18 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der zulässige Fehler setzt die Buchwerte und die Wesentlichkeitsschwelle voraus. |
+| C22 | C7, C8, C9, C21 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der voraussichtliche Fehler setzt die Buchwerte und die voraussichtliche Fehlerquote voraus. |
+| C27 | C7, C8, C9, C24, C25, C26 | Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Die gewichtete Standardabweichung setzt Buchwert und Standardabweichung aller Zeiträume voraus. |
+| C29, C35, C36, C37, C38, C43, C44, C45 | C7, C8, C9, C21, C24, C25, C26 | Wert auf Grundlage des mit 0 gerechneten Buchwerts, AE = 0 bzw. σ_r = 0 (Gesamtumfang mindestens 30) | Angabe fehlt | Ohne Buchwerte, voraussichtliche Fehlerquote und Standardabweichungen aller Zeiträume ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C74 | C7, C8, C9, C21, C24, C25, C26, C51 | Planumfang mal Faktor 1 bzw. mal dem Faktor allein aus dem Verhältnis der Anzahlen (ein leerer Buchwert zählt als 0) | Angabe fehlt | Der Faktor der Unterschätzung vergleicht den Ist-Buchwert des Zeitraums mit seiner Prognose; ohne beide ist die Erhöhung nicht bestimmt. |
+| C39 | C8, C9, C21, C24, C25, C26 | Wert auf Grundlage des mit 0 gerechneten Buchwerts, AE = 0 bzw. σ_r = 0 (Gesamtumfang mindestens 30) | Angabe fehlt | Ohne Buchwerte, voraussichtliche Fehlerquote und Standardabweichungen aller Zeiträume ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C42 | C7 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C58 | C7, C51, C53 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C59 | C7, C18, C51, C53 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte zulässige Fehler setzt die Buchwerte und die Wesentlichkeitsschwelle voraus. |
+| C60 | C7, C21, C51, C53 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte voraussichtliche Fehler setzt die Buchwerte und eine voraussichtliche Fehlerquote voraus. |
+| C61 | C24 | 0,0000 (leere Zelle zählt als 0) | Angabe fehlt | Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für Zeitraum 1. |
+| C62 | C51, C53 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C63 | C51, C53, C55, C56 | Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
+| C64 | C8, C9, C21, C24, C25, C26, C51, C53 | Nenner auf Grundlage des mit 0 gerechneten Werts | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
+| C65, C66, C67 | C8, C9, C21, C24, C25, C26, C51, C53, C55, C56 | Wert auf Grundlage von BV = 0 bzw. σ_r = 0 für die Zeiträume 2 und 3 (z. B. Umfang 0 oder 3) | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
+| C68 | C7, C24, C51, C53, C55, C56 | Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
+| C69, C70, C72, C73 | C7, C18, C21, C24, C51, C53, C55, C56 | Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30) | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
+| C71, C75, C76, C77, C78, C82, C83, C84 | C7, C8, C9, C21, C24, C25, C26, C18, C51, C53, C55, C56 | Wert auf Grundlage von BV = 0 bzw. σ_r = 0 für die Zeiträume 2 und 3 (z. B. Umfang 0 oder 3) | Angabe fehlt | Ohne Ist-Buchwert des zweiten Zeitraums, aktualisierte Prognose für den dritten und die aktualisierten Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt. |
+| C106 | C7, C8, C9, C21, C24, C25, C26, C18, C51, C53, C55, C56, C90 | Planumfang mal Faktor 1 bzw. mal dem Faktor allein aus dem Verhältnis der Anzahlen (ein leerer Buchwert zählt als 0) | Angabe fehlt | Der Faktor der Unterschätzung vergleicht den Ist-Buchwert des Zeitraums mit seiner Prognose; ohne beide ist die Erhöhung nicht bestimmt. |
+| C81 | C51 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C94, N4 | C7, C51, C90 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C95 | C7, C18, C51, C90 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der zulässige Fehler des Geschäftsjahres setzt die Ist-Buchwerte und die Wesentlichkeitsschwelle voraus. |
+| C96 | C7, C21, C51, C90 | 0,00 € bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der voraussichtliche Fehler des Geschäftsjahres setzt die Ist-Buchwerte und eine voraussichtliche Fehlerquote voraus. |
+| C97 | C55 | 0,0000 (leere Zelle zählt als 0) | Angabe fehlt | Ohne Standardabweichung der Stichprobe und ohne aktualisierte Standardabweichung gibt es keinen Wert für Zeitraum 2. |
+| C98 | C8, C9, C21, C24, C25, C26, C51, C53, C55, C56, C90 | Nenner auf Grundlage des mit 0 gerechneten Werts | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
+| C99 | C8, C9, C21, C24, C25, C26, C51, C53, C55, C56, C90, C92 | Wert auf Grundlage von BV₃ = 0 bzw. σ_r3 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
+| C100 | C7, C24, C51, C55, C90, C92 | Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
+| C101, C102, C105 | C7, C18, C21, C24, C51, C55, C90, C92 | Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
+| C104, C103, C107, C108, C109, C110, C111, C112, C116, C117, C118, C124, C125, C127, C128, C129, C132, C133, C134, C135, C136, C137, C138, N5, N7, N10, N11 | C7, C8, C9, C21, C24, C25, C26, C18, C51, C53, C55, C56, C90, C92 | Wert auf Grundlage von BV₃ = 0 bzw. σ_r3 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Buchwert und aktualisierte Standardabweichung des dritten Zeitraums ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Hochrechnung und Würdigung bleiben offen. |
+| C115 | C90 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C35 | C29 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
+| C70 | C69 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
+| C102 | C101 | begrenzter Umfang (50 bzw. 30 Einheiten), obwohl die Zelle des rechnerischen Umfangs leer ist | kein Wert | Ohne rechnerischen Umfang gibt es nichts zu begrenzen; der begrenzte Umfang allein sähe wie ein Ergebnis aus. |
+| C36, C37, C38, C39, C43, C44, C45, C64, C65, C66, C67, C71, C72, C73, C74, C75, C76, C77, C103, C105, C106, C107, C109, C124, C78, C82, C83, C84, C98, C99, C104, C108, C125, C110, C111, C112, C116, C117, C118, C127, C128, C129, C132, C133, C134, C135, C136, C137, C138, N5, N7, N10, N11 | C29, C69, C101 | Wert auf Grundlage eines begrenzten Umfangs, den kein rechnerischer Umfang trägt | kein Wert | Der Wert baut auf dem begrenzten Umfang auf; ohne rechnerischen Umfang ist er nicht bestimmt. |
+| C75 | C75 | Untergrenze 3 bzw. Auffüllung auf 30 (MAX übergeht den Text bzw. die leere Zelle des gewählten Umfangs) | kein Wert | Liefert der gewählte Ansatz keinen Umfang für den Zeitraum, gibt es nichts, was die Untergrenzen sichern könnten; ein Umfang von 3 bzw. die Auffüllung auf 30 sähe wie ein Ergebnis der Neuberechnung aus. |
+| C109 | C75, C109 | Untergrenze 3 bzw. Auffüllung auf 30 (MAX übergeht den Text bzw. die leere Zelle des gewählten Umfangs) | kein Wert | Liefert der gewählte Ansatz keinen Umfang für den Zeitraum, gibt es nichts, was die Untergrenzen sichern könnten; ein Umfang von 3 bzw. die Auffüllung auf 30 sähe wie ein Ergebnis der Neuberechnung aus. |
+| C78, C82, C83, C84, C98, C99, C104, C108, C125 | C75 | Wert auf Grundlage eines Umfangs für Zeitraum 2 bzw. 3, der nur aus den Untergrenzen besteht | kein Wert | Der Wert baut auf einem Umfang auf, den keine Neuberechnung ergeben hat; ohne ihn ist er nicht bestimmt. |
+| C110, C111, C112, C116, C117, C118, C127, C128, C129, C132, C133, C134, C135, C136, C137, C138, N5, N7, N10, N11 | C75, C109 | Wert auf Grundlage eines Umfangs für Zeitraum 2 bzw. 3, der nur aus den Untergrenzen besteht | kein Wert | Der Wert baut auf einem Umfang auf, den keine Neuberechnung ergeben hat; ohne ihn ist er nicht bestimmt. |
+| C127 | C49, C88, C122 | 0,00 € (die Fehlersumme der Stichprobe fehlt; N(…) zählt sie als 0) | kein Wert | Ohne Fehlersumme der Stichprobe gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 08_SRS_1Z
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C7, N4 | C7 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf Grundlage von 0 € wäre irreführend. |
+| C8 | C8 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten der Grundgesamtheit unbekannt, nicht null. |
+| C12 | C7 | 0 € abzüglich des Buchwerts der umfassenden Schicht | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf Grundlage von 0 € wäre irreführend. |
+| C13 | C8 | 0 abzüglich der Einheiten der umfassenden Schicht | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten der Grundgesamtheit unbekannt, nicht null. |
+| C21 | C7, C19 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt Buchwert und Wesentlichkeitsschwelle voraus. |
+| C23 | C7, C22 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt Buchwert und voraussichtliche Fehlerquote voraus. |
+| C26 | C8, C22, C25 | Umfang mit N_s ≤ 0, AE = 0 bzw. σ_e = 0 (z. B. 0, 1 oder 16) | Angabe fehlt | Ohne Anzahl der Einheiten, voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C34, C35, N10 | C8, C22, C25 | Mindestumfang bzw. der mit 0 berechnete Umfang, gegebenenfalls begrenzt | Angabe fehlt | Ohne Anzahl der Einheiten, voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C42, C43, N5 | C7 | Hochrechnung auf Grundlage von 0 € abzüglich des Buchwerts der umfassenden Schicht (negativer Betrag) | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf Grundlage von 0 € wäre irreführend. |
+| C44, N7, C49, C52, C53 | C8, C22, C25 | Wert auf Grundlage des mit 0 gerechneten Umfangs bzw. einer Zufallsschicht mit N_s ≤ 0 | Angabe fehlt | Ohne Anzahl der Einheiten, voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C47, C48 | C7, C8, C22, C25 | Wert auf Grundlage des mit 0 gerechneten Buchwerts bzw. Umfangs | Angabe fehlt | Ohne Anzahl der Einheiten, voraussichtliche Fehlerquote und Standardabweichung ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C42 | C37 | 0,00 € (die Fehlersumme der Stichprobe fehlt; N(…) zählt sie als 0) | kein Wert | Ohne Fehlersumme der Stichprobe gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 09_SRS_1Z_S
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C15 | 02_Grundgesamtheit!C51 | Buchwert der Grundgesamtheit abzüglich 0 € (leeres Blatt 02) | Angabe fehlt | Ohne angepasste Grundgesamtheit in Blatt 02 gibt es nichts abzugleichen. |
+| C23 | C21 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus. |
+| C25 | C24 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus. |
+| D29–J29, AA29–AM29 | D28–J28, AA28–AM28 | 0 (σ_eh einer belegten Schicht zählt als 0) | Angabe fehlt | Fehlt die Standardabweichung einer belegten Schicht, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C29, C30 | D28–J28, AA28–AM28 | Wert ohne den Beitrag der Schicht mit fehlender Standardabweichung | Angabe fehlt | Fehlt die Standardabweichung einer belegten Schicht, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C31, C39, C41, N10, C53, N7, C58 | C24, D28–J28, AA28–AM28 | Wert auf Grundlage des mit AE = 0 bzw. σ_eh = 0 berechneten Umfangs (mindestens der Mindestumfang) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| D41–J41, AA41–AM41, D42–J42, AA42–AM42 | C24, D28–J28, AA28–AM28 | Wert auf Grundlage des mit AE = 0 bzw. σ_eh = 0 berechneten Umfangs (mindestens der Mindestumfang) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| D49–J49, AA49–AM49 | D13–J13, AA13–AM13 | 0 € (Buchwert einer belegten Schicht zählt als 0) | Angabe fehlt | Fehlt der Buchwert einer belegten Schicht, lässt sich ihr Fehler nicht hochrechnen; die Vorlage rechnet für diese Schicht mit 0 €. |
+| C49, C52, N5, C59, C60, N11 | D13–J13, AA13–AM13 | Wert ohne den Beitrag der Schicht mit fehlendem Buchwert | Angabe fehlt | Fehlt der Buchwert einer belegten Schicht, lässt sich ihr Fehler nicht hochrechnen; die Vorlage rechnet für diese Schicht mit 0 €. |
+| C56, C57, C61, C62 | C24, D28–J28, AA28–AM28, D13–J13, AA13–AM13 | Wert auf Grundlage des mit 0 berechneten Umfangs bzw. ohne den Beitrag der Schicht mit fehlendem Buchwert | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C12, C29, C50 | D12–J12, AA12–AM12 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C13 | D13–J13, AA13–AM13 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C41 | D41–J41, AA41–AM41 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C45 | D45–J45, AA45–AM45 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C46 | D46–J46, AA46–AM46 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C14, N4, C15, C23, C25 | C13 | Wert auf Grundlage einer Summe der Buchwerte von 0 € (nur die umfassende Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C26, C31, C39, C53, N7, C58 | C13 | Stichprobenumfang und Genauigkeit auf Grundlage eines zulässigen Fehlers ohne die Buchwerte der Zufallsschichten | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D41–J41, AA41–AM41 | C13 | Stichprobenumfang und Genauigkeit auf Grundlage eines zulässigen Fehlers ohne die Buchwerte der Zufallsschichten | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| N10 | C41 | Einheiten der umfassenden Schicht bzw. 0 (Summe der Schichtumfänge ohne Umfang je Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D42–J42, AA42–AM42 | D41–J41, AA41–AM41 | „✔ ≥ 3“ (Excel wertet die leere Textzelle im Vergleich größer als jede Zahl) | kein Wert | Ohne Stichprobenumfang der Schicht gibt es nichts zu prüfen; ein bestandener Prüfhinweis wäre irreführend. |
+| C49 | C46 | 0,00 € (keine Schicht trägt eine Fehlersumme) | kein Wert | Solange keine Schicht eine Fehlersumme trägt, gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+| D49–J49, AA49–AM49 | C46 | 0,00 € (keine Schicht trägt eine Fehlersumme) | kein Wert | Solange keine Schicht eine Fehlersumme trägt, gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 10_SRS_2Z
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C12 | C7 | 0 € abzüglich des Buchwerts der umfassenden Schicht | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C13 | C8 | 0 abzüglich der Einheiten der umfassenden Schicht | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten eines Zeitraums unbekannt, nicht null. |
+| C16 | C7, C14 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C17 | C8, C15 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten eines Zeitraums unbekannt, nicht null. |
+| C25 | C7, C14, C23 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der zulässige Fehler setzt beide Buchwerte und die Wesentlichkeitsschwelle voraus. |
+| C27 | C7, C14, C26 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der voraussichtliche Fehler setzt beide Buchwerte und die voraussichtliche Fehlerquote voraus. |
+| C28 | C7, C14 | Prüfhinweis auf Grundlage nur eines Buchwerts | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C31 | C8, C15, C29, C30 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Die gewichtete Standardabweichung setzt Anzahl der Einheiten und Standardabweichung beider Zeiträume voraus. |
+| C33, C41, C42, C43, C71 | C7, C8, C14, C15, C26, C29, C30 | Wert auf Grundlage von BV = 0, N = 0, AE = 0 bzw. σ_e = 0 (z. B. Mindestumfang oder begrenzter Umfang) | Angabe fehlt | Ohne Buchwerte, Anzahl der Einheiten, voraussichtliche Fehlerquote und Standardabweichungen beider Zeiträume ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C54 | C49 | 0 € abzüglich des Buchwerts der umfassenden Schicht | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C55 | C50 | 0 abzüglich der Einheiten der umfassenden Schicht | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten eines Zeitraums unbekannt, nicht null. |
+| C58, N4 | C7, C49 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C59 | C7, C23, C49 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte zulässige Fehler setzt beide Ist-Buchwerte und die Wesentlichkeitsschwelle voraus. |
+| C60 | C7, C26, C49 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte voraussichtliche Fehler setzt beide Ist-Buchwerte und eine voraussichtliche Fehlerquote voraus. |
+| C61 | C29 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für Zeitraum 1. |
+| C62 | C7, C8, C14, C15, C23, C26, C29, C30, C49 | Nenner auf Grundlage des mit 0 gerechneten Werts | Angabe fehlt | Ohne Ist-Werte und aktualisierte Standardabweichung des zweiten Zeitraums ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C64 | C8, C50 | 0 bzw. der Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten eines Zeitraums unbekannt, nicht null. |
+| C65 | C8, C29, C50, C56 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Die gewichtete Standardabweichung setzt Anzahl der Einheiten und Standardabweichung beider Zeiträume voraus. |
+| C66, C68, C70 | C7, C8, C23, C26, C29, C49, C50, C56 | Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens der Mindestumfang) | Angabe fehlt | Ohne Ist-Werte und aktualisierte Standardabweichung des zweiten Zeitraums ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C63, C69, C72, C73, C74, C75, C76, N10 | C7, C8, C14, C15, C23, C26, C29, C30, C49, C50, C56 | Wert auf Grundlage von BV₂ = 0, N₂ = 0 bzw. σ_e2 = 0 (z. B. Umfang 0, 3 oder Auffüllung auf 30) | Angabe fehlt | Ohne Ist-Werte und aktualisierte Standardabweichung des zweiten Zeitraums ist die Neuberechnung nicht bestimmt; die Folgegrößen bleiben offen. |
+| C83, C84, C91, C92, N5, N11 | C7, C49 | Hochrechnung auf Grundlage von 0 € abzüglich des Buchwerts der umfassenden Schicht (negativer Betrag) | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C85, C88, C89, C90, C93, N7 | C7, C8, C14, C15, C23, C26, C29, C30, C49, C50, C56 | Wert auf Grundlage der mit 0 gerechneten Umfänge bzw. einer Zufallsschicht mit N ≤ 0 | Angabe fehlt | Ohne die Angaben zum Gesamtumfang und zur Neuberechnung für Zeitraum 2 sind die endgültigen Umfänge nicht bestimmt; Genauigkeit, Fehlergrenzen und Würdigung bleiben offen. |
+| C94 | C7, C8, C14, C15, C26, C29, C30, C49, C50, C56 | Würdigung auf Grundlage der mit 0 gerechneten Genauigkeit | Angabe fehlt | Ohne die Angaben zum Gesamtumfang und zur Neuberechnung für Zeitraum 2 sind die endgültigen Umfänge nicht bestimmt; Genauigkeit, Fehlergrenzen und Würdigung bleiben offen. |
+| C73, C74, C75, C76, N10 | C63 | Untergrenzen (mindestens 3, Auffüllung auf 30) bzw. die darauf aufbauende Gesamtstichprobe und ihre Prüfhinweise, obwohl die Standardneuberechnung keinen Umfang ergibt (z. B. ohne Konfidenzniveau oder ohne Einheiten der Zufallsschicht in Zeitraum 1) | kein Wert | Ergibt die Standardneuberechnung keinen Umfang, ohne dass ihr Nenner als nicht positiv ausgewiesen ist, bleiben in der Vorlage nur die Untergrenzen (MAX übergeht den leeren Bezug); als anzuwendender Umfang hätten sie keine Grundlage. |
+| C83 | C45, C78 | 0,00 € (kein Zeitraum trägt eine Fehlersumme) | kein Wert | Solange kein Zeitraum eine Fehlersumme trägt, gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 11_SRS_2Z_S
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C24, C62 | C22 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt die Wesentlichkeitsschwelle voraus. |
+| C26, C63 | C25 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt die voraussichtliche Fehlerquote voraus. |
+| D31–J31, AA31–AM31 | D29–J29, AA29–AM29, D30–J30, AA30–AM30 | 0 bzw. nur der Beitrag des anderen Zeitraums (σ_eh einer belegten Schicht zählt als 0) | Angabe fehlt | Fehlt die Standardabweichung einer für den Zeitraum belegten Schicht, ist die Streuung nicht bestimmt; 0 wäre eine Annahme zugunsten eines kleineren Umfangs. |
+| C31, C32 | D29–J29, AA29–AM29, D30–J30, AA30–AM30 | Wert mit σ = 0 für die Schicht mit fehlender Standardabweichung | Angabe fehlt | Fehlt die Standardabweichung einer für den Zeitraum belegten Schicht, ist die Streuung nicht bestimmt; 0 wäre eine Annahme zugunsten eines kleineren Umfangs. |
+| C34, C42, C44, C45, C66 | C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30 | Wert auf Grundlage des mit AE = 0 bzw. σ_eh = 0 berechneten Gesamtumfangs (mindestens der Mindestumfang) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Gesamtumfang nicht bestimmt; seine Aufteilung und alle Folgegrößen bleiben offen. |
+| D44–J44, AA44–AM44, D45–J45, AA45–AM45, D46–J46, AA46–AM46, D66–J66, AA66–AM66 | C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30 | Wert auf Grundlage des mit AE = 0 bzw. σ_eh = 0 berechneten Gesamtumfangs (mindestens der Mindestumfang) | Angabe fehlt | Ohne voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist der Gesamtumfang nicht bestimmt; seine Aufteilung und alle Folgegrößen bleiben offen. |
+| D65–J65, AA65–AM65 | D29–J29, AA29–AM29 | 0 (weder s_eh noch σ_eh1 angegeben; die leere Zelle zählt als 0) | Angabe fehlt | Fehlt die Standardabweichung einer für den Zeitraum belegten Schicht, ist die Streuung nicht bestimmt; 0 wäre eine Annahme zugunsten eines kleineren Umfangs. |
+| D67–J67, AA67–AM67 | D59–J59, AA59–AM59 | 0 (σ_eh2 einer belegten Schicht zählt als 0) | Angabe fehlt | Fehlt die Standardabweichung einer für den Zeitraum belegten Schicht, ist die Streuung nicht bestimmt; 0 wäre eine Annahme zugunsten eines kleineren Umfangs. |
+| C67 | D59–J59, AA59–AM59 | Wert mit σ = 0 für die Schicht mit fehlender Standardabweichung | Angabe fehlt | Fehlt die Standardabweichung einer für den Zeitraum belegten Schicht, ist die Streuung nicht bestimmt; 0 wäre eine Annahme zugunsten eines kleineren Umfangs. |
+| C68 | C22, C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30 | Nenner auf Grundlage von TE = 0, AE = 0 bzw. des mit 0 berechneten Umfangs für Zeitraum 1 | Angabe fehlt | Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen. |
+| C69, C76, C77, C78, C80, C81, N10 | C22, C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30, D59–J59, AA59–AM59 | Wert auf Grundlage von TE = 0, AE = 0 bzw. σ_eh = 0 (z. B. Umfang 3 je Schicht oder der Mindestumfang) | Angabe fehlt | Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen. |
+| D70–J70, AA70–AM70 | D29–J29, AA29–AM29, D59–J59, AA59–AM59 | 0 bzw. nur der Beitrag des anderen Zeitraums (Standardabweichung einer belegten Schicht zählt als 0) | Angabe fehlt | Fehlt die Standardabweichung einer für den Zeitraum belegten Schicht, ist die Streuung nicht bestimmt; 0 wäre eine Annahme zugunsten eines kleineren Umfangs. |
+| C70 | D29–J29, AA29–AM29, D59–J59, AA59–AM59 | Wert mit σ = 0 für die Schicht mit fehlender Standardabweichung | Angabe fehlt | Fehlt die Standardabweichung einer für den Zeitraum belegten Schicht, ist die Streuung nicht bestimmt; 0 wäre eine Annahme zugunsten eines kleineren Umfangs. |
+| C72, C74 | C22, C25, D29–J29, AA29–AM29, D59–J59, AA59–AM59 | Wert auf Grundlage von TE = 0, AE = 0 bzw. σ_eh = 0 (z. B. Umfang 3 je Schicht oder der Mindestumfang) | Angabe fehlt | Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen. |
+| D76–J76, AA76–AM76, D77–J77, AA77–AM77, D78–J78, AA78–AM78, D79–J79, AA79–AM79 | C22, C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30, D59–J59, AA59–AM59 | Wert auf Grundlage von TE = 0, AE = 0 bzw. σ_eh = 0 (z. B. Umfang 3 je Schicht oder der Mindestumfang) | Angabe fehlt | Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen. |
+| D89–J89, AA89–AM89 | D12–J12, AA12–AM12, D58–J58, AA58–AM58 | 0 € bzw. nur der Beitrag des anderen Zeitraums (Buchwert einer belegten Schicht zählt als 0) | Angabe fehlt | Fehlt der Buchwert einer belegten Schicht, lässt sich ihr Fehler nicht hochrechnen; die Vorlage rechnet für diese Schicht mit 0 €. |
+| C89, C92, N5, C99, C100, N11 | D12–J12, AA12–AM12, D58–J58, AA58–AM58 | Wert ohne den Beitrag der Schicht mit fehlendem Buchwert | Angabe fehlt | Fehlt der Buchwert einer belegten Schicht, lässt sich ihr Fehler nicht hochrechnen; die Vorlage rechnet für diese Schicht mit 0 €. |
+| C90, C93, N7, C98 | C22, C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30, D59–J59, AA59–AM59 | Wert auf Grundlage der mit 0 berechneten Umfänge je Schicht | Angabe fehlt | Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen. |
+| D90–J90, AA90–AM90 | C22, C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30, D59–J59, AA59–AM59 | Wert auf Grundlage der mit 0 berechneten Umfänge je Schicht | Angabe fehlt | Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen. |
+| C96, C97, C101, C102 | C22, C25, D29–J29, AA29–AM29, D30–J30, AA30–AM30, D59–J59, AA59–AM59, D12–J12, AA12–AM12, D58–J58, AA58–AM58 | Wert auf Grundlage der mit 0 berechneten Umfänge bzw. ohne den Beitrag der Schicht mit fehlendem Buchwert | Angabe fehlt | Ohne Wesentlichkeitsschwelle, voraussichtliche Fehlerquote und Standardabweichung jeder belegten Schicht ist die Neuberechnung für Zeitraum 2 nicht bestimmt; die endgültigen Umfänge und die Genauigkeit bleiben offen. |
+| C11 | D11–J11, AA11–AM11 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C12 | D12–J12, AA12–AM12 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C13 | D13–J13, AA13–AM13 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C14 | D14–J14, AA14–AM14 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C31 | D31–J31, AA31–AM31, D11–J11, AA11–AM11, D13–J13, AA13–AM13 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C44 | D44–J44, AA44–AM44 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C45 | D45–J45, AA45–AM45 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C49 | D49–J49, AA49–AM49 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C50 | D50–J50, AA50–AM50 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C57 | D57–J57, AA57–AM57 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C58 | D58–J58, AA58–AM58 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C66 | D66–J66, AA66–AM66, D11–J11, AA11–AM11 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C67 | D67–J67, AA67–AM67, D57–J57, AA57–AM57 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C70 | D70–J70, AA70–AM70, D11–J11, AA11–AM11, D57–J57, AA57–AM57 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C76 | D76–J76, AA76–AM76 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C77 | D77–J77, AA77–AM77 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C78 | D78–J78, AA78–AM78 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C84 | D84–J84, AA84–AM84 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C85 | D85–J85, AA85–AM85 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. |
+| C15, C16, C24, C26, C27, C32, C34, C42 | C11, C12, C13, C14 | Wert auf Grundlage einer Summe von 0 über Schichten ohne Wert | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D44–J44, AA44–AM44, D45–J45, AA45–AM45, D66–J66, AA66–AM66 | C11, C12, C13, C14 | Wert auf Grundlage einer Summe von 0 über Schichten ohne Wert | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C61, N4, C62, C63, C71, C72, C74 | C11, C12, C13, C14, C57, C58 | Wert auf Grundlage einer Summe von 0 über Schichten ohne Wert | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D76–J76, AA76–AM76 | C11, C12, C13, C14, C57, C58 | Wert auf Grundlage einer Summe von 0 über Schichten ohne Wert | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C68, C69 | C11, C12, C13, C14, C57, C58, C66, C67 | Nenner bzw. Umfang des Standardansatzes auf Grundlage einer Summe von 0 (z. B. ohne Umfang je Schicht für Zeitraum 1 bei „TE ≤ AE“) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D46–J46, AA46–AM46 | D44–J44, AA44–AM44 | „✔ ≥ 3“ (Excel wertet die leere Textzelle im Vergleich größer als jede Zahl) | kein Wert | Ohne Stichprobenumfang der Schicht gibt es nichts zu prüfen; ein bestandener Prüfhinweis wäre irreführend. |
+| D79–J79, AA79–AM79 | D77–J77, AA77–AM77 | „✔ ≥ 3“ (Excel wertet die leere Textzelle im Vergleich größer als jede Zahl) | kein Wert | Ohne Stichprobenumfang der Schicht gibt es nichts zu prüfen; ein bestandener Prüfhinweis wäre irreführend. |
+| D77–J77, AA77–AM77 | C69, C74, D45–J45, AA45–AM45 | 3 (Untergrenze je Schicht, obwohl es keinen Gesamtumfang gibt, z. B. bei „TE ≤ AE“) bzw. Umfang auf Grundlage einer Summe von 0 | kein Wert | Ohne Gesamtumfang gibt es für Zeitraum 2 nichts aufzuteilen; die Untergrenze von 3 Einheiten je Schicht hätte als anzuwendender Umfang keine Grundlage. |
+| D78–J78, AA78–AM78 | D44–J44, AA44–AM44, D76–J76, AA76–AM76 | Wert auf Grundlage einer Summe von 0 über Schichten ohne Wert | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C80, C81, N10 | C77, C78 | Gesamtstichprobe bzw. ihr Prüfhinweis auf Grundlage einer Summe der Schichtumfänge von 0 | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| D89–J89, AA89–AM89 | C50, C85 | 0,00 € (keine Schicht trägt eine Fehlersumme) | kein Wert | Solange keine Schicht eine Fehlersumme trägt, gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+| D90–J90, AA90–AM90 | D77–J77, AA77–AM77, D78–J78, AA78–AM78 | Beitrag zur Genauigkeit auf Grundlage eines Umfangs je Schicht, der auf einer Summe von 0 aufbaut | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+| C89 | C11, C57, D89–J89, AA89–AM89 | Hochrechnung bzw. Genauigkeit allein aus einem Zeitraum oder aus einer Summe von 0 (z. B. Genauigkeit 0 € ohne Umfang je Schicht bei „TE ≤ AE“) | kein Wert | Hochrechnung und Genauigkeit gelten für das Geschäftsjahr; ist für einen der beiden Zeiträume keine Schicht belegt oder trägt keine belegte Schicht einen Wert, entstünden sie allein aus dem anderen Zeitraum bzw. aus einer Summe von 0. |
+| C90 | C11, C57, D90–J90, AA90–AM90 | Hochrechnung bzw. Genauigkeit allein aus einem Zeitraum oder aus einer Summe von 0 (z. B. Genauigkeit 0 € ohne Umfang je Schicht bei „TE ≤ AE“) | kein Wert | Hochrechnung und Genauigkeit gelten für das Geschäftsjahr; ist für einen der beiden Zeiträume keine Schicht belegt oder trägt keine belegte Schicht einen Wert, entstünden sie allein aus dem anderen Zeitraum bzw. aus einer Summe von 0. |
+| C92, N5 | C89 | Hochrechnung bzw. Genauigkeit allein aus einem Zeitraum oder aus einer Summe von 0 (z. B. Genauigkeit 0 € ohne Umfang je Schicht bei „TE ≤ AE“) | kein Wert | Hochrechnung und Genauigkeit gelten für das Geschäftsjahr; ist für einen der beiden Zeiträume keine Schicht belegt oder trägt keine belegte Schicht einen Wert, entstünden sie allein aus dem anderen Zeitraum bzw. aus einer Summe von 0. |
+| C93, N7, C96, C97 | C89, C90 | Hochrechnung bzw. Genauigkeit allein aus einem Zeitraum oder aus einer Summe von 0 (z. B. Genauigkeit 0 € ohne Umfang je Schicht bei „TE ≤ AE“) | kein Wert | Hochrechnung und Genauigkeit gelten für das Geschäftsjahr; ist für einen der beiden Zeiträume keine Schicht belegt oder trägt keine belegte Schicht einen Wert, entstünden sie allein aus dem anderen Zeitraum bzw. aus einer Summe von 0. |
+| C98, C99, C100, N11, C101, C102 | C11, C12, C13, C14, C57, C58, C89, C90 | Quote bzw. Würdigung auf Grundlage einer Summe von 0 über Schichten ohne Wert | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. |
+
+### 12_SRS_3Z
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C12 | C7 | 0 € abzüglich des Buchwerts der umfassenden Schicht | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C13 | C8 | 0 abzüglich der Einheiten der umfassenden Schicht | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten unbekannt, nicht null. |
+| C18 | C7, C14, C16 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C19 | C8, C15, C17 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten unbekannt, nicht null. |
+| C27 | C7, C14, C16, C25 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der zulässige Fehler setzt die Buchwerte aller Zeiträume und die Wesentlichkeitsschwelle voraus. |
+| C29 | C7, C14, C16, C28 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der voraussichtliche Fehler setzt die Buchwerte aller Zeiträume und die voraussichtliche Fehlerquote voraus. |
+| C30 | C7, C14, C16 | Prüfhinweis auf Grundlage der vorhandenen Buchwerte | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C34 | C8, C15, C17, C31, C32, C33 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Fehlt die Standardabweichung eines Zeitraums oder seine Anzahl der Einheiten, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C36, C44, C45, C46, C47, C83 | C7, C14, C16, C8, C15, C17, C28, C31, C32, C33 | Wert auf Grundlage des mit 0 gerechneten Buchwerts, N = 0, AE = 0 bzw. σ_e = 0 (Gesamtumfang mindestens der Mindestumfang) | Angabe fehlt | Ohne Buchwerte, Anzahl der Einheiten, voraussichtliche Fehlerquote und Standardabweichungen aller drei Zeiträume ist der Gesamtumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C58 | C53 | 0 € abzüglich des Buchwerts der umfassenden Schicht | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C59 | C54 | 0 abzüglich der Einheiten der umfassenden Schicht | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten unbekannt, nicht null. |
+| C65 | C7, C53, C60 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C66 | C7, C53, C60, C25 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte zulässige Fehler setzt die Buchwerte aller Zeiträume und die Wesentlichkeitsschwelle voraus. |
+| C67 | C7, C53, C60, C28 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der aktualisierte voraussichtliche Fehler setzt die Buchwerte aller Zeiträume und eine voraussichtliche Fehlerquote voraus. |
+| C68 | C31 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für Zeitraum 1. |
+| C69 | C54, C61 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten unbekannt, nicht null. |
+| C70 | C54, C61, C62, C63 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Fehlt die Standardabweichung eines Zeitraums oder seine Anzahl der Einheiten, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C71 | C7, C14, C16, C8, C15, C17, C28, C31, C32, C33, C25, C53, C60 | Nenner auf Grundlage der mit 0 gerechneten Angabe | Angabe fehlt | Ohne die Ist-Werte des Zeitraums 2 und die aktualisierten Prognosen und Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt; die Folgegrößen bleiben offen. |
+| C72, C73, C74, C80, C84, C85, C86, C115 | C7, C14, C16, C8, C15, C17, C28, C31, C32, C33, C25, C53, C60, C54, C61, C62, C63 | Wert auf Grundlage der mit 0 gerechneten Angabe (z. B. Umfang 0 oder 3, „✖ nicht anwendbar (Nenner ≤ 0)“) | Angabe fehlt | Ohne die Ist-Werte des Zeitraums 2 und die aktualisierten Prognosen und Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt; die Folgegrößen bleiben offen. |
+| C75 | C8, C54, C61 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten unbekannt, nicht null. |
+| C76 | C8, C31, C54, C61, C62, C63 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Fehlt die Standardabweichung eines Zeitraums oder seine Anzahl der Einheiten, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C77, C79, C81, C82 | C7, C53, C60, C25, C28, C8, C31, C54, C61, C62, C63 | Umfang auf Grundlage der mit 0 gerechneten Angabe (mindestens der Mindestumfang, gegebenenfalls begrenzt) | Angabe fehlt | Ohne die Ist-Werte des Zeitraums 2 und die aktualisierten Prognosen und Standardabweichungen ist die Neuberechnung nach Zeitraum 1 nicht bestimmt; die Folgegrößen bleiben offen. |
+| C97 | C92 | 0 € abzüglich des Buchwerts der umfassenden Schicht | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C98 | C93 | 0 abzüglich der Einheiten der umfassenden Schicht | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten unbekannt, nicht null. |
+| C101, N4 | C7, C53, C92 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C102 | C7, C53, C92, C25 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der endgültige zulässige Fehler setzt die Buchwerte aller Zeiträume und die Wesentlichkeitsschwelle voraus. |
+| C103 | C7, C53, C92, C28 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Der endgültige voraussichtliche Fehler setzt die Buchwerte aller Zeiträume und eine voraussichtliche Fehlerquote voraus. |
+| C104 | C62 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Ohne Standardabweichung der Stichprobe und ohne aktualisierte Standardabweichung gibt es keinen Wert für Zeitraum 2. |
+| C105 | C7, C14, C16, C8, C15, C17, C28, C31, C32, C33, C25, C53, C60, C54, C61, C62, C63, C92 | Nenner auf Grundlage der mit 0 gerechneten Angabe | Angabe fehlt | Ohne die Ist-Werte des Zeitraums 3 und die aktualisierte Standardabweichung ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Genauigkeit und Würdigung bleiben offen. |
+| C107 | C8, C54, C93 | Wert mit 0 an Stelle der leeren Zelle | Angabe fehlt | Ohne Angabe ist die Anzahl der Einheiten unbekannt, nicht null. |
+| C108 | C8, C31, C54, C62, C93, C99 | gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle | Angabe fehlt | Fehlt die Standardabweichung eines Zeitraums oder seine Anzahl der Einheiten, ist die gewichtete Standardabweichung nicht bestimmt. |
+| C109, C111, C114 | C7, C53, C92, C25, C28, C8, C31, C54, C62, C93, C99 | Umfang auf Grundlage der mit 0 gerechneten Angabe (mindestens der Mindestumfang, gegebenenfalls begrenzt) | Angabe fehlt | Ohne die Ist-Werte des Zeitraums 3 und die aktualisierte Standardabweichung ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Genauigkeit und Würdigung bleiben offen. |
+| C106, C112, C113, C116, C117, C118, C119, C120, N10, C129, C132, C133, C134, C137, C138, N7 | C7, C14, C16, C8, C15, C17, C28, C31, C32, C33, C25, C53, C60, C54, C61, C62, C63, C92, C93, C99 | Wert auf Grundlage der mit 0 gerechneten Angabe (z. B. Umfang 3, Auffüllung auf 30, Genauigkeit ohne den Beitrag des Zeitraums) | Angabe fehlt | Ohne die Ist-Werte des Zeitraums 3 und die aktualisierte Standardabweichung ist die Neuberechnung nach Zeitraum 2 nicht bestimmt; endgültige Umfänge, Genauigkeit und Würdigung bleiben offen. |
+| C127, C128, C135, C136, N5, N11 | C7, C53, C92 | Hochrechnung auf Grundlage eines mit 0 € gerechneten Buchwerts (bei umfassender Schicht ein negativer Betrag) | Angabe fehlt | Ohne die Buchwerte der Zeiträume gibt es keine Bezugsgröße; ein Betrag auf Grundlage von 0 € wäre irreführend. |
+| C84 | C73, C81, C83, C46 | 3 (Untergrenze, obwohl für Zeitraum 2 kein Umfang bestimmt ist, z. B. beim leeren Formular oder bei „TE ≤ AE“) | kein Wert | Ohne gewählten Umfang für Zeitraum 2 bleibt in der Vorlage nur die Untergrenze von 3 Einheiten (MAX übergeht den leeren Bezug); als anzuwendender Umfang hätte sie keine Grundlage. |
+| C113, C117 | C84 | Wert auf Grundlage eines Umfangs von 3 Einheiten für Zeitraum 2, der nur die Untergrenze ist | kein Wert | Ohne gewählten Umfang für Zeitraum 2 bleibt in der Vorlage nur die Untergrenze von 3 Einheiten (MAX übergeht den leeren Bezug); als anzuwendender Umfang hätte sie keine Grundlage. |
+| C127 | C49, C88, C122 | 0,00 € (kein Zeitraum trägt eine Fehlersumme) | kein Wert | Solange kein Zeitraum eine Fehlersumme trägt, gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 13_NS_GW
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C7, N4 | C7 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf der Grundlage von 0 € wäre irreführend. |
+| C8 | C8 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Angabe ist die Anzahl der Stichprobeneinheiten unbekannt, nicht null. |
+| C9 | C8 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | Angabe fehlt | Ohne Angabe ist die Anzahl der Stichprobeneinheiten unbekannt, nicht null. |
+| C12 | C7 | 0 € abzüglich des Buchwerts der umfassenden Schicht | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf der Grundlage von 0 € wäre irreführend. |
+| C14, N10 | C13 | nur die Einheiten der umfassenden Schicht bzw. 0 (leere Zelle zählt als 0) | Angabe fehlt | Ohne Umfang der Zufallsstichprobe ist die Gesamtstichprobe nicht bestimmt. |
+| C15 | C8 | 0 (10 % von 0 Einheiten) | Angabe fehlt | Ohne Angabe ist die Anzahl der Stichprobeneinheiten unbekannt, nicht null. |
+| C16 | C8, C13 | Prüfhinweis auf der Grundlage von 0 Einheiten der Grundgesamtheit bzw. der Zufallsstichprobe | Angabe fehlt | Die Prüfung der Mindesterfassung setzt die Anzahl der Stichprobeneinheiten und den Umfang der Zufallsstichprobe voraus. |
+| C21, C22, N5 | C7 | Hochrechnung mit dem negativen Buchwert der Zufallsschicht (0 € abzüglich umfassende Schicht) bzw. 0 € | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf der Grundlage von 0 € wäre irreführend. |
+| C28 | C27 | Würdigung gegen eine Schwelle von 0 % | Angabe fehlt | Die Würdigung setzt die Wesentlichkeitsschwelle voraus. |
+| C21 | C18 | 0,00 € (die Fehlersumme der Stichprobe fehlt; N(…) zählt sie als 0) | kein Wert | Ohne Fehlersumme der Stichprobe gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 14_NS_GW_S
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C11 | D11–J11, AA11–AM11 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C12 | D12–J12, AA12–AM12 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C18 | D18–J18, AA18–AM18 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C24 | D24–J24, AA24–AM24 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C25 | D25–J25, AA25–AM25 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C27 | D11–J11, AA11–AM11, D27–J27, AA27–AM27 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C13, N4 | C12 | nur der Buchwert der umfassenden Schicht bzw. 0 € (Summe der Buchwerte ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C14 | C11 | nur die Einheiten der umfassenden Schicht bzw. 0 (Summe der Einheiten ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C15 | C11 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C20 | C11 | 10 % der Einheiten der umfassenden Schicht bzw. 0 | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C19, N10 | C18 | nur die Einheiten der umfassenden Schicht bzw. 0 (Summe der Schichtumfänge ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C21 | C19, C20 | Prüfhinweis auf der Grundlage einer Gesamtstichprobe bzw. einer Mindesterfassung, zu der keine Schicht beiträgt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C29, C32, C33, C35, N5, N11 | C27 | Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers der Zufallsschichten von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| D18–J18, AA18–AM18 | C16 | 1 je belegter Schicht (Mindestwert der Formel bei n = 0) | Angabe fehlt | Ohne Umfang der Zufallsstichprobe ist die Aufteilung auf die Schichten nicht bestimmt. |
+| C18, C19, N10 | C16 | Anzahl der belegten Schichten (je Schicht 1), zuzüglich der umfassenden Schicht | Angabe fehlt | Ohne Umfang der Zufallsstichprobe ist die Aufteilung auf die Schichten nicht bestimmt. |
+| C21 | C16 | Prüfhinweis auf der Grundlage von einer Einheit je belegter Schicht | Angabe fehlt | Die Prüfung der Mindesterfassung setzt den Umfang der Zufallsstichprobe voraus. |
+| D27–J27, AA27–AM27 | D12–J12, AA12–AM12 | 0,00 € (leerer Buchwert der Schicht zählt als 0) | Angabe fehlt | Fehlt der Buchwert einer belegten Schicht, ist ihr extrapolierter Fehler nicht bestimmt; Summe und Fehlerquoten bleiben offen. |
+| C27, C29, N5 | D12–J12, AA12–AM12 | Summe, in die die Schicht ohne Buchwert mit 0 € eingeht | Angabe fehlt | Fehlt der Buchwert einer belegten Schicht, ist ihr extrapolierter Fehler nicht bestimmt; Summe und Fehlerquoten bleiben offen. |
+| C32, C33, N11 | D12–J12, AA12–AM12 | Fehlerquote, in die die Schicht ohne Buchwert mit 0 € eingeht, bzw. bezogen nur auf die umfassende Schicht | Angabe fehlt | Fehlt der Buchwert einer belegten Schicht, ist ihr extrapolierter Fehler nicht bestimmt; Summe und Fehlerquoten bleiben offen. |
+| C35 | C34, D12–J12, AA12–AM12 | Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage der mit 0 € gerechneten Schicht | Angabe fehlt | Die Würdigung setzt die Wesentlichkeitsschwelle und den Buchwert jeder belegten Schicht voraus. |
+
+### 15_NS_PPS
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C7, N4 | C7 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf der Grundlage von 0 € wäre irreführend. |
+| C8 | C8 | 0 (Verknüpfung auf das leere Blatt 02) | Angabe fehlt | Ohne Angabe ist die Anzahl der Stichprobeneinheiten unbekannt, nicht null. |
+| C9 | C8 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | Angabe fehlt | Ohne Angabe ist die Anzahl der Stichprobeneinheiten unbekannt, nicht null. |
+| C11 | C8 | 0 (10 % von 0 Einheiten) | Angabe fehlt | Ohne Angabe ist die Anzahl der Stichprobeneinheiten unbekannt, nicht null. |
+| C12 | C8 | „✔ Mindesterfassung erreicht“ (gegen 0 Einheiten) | Angabe fehlt | Ohne Angabe ist die Anzahl der Stichprobeneinheiten unbekannt, nicht null. |
+| N10 | C10 | 0 (leere Zelle zählt als 0) | Angabe fehlt | Ohne Stichprobenumfang sind Zufallsschicht und Auswahlintervall nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C13 | C7 | 0,00 € (0 € geteilt durch den Stichprobenumfang) | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf der Grundlage von 0 € wäre irreführend. |
+| C16 | C7 | 0 € abzüglich des Buchwerts der hochwertigen Einheiten | Angabe fehlt | Ohne Buchwert der Grundgesamtheit gibt es keine Bezugsgröße; ein Ergebnis auf der Grundlage von 0 € wäre irreführend. |
+| C17 | C10 | 0 abzüglich der Anzahl hochwertiger Einheiten | Angabe fehlt | Ohne Stichprobenumfang sind Zufallsschicht und Auswahlintervall nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C18 | C10 | „✖ < 3 Einheiten (Art. 5 Abs. 5)“ (gegen 0 bzw. eine negative Anzahl) | Angabe fehlt | Ohne Stichprobenumfang sind Zufallsschicht und Auswahlintervall nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C19, C25, C26, N5 | C7, C10 | Wert auf Grundlage des mit 0 gerechneten Buchwerts bzw. Stichprobenumfangs (auch negative Beträge) | Angabe fehlt | Auswahlintervall und Hochrechnung setzen Buchwert der Grundgesamtheit und Stichprobenumfang voraus. |
+| C29, C30, N11 | C10 | Fehlerquote auf Grundlage des mit n = 0 gerechneten (negativen) Auswahlintervalls | Angabe fehlt | Ohne Stichprobenumfang sind Zufallsschicht und Auswahlintervall nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C32 | C10, C31 | Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage des mit n = 0 gerechneten Auswahlintervalls | Angabe fehlt | Die Würdigung setzt die Wesentlichkeitsschwelle und den Stichprobenumfang voraus. |
+| C25 | C23 | 0,00 € (die Fehlersumme der Stichprobe fehlt; N(…) zählt sie als 0) | kein Wert | Ohne Fehlersumme der Stichprobe gibt es nichts hochzurechnen; ein extrapolierter Fehler von 0 € sähe wie ein Prüfergebnis aus. |
+
+### 16_NS_PPS_S
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C9 | D9–J9, AA9–AM9 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C10 | D10–J10, AA10–AM10 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C15 | D15–J15, AA15–AM15 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C19 | D19–J19, AA19–AM19 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C20 | D20–J20, AA20–AM20 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C21 | D21–J21, AA21–AM21 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C22 | D22–J22, AA22–AM22 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C25 | D25–J25, AA25–AM25 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C26 | D26–J26, AA26–AM26 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C28 | D9–J9, AA9–AM9, D28–J28, AA28–AM28 | 0 (Summe über Schichten ohne Wert) | kein Wert | Trägt keine Schicht einen Wert, gibt es nichts zu summieren; eine Summe von 0 sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| N4 | C9 | 0 € (Summe der Buchwerte ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C11 | C10 | 0 (Summe der Einheiten ohne Angabe in einer Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C12 | C10 | „✔ N < 300: zulässig …“ (0 Einheiten liegen unter 300) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C16 | C10 | 0 (10 % von 0 Einheiten) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C17 | C15, C16 | Prüfhinweis auf der Grundlage einer Summe der Schichtumfänge bzw. einer Mindesterfassung, zu der keine Schicht beiträgt | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| N10 | C15 | 0 (Summe der Schichtumfänge ohne belegte Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C29, N6 | C25 | 0 € (Summe der Fehler hochwertiger Einheiten ohne Angabe in einer Schicht) | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| C30, C33, C34, C36, N5, N11 | C28 | Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| D15–J15, AA15–AM15, D18–J18, AA18–AM18, D22–J22, AA22–AM22, D23–J23, AA23–AM23, D28–J28, AA28–AM28 | C13 | Wert auf Grundlage von einer Einheit je belegter Schicht (Mindestwert der Formel bei n = 0) | Angabe fehlt | Ohne Stichprobenumfang sind die Aufteilung auf die Schichten, die Zufallsschichten und die Auswahlintervalle nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C15, C22, C28, C30, C33, C34, N5, N10, N11 | C13 | Wert auf Grundlage von einer Einheit je belegter Schicht (Mindestwert der Formel bei n = 0) | Angabe fehlt | Ohne Stichprobenumfang sind die Aufteilung auf die Schichten, die Zufallsschichten und die Auswahlintervalle nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C17 | C13 | Prüfhinweis auf der Grundlage von einer Einheit je belegter Schicht | Angabe fehlt | Die Prüfung der Mindesterfassung setzt den Stichprobenumfang voraus. |
+| C36 | C13, C35 | Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage von einer Einheit je belegter Schicht | Angabe fehlt | Die Würdigung setzt die Wesentlichkeitsschwelle und den Stichprobenumfang voraus. |
+
+### 17_Unterstichprobe
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C13, C16, C20, C22 | C6 | Wert auf Grundlage eines Buchwerts von 0 € | Angabe fehlt | Ohne Buchwert der Stichprobeneinheit lässt sich nichts hochrechnen; die Vorlage rechnet mit 0 € weiter. |
+| C20, C22, C23 | C15 | Wert auf Grundlage eines Umfangs von 0 (bei vorhandenen hochwertigen Einheiten negativ) | Angabe fehlt | Ohne Umfang der Unterstichprobe gibt es kein Auswahlintervall; mit 0 abzüglich der hochwertigen Einheiten entstünden ein negatives Intervall und ein negativer Fehler. |
+
+### 18_GFQ_AnhIII
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C5 | C5 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C6 | C6 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C7, C23 | C7 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C8 | C8 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C12 | 02_Grundgesamtheit!C39 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C14 | C12 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C17 | C14 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C18 | C14, C17 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C19 | C5, C14, C17 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C24 | C6, C7, C18, C23 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C25 | C8, C18 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C26 | C14, C24 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C27 | C12, C26 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C28 | C14, C24, C25 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C30 | C26, C28 | Wert auf Grundlage der in Blatt 02 bzw. im Methodenblatt mit 0 gerechneten leeren Eingaben; ohne Genauigkeit „n. a.“ | kein Wert | Blatt 02 bzw. das Methodenblatt zeigen für die zugrunde liegende Größe „Angabe fehlt“; ein darauf aufbauender Wert hätte keine Grundlage. |
+| C15 | 02_Grundgesamtheit!C49 | 0 (Bezug auf die leere Auswahlzelle in Blatt 02) | Angabe fehlt | Ohne Auswahl in Blatt 02 ist die Behandlung der nicht prüfbaren Einheiten unbekannt, nicht 0. |
+| C30 | C29 | Würdigung gegen eine Schwelle von 0 % | Angabe fehlt | Ohne Wesentlichkeitsschwelle gibt es nichts zu würdigen. |
+| C23 | C21 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Die Anpassung der hochwertigen Schicht setzt den Buchwert der ursprünglichen hochwertigen Schicht voraus; mit 0 entfiele der Fehler der umfassenden Schicht. |
+| C24, C26, C27, C28, C30 | C21 | Wert ohne den Fehler der umfassenden Schicht (EE_e = 0), wenn die Anpassung mit „Ja“ gewählt ist | Angabe fehlt | Die Anpassung der hochwertigen Schicht setzt den Buchwert der ursprünglichen hochwertigen Schicht voraus; mit 0 entfiele der Fehler der umfassenden Schicht. |
+
+### 20_Druck_KOM
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| F11 | 02_Grundgesamtheit!C23 | 0 (leere Zelle zählt als 0) | Angabe fehlt | Ohne Anzahl der Datensätze in Blatt 02 ist sie unbekannt, nicht 0. |
+| G11 | 02_Grundgesamtheit!C16 | 0,00 € (leere Zelle zählt als 0) | Angabe fehlt | Ohne Betrag laut SFC2021 in Blatt 02 ist er unbekannt, nicht 0 €. |
+| A37 | 18_GFQ_AnhIII!C29 | Satz zur Würdigung gegen eine Schwelle von 0 % | Angabe fehlt | Ohne Wesentlichkeitsschwelle in Blatt 18 gibt es nichts zu würdigen. |
+| F12 | 02_Grundgesamtheit!C52 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G12 | 02_Grundgesamtheit!C51 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| F14 | F14 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G32, A37 | 18_GFQ_AnhIII!C26 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G33 | 18_GFQ_AnhIII!C24 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G34 | 18_GFQ_AnhIII!C25 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G35 | 18_GFQ_AnhIII!C28 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G36 | 18_GFQ_AnhIII!C27 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G42 | 18_GFQ_AnhIII!C26, 18_GFQ_AnhIII!C14 | Wert auf Grundlage der in Blatt 02, im Methodenblatt bzw. in Blatt 18 mit 0 gerechneten leeren Eingaben; ohne Zahl in Blatt 18 „nicht berechnet“ | kein Wert | Das liefernde Blatt zeigt für die Größe „Angabe fehlt“; der Bericht übernimmt keinen Wert, der dort keine Grundlage hat. |
+| G43 | G42 | Betrag der Korrektur, obwohl die Restfehlerquote fehlt (Excel wertet die leere Textzelle im Vergleich größer als 0,02) | kein Wert | Ohne Restfehlerquote steht nicht fest, ob eine Korrektur erforderlich ist; ein Betrag hätte keine Grundlage. |
+
+### X1_KonsMUS_2017
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C5, C6 | C4 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Zuverlässigkeits- und keinen Erweiterungsfaktor. |
+| C8 | C1, C7 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt Buchwert und erwartete Fehlerquote voraus. |
+| C10 | C1 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt den Buchwert voraus. |
+| C11, C12, C15 | C4, C7 | Wert auf Grundlage des mit RF = 0 bzw. AE = 0 berechneten Umfangs (z. B. Mindestumfang 30) | Angabe fehlt | Ohne Konfidenzniveau und erwartete Fehlerquote ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C17, C18 | C4, C7, C16 | Genauigkeit mit Incremental Allowance = 0 bzw. auf Grundlage des mit 0 berechneten Umfangs | Angabe fehlt | Die Genauigkeit setzt den Stichprobenumfang und die Incremental Allowance voraus. |
+| C19, C21 | C4, C7, C13, C14 | Hochrechnung mit Fehlern = 0 bzw. auf Grundlage des mit 0 berechneten Umfangs | Angabe fehlt | Die Hochrechnung setzt den Stichprobenumfang und die Fehler der Stichprobe voraus. |
+| C20, C22 | C4, C7, C13, C14, C16 | Obere Fehlergrenze mit Fehlern bzw. Incremental Allowance = 0 oder auf Grundlage des mit 0 berechneten Umfangs | Angabe fehlt | Die Hochrechnung setzt den Stichprobenumfang und die Fehler der Stichprobe voraus. |
+
+### X2_DiffSch_2017
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C6 | C5 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
+| C8 | C1, C7 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der voraussichtliche Fehler setzt Buchwert und erwartete Fehlerquote voraus. |
+| C10, C23 | C1 | 0 € (leere Zelle zählt als 0) | Angabe fehlt | Der zulässige Fehler setzt den Buchwert voraus. |
+| C11, C19, C20 | C3, C4, C5, C7 | Wert auf Grundlage des mit 0 berechneten Umfangs (Mindestumfang 30) | Angabe fehlt | Ohne Umfang der Grundgesamtheit, Standardabweichung, Konfidenzniveau und erwartete Fehlerquote ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C14, C16, C17, C18, C21, C22 | C3, C4, C5, C7, C13 | Hochrechnung mit einem Stichprobenfehler von 0 € bzw. auf Grundlage des mit 0 berechneten Umfangs | Angabe fehlt | Die Hochrechnung setzt den Stichprobenumfang und den Fehler der Stichprobe voraus. |
+
+### X3_DiffSch_S_2017
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| D1, D14, D30 | E6–K6, AA6–AM6 | Wert ohne den Buchwert der Schicht mit fehlender Angabe | Angabe fehlt | Zu einer belegten Schicht gehören Buchwert, Umfang und Standardabweichung; fehlt eine Angabe, sind die Summen des Blatts nicht bestimmt. |
+| D3 | E7–K7, AA7–AM7 | Summe ohne den Umfang der Schicht mit fehlender Angabe | Angabe fehlt | Zu einer belegten Schicht gehören Buchwert, Umfang und Standardabweichung; fehlt eine Angabe, sind die Summen des Blatts nicht bestimmt. |
+| D4 | E7–K7, AA7–AM7, E8–K8, AA8–AM8 | Wert ohne den Beitrag der Schicht mit fehlender Angabe | Angabe fehlt | Zu einer belegten Schicht gehören Buchwert, Umfang und Standardabweichung; fehlt eine Angabe, sind die Summen des Blatts nicht bestimmt. |
+| D10 | D9 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
+| D12 | D11, E6–K6, AA6–AM6 | 0 € bzw. Wert ohne den Buchwert der Schicht mit fehlender Angabe | Angabe fehlt | Der voraussichtliche Fehler setzt die erwartete Fehlerquote und den Buchwert jeder belegten Schicht voraus. |
+| D15, D26, D27, E17–K17, AA17–AM17 | D9, D11, E6–K6, AA6–AM6, E7–K7, AA7–AM7, E8–K8, AA8–AM8 | Wert auf Grundlage des mit 0 berechneten Umfangs (mindestens 30) | Angabe fehlt | Ohne Konfidenzniveau, erwartete Fehlerquote und die Angaben jeder belegten Schicht ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| D23, D24, D25, D28, D29, E20–K20, AA20–AM20, E22–K22, AA22–AM22 | D9, D11, E6–K6, AA6–AM6, E7–K7, AA7–AM7, E8–K8, AA8–AM8, E19–K19, AA19–AM19 | Hochrechnung mit einem Stichprobenfehler von 0 € bzw. auf Grundlage des mit 0 berechneten Umfangs | Angabe fehlt | Die Hochrechnung setzt den Stichprobenumfang und den Fehler der Stichprobe mindestens einer belegten Schicht voraus. |
+| D23 | E22–K22, AA22–AM22 | 0 € (Summe über Schichten ohne hochgerechneten Fehler) | kein Wert | Trägt keine Schicht einen hochgerechneten Fehler, gibt es nichts zu summieren; eine Summe von 0 € sähe wie ein Ergebnis aus. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+| D24, D25 | D23 | Fehlerquote 0 % bzw. berichtigter Buchwert in Höhe des Buchwerts, gerechnet mit einem hochgerechneten Fehler von 0 € | kein Wert | Der Wert baut auf einer Summe auf, zu der keine Schicht beiträgt; ohne sie ist er nicht bestimmt. Die Webfassung lässt ihn offen, solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis in Warnfarbe. |
+
+### X4_DiffSch_2Z_2017
+
+| Zellen | leer ist eine von | Vorlage zeigt | Webfassung zeigt | Begründung |
+|---|---|---|---|---|
+| C1, C15 | C3, C4 | Wert auf Grundlage nur eines Buchwerts bzw. 0 € | Angabe fehlt | Der Buchwert der Grundgesamtheit setzt die Buchwerte beider Zeiträume voraus. |
+| C9 | C5, C6, C7, C8 | Wert ohne den Beitrag des Zeitraums mit fehlender Angabe | Angabe fehlt | Das gewichtete Mittel der Varianzen setzt Umfang und Standardabweichung beider Zeiträume voraus. |
+| C11 | C10 | 0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH) | Angabe fehlt | Ohne Konfidenzniveau gibt es keinen Koeffizienten z. |
+| C13 | C3, C4, C12 | 0 € bzw. Wert auf Grundlage nur eines Buchwerts | Angabe fehlt | Der voraussichtliche Fehler setzt die Buchwerte beider Zeiträume und die erwartete Fehlerquote voraus. |
+| C16, C17, C18 | C3, C4, C5, C6, C7, C8, C10, C12 | Umfang auf Grundlage der mit 0 gerechneten Angabe (z. B. 0) | Angabe fehlt | Ohne die Angaben zur Planung des ersten Zeitraums ist der Stichprobenumfang nicht bestimmt. |
+| C24, C30, C43 | C3, C25 | Wert auf Grundlage nur eines Buchwerts bzw. 0 € | Angabe fehlt | Der Buchwert der Grundgesamtheit setzt die Buchwerte beider Zeiträume voraus. |
+| C28 | C3, C25, C27 | 0 € bzw. Wert auf Grundlage nur eines Buchwerts | Angabe fehlt | Der voraussichtliche Fehler setzt die Buchwerte beider Zeiträume und die erwartete Fehlerquote voraus. |
+| C31 | C3, C4, C6, C7, C8, C12, C22, C25, C27, C23, C26 | Umfang auf Grundlage der mit 0 gerechneten Angabe (z. B. 0) | Angabe fehlt | Ohne die Angaben beider Zeiträume ist der neu berechnete Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C39, C40 | C3, C4, C6, C7, C8, C12, C22, C25, C27 | Genauigkeit auf Grundlage der mit 0 gerechneten Angabe | Angabe fehlt | Ohne die Angaben beider Zeiträume ist der neu berechnete Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen. |
+| C36, C37, C38, C41, C42 | C3, C4, C6, C7, C8, C12, C22, C25, C27, C21, C34 | Hochrechnung mit einem Stichprobenfehler von 0 € bzw. auf Grundlage der mit 0 gerechneten Angabe | Angabe fehlt | Die Hochrechnung setzt die Stichprobenumfänge und die Fehler der Stichproben beider Zeiträume voraus. |
+
+<!-- abweichungen:end -->
+
+## 2. Verknüpfungen zu Blatt 02
+
+Die grünen Verknüpfungen (z. B. `03_MUS_1Z!C7 = 02_Grundgesamtheit!C51`) zeigen
+in der Vorlage 0, solange Blatt 02 leer ist. In der Webfassung liefert ein
+leeres Blatt 02 keinen Buchwert 0, sondern keinen Wert (Blatt 02: C37, C38,
+C51, C52); die Verknüpfung im Methodenblatt ist dann leer. Leert die
+Prüfbehörde eine überschriebene Verknüpfung, gilt wieder der Wert aus Blatt
+02; in Excel bliebe die Zelle leer, weil die Formel überschrieben ist.
+Überschriebene Verknüpfungen sind in der Oberfläche markiert.
+
+## 3. Vergleiche, Differenzen und Aufrunden
+
+Die Tabellenkalkulation rechnet nicht mit rohem Gleitkomma. Gemessen an
+LibreOffice 24.2 (`scripts/measure_semantics.py`, 451 Vergleiche und 81
+Rundungen in `test/fixtures/libreoffice-semantik.json`) gilt:
+
+- **Vergleiche** (`=`, `<>`, `<`, `<=`, `>`, `>=`) behandeln zwei Zahlen als
+  gleich, wenn sie sich um weniger als 2⁻⁴⁸ relativ unterscheiden. Die
+  Rechenkerne vergleichen deshalb ausschließlich über `excel.eq`, `ne`, `lt`,
+  `le`, `gt`, `ge`; rohe Vergleiche sind in `src/sheets` per Lint-Regel
+  gesperrt.
+- **Differenzen** fast gleicher Werte ergeben 0 (`excel.minus`, `excel.plus`).
+- **`ROUNDUP`** kürzt den Wert zuerst auf zwölf signifikante Stellen und
+  rundet dann von null weg auf. 100,00000000000004 bleibt 100;
+  100,000000001 wird 101. Das gilt auch oberhalb von zwölf ganzzahligen
+  Stellen: Aus 369.792.900.021.303 wird 369.792.900.021.000 (Abnahme, Blatt
+  03 C21). `excel.roundUp` bildet das nach.
+- **`SUMME`** über einen Bereich summiert mit Fehlerausgleich
+  (Kahan-Neumaier); `excel.sum` tut dasselbe. Ohne ihn weicht die Summe über
+  mehrere Schichten um eine Stelle der letzten Ziffer ab, was eine Würdigung
+  genau an der Schwelle kippen kann (Abnahme, Blatt 09 C62). Einzelne
+  Additionen (`A1+B1`) rechnen wie in der Vorlage ohne Ausgleich.
+
+Die Messwerte sind Bestandteil der Tests (`test/excel.spec.ts`). Der
+Golden-Abgleich vergleicht Zellen mit Ganzzahlformat exakt, die übrigen auf
+1e-9 relativ; bei Eurobeträgen gilt zusätzlich ein Unterschied bis 10⁻⁶ € als
+gleich (Rauschen aus einer Auslöschung in Blatt 20 G43, angezeigt wird in
+beiden Fällen 0,00 €).
+
+**Grenzen des geprüften Zahlenbereichs:**
+
+- Stichprobenumfänge ab 10¹⁵ Einheiten entstehen nur, wenn TE und AE bis auf
+  Rundungsrauschen gleich sind. Dort streuen Vorlage und Webfassung um bis zu
+  einige 10⁻⁵ relativ. Die Webfassung zeigt den Wert und weist ihn mit „…
+  außerhalb des geprüften Zahlenbereichs … nicht belastbar“ in Warnfarbe aus;
+  der Abgleich vergleicht dort nur die Größenordnung.
+- Liegt eine Quote genau auf der Vergleichstoleranz und trägt der Fall eine
+  Eingabe mit 16 oder 17 geltenden Stellen, kann die Würdigung von der
+  Neuberechnung mit LibreOffice abweichen (zwei Prüfsonden der Abnahme: Blatt
+  06 C99, Blatt 12 C138). Ursache ist die letzte Stelle der eingelesenen
+  Eingabe: Mit der um eine Stelle der letzten Ziffer verschobenen Eingabe
+  zeigt die Webfassung in beiden Fällen den Text der Vorlage. Über die
+  Oberfläche lassen sich solche Zahlen nicht eingeben; der Abgleich führt die
+  Zellen getrennt als „Toleranzkante“ und prüft die Erklärung je Zelle.
+
+**Offen:** Gemessen ist LibreOffice 24.2, mit dem auch alle Sollwerte
+entstehen. Eine Gegenprobe mit Microsoft Excel steht aus; das steht auch in
+der Fußzeile der Oberfläche und im Kopf von [abgleich.md](abgleich.md). Excel rundet bei der Anzeige und in
+Vergleichen ebenfalls auf 15 Stellen, die genauen Grenzen können abweichen;
+betroffen wären nur Werte, die sich erst jenseits der zwölften Stelle von
+einer Schwelle oder ganzen Zahl unterscheiden.
+
+## 4. Blatt 03: begrenzter Stichprobenumfang ohne rechnerischen Umfang
+
+Ist der begrenzte Stichprobenumfang gewählt und fehlt die voraussichtliche
+Fehlerquote oder Standardabweichung, zeigt die Vorlage `MIN(MAX(n;30);n_lim)`
+mit dem aus 0 berechneten n. Der Referenz-Rechenkern `engine.js` des
+Ausgangsmaterials zeigte hier den begrenzten Umfang (50 bzw. 30). Die
+Webfassung zeigt „Angabe fehlt“, damit die Regel oben ohne Ausnahme gilt. Für
+`TE ≤ AE` und für ein fehlendes Konfidenzniveau zeigt die Vorlage selbst den
+begrenzten Umfang; die Webfassung folgt ihr.
+
+## 5. Schichtzeilen
+
+Die Summe über eine Schichtzeile, in der keine Schicht einen Wert trägt, ist
+in der Vorlage 0. Solange eine Pflichteingabe fehlt, zeigt die Webfassung
+dort keinen Wert (`withoutBasis`) – auch nicht in den Zellen, die auf dieser 0
+aufbauen (Abgleich mit Blatt 02, zulässiger Fehler, Hochrechnung, Würdigung,
+Ergebnisübersicht). Summen, die vom Stichprobenumfang abhängen, bleiben offen,
+solange der Umfang wegen einer fehlenden Angabe offen ist.
+
+Der Prüfhinweis „mindestens drei Einheiten je (Zufalls-)Schicht“ lautet in
+der Vorlage „✔ ≥ 3“, wenn es keinen Umfang je Schicht gibt (leere Textzelle,
+im Vergleich größer als jede Zahl). Fehlt eine Pflichteingabe, zeigt die
+Webfassung ihn in allen geschichteten Blättern einheitlich nicht
+(`checkStratumUnits`); sind alle Pflichteingaben vorhanden (etwa bei „TE ≤
+AE“), zeigt sie ihn wie die Vorlage und weist ihn als Wert ohne Grundlage aus.
+
+Die 8. bis 20. Schicht (Spalten AA–AM) gibt es in der Vorlage nicht; siehe
+[schichten-und-listen.md](schichten-und-listen.md). Die Altvorlage X3 führt
+ihre Schichten in E–K; die Webfassung liest die Schichtspalten je Blatt aus
+der Definition (`strataColumnsOf`).
+
+## 6. Blatt 17 als Liste
+
+Die Vorlage wird je Stichprobeneinheit kopiert, die Webfassung führt eine
+Liste. Die Zuordnung der Einheiten zum Methodenblatt (Zellen W5–W10:
+Zufallsschicht oder hochwertige Einheit, maßgebliche Variante, Nummer der
+Schicht, Stichprobenzeitraum) und die Summenbildung sind Hinweise der
+Webfassung; der Rechenkern je Einheit folgt der Vorlage. Die Summen werden
+per Schaltfläche in die Eingaben des gewählten Verfahrens übernommen. Die
+Übernahme gibt es für die Blätter 03, 04, 08, 13 und 15 – in Blatt 04 je
+Schicht; Einheiten ohne die dafür nötige Schichtnummer werden nicht
+übernommen und genannt. Die übrigen Blätter (05–07, 09–12, 14, 16) nehmen
+keine Summen auf; dort sind sie von Hand einzutragen. Die Hinweise an den
+Feldern W9 und W10 und die Meldung der Oberfläche sagen genau das.
+
+## 7. Darstellung
+
+Prozentwerte erscheinen mit drei Nachkommastellen (0,652 %), die Vorlage
+formatiert mit zwei. Gerechnet wird mit dem vollen Wert; der Excel-Export
+verwendet die Zahlenformate der Vorlage.
+
+## 8. Mit 0 gerechnet und ausgewiesen
+
+Entscheidung des Auftraggebers: Fehlt die Standardabweichung der Stichprobe
+(z. B. Blatt 03: C39; Blatt 04: Zeile 47 einer belegten Schicht), rechnet die
+Webfassung wie die Vorlage mit 0 und zeigt die Werte. An den betroffenen
+Werten (Genauigkeit, Fehlergrenzen, Würdigung) steht der Hinweis der
+Webfassung „Keine Angabe, daher mit 0 berechnet.“ (englisch „Not provided,
+therefore calculated with 0.“). Die Würdigung erscheint mit dem Wortlaut der
+Vorlage, daneben in Warnfarbe der Hinweis; sie ist nicht uneingeschränkt grün.
+Derselbe Hinweis steht in der Ergebnisspalte, im Excel-Export, im Arbeitsstand
+(`hinweise`), in Blatt 18 und im Bericht (Nr. 13). Ebenso behandelt wird die fehlende Fehlersumme
+einer von mehreren belegten Schichten bzw. eines von mehreren Zeiträumen
+(`partialErrorSum`). Das ist keine Abweichung im Wert, sondern eine
+Kennzeichnung; die Fallarten stehen in Abschnitt 1.
+
+## 9. Import der ausgefüllten Vorlage
+
+Die Webfassung liest die Eingabezellen aller Blätter der ausgefüllten Vorlage
+und nennt, welche Blätter Werte enthielten. Kopien des Blatts 17 werden zu
+weiteren Stichprobeneinheiten – auch unter freiem Namen, erkannt am Titel des
+Blatts und in der Vorschau genannt; das in Blatt 18 gewählte Methodenblatt
+wird das aktive Verfahren, und Blatt 18 gilt damit als ausgefüllt. Vor der
+Übernahme zeigt eine Vorschau:
+
+- **Umgedeutete und nicht übernommene Werte** mit Blatt, Zelle, gefundenem
+  Wert und Grund (abweichende Schreibweise einer Auswahl, Zahl als Text,
+  überschriebene Verknüpfung, unbekannter Auswahlwert). Ein Datum, das als
+  Tageszahl in der Zelle steht (Blatt 20 „Stand“), wird als Datum übernommen.
+- **Hinweise zur Mappe:** Zahlen in Schichtzeilen außerhalb der sieben
+  Schichtspalten (z. B. eine selbst angelegte Spalte K) werden nicht gelesen
+  und genannt; ist in Blatt 18 der Mappe kein Methodenblatt gewählt, sagt die
+  Vorschau, welches Verfahren die Webfassung als aktiv annimmt; eine in der
+  Mappe gelöschte Vorgabe (z. B. die Wesentlichkeitsschwelle) übernimmt die
+  Webfassung als leere Zelle, statt die Vorgabe wieder einzusetzen.
+- **Gegenprobe gegen die Rechenwerte der Mappe** für alle ausgefüllten Blätter
+  und immer auch für Blatt 18 und den Bericht, einschließlich der Summenzellen
+  und der Ergebnisübersicht N3–N11, in beide Richtungen: anderer Wert, „Mappe
+  mit Wert, Webfassung ohne“ und „Mappe leer, Webfassung mit Wert“.
+  Begründete Fälle („Angabe fehlt“, die Vorlage rechnet mit 0) stehen getrennt
+  in einer zugeklappten Liste, damit echte Unterschiede auffallen. Verglichen
+  werden nur Zellen, die es in der Mappe gibt; eine nie berechnete Datei
+  enthält keine Rechenwerte und wird nicht verglichen.
+
+Ein abgeschnittenes oder übergroßes Blatt ist ein Lesefehler; die Datei wird
+abgelehnt, nicht teilweise gelesen. Übernommen wird erst nach Bestätigung.
+
+## 10. Prüfsumme des Arbeitsstands
+
+Die Prüfsumme (SHA-256) umfasst Kopf, aktives Verfahren und Eingaben in
+kanonischer Reihenfolge. Der Zeitpunkt `gespeichertAm`, die gespeicherten
+Ergebnisse und die Hinweise gehören bewusst nicht dazu: Die Prüfsumme
+belegt, dass die Eingaben unverändert sind; Ergebnisse und Hinweise werden
+beim Öffnen neu gerechnet. Ein nachträglich geänderter Zeitstempel fällt
+deshalb nicht auf.
+
+## 11. Wo die Webfassung der Vorlage trotz Auffälligkeit folgt
+
+Die vorläufige Vorgabe betrifft Werte, die nur wegen einer fehlenden Angabe
+entstehen, und bestandene Prüfhinweise ohne Grundlage. Folgende Stellen fallen
+nicht darunter; die Webfassung zeigt dort denselben Wert wie die Vorlage und,
+wo es der Einordnung dient, einen Hinweis der Webfassung in Warnfarbe:
+
+- **Warnung ohne obere Fehlergrenze** (Blätter 03–12): Fehlt die obere
+  Fehlergrenze, zeigt die Vorlage „⚠ GFQ unter, obere Fehlergrenze über der
+  Schwelle – weitere Würdigung“. Die Warnung ist die vorsichtigere Aussage und
+  bleibt; fehlt die Genauigkeit nur wegen einer fehlenden Angabe, bleibt die
+  Würdigung offen.
+- **Nicht positiver Nenner der Standardneuberechnung** (05–07, 10–12): Der
+  Text „✖ nicht anwendbar (Nenner ≤ 0)“ steht wie in der Vorlage; sind alle
+  Pflichteingaben vorhanden, zeigen alle sechs Blätter einheitlich die
+  Untergrenzen (3 bzw. Auffüllung auf 30) und die Auswertung wie die Vorlage,
+  dazu Hinweise in Warnfarbe (Empfehlung: globale Neuberechnung).
+- **Negative oder unbegrenzte Umfänge der Altvorlagen** (X1–X4) und der
+  **nicht positive Anpassungsfaktor in Blatt 18**: wie die Vorlage, mit Hinweis.
+- **Hilfszeilen je Schicht**, die für unbelegte Schichten 0 tragen (z. B.
+  Blatt 04 Zeilen 25 und 52, Blatt 14 Zeile 27): wie die Vorlage.
+- **Freiwillige Einzelbeträge** aus `N(…)` (systembedingte und anomale
+  Fehler, in Blatt 20 die Beträge nach Art. 98 Abs. 6 und die
+  Finanzkorrekturen): 0 ohne Ausweis. Für die Fehler der hochwertigen bzw.
+  umfassenden Schicht gilt das nur, solange die Schicht gar nicht erklärt ist
+  (Nr. 13).
+- **Negative Ergebnisse** (mehr hochwertige Einheiten als Stichprobenumfang,
+  negative Gesamt- oder Restfehlerquote): wie die Vorlage, mit Hinweis in
+  Warnfarbe (Nr. 13).
+
+Eine Zusammenstellung dieser und weiterer Auffälligkeiten der Vorlage für den
+Auftraggeber liegt außerhalb des Repositorys.
+
+## 12. Bericht: Programm und Prüfbehörde sind Angaben, kein fester Text
+
+Die Vorlage nennt in Blatt 20 fest ein bestimmtes Programm (Kopfzeile, Zelle
+A6) und eine bestimmte Prüfbehörde (Fußzeile der Druckseite). Die Webfassung
+wird von Prüfbehörden verschiedener Programme und Mitgliedstaaten benutzt;
+ein Bericht mit fremder Behörde im Fuß wäre dort falsch. Sie weicht deshalb
+**bewusst im Wert** von der Vorlage ab:
+
+- **Kopfzeile:** „Bezeichnung des Programms · CCI … · Geschäftsjahr … ·
+  Status“. Die Bezeichnung gibt die Prüfbehörde bei den Steuerfeldern an (Zelle
+  W4, in der Vorlage unbelegt); ohne Angabe gilt „Programm(e) / CCI“ des
+  gewählten Verfahrens, sonst beginnt die Zeile mit der CCI-Nummer. Der Teil ab
+  „CCI“ ist wie in der Vorlage.
+- **Fußzeile:** Prüfbehörde, Organisationseinheit und Ort aus den Angaben W5–W7.
+  Ohne Angabe bleibt die Fußzeile im Druck leer.
+- Fehlende Angaben zeigt die Bildschirmansicht als Platzhalter in eckigen
+  Klammern; er wird nicht gedruckt. Kopf- und Fußzeile folgen der gewählten
+  Sprache; die Angaben selbst bleiben, wie sie eingegeben sind.
+- Die Angaben stehen im Arbeitsstand und im Excel-Export. Beim Import der
+  ausgefüllten Vorlage bleiben sie leer, weil die Vorlage sie nicht kennt.
+- Am Bericht steht dazu der Hinweis der Webfassung (`own-header`); im
+  Abgleich ist Zelle A6 als bewusst anders gebildet geführt (`adapted` im
+  Blattmodul): Verglichen wird der Teil ab „CCI“.
+
+Das ausgelieferte Paket enthält keinen festen Namen einer Behörde oder eines
+Programms, auch nicht in den Beispielwerten (`test/neutral.spec.ts`).
+
+Ebenfalls anders als in der Vorlage: Leere Freitextfelder des Berichts werden
+nicht mit ihrem Platzhaltertext in eckigen Klammern gedruckt, sondern bleiben
+im Druck leer; der Platzhalter steht nur am Bildschirm.
+
+## 13. Einschränkungen eines Ergebnisses: Hinweise in Warnfarbe
+
+An keiner dieser Stellen weicht ein Wert von der Vorlage ab. Die Webfassung
+sagt aber dazu, wenn ein gezeigtes Ergebnis nicht belastbar ist
+(`src/view/limits.ts`):
+
+| Art | Wann | Hinweis |
+|---|---|---|
+| mit 0 gerechnet | Standardabweichung der Stichprobe oder Fehlersumme einer von mehreren Schichten fehlt (Nr. 8) | „Keine Angabe, daher mit 0 berechnet: …“ |
+| stille Lücke | Eine nicht freiwillige Eingabe ist leer, die Vorlage rechnet ohne sie weiter, und ein gezeigtes Ergebnis hängt von ihr ab – etwa Buchwert, Anzahl oder Summe der Buchwerte der Stichprobe einer belegten Schicht, der Ist-Wert eines Zeitraums, das Konfidenzniveau oder die Fehlersumme einer erklärten hochwertigen bzw. umfassenden Schicht | „Angabe fehlt: Schicht n: … (Zelle). Die Vorlage rechnet ohne sie weiter; das Ergebnis hängt aber von ihr ab und ist so nicht belastbar. Trifft 0 zu, bitte 0 eintragen“ |
+| ohne Grundlage | Wert der Vorlage ohne Grundlage bei vollständigen Pflichteingaben (Nr. 1) | „Wie in der Vorlage gezeigt, obwohl die Grundlage fehlt: …“ |
+| negatives Ergebnis | Eine berechnete Anzahl, ein Auswahlintervall, der extrapolierte Fehler oder eine Fehlerquote ist negativ | „Mehr hochwertige Einheiten als Stichprobenumfang: Die Zufallsschicht ist negativ …“ und „Negativer Wert wie in der Vorlage: …“ |
+| Zahlenbereich | Stichprobenumfang ab 10¹⁵ (Nr. 3) | „… außerhalb des geprüften Zahlenbereichs …“ |
+| Hinweis des Blatts | Hinweise der Webfassung in Warnfarbe (`webHints`) | Text des Blatts |
+| Auslegung, Altvorlage | wie bisher | „Auslegung der Vorlage – …“, Hinweis der Altvorlage |
+
+**Stille Lücken** ermittelt `src/model/dependence.ts` einheitlich für alle
+Blätter durch Nachrechnen: Das Blatt wird mit Probewerten an der Stelle der
+leeren Eingabe noch einmal gerechnet; ändert sich eine Ergebniszelle
+(extrapolierter Fehler, Fehlerquote, obere Fehlergrenze, Stichprobenumfang),
+hängt sie davon ab. Bei Schichtzeilen zählen nur belegte Schichten. Freiwillig
+sind systembedingte und anomale Fehler, die aktualisierte voraussichtliche
+Fehlerquote („leer = Wert aus I“) und – jeweils als Gruppe, die nur gemeinsam
+leer sein darf – die Angaben der hochwertigen Einheiten bzw. der umfassenden
+Schicht je Zeitraum und Schicht; in Blatt 02 und im Bericht sind die
+freiwilligen Angaben in der Definition gekennzeichnet (`optional`). Die Regel
+ist als Eigenschaft geprüft (`test/properties.spec.ts`): Für jede Einzellücke
+der Abnahme, die in der Vorlage ein Ergebnis ändert, ist dieses Ergebnis in
+der Webfassung offen oder trägt einen Hinweis in Warnfarbe.
+
+**Die Hinweise reisen mit.** Blatt 18 führt die Einschränkungen des Blatts 02
+und des gewählten Verfahrens mit der Blattnummer davor („Blatt 03: …“), der
+Bericht zusätzlich die des Blatts 18 – am Bildschirm, im Druck und auf jedem
+Blatt des Excel-Exports; im Arbeitsstand stehen sie unter `hinweise`. Ist eine
+Altvorlage das gewählte Verfahren, steht der Hinweis in Blatt 18 auch bei
+sonst leerem Formular. Schränkt ein Hinweis in Warnfarbe das Ergebnis ein,
+erscheint eine bestandene Würdigung („✔“) mit dem Zusatz „Nicht
+uneingeschränkt: siehe Hinweise der Webfassung“ und in Warnfarbe statt grün.
+Je Hinweisart gibt es einen Durchstich Verfahren → Blatt 18 → Bericht → Export
+(`test/limits.spec.ts`).
+
+## 14. Bericht: Zuordnung zum Arbeitsstand
+
+Der Bericht trägt am Bildschirm und im Druck – wie der Kopf des Excel-Exports
+– die Vorlage, den Rechtsstand, die Fassung des Rechenkerns und die Prüfsumme
+der Eingaben. Damit lässt sich ein Ausdruck einem Arbeitsstand zuordnen. Die
+Vorlage kennt diese Zeile nicht.
+
+## 15. Excel-Export: nur bearbeitete Blätter
+
+Exportiert werden das gewählte Verfahren (Blatt „Ergebnis“), Blatt 18 und der
+Bericht dazu und jedes weitere Blatt, in dem mindestens eine Eingabe von den
+Vorgaben der Vorlage abweicht. Ein Blatt nur mit Vorgaben („✔ ≤ 2 %“) steht
+nicht im Export. Ein anderes, früher bearbeitetes Verfahrensblatt trägt im
+Kopf den Satz „Nicht das gewählte Verfahren: Dieses Blatt fließt nicht in
+Blatt 18 und den Bericht ein.“
