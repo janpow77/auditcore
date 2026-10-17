@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Vorbereitung Release v0.14.1 (17.10.2026): Begriff „Signifikanzschwelle“
+  statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“ für die 2-%-Schwelle der
+  Fehlerquote (Delegierte Verordnung (EU) 2023/67, Anhang I Nr. 1; VO (EU)
+  2021/1060, Anhang XX Nr. 5.9) in npm `@auditcore/ui-core` 0.4.1,
+  `@auditcore/ui` 0.5.1, `@auditcore/ui-react` 1.3.1 sowie in
+  `auditcore_extrapolation` 0.2.1 und `auditcore_sampling` 0.2.5. Nur Texte;
+  Bezeichner, Schlüssel und REST-Verträge bleiben unverändert, die englische
+  Bezeichnung bleibt „materiality threshold“. Wegen der exakten Bindungen
+  folgen `@auditcore/bpmn-vue` 0.5.2, `@auditcore/bpmn-react` 0.5.2 und
+  `@auditcore/layout` 0.1.2 ohne Änderung am Paket selbst. Alle übrigen Pakete
+  sind gegenüber v0.14.0 unverändert und behalten ihre Version.
 - Vorbereitung Release v0.14.0 (17.10.2026): `auditcore_dummygenerator` 0.2.0
   (Namensbaukasten für synthetische Firmennamen), `auditcore_dummybundle` 0.2.0
   (Firmennamen aus dem Namensbaukasten; gleicher Startwert ergibt andere Daten

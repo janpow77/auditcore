@@ -1,4 +1,4 @@
-auditcore_extrapolation 0.1.0 — attribution and authorization
+auditcore_extrapolation 0.2.1 — attribution and authorization
 
 New implementation in auditcore. No code was copied from other repositories.
 The formulas and printed tables (z values, reliability factors) follow the
