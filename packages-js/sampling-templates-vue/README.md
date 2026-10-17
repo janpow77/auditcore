@@ -107,7 +107,7 @@ der Anwendung legt dafür ein eigenes Teilpaket an.
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (36):
+Exporte der Einstiegspunkte aus `package.json#exports` (37):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -123,6 +123,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (36):
 | `@auditcore/sampling-templates-vue` | `LocalDraftOptions` | Schnittstelle | – | `composables/useLocalDraft` |
 | `@auditcore/sampling-templates-vue` | `MenuAction` | Typ | Einträge des Menüs „Arbeitsstand“. | `types` |
 | `@auditcore/sampling-templates-vue` | `MethodBar` | Vue-Komponente | – | `components/MethodBar.vue` |
+| `@auditcore/sampling-templates-vue` | `MethodGlossary` | Vue-Komponente | – | `components/MethodGlossary.vue` |
 | `@auditcore/sampling-templates-vue` | `MethodGuide` | Vue-Komponente | – | `components/MethodGuide.vue` |
 | `@auditcore/sampling-templates-vue` | `MethodPicker` | Vue-Komponente | – | `components/MethodPicker.vue` |
 | `@auditcore/sampling-templates-vue` | `NoticeList` | Vue-Komponente | – | `components/NoticeList.vue` |
@@ -218,12 +219,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (36):
 | `step` | `WorkflowStep['id']` | ja | – | – |
 | `sheets` | `readonly SheetModule[]` | ja | – | – |
 | `t` | `Translate` | ja | – | – |
+| `choosing` | `boolean` | nein | `false` | – |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `change` | `[]` | – |
 | `step` | `[id: WorkflowStep['id']]` | – |
 | `table` | `[sheet: string]` | – |
+
+#### `MethodGlossary`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `t` | `Translate` | ja | – | – |
 
 #### `MethodGuide`
 
@@ -296,7 +304,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (36):
 | `filePrefix` | `string` | nein | `undefined` | Vorsatz der Dateinamen von Arbeitsstand und Export (Standard: „Stichprobe“). |
 | `dataMark` | `string` | nein | `undefined` | Datenmarke der Anwendung als Text neben dem Titel; mehr Gestaltung über den Slot `mark`. |
 | `saveFile` | `(file: DownloadFile) => void \| Promise<void>` | nein | `undefined` | Eigene Übergabe von Dateien an den Browser (Standard: Download über Blob). |
-| `workspaceMenu` | `boolean` | nein | `true` | Menü „Arbeitsstand“ in der Kopfzeile des Rechners; `false`, wenn die Anwendung ein eigenes Menü führt (dann `runAction()`/`openFile()`). |
+| `workspaceMenu` | `boolean` | nein | `true` | Menü „Arbeitsstand“ im Rechner; `false` bei eigenem Menü der Anwendung (`runAction()`, `openFile()`). |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
