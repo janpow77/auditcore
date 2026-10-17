@@ -76,7 +76,7 @@ function recalculation(c: Cells, pending: Pending, limit: number | null, context
   c.C57 = standardSize(c.C56, () => (required(c.C15) * required(c.C48) * required(c.C50)) ** 2, NOT_APPLICABLE_GLOBAL)
   c.C58 = weightedDeviation([[c.C7, c.C55], [c.C48, c.C50]], c.C52)
   c.C59 = globalComputedSize(c.C15, c.C52, c.C58, c.C53, c.C54)
-  c.C60 = appliedTotalSize(c.C59, limit, pending('C59'), context)
+  c.C60 = appliedTotalSize(c.C59, limit, pending('C59'), context, true)
   c.C61 = share(c.C7, c.C52, c.C60)
   c.C62 = additionalUnits(c.C61, c.C34)
   c.C63 = share(c.C48, c.C52, c.C60)

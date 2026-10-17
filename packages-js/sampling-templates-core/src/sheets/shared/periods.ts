@@ -10,7 +10,7 @@
  * Dort muss der Rechenkern wissen, ob ein Zwischenwert leer ist, weil auch die
  * Vorlage keinen zeigt, oder weil eine Angabe fehlt.
  */
-import { divide, gt, guard, isBlank, isNumber, le, left, minus, ne, required, roundUp, sameText, squareRoot } from '../../excel/index'
+import { divide, eq, gt, guard, isBlank, isNumber, left, minus, ne, required, roundUp, sameText, squareRoot } from '../../excel/index'
 import { cellsOf, fieldsOf, type MethodDefinition } from '../../model/definition'
 import { TEMPLATE_POLICY } from '../../model/policy'
 import type { CellAddress, CellValue, Cells, SheetContext } from '../../model/types'
@@ -87,41 +87,41 @@ export function weightedDeviation(periods: readonly (readonly [weight: Value, de
 }
 
 /**
- * Ergebnis der globalen Neuberechnung bei AE ≥ TE: Nach Anhang II DelVO (EU)
- * 2023/67 ist die Formel des Stichprobenumfangs dann nicht anwendbar.
- * Entscheidung des Inhabers vom 17.10.2026: Die Webfassung rechnet hier nach
- * der DelVO und nicht wie die Vorlage, die TE > AE nicht prüft und durch das
- * Quadrieren von (TE − AE) einen Umfang zeigt (`docs/abweichungen.md` Nr. 16).
+ * Stichprobenumfang bei AE = TE: Die Formel des Anhangs II DelVO (EU) 2023/67
+ * teilt durch TE − AE und ist dann nicht anwendbar (Division durch null). Bei
+ * AE > TE rechnet die Webfassung nach KOM-Leitfaden EGESIF_16-0014-01 (7.1,
+ * S. 183, Fußnote 59) mit der geplanten Genauigkeit |TE − AE| – die quadrierte
+ * Formel liefert das ohne Änderung (`docs/abweichungen.md` Nr. 16).
  */
-export const GLOBAL_NOT_APPLICABLE = '✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)'
+export const SIZE_NOT_APPLICABLE = '✖ nicht anwendbar (Division durch null)'
 
-/** Englische Arbeitsübersetzung von `GLOBAL_NOT_APPLICABLE`. */
-export const GLOBAL_NOT_APPLICABLE_EN = '✖ not applicable: the anticipated error must be smaller than the tolerable error (Annex II)'
+/** Englische Arbeitsübersetzung von `SIZE_NOT_APPLICABLE`. */
+export const SIZE_NOT_APPLICABLE_EN = '✖ not applicable (division by zero)'
 
 /**
- * Globale Neuberechnung nach der DelVO: Ist der (aktualisierte) voraussichtliche
- * Fehler mindestens so groß wie der zulässige, `GLOBAL_NOT_APPLICABLE`; sonst
- * die Formel `formula` wie in der Vorlage (wie beim ersten Zeitraum, dort „TE ≤ AE“).
+ * Globale Neuberechnung: Bei AE = TE (und AE ≠ 0) `SIZE_NOT_APPLICABLE`; sonst
+ * die Formel `formula` wie in der Vorlage – bei AE > TE mit |TE − AE| nach
+ * KOM-Leitfaden. Bei TE = AE = 0 (leere Eingaben, die die Vorlage als 0 liest)
+ * ist schon die Formel ein Fehlerwert wie in der Vorlage.
  */
 export function globalSize(tolerable: Value, anticipated: Value, formula: () => number): CellValue {
-  // Bei TE = AE = 0 (etwa leere Eingaben, die die Vorlage als 0 liest) ist schon die Formel ein Fehlerwert wie in der Vorlage.
-  if (isNumber(tolerable) && isNumber(anticipated) && ne(anticipated, 0) && le(tolerable, anticipated)) return GLOBAL_NOT_APPLICABLE
+  if (isNumber(tolerable) && isNumber(anticipated) && ne(anticipated, 0) && eq(tolerable, anticipated)) return SIZE_NOT_APPLICABLE
   return guard(formula)
 }
 
-/** Globale Neuberechnung: `ROUNDUP((z·G·σ_w/(TE-AE))^2;0)` mit G = BV bzw. N, nur bei TE > AE (`globalSize`). */
+/** Globale Neuberechnung: `ROUNDUP((z·G·σ_w/(TE-AE))^2;0)` mit G = BV bzw. N; bei AE = TE nicht anwendbar (`globalSize`). */
 export function globalComputedSize(z: Value, size: Value, deviation: Value, tolerable: Value, anticipated: Value): CellValue {
   return globalSize(tolerable, anticipated, () => roundUp(divide(required(z) * required(size) * required(deviation), minus(required(tolerable), required(anticipated))) ** 2))
 }
 
 /**
- * Der globale Ansatz liefert keinen Umfang, weil er nach der DelVO nicht
+ * Der globale Ansatz liefert keinen Umfang, weil die Formel bei AE = TE nicht
  * anwendbar ist: Der anzuwendende Gesamtumfang und die Umfänge der
  * Folgezeiträume bleiben offen („—“), statt auf den begrenzten Umfang oder die
- * Untergrenzen zu fallen.
+ * Untergrenzen zu fallen (Erhöhung nach Art. 5 Abs. 7 UAbs. 4 Buchst. a prüfen).
  */
 export function globalBlocked(computed: Value): boolean {
-  return computed === GLOBAL_NOT_APPLICABLE
+  return computed === SIZE_NOT_APPLICABLE
 }
 
 /** Folgegrößen der Ergebnisübersicht, die vom Stichprobenumfang abhängen (EE, SE, Umfang, Gesamtfehlerquote). */
@@ -156,7 +156,7 @@ export function withoutGlobalAssessment(c: Cells, approach: string, sizes: reado
  * (wie die Vorlage) nicht anwendbar wäre (etwa TE = 0 bei fehlender Schwelle).
  */
 export function blockedGlobal(c: Cells, cell: CellAddress, pending: Pending): boolean {
-  return globalBlocked(c[cell]) || (pending(cell) && pending.likeTemplate?.(cell) === GLOBAL_NOT_APPLICABLE)
+  return globalBlocked(c[cell]) || (pending(cell) && pending.likeTemplate?.(cell) === SIZE_NOT_APPLICABLE)
 }
 
 /**

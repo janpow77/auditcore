@@ -63,7 +63,7 @@ function global(c: Cells, pending: Pending, limit: number | null, context: Sheet
   // Nach der DelVO nur bei TE > AE (Entscheidung des Inhabers vom 17.10.2026); die Vorlage prüft das nicht.
   c.C72 = globalSize(c.C62, c.C63, () => roundUp(divide(required(c.C20) * required(c.C71) * squareRoot(divide(required(c.C70), required(c.C71))), minus(required(c.C62), required(c.C63))) ** 2))
   c.C73 = netLimitedSize(limit, c.C9, c.C55)
-  c.C74 = appliedRandomSize(c.C72, minimumRandomSize(6, c.C8, c.C54), c.C73, pending('C72'))
+  c.C74 = appliedRandomSize(c.C72, minimumRandomSize(6, c.C8, c.C54), c.C73, pending('C72'), true)
   // =IF(D11="";"";MAX(0;ROUNDUP(D11/C71*C74;0)-D44))
   fillRow(c, 76, (column) => {
     if (!used(c, column, UNITS.period1)) return null

@@ -9,6 +9,7 @@ import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte mit drei Schichten; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -43,7 +44,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
   if (gt(usedStrata(inputs, [12]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return [...hints, ...exclusionReference(context)]
+  return [...hints, ...komPlanningHints(definition, results), ...exclusionReference(context), ...annexIIIApproximation(context, true)]
 }
 
 /** Belegte Schichten, deren Eingabe in `row` fehlt. */

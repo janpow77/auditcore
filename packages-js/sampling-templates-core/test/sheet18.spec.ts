@@ -70,8 +70,10 @@ describe('Blatt 18: Gesamtfehlerquote nach Anhang III', () => {
     // Ausschluss (Tabellen 1 und 2): Genauigkeit der reduzierten Grundgesamtheit mal BV/BV_r, wie die Vorlage; Ersetzung bei MUS: unverändert.
     expect(compute({}, context({}, { C47: 40, C48: 500000, C49: 'Ausschluss (Art. 3 Abs. 6 Buchst. b)', C52: 360 })).C25).toBeCloseTo((60000 * 10000000) / 9500000, 6)
     expect(compute({}, context({ sheet: '03_MUS_1Z' }, { C47: 40, C48: 500000, C49: 'Ersetzung (Anh. III)', C52: 400 })).C25).toBe(60000)
-    expect(hintIds({}, ctx)).toContain('replacement-precision-not-scaled')
-    expect(hintIds({}, context({ sheet: '03_MUS_1Z' }, { C48: 500000, C49: 'Ersetzung (Anh. III)' }))).not.toContain('replacement-precision-not-scaled')
+    // Umfassende Schicht vorhanden (EE_e aus dem Methodenblatt), Lage nicht erfasst: Gesamt-Näherung, nicht KOM-konform.
+    expect(hintIds({}, ctx)).toContain('replacement-location-missing')
+    expect(hintIds({}, context({ exhaustiveError: null }, { C47: 40, C48: 500000, C49: 'Ersetzung (Anh. III)', C52: 400 }))).toContain('replacement-precision-reduced')
+    expect(hintIds({}, context({ sheet: '03_MUS_1Z' }, { C48: 500000, C49: 'Ersetzung (Anh. III)' })).filter((id) => id.startsWith('replacement-'))).toEqual([])
   })
 
   it('Anpassung der hochwertigen Schicht: nur der Zufallsteil wird skaliert, EE_e wird hochgerechnet', () => {

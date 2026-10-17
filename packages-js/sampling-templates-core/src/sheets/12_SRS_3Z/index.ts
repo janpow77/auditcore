@@ -3,11 +3,12 @@ import { gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import type { CellAddress, CellMap, SheetContext, WebHint } from '../../model/types'
 import { precisionCells, projectionCells, recalculationOf } from '../shared/srs'
-import { exclusionReference, globalWithoutMargin, withNotApplicableNote } from '../shared/delvo'
+import { exclusionReference, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -52,7 +53,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
     ...negativeDenominator(results, 'C105', 3, 'mindestens 3, Auffüllung auf 30'),
   ]
   if (sameNumber(results.C21, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C35', { size: 'C77' }, 2), ...globalWithoutMargin(results, 'C35', { size: 'C109' }, 3), ...exclusionReference(context)])
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...exclusionReference(context), ...annexIIIApproximation(context, true)])
 }
 
 /** Standardabweichungen der Variablen q in den Stichproben der drei Zeiträume (s_q). */

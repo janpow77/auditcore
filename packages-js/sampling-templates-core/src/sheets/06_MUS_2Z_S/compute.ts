@@ -97,7 +97,7 @@ function recalculation(run: Run): void {
   fill(run, 64, (column) => guard(() => varianceTerm(run, column, 8, 59) + varianceTerm(run, column, 51, 53)))
   c.C64 = total(run, 64, [8, 51])
   c.C65 = globalSize(c.C56, c.C57, () => roundUp(divide(required(c.C15) * required(c.C55) * squareRoot(divide(required(c.C64), required(c.C55))), minus(required(c.C56), required(c.C57))) ** 2))
-  c.C66 = appliedTotalSize(c.C65, run.limit, run.pending('C65'), run.context)
+  c.C66 = appliedTotalSize(c.C65, run.limit, run.pending('C65'), run.context, true)
   fill(run, 68, (column) => (has(run, column, 8) ? additionalUnits(share(c[at(column, 8)], c.C55, c.C66), c[at(column, 37)]) : null))
   // Nach der DelVO nicht anwendbar: keine Zusatzeinheiten aus der globalen Neuberechnung (statt der Summe 0).
   c.C68 = blockedGlobal(c, 'C65', run.pending) ? null : total(run, 68)

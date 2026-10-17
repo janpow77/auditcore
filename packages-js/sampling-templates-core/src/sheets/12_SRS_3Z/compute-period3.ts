@@ -29,7 +29,7 @@ function approaches(c: Cells, pending: Pending): void {
   c.C108 = weightedDeviation([[c.C13, c.C68], [c.C59, c.C104], [c.C98, c.C99]], c.C107)
   c.C109 = globalComputedSize(c.C23, c.C107, c.C108, c.C102, c.C103)
   c.C110 = netLimitedSize(c.C41, c.C11, c.C57, c.C96)
-  c.C111 = appliedRandomSize(c.C109, minimumRandomSize(9, c.C10, c.C56, c.C95), c.C110, pending('C109'))
+  c.C111 = appliedRandomSize(c.C109, minimumRandomSize(9, c.C10, c.C56, c.C95), c.C110, pending('C109'), true)
   c.C112 = additionalUnits(c.C13, c.C107, c.C111, c.C86)
   c.C113 = additionalUnits(c.C59, c.C107, c.C111, c.C84)
   c.C114 = share(c.C98, c.C107, c.C111)

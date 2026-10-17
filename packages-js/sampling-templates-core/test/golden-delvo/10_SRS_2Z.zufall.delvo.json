@@ -3,189 +3,310 @@
   "position": 2,
   "name": "Zufall 003",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 28286.6480447726,
+   "N10": 1356817,
+   "C33": 1241774,
+   "C41": 1241774,
+   "C42": 851600,
+   "C43": 390175,
+   "C62": 276629416640.664,
+   "C63": 4,
+   "C69": 0,
+   "C71": 505199,
+   "C72": 851600,
+   "C73": 505199,
+   "C74": 1356817,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 28286.6480447726,
+   "C88": 1204216.13752757,
+   "C89": 1147642.84143803,
+   "C90": 0.000220461739613655,
+   "C93": 0.00938547346189462,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
-  "position": 5,
-  "name": "Zufall 006",
+  "position": 10,
+  "name": "Zufall 011",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 1503904.77584584,
+   "N10": 1084,
+   "C33": 2939,
+   "C41": 2939,
+   "C42": 1067,
+   "C43": 1873,
+   "C62": 1086477441508.03,
+   "C63": 2,
+   "C69": 0,
+   "C71": 1873,
+   "C72": 1067,
+   "C73": 3,
+   "C74": 1084,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 1503904.77584584,
+   "C88": 2444242.3954679,
+   "C90": 0.0274123371392994,
+   "C93": 0.0445522866014244
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
-  "position": 7,
-  "name": "Zufall 008",
+  "position": 13,
+  "name": "Zufall 014",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C33": 195523
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
-  "position": 8,
-  "name": "Zufall 009",
+  "position": 26,
+  "name": "Zufall 027",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 83759.0315793718,
+   "N10": 13554,
+   "C33": 16441,
+   "C41": 16441,
+   "C42": 13032,
+   "C43": 3410,
+   "C62": 327810705171.495,
+   "C63": 505,
+   "C69": 0,
+   "C71": 4114,
+   "C72": 13032,
+   "C73": 505,
+   "C74": 13554,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 83759.0315793718,
+   "C88": 643693.90393912,
+   "C89": 476175.840780377,
+   "C90": 0.00111493643728885,
+   "C93": 0.00856836301029035,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
-  "position": 16,
-  "name": "Zufall 017",
+  "position": 31,
+  "name": "Zufall 032",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C33": 114377
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 23,
-  "name": "Zufall 024",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 28,
-  "name": "Zufall 029",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
   "position": 40,
   "name": "Zufall 041",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C33": 26855
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
-  "position": 41,
-  "name": "Zufall 042",
+  "position": 51,
+  "name": "Zufall 052",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 275527.572501329,
+   "N10": 17616,
+   "C33": 17602,
+   "C41": 17602,
+   "C42": 8881,
+   "C43": 8722,
+   "C62": 302792915736.095,
+   "C63": 2073,
+   "C69": 0,
+   "C71": 8722,
+   "C72": 8881,
+   "C73": 8722,
+   "C74": 17616,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 275527.572501329,
+   "C88": 622811.122539474,
+   "C90": 0.00269544789375585,
+   "C93": 0.00609287452873213,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 48,
-  "name": "Zufall 049",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 50,
-  "name": "Zufall 051",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
   "position": 52,
   "name": "Zufall 053",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 115018.418152642,
+   "N10": 48225,
+   "C33": 111178,
+   "C41": 111178,
+   "C42": 46329,
+   "C43": 64850,
+   "C62": 212913882583.397,
+   "C63": 1891,
+   "C69": 0,
+   "C71": 90174,
+   "C72": 46329,
+   "C73": 1891,
+   "C74": 48225,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 115018.418152642,
+   "C88": 634831.761978346,
+   "C89": 404794.925673062,
+   "C90": 0.000967543217820582,
+   "C93": 0.00534025050617627,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
-  "position": 53,
-  "name": "Zufall 054",
+  "position": 58,
+  "name": "Zufall 059",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 340569.615320264,
+   "N10": 86177,
+   "C33": 236909,
+   "C41": 236909,
+   "C42": 86110,
+   "C43": 150800,
+   "C62": 2983377177694.62,
+   "C63": 57,
+   "C69": 0,
+   "C71": 192693,
+   "C72": 86110,
+   "C73": 57,
+   "C74": 86177,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 340569.615320264,
+   "C88": 3279466.54499216,
+   "C89": 2598327.31435164,
+   "C90": 0.00285902233475593,
+   "C93": 0.0275305478716896
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 56,
-  "name": "Zufall 057",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
   "position": 59,
   "name": "Zufall 060",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 40353.242927548,
+   "N10": 584980,
+   "C33": 584968,
+   "C41": 584968,
+   "C42": 237026,
+   "C43": 347943,
+   "C62": 76534827527.3531,
+   "C63": 2544,
+   "C69": 0,
+   "C71": 352676,
+   "C72": 237026,
+   "C73": 347943,
+   "C74": 584980,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 40353.242927548,
+   "C88": 273854.930063903,
+   "C89": 193148.444208807,
+   "C90": 0.000449868801520421,
+   "C93": 0.00305300838892932,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 60,
-  "name": "Zufall 061",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
   "position": 70,
   "name": "Zufall 071",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 314333.574285463,
+   "N10": 29885,
+   "C33": 29871,
+   "C41": 29871,
+   "C42": 14500,
+   "C43": 15372,
+   "C62": -20501947474.8377,
+   "C63": "✖ nicht anwendbar (Nenner ≤ 0) – globale Neuberechnung",
+   "C69": 104208,
+   "C71": 18630,
+   "C72": 14500,
+   "C73": 15372,
+   "C74": 29885,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 314333.574285463,
+   "C88": 1252270.47898633,
+   "C89": 623603.330415404,
+   "C90": 0.00188344025539548,
+   "C93": 0.00750341937264483,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
-  "position": 80,
-  "name": "Zufall 081",
+  "position": 79,
+  "name": "Zufall 080",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C33": 1366
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 82,
-  "name": "Zufall 083",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 85,
-  "name": "Zufall 086",
-  "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
   "position": 90,
   "name": "Zufall 091",
   "cells": {
-   "C66": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 123867.433751472,
+   "N10": 907,
+   "C33": 694,
+   "C41": 694,
+   "C42": 103,
+   "C43": 592,
+   "C62": -1673928213.91701,
+   "C63": "✖ nicht anwendbar (Nenner ≤ 0) – globale Neuberechnung",
+   "C69": 660,
+   "C71": 793,
+   "C72": 103,
+   "C73": 793,
+   "C74": 907,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 123867.433751472,
+   "C88": 511586.159425195,
+   "C90": 0.00302372903005471,
+   "C93": 0.0124883343004575,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 96,
+  "name": "Zufall 097",
+  "cells": {
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 610726.204603604,
+   "N10": 102,
+   "C33": 92,
+   "C41": 92,
+   "C42": 77,
+   "C43": 16,
+   "C62": 1646841297825.41,
+   "C63": 20,
+   "C69": 0,
+   "C71": 22,
+   "C72": 77,
+   "C73": 16,
+   "C74": 102,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 610726.204603604,
+   "C88": 2910162.01520159,
+   "C90": 0.00393090389915105,
+   "C93": 0.0187310895234013,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  }
 ]

@@ -3,11 +3,12 @@ import { gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import type { CellAddress, CellMap, SheetContext, WebHint } from '../../model/types'
 import { precisionCells, projectionCells, recalculationOf } from '../shared/srs'
-import { exclusionReference, globalWithoutMargin, withNotApplicableNote } from '../shared/delvo'
+import { exclusionReference, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -41,7 +42,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
     })
   }
   if (sameNumber(results.C19, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C32', { size: 'C66' }), ...exclusionReference(context)])
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...exclusionReference(context), ...annexIIIApproximation(context, true)])
 }
 
 /**

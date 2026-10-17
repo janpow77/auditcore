@@ -12,8 +12,8 @@
   "position": 8,
   "name": "Abnahme 1: A008 Kontext",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 9,
@@ -89,8 +89,8 @@
   "position": 64,
   "name": "Abnahme 1: A064 Kontext",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 65,
@@ -131,8 +131,8 @@
   "position": 92,
   "name": "Abnahme 1: A092 Kontext",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 93,

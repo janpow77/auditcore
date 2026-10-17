@@ -31,11 +31,13 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
   genau den Wert zeigt, der sich nach dieser Regel aus dem Wert von Excel ergibt.
 - **Amtlicher Begriff** sind Texte, in denen die Webfassung statt „Signifikanzschwelle“ der Vorlage den amtlichen
   Begriff „Signifikanzschwelle“ zeigt (Anhang I Nr. 1 DelVO (EU) 2023/67); sonst ist der Text wortgleich.
-- **Bewusst nach DelVO** sind Zellen, an denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 nach der
-  DelVO (EU) 2023/67 rechnet und nicht wie die Vorlage: Genauigkeit bei Ersetzung in Tabelle 2 (Anhang III; Blatt 18)
-  und globale Neuberechnung bei AE ≥ TE (Anhang II; Blätter 05–07, 10–12). Je Zelle ist geprüft, dass die Webfassung
-  den Wert zeigt, den `scripts/delvo_soll.py` unabhängig vom Rechenkern aus den Excel-Sollwerten nachrechnet
-  (`test/golden-delvo/`); Folgegrößen eines nicht bestimmbaren Umfangs müssen leer sein.
+- **Bewusst nach KOM** sind Zellen, an denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 („Es gelten
+  die Vorgaben der KOM“: DelVO (EU) 2023/67 und KOM-Leitfaden EGESIF_16-0014-01) anders rechnet als die Vorlage:
+  Umfang bei AE > TE mit |TE − AE| (Leitfaden 7.1; Blätter 03–12, erster Zeitraum, mit allen Folgegrößen), bei AE = TE
+  „nicht anwendbar (Division durch null)“ (globale Neuberechnung mit leeren Folgegrößen) und Genauigkeit bei Ersetzung
+  in Tabelle 2 (Anhang III; Blätter 18 und 20). Je Zelle ist geprüft, dass die Webfassung den Wert zeigt, den
+  `scripts/delvo_soll.py` unabhängig vom Rechenkern nachrechnet (`test/golden-delvo/`; Folgegrößen des ersten
+  Zeitraums aus einer Neuberechnung der Vorlage in LibreOffice mit dem nach KOM bestimmten Umfang, `scripts/kom_lo.py`).
 - **Toleranzkanten** gibt es gegen Excel keine mehr: Die beiden Würdigungen, die gegen LibreOffice an der
   Vergleichstoleranz hingen (Blatt 06 C99, Blatt 12 C138), zeigt die Webfassung mit der Vergleichsregel von Excel
   genau wie Excel.
@@ -44,35 +46,35 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 - Die Fallsätze `abnahme-grund`, `abnahme-luecken` und `abnahme-schwelle` sind die 6.805 Fälle der unabhängigen
   Gesamtabnahme (eigener Generator, Einzellücken-Matrix, Schwellen- und Ganzzahlsonden).
 
-| Blatt | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Blatt | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 02_Grundgesamtheit | 159 | 3021 | 2877 | 73 | 0 | 71 | 0 | 0 | 0 |
-| 03_MUS_1Z | 783 | 29754 | 29347 | 308 | 0 | 99 | 0 | 0 | 0 |
-| 04_MUS_1Z_S | 381 | 46482 | 45376 | 1003 | 0 | 103 | 0 | 0 | 0 |
-| 05_MUS_2Z | 541 | 35165 | 32791 | 1924 | 0 | 103 | 347 | 0 | 0 |
-| 06_MUS_2Z_S | 635 | 150495 | 145588 | 3192 | 0 | 127 | 1588 | 0 | 0 |
-| 07_MUS_3Z | 612 | 56916 | 51913 | 4216 | 0 | 90 | 697 | 0 | 0 |
-| 08_SRS_1Z | 660 | 24420 | 24078 | 210 | 0 | 132 | 0 | 0 | 0 |
-| 09_SRS_1Z_S | 421 | 32417 | 31488 | 778 | 0 | 151 | 0 | 0 | 0 |
-| 10_SRS_2Z | 714 | 42840 | 39082 | 3374 | 0 | 117 | 267 | 0 | 0 |
-| 11_SRS_2Z_S | 724 | 118736 | 113853 | 3562 | 0 | 248 | 1073 | 0 | 0 |
-| 12_SRS_3Z | 785 | 67510 | 61193 | 5800 | 0 | 135 | 382 | 0 | 0 |
+| 03_MUS_1Z | 783 | 29754 | 28884 | 328 | 0 | 99 | 443 | 0 | 0 |
+| 04_MUS_1Z_S | 381 | 46482 | 43618 | 1003 | 0 | 103 | 1758 | 0 | 0 |
+| 05_MUS_2Z | 541 | 35165 | 32489 | 1942 | 0 | 107 | 627 | 0 | 0 |
+| 06_MUS_2Z_S | 635 | 150495 | 142973 | 3266 | 0 | 132 | 4124 | 0 | 0 |
+| 07_MUS_3Z | 612 | 56916 | 51457 | 4270 | 0 | 92 | 1097 | 0 | 0 |
+| 08_SRS_1Z | 660 | 24420 | 23771 | 210 | 0 | 132 | 307 | 0 | 0 |
+| 09_SRS_1Z_S | 421 | 32417 | 30967 | 778 | 0 | 151 | 521 | 0 | 0 |
+| 10_SRS_2Z | 714 | 42840 | 38755 | 3414 | 0 | 121 | 550 | 0 | 0 |
+| 11_SRS_2Z_S | 724 | 118736 | 112139 | 3636 | 0 | 252 | 2709 | 0 | 0 |
+| 12_SRS_3Z | 785 | 67510 | 60721 | 5937 | 0 | 141 | 711 | 0 | 0 |
 | 13_NS_GW | 399 | 8778 | 8286 | 117 | 0 | 375 | 0 | 0 | 0 |
 | 14_NS_GW_S | 410 | 16400 | 15709 | 301 | 0 | 390 | 0 | 0 | 0 |
 | 15_NS_PPS | 406 | 10556 | 9970 | 222 | 0 | 364 | 0 | 0 | 0 |
 | 16_NS_PPS_S | 412 | 28840 | 27840 | 618 | 0 | 382 | 0 | 0 | 0 |
 | 17_Unterstichprobe | 102 | 612 | 577 | 35 | 0 | 0 | 0 | 0 | 0 |
-| 18_GFQ_AnhIII | 677 | 14894 | 13866 | 289 | 0 | 438 | 301 | 0 | 0 |
-| 20_Druck_KOM | 588 | 19404 | 17763 | 246 | 610 | 516 | 269 | 0 | 0 |
+| 18_GFQ_AnhIII | 677 | 14894 | 13883 | 291 | 0 | 440 | 280 | 0 | 0 |
+| 20_Druck_KOM | 588 | 19404 | 17755 | 251 | 610 | 516 | 272 | 0 | 0 |
 | X1_KonsMUS_2017 | 213 | 2769 | 2580 | 181 | 8 | 0 | 0 | 0 | 0 |
 | X2_DiffSch_2017 | 434 | 5642 | 5445 | 193 | 4 | 0 | 0 | 0 | 0 |
 | X3_DiffSch_S_2017 | 234 | 8424 | 7838 | 582 | 4 | 0 | 0 | 0 | 0 |
 | X4_DiffSch_2Z_2017 | 241 | 4820 | 4486 | 330 | 4 | 0 | 0 | 0 | 0 |
-| **Summe** | 10531 | 728895 | 691946 | 27554 | 630 | 3841 | 4924 | 0 | 0 |
+| **Summe** | 10531 | 728895 | 683020 | 27978 | 630 | 3868 | 13399 | 0 | 0 |
 
 ## 02_Grundgesamtheit
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 69 | 1311 | 1266 | 38 | 0 | 7 | 0 | 0 | 0 |
 | abnahme-luecken | 69 | 1311 | 1236 | 11 | 0 | 64 | 0 | 0 | 0 |
@@ -104,14 +106,14 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 03_MUS_1Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 2660 | 2607 | 52 | 0 | 1 | 0 | 0 | 0 |
+| abnahme-grund | 70 | 2660 | 2557 | 52 | 0 | 1 | 50 | 0 | 0 |
 | abnahme-luecken | 355 | 13490 | 13414 | 48 | 0 | 28 | 0 | 0 | 0 |
 | abnahme-schwelle | 60 | 2280 | 2260 | 0 | 0 | 20 | 0 | 0 | 0 |
-| Hauptsatz | 40 | 1520 | 1414 | 103 | 0 | 3 | 0 | 0 | 0 |
-| pruefer | 158 | 6004 | 5882 | 105 | 0 | 17 | 0 | 0 | 0 |
-| zufall | 100 | 3800 | 3770 | 0 | 0 | 30 | 0 | 0 | 0 |
+| Hauptsatz | 40 | 1520 | 1393 | 103 | 0 | 3 | 21 | 0 | 0 |
+| pruefer | 158 | 6004 | 5811 | 125 | 0 | 17 | 51 | 0 | 0 |
+| zufall | 100 | 3800 | 3449 | 0 | 0 | 30 | 321 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -158,13 +160,13 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 04_MUS_1Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 8540 | 8351 | 178 | 0 | 11 | 0 | 0 | 0 |
-| abnahme-luecken | 124 | 15128 | 14844 | 256 | 0 | 28 | 0 | 0 | 0 |
+| abnahme-grund | 70 | 8540 | 8236 | 178 | 0 | 11 | 115 | 0 | 0 |
+| abnahme-luecken | 124 | 15128 | 13996 | 256 | 0 | 28 | 848 | 0 | 0 |
 | abnahme-schwelle | 60 | 7320 | 7240 | 60 | 0 | 20 | 0 | 0 | 0 |
-| Hauptsatz | 27 | 3294 | 2882 | 409 | 0 | 3 | 0 | 0 | 0 |
-| zufall | 100 | 12200 | 12059 | 100 | 0 | 41 | 0 | 0 | 0 |
+| Hauptsatz | 27 | 3294 | 2841 | 409 | 0 | 3 | 41 | 0 | 0 |
+| zufall | 100 | 12200 | 11305 | 100 | 0 | 41 | 754 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -198,14 +200,14 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 05_MUS_2Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 4550 | 4359 | 169 | 0 | 11 | 11 | 0 | 0 |
-| abnahme-luecken | 232 | 15080 | 14103 | 937 | 0 | 28 | 12 | 0 | 0 |
+| abnahme-grund | 70 | 4550 | 4287 | 172 | 0 | 11 | 80 | 0 | 0 |
+| abnahme-luecken | 232 | 15080 | 14103 | 949 | 0 | 28 | 0 | 0 | 0 |
 | abnahme-schwelle | 60 | 3900 | 3880 | 0 | 0 | 20 | 0 | 0 | 0 |
-| fehlend | 5 | 325 | 261 | 30 | 0 | 1 | 33 | 0 | 0 |
-| Hauptsatz | 74 | 4810 | 3972 | 788 | 0 | 9 | 41 | 0 | 0 |
-| zufall | 100 | 6500 | 6216 | 0 | 0 | 34 | 250 | 0 | 0 |
+| fehlend | 5 | 325 | 293 | 30 | 0 | 2 | 0 | 0 | 0 |
+| Hauptsatz | 74 | 4810 | 3969 | 791 | 0 | 9 | 41 | 0 | 0 |
+| zufall | 100 | 6500 | 5957 | 0 | 0 | 37 | 506 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -258,7 +260,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 47 | Teilweise: nur Buchwerte | 65 | 10 | 0 |
 | 48 | Teilweise: Buchwert Zeitraum 1 fehlt | 65 | 46 | 0 |
 | 49 | Teilweise: prognostizierter Buchwert Zeitraum 2 fehlt | 65 | 40 | 0 |
-| 50 | Teilweise: Wesentlichkeitsschwelle geleert | 65 | 3 | 0 |
+| 50 | Teilweise: Wesentlichkeitsschwelle geleert | 65 | 6 | 0 |
 | 51 | Teilweise: voraussichtliche Fehlerquote fehlt | 65 | 40 | 0 |
 | 52 | Teilweise: voraussichtliche Fehlerquote fehlt, aktualisierte vorhanden | 65 | 35 | 0 |
 | 53 | Teilweise: voraussichtliche Standardabweichung Zeitraum 1 fehlt | 65 | 35 | 0 |
@@ -286,14 +288,14 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 06_MUS_2Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 110 | 26070 | 25507 | 449 | 0 | 7 | 107 | 0 | 0 |
-| abnahme-luecken | 291 | 68967 | 66688 | 1589 | 0 | 67 | 623 | 0 | 0 |
+| abnahme-grund | 110 | 26070 | 25320 | 483 | 0 | 7 | 260 | 0 | 0 |
+| abnahme-luecken | 291 | 68967 | 65117 | 1627 | 0 | 67 | 2156 | 0 | 0 |
 | abnahme-schwelle | 60 | 14220 | 14200 | 0 | 0 | 20 | 0 | 0 | 0 |
-| fehlend | 14 | 3318 | 2840 | 391 | 0 | 1 | 86 | 0 | 0 |
-| Hauptsatz | 60 | 14220 | 13403 | 763 | 0 | 3 | 51 | 0 | 0 |
-| zufall | 100 | 23700 | 22950 | 0 | 0 | 29 | 721 | 0 | 0 |
+| fehlend | 14 | 3318 | 2923 | 391 | 0 | 2 | 2 | 0 | 0 |
+| Hauptsatz | 60 | 14220 | 13276 | 765 | 0 | 3 | 176 | 0 | 0 |
+| zufall | 100 | 23700 | 22137 | 0 | 0 | 33 | 1530 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -343,7 +345,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 44 | Teilweise: nur der erste Zeitraum ausgefüllt | 237 | 34 | 0 |
 | 45 | Teilweise: nur der erste Zeitraum ausgefüllt, sieben Schichten, globale Neuberechnung | 237 | 68 | 0 |
 | 46 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 237 | 54 | 0 |
-| 47 | Teilweise: Wesentlichkeitsschwelle geleert | 237 | 47 | 0 |
+| 47 | Teilweise: Wesentlichkeitsschwelle geleert | 237 | 49 | 0 |
 | 48 | Teilweise: voraussichtliche Fehlerquote fehlt | 237 | 84 | 0 |
 | 49 | Teilweise: sieben Schichten, voraussichtliche Standardabweichungen Zeitraum 1 und der Stichprobe fehlen | 237 | 174 | 0 |
 | 50 | Teilweise: sieben Schichten, aktualisierte Standardabweichungen Zeitraum 2 fehlen | 237 | 94 | 0 |
@@ -360,14 +362,14 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 07_MUS_3Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 6510 | 6173 | 275 | 0 | 11 | 51 | 0 | 0 |
-| abnahme-luecken | 289 | 26877 | 24501 | 2258 | 0 | 25 | 93 | 0 | 0 |
+| abnahme-grund | 70 | 6510 | 6089 | 290 | 0 | 11 | 120 | 0 | 0 |
+| abnahme-luecken | 289 | 26877 | 24561 | 2291 | 0 | 25 | 0 | 0 | 0 |
 | abnahme-schwelle | 60 | 5580 | 5560 | 0 | 0 | 20 | 0 | 0 | 0 |
-| fehlend | 7 | 651 | 503 | 92 | 0 | 1 | 55 | 0 | 0 |
-| Hauptsatz | 86 | 7998 | 6337 | 1591 | 0 | 8 | 62 | 0 | 0 |
-| zufall | 100 | 9300 | 8839 | 0 | 0 | 25 | 436 | 0 | 0 |
+| fehlend | 7 | 651 | 557 | 92 | 0 | 2 | 0 | 0 | 0 |
+| Hauptsatz | 86 | 7998 | 6328 | 1597 | 0 | 8 | 65 | 0 | 0 |
+| zufall | 100 | 9300 | 8362 | 0 | 0 | 26 | 912 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -421,7 +423,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 48 | Teilweise: erster und zweiter Zeitraum ausgefüllt, globale Neuberechnung | 93 | 38 | 0 |
 | 49 | Teilweise: nur Grundgesamtheit und Parameter | 93 | 46 | 0 |
 | 50 | Teilweise: nur Buchwerte | 93 | 23 | 0 |
-| 51 | Teilweise: Wesentlichkeitsschwelle geleert | 93 | 12 | 0 |
+| 51 | Teilweise: Wesentlichkeitsschwelle geleert | 93 | 18 | 0 |
 | 52 | Teilweise: Konfidenzniveau fehlt | 93 | 0 | 0 |
 | 53 | Teilweise: Konfidenzniveau fehlt, begrenzt zulässig | 93 | 0 | 0 |
 | 54 | Teilweise: Ansatz der Neuberechnung und Testart geleert | 93 | 0 | 0 |
@@ -460,13 +462,13 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 08_SRS_1Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 2590 | 2524 | 39 | 0 | 27 | 0 | 0 | 0 |
-| abnahme-luecken | 362 | 13394 | 13303 | 42 | 0 | 49 | 0 | 0 | 0 |
+| abnahme-grund | 70 | 2590 | 2497 | 39 | 0 | 27 | 27 | 0 | 0 |
+| abnahme-luecken | 362 | 13394 | 13199 | 42 | 0 | 49 | 104 | 0 | 0 |
 | abnahme-schwelle | 60 | 2220 | 2200 | 0 | 0 | 20 | 0 | 0 | 0 |
-| Hauptsatz | 68 | 2516 | 2383 | 129 | 0 | 4 | 0 | 0 | 0 |
-| zufall | 100 | 3700 | 3668 | 0 | 0 | 32 | 0 | 0 | 0 |
+| Hauptsatz | 68 | 2516 | 2367 | 129 | 0 | 4 | 16 | 0 | 0 |
+| zufall | 100 | 3700 | 3508 | 0 | 0 | 32 | 160 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -541,13 +543,13 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 09_SRS_1Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 5390 | 5218 | 145 | 0 | 27 | 0 | 0 | 0 |
-| abnahme-luecken | 126 | 9702 | 9464 | 205 | 0 | 33 | 0 | 0 | 0 |
+| abnahme-grund | 70 | 5390 | 5180 | 145 | 0 | 27 | 38 | 0 | 0 |
+| abnahme-luecken | 126 | 9702 | 9312 | 205 | 0 | 33 | 152 | 0 | 0 |
 | abnahme-schwelle | 60 | 4620 | 4540 | 60 | 0 | 20 | 0 | 0 | 0 |
-| Hauptsatz | 65 | 5005 | 4633 | 368 | 0 | 4 | 0 | 0 | 0 |
-| zufall | 100 | 7700 | 7633 | 0 | 0 | 67 | 0 | 0 | 0 |
+| Hauptsatz | 65 | 5005 | 4614 | 368 | 0 | 4 | 19 | 0 | 0 |
+| zufall | 100 | 7700 | 7321 | 0 | 0 | 67 | 312 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -619,13 +621,13 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 10_SRS_2Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 4200 | 4049 | 116 | 0 | 24 | 11 | 0 | 0 |
-| abnahme-luecken | 251 | 15060 | 14036 | 917 | 0 | 58 | 49 | 0 | 0 |
+| abnahme-grund | 70 | 4200 | 4004 | 118 | 0 | 25 | 53 | 0 | 0 |
+| abnahme-luecken | 251 | 15060 | 13884 | 925 | 0 | 59 | 192 | 0 | 0 |
 | abnahme-schwelle | 60 | 3600 | 3580 | 0 | 0 | 20 | 0 | 0 | 0 |
-| Hauptsatz | 233 | 13980 | 11561 | 2341 | 0 | 10 | 68 | 0 | 0 |
-| zufall | 100 | 6000 | 5856 | 0 | 0 | 5 | 139 | 0 | 0 |
+| Hauptsatz | 233 | 13980 | 11504 | 2371 | 0 | 12 | 93 | 0 | 0 |
+| zufall | 100 | 6000 | 5783 | 0 | 0 | 5 | 212 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -750,7 +752,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 119 | Teilweise: alles ausgefüllt außer Anzahl Einheiten Zeitraum 1 (C8), Ansatz „Standard“ | 60 | 28 | 0 |
 | 120 | Teilweise: alles ausgefüllt außer prognostizierter Buchwert Zeitraum 2 (C14), Ansatz „Standard“ | 60 | 24 | 0 |
 | 121 | Teilweise: alles ausgefüllt außer prognostizierte Anzahl Zeitraum 2 (C15), Ansatz „Standard“ | 60 | 22 | 0 |
-| 122 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Standard“ | 60 | 3 | 0 |
+| 122 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Standard“ | 60 | 5 | 0 |
 | 123 | Teilweise: alles ausgefüllt außer voraussichtliche Fehlerquote (C26), Ansatz „Standard“ | 60 | 21 | 0 |
 | 124 | Teilweise: alles ausgefüllt außer σ_e1 (C29), Ansatz „Standard“ | 60 | 21 | 0 |
 | 125 | Teilweise: alles ausgefüllt außer σ_e2 (C30), Ansatz „Standard“ | 60 | 21 | 0 |
@@ -761,7 +763,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 130 | Teilweise: alles ausgefüllt außer Anzahl Einheiten Zeitraum 1 (C8), Ansatz „Global“ | 60 | 28 | 0 |
 | 131 | Teilweise: alles ausgefüllt außer prognostizierter Buchwert Zeitraum 2 (C14), Ansatz „Global“ | 60 | 24 | 0 |
 | 132 | Teilweise: alles ausgefüllt außer prognostizierte Anzahl Zeitraum 2 (C15), Ansatz „Global“ | 60 | 22 | 0 |
-| 133 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Global“ | 60 | 3 | 0 |
+| 133 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Global“ | 60 | 5 | 0 |
 | 134 | Teilweise: alles ausgefüllt außer voraussichtliche Fehlerquote (C26), Ansatz „Global“ | 60 | 21 | 0 |
 | 135 | Teilweise: alles ausgefüllt außer σ_e1 (C29), Ansatz „Global“ | 60 | 21 | 0 |
 | 136 | Teilweise: alles ausgefüllt außer σ_e2 (C30), Ansatz „Global“ | 60 | 21 | 0 |
@@ -772,7 +774,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 141 | Teilweise: alles ausgefüllt außer Anzahl Einheiten Zeitraum 1 (C8), Ansatz „Erhöhung“ | 60 | 28 | 0 |
 | 142 | Teilweise: alles ausgefüllt außer prognostizierter Buchwert Zeitraum 2 (C14), Ansatz „Erhöhung“ | 60 | 24 | 0 |
 | 143 | Teilweise: alles ausgefüllt außer prognostizierte Anzahl Zeitraum 2 (C15), Ansatz „Erhöhung“ | 60 | 22 | 0 |
-| 144 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Erhöhung“ | 60 | 3 | 0 |
+| 144 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „Erhöhung“ | 60 | 5 | 0 |
 | 145 | Teilweise: alles ausgefüllt außer voraussichtliche Fehlerquote (C26), Ansatz „Erhöhung“ | 60 | 21 | 0 |
 | 146 | Teilweise: alles ausgefüllt außer σ_e1 (C29), Ansatz „Erhöhung“ | 60 | 21 | 0 |
 | 147 | Teilweise: alles ausgefüllt außer σ_e2 (C30), Ansatz „Erhöhung“ | 60 | 21 | 0 |
@@ -783,7 +785,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 152 | Teilweise: alles ausgefüllt außer Anzahl Einheiten Zeitraum 1 (C8), Ansatz „keine Neuberechnung“ | 60 | 28 | 0 |
 | 153 | Teilweise: alles ausgefüllt außer prognostizierter Buchwert Zeitraum 2 (C14), Ansatz „keine Neuberechnung“ | 60 | 24 | 0 |
 | 154 | Teilweise: alles ausgefüllt außer prognostizierte Anzahl Zeitraum 2 (C15), Ansatz „keine Neuberechnung“ | 60 | 22 | 0 |
-| 155 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „keine Neuberechnung“ | 60 | 3 | 0 |
+| 155 | Teilweise: alles ausgefüllt außer Wesentlichkeitsschwelle (C23), Ansatz „keine Neuberechnung“ | 60 | 5 | 0 |
 | 156 | Teilweise: alles ausgefüllt außer voraussichtliche Fehlerquote (C26), Ansatz „keine Neuberechnung“ | 60 | 21 | 0 |
 | 157 | Teilweise: alles ausgefüllt außer σ_e1 (C29), Ansatz „keine Neuberechnung“ | 60 | 21 | 0 |
 | 158 | Teilweise: alles ausgefüllt außer σ_e2 (C30), Ansatz „keine Neuberechnung“ | 60 | 21 | 0 |
@@ -794,7 +796,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 163 | Teilweise: Anzahl Einheiten Zeitraum 1 (C8) fehlt, begrenzt Kategorie 2 | 60 | 29 | 0 |
 | 164 | Teilweise: prognostizierter Buchwert Zeitraum 2 (C14) fehlt, begrenzt Kategorie 2 | 60 | 25 | 0 |
 | 165 | Teilweise: prognostizierte Anzahl Zeitraum 2 (C15) fehlt, begrenzt Kategorie 2 | 60 | 23 | 0 |
-| 166 | Teilweise: Wesentlichkeitsschwelle (C23) fehlt, begrenzt Kategorie 2 | 60 | 16 | 0 |
+| 166 | Teilweise: Wesentlichkeitsschwelle (C23) fehlt, begrenzt Kategorie 2 | 60 | 19 | 0 |
 | 167 | Teilweise: voraussichtliche Fehlerquote (C26) fehlt, begrenzt Kategorie 2 | 60 | 22 | 0 |
 | 168 | Teilweise: σ_e1 (C29) fehlt, begrenzt Kategorie 2 | 60 | 22 | 0 |
 | 169 | Teilweise: σ_e2 (C30) fehlt, begrenzt Kategorie 2 | 60 | 22 | 0 |
@@ -805,7 +807,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 174 | Teilweise: Anzahl Einheiten Zeitraum 1 (C8) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 29 | 0 |
 | 175 | Teilweise: prognostizierter Buchwert Zeitraum 2 (C14) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 25 | 0 |
 | 176 | Teilweise: prognostizierte Anzahl Zeitraum 2 (C15) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 23 | 0 |
-| 177 | Teilweise: Wesentlichkeitsschwelle (C23) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 5 | 0 |
+| 177 | Teilweise: Wesentlichkeitsschwelle (C23) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 20 | 0 |
 | 178 | Teilweise: voraussichtliche Fehlerquote (C26) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 26 | 0 |
 | 179 | Teilweise: σ_e1 (C29) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 27 | 0 |
 | 180 | Teilweise: σ_e2 (C30) fehlt, s_e1 und aktualisierte Fehlerquote leer, global, Art. 83 | 60 | 22 | 0 |
@@ -816,7 +818,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 185 | Teilweise: Anzahl Einheiten Zeitraum 1 (C8) fehlt, negativer Nenner | 60 | 28 | 0 |
 | 186 | Teilweise: prognostizierter Buchwert Zeitraum 2 (C14) fehlt, negativer Nenner | 60 | 24 | 0 |
 | 187 | Teilweise: prognostizierte Anzahl Zeitraum 2 (C15) fehlt, negativer Nenner | 60 | 22 | 0 |
-| 188 | Teilweise: Wesentlichkeitsschwelle (C23) fehlt, negativer Nenner | 60 | 3 | 0 |
+| 188 | Teilweise: Wesentlichkeitsschwelle (C23) fehlt, negativer Nenner | 60 | 5 | 0 |
 | 189 | Teilweise: voraussichtliche Fehlerquote (C26) fehlt, negativer Nenner | 60 | 21 | 0 |
 | 190 | Teilweise: σ_e1 (C29) fehlt, negativer Nenner | 60 | 21 | 0 |
 | 191 | Teilweise: σ_e2 (C30) fehlt, negativer Nenner | 60 | 21 | 0 |
@@ -845,7 +847,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 214 | Teilweise: s_q Zeitraum 1 fehlt, Gesamtfehlerquote über der Schwelle | 60 | 0 | 0 |
 | 215 | Teilweise: Summen der Fehler fehlen in beiden Zeiträumen | 60 | 0 | 0 |
 | 216 | Teilweise: Testart geleert | 60 | 0 | 0 |
-| 217 | Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang) | 60 | 3 | 0 |
+| 217 | Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang) | 60 | 5 | 0 |
 | 218 | Teilweise: Kategorie fehlt, begrenzter Umfang beantragt | 60 | 0 | 0 |
 | 219 | Teilweise: systembedingte und anomale Fehler nicht angegeben | 60 | 0 | 0 |
 | 220 | Teilweise: σ_e1 und s_e1 fehlen | 60 | 26 | 0 |
@@ -865,14 +867,14 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 11_SRS_2Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 110 | 18040 | 17361 | 529 | 0 | 34 | 116 | 0 | 0 |
-| abnahme-luecken | 315 | 51660 | 49833 | 1212 | 0 | 115 | 500 | 0 | 0 |
+| abnahme-grund | 110 | 18040 | 17271 | 548 | 0 | 35 | 186 | 0 | 0 |
+| abnahme-luecken | 315 | 51660 | 49028 | 1236 | 0 | 116 | 1280 | 0 | 0 |
 | abnahme-schwelle | 60 | 9840 | 9820 | 0 | 0 | 20 | 0 | 0 | 0 |
-| Hauptsatz | 126 | 20664 | 18937 | 1579 | 0 | 6 | 142 | 0 | 0 |
+| Hauptsatz | 126 | 20664 | 18810 | 1610 | 0 | 7 | 237 | 0 | 0 |
 | teilbelegung | 13 | 2132 | 1890 | 242 | 0 | 0 | 0 | 0 | 0 |
-| zufall | 100 | 16400 | 16012 | 0 | 0 | 73 | 315 | 0 | 0 |
+| zufall | 100 | 16400 | 15320 | 0 | 0 | 74 | 1006 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -966,9 +968,9 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 88 | Teilweise: alles ausgefüllt außer der Zuverlässigkeit | 164 | 0 | 0 |
 | 89 | Teilweise: alles ausgefüllt außer dem Konfidenzniveau | 164 | 0 | 0 |
 | 90 | Teilweise: Testart geleert | 164 | 0 | 0 |
-| 91 | Teilweise: Wesentlichkeitsschwelle geleert | 164 | 29 | 0 |
-| 92 | Teilweise: Wesentlichkeitsschwelle geleert, global | 164 | 11 | 0 |
-| 93 | Teilweise: Wesentlichkeitsschwelle geleert, keine Neuberechnung, begrenzt zulässig | 164 | 5 | 0 |
+| 91 | Teilweise: Wesentlichkeitsschwelle geleert | 164 | 31 | 0 |
+| 92 | Teilweise: Wesentlichkeitsschwelle geleert, global | 164 | 31 | 0 |
+| 93 | Teilweise: Wesentlichkeitsschwelle geleert, keine Neuberechnung, begrenzt zulässig | 164 | 10 | 0 |
 | 94 | Teilweise: alles ausgefüllt außer der voraussichtlichen Fehlerquote | 164 | 52 | 0 |
 | 95 | Teilweise: voraussichtliche Fehlerquote fehlt, aktualisierte Quote angegeben | 164 | 49 | 0 |
 | 96 | Teilweise: voraussichtliche Fehlerquote fehlt, global, begrenzt zulässig | 164 | 52 | 0 |
@@ -977,7 +979,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 99 | Teilweise: voraussichtliche Fehlerquote fehlt, Gesamtfehlerquote über der Schwelle | 164 | 51 | 0 |
 | 100 | Teilweise: alles ausgefüllt außer der Kategorie | 164 | 0 | 0 |
 | 101 | Teilweise: Kategorie fehlt, begrenzter Umfang beantragt | 164 | 0 | 0 |
-| 102 | Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang) | 164 | 29 | 0 |
+| 102 | Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang) | 164 | 31 | 0 |
 | 103 | Teilweise: σ Zeitraum 1 fehlt in Schicht 3 | 164 | 51 | 0 |
 | 104 | Teilweise: σ Zeitraum 1 und s_eh fehlen in Schicht 3 | 164 | 56 | 0 |
 | 105 | Teilweise: σ Zeitraum 1 und s_eh fehlen in Schicht 3, global | 164 | 56 | 0 |
@@ -1001,17 +1003,17 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 123 | Teilweise: sieben Schichten ohne Standardabweichungen für den Umfang | 164 | 118 | 0 |
 | 124 | Teilweise: sieben Schichten ohne aktualisierte σ Zeitraum 2 | 164 | 60 | 0 |
 | 125 | Teilweise: sieben Schichten ohne Buchwerte | 164 | 94 | 0 |
-| 126 | Teilweise: sieben Schichten ohne Wesentlichkeitsschwelle | 164 | 41 | 0 |
+| 126 | Teilweise: sieben Schichten ohne Wesentlichkeitsschwelle | 164 | 43 | 0 |
 
 ## 12_SRS_3Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 6020 | 5758 | 201 | 0 | 26 | 35 | 0 | 0 |
-| abnahme-luecken | 324 | 27864 | 25566 | 2205 | 0 | 32 | 61 | 0 | 0 |
+| abnahme-grund | 70 | 6020 | 5705 | 211 | 0 | 27 | 77 | 0 | 0 |
+| abnahme-luecken | 324 | 27864 | 25294 | 2233 | 0 | 33 | 304 | 0 | 0 |
 | abnahme-schwelle | 60 | 5160 | 5140 | 0 | 0 | 20 | 0 | 0 | 0 |
-| Hauptsatz | 231 | 19866 | 16239 | 3394 | 0 | 9 | 224 | 0 | 0 |
-| zufall | 100 | 8600 | 8490 | 0 | 0 | 48 | 62 | 0 | 0 |
+| Hauptsatz | 231 | 19866 | 16158 | 3493 | 0 | 11 | 204 | 0 | 0 |
+| zufall | 100 | 8600 | 8424 | 0 | 0 | 50 | 126 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1215,9 +1217,9 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 198 | Teilweise: C93 fehlt, Ansatz keine Neuberechnung | 86 | 16 | 0 |
 | 199 | Teilweise: C99 fehlt, Ansatz keine Neuberechnung | 86 | 7 | 0 |
 | 200 | Teilweise: Testart geleert | 86 | 0 | 0 |
-| 201 | Teilweise: Wesentlichkeitsschwelle geleert | 86 | 7 | 0 |
-| 202 | Teilweise: Wesentlichkeitsschwelle geleert, global | 86 | 5 | 0 |
-| 203 | Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang) | 86 | 7 | 0 |
+| 201 | Teilweise: Wesentlichkeitsschwelle geleert | 86 | 13 | 0 |
+| 202 | Teilweise: Wesentlichkeitsschwelle geleert, global | 86 | 15 | 0 |
+| 203 | Teilweise: Vorgaben geleert (Testart, Schwelle, Ansatz, Art. 83, begrenzter Umfang) | 86 | 13 | 0 |
 | 204 | Teilweise: Kategorie fehlt, begrenzter Umfang beantragt | 86 | 0 | 0 |
 | 205 | Teilweise: σ_e1 und s_e1 fehlen (C31, C50) | 86 | 43 | 0 |
 | 206 | Teilweise: σ_e1 und s_e1 fehlen, global | 86 | 43 | 0 |
@@ -1240,16 +1242,16 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 223 | Nenner nach Zeitraum 1 genau 0 | 86 | 0 | 0 |
 | 224 | Nenner nach Zeitraum 1 knapp über 0 | 86 | 0 | 0 |
 | 225 | Nenner nach Zeitraum 1 knapp unter 0 | 86 | 0 | 0 |
-| 226 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz Standard | 86 | 25 | 0 |
-| 227 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz Global | 86 | 9 | 0 |
-| 228 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz Erhöhung | 86 | 11 | 0 |
-| 229 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz keine Neuberechnung | 86 | 11 | 0 |
-| 230 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt, global, keine Fehler in den Stichproben | 86 | 9 | 0 |
+| 226 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz Standard | 86 | 33 | 0 |
+| 227 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz Global | 86 | 35 | 0 |
+| 228 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz Erhöhung | 86 | 19 | 0 |
+| 229 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt Kategorie 1, Ansatz keine Neuberechnung | 86 | 19 | 0 |
+| 230 | Teilweise: Wesentlichkeitsschwelle geleert, begrenzt, global, keine Fehler in den Stichproben | 86 | 36 | 0 |
 | 231 | Teilweise: voraussichtliche Fehlerquote und Standardabweichungen fehlen, begrenzt Art. 83, global | 86 | 43 | 0 |
 
 ## 13_NS_GW
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 64 | 1408 | 1328 | 22 | 0 | 58 | 0 | 0 | 0 |
 | abnahme-luecken | 108 | 2376 | 2234 | 38 | 0 | 104 | 0 | 0 | 0 |
@@ -1309,7 +1311,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 14_NS_GW_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 64 | 2560 | 2460 | 40 | 0 | 60 | 0 | 0 | 0 |
 | abnahme-luecken | 112 | 4480 | 4260 | 111 | 0 | 109 | 0 | 0 | 0 |
@@ -1376,7 +1378,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 15_NS_PPS
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 64 | 1664 | 1577 | 32 | 0 | 55 | 0 | 0 | 0 |
 | abnahme-luecken | 108 | 2808 | 2608 | 104 | 0 | 96 | 0 | 0 | 0 |
@@ -1443,7 +1445,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 16_NS_PPS_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 64 | 4480 | 4347 | 75 | 0 | 58 | 0 | 0 | 0 |
 | abnahme-luecken | 113 | 7910 | 7435 | 372 | 0 | 103 | 0 | 0 | 0 |
@@ -1511,7 +1513,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 17_Unterstichprobe
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 72 | 432 | 408 | 24 | 0 | 0 | 0 | 0 | 0 |
 | abnahme-luecken | 14 | 84 | 77 | 7 | 0 | 0 | 0 | 0 | 0 |
@@ -1538,12 +1540,12 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 18_GFQ_AnhIII
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 126 | 2772 | 2618 | 7 | 0 | 85 | 62 | 0 | 0 |
-| abnahme-luecken | 370 | 8140 | 7533 | 217 | 0 | 206 | 184 | 0 | 0 |
-| Hauptsatz | 55 | 1210 | 1104 | 65 | 0 | 37 | 4 | 0 | 0 |
-| zufall | 126 | 2772 | 2611 | 0 | 0 | 110 | 51 | 0 | 0 |
+| abnahme-luecken | 370 | 8140 | 7527 | 223 | 0 | 206 | 184 | 0 | 0 |
+| Hauptsatz | 55 | 1210 | 1102 | 61 | 0 | 37 | 10 | 0 | 0 |
+| zufall | 126 | 2772 | 2636 | 0 | 0 | 112 | 24 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1595,8 +1597,8 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 46 | Methodenblatt (03) ohne voraussichtliche Standardabweichung, Ausschluss und Anpassung Ja | 22 | 8 | 0 |
 | 47 | Methodenblatt (03) ohne Summe der Fehlerquoten | 22 | 0 | 0 |
 | 48 | Methodenblatt (03) ohne Standardabweichung der Stichprobe (mit 0 gerechnet) | 22 | 0 | 0 |
-| 49 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht (Umfang nicht bestimmbar) | 22 | 2 | 0 |
-| 50 | SRS geschichtet (09): extrapolierter Fehler bestimmt, Genauigkeit nicht, Schwelle 0,01 % | 22 | 2 | 0 |
+| 49 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht (Umfang nicht bestimmbar) | 22 | 0 | 0 |
+| 50 | SRS geschichtet (09): extrapolierter Fehler bestimmt, Genauigkeit nicht, Schwelle 0,01 % | 22 | 0 | 0 |
 | 51 | Blatt 02 leer, Methodenblatt (03) mit eigenem Buchwert | 22 | 4 | 0 |
 | 52 | Blatt 02 leer, Methodenblatt (03) mit verknüpftem Buchwert | 22 | 7 | 0 |
 | 53 | Blatt 02 ohne Summe der positiven Datensätze, mit TH-Pauschale und nicht prüfbaren Einheiten | 22 | 7 | 0 |
@@ -1605,11 +1607,11 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## 20_Druck_KOM
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 98 | 3234 | 2989 | 13 | 108 | 73 | 51 | 0 | 0 |
-| abnahme-luecken | 410 | 13530 | 12332 | 200 | 422 | 370 | 206 | 0 | 0 |
-| Hauptsatz | 24 | 792 | 718 | 33 | 24 | 17 | 0 | 0 | 0 |
+| abnahme-luecken | 410 | 13530 | 12325 | 207 | 422 | 370 | 206 | 0 | 0 |
+| Hauptsatz | 24 | 792 | 717 | 31 | 24 | 17 | 3 | 0 | 0 |
 | zufall | 56 | 1848 | 1724 | 0 | 56 | 56 | 12 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
@@ -1634,14 +1636,14 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 | 18 | Leeres Formular (nichts gewählt, nichts eingetragen) | 33 | 6 | 0 |
 | 19 | Methodenblatt leer (03) | 33 | 2 | 0 |
 | 20 | Methodenblatt (03) ohne voraussichtliche Standardabweichung | 33 | 9 | 0 |
-| 21 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht | 33 | 2 | 0 |
+| 21 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht | 33 | 0 | 0 |
 | 22 | Blatt 02 leer | 33 | 5 | 0 |
 | 23 | Blatt 02 ohne Anzahl der Datensätze und ohne Betrag laut SFC2021 | 33 | 2 | 0 |
 | 24 | Blatt 02 ohne positive Datensätze (Anzahl und Summe) | 33 | 3 | 0 |
 
 ## X1_KonsMUS_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 80 | 1040 | 943 | 89 | 8 | 0 | 0 | 0 | 0 |
 | abnahme-luecken | 9 | 117 | 82 | 35 | 0 | 0 | 0 | 0 | 0 |
@@ -1677,7 +1679,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## X2_DiffSch_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 80 | 1040 | 958 | 78 | 4 | 0 | 0 | 0 | 0 |
 | abnahme-luecken | 226 | 2938 | 2891 | 47 | 0 | 0 | 0 | 0 | 0 |
@@ -1717,7 +1719,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## X3_DiffSch_S_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 80 | 2880 | 2700 | 176 | 4 | 0 | 0 | 0 | 0 |
 | abnahme-luecken | 16 | 576 | 412 | 164 | 0 | 0 | 0 | 0 | 0 |
@@ -1765,7 +1767,7 @@ von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`
 
 ## X4_DiffSch_2Z_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | abnahme-grund | 80 | 1600 | 1535 | 61 | 4 | 0 | 0 | 0 | 0 |
 | abnahme-luecken | 20 | 400 | 281 | 119 | 0 | 0 | 0 | 0 | 0 |

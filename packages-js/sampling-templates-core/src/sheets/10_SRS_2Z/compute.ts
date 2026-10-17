@@ -85,7 +85,7 @@ function globalRecalculation(c: Cells, pending: Pending): void {
   c.C65 = weightedDeviation([[c.C13, c.C61], [c.C55, c.C56]], c.C64)
   c.C66 = globalComputedSize(c.C21, c.C64, c.C65, c.C59, c.C60)
   c.C67 = netLimitedSize(c.C38, c.C11, c.C53)
-  c.C68 = appliedRandomSize(c.C66, minimumRandomSize(6, c.C10, c.C52), c.C67, pending('C66'))
+  c.C68 = appliedRandomSize(c.C66, minimumRandomSize(6, c.C10, c.C52), c.C67, pending('C66'), true)
   c.C69 = additionalUnits(c.C13, c.C64, c.C68, c.C42)
   c.C70 = share(c.C55, c.C64, c.C68)
   c.C71 = guard(() => increasedSize(c.C43, [[c.C49, c.C14], [c.C55, c.C15]]))

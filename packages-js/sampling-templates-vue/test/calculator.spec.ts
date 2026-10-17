@@ -168,9 +168,12 @@ describe('Rechenblatt', () => {
 
   it('Prozentfelder werden in Prozent eingegeben, Auswahlfelder behalten ihren Zahlenwert', async () => {
     const wrapper = await withSample()
+    await inputOf(wrapper, 'C17').setValue('2')
+    expect(field(wrapper, 'C19').text()).toContain('✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)')
+    expect(wrapper.get('[data-result="primary"]').text()).toBe('nicht bestimmbar (TE = AE, Division durch null)')
+    // AE > TE: Umfang nach KOM-Leitfaden EGESIF_16-0014-01 (7.1) mit |TE − AE|.
     await inputOf(wrapper, 'C17').setValue('2,5')
-    expect(field(wrapper, 'C19').text()).toContain('✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar')
-    expect(wrapper.get('[data-result="primary"]').text()).toBe('nicht bestimmbar (TE ≤ AE)')
+    expect(field(wrapper, 'C19').text()).toContain('⚠ AE > TE')
     await inputOf(wrapper, 'C17').setValue('0,7')
     await inputOf(wrapper, 'C10').setValue('0.95')
     expect(valueOf(wrapper, 'C12')).toBe('1,960')

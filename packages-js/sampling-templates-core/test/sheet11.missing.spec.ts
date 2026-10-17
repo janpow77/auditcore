@@ -215,8 +215,8 @@ describe('Blatt 11_SRS_2Z_S: Richtlinie für fehlende Angaben', () => {
     expect(['D89', 'C89'].some((cell) => incomplete.lacking.has(cell))).toBe(false)
   })
 
-  it('Wert ohne Grundlage (withoutBasis): bei „TE ≤ AE“ wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
-    const inputs = { ...sample, C25: 0.025, C33: NONE }
+  it('Wert ohne Grundlage (withoutBasis): bei TE = AE wie die Vorlage (dort „TE ≤ AE“) gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
+    const inputs = { ...sample, C25: 0.02, C33: NONE }
     const cells = ['C44', 'D46', 'D77', 'D79', 'C80', 'C93', 'C102']
     const pick = (results: CellMap): unknown[] => cells.map((cell) => results[cell] ?? null)
     // Alle Pflichteingaben liegen vor: Untergrenzen, Genauigkeit 0 und die Würdigung „✔“ stehen wie in der Vorlage – mit Hinweis in Warnfarbe.

@@ -4,9 +4,12 @@
  * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import type { SheetTexts } from '../../model/texts'
-import { delvoHintsEn, globalMarginId, withNotApplicableNoteEn } from '../shared/delvo'
+import { delvoHintsEn, withNotApplicableNoteEn } from '../shared/delvo'
 import { EXHAUSTIVE_MINIMUM_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
-import { GLOBAL_NOT_APPLICABLE, GLOBAL_NOT_APPLICABLE_EN } from '../shared/periods'
+import { SIZE_NOT_APPLICABLE, SIZE_NOT_APPLICABLE_EN } from '../shared/periods'
+import { APPROXIMATION_EN_TEXT, komHintsEn } from '../shared/kom'
+import { definition } from './definition'
+import { ANTICIPATED_ABOVE_TOLERABLE, TOLERABLE_EQUALS_ANTICIPATED } from '../shared/statistical'
 
 export const en: SheetTexts = {
   title: 'Simple random sampling – three sampling periods, non-stratified',
@@ -167,7 +170,7 @@ export const en: SheetTexts = {
   },
   values: {
     'Einfaches Zufallsstichprobenverfahren, 3 Zeiträume': 'Simple random sampling, 3 periods',
-    [GLOBAL_NOT_APPLICABLE]: GLOBAL_NOT_APPLICABLE_EN,
+    [SIZE_NOT_APPLICABLE]: SIZE_NOT_APPLICABLE_EN,
     '✔ mind. 90 % eingehalten': '✔ at least 90 % observed',
     '✖ gering: mind. 90 % erforderlich': '✖ low: at least 90 % required',
     '✔ mind. 60 % eingehalten': '✔ at least 60 % observed',
@@ -178,6 +181,8 @@ export const en: SheetTexts = {
     '✖ unzulässig: höchstens 2 %': '✖ not permitted: maximum 2 %',
     '✔ TE > AE': '✔ TE > AE',
     '✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar': '✖ TE ≤ AE: sample size cannot be determined',
+    [ANTICIPATED_ABOVE_TOLERABLE]: '⚠ AE > TE: sample size with the planned precision |TE − AE| (Commission guidance EGESIF_16-0014-01, 7.1)',
+    [TOLERABLE_EQUALS_ANTICIPATED]: '✖ TE = AE: sample size cannot be determined (division by zero)',
     'TE ≤ AE': 'TE ≤ AE',
     'Nicht angewandt – Anh. I und II gelten': 'Not applied – Annexes I and II apply',
     '✔ 30 Einheiten (Art. 83 VO (EU) 2021/1060)': '✔ 30 sampling units (Art. 83 of Regulation (EU) 2021/1060)',
@@ -192,7 +197,9 @@ export const en: SheetTexts = {
     '✖ < 30 Einheiten (Art. 5 Abs. 5)': '✖ < 30 units (Art. 5(5))',
   },
   webHints: withNotApplicableNoteEn({
-    ...delvoHintsEn(globalMarginId(2), globalMarginId(3), 'exclusion-reference-population'),
+    ...komHintsEn(definition),
+    ...APPROXIMATION_EN_TEXT,
+    ...delvoHintsEn('exclusion-reference-population'),
     'size-exceeds-population-1': 'Sample size for period 1 exceeds the number of units of the random stratum of that period',
     'size-exceeds-population-2': 'Sample size for period 2 exceeds the number of units of the random stratum of that period',
     'size-exceeds-population-3': 'Sample size for period 3 exceeds the number of units of the random stratum of that period',

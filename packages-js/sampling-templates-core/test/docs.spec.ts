@@ -38,7 +38,7 @@ interface Counts {
   adapted: number
   /** Texte mit dem amtlichen Begriff statt des Begriffs der Vorlage. */
   terms: number
-  /** Zellen, an denen die Webfassung bewusst nach der DelVO rechnet. */
+  /** Zellen, an denen die Webfassung bewusst nach den Vorgaben der KOM rechnet. */
   delvo: number
   unexplained: number
   /** Abweichungen unter der Richtlinie „wie die Vorlage“. */
@@ -75,7 +75,7 @@ const row = (name: string, counts: Counts): string =>
   `| ${name} | ${counts.cases} | ${counts.compared} | ${counts.compared - counts.explained - counts.adapted - counts.terms - counts.delvo - counts.unexplained} | ${counts.explained} | ${counts.adapted} | ${counts.terms} | ${counts.delvo} | ${counts.unexplained} | ${counts.template} |`
 
 const EMPTY: Counts = { cases: 0, compared: 0, explained: 0, adapted: 0, terms: 0, delvo: 0, unexplained: 0, template: 0 }
-const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
+const HEAD = ['| Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |', '|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
 
 function comparison(): string {
   const lines = [
@@ -112,11 +112,13 @@ function comparison(): string {
     '  genau den Wert zeigt, der sich nach dieser Regel aus dem Wert von Excel ergibt.',
     '- **Amtlicher Begriff** sind Texte, in denen die Webfassung statt „Signifikanzschwelle“ der Vorlage den amtlichen',
     '  Begriff „Signifikanzschwelle“ zeigt (Anhang I Nr. 1 DelVO (EU) 2023/67); sonst ist der Text wortgleich.',
-    '- **Bewusst nach DelVO** sind Zellen, an denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 nach der',
-    '  DelVO (EU) 2023/67 rechnet und nicht wie die Vorlage: Genauigkeit bei Ersetzung in Tabelle 2 (Anhang III; Blatt 18)',
-    '  und globale Neuberechnung bei AE ≥ TE (Anhang II; Blätter 05–07, 10–12). Je Zelle ist geprüft, dass die Webfassung',
-    '  den Wert zeigt, den `scripts/delvo_soll.py` unabhängig vom Rechenkern aus den Excel-Sollwerten nachrechnet',
-    '  (`test/golden-delvo/`); Folgegrößen eines nicht bestimmbaren Umfangs müssen leer sein.',
+    '- **Bewusst nach KOM** sind Zellen, an denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 („Es gelten',
+    '  die Vorgaben der KOM“: DelVO (EU) 2023/67 und KOM-Leitfaden EGESIF_16-0014-01) anders rechnet als die Vorlage:',
+    '  Umfang bei AE > TE mit |TE − AE| (Leitfaden 7.1; Blätter 03–12, erster Zeitraum, mit allen Folgegrößen), bei AE = TE',
+    '  „nicht anwendbar (Division durch null)“ (globale Neuberechnung mit leeren Folgegrößen) und Genauigkeit bei Ersetzung',
+    '  in Tabelle 2 (Anhang III; Blätter 18 und 20). Je Zelle ist geprüft, dass die Webfassung den Wert zeigt, den',
+    '  `scripts/delvo_soll.py` unabhängig vom Rechenkern nachrechnet (`test/golden-delvo/`; Folgegrößen des ersten',
+    '  Zeitraums aus einer Neuberechnung der Vorlage in LibreOffice mit dem nach KOM bestimmten Umfang, `scripts/kom_lo.py`).',
     '- **Toleranzkanten** gibt es gegen Excel keine mehr: Die beiden Würdigungen, die gegen LibreOffice an der',
     '  Vergleichstoleranz hingen (Blatt 06 C99, Blatt 12 C138), zeigt die Webfassung mit der Vergleichsregel von Excel',
     '  genau wie Excel.',

@@ -27,7 +27,7 @@ export interface GoldenCase {
   eingaben: Record<string, CellValue>
   /** Werte der Vorlage; Excel zeigt auch Wahrheitswerte (`false`) und Fehlerwerte (`"#DIV/0!"`). */
   erwartet: Record<string, CellValue | boolean>
-  /** DelVO-Sollwerte, wo die Webfassung bewusst nach der DelVO rechnet (`delvoGolden.ts`). */
+  /** DelVO-Sollwerte, wo die Webfassung bewusst nach den Vorgaben der KOM rechnet (`delvoGolden.ts`). */
   delvo?: DelvoEntry
 }
 
@@ -51,7 +51,7 @@ export interface CaseReport {
   adapted: Mismatch[]
   /** Texte, die nur den amtlichen Begriff statt des Begriffs der Vorlage tragen („Signifikanzschwelle“). */
   terms: Mismatch[]
-  /** Zellen, an denen die Webfassung bewusst nach der DelVO rechnet; je Zelle gegen den unabhängig gerechneten DelVO-Wert geprüft. */
+  /** Zellen, an denen die Webfassung bewusst nach den Vorgaben der KOM rechnet; je Zelle gegen den unabhängig gerechneten Sollwert geprüft. */
   delvo: Mismatch[]
 }
 
@@ -248,7 +248,7 @@ export function templateMismatches(sheet: AvailableSheet, golden: GoldenCase): M
     const actual = results[cell] ?? null
     const same = (soll: CellValue, value: CellValue): boolean => sameValue(soll, value, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))
     if (name !== sheet.id || same(asShownByWeb(sheet, cell, expected, results) as CellValue, actual)) continue
-    // Bewusst nach der DelVO gerechnet: auch unter der Richtlinie „wie die Vorlage“ der DelVO-Wert.
+    // Bewusst nach den Vorgaben der KOM gerechnet: auch unter der Richtlinie „wie die Vorlage“ der DelVO-Wert.
     if (delvoVerdict(golden.delvo, cell, actual, same) === 'delvo') continue
     mismatches.push({ cell, expected, actual })
   }
@@ -299,13 +299,13 @@ function settle(report: CaseReport, sheet: AvailableSheet, golden: GoldenCase, m
  * Zelle damit eingeordnet ist. Eine Zelle mit DelVO-Sollwert, an der die
  * Webfassung keinen Wert zeigt, ist nur begründet, wenn die Gegenprobe mit 0 den
  * DelVO-Wert ergibt; eine leere Folgegröße wird zuerst wie gewohnt begründet
- * (fehlende Angabe), sonst als „bewusst nach DelVO“ gezählt.
+ * (fehlende Angabe), sonst als „bewusst nach KOM“ gezählt.
  */
 function delvoCell(report: CaseReport, sheet: AvailableSheet, golden: GoldenCase, all: Record<string, CellMap>, entry: ComparedCell): boolean {
   const { cell, expected, actual, target, same } = entry
   const verdict = delvoVerdict(golden.delvo, cell, actual, same)
   if (verdict === 'wrong') {
-    settle(report, sheet, golden, { cell, expected: golden.delvo?.cells[cell] ?? null, actual }, all)
+    settle(report, sheet, golden, { cell, expected: officialWording(golden.delvo?.cells[cell] ?? null) as CellValue, actual }, all)
     return true
   }
   if (verdict !== 'delvo' || same(officialWording(expected) as CellValue, actual)) return false

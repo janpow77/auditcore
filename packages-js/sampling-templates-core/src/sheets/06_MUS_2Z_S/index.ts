@@ -2,13 +2,14 @@
 import { eq, gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import { STRATA_COLUMNS, TEMPLATE_STRATA, countRow, stratumCell, usedStrata } from '../../model/strata'
-import type { CellMap, WebHint } from '../../model/types'
+import type { CellMap, SheetContext, WebHint } from '../../model/types'
 import { approachOf, errorDependents, limitWithoutSize, partialErrorSums } from '../shared/mus'
-import { globalWithoutMargin, withNotApplicableNote } from '../shared/delvo'
+import { withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte mit drei Schichten; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -83,7 +84,7 @@ function sizeHints(results: CellMap): WebHint[] {
 }
 
 /** Hinweise der Webfassung zu Blatt 06; sie verändern kein Rechenergebnis. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints = sizeHints(results)
   if (isNumber(results.C8) && gt(results.C8, 0) && eq(countRow(results, 51), 0)) {
     hints.push({ id: 'second-period-empty', tone: 'warning', text: SECOND_PERIOD_EMPTY })
@@ -92,7 +93,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   if (gt(usedStrata(inputs, [8, 9, 51]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C28', { size: 'C65' })])
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...annexIIIApproximation(context, false)])
 }
 
 /** Zellen, die von der Genauigkeit abhängen (ohne die Hilfszelle der Schicht). */

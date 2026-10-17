@@ -255,11 +255,11 @@ describe('Blatt 06_MUS_2Z_S', () => {
   })
 
   it('Prüfhinweis „mindestens drei Einheiten“ ohne Einheiten: bei vollständigen Pflichteingaben „✔ ≥ 3“ wie die Vorlage mit Hinweis in Warnfarbe; offen, solange eine Pflichteingabe fehlt', () => {
-    // „TE ≤ AE“: Die Vorlage zeigt keinen Umfang je Schicht, trotzdem „✔ ≥ 3“ und die Summe 0, und rechnet damit weiter.
-    const inputs = sample({ C20: 0.025 })
+    // TE = AE (Vorlage: „TE ≤ AE“): Die Vorlage zeigt keinen Umfang je Schicht, trotzdem „✔ ≥ 3“ und die Summe 0, und rechnet damit weiter.
+    const inputs = sample({ C20: 0.02 })
     const current = evaluateSheet(sheet, inputs, context)
     expect(current.complete).toBe(true)
-    expect(current.cells).toMatchObject({ C29: 'TE ≤ AE', D37: null, D44: null, D45: '✔ ≥ 3', E45: '✔ ≥ 3', F45: '✔ ≥ 3', G45: null, C37: 0 })
+    expect(current.cells).toMatchObject({ C29: '✖ nicht anwendbar (Division durch null)', D37: null, D44: null, D45: '✔ ≥ 3', E45: '✔ ≥ 3', F45: '✔ ≥ 3', G45: null, C37: 0 })
     expect(current.cells).toEqual(evaluateSheet(sheet, inputs, likeTemplate).cells)
     expect(current.withoutBasis).toEqual(expect.arrayContaining(['D45', 'E45', 'F45', 'C37']))
     expect(current.lacking.size).toBe(0)
@@ -268,12 +268,12 @@ describe('Blatt 06_MUS_2Z_S', () => {
     expect(isQualified(note ? [note] : [])).toBe(true)
     expect(isQualified(limitations)).toBe(true)
     // Derselbe Fall ohne aktualisierte Standardabweichung einer belegten Schicht (Pflichteingabe): kein „✔ ≥ 3“, keine Summe 0.
-    const open = evaluateSheet(sheet, sample({ C20: 0.025, F53: null }), context)
+    const open = evaluateSheet(sheet, sample({ C20: 0.02, F53: null }), context)
     expect(open.complete).toBe(false)
-    expect(open.cells).toMatchObject({ C29: 'TE ≤ AE', D37: null, D44: null, D45: null, E45: null, F45: null, C37: null })
+    expect(open.cells).toMatchObject({ C29: '✖ nicht anwendbar (Division durch null)', D37: null, D44: null, D45: null, E45: null, F45: null, C37: null })
     expect(open.withoutBasis).toEqual([])
     expect(open.lacking.has('D45')).toBe(false)
-    expect(unfoundedNote(sample({ C20: 0.025, F53: null })).note).toBeUndefined()
+    expect(unfoundedNote(sample({ C20: 0.02, F53: null })).note).toBeUndefined()
     expect(compute({ D41: 21 })).toMatchObject({ D44: 1, D45: '✖ < 3', E45: '✔ ≥ 3' })
     expect(sheet.deviations.filter((entry) => entry.kind === 'withoutBasis' && /^[A-Z]+45$/.test(entry.cell))).toHaveLength(STRATA_COLUMNS.length * 3)
   })
@@ -326,8 +326,10 @@ describe('Blatt 06_MUS_2Z_S', () => {
     const firstOnly = withoutRows(51, 52, 53, 75, 76, 81, 82, 83)
     const twenty: Record<string, CellValue> = { ...sheet.sample.inputs, C28: 'keine Neuberechnung' }
     for (const column of STRATA_COLUMNS) Object.assign(twenty, moveStratum(Object.fromEntries(Object.entries(sheet.sample.inputs).filter(([cell]) => cell.startsWith('D'))), 'D', column), { [`${column}9`]: null, [`${column}52`]: 1 })
-    const cases = [sample({ D49: 0.9, E49: 0.9, F49: 0.9 }), sample({ C28: GLOBAL, C54: 0.03 }), firstOnly, sample({ C13: 0.95 }), { C30: 2, C32: 'Ja' }, twenty, { ...twenty, C28: 'Standard (Art. 5 Abs. 6 Buchst. a)', D9: 11000000, D25: 0.1 }]
+    const cases = [sample({ D49: 0.9, E49: 0.9, F49: 0.9 }), sample({ C28: GLOBAL, C54: 0.03 }), sample({ C20: 0.05 }), sample({ C28: GLOBAL, C54: 0.05 }), sample({ C28: GLOBAL, C54: 0.02 }), firstOnly, sample({ C13: 0.95 }), { C30: 2, C32: 'Ja' }, twenty, { ...twenty, C28: 'Standard (Art. 5 Abs. 6 Buchst. a)', D9: 11000000, D25: 0.1 }]
     const hints = cases.flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
+    const excluded = createContext({ sheets: { '02_Grundgesamtheit': { C47: 2, C49: 'Ausschluss (Art. 3 Abs. 6 Buchst. b)' } } })
+    hints.push(...(sheet.webHints?.(sheet.sample.inputs, sheet.compute(sheet.sample.inputs, excluded), excluded) ?? []))
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts?.webHints ?? {})))
     expect(texts?.webHints?.['no-planned-size-20']).toMatch(/^Stratum 20: /)
     expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – two sampling periods, stratified')
@@ -339,7 +341,8 @@ describe('Blatt 04_MUS_1Z_S: englische Arbeitsübersetzung (noch nicht am Blatt 
     expectTranslated(sheet04, texts04)
     const inputs: Record<string, CellValue> = { ...sheet04.sample.inputs, C13: 0.95, D10: 10, E10: 10, F10: 10 }
     for (const column of STRATA_COLUMNS.slice(3, 8)) Object.assign(inputs, { [`${column}9`]: 1000000, [`${column}24`]: 0.1 })
-    const hints = sheet04.webHints?.(inputs, sheet04.compute(inputs, context), context) ?? []
+    const excluded = createContext({ sheets: { '02_Grundgesamtheit': { C47: 2, C49: 'Ausschluss (Art. 3 Abs. 6 Buchst. b)' } } })
+    const hints = [inputs, { ...sheet04.sample.inputs, C20: 0.05 }].flatMap((entry) => sheet04.webHints?.(entry, sheet04.compute(entry, excluded), excluded) ?? [])
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts04.webHints ?? {})))
     expect(localizeSheet({ ...sheet04, translations: { en: texts04 } }, 'en').definition.title).toBe('MUS standard approach – one sampling period, stratified')
   })

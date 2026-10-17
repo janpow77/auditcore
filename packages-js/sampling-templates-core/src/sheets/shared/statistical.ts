@@ -9,6 +9,7 @@
 import { eq, ge, gt, guard, isNumber, le, lt, minus, n, ne, required, roundUp, sameNumber, sameText } from '../../excel/index'
 import { unfounded } from '../../model/policy'
 import type { CellValue, SheetContext } from '../../model/types'
+import { SIZE_NOT_APPLICABLE } from './periods'
 
 /** Prüfung Konfidenzniveau gegen Systembewertung (Anh. I Nr. 2). */
 export function checkConfidence(reliability: CellValue | undefined, confidence: CellValue | undefined): CellValue {
@@ -24,10 +25,21 @@ export function checkMateriality(materiality: CellValue | undefined): CellValue 
   return le(materiality, 0.02) ? '✔ ≤ 2 %' : '✖ unzulässig: höchstens 2 %'
 }
 
-/** Prüfung TE > AE; `rate` ist die Eingabe der voraussichtlichen Fehlerquote. */
+/** Prüfhinweis bei AE > TE (KOM-Leitfaden EGESIF_16-0014-01, 7.1); die Vorlage zeigt hier „✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar“. */
+export const ANTICIPATED_ABOVE_TOLERABLE = '⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)'
+/** Prüfhinweis bei AE = TE. */
+export const TOLERABLE_EQUALS_ANTICIPATED = '✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)'
+
+/**
+ * Prüfung TE > AE; `rate` ist die Eingabe der voraussichtlichen Fehlerquote.
+ * Nach KOM-Leitfaden EGESIF_16-0014-01 (7.1, S. 183) plant die Prüfbehörde
+ * auch bei AE > TE, mit der Genauigkeit |TE − AE|; nicht bestimmbar ist der
+ * Umfang nur bei AE = TE. Die Vorlage zeigt für beides „✖ TE ≤ AE“.
+ */
 export function checkTolerableError(tolerable: CellValue | undefined, anticipated: CellValue | undefined, rate: CellValue | undefined): CellValue {
   if (eq(n(tolerable), 0) || !isNumber(rate)) return null
-  return gt(n(tolerable), n(anticipated)) ? '✔ TE > AE' : '✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar'
+  if (gt(n(tolerable), n(anticipated))) return '✔ TE > AE'
+  return eq(n(tolerable), n(anticipated)) ? TOLERABLE_EQUALS_ANTICIPATED : ANTICIPATED_ABOVE_TOLERABLE
 }
 
 /** Größen der Formel n = (z · BV · σ / (TE − AE))². */
@@ -39,10 +51,15 @@ export interface SizeTerms {
   anticipated: CellValue | undefined
 }
 
-/** Rechnerischer Stichprobenumfang, aufgerundet; „TE ≤ AE“ als Text wie in der Vorlage. */
+/**
+ * Rechnerischer Stichprobenumfang, aufgerundet. Bei AE > TE nach KOM-Leitfaden
+ * EGESIF_16-0014-01 (7.1) mit |TE − AE| (die quadrierte Formel liefert das); die
+ * Vorlage zeigt dort „TE ≤ AE“ und keinen Umfang. Bei AE = TE nicht anwendbar
+ * (Division durch null).
+ */
 export function computedSampleSize(terms: SizeTerms): CellValue {
   if (eq(n(terms.tolerable), 0) || !isNumber(terms.anticipated)) return null
-  if (le(n(terms.tolerable), terms.anticipated)) return 'TE ≤ AE'
+  if (eq(n(terms.tolerable), terms.anticipated)) return SIZE_NOT_APPLICABLE
   return guard(() => roundUp(((required(terms.z) * required(terms.bookValue) * required(terms.deviation)) / minus(n(terms.tolerable), n(terms.anticipated))) ** 2))
 }
 

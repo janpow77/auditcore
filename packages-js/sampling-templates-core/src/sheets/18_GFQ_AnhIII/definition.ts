@@ -42,6 +42,19 @@ const highValue: FieldDefinition[] = [
   { cell: 'C23', alias: 'adjustedExhaustiveError', kind: 'formula', type: 'amount', format: EUR, label: 'EE_e', formula: 'EE_e,reduziert · BV_e,ursprünglich / BV_e,reduziert' },
 ]
 
+/** Lage der berührten Einheiten nach KOM-Leitfaden (freiwillige Gruppe; nicht in der Vorlage). */
+const LOCATION = 'article80Location'
+const location: FieldDefinition[] = [
+  { cell: 'C31', alias: 'locationExhaustiveUnits', kind: 'input', optional: LOCATION, type: 'integer', format: '#,##0', label: 'Einheiten der hochwertigen bzw. umfassenden Schicht der ursprünglichen Grundgesamtheit (N_e)', hint: 'Freiwillig; mit allen vier Angaben passt Blatt 18 nach KOM-Leitfaden EGESIF_16-0014-01 (7.10.3) je Schicht an. Gibt es keine solche Schicht, überall 0 eintragen.' },
+  { cell: 'C32', alias: 'locationExhaustiveBookValue', kind: 'input', optional: LOCATION, type: 'amount', format: EUR, label: 'Buchwert der hochwertigen bzw. umfassenden Schicht der ursprünglichen Grundgesamtheit (BV_e)' },
+  { cell: 'C33', alias: 'locationAffectedUnits', kind: 'input', optional: LOCATION, type: 'integer', format: '#,##0', label: 'davon nach Art. 80 Abs. 3 berührt: Anzahl (A_e)' },
+  { cell: 'C34', alias: 'locationAffectedBookValue', kind: 'input', optional: LOCATION, type: 'amount', format: EUR, label: 'davon nach Art. 80 Abs. 3 berührt: Buchwert (BV_A,e)' },
+  { cell: 'C35', alias: 'randomStratumAffectedUnits', kind: 'formula', type: 'integer', format: '#,##0', label: 'Berührte Einheiten der Zufallsschicht (A_s)', formula: 'A_s = A − A_e' },
+  { cell: 'C36', alias: 'randomStratumOriginalBookValue', kind: 'formula', type: 'amount', format: EUR, label: 'Buchwert der Zufallsschicht, ursprünglich (BV_s)', formula: 'BV_s = BV_u − BV_e' },
+  { cell: 'C37', alias: 'randomStratumReducedBookValue', kind: 'formula', type: 'amount', format: EUR, label: 'Buchwert der Zufallsschicht, reduziert (BV_s,r)', formula: 'BV_s,r = BV_s − (BV_A − BV_A,e)' },
+  { cell: 'C38', alias: 'randomStratumFactor', kind: 'formula', type: 'decimal', format: '0.0000', label: 'Anpassungsfaktor der Zufallsschicht BV_s / BV_s,r', hint: 'KOM-Leitfaden EGESIF_16-0014-01, 7.10.2 und 7.10.3.' },
+]
+
 const adjusted: FieldDefinition[] = [
   {
     cell: 'C24',
@@ -74,6 +87,7 @@ export const definition: MethodDefinition = {
     { id: 'A', title: 'Übernahme aus dem Methodenblatt', fields: method },
     { id: 'B', title: 'Grundgesamtheiten', reference: 'aus Blatt 02', fields: populations },
     { id: 'C', title: 'Anpassung hochwertige Schicht', reference: 'Anhang III, optional', fields: highValue },
+    { id: 'F', title: 'Lage der berührten Einheiten', reference: 'KOM-Leitfaden EGESIF_16-0014-01, 7.10; freiwillig', fields: location },
     { id: 'D', title: 'Angepasster extrapolierter Fehler und angepasste Genauigkeit', reference: 'Anhang III', fields: adjusted },
     { id: 'E', title: 'Gesamtfehlerquote', reference: 'Art. 8 Abs. 1 und 5', fields: totalErrorRate },
   ],

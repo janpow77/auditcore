@@ -4,12 +4,13 @@ import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import { STRATA_COLUMNS, TEMPLATE_STRATA, stratumCell, usedStrata } from '../../model/strata'
 import type { CellMap, SheetContext, WebHint } from '../../model/types'
 import { NOT_APPLICABLE, precisionCells, projectionCells, recalculationOf } from '../shared/srs'
-import { exclusionReference, globalWithoutMargin, withNotApplicableNote } from '../shared/delvo'
+import { exclusionReference, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
 import { UNITS, used } from './strata'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte mit drei Schichten; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -72,7 +73,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
   if (gt(usedStrata(inputs, [UNITS.period1, UNITS.forecast2, UNITS.period2]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return withNotApplicableNote([...hints, ...globalWithoutMargin(results, 'C33', { size: 'C72' }), ...exclusionReference(context)])
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...exclusionReference(context), ...annexIIIApproximation(context, true)])
 }
 
 /** Je Zeitraum: Zeile der Einheiten, der Standardabweichung der Variablen q (s_qh) und der Fehlersumme (Σ E_i). */

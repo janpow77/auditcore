@@ -38,9 +38,9 @@ export function netLimitedSize(limit: CellValue | undefined, ...highValueUnits: 
  * `pending`: Der rechnerische Umfang ist offen, weil eine Angabe fehlt, mit der
  * die Vorlage als 0 weiterrechnen würde – dann bleibt auch dieser Umfang offen.
  */
-export function appliedRandomSize(computed: CellValue | undefined, minimum: number, netLimit: number | null, pending: boolean): CellValue {
-  // Globale Neuberechnung nach der DelVO nicht anwendbar (AE ≥ TE): kein Umfang, auch kein begrenzter.
-  if (pending || globalBlocked(computed)) return null
+export function appliedRandomSize(computed: CellValue | undefined, minimum: number, netLimit: number | null, pending: boolean, global = false): CellValue {
+  // Globale Neuberechnung bei AE = TE nicht anwendbar: kein Umfang, auch kein begrenzter; im ersten Zeitraum gilt der begrenzte Umfang.
+  if (pending || (global && globalBlocked(computed))) return null
   const atLeast = isNumber(computed) ? Math.max(computed, minimum) : null
   if (netLimit === null) return atLeast
   return atLeast === null ? netLimit : Math.min(atLeast, netLimit)

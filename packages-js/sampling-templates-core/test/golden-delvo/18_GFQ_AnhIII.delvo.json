@@ -18,5 +18,25 @@
    "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
   },
   "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 48,
+  "name": "SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht (Umfang nicht bestimmbar)",
+  "cells": {
+   "C8": 130224.492622687,
+   "C25": 130224.492622687,
+   "C28": 0.0781910880923268
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE im Verfahren"
+ },
+ {
+  "position": 49,
+  "name": "SRS geschichtet (09): extrapolierter Fehler bestimmt, Genauigkeit nicht, Schwelle 0,01 %",
+  "cells": {
+   "C8": 1343585.84222192,
+   "C25": 1343585.84222192,
+   "C28": 0.261733575110422
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE im Verfahren"
  }
 ]

@@ -5,9 +5,11 @@
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, INCREASE_INTERPRETATION_EN, VALUES_EN, findingsEn, periodExceedsEn, selectionEn } from '../shared/mus'
-import { delvoHintsEn, globalMarginId, withNotApplicableNoteEn } from '../shared/delvo'
+import { withNotApplicableNoteEn } from '../shared/delvo'
 import { ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
 import { HIGH_VALUE_INTERPRETATION_EN } from '../shared/interpretations'
+import { APPROXIMATION_EN_TEXT, komHintsEn } from '../shared/kom'
+import { definition } from './definition'
 
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 
@@ -113,8 +115,9 @@ export const en: SheetTexts = {
     '⚠ Umfang überschritten – Art. 5 Abs. 7 UAbs. 4 Buchst. a oder b': '⚠ sample size exceeded – Art. 5(7), fourth subparagraph, point (a) or (b)',
   },
   webHints: withNotApplicableNoteEn({
-    ...delvoHintsEn(globalMarginId()),
-    'limited-size-open': HINTS_EN['limited-size-open'],
+    ...komHintsEn(definition),
+    ...APPROXIMATION_EN_TEXT,
+        'limited-size-open': HINTS_EN['limited-size-open'],
     'size-exceeds-population-1': periodExceedsEn(1),
     'size-exceeds-population-2': periodExceedsEn(2),
     'negative-denominator':

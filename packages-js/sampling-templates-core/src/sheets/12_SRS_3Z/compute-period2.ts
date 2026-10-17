@@ -40,7 +40,7 @@ function global(c: Cells, pending: Pending): void {
   c.C76 = weightedDeviation([[c.C13, c.C68], [c.C59, c.C62], [c.C61, c.C63]], c.C75)
   c.C77 = globalComputedSize(c.C23, c.C75, c.C76, c.C66, c.C67)
   c.C78 = netLimitedSize(c.C41, c.C11, c.C57)
-  c.C79 = appliedRandomSize(c.C77, minimumRandomSize(9, c.C10, c.C56), c.C78, pending('C77'))
+  c.C79 = appliedRandomSize(c.C77, minimumRandomSize(9, c.C10, c.C56), c.C78, pending('C77'), true)
   c.C80 = additionalUnits(c.C13, c.C75, c.C79, c.C45)
   c.C81 = share(c.C59, c.C75, c.C79)
   c.C82 = share(c.C61, c.C75, c.C79)

@@ -1,5 +1,48 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.9 – 2026-10-17
+
+Entscheidung des Inhabers vom 17.10.2026: „Es gelten die Vorgaben der KOM“
+(DelVO (EU) 2023/67 und KOM-Leitfaden EGESIF_16-0014-01). Die unabhängige
+Gegenprüfung von 0.1.8 hat Nr. 2 als nicht von der DelVO gedeckt und Nr. 1 als
+ungenau bewertet; beides ist neu gefasst (noch nicht veröffentlicht).
+
+- Nr. 2 zurückgenommen und nach dem Leitfaden (7.1, S. 183) gefasst: Bei AE > TE
+  rechnen erster Zeitraum, Standard- und globale Neuberechnung den Umfang mit
+  |TE − AE|; neutraler Hinweis `anticipated-above-tolerable[-global[-3]]`, ab
+  AE ≥ 4 % zusätzlich `anticipated-at-least-4[…]` (Empfehlung 4 %, der Wert wird
+  nicht ersetzt). Im ersten Zeitraum (03–12) weicht das von der Vorlage ab
+  („TE ≤ AE“); Prüfhinweis dort „⚠ AE > TE: Umfang mit der geplanten
+  Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)“. Nur bei AE = TE
+  „✖ nicht anwendbar (Division durch null)“ (`SIZE_NOT_APPLICABLE`); im ersten
+  Zeitraum gilt ein begrenzter Umfang wie in der Vorlage, in der globalen
+  Neuberechnung bleiben Umfang und Folgegrößen offen, Warnhinweis
+  `size-not-applicable-global[-3]` mit Art. 5 Abs. 7 UAbs. 4 Buchst. a.
+  Entfallen: `global-te-not-above-ae*`. `appliedTotalSize`/`appliedRandomSize`
+  mit neuem Parameter `global`. Ergebnisspalte: „nicht bestimmbar (TE = AE,
+  Division durch null)“ (`equalErrors`).
+- Nr. 1 je Schicht nach dem Leitfaden (7.10.2, 7.10.3): Blatt 18 Abschnitt F
+  (freiwillig) erfasst die Lage der berührten Einheiten (C31–C34) und leitet
+  Zufallsschicht und Faktor ab (C35–C38). Ausschluss mit Lage: Zufallsteil und
+  Genauigkeit mal BV_s/BV_s,r, umfassende Schicht mal BV_e/BV_e,r; Ersetzung bei
+  Tabelle 2 mit Lage: SE · (N_s − A_s)/N_s · BV_s/BV_s,r. Ohne Lage
+  Gesamt-Näherung (Ersetzung) bzw. wie die Vorlage (Ausschluss), mit
+  Warnhinweis, wenn es eine umfassende Schicht gibt. Neue Hinweise
+  `exclusion-by-stratum`, `exclusion-location-missing`,
+  `replacement-precision-reduced`, `replacement-location-missing`;
+  `stratified-single-factor` ersetzt durch `annex-iii-approximation` (auch an
+  den Blättern 04–07, 09–12). Belegrechnungen aller Leitfadenbeispiele
+  7.10.3.1 a/b, 7.10.3.2, 7.10.3.4 in `test/kom-annex.spec.ts`.
+- Kontrollwerte: `scripts/delvo_soll.py` (Schwelle in Blatt 18 auch mit
+  Blattpräfix gelesen) plus `scripts/kom_lo.py` (Neuberechnung der Vorlage in
+  LibreOffice mit dem nachgerechneten Umfang, `test/golden-delvo/lo/`);
+  `delvo_soll.py --check` läuft in `npm test`. Golden-Spalte „bewusst nach KOM“.
+- Golden-Abgleich (10.531 Fälle, 728.895 Zellen): 683.020 gleich, 27.978
+  begründet, 630 bewusst anders dargestellt, 3.868 amtlicher Begriff, 13.399
+  bewusst nach KOM, 0 unbegründet, 0 abweichend „wie die Vorlage“. Gegenüber
+  0.1.7 ändern sich 13.426 Zellen in 667 Fällen (03–12, 18, 20), gegenüber
+  0.1.8 14.378 Zellen in 565 Fällen.
+
 ## 0.1.8 – 2026-10-17
 
 Entscheidung des Inhabers vom 17.10.2026: Bei den Abweichungen 1 und 2 des

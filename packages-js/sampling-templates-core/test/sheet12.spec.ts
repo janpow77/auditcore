@@ -278,11 +278,11 @@ describe('Blatt 12_SRS_3Z: Richtlinie für fehlende Angaben', () => {
   })
 
   it('Wert ohne Grundlage (withoutBasis): Umfang aus der bloßen Untergrenze wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
-    // „TE ≤ AE“: Es gibt keinen Umfang; die Vorlage zeigt für Zeitraum 2 dennoch 3 Einheiten.
-    const undetermined = { ...sample, C28: 0.025, C35: NONE }
+    // TE = AE (Vorlage: „TE ≤ AE“): Es gibt keinen Umfang; die Vorlage zeigt für Zeitraum 2 dennoch 3 Einheiten.
+    const undetermined = { ...sample, C28: 0.02, C35: NONE }
     const cells = ['C36', 'C44', 'C46', 'C84', 'C113', 'C117', 'C118', 'C119']
-    // C113 (Zusatzeinheiten der globalen Neuberechnung nach Zeitraum 2): Bei AE ≥ TE ist der globale Ansatz nach der DelVO nicht anwendbar (Nr. 16).
-    const shown = ['TE ≤ AE', null, null, 3, null, 3, null, null]
+    // C113 (Zusatzeinheiten der globalen Neuberechnung nach Zeitraum 2): Bei AE = TE ist der globale Ansatz nicht anwendbar (Division durch null, Nr. 16).
+    const shown = ['✖ nicht anwendbar (Division durch null)', null, null, 3, null, 3, null, null]
     const current = evaluateSheet(sheet, undetermined, context)
     expect(current.complete).toBe(true)
     expect(pick(current.cells, cells)).toEqual(shown)
@@ -293,7 +293,7 @@ describe('Blatt 12_SRS_3Z: Richtlinie für fehlende Angaben', () => {
     // Fehlt dazu die Standardabweichung des dritten Zeitraums (Pflichteingabe), bleibt die Untergrenze offen.
     const incomplete = evaluateSheet(sheet, { ...undetermined, C99: null }, context)
     expect(incomplete.complete).toBe(false)
-    expect(pick(incomplete.cells, cells)).toEqual(['TE ≤ AE', null, null, null, null, null, null, null])
+    expect(pick(incomplete.cells, cells)).toEqual(['✖ nicht anwendbar (Division durch null)', null, null, null, null, null, null, null])
     expect(incomplete.withoutBasis).toEqual([])
     expect(incomplete.lacking.has('C84')).toBe(false)
     expect(withoutBasisHint({ ...undetermined, C99: null }).tone).toBeUndefined()

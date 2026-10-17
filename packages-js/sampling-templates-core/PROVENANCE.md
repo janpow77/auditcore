@@ -12,7 +12,7 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 
 ## Was aus der Vorlage im Paket steckt
 
-| Inhalt | Ort | Umfang in 0.1.8 |
+| Inhalt | Ort | Umfang in 0.1.9 |
 |---|---|---|
 | Rechenwege (Formeln als TypeScript, Zelle für Zelle) | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter: 02–18, 20, X1–X4 |
 | Bezeichnungen (Spalte B), Fundstellen und Hinweise (Spalte D bzw. K), Abschnittstitel, Zahlenformate, Vorgaben | `src/sheets/<Blatt>/definition*.ts` | alle Blätter, wörtlich; Bezeichnungen mit Formel in Bezeichnung und Kurzformel getrennt. Altvorlagen: englischer Wortlaut der Vorlage von 2017 |
@@ -23,6 +23,7 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 | z-Werte und Auswahllisten aus Blatt 01 | `src/sheets/01_Parameter/index.ts` | vollständig (z-Werte aus Anhang I DelVO) |
 | Blattnamen, Inhaltsangaben, Rechtsgrundlagen und Bezug zur Vorlage 2017 aus Blatt 00; Hinweis zu drei Zeiträumen geschichtet | `src/catalog/catalog.ts`, `src/sheets/registry.ts` | alle 23 Blätter |
 | Erwartete Werte der Formelzellen (Zahlen, Prüfhinweistexte) aus der Neuberechnung der Vorlage | `test/golden/*.golden.json` | alle Blätter; Umfang in `docs/abgleich.md` |
+| Sollwerte nach KOM; Werte der Formelzellen aus einer Neuberechnung der Vorlage mit nach KOM gesetztem Umfang (AE > TE, erster Zeitraum) | `test/golden-delvo/*.delvo.json`, `test/golden-delvo/lo/*.json` | nur die betroffenen Fälle (03–12, 18, 20) |
 | Statistik der verwendeten Excel-Funktionen | `docs/excel-funktionen.md` | Anzahl je Funktion |
 
 Damit wären bei einer Veröffentlichung dieses Stands im Repository versioniert:
@@ -49,11 +50,14 @@ ohne Dialog). Vorher entstanden die Sollwerte mit `scripts/golden_recalc.py`,
 das die Vorlage mit LibreOffice (24.2.7.2) ohne Oberfläche neu rechnet; diese
 Fassung liegt in der Versionsgeschichte (0.1.5) und weicht in 937 Zellen von
 Excel ab. `scripts/golden_recalc.py` bleibt als Hilfsmittel für vorläufige
-Sollwerte neuer Fälle. Seit 0.1.8 rechnet die Webfassung an zwei Stellen nach
-der DelVO statt wie die Vorlage (Entscheidung des Inhabers vom 17.10.2026,
+Sollwerte neuer Fälle. Seit 0.1.9 rechnet die Webfassung an zwei Stellen nach
+den Vorgaben der KOM statt wie die Vorlage (DelVO und KOM-Leitfaden
+EGESIF_16-0014-01; Entscheidung des Inhabers vom 17.10.2026,
 `docs/abweichungen.md` Nr. 16); die Sollwerte dieser Zellen rechnet
 `scripts/delvo_soll.py` unabhängig vom Rechenkern aus den Excel-Sollwerten nach
-(`test/golden-delvo/`). `test/golden.spec.ts` vergleicht jede Zelle
+(`test/golden-delvo/`), die Folgegrößen des ersten Zeitraums bei AE > TE aus
+einer Neuberechnung der Vorlage in LibreOffice mit dem nachgerechneten Umfang
+(`scripts/kom_lo.py`, `test/golden-delvo/lo/`). `test/golden.spec.ts` vergleicht jede Zelle
 (Zellen mit Ganzzahlformat exakt, übrige relative Toleranz 1e-9, Texte
 wortgleich); Ergebnis in `docs/abgleich.md`. Eine Abweichung ist nur
 zugelassen, wenn die Webfassung keinen Wert zeigt, die Abweichung als Datum

@@ -1035,7 +1035,7 @@ nicht im Export. Ein anderes, früher bearbeitetes Verfahrensblatt trägt im
 Kopf den Satz „Nicht das gewählte Verfahren: Dieses Blatt fließt nicht in
 Blatt 18 und den Bericht ein.“
 
-## 16. Abgleich mit der DelVO
+## 16. Abgleich mit der DelVO und dem KOM-Leitfaden
 
 Grundlage ist der Abgleich der Vorlage und der Webfassung mit der Delegierten
 Verordnung (EU) 2023/67 vom 17.10.2026 (Bericht `DELVO_ABGLEICH_2026-10-17.md`
@@ -1074,77 +1074,106 @@ Weitere Begriffe des Abgleichs, nicht umgestellt:
   Umstellung auf „vorhergesagt“ wäre ohne amtlichen Begriff. Bleibt wie in der
   Vorlage.
 
-**Entscheidung des Inhabers vom 17.10.2026: Nr. 1 und 2 nach der DelVO.** Bei den
-Abweichungen 1 und 2 rechnet die Webfassung nach der DelVO, nicht wie die
-Vorlage; sie weicht dort bewusst von der Excel-Vorlage ab. Der Hinweis in
-Warnfarbe lautet „Berechnet nach DelVO … ; die Vorlage rechnet hier anders (…)“
-und steht am Ergebnis, in Blatt 18, im Bericht und im Export.
+**Entscheidung des Inhabers vom 17.10.2026: „Es gelten die Vorgaben der KOM“**
+(DelVO (EU) 2023/67 und KOM-Leitfaden EGESIF_16-0014-01 zu den
+Stichprobenverfahren der Prüfbehörden). Bei den Abweichungen 1 und 2 rechnet die Webfassung nach diesen
+Vorgaben, nicht wie die Vorlage. Die Hinweistexte sagen „nach DelVO“ nur, wo
+die DelVO es selbst sagt; was aus dem Leitfaden stammt, ist als „nach
+KOM-Leitfaden EGESIF_16-0014-01“ gekennzeichnet. Fassung 0.1.8 hatte Nr. 2 nach
+einer engeren Lesart der DelVO gesperrt (Umfang bei AE ≥ TE „nicht anwendbar“);
+die Gegenprüfung hat das als nicht von der DelVO gedeckt bewertet, Fassung 0.1.9
+nimmt es zurück. Ebenso ersetzt 0.1.9 die Gesamt-Näherung von 0.1.8 bei Nr. 1
+durch den Bezug auf die Zufallsschicht.
 
-- **Nr. 1, Blatt 18, Ersetzung bei Tabelle 2** (einfache Zufallsstichprobe bzw.
-  Auswahl mit gleicher Wahrscheinlichkeit). Anhang III Tabelle 2, Ersetzung:
-  „Die Genauigkeit muss für die reduzierte Grundgesamtheit berechnet werden …
-  Danach sollte sie … angepasst werden, … indem die Genauigkeit der reduzierten
-  Grundgesamtheit multipliziert wird mit dem Verhältnis zwischen den Ausgaben
-  BV(h) ursprünglich … und … BV(h) reduziert“ (ABl. L 7 vom 10.1.2023, S. 24;
-  am amtlichen PDF gelesen). Das Methodenblatt rechnet bei Ersetzung mit der
-  ursprünglichen Grundgesamtheit (Blatt 02 zieht nur beim Ausschluss ab). Die
-  Genauigkeit der einfachen Zufallsstichprobe ist proportional zur Zahl der
-  Einheiten (SE = N·z·s_q/√n); auf die reduzierte Grundgesamtheit bezogen ist
-  sie SE · N_r/N. Danach folgt genau einmal die Anpassung mit BV/BV_r:
-  **SE = SE_Methodenblatt · (N − N_Art.80)/N · BV/BV_r** (N aus Blatt 02 C52,
-  N_Art.80 aus C47, BV/BV_r = C18). Die Vorlage übernimmt SE unverändert
-  (`LEFT($C$11;10)="Tabelle 2"` trifft nie zu); nur die Länge des Vergleichs zu
-  korrigieren, würde einen schon auf die ursprüngliche Grundgesamtheit
-  bezogenen Wert noch einmal hochskalieren. Annahme der Webfassung: Die
-  berührten Einheiten verteilen sich anteilig auf Schichten und Zeiträume (die
-  Vorlage erfasst nicht, wo sie liegen). Beispiel: SE 60.000 €, N = 400, davon
-  40 berührt, BV 10 Mio. €, BV_r 9,5 Mio. € → 60.000 · 360/400 · 10/9,5 =
-  56.842,11 € (Vorlage 60.000 €). Daraus folgen obere Fehlergrenze (C28) und
-  Würdigung (C30), im Bericht G34 und G35.
-  Übrige Fälle unverändert wie die Vorlage, genau nach Anhang III: Ausschluss
-  (Tabellen 1 und 2) – Hochrechnung und Genauigkeit auf der reduzierten
-  Grundgesamtheit, angepasst mit BV/BV_r; Ersetzung bei Tabelle 1 –
-  Hochrechnung und Genauigkeit für die ursprüngliche Grundgesamtheit, ohne
-  Anpassung; Ersetzung bei Tabelle 2 – Hochrechnung für die ursprüngliche
-  Grundgesamtheit, ohne Anpassung.
-- **Nr. 2, globale Neuberechnung bei AE ≥ TE** (05, 06, 07, 10, 11, 12). Die
-  Umfangsformel des Anhangs II, n = (z·BV·σ / (TE − AE))² bzw. mit N, setzt
-  TE > AE voraus; beim ersten Zeitraum zeigt schon die Vorlage „TE ≤ AE“.
-  Ist der (aktualisierte) voraussichtliche Fehler mindestens so groß wie der
-  zulässige (und nicht 0), zeigt die Zelle des globalen Umfangs „✖ nicht
-  anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige
-  Fehler (Anhang II)“ statt des durch das Quadrieren scheinbar plausiblen
-  Umfangs der Vorlage. Der anzuwendende globale Umfang, die Zusatzeinheiten und
-  die Umfänge der Folgezeiträume bleiben offen („—“) – auch bei begrenztem
-  Stichprobenumfang –, ebenso Hochrechnung, Genauigkeit, Fehlergrenzen,
-  Gesamtfehlerquote und Würdigung, wenn der globale Ansatz gewählt ist (keine
-  grüne Würdigung). In den geschichteten Blättern 06 und 11 bleiben dann alle
-  Formelzellen nach der globalen Neuberechnung offen. Blatt 18 und der Bericht
-  übernehmen aus einem solchen Verfahren nichts. Beispiel: Blatt 05 mit
-  Beispielwerten, Ansatz „Global“, aktualisierte voraussichtliche Fehlerquote
-  3 % bei Schwelle 2 %: TE = 0,02 · BV < AE = 0,03 · BV → nicht anwendbar
-  (Vorlage: ein Umfang aus (z·BV·σ/(−0,01·BV))²).
-
-Die Hinweise zu Nr. 3–5 bleiben wie in 0.1.7 (Rechenwerte wie die Vorlage):
+- **Nr. 2, Planung bei AE > TE** (03–12, erster Zeitraum, Standard- und globale
+  Neuberechnung). Anhang II DelVO nennt die Formel n = (z·BV·σ / (TE − AE))²,
+  aber keine Bedingung TE > AE. Der Leitfaden plant ausdrücklich auch bei
+  AE > TE, mit der geplanten Genauigkeit |TE − AE| (Abschnitt 7.1, S. 183 mit
+  Fußnote 59); ab AE ≥ 4 % empfiehlt er, mit 4 % zu rechnen (geplante
+  Genauigkeit höchstens 2 %), nahe der Schwelle die Grundgesamtheit zu teilen.
+  Die Webfassung rechnet daher bei AE > TE den Umfang wie die Formel
+  (quadriert, also mit |TE − AE|), mit neutralem Hinweis
+  `anticipated-above-tolerable` (globale Neuberechnung `-global`, `-global-3`);
+  ab 4 % zusätzlich der neutrale Hinweis `anticipated-at-least-4` – der
+  eingegebene Wert wird nicht ersetzt. Im ersten Zeitraum weicht das von der
+  Vorlage ab (sie zeigt „TE ≤ AE“ und keinen Umfang, Prüfhinweis „✖ TE ≤ AE“);
+  die Webfassung zeigt den Umfang und als Prüfhinweis „⚠ AE > TE: Umfang mit der
+  geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)“. In
+  der globalen Neuberechnung rechnet die Vorlage bei AE > TE ebenso.
+  **AE = TE:** Die Formel teilt durch null. Der Umfang zeigt „✖ nicht anwendbar
+  (Division durch null)“, der Prüfhinweis „✖ TE = AE: Stichprobenumfang nicht
+  bestimmbar (Division durch null)“. Im ersten Zeitraum gilt ein gewählter
+  begrenzter Stichprobenumfang wie in der Vorlage (Art. 5 Abs. 7).
+  In der globalen Neuberechnung bleiben anzuwendender Umfang, Zusatzeinheiten,
+  Folgezeiträume und – bei gewähltem globalem Ansatz – Hochrechnung,
+  Genauigkeit, Fehlergrenzen und Würdigung offen („—“), auch bei begrenztem
+  Umfang: Die Neuberechnung kann ihn nicht bestätigen; als andere Maßnahme
+  nennt Art. 5 Abs. 7 UAbs. 4 Buchst. a DelVO die Erhöhung des
+  Stichprobenumfangs (Warnhinweis `size-not-applicable-global[-3]`, reist mit
+  zu Blatt 18, Bericht und Export). Beispiel Blatt 03 (Golden-Fall „TE ≤ AE“):
+  z = 0,842, BV = 30 Mio. €, σ = 0,1, TE = 600.000 €, AE = 750.000 € →
+  n = ⌈(0,842 · 30.000.000 · 0,1 / 150.000)²⌉ = ⌈283,58⌉ = 284 (Vorlage „TE ≤ AE“).
+- **Nr. 1, Blatt 18, Anhang III bei Ausschluss und Ersetzung.** Der Leitfaden
+  passt je Schicht an (7.10.2, 7.10.3): der Zufallsteil mit dem Verhältnis der
+  Zufallsschicht, die hochwertige bzw. umfassende Schicht über
+  EE_e = EE_e,r · BV_e / BV_e,r (Beispiele 7.10.3.1 b, 7.10.3.2, 7.10.3.4).
+  Dafür erfasst Blatt 18 freiwillig in Abschnitt F die Lage der berührten
+  Einheiten: Anzahl und Buchwert der umfassenden Schicht (C31, C32) und davon
+  berührt (C33, C34). Abgeleitet: A_s = A − A_e (C35), BV_s = BV_u − BV_e (C36),
+  BV_s,r = BV_s − (BV_A − BV_A,e) (C37), Faktor BV_s / BV_s,r (C38).
+  - Ausschluss mit Lage: EE = EE_e · BV_e/BV_e,r + (EE − EE_e) · BV_s/BV_s,r,
+    SE = SE · BV_s/BV_s,r (Leitfaden 7.10.3.2, 7.10.3.4; Hinweis
+    `exclusion-by-stratum`). Ohne Lage wie die Vorlage mit dem Gesamtfaktor
+    BV/BV_r (mit Abschnitt C nur für den Zufallsteil); gibt es eine umfassende
+    Schicht, mit Warnhinweis `exclusion-location-missing` (nicht KOM-konform,
+    Beispiel 7.10.3.4: 1,44 % statt 1,50 %).
+  - Ersetzung bei Tabelle 2 (DelVO Anhang III Tabelle 2: Genauigkeit für die
+    reduzierte Grundgesamtheit, dann mal BV(h) ursprünglich / BV(h) reduziert;
+    Leitfaden 7.10.2 mit Fußnote 70): mit Lage
+    **SE = SE_Methodenblatt · (N_s − A_s)/N_s · BV_s/BV_s,r** mit
+    N_s = N − N_e (Blatt 02 C52 − C31) – die Genauigkeit der Zufallsstichprobe
+    ist proportional zur Zahl der Einheiten; ohne Lage die Gesamt-Näherung
+    SE · (N − A)/N · BV/BV_r, exakt nur ohne umfassende Schicht (Hinweis
+    `replacement-precision-reduced`), sonst nicht KOM-konform (Warnhinweis
+    `replacement-location-missing`). Hochrechnung bei Ersetzung: Zufallsteil
+    unverändert, umfassende Schicht mit Lage über EE_e (Beispiel 7.10.3.1 b).
+    Die Vorlage übernimmt SE unverändert (`LEFT($C$11;10)="Tabelle 2"` trifft
+    nie zu).
+  - Ersetzung bei Tabelle 1 (MUS): ohne Anpassung, wie Vorlage und Leitfaden
+    (7.10.3.1 a).
+  - Mehrere Schichten oder Zeiträume (04–07, 09–12, 14, 16): Abschnitt F nimmt
+    die Lage nur für die umfassende Schicht auf; je Zufallsschicht bzw. Zeitraum
+    rechnet Blatt 18 mit einem Verhältnis über die ganze Zufallsschicht. Das ist
+    eine anteilige Näherung; Warnhinweis `annex-iii-approximation` an den
+    Blättern 04–07 und 09–12 sowie in Blatt 18.
+  - Belegrechnungen der Leitfadenbeispiele in `test/kom-annex.spec.ts`:
+    7.10.3.1 a (EE 52.294.628 € = 1,25 %), 7.10.3.1 b (EE_e = 420 ·
+    1.987.446.254 / 1.697.136.654 = 492, EE = 50.020.779 € = 1,19 %), 7.10.3.2
+    (42.459.164 → 42.609.012 €, EE = 50.225.817 € = 1,20 %, SE 52.829.067 →
+    53.015.513 €), 7.10.3.4 (EE_e = 680.068,95 €, Zufallsschicht 32.426.844,02 →
+    32.461.940,01 €, EE = 33.142.008,96 € = 1,44 %, SE-Faktor 1,0011).
+    Beispiel 7.10.3.3 (konservatives MUS) hat in der Vorlage kein Verfahren.
 
 | Nr. | Abweichung | Blätter | Hinweis | Fundstelle |
 |---|---|---|---|---|
-| 1 | Ersetzung bei Tabelle 2 – **nach DelVO gerechnet** | 18 | `replacement-precision-not-scaled` („Berechnet nach DelVO …“) | Anhang III Tabelle 2 |
-| 2 | globale Neuberechnung bei AE ≥ TE – **nach DelVO gerechnet** | 05, 06, 07, 10, 11, 12 | `global-te-not-above-ae` (07, 12 je Neuberechnung `-2`, `-3`, „Berechnet nach DelVO …“) | Anhang II, Formel des Umfangs |
+| 1 | Anhang III je Schicht – **nach KOM gerechnet** | 18 | `exclusion-by-stratum`, `exclusion-location-missing`, `replacement-precision-not-scaled`, `replacement-precision-reduced`, `replacement-location-missing` | Anhang III Tabellen 1 und 2; Leitfaden 7.10.2, 7.10.3 |
+| 2 | Umfang bei AE > TE mit \|TE − AE\|, bei AE = TE nicht anwendbar – **nach KOM gerechnet** | 03–12 | `anticipated-above-tolerable[-global[-3]]`, `anticipated-at-least-4[…]` (neutral), `size-not-applicable-global[-3]` | Anhang II; Leitfaden 7.1, S. 183; Art. 5 Abs. 7 UAbs. 4 Buchst. a |
 | 3 | nicht anwendbare Standardneuberechnung (Nenner ≤ 0): Umfang aus den Untergrenzen | 05, 06, 07, 10, 11, 12 | bestehender Hinweis `negative-denominator…` mit Zusatz „Standardansatz nicht anwendbar … Untergrenze“ | Anhang II, Anmerkungen zu Nr. 1.2 und 2.2 |
-| 4 | ein einziger Anpassungsfaktor auch bei Schichtung | 18 bei 04, 06, 09, 11, 14, 16 mit Ausschluss oder Ersetzung | `stratified-single-factor` | Anhang III, „BV(h)“ |
+| 4 | anteilige Näherung bei mehreren Schichten oder Zeiträumen | 04–07, 09–12; 18 bei 04–07, 09–12, 14, 16 | `annex-iii-approximation` | Anhang III, „BV(h)“; Leitfaden 7.10.2 |
 | 5 | Umfangsparameter bei Ausschluss aus der reduzierten Grundgesamtheit (Auslegungsfrage) | 08–12 (nur einfache Zufallsstichprobe; bei MUS kürzt sich BV heraus) | `exclusion-reference-population`, wenn in Blatt 02 der Ausschluss gewählt und eine Einheit betroffen ist | Anhang III Tabellen 1 und 2 |
 
-**Nachweis im Golden-Abgleich:** Die Zellen, an denen die Webfassung nach der
-DelVO rechnet, führt `docs/abgleich.md` als eigene Spalte „bewusst nach DelVO“.
-Die Sollwerte rechnet `scripts/delvo_soll.py` unabhängig vom Rechenkern aus den
-Excel-Sollwerten und den Eingaben der Fälle nach (`test/golden-delvo/`): für Nr. 1
-SE, obere Fehlergrenze und Würdigung (Blatt 18) bzw. G34 und G35 (Bericht), für
-Nr. 2 die betroffenen Fälle (AE ≥ TE aus den Excel-Werten von TE und AE bzw.
-für Blatt 18 und 20 aus den Eingaben des Verfahrens) mit dem Text der
-Umfangszelle; jede weitere abweichende Zelle eines solchen Falls muss leer sein
-(oder „n. a.“/„nicht berechnet“ in Blatt 18 und im Bericht). Alle übrigen Zellen
-bleiben beim Abgleich mit Excel.
+**Nachweis im Golden-Abgleich:** Die Zellen, an denen die Webfassung nach den
+Vorgaben der KOM rechnet, führt `docs/abgleich.md` als eigene Spalte „bewusst
+nach KOM“. Die Sollwerte rechnet `scripts/delvo_soll.py` unabhängig vom
+Rechenkern nach (`test/golden-delvo/`, Prüfung `--check` in `npm test`): für
+Nr. 2 im ersten Zeitraum den Prüfhinweis und alle Zellen, die sich ändern, aus
+einer Neuberechnung der Vorlage in LibreOffice, in die `scripts/kom_lo.py` den
+in Python nachgerechneten Umfang einsetzt (gegen dieselbe Neuberechnung ohne
+Eingriff verglichen, `test/golden-delvo/lo/`); bei AE = TE den Text; in der
+globalen Neuberechnung bei AE = TE den Text, jede weitere abweichende Zelle
+muss leer sein; für Nr. 1 SE, obere Fehlergrenze und Würdigung (Blatt 18) bzw.
+G34 und G35 (Bericht) mit der Gesamt-Näherung (die Golden-Fälle erfassen keine
+Lage). Alle übrigen Zellen bleiben beim Abgleich mit Excel.
 
 **Auslegungen, die die Vorlage nicht kennzeichnet**, kennzeichnet die
 Webfassung wie die übrigen Auslegungen am Feld („Auslegung der Vorlage – …“,

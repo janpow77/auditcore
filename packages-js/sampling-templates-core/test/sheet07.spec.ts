@@ -98,8 +98,8 @@ describe('Blatt 07_MUS_3Z', () => {
     expect(limited).toMatchObject({ C29: null, C34: 50, C35: null, C36: null, C70: null, C75: null, C102: null, C109: null, N10: null })
     expect(sheet.webHints?.({}, limited, context).map((hint) => hint.id)).toEqual(['limited-size-open'])
     expect(sheet.compute(sample({ C14: null, C32: 'Ja' }), likeTemplate)).toMatchObject({ C35: 50, C36: 19, C75: 3, C109: 8 })
-    // „TE ≤ AE“ ist ein Ergebnis, kein fehlender Wert: Der begrenzte Umfang gilt wie in der Vorlage.
-    expect(compute({ C21: 0.025, C32: 'Ja' })).toMatchObject({ C29: 'TE ≤ AE', C35: 50, C36: 19 })
+    // AE = TE ist ein Ergebnis, kein fehlender Wert: Der begrenzte Umfang gilt wie in der Vorlage (dort „TE ≤ AE“).
+    expect(compute({ C21: 0.02, C32: 'Ja' })).toMatchObject({ C29: '✖ nicht anwendbar (Division durch null)', C35: 50, C36: 19 })
   })
 
   it('leeres Formular: außer festen Texten, der Prüfung der Vorgabe 2 % und den freiwilligen Einzelbeträgen erscheint kein Wert', () => {
@@ -237,7 +237,9 @@ describe('Blatt 07_MUS_3Z', () => {
     expect(sheet.definition.summary.rows.filter((row) => !texts?.summary?.rows?.[row.cell]).map((row) => row.cell)).toEqual([])
     const produced = new Set(loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').map((value) => officialWording(value))))
     expect([...produced].filter((value) => !texts?.values?.[value])).toEqual([])
-    const hints = [sample({ C50: 0.9 }), sample({ C89: 0.9 }), sample({ C28: GLOBAL, C57: 0.03, C93: 0.03 }), sample({ C14: 0.95, C52: 10, C91: 5 }), sample({ C14: null, C32: 'Ja' })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
+    const hints = [sample({ C50: 0.9 }), sample({ C89: 0.9 }), sample({ C28: GLOBAL, C57: 0.03, C93: 0.03 }), sample({ C14: 0.95, C52: 10, C91: 5 }), sample({ C14: null, C32: 'Ja' }), sample({ C21: 0.05 }), sample({ C28: GLOBAL, C57: 0.05, C93: 0.05 }), sample({ C28: GLOBAL, C57: 0.02 }), sample({ C28: GLOBAL, C57: 0.03, C93: 0.02 })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
+    const excluded = createContext({ sheets: { '02_Grundgesamtheit': { C47: 2, C49: 'Ausschluss (Art. 3 Abs. 6 Buchst. b)' } } })
+    hints.push(...(sheet.webHints?.(sheet.sample.inputs, sheet.compute(sheet.sample.inputs, excluded), excluded) ?? []))
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts?.webHints ?? {})))
     expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – three sampling periods, non-stratified')
   })

@@ -10,6 +10,7 @@ import { cellsOf, fieldsOf, findField, inputFields, type FieldDefinition, type S
 import { evaluateSheet } from '../model/evaluate'
 import type { AvailableSheet, SheetModule } from '../model/sheet'
 import { SHEETS } from '../sheets/registry'
+import { SIZE_NOT_APPLICABLE } from '../sheets/shared/periods'
 import { translateValue } from '../model/texts'
 import type { CellMap, CellValue, SheetContext, Tone } from '../model/types'
 import { carriedLimitations, inputName, isQualified, limitationsOf, type Limitation } from './limits'
@@ -120,8 +121,9 @@ export function buildHints(sheet: AvailableSheet, inputs: CellMap, results: Cell
   return [...template, ...limiting(own), ...web, ...carried.map((entry): HintView => ({ id: entry.id, text: entry.text, tone: entry.tone, source: 'web' }))]
 }
 
-/** Warum die Hauptgröße fehlt: Text der Vorlage („TE ≤ AE“) oder die fehlenden Eingaben. */
+/** Warum die Hauptgröße fehlt: TE = AE (Division durch null), ein Text der Vorlage oder die fehlenden Eingaben. */
 function primaryNote(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, reason: CellValue, t: Translate, invalid: ReadonlySet<string>): string {
+  if (reason === SIZE_NOT_APPLICABLE) return `${t('notDeterminable')} (${t('equalErrors')})`
   if (typeof reason === 'string' && reason) return `${t('notDeterminable')} (${translateValue(sheet.texts, reason)})`
   const named = [...new Set(evaluateSheet(sheet, inputs, context).lacking.get(sheet.definition.summary.primary.cell) ?? [])]
   // Zeigt auch die Vorlage ohne die Eingabe keine Hauptgröße (z. B. Buchwert 0), nennt die Übersicht die ungültigen Eingaben des Blatts.

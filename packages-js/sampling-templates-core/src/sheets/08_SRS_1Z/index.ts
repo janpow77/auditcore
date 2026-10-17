@@ -8,6 +8,7 @@ import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -47,7 +48,7 @@ function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): We
   if (sameNumber(results.C15, 0.95)) {
     hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
   }
-  return [...hints, ...exclusionReference(context)]
+  return [...hints, ...komPlanningHints(definition, results), ...exclusionReference(context)]
 }
 
 /**

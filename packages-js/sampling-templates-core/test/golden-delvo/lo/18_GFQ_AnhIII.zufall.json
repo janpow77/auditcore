@@ -1,0 +1,27 @@
+[
+ {
+  "position": 6,
+  "name": "Zufall 007 (09_SRS_1Z_S, Startwert 20261013)",
+  "cells": {}
+ },
+ {
+  "position": 8,
+  "name": "Zufall 009 (11_SRS_2Z_S, Startwert 20261013)",
+  "cells": {}
+ },
+ {
+  "position": 17,
+  "name": "Zufall 018 (06_MUS_2Z_S, Startwert 20261013)",
+  "cells": {}
+ },
+ {
+  "position": 32,
+  "name": "Zufall 033 (07_MUS_3Z, Startwert 20261013)",
+  "cells": {}
+ },
+ {
+  "position": 90,
+  "name": "Zufall 091 (09_SRS_1Z_S, Startwert 20261013)",
+  "cells": {}
+ }
+]

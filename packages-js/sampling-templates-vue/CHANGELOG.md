@@ -1,5 +1,14 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.9 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.9 gebunden. Der Kern rechnet
+nach den Vorgaben der KOM (DelVO und KOM-Leitfaden EGESIF_16-0014-01): Umfang
+bei AE > TE mit |TE − AE|, bei AE = TE nicht anwendbar; Blatt 18 mit dem neuen
+freiwilligen Abschnitt F (Lage der berührten Einheiten). Die Komponente zeigt
+das ohne eigene Änderung; die Ergebnisspalte nennt bei AE = TE „nicht
+bestimmbar (TE = AE, Division durch null)“.
+
 ## 0.1.8 – 2026-10-17
 
 Exakt an `@auditcore/sampling-templates-core` 0.1.8 gebunden. Der Kern rechnet

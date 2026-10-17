@@ -6,6 +6,10 @@
 import type { SheetTexts } from '../../model/texts'
 import { delvoHintsEn, withNotApplicableNoteEn } from '../shared/delvo'
 import { EXHAUSTIVE_MINIMUM_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { komHintsEn } from '../shared/kom'
+import { definition } from './definition'
+import { SIZE_NOT_APPLICABLE, SIZE_NOT_APPLICABLE_EN } from '../shared/periods'
+import { ANTICIPATED_ABOVE_TOLERABLE, TOLERABLE_EQUALS_ANTICIPATED } from '../shared/statistical'
 
 export const en: SheetTexts = {
   title: 'Simple random sampling – one period, non-stratified',
@@ -87,6 +91,9 @@ export const en: SheetTexts = {
     '✖ unzulässig: höchstens 2 %': '✖ not permitted: maximum 2 %',
     '✔ TE > AE': '✔ TE > AE',
     '✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar': '✖ TE ≤ AE: sample size cannot be determined',
+    [ANTICIPATED_ABOVE_TOLERABLE]: '⚠ AE > TE: sample size with the planned precision |TE − AE| (Commission guidance EGESIF_16-0014-01, 7.1)',
+    [TOLERABLE_EQUALS_ANTICIPATED]: '✖ TE = AE: sample size cannot be determined (division by zero)',
+    [SIZE_NOT_APPLICABLE]: SIZE_NOT_APPLICABLE_EN,
     'TE ≤ AE': 'TE ≤ AE',
     'Nicht angewandt – Anh. I und II gelten': 'Not applied – Annexes I and II apply',
     '✔ 30 Einheiten (Art. 83 VO (EU) 2021/1060)': '✔ 30 sampling units (Art. 83 of Regulation (EU) 2021/1060)',
@@ -98,6 +105,7 @@ export const en: SheetTexts = {
     '✔ GFQ und obere Fehlergrenze unter der Schwelle': '✔ total error rate and upper error limit below the threshold',
   },
   webHints: withNotApplicableNoteEn({
+    ...komHintsEn(definition),
     ...delvoHintsEn('exclusion-reference-population'),
     'size-exceeds-population': 'Sample size exceeds the number of units of the population',
     'confidence-outside-annex': 'Confidence level 95 % is outside the table in Annex I',

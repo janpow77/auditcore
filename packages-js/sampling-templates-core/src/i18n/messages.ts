@@ -87,6 +87,7 @@ const de = {
   toneWarning: 'fachlich zu würdigen',
   toneDanger: 'Anforderung nicht erfüllt',
   toneNeutral: 'Hinweis',
+  equalErrors: 'TE = AE, Division durch null',
   notDeterminable: 'nicht bestimmbar',
   results: 'Ergebnisse',
   noEntries: 'noch keine Angaben',

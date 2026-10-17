@@ -6,6 +6,8 @@
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, VALUES_EN } from '../shared/mus'
 import { HIGH_VALUE_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { APPROXIMATION_EN_TEXT, komHintsEn } from '../shared/kom'
+import { definition } from './definition'
 
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 
@@ -85,6 +87,8 @@ export const en: SheetTexts = {
   },
   values: { ...VALUES_EN, 'MUS-Standardansatz, 1 Zeitraum, geschichtet': 'MUS standard approach, 1 period, stratified' },
   webHints: {
+    ...komHintsEn(definition),
+    ...APPROXIMATION_EN_TEXT,
     'strata-sum-exceeds-size': HINTS_EN['strata-sum-exceeds-size'],
     'size-exceeds-population': HINTS_EN['size-exceeds-population'],
     'confidence-outside-annex': HINTS_EN['confidence-outside-annex'],

@@ -10,17 +10,18 @@
  * der Vorlage (01_Parameter!I24:I37); Altvorlagen und Blatt 17 haben keine
  * Ergebnisübersicht.
  */
-import { divide, gt, guard, isBlank, isNumber, left, lt, minus, n, plus, required, search, sameText } from '../../excel/index'
+import { divide, gt, guard, isBlank, isNumber, lt, minus, n, plus, required, search } from '../../excel/index'
 import { unfounded } from '../../model/policy'
 import { resolveInputs } from '../../model/sheet'
 import type { CellMap, CellValue, Cells, MethodSummary, SheetContext } from '../../model/types'
+import { NOT_APPLICABLE, adjustedError, adjustedPrecision, isExclusion, randomStratum } from './annex'
 import { definition } from './definition'
+
+export { NOT_APPLICABLE, isReplacementTable2 } from './annex'
 
 /** Blatt, aus dem die Grundgesamtheiten stammen. */
 export const POPULATION_SHEET = '02_Grundgesamtheit'
 
-/** Text der Vorlage, wenn es keine Genauigkeit gibt (nichtstatistische Verfahren). */
-export const NOT_APPLICABLE = 'n. a.'
 
 /** Ergebnisübersicht des aktiven Verfahrens, wenn es in der Auswahlliste der Vorlage steht; sonst keine Übernahme. */
 export function adoptedMethod(context: SheetContext): MethodSummary | undefined {
@@ -28,8 +29,6 @@ export function adoptedMethod(context: SheetContext): MethodSummary | undefined 
   return method && context.parameters.lists.methodSheets.includes(method.sheet) ? method : undefined
 }
 
-/** `LEFT($C$15;10)="Ausschluss"` */
-const isExclusion = (c: Cells): boolean => sameText(left(c.C15, 10), 'Ausschluss')
 
 /** `ISNUMBER(SEARCH(text;C4))` */
 const contains = (text: string, value: CellValue): boolean => guard(() => search(text, value)) !== null
@@ -78,55 +77,6 @@ function populations(c: Cells, context: SheetContext): void {
   c.C19 = checkBookValue(c)
 }
 
-/** C24: angepasster extrapolierter Fehler nach Anhang III. */
-function adjustedError(c: Cells): CellValue {
-  const exclusion = isExclusion(c)
-  if (!sameText(c.C20, 'Ja')) return exclusion ? guard(() => required(c.C6) * required(c.C18)) : (c.C6 ?? null)
-  return guard(() => {
-    const random = minus(required(c.C6), required(c.C7))
-    return plus(exclusion ? random * required(c.C18) : random, required(c.C23))
-  })
-}
-
-/** Ersetzung bei einem Verfahren der Tabelle 2 (einfache Zufallsstichprobe/Auswahl mit gleicher Wahrscheinlichkeit). */
-export const isReplacementTable2 = (c: CellMap): boolean => sameText(left(c.C15, 9), 'Ersetzung') && sameText(left(c.C11, 9), 'Tabelle 2')
-
-/**
- * Genauigkeit bei Ersetzung, Tabelle 2, nach Anhang III DelVO (EU) 2023/67:
- * „Die Genauigkeit muss für die reduzierte Grundgesamtheit berechnet werden …
- * Danach sollte sie … angepasst werden, … indem die Genauigkeit der reduzierten
- * Grundgesamtheit multipliziert wird mit dem Verhältnis zwischen den Ausgaben
- * BV(h) ursprünglich … und … BV(h) reduziert.“ Das Methodenblatt rechnet bei
- * Ersetzung mit der ursprünglichen Grundgesamtheit (N). Die Genauigkeit der
- * einfachen Zufallsstichprobe ist proportional zur Zahl der Einheiten (SE =
- * N·z·s_q/√n); bezogen auf die reduzierte Grundgesamtheit ist sie SE · N_r/N.
- * Danach die Anpassung mit BV/BV_r (C18) – nur einmal, nicht auf einen Wert, der
- * schon auf der ursprünglichen Grundgesamtheit beruht.
- * SE_DelVO = SE · (N − N_Art.80)/N · BV/BV_r. Entscheidung des Inhabers vom
- * 17.10.2026: Die Webfassung rechnet hier nach der DelVO; die Vorlage übernimmt
- * die Genauigkeit des Methodenblatts unverändert (`LEFT($C$11;10)="Tabelle 2"`
- * trifft nie zu).
- */
-function replacementPrecision(c: Cells, context: SheetContext): CellValue {
-  const population = context.sheets[POPULATION_SHEET] ?? {}
-  return guard(() => {
-    const units = required(population.C52)
-    const reduced = minus(units, n(population.C47))
-    return required(c.C8) * divide(reduced, units) * required(c.C18)
-  })
-}
-
-/** C25: angepasste Genauigkeit; ohne Genauigkeit im Methodenblatt „n. a.“. */
-function adjustedPrecision(c: Cells, context: SheetContext): CellValue {
-  // Ohne Wert in C8 zeigt die Vorlage „n. a.“ – auch dann, wenn das Methodenblatt nur noch keine Genauigkeit liefert.
-  if (isBlank(c.C8)) return unfounded(context, NOT_APPLICABLE)
-  if (!isNumber(c.C8)) return NOT_APPLICABLE
-  // Ausschluss (Tabellen 1 und 2): Genauigkeit der reduzierten Grundgesamtheit mal BV/BV_r. Ersetzung, Tabelle 1:
-  // für die ursprüngliche Grundgesamtheit, ohne Anpassung. Ersetzung, Tabelle 2: nach der DelVO (`replacementPrecision`).
-  if (isExclusion(c)) return guard(() => required(c.C8) * required(c.C18))
-  return isReplacementTable2(c) ? replacementPrecision(c, context) : c.C8
-}
-
 /** C28: obere Fehlergrenze in Prozent; ohne Genauigkeit „n. a.“. */
 function upperLimit(c: Cells, context: SheetContext): CellValue {
   if (isBlank(c.C25)) return unfounded(context, NOT_APPLICABLE)
@@ -147,6 +97,7 @@ function assessment(c: Cells, context: SheetContext): CellValue {
 /** Abschnitte C bis E: hochwertige Schicht, Anpassung nach Anhang III, Gesamtfehlerquote und Würdigung (C23–C30). */
 function totalErrorRate(c: Cells, context: SheetContext): void {
   c.C23 = guard(() => divide(required(c.C7) * required(c.C21), required(c.C22)))
+  randomStratum(c, context)
   c.C24 = adjustedError(c)
   c.C25 = adjustedPrecision(c, context)
   c.C26 = guard(() => divide(plus(plus(required(c.C24), n(c.C9)), n(c.C10)), required(c.C14)))

@@ -1,5 +1,20 @@
 [
  {
+  "position": 17,
+  "name": "Abnahme 2: L18 03_MUS_1Z Lücke 02_Grundgesamtheit!C25",
+  "cells": {
+   "C6": 499482.618096215,
+   "C8": -3058678.93554173,
+   "C24": 685949.526131689,
+   "C25": -202.925944882743,
+   "C26": -24379.1188492038,
+   "C27": -377299503443.326,
+   "C28": -24374.0266046646,
+   "C30": "✔ unter der Wesentlichkeitsschwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE im Verfahren"
+ },
+ {
   "position": 42,
   "name": "Abnahme 2: L18 09_SRS_1Z_S Basis",
   "cells": {
@@ -550,43 +565,43 @@
   "position": 258,
   "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18=Schwelle",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 259,
   "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 +1e-13",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 260,
   "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 −1e-13",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 261,
   "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | GFQ18 Cent",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 262,
   "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | OFG18=Schwelle",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 263,
   "name": "Abnahme 2: S18 A008 Kontext 11_SRS_2Z_S | OFG18 +1e-13",
   "cells": {},
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE im Verfahren 11_SRS_2Z_S"
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
  },
  {
   "position": 304,

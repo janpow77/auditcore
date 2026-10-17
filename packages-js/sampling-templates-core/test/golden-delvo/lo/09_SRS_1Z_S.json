@@ -1,0 +1,29 @@
+[
+ {
+  "position": 12,
+  "name": "TE ≤ AE, Stichprobenumfang nicht bestimmbar",
+  "cells": {
+   "09_SRS_1Z_S!N7": 64687.9249789589,
+   "09_SRS_1Z_S!N10": 285,
+   "09_SRS_1Z_S!C31": 280,
+   "09_SRS_1Z_S!C39": 280,
+   "09_SRS_1Z_S!C41": 281,
+   "09_SRS_1Z_S!D41": 139,
+   "09_SRS_1Z_S!E41": 101,
+   "09_SRS_1Z_S!F41": 41,
+   "09_SRS_1Z_S!C53": 64687.9249789589,
+   "09_SRS_1Z_S!C56": 294016.49640753,
+   "09_SRS_1Z_S!C57": 164640.646449613,
+   "09_SRS_1Z_S!C58": 0.0013337716490507,
+   "09_SRS_1Z_S!C61": 0.00606219580221712,
+   "09_SRS_1Z_S!C62": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  }
+ },
+ {
+  "position": 15,
+  "name": "TE ≤ AE mit begrenztem Umfang Kategorie 2",
+  "cells": {
+   "09_SRS_1Z_S!C31": 70
+  }
+ }
+]

@@ -85,6 +85,7 @@ export const en: Readonly<Partial<Record<MessageKey, string>>> = {
   toneWarning: 'requires professional judgement',
   toneDanger: 'requirement not met',
   toneNeutral: 'note',
+  equalErrors: 'TE = AE, division by zero',
   notDeterminable: 'cannot be determined',
   results: 'Results',
   noEntries: 'no entries yet',

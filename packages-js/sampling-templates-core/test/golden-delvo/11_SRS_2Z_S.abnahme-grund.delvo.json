@@ -3,54 +3,155 @@
   "position": 1,
   "name": "Abnahme 1: A001 te_eq_ae",
   "cells": {
-   "C72": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C34": "✖ nicht anwendbar (Division durch null)",
+   "C27": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C72": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 2,
   "name": "Abnahme 1: A002 te_lt_ae",
   "cells": {
-   "C72": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C27": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 14622.3148052851,
+   "N10": 138943,
+   "C34": 122558,
+   "C42": 122558,
+   "C44": 60275,
+   "D44": 1480,
+   "E44": 14275,
+   "F44": 1568,
+   "G44": 2211,
+   "H44": 8644,
+   "I44": 18686,
+   "J44": 13411,
+   "C45": 62289,
+   "D45": 1970,
+   "E45": 14064,
+   "F45": 2053,
+   "G45": 2233,
+   "H45": 9106,
+   "I45": 13363,
+   "J45": 19500,
+   "C66": 166687410.836956,
+   "D66": 158311.61325,
+   "E66": 16135596.2518881,
+   "F66": 4823959.66605,
+   "G66": 1009040.86486771,
+   "H66": 29453665.5157764,
+   "I66": 111902719.333901,
+   "J66": 3204117.59122261,
+   "C68": 101114752.442161,
+   "C69": 56082,
+   "D76": 0,
+   "E76": 0,
+   "F76": 0,
+   "G76": 0,
+   "H76": 0,
+   "I76": 0,
+   "J76": 0,
+   "C77": 78668,
+   "D77": 2674,
+   "E77": 19518,
+   "F77": 2496,
+   "G77": 3201,
+   "H77": 13398,
+   "I77": 17881,
+   "J77": 19500,
+   "C78": 60275,
+   "D78": 1480,
+   "E78": 14275,
+   "F78": 1568,
+   "G78": 2211,
+   "H78": 8644,
+   "I78": 18686,
+   "J78": 13411,
+   "C80": 138943,
+   "C81": "✔ ≥ 30 Einheiten",
+   "C90": 301583846.661973,
+   "D90": 4192508.59907648,
+   "E90": 6033165.37969785,
+   "F90": 5266894.1934,
+   "G90": 17193960.0541961,
+   "H90": 49023509.4460174,
+   "I90": 145647867.469902,
+   "J90": 74225941.5196828,
+   "C93": 14622.3148052851,
+   "C96": 77296.5585311141,
+   "C97": 48051.928920544,
+   "C98": 0.00187611818079453,
+   "C101": 0.00991754593606865
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 29,
-  "name": "Abnahme 1: A029 miss_te",
-  "cells": {
-   "C72": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  },
  {
   "position": 57,
   "name": "Abnahme 1: A057 te_eq_ae",
   "cells": {
-   "C72": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C34": "✖ nicht anwendbar (Division durch null)",
+   "C27": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C72": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
+ },
+ {
+  "position": 66,
+  "name": "Abnahme 1: A066 te_eq_ae",
+  "cells": {
+   "C34": "✖ nicht anwendbar (Division durch null)",
+   "C27": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
  },
  {
   "position": 67,
   "name": "Abnahme 1: A067 te_lt_ae",
   "cells": {
-   "C72": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C27": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 128143.269755406,
+   "N10": 1275,
+   "C34": 1262,
+   "C42": 1262,
+   "C44": 649,
+   "D44": 64,
+   "F44": 232,
+   "J44": 353,
+   "C45": 616,
+   "D45": 58,
+   "F45": 267,
+   "J45": 291,
+   "C66": 2096485447.06743,
+   "D66": 499305951.974025,
+   "F66": 364054412.781078,
+   "J66": 1233125082.31232,
+   "C68": 24911573981.163,
+   "C69": 46,
+   "D76": 0,
+   "F76": 0,
+   "J76": 0,
+   "C77": 616,
+   "D77": 58,
+   "F77": 267,
+   "J77": 291,
+   "C78": 649,
+   "D78": 64,
+   "F78": 232,
+   "J78": 353,
+   "C80": 1275,
+   "C81": "✔ ≥ 30 Einheiten",
+   "C90": 6068198772.59331,
+   "D90": 2373781905.42073,
+   "F90": 440849145.799473,
+   "J90": 3253567721.37311,
+   "C93": 128143.269755406,
+   "C96": 229829.823431893,
+   "C98": 0.0139218572463334,
+   "C101": 0.024969379967252,
+   "C102": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle – weitere Würdigung"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 94,
-  "name": "Abnahme 1: A094 miss_te",
-  "cells": {
-   "C72": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  }
 ]

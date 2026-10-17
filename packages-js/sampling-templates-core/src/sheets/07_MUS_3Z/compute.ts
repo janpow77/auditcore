@@ -98,7 +98,7 @@ const PERIOD3: Choice = { standard: 'C99', global: 'C105', increase: 'C106', non
 function secondSizes(c: Cells, run: Run): void {
   c.C68 = weightedDeviation([[c.C7, c.C61], [c.C51, c.C55], [c.C53, c.C56]], c.C58)
   c.C69 = globalComputedSize(c.C16, c.C58, c.C68, c.C59, c.C60)
-  c.C70 = appliedTotalSize(c.C69, run.limit, run.pending('C69'), run.context)
+  c.C70 = appliedTotalSize(c.C69, run.limit, run.pending('C69'), run.context, true)
   c.C71 = additionalUnits(share(c.C7, c.C58, c.C70), c.C36)
   c.C72 = share(c.C51, c.C58, c.C70)
   c.C73 = share(c.C53, c.C58, c.C70)
@@ -121,7 +121,7 @@ function thirdRecalculation(c: Cells, run: Run): void {
   c.C99 = standardSize(c.C98, () => (required(c.C16) * required(c.C90) * required(c.C92)) ** 2)
   c.C100 = weightedDeviation([[c.C7, c.C61], [c.C51, c.C97], [c.C90, c.C92]], c.C94)
   c.C101 = globalComputedSize(c.C16, c.C94, c.C100, c.C95, c.C96)
-  c.C102 = appliedTotalSize(c.C101, run.limit, run.pending('C101'), run.context)
+  c.C102 = appliedTotalSize(c.C101, run.limit, run.pending('C101'), run.context, true)
   c.C103 = additionalUnits(share(c.C7, c.C94, c.C102), c.C77)
   c.C104 = additionalUnits(share(c.C51, c.C94, c.C102), c.C75)
   c.C105 = share(c.C90, c.C94, c.C102)

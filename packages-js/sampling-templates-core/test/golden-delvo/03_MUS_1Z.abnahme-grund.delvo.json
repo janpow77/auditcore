@@ -1,0 +1,94 @@
+[
+ {
+  "position": 1,
+  "name": "Abnahme 1: A001 te_eq_ae",
+  "cells": {
+   "C21": "✖ nicht anwendbar (Division durch null)",
+   "C19": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 2,
+  "name": "Abnahme 1: A002 te_lt_ae",
+  "cells": {
+   "C19": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N5": 83115.5781089552,
+   "N7": 639639.051901678,
+   "N10": 2149,
+   "N11": 0.0018839315994019,
+   "C21": 2149,
+   "C27": 2149,
+   "C28": 74208.0640297813,
+   "C32": 2144,
+   "C33": "✔ ≥ 3 Einheiten",
+   "C34": 74381.123880597,
+   "C41": 34289.6981089552,
+   "C42": 83115.5781089552,
+   "C43": 639639.051901678,
+   "C46": 940075.520010634,
+   "C47": -339202.583792723,
+   "C48": 0.00401095189832958,
+   "C49": 0.000521188605989176,
+   "C50": 0.0018839315994019,
+   "C51": 0.00589488349773148,
+   "C52": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 37,
+  "name": "Abnahme 1: A037 glatt",
+  "cells": {
+   "C21": "✖ nicht anwendbar (Division durch null)",
+   "C19": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 57,
+  "name": "Abnahme 1: A057 te_eq_ae",
+  "cells": {
+   "C21": "✖ nicht anwendbar (Division durch null)",
+   "C19": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 66,
+  "name": "Abnahme 1: A066 te_eq_ae",
+  "cells": {
+   "C21": "✖ nicht anwendbar (Division durch null)",
+   "C19": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 67,
+  "name": "Abnahme 1: A067 te_lt_ae",
+  "cells": {
+   "C19": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N5": 8414654.2634963,
+   "N7": 34752333.9519462,
+   "N10": 721,
+   "N11": 0.00603688791922676,
+   "C21": 721,
+   "C27": 721,
+   "C28": 4521467.32558946,
+   "C32": 717,
+   "C33": "✔ ≥ 3 Einheiten",
+   "C34": 4497393.40722455,
+   "C41": 4554510.3034963,
+   "C42": 8414654.2634963,
+   "C43": 34752333.9519462,
+   "C46": 54432455.4054425,
+   "C47": -15072212.4984499,
+   "C48": 0.0106602972697695,
+   "C49": 0.00258119975467662,
+   "C50": 0.00603688791922676,
+   "C51": 0.0166971851889962,
+   "C52": "✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ }
+]

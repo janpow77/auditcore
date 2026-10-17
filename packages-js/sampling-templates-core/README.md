@@ -10,7 +10,7 @@ Ergebnisse herunterladen, den Arbeitsstand als Datei speichern und später
 wieder öffnen – ohne Server, ohne Anmeldung, ohne Netzanfragen. Die Oberfläche
 liegt in [`@auditcore/sampling-templates-vue`](../sampling-templates-vue/README.md).
 
-**Stand 0.1.8:** Alle Blätter der Vorlage sind gebaut und gegen sie
+**Stand 0.1.9:** Alle Blätter der Vorlage sind gebaut und gegen sie
 abgeglichen: Grundgesamtheit (02), MUS-Standardansatz (03–07), einfaches
 Zufallsstichprobenverfahren (08–12), nichtstatistische Verfahren (13–16),
 Unterstichproben (17), Gesamtfehlerquote nach Anhang III (18), Bericht (20) und
@@ -44,10 +44,10 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-core-0.1.8.tgz
+npm install @auditcore/sampling-templates-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-core-0.1.9.tgz
 ```
 
-Version 0.1.8 ist noch nicht veröffentlicht (siehe „Lizenz und
+Version 0.1.9 ist noch nicht veröffentlicht (siehe „Lizenz und
 Herkunftsnachweis“). Anleitung mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
@@ -381,31 +381,31 @@ Repository). Jedes Blatt ist gegen die Vorlage charakterisiert (Neuberechnung in
 Excel 16.0.20326; Zellen mit Ganzzahlformat exakt, übrige auf 1e-9 relativ,
 Texte wortgleich):
 
-| Blatt | Fälle | Zellen | gleich | begründet abweichend | bewusst anders dargestellt | amtlicher Begriff | bewusst nach DelVO | unbegründet | abweichend „wie die Vorlage“ |
+| Blatt | Fälle | Zellen | gleich | begründet abweichend | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründet | abweichend „wie die Vorlage“ |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | `02_Grundgesamtheit` | 159 | 3.021 | 2.877 | 73 | 0 | 71 | 0 | 0 | 0 |
-| `03_MUS_1Z` | 783 | 29.754 | 29.347 | 308 | 0 | 99 | 0 | 0 | 0 |
-| `04_MUS_1Z_S` | 381 | 46.482 | 45.376 | 1.003 | 0 | 103 | 0 | 0 | 0 |
-| `05_MUS_2Z` | 541 | 35.165 | 32.791 | 1.924 | 0 | 103 | 347 | 0 | 0 |
-| `06_MUS_2Z_S` | 635 | 150.495 | 145.588 | 3.192 | 0 | 127 | 1.588 | 0 | 0 |
-| `07_MUS_3Z` | 612 | 56.916 | 51.913 | 4.216 | 0 | 90 | 697 | 0 | 0 |
-| `08_SRS_1Z` | 660 | 24.420 | 24.078 | 210 | 0 | 132 | 0 | 0 | 0 |
-| `09_SRS_1Z_S` | 421 | 32.417 | 31.488 | 778 | 0 | 151 | 0 | 0 | 0 |
-| `10_SRS_2Z` | 714 | 42.840 | 39.082 | 3.374 | 0 | 117 | 267 | 0 | 0 |
-| `11_SRS_2Z_S` | 724 | 118.736 | 113.853 | 3.562 | 0 | 248 | 1.073 | 0 | 0 |
-| `12_SRS_3Z` | 785 | 67.510 | 61.193 | 5.800 | 0 | 135 | 382 | 0 | 0 |
+| `03_MUS_1Z` | 783 | 29.754 | 28.884 | 328 | 0 | 99 | 443 | 0 | 0 |
+| `04_MUS_1Z_S` | 381 | 46.482 | 43.618 | 1.003 | 0 | 103 | 1.758 | 0 | 0 |
+| `05_MUS_2Z` | 541 | 35.165 | 32.489 | 1.942 | 0 | 107 | 627 | 0 | 0 |
+| `06_MUS_2Z_S` | 635 | 150.495 | 142.973 | 3.266 | 0 | 132 | 4.124 | 0 | 0 |
+| `07_MUS_3Z` | 612 | 56.916 | 51.457 | 4.270 | 0 | 92 | 1.097 | 0 | 0 |
+| `08_SRS_1Z` | 660 | 24.420 | 23.771 | 210 | 0 | 132 | 307 | 0 | 0 |
+| `09_SRS_1Z_S` | 421 | 32.417 | 30.967 | 778 | 0 | 151 | 521 | 0 | 0 |
+| `10_SRS_2Z` | 714 | 42.840 | 38.755 | 3.414 | 0 | 121 | 550 | 0 | 0 |
+| `11_SRS_2Z_S` | 724 | 118.736 | 112.139 | 3.636 | 0 | 252 | 2.709 | 0 | 0 |
+| `12_SRS_3Z` | 785 | 67.510 | 60.721 | 5.937 | 0 | 141 | 711 | 0 | 0 |
 | `13_NS_GW` | 399 | 8.778 | 8.286 | 117 | 0 | 375 | 0 | 0 | 0 |
 | `14_NS_GW_S` | 410 | 16.400 | 15.709 | 301 | 0 | 390 | 0 | 0 | 0 |
 | `15_NS_PPS` | 406 | 10.556 | 9.970 | 222 | 0 | 364 | 0 | 0 | 0 |
 | `16_NS_PPS_S` | 412 | 28.840 | 27.840 | 618 | 0 | 382 | 0 | 0 | 0 |
 | `17_Unterstichprobe` | 102 | 612 | 577 | 35 | 0 | 0 | 0 | 0 | 0 |
-| `18_GFQ_AnhIII` | 677 | 14.894 | 13.866 | 289 | 0 | 438 | 301 | 0 | 0 |
-| `20_Druck_KOM` | 588 | 19.404 | 17.763 | 246 | 610 | 516 | 269 | 0 | 0 |
+| `18_GFQ_AnhIII` | 677 | 14.894 | 13.883 | 291 | 0 | 440 | 280 | 0 | 0 |
+| `20_Druck_KOM` | 588 | 19.404 | 17.755 | 251 | 610 | 516 | 272 | 0 | 0 |
 | `X1_KonsMUS_2017` | 213 | 2.769 | 2.580 | 181 | 8 | 0 | 0 | 0 | 0 |
 | `X2_DiffSch_2017` | 434 | 5.642 | 5.445 | 193 | 4 | 0 | 0 | 0 | 0 |
 | `X3_DiffSch_S_2017` | 234 | 8.424 | 7.838 | 582 | 4 | 0 | 0 | 0 | 0 |
 | `X4_DiffSch_2Z_2017` | 241 | 4.820 | 4.486 | 330 | 4 | 0 | 0 | 0 | 0 |
-| **Summe** | 10.531 | 728.895 | 691.946 | 27.554 | 630 | 3.841 | 4.924 | 0 | 0 |
+| **Summe** | 10.531 | 728.895 | 683.020 | 27.978 | 630 | 3.868 | 13.399 | 0 | 0 |
 
 „Begründet abweichend“ heißt: Die Webfassung zeigt keinen Wert, wo die Vorlage
 einen zeigt, weil eine Eingabe fehlt; die Gegenprobe ergibt den Wert der
@@ -414,12 +414,13 @@ die Vorlage zeigt. „Bewusst anders dargestellt“ sind die Kopfzeile des
 Berichts, `#DIV/0!` in Blatt 20 (kein Wert mit Hinweis) und der Wahrheitswert
 FALSCH der Altvorlagen (0 mit Hinweis). „Amtlicher Begriff“ sind Texte, die
 statt „Wesentlichkeitsschwelle“ der Vorlage „Signifikanzschwelle“ zeigen
-(Anhang I Nr. 1 DelVO), sonst wortgleich. „Bewusst nach DelVO“ sind Zellen, an
-denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 nach der
-DelVO rechnet; je Zelle gegen einen unabhängig nachgerechneten DelVO-Wert
-geprüft (`scripts/delvo_soll.py`). Toleranzkanten gibt es gegen Excel
+(Anhang I Nr. 1 DelVO), sonst wortgleich. „Bewusst nach KOM“ sind Zellen, an
+denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 nach den
+Vorgaben der KOM rechnet (DelVO und KOM-Leitfaden EGESIF_16-0014-01); je Zelle
+gegen einen unabhängig nachgerechneten Wert geprüft (`scripts/delvo_soll.py`,
+`scripts/kom_lo.py`). Toleranzkanten gibt es gegen Excel
 keine. „Wie die Vorlage“ ist dieselbe Rechnung unter der Richtlinie, die jede
-fehlende Angabe mit 0 rechnet: Dann stimmt jede Zelle. Von den 10.531 Fällen
+fehlende Angabe mit 0 rechnet: Dann stimmt jede Zelle außer denen „bewusst nach KOM“. Von den 10.531 Fällen
 stammen 6.805 aus der unabhängigen Gesamtabnahme (eigener Generator,
 Einzellücken-Matrix, Schwellen- und Ganzzahlsonden), 3.726 aus dem Bau; je
 Blatt gehören mindestens 100 zufällige vollständige Belegungen dazu.

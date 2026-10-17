@@ -13,8 +13,9 @@ import { unfounded } from '../../model/policy'
 import type { ZeroAssumption } from '../../model/sheet'
 import type { FieldTexts } from '../../model/texts'
 import type { CellAddress, CellMap, CellValue, Cells, SheetContext, WebHint } from '../../model/types'
-import { appliedPeriodSize as periodSize, GLOBAL_NOT_APPLICABLE, GLOBAL_NOT_APPLICABLE_EN, globalBlocked, NOT_APPLICABLE } from './periods'
+import { appliedPeriodSize as periodSize, SIZE_NOT_APPLICABLE, SIZE_NOT_APPLICABLE_EN, globalBlocked, NOT_APPLICABLE } from './periods'
 import { appliedSampleSize, assessment, checkIteration, checkMinimumUnits, lowerErrorLimit } from './statistical'
+import { ANTICIPATED_ABOVE_TOLERABLE, TOLERABLE_EQUALS_ANTICIPATED } from './statistical'
 
 type Value = CellValue | undefined
 
@@ -78,9 +79,10 @@ export function remembered(compute: (cells: Cells, context: SheetContext) => Cel
  * rechnerischen Umfangs dagegen leer (etwa ohne Konfidenzniveau), gibt es
  * nichts zu begrenzen – ein Wert ohne Grundlage (`unfounded`).
  */
-export function appliedTotalSize(computed: Value, limit: number | null, open: boolean, context: Pick<SheetContext, 'policy'>): CellValue {
-  // Globale Neuberechnung nach der DelVO nicht anwendbar (AE ≥ TE): kein Gesamtumfang, auch kein begrenzter.
-  if (globalBlocked(computed)) return null
+export function appliedTotalSize(computed: Value, limit: number | null, open: boolean, context: Pick<SheetContext, 'policy'>, global = false): CellValue {
+  // Globale Neuberechnung bei AE = TE nicht anwendbar: kein Gesamtumfang, auch kein begrenzter (Art. 5 Abs. 7 UAbs. 4 Buchst. a DelVO).
+  // Im ersten Zeitraum gilt bei AE = TE der begrenzte Umfang wie in der Vorlage.
+  if (global && globalBlocked(computed)) return null
   const size = appliedSampleSize(computed, limit, open)
   return open || !isBlank(computed) ? size : unfounded(context, size)
 }
@@ -223,7 +225,7 @@ export function limitWithoutSize(results: CellMap, limit: CellAddress, computed:
  * dieser Datei. Begriffe nach der englischen Fassung der DelVO (EU) 2023/67.
  */
 export const VALUES_EN: Readonly<Record<string, string>> = {
-  [GLOBAL_NOT_APPLICABLE]: GLOBAL_NOT_APPLICABLE_EN,
+  [SIZE_NOT_APPLICABLE]: SIZE_NOT_APPLICABLE_EN,
   '✔ mind. 90 % eingehalten': '✔ at least 90 % observed',
   '✖ gering: mind. 90 % erforderlich': '✖ low: at least 90 % required',
   '✔ mind. 60 % eingehalten': '✔ at least 60 % observed',
@@ -234,6 +236,8 @@ export const VALUES_EN: Readonly<Record<string, string>> = {
   '✖ unzulässig: höchstens 2 %': '✖ not permitted: maximum 2 %',
   '✔ TE > AE': '✔ TE > AE',
   '✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar': '✖ TE ≤ AE: sample size cannot be determined',
+  [ANTICIPATED_ABOVE_TOLERABLE]: '⚠ AE > TE: sample size with the planned precision |TE − AE| (Commission guidance EGESIF_16-0014-01, 7.1)',
+  [TOLERABLE_EQUALS_ANTICIPATED]: '✖ TE = AE: sample size cannot be determined (division by zero)',
   'TE ≤ AE': 'TE ≤ AE',
   'Nicht angewandt – Anh. I und II gelten': 'Not applied – Annexes I and II apply',
   '✔ 30 Einheiten (Art. 83 VO (EU) 2021/1060)': '✔ 30 sampling units (Art. 83 of Regulation (EU) 2021/1060)',

@@ -180,11 +180,11 @@ describe('Blatt 11_SRS_2Z_S: Schichten', () => {
 
   it('ohne Umfang zeigt die Vorlage „✔ ≥ 3“ und die Summe 0 – Werte ohne Grundlage, bei vollständigen Pflichteingaben ebenso gezeigt und ausgewiesen; fehlt eine Angabe, bleibt alles offen', () => {
     // Der Rechenkern lässt Werte ohne Grundlage offen; `evaluateSheet` zeigt sie bei vollständigen Pflichteingaben wie die Vorlage.
-    const none = run({ C25: 0.025 })
-    expect([none.C34, none.C42, none.D44, none.C44, none.D46]).toEqual(['TE ≤ AE', null, null, null, null])
-    const shown = template({ C25: 0.025 })
-    expect([shown.C34, shown.C42, shown.D44, shown.C44, shown.D46]).toEqual(['TE ≤ AE', null, null, 0, '✔ ≥ 3'])
-    const evaluation = evaluateSheet(sheet, { ...sample, C25: 0.025 }, context)
+    const none = run({ C25: 0.02 })
+    expect([none.C34, none.C42, none.D44, none.C44, none.D46]).toEqual(['✖ nicht anwendbar (Division durch null)', null, null, null, null])
+    const shown = template({ C25: 0.02 })
+    expect([shown.C34, shown.C42, shown.D44, shown.C44, shown.D46]).toEqual(['✖ nicht anwendbar (Division durch null)', null, null, 0, '✔ ≥ 3'])
+    const evaluation = evaluateSheet(sheet, { ...sample, C25: 0.02 }, context)
     expect(evaluation.complete).toBe(true)
     expect(evaluation.cells).toEqual(shown)
     expect(evaluation.withoutBasis).toEqual(expect.arrayContaining(['C44', 'D46']))

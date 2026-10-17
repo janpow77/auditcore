@@ -6,8 +6,10 @@
 import { STRATA_COLUMNS } from '../../model/strata'
 import type { FieldTexts, SheetTexts } from '../../model/texts'
 import { HINTS_EN, INCREASE_INTERPRETATION_EN, VALUES_EN } from '../shared/mus'
-import { delvoHintsEn, globalMarginId, withNotApplicableNoteEn } from '../shared/delvo'
+import { withNotApplicableNoteEn } from '../shared/delvo'
 import { HIGH_VALUE_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { APPROXIMATION_EN_TEXT, komHintsEn } from '../shared/kom'
+import { definition } from './definition'
 
 const ERRORS = 'Art. 2(20), (21); Art. 8(1) DR.'
 const INCREASE_NOTE = `Approach “increase” – ${INCREASE_INTERPRETATION_EN}`
@@ -130,8 +132,9 @@ export const en: SheetTexts = {
   },
   values: { ...VALUES_EN, 'MUS-Standardansatz, 2 Zeiträume, geschichtet': 'MUS standard approach, 2 periods, stratified' },
   webHints: withNotApplicableNoteEn({
-    ...delvoHintsEn(globalMarginId()),
-    'limited-size-open': HINTS_EN['limited-size-open'],
+    ...komHintsEn(definition),
+    ...APPROXIMATION_EN_TEXT,
+        'limited-size-open': HINTS_EN['limited-size-open'],
     'strata-sum-exceeds-size': HINTS_EN['strata-sum-exceeds-size'],
     ...perStratum('size-exceeds-population-2', 'sample size for period 2 exceeds the number of units of the stratum'),
     ...perStratum(

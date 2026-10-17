@@ -6,6 +6,10 @@
 import type { SheetTexts } from '../../model/texts'
 import { delvoHintsEn, withNotApplicableNoteEn } from '../shared/delvo'
 import { EXHAUSTIVE_MINIMUM_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { APPROXIMATION_EN_TEXT, komHintsEn } from '../shared/kom'
+import { definition } from './definition'
+import { SIZE_NOT_APPLICABLE, SIZE_NOT_APPLICABLE_EN } from '../shared/periods'
+import { ANTICIPATED_ABOVE_TOLERABLE, TOLERABLE_EQUALS_ANTICIPATED } from '../shared/statistical'
 
 export const en: SheetTexts = {
   title: 'Simple random sampling – one period, stratified',
@@ -91,6 +95,9 @@ export const en: SheetTexts = {
     '✖ unzulässig: höchstens 2 %': '✖ not permitted: maximum 2 %',
     '✔ TE > AE': '✔ TE > AE',
     '✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar': '✖ TE ≤ AE: sample size cannot be determined',
+    [ANTICIPATED_ABOVE_TOLERABLE]: '⚠ AE > TE: sample size with the planned precision |TE − AE| (Commission guidance EGESIF_16-0014-01, 7.1)',
+    [TOLERABLE_EQUALS_ANTICIPATED]: '✖ TE = AE: sample size cannot be determined (division by zero)',
+    [SIZE_NOT_APPLICABLE]: SIZE_NOT_APPLICABLE_EN,
     'TE ≤ AE': 'TE ≤ AE',
     'Nicht angewandt – Anh. I und II gelten': 'Not applied – Annexes I and II apply',
     '✔ 30 Einheiten (Art. 83 VO (EU) 2021/1060)': '✔ 30 sampling units (Art. 83 of Regulation (EU) 2021/1060)',
@@ -104,6 +111,8 @@ export const en: SheetTexts = {
     '✖ < 3': '✖ < 3',
   },
   webHints: withNotApplicableNoteEn({
+    ...komHintsEn(definition),
+    ...APPROXIMATION_EN_TEXT,
     ...delvoHintsEn('exclusion-reference-population'),
     'strata-sum-exceeds-size': 'Sum of the rounded-up stratum sample sizes is larger than the sample size to be applied',
     'strata-beyond-template': 'More than seven strata: the template provides seven columns; strata 8 to 20 are an extension of the web version',

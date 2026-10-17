@@ -1,13 +1,16 @@
 /**
- * Zellen, an denen die Webfassung bewusst nach der DelVO (EU) 2023/67 rechnet
- * (Entscheidung des Inhabers vom 17.10.2026, `docs/abweichungen.md` Nr. 16).
- * Die Sollwerte rechnet `scripts/delvo_soll.py` unabhängig vom Rechenkern aus
- * den Excel-Sollwerten nach (`test/golden-delvo/*.delvo.json`): `cells` nennt
- * je Fall den DelVO-Wert einer Zelle, `others` (falls vorhanden) verlangt, dass
- * jede weitere abweichende Zelle des Falls leer ist („—“, Folgegröße).
+ * Zellen, an denen die Webfassung bewusst nach den Vorgaben der KOM rechnet
+ * (DelVO (EU) 2023/67 und KOM-Leitfaden EGESIF_16-0014-01; Entscheidung des
+ * Inhabers vom 17.10.2026, `docs/abweichungen.md` Nr. 16). Die Sollwerte rechnet
+ * `scripts/delvo_soll.py` unabhängig vom Rechenkern aus den Excel-Sollwerten und
+ * den LibreOffice-Kontrollwerten von `scripts/kom_lo.py` nach
+ * (`test/golden-delvo/*.delvo.json`): `cells` nennt je Fall den Sollwert einer
+ * Zelle, `others` (falls vorhanden) verlangt, dass jede weitere abweichende
+ * Zelle des Falls leer ist („—“, Folgegröße).
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { officialWording } from '../src/model/terms'
 import type { CellValue } from '../src/model/types'
 
 export interface DelvoEntry {
@@ -38,6 +41,7 @@ export function delvoEntries(goldenFile: string): Map<number, DelvoEntry> {
  */
 export function delvoVerdict(entry: DelvoEntry | undefined, cell: string, actual: CellValue, same: (expected: CellValue, actual: CellValue) => boolean): 'delvo' | 'wrong' | 'none' {
   if (!entry) return 'none'
-  if (cell in entry.cells) return same(entry.cells[cell] ?? null, actual) ? 'delvo' : 'wrong'
+  // Texte aus der Neuberechnung der Vorlage tragen deren Begriff; verglichen wird mit dem amtlichen (Spalte „amtlicher Begriff“).
+  if (cell in entry.cells) return same(officialWording(entry.cells[cell] ?? null) as CellValue, actual) ? 'delvo' : 'wrong'
   return 'others' in entry && (actual === null || NO_VALUE.has(String(actual))) ? 'delvo' : 'none'
 }

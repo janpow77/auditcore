@@ -94,8 +94,8 @@ describe('Blatt 05_MUS_2Z', () => {
     expect(limited).toMatchObject({ C27: null, C32: 50, C33: null, C34: null, C57: null, C60: null, C67: null, N10: null })
     expect(sheet.webHints?.({}, limited, context).map((hint) => hint.id)).toEqual(['limited-size-open'])
     expect(sheet.compute(sample({ C13: null, C30: 'Ja' }), likeTemplate)).toMatchObject({ C33: 50, C34: 27, C57: null, C67: 3 })
-    // „TE ≤ AE“ ist ein Ergebnis, kein fehlender Wert: Der begrenzte Umfang gilt wie in der Vorlage.
-    expect(compute({ C20: 0.025, C30: 'Ja' })).toMatchObject({ C27: 'TE ≤ AE', C33: 50, C34: 27 })
+    // AE = TE ist ein Ergebnis, kein fehlender Wert: Der begrenzte Umfang gilt wie in der Vorlage (dort „TE ≤ AE“).
+    expect(compute({ C20: 0.02, C30: 'Ja' })).toMatchObject({ C27: '✖ nicht anwendbar (Division durch null)', C33: 50, C34: 27 })
     expect(compute({ C13: null })).toMatchObject({ C33: null, C67: null })
   })
 
@@ -238,7 +238,9 @@ describe('Blatt 05_MUS_2Z', () => {
     expect(sheet.definition.summary.rows.filter((row) => !texts?.summary?.rows?.[row.cell]).map((row) => row.cell)).toEqual([])
     const produced = new Set(loadGolden(sheet.id).flatMap((golden) => Object.values(golden.erwartet).filter((value): value is string => typeof value === 'string').map((value) => officialWording(value))))
     expect([...produced].filter((value) => !texts?.values?.[value])).toEqual([])
-    const hints = [sample({ C47: 0.9 }), sample({ C47: 0.9, C26: GLOBAL }), sample({ C26: GLOBAL, C51: 0.03 }), sample({ C13: 0.95, C9: 10 }), sample({ C13: null, C30: 'Ja' })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
+    const hints = [sample({ C47: 0.9 }), sample({ C47: 0.9, C26: GLOBAL }), sample({ C26: GLOBAL, C51: 0.03 }), sample({ C13: 0.95, C9: 10 }), sample({ C13: null, C30: 'Ja' }), sample({ C20: 0.05 }), sample({ C26: GLOBAL, C51: 0.05 }), sample({ C26: GLOBAL, C51: 0.02 })].flatMap((inputs) => sheet.webHints?.(inputs, sheet.compute(inputs, context), context) ?? [])
+    const excluded = createContext({ sheets: { '02_Grundgesamtheit': { C47: 2, C49: 'Ausschluss (Art. 3 Abs. 6 Buchst. b)' } } })
+    hints.push(...(sheet.webHints?.(sheet.sample.inputs, sheet.compute(sheet.sample.inputs, excluded), excluded) ?? []))
     expect(new Set(hints.map((hint) => hint.id))).toEqual(new Set(Object.keys(texts?.webHints ?? {})))
     expect(localizeSheet(sheet, 'en').definition.title).toBe('MUS standard approach – two sampling periods, non-stratified')
   })

@@ -1,122 +1,410 @@
 [
  {
-  "position": 13,
-  "name": "Abnahme 2: L0 Lücke C25 (te) Standard (Art. 5 Abs. 6 Buchst. a)",
-  "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 69,
-  "name": "Abnahme 2: L1 Lücke C25 (te) Global (Art. 5 Abs. 6 Buchst. b)",
-  "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 125,
-  "name": "Abnahme 2: L2 Lücke C25 (te) Erhöhung bei begrenztem Umfang (Art. 5 Abs. 7 UAbs. 4 Buchst. a)",
-  "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
-  "position": 181,
-  "name": "Abnahme 2: L3 Lücke C25 (te) keine Neuberechnung",
-  "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
-  },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
- },
- {
   "position": 236,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle (volle Genauigkeit)",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 237,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle +1e-13",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 238,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle −1e-13",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 239,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle +3e-15",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 240,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle −3e-15",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 241,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle auf Cent gerundet",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 242,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle +1 Cent",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
  },
  {
   "position": 243,
   "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle −1 Cent",
   "cells": {
-   "C77": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)",
-   "C109": "✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der zulässige Fehler (Anhang II)"
+   "C36": "✖ nicht anwendbar (Division durch null)",
+   "C30": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C77": "✖ nicht anwendbar (Division durch null)",
+   "C109": "✖ nicht anwendbar (Division durch null)"
   },
-  "others": null,
-  "rule": "Anhang II: AE ≥ TE"
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
+ },
+ {
+  "position": 244,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle (volle Genauigkeit)",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.1887716961,
+   "C133": 24504.509228304,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368522148651
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 245,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle +1e-13",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.1887716999,
+   "C133": 24504.5092283078,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368522148671
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 246,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle −1e-13",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.1887716923,
+   "C133": 24504.5092283001,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368522148631
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 247,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle +3e-15",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.1887716962,
+   "C133": 24504.5092283041,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368522148652
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 248,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle −3e-15",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.188771696,
+   "C133": 24504.5092283039,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368522148651
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 249,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle auf Cent gerundet",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.1889882581,
+   "C133": 24504.509444866,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368523276612
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 250,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle +1 Cent",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.1989882581,
+   "C133": 24504.519444866,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368575361507
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 251,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle −1 Cent",
+  "cells": {
+   "C30": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13894.3397716961,
+   "N10": 2611,
+   "C36": 2547,
+   "C44": 2547,
+   "C45": 625,
+   "C46": 904,
+   "C47": 1020,
+   "C71": 58714291.4297923,
+   "C72": 70252,
+   "C73": 33389,
+   "C74": 36863,
+   "C80": 11646,
+   "C83": 957,
+   "C84": 957,
+   "C85": 1020,
+   "C86": 625,
+   "C105": -184768981.273487,
+   "C106": "✖ nicht anwendbar (Nenner ≤ 0)",
+   "C112": 2007,
+   "C113": 3072,
+   "C115": 1020,
+   "C116": 625,
+   "C117": 957,
+   "C118": 1020,
+   "C119": 2611,
+   "C120": "✔ ≥ 30 Einheiten",
+   "C129": 13894.3397716961,
+   "C132": 52293.1789882581,
+   "C133": 24504.499444866,
+   "C134": 0.00723685221486511,
+   "C137": 0.0272368471191718
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
  }
 ]
