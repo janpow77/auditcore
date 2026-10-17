@@ -284,7 +284,7 @@ def mus_conservative_size(
     if margin <= 0:
         raise SamplingInputError(
             "TE − AE × EF ist nicht positiv: Die erwartete Fehlerquote ist zu nahe an der "
-            "Wesentlichkeit (Leitfaden, Abschn. 6.3.5.2, Fußnote 36)."
+            "Signifikanzschwelle (Leitfaden, Abschn. 6.3.5.2, Fußnote 36)."
         )
     raw = limits.book_value * rf / margin
     size = round_up(raw)

@@ -42,7 +42,7 @@ fastapi_app.include_router(create_router("/api/extrapolation"))
 
 | Methode | Pfad | Zweck |
 |---|---|---|
-| GET | `/profiles` | Methoden, Faktorprofile, Konfidenzniveaus, Wesentlichkeit, Fehlerklassen |
+| GET | `/profiles` | Methoden, Faktorprofile, Konfidenzniveaus, Signifikanzschwelle, Fehlerklassen |
 | POST | `/evaluate` | Hochrechnung, Präzision, TER, Fehlerobergrenze, Ergebnis, Herleitung |
 | POST | `/evaluate/export` | dieselbe Auswertung als Datei (`format`: `csv` oder `json`) |
 | POST | `/residual` | Restfehlerquote nach Annex 3 (Zeilen A–M) |

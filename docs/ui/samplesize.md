@@ -21,9 +21,9 @@ Eigenschaften: `port` (z. B. `createSamplesizeRestPort({ baseUrl: '/api/sampling
 Ereignisse: `plan-calculated` (React `onPlanCalculated`, Nutzdaten: Antwort
 von `POST /guidance/size`), `error` (React `onError`).
 
-Anteile (erwartete Fehlerquote, Wesentlichkeit) werden in Prozent mit
+Anteile (erwartete Fehlerquote, Signifikanzschwelle) werden in Prozent mit
 deutschem Dezimalkomma erfasst und als Anteil gesendet; vorbelegt ist nur die
-Wesentlichkeit von 2 %. Faktorprofil, Konfidenzniveau und alle Pflichtangaben
+Signifikanzschwelle von 2 %. Faktorprofil, Konfidenzniveau und alle Pflichtangaben
 wählt die Prüferin oder der Prüfer ausdrücklich; fehlende oder ungültige
 Angaben werden am Feld gemeldet, ohne das Backend zu fragen.
 
