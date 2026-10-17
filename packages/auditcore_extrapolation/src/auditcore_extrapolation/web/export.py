@@ -25,7 +25,7 @@ _CONCLUSIONS = {
 }
 _SUMMARY = (
     ("Buchwert der Grundgesamtheit (BV)", "book_value"),
-    ("Wesentlichkeitsschwelle", "materiality_rate"),
+    ("Signifikanzschwelle", "materiality_rate"),
     ("Tolerierbarer Fehler (TE)", "tolerable_error"),
     ("Hochgerechneter zufälliger Fehler (EE)", "projected_random_error"),
     ("Abgegrenzte systemische Fehler", "systemic_errors"),

@@ -144,7 +144,7 @@ class Tolerance:
         return [
             Step(
                 "Tolerierbarer Fehler",
-                "TE = Wesentlichkeit × BV",
+                "TE = Signifikanzschwelle × BV",
                 self.tolerable_error,
                 guidance("5.3"),
             ),
@@ -163,13 +163,14 @@ def tolerance(book_value: object, materiality_rate: object, anticipated_rate: ob
     rate = finite(materiality_rate, "materiality_rate", positive=True)
     if rate > MATERIALITY_RATE + 1e-12:
         raise SamplingInputError(
-            "Die Wesentlichkeit darf höchstens 2 % der Ausgaben betragen (Leitfaden, Abschn. 5.3)."
+            "Die Signifikanzschwelle darf höchstens 2 % der Ausgaben betragen "
+            "(Leitfaden, Abschn. 5.3)."
         )
     expected = finite(anticipated_rate, "anticipated_error_rate")
     if expected >= rate:
         raise SamplingInputError(
-            "Die erwartete Fehlerquote muss kleiner als die Wesentlichkeit sein; sonst ist kein "
-            "Stichprobenumfang bestimmbar (Leitfaden, Abschn. 6.3.5.2, Fußnote 36)."
+            "Die erwartete Fehlerquote muss kleiner als die Signifikanzschwelle sein; "
+            "sonst ist kein Stichprobenumfang bestimmbar (Leitfaden, Abschn. 6.3.5.2, Fußnote 36)."
         )
     return Tolerance(value, rate, expected)
 

@@ -45,7 +45,7 @@ describe('ExtrapolationPanel', () => {
     await flushPromises()
     expect(port.calls.residual[0]).toMatchObject({ audit_population: 1_000_000, total_error_rate: 0.016, financial_corrections: 2.1 })
     expect(wrapper.emitted('residual-computed')?.[0]).toEqual([residualResult])
-    expect(wrapper.get('[data-testid="extrapolation-rer"]').text()).toContain('über der Wesentlichkeitsschwelle')
+    expect(wrapper.get('[data-testid="extrapolation-rer"]').text()).toContain('über der Signifikanzschwelle')
     await wrapper.get('[data-testid="extrapolation-export-csv"]').trigger('click')
     await flushPromises()
     expect(port.calls.export[0]?.[1]).toBe('csv')
