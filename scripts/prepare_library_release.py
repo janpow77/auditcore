@@ -570,15 +570,36 @@ def npm_integrity(data: bytes) -> str:
     return "sha512-" + base64.b64encode(hashlib.sha512(data).digest()).decode()
 
 
+_NPM_COMPARATOR = re.compile(r"(>=|<=|>|<|=)?([0-9]+)\.([0-9]+)\.([0-9]+)")
+
+
 def _npm_version_satisfies(version: str, spec: str) -> bool:
-    """Exact ``x.y.z`` or caret ``^x.y.z`` (the only forms used between @auditcore packages)."""
+    """Exact ``x.y.z``, caret ``^x.y.z`` or a comparator set such as ``>=0.4.0 <0.6.0``.
+
+    These are the only forms used between @auditcore packages; anything else
+    (``||``, ``~``, wildcards, prereleases) is rejected instead of guessed.
+    """
+    have = tuple(int(part) for part in version.split("."))
     if re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", spec):
         return version == spec
     match = re.fullmatch(r"\^([0-9]+)\.([0-9]+)\.([0-9]+)", spec)
     if not match:
-        raise ValueError(f"Unsupported internal npm version range: {spec}")
+        comparators = [_NPM_COMPARATOR.fullmatch(part) for part in spec.split()]
+        if not comparators or not all(comparators):
+            raise ValueError(f"Unsupported internal npm version range: {spec}")
+        checks = {
+            ">=": lambda bound: have >= bound,
+            "<=": lambda bound: have <= bound,
+            ">": lambda bound: have > bound,
+            "<": lambda bound: have < bound,
+            "=": lambda bound: have == bound,
+        }
+        return all(
+            checks[item.group(1) or "="](tuple(int(item.group(n)) for n in (2, 3, 4)))
+            for item in comparators
+            if item is not None
+        )
     wanted = tuple(int(part) for part in match.groups())
-    have = tuple(int(part) for part in version.split("."))
     if wanted[0] > 0:
         return have[0] == wanted[0] and have >= wanted
     if wanted[1] > 0:
