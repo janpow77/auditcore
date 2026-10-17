@@ -91,7 +91,7 @@ class ResidualErrorRate:
             ("K=J/I", "Restfehlerquote (RER)", self.rate),
             (
                 "L=(J-0.02*I)/0.98",
-                "Hochgerechnete Finanzkorrektur bis zur Wesentlichkeit",
+                "Hochgerechnete Finanzkorrektur bis zur Signifikanzschwelle",
                 self.extrapolated_correction,
             ),
             ("M=(J-L)/(I-L)", "RER nach hochgerechneter Korrektur", self.rate_after_correction),
@@ -141,7 +141,7 @@ def _checked(inputs: ResidualInputs, materiality: Number) -> tuple[Decimal, ...]
     if min(e1, e2, h) < 0:
         raise ExtrapolationInputError("E1, E2 und H werden als nicht negative Beträge angegeben.")
     if not Decimal(0) < m <= DEFAULT_MATERIALITY:
-        raise ExtrapolationInputError("Die Wesentlichkeitsschwelle muss in (0, 2 %] liegen.")
+        raise ExtrapolationInputError("Die Signifikanzschwelle muss in (0, 2 %] liegen.")
     return a, d, e1, e2, h, m
 
 

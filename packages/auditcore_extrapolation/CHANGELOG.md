@@ -1,5 +1,9 @@
 # Changelog auditcore_extrapolation
 
+## Unreleased
+
+- Begriff: Meldungen, Ergebnistexte, Herleitung (`TE = Signifikanzschwelle × BV`), RER-Zeile L und die Excel-/CSV-Zusammenfassung nennen die 2-%-Schwelle „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“ (DelVO (EU) 2023/67, Anhang I Nr. 1; VO (EU) 2021/1060, Anhang XX Nr. 5.9). Bezeichner (`materiality_rate`, `MATERIALITY_RATE`), Ergebniscodes (`material`, `not_material`, `inconclusive`) und REST-Vertrag bleiben unverändert; die englische Bezeichnung bleibt „materiality threshold“.
+
 ## 0.2.0 – 2026-10-03
 
 - Ausschluss und Ersetzen von Einheiten nach verhältnismäßiger Kontrolle

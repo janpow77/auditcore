@@ -40,7 +40,7 @@ export interface ExtrapolationForm {
   confidence: number | null
   profileId: string | null
   sampleSize: string
-  /** Wesentlichkeitsschwelle in Prozent. */
+  /** Signifikanzschwelle in Prozent. */
   materiality: string
   strata: readonly StratumRow[]
   units: readonly UnitRow[]

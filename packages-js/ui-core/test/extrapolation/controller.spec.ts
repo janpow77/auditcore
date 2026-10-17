@@ -86,6 +86,6 @@ describe('createExtrapolationController', () => {
     expect(metrics.map((metric) => metric.id)).toEqual(['projected', 'systemic', 'anomalous', 'excluded', 'total', 'ter', 'tolerable', 'precision', 'upper'])
     expect(metrics.find((metric) => metric.id === 'ter')?.value).toBe('1,60\u00a0%')
     const rer = residualMetrics(residualResult.residual_error_rate, t, 'de')
-    expect(rer[0]).toEqual({ id: 'rer', label: 'Restfehlerquote (RER)', value: '2,29\u00a0%', detail: 'über der Wesentlichkeitsschwelle' })
+    expect(rer[0]).toEqual({ id: 'rer', label: 'Restfehlerquote (RER)', value: '2,29\u00a0%', detail: 'über der Signifikanzschwelle' })
   })
 })

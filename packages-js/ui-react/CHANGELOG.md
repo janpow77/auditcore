@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-react
 
+## Unreleased
+
+- Begriff: `FlowauditExtrapolation` und `FlowauditSampleSizePlanner` zeigen wie die Vue-Fassung „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“ (Texte aus `@auditcore/ui-core`). Eigenschaften und Ereignisse bleiben unverändert.
+
 ## 1.2.0 – 2026-09-29
 
 Native Konten-/Mandantenoberfläche mit gemeinsamer Vue-Paritätsprüfung.

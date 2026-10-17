@@ -16,7 +16,7 @@ export const samplesizeMessages = defineMessages({
     confidence_level: 'Konfidenzniveau',
     book_value: 'Buchwert der Grundgesamtheit (BV, €)',
     anticipated_error_rate: 'Erwartete Fehlerquote (%)',
-    materiality_rate: 'Wesentlichkeit (%)',
+    materiality_rate: 'Signifikanzschwelle (%)',
     population_size: 'Anzahl der Einheiten (N)',
     error_sd: 'Standardabweichung der Fehler (σ_e, €)',
     error_rate_sd: 'Standardabweichung der Fehlerquoten (σ_r)',

@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.1.0",
+ "library": "auditcore_extrapolation 0.2.0",
  "fingerprint": "7dc7d459406aef487724d001b495bf3acac71c1e30cd53522df8b06d0efffe1f",
  "residual_error_rate": {
   "source": "CPRE_23-0013-01 Annex 3",
@@ -73,7 +73,7 @@
    },
    {
     "row": "L=(J-0.02*I)/0.98",
-    "label": "Hochgerechnete Finanzkorrektur bis zur Wesentlichkeit",
+    "label": "Hochgerechnete Finanzkorrektur bis zur Signifikanzschwelle",
     "value": 3.0020408163265304,
     "exact": "3.002040816326530612244897959"
    },
