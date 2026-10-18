@@ -2,12 +2,14 @@
  * Ein Blatt der Vorlage als Modul: Definition, Rechenkern, Beispielwerte und
  * begründete Abweichungen. Blätter ohne Rechenkern sind als geplant geführt.
  */
+import { exhaustiveStratumOf } from './exhaustive'
 import { isBlank } from '../excel/index'
 import { PARAMETERS } from '../sheets/01_Parameter/index'
 import { cellsOf, inputFields, type MethodDefinition, type SubsampleRole } from './definition'
 import type { DataTable } from './table'
 import { localizeDefinition, type SheetTexts, type SheetTranslations, type TranslationLocale } from './texts'
 import type { CellAddress, CellMap, CellValue, Cells, Compute, Deviation, MethodSummary, SheetContext, SheetId, WebHint } from './types'
+import { withTemplateTerm } from './terms'
 
 /** Erfundene Beispielwerte eines Blatts; die Oberfläche kennzeichnet sie als Beispiel. */
 export interface SampleInputs {
@@ -61,8 +63,16 @@ export interface AvailableSheet {
 export interface Adaptation {
   cell: CellAddress
   reason: string
-  /** Wert der Webfassung zu dem Wert, den die Vorlage zeigt; `results` sind die Zellwerte der Webfassung. */
-  fromTemplate: (shown: CellValue, results: CellMap) => CellValue
+  /**
+   * Wert der Webfassung zu dem Wert, den die Vorlage zeigt (in Excel auch ein
+   * Wahrheitswert oder ein Fehlerwert wie `#DIV/0!`); `results` sind die Zellwerte der Webfassung.
+   */
+  fromTemplate: (shown: CellValue | boolean, results: CellMap) => CellValue
+}
+
+/** Wert der Vorlage als Zellwert: Ein Wahrheitswert zählt wie in Excel als 1 bzw. 0. */
+export function templateNumber(shown: CellValue | boolean): CellValue {
+  return typeof shown === 'boolean' ? Number(shown) : shown
 }
 
 /** Eine fehlende Eingabe, mit der wie in der Vorlage als 0 gerechnet wurde. */
@@ -115,7 +125,7 @@ export function tableSheet(id: SheetId, table: DataTable): PlannedSheet {
 
 /** Blatt mit Rechenkern anmelden. */
 export function defineSheet(sheet: Omit<AvailableSheet, 'available'>): AvailableSheet {
-  return { ...sheet, available: true }
+  return { ...sheet, definition: withTemplateTerm(sheet.definition), available: true }
 }
 
 /**
@@ -136,9 +146,17 @@ export function createContext(partial: Partial<SheetContext> = {}): SheetContext
 }
 
 /**
+ * Wert einer Eingabe, deren Text die Oberfläche nicht als Zahl lesen kann. Die
+ * Eingabe zählt als leer, fällt aber nicht auf die Vorbelegung aus einem
+ * anderen Blatt zurück: Ein vorbelegtes Feld mit „abc“ rechnet nicht still mit
+ * dem Wert aus Blatt 02 weiter, die Folgegrößen bleiben offen.
+ */
+export const UNREADABLE_INPUT = '#WERT!'
+
+/**
  * Eingaben eines Blatts auflösen: eigene Werte der Eingabezellen, bei
  * Verknüpfungen der Wert des anderen Blatts aus dem Kontext, solange die
- * Prüfbehörde ihn nicht überschrieben hat.
+ * Prüfbehörde ihn nicht überschrieben hat (`UNREADABLE_INPUT`: leer, ohne Vorbelegung).
  */
 export function resolveInputs(definition: MethodDefinition, inputs: CellMap, context: SheetContext): Cells {
   const cells: Cells = {}
@@ -146,7 +164,7 @@ export function resolveInputs(definition: MethodDefinition, inputs: CellMap, con
     const linked = field.link ? context.sheets[field.link.sheet]?.[field.link.cell] : undefined
     for (const cell of cellsOf(field)) {
       const own = inputs[cell]
-      cells[cell] = isBlank(own) ? (linked ?? null) : own
+      cells[cell] = own === UNREADABLE_INPUT ? null : isBlank(own) ? (linked ?? null) : own
     }
   }
   return cells
@@ -201,5 +219,8 @@ export function summaryOf(sheet: SheetId, results: CellMap): MethodSummary {
   for (const [name, cell] of Object.entries(SUMMARY_CELLS) as [keyof typeof SUMMARY_CELLS, string][]) {
     summary[name] = results[cell] ?? null
   }
+  const exhaustive = exhaustiveStratumOf(sheet, results)
+  summary.exhaustiveUnits = exhaustive.units
+  summary.exhaustiveBookValue = exhaustive.bookValue
   return summary
 }

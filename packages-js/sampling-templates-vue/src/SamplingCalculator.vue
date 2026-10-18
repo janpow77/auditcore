@@ -158,7 +158,7 @@ const announced = useAnnouncer(() => {
   if (!view) return ''
   const strong = view.rows.filter((row) => row.strong).map((row) => `${row.label} ${row.value}`)
   const primary = `${view.primaryLabel} ${view.primaryValue ? `${view.primaryValue} ${view.primaryUnit}` : view.primaryNote || t('noValue')}`
-  return t('resultsUpdated', { summary: [primary, ...strong].join(', ') })
+  return t('resultsUpdated', { summary: [primary, ...strong, ...(view.invalidNote ? [view.invalidNote] : [])].join(', ') })
 })
 
 useUnloadGuard(() => props.guardUnload && meta.value.dirty)

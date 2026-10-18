@@ -7,6 +7,7 @@
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, STRATA_HINTS_EN, VALUES_EN } from '../shared/nonstatistical'
+import { NONSTATISTICAL_ALLOCATION_INTERPRETATION_EN } from '../shared/interpretations'
 
 export const en: SheetTexts = {
   title: 'Non-statistical sampling – selection with equal probability, stratified',
@@ -30,7 +31,7 @@ export const en: SheetTexts = {
     C14: { label: 'Number of units of the population (N)' },
     C15: { label: 'Admissibility of non-statistical sampling (N < 300)' },
     C16: { label: 'Size of the random sample (professional judgement)' },
-    D18: { label: 'Sample size per stratum' },
+    D18: { label: 'Sample size per stratum', interpretation: NONSTATISTICAL_ALLOCATION_INTERPRETATION_EN },
     C19: { label: 'Total sample' },
     C20: { label: 'Minimum coverage 10 % of the sampling units (rounded up)', hint: 'Art. 79(2) of Regulation (EU) 2021/1060; Art. 6(2) DR: units of exhaustive strata are included. Where the method is changed under Art. 6(3), the minimum size refers to the whole accounting year.' },
     C21: { label: 'Check of minimum coverage' },

@@ -1,0 +1,12 @@
+[
+ {
+  "position": 20,
+  "name": "SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht",
+  "cells": {
+   "F14": 1604,
+   "G34": 130224.492622687,
+   "G35": 0.0781910880923268
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE im Verfahren"
+ }
+]

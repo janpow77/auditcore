@@ -10,7 +10,7 @@
  *   solange eine Pflichteingabe fehlt; bei vollständigen Eingaben zeigt sie ihn
  *   wie die Vorlage mit Hinweis.
  * - Pflichteingabe fehlt (ohne `kind`): Stichprobenumfang und
- *   Wesentlichkeitsschwelle.
+ *   Signifikanzschwelle.
  */
 import { STRATA_COLUMNS, stratumCell } from '../../model/strata'
 import type { Deviation } from '../../model/types'
@@ -36,9 +36,10 @@ function emptyTotal(cell: string, rows: readonly number[]): Deviation {
   }
 }
 
+/* Hochwertige Einheiten und Iteration sind freiwillig (Entscheidung des Inhabers vom 17.10.2026): Ihre Summe ist wie in der Vorlage 0, keine Abweichung. */
 /** Summenzellen mit den Schichtzeilen, deren Werte sie summieren (C28: nur belegte Schichten, Zeile 9). */
 const TOTALS: readonly (readonly [cell: string, rows: readonly number[]])[] = [
-  ['C9', [9]], ['C10', [10]], ['C15', [15]], ['C19', [19]], ['C20', [20]], ['C21', [21]], ['C22', [22]], ['C25', [25]], ['C26', [26]], ['C28', [9, 28]],
+  ['C9', [9]], ['C10', [10]], ['C15', [15]], ['C21', [21]], ['C22', [22]], ['C26', [26]], ['C28', [9, 28]],
 ]
 
 /** Zellen, die auf einer Summe ohne Summanden aufbauen: Die Vorlage rechnet mit deren 0 weiter. */
@@ -63,9 +64,8 @@ export const deviations: readonly Deviation[] = [
   ...withoutTotal(['C16'], ['C10'], '0 (10 % von 0 Einheiten)'),
   ...withoutTotal(['C17'], ['C15', 'C16'], 'Prüfhinweis auf der Grundlage einer Summe der Schichtumfänge bzw. einer Mindesterfassung, zu der keine Schicht beiträgt'),
   ...withoutTotal(['N10'], ['C15'], '0 (Summe der Schichtumfänge ohne belegte Schicht)'),
-  ...withoutTotal(['C29', 'N6'], ['C25'], '0 € (Summe der Fehler hochwertiger Einheiten ohne Angabe in einer Schicht)'),
   ...withoutTotal(['C30', 'C33', 'C34', 'C36', 'N5', 'N11'], ['C28'], 'Hochrechnung und Würdigung auf Grundlage eines extrapolierten Fehlers von 0 €, obwohl keine belegte Schicht hochgerechnet werden kann'),
   ...entries([...row(15), ...row(18), ...row(22), ...row(23), ...row(28), 'C15', 'C22', 'C28', 'C30', 'C33', 'C34', 'N5', 'N10', 'N11'], ['C13'], SIZE_TEMPLATE, SIZE),
   ...entries(['C17'], ['C13'], 'Prüfhinweis auf der Grundlage von einer Einheit je belegter Schicht', 'Die Prüfung der Mindesterfassung setzt den Stichprobenumfang voraus.'),
-  ...entries(['C36'], ['C13', 'C35'], 'Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage von einer Einheit je belegter Schicht', 'Die Würdigung setzt die Wesentlichkeitsschwelle und den Stichprobenumfang voraus.'),
+  ...entries(['C36'], ['C13', 'C35'], 'Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage von einer Einheit je belegter Schicht', 'Die Würdigung setzt die Signifikanzschwelle und den Stichprobenumfang voraus.'),
 ]

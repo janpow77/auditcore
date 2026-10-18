@@ -1,12 +1,14 @@
 /** Blatt 12_SRS_3Z: einfaches Zufallsstichprobenverfahren (Verhältnisschätzung), drei Stichprobenzeiträume, nicht geschichtet. */
 import { gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
-import type { CellAddress, CellMap, WebHint } from '../../model/types'
+import type { CellAddress, CellMap, SheetContext, WebHint } from '../../model/types'
 import { precisionCells, projectionCells, recalculationOf } from '../shared/srs'
+import { exclusionReference, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -42,7 +44,7 @@ function negativeDenominator(results: CellMap, denominator: CellAddress, period:
 }
 
 /** Hinweise der Webfassung zu Blatt 12; sie verändern kein Rechenergebnis. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints: WebHint[] = [
     ...exceeds(results, 'C116', 'C13', 1),
     ...exceeds(results, 'C117', 'C59', 2),
@@ -51,7 +53,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
     ...negativeDenominator(results, 'C105', 3, 'mindestens 3, Auffüllung auf 30'),
   ]
   if (sameNumber(results.C21, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return hints
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...exclusionReference(context), ...annexIIIApproximation(context, true)])
 }
 
 /** Standardabweichungen der Variablen q in den Stichproben der drei Zeiträume (s_q). */

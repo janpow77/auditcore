@@ -1,0 +1,266 @@
+[
+ {
+  "position": 38,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle (volle Genauigkeit)",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 39,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle +1e-13",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 40,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle −1e-13",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 41,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle +3e-15",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 42,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ=Schwelle −3e-15",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 43,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle auf Cent gerundet",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 44,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle +1 Cent",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 45,
+  "name": "Abnahme 2: S A001 te_eq_ae | GFQ Schwelle −1 Cent",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 46,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle (volle Genauigkeit)",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.195470897,
+   "C58": 0.010620464980163,
+   "C61": 0.0306204649801631
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 47,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle +1e-13",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.195470932,
+   "C58": 0.010620464980163,
+   "C61": 0.0306204649801651
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 48,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle −1e-13",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.195470862,
+   "C58": 0.010620464980163,
+   "C61": 0.0306204649801611
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 49,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle +3e-15",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.195470898,
+   "C58": 0.010620464980163,
+   "C61": 0.0306204649801631
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 50,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ=Schwelle −3e-15",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.195470896,
+   "C58": 0.010620464980163,
+   "C61": 0.030620464980163
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 51,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle auf Cent gerundet",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.191080108,
+   "C58": 0.010620464980163,
+   "C61": 0.0306204647299724
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 52,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle +1 Cent",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.201080108,
+   "C58": 0.010620464980163,
+   "C61": 0.0306204652997804
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 53,
+  "name": "Abnahme 2: S A002 te_lt_ae | GFQ Schwelle −1 Cent",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 186386.744670897,
+   "N10": 188,
+   "C31": 180,
+   "C39": 180,
+   "C41": 183,
+   "D41": 46,
+   "E41": 13,
+   "F41": 41,
+   "G41": 46,
+   "H41": 7,
+   "I41": 10,
+   "J41": 20,
+   "C53": 186386.744670897,
+   "C56": 537382.181080108,
+   "C58": 0.010620464980163,
+   "C61": 0.0306204641601645
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ }
+]

@@ -1,11 +1,14 @@
 /**
  * Abgleich eines Rechenkerns mit den Golden-Dateien: jede Formelzelle des
  * Blatts mit relativer Toleranz 1e-9, Texte wortgleich. Eine Abweichung ist nur
- * zulässig, wenn das Blatt sie als begründete Abweichung führt (`deviations`).
+ * zulässig, wenn das Blatt sie als begründete Abweichung führt (`deviations`)
+ * oder die Zelle bewusst anders darstellt (`adapted`). Sollwerte: Neuberechnung
+ * der Vorlage in Microsoft Excel 16.0.20326 (Excel-Gegenprobe vom 17.10.2026).
  */
 import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isNumber } from '../src/excel/index'
+import { officialWording } from '../src/model/terms'
 import { defaultInputs, findField } from '../src/model/definition'
 import { evaluateSheet } from '../src/model/evaluate'
 import { MISSING_POLICY, TEMPLATE_POLICY } from '../src/model/policy'
@@ -14,6 +17,7 @@ import type { CellMap, CellValue, Deviation, MissingPolicy } from '../src/model/
 import { SHEETS, availableSheets } from '../src/sheets/registry'
 import { computeWorkspace, contextFor } from '../src/workspace/compute'
 import { emptyWorkspace, type WorkspaceState } from '../src/workspace/types'
+import { delvoEntries, delvoVerdict, type DelvoEntry } from './delvoGolden'
 
 export const TOLERANCE = 1e-9
 
@@ -21,12 +25,18 @@ export interface GoldenCase {
   name: string
   blatt: string
   eingaben: Record<string, CellValue>
-  erwartet: Record<string, CellValue>
+  /** Werte der Vorlage; Excel zeigt auch Wahrheitswerte (`false`) und Fehlerwerte (`"#DIV/0!"`). */
+  erwartet: Record<string, CellValue | boolean>
+  /** DelVO-Sollwerte, wo die Webfassung bewusst nach den Vorgaben der KOM rechnet (`delvoGolden.ts`). */
+  delvo?: DelvoEntry
 }
+
+/** Soll einer Zelle: Wert der Vorlage, in Excel auch ein Wahrheitswert. */
+type Expected = CellValue | boolean
 
 export interface Mismatch {
   cell: string
-  expected: CellValue
+  expected: Expected
   actual: CellValue
 }
 
@@ -35,13 +45,14 @@ export interface CaseReport {
   compared: number
   /** Zellen, die als begründete Abweichung geführt sind. */
   explained: (Mismatch & { deviation: Deviation })[]
-  /**
-   * Würdigungen genau an der Vergleichstoleranz, die an der letzten Stelle einer
-   * 17-stelligen Eingabe hängen (`readingEdge`); über die Oberfläche nicht eingebbar.
-   */
-  edge: Mismatch[]
   /** Abweichungen ohne Begründung – Soll: keine. */
   unexplained: Mismatch[]
+  /** Zellen, die die Webfassung bewusst anders darstellt (`sheet.adapted`): Kopfzeile, Wahrheitswert FALSCH, `#DIV/0!`. */
+  adapted: Mismatch[]
+  /** Texte, die nur den amtlichen Begriff statt des Begriffs der Vorlage tragen („Signifikanzschwelle“). */
+  terms: Mismatch[]
+  /** Zellen, an denen die Webfassung bewusst nach den Vorgaben der KOM rechnet; je Zelle gegen den unabhängig gerechneten Sollwert geprüft. */
+  delvo: Mismatch[]
 }
 
 const GOLDEN_DIRECTORY = fileURLToPath(new URL('./golden/', import.meta.url))
@@ -54,7 +65,16 @@ export function goldenFiles(sheet: string): string[] {
 }
 
 export function loadGolden(sheet: string): GoldenCase[] {
-  return goldenFiles(sheet).flatMap((name) => JSON.parse(readFileSync(`${GOLDEN_DIRECTORY}${name}`, 'utf8')) as GoldenCase[])
+  return goldenFiles(sheet).flatMap((name) => readGoldenFile(name))
+}
+
+/** Fälle einer Golden-Datei. */
+export function readGoldenFile(name: string): GoldenCase[] {
+  const delvo = delvoEntries(name)
+  return (JSON.parse(readFileSync(`${GOLDEN_DIRECTORY}${name}`, 'utf8')) as GoldenCase[]).map((golden, position) => {
+    const entry = delvo.get(position)
+    return entry ? { ...golden, delvo: entry } : golden
+  })
 }
 
 /** Ab dieser Größe liegt ein Wert außerhalb des geprüften Zahlenbereichs (`view/limits.ts`, Hinweis der Webfassung). */
@@ -69,7 +89,7 @@ export const AMOUNT_TOLERANCE = 1e-6
  * (Stichprobenumfänge) müssen genau stimmen. `absolute`: zusätzlich zulässiger
  * absoluter Unterschied (Eurobeträge).
  */
-export function sameValue(expected: CellValue, actual: CellValue, exact = false, absolute = 0): boolean {
+export function sameValue(expected: Expected, actual: Expected, exact = false, absolute = 0): boolean {
   if (isNumber(expected) && isNumber(actual)) {
     // Jenseits von 15 Stellen speichert die neu berechnete Mappe den Wert nicht mehr genau.
     const beyond = Math.abs(expected) >= BEYOND_RANGE
@@ -226,8 +246,11 @@ export function templateMismatches(sheet: AvailableSheet, golden: GoldenCase): M
   for (const [reference, expected] of Object.entries(golden.erwartet)) {
     const [name, cell] = reference.split('!') as [string, string]
     const actual = results[cell] ?? null
-    if (name !== sheet.id || sameValue(asShownByWeb(sheet, cell, expected, results), actual, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))) continue
-    if (!readingEdge(sheet, golden, { cell, expected, actual })) mismatches.push({ cell, expected, actual })
+    const same = (soll: CellValue, value: CellValue): boolean => sameValue(soll, value, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))
+    if (name !== sheet.id || same(asShownByWeb(sheet, cell, expected, results) as CellValue, actual)) continue
+    // Bewusst nach den Vorgaben der KOM gerechnet: auch unter der Richtlinie „wie die Vorlage“ der DelVO-Wert.
+    if (delvoVerdict(golden.delvo, cell, actual, same) === 'delvo') continue
+    mismatches.push({ cell, expected, actual })
   }
   return mismatches
 }
@@ -248,58 +271,75 @@ export function caseResults(sheet: AvailableSheet, golden: GoldenCase): CellMap 
  * die Webfassung bewusst anders bildet (`sheet.adapted`); dort der Wert, der sich
  * aus dem der Vorlage ergibt.
  */
-function asShownByWeb(sheet: AvailableSheet, cell: string, expected: CellValue, results: CellMap): CellValue {
+function asShownByWeb(sheet: AvailableSheet, cell: string, expected: Expected, results: CellMap): Expected {
   const adaptation = sheet.adapted?.find((entry) => entry.cell === cell)
-  return adaptation ? adaptation.fromTemplate(expected, results) : expected
+  // Amtlicher Begriff statt des Begriffs der Vorlage (`model/terms.ts`), danach die bewusst anders gebildeten Zellen.
+  const official = officialWording(expected)
+  return adaptation ? adaptation.fromTemplate(official, results) : official
 }
 
-/** Nächste darstellbare Zahl in `steps` Schritten (letzte Stelle der Gleitkommazahl). */
-function shifted(value: number, steps: number): number {
-  const buffer = new Float64Array([value])
-  const bits = new BigInt64Array(buffer.buffer)
-  bits[0] = (bits[0] ?? 0n) + BigInt(value < 0 ? -steps : steps)
-  return buffer[0] ?? value
+/** Eine verglichene Zelle eines Falls. */
+interface ComparedCell {
+  cell: string
+  expected: Expected
+  actual: CellValue
+  target: Expected
+  same: (soll: CellValue, value: CellValue) => boolean
 }
 
-/** Geltende Stellen der kürzesten Dezimaldarstellung. */
-const significantDigits = (value: number): number => value.toExponential().split('e')[0]!.replace(/[-.]/g, '').length
-/** Ab so vielen geltenden Stellen ist eine Eingabe nur als Prüfsonde entstanden (die Oberfläche nimmt höchstens 15). */
-const PROBE_DIGITS = 16
+/** Mismatch begründet (`explained`) oder nicht (`unexplained`) einordnen. */
+function settle(report: CaseReport, sheet: AvailableSheet, golden: GoldenCase, mismatch: Mismatch, all: Record<string, CellMap>): void {
+  const deviation = explain(sheet, golden, mismatch, all)
+  if (deviation) report.explained.push({ ...mismatch, deviation })
+  else report.unexplained.push(mismatch)
+}
 
 /**
- * Würdigung an der Toleranzkante: Die Vorlage würdigt anders, obwohl alle Zahlen
- * im Rahmen der Toleranz gleich sind. Das ist nur begründet, wenn der Fall eine
- * Eingabe mit 16 oder 17 geltenden Stellen trägt und die Webfassung mit der um
- * höchstens zwei letzte Stellen verschobenen Eingabe genau den Text der Vorlage
- * zeigt: LibreOffice liest so lange Dezimalzahlen nicht immer auf die nächste
- * Gleitkommazahl, und die Quote liegt genau auf der Vergleichstoleranz (2⁻⁴⁸).
+ * Zellen eines Falls mit DelVO-Sollwerten (`delvoGolden.ts`); `true`, wenn die
+ * Zelle damit eingeordnet ist. Eine Zelle mit DelVO-Sollwert, an der die
+ * Webfassung keinen Wert zeigt, ist nur begründet, wenn die Gegenprobe mit 0 den
+ * DelVO-Wert ergibt; eine leere Folgegröße wird zuerst wie gewohnt begründet
+ * (fehlende Angabe), sonst als „bewusst nach KOM“ gezählt.
  */
-function readingEdge(sheet: AvailableSheet, golden: GoldenCase, mismatch: Mismatch): boolean {
-  if (typeof mismatch.expected !== 'string' || typeof mismatch.actual !== 'string') return false
-  const probes = Object.entries(golden.eingaben).filter((entry): entry is [string, number] => isNumber(entry[1]) && significantDigits(entry[1]) >= PROBE_DIGITS)
-  return probes.some(([reference, value]) =>
-    [-2, -1, 1, 2].some((steps) => {
-      const moved = { ...golden, eingaben: { ...golden.eingaben, [reference]: shifted(value, steps) } }
-      return (caseWorkspace(sheet, moved)[sheet.id] ?? {})[mismatch.cell] === mismatch.expected
-    }),
-  )
+function delvoCell(report: CaseReport, sheet: AvailableSheet, golden: GoldenCase, all: Record<string, CellMap>, entry: ComparedCell): boolean {
+  const { cell, expected, actual, target, same } = entry
+  const verdict = delvoVerdict(golden.delvo, cell, actual, same)
+  if (verdict === 'wrong') {
+    settle(report, sheet, golden, { cell, expected: officialWording(golden.delvo?.cells[cell] ?? null) as CellValue, actual }, all)
+    return true
+  }
+  if (verdict !== 'delvo' || same(officialWording(expected) as CellValue, actual)) return false
+  const listed = golden.delvo !== undefined && cell in golden.delvo.cells
+  const deviation = listed ? undefined : explain(sheet, golden, { cell, expected: target, actual }, all)
+  if (deviation) report.explained.push({ cell, expected: target, actual, deviation })
+  else report.delvo.push({ cell, expected, actual })
+  return true
+}
+
+/** Gleich mit dem Wert der Vorlage, bewusst anders dargestellt oder nur im amtlichen Begriff verschieden; `true`, wenn eingeordnet. */
+function matchingCell(report: CaseReport, entry: ComparedCell): boolean {
+  const { cell, expected, actual, target, same } = entry
+  if (!same(target as CellValue, actual)) return false
+  if (same(officialWording(expected) as CellValue, actual) && !sameValue(expected, actual)) report.terms.push({ cell, expected, actual })
+  else if (!same(expected as CellValue, actual)) report.adapted.push({ cell, expected, actual })
+  return true
 }
 
 export function compareCase(sheet: AvailableSheet, golden: GoldenCase): CaseReport {
   const all = caseWorkspace(sheet, golden)
   const results = all[sheet.id] ?? {}
-  const report: CaseReport = { name: golden.name, compared: 0, explained: [], edge: [], unexplained: [] }
+  const report: CaseReport = { name: golden.name, compared: 0, explained: [], unexplained: [], adapted: [], terms: [], delvo: [] }
   for (const [reference, expected] of Object.entries(golden.erwartet)) {
     const [name, cell] = reference.split('!') as [string, string]
     if (name !== sheet.id) continue
     report.compared += 1
+    const exact = isIntegerCell(sheet, cell)
     const actual = results[cell] ?? null
-    if (sameValue(asShownByWeb(sheet, cell, expected, results), actual, isIntegerCell(sheet, cell), absoluteTolerance(sheet, cell))) continue
-    const mismatch = { cell, expected, actual }
-    const deviation = explain(sheet, golden, mismatch, all)
-    if (deviation) report.explained.push({ ...mismatch, deviation })
-    else if (readingEdge(sheet, golden, mismatch)) report.edge.push(mismatch)
-    else report.unexplained.push(mismatch)
+    const target = asShownByWeb(sheet, cell, expected, results)
+    const entry: ComparedCell = { cell, expected, actual, target, same: (soll, value) => sameValue(soll, value, exact, absoluteTolerance(sheet, cell)) }
+    if (delvoCell(report, sheet, golden, all, entry) || matchingCell(report, entry)) continue
+    // Die Gegenproben vergleichen mit dem Wert, den die Webfassung für den Wert der Vorlage zeigt (FALSCH als 0).
+    settle(report, sheet, golden, { cell, expected: target, actual }, all)
   }
   return report
 }

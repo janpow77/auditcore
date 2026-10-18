@@ -28,7 +28,7 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C8'], ['C8'], '0 (Verknüpfung auf das leere Blatt 02)', UNITS),
   ...entries(['C12'], ['C7'], '0 € abzüglich des Buchwerts der umfassenden Schicht', BOOK_VALUE),
   ...entries(['C13'], ['C8'], '0 abzüglich der Einheiten der umfassenden Schicht', UNITS),
-  ...entries(['C21'], ['C7', 'C19'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt Buchwert und Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C21'], ['C7', 'C19'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt Buchwert und Signifikanzschwelle voraus.'),
   ...entries(['C23'], ['C7', 'C22'], '0,00 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt Buchwert und voraussichtliche Fehlerquote voraus.'),
   ...entries(['C26'], SIZE_INPUTS, 'Umfang mit N_s ≤ 0, AE = 0 bzw. σ_e = 0 (z. B. 0, 1 oder 16)', SIZE),
   ...entries(['C34', 'C35', 'N10'], SIZE_INPUTS, 'Mindestumfang bzw. der mit 0 berechnete Umfang, gegebenenfalls begrenzt', SIZE),

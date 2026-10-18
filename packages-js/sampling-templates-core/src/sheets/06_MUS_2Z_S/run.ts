@@ -3,7 +3,7 @@
  * zwei Formeln, die in beiden Zeiträumen vorkommen.
  */
 import { isBlank, required } from '../../excel/index'
-import { STRATA_COLUMNS, stratumCell as at, totalRow } from '../../model/strata'
+import { STRATA_COLUMNS, stratumCell as at, sumRow, totalRow } from '../../model/strata'
 import type { CellValue, Cells, SheetContext } from '../../model/types'
 import type { Pending } from '../shared/mus'
 import { checkStratumUnits } from '../shared/statistical'
@@ -83,6 +83,14 @@ export function total(run: Run, row: number, used?: readonly number[]): CellValu
 /** Summen eingegebener Schichtzeilen (`SUM(D<zeile>:J<zeile>)`); ohne jeden Wert bleibt die Summe offen statt 0. */
 export function inputTotals(run: Run, rows: readonly number[]): void {
   for (const row of rows) run.c[`C${row}`] = totalRow(run.c, row, run.context)
+}
+
+/**
+ * Summen freiwilliger Schichtzeilen (hochwertige Einheiten; Entscheidung des
+ * Inhabers vom 17.10.2026): leer heißt keine, die Summe ist wie in der Vorlage 0.
+ */
+export function optionalTotals(run: Run, rows: readonly number[]): void {
+  for (const row of rows) run.c[`C${row}`] = sumRow(run.c, row)
 }
 
 /** `BV · σ²`, wenn die Schicht in der Zeile `bookValue` belegt ist, sonst 0 (`N(D8)*N(D24)^2`). */

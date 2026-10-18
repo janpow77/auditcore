@@ -94,7 +94,7 @@ describe('Blatt 11_SRS_2Z_S: fehlende Angaben', () => {
     expect(none.C93).toBeGreaterThan(0)
   })
 
-  it('fehlen Wesentlichkeitsschwelle oder voraussichtliche Fehlerquote, bleiben die Umfänge offen', () => {
+  it('fehlen Signifikanzschwelle oder voraussichtliche Fehlerquote, bleiben die Umfänge offen', () => {
     const rate = run({ C25: null })
     expect([rate.C26, rate.C34, rate.C42, rate.C63, rate.C68, rate.C69, rate.C72, rate.C74, rate.C77, rate.C80, rate.N10]).toEqual(nulls(11))
     const threshold = run({ C22: null })
@@ -114,7 +114,7 @@ describe('Blatt 11_SRS_2Z_S: fehlende Angaben', () => {
   })
 
   it('eine Gesamtfehlerquote über der Schwelle wird auch bei offener Genauigkeit gewürdigt', () => {
-    expect(run({ C25: null, D50: 60000, E50: 31000, D85: 45000 }).C102).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(run({ C25: null, D50: 60000, E50: 31000, D85: 45000 }).C102).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('nur Zeitraum 1 ausgefüllt: Umfänge für Zeitraum 1, aber kein Ergebnis für das Geschäftsjahr allein aus Zeitraum 1', () => {
@@ -215,8 +215,8 @@ describe('Blatt 11_SRS_2Z_S: Richtlinie für fehlende Angaben', () => {
     expect(['D89', 'C89'].some((cell) => incomplete.lacking.has(cell))).toBe(false)
   })
 
-  it('Wert ohne Grundlage (withoutBasis): bei „TE ≤ AE“ wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
-    const inputs = { ...sample, C25: 0.025, C33: NONE }
+  it('Wert ohne Grundlage (withoutBasis): bei TE = AE wie die Vorlage (dort „TE ≤ AE“) gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
+    const inputs = { ...sample, C25: 0.02, C33: NONE }
     const cells = ['C44', 'D46', 'D77', 'D79', 'C80', 'C93', 'C102']
     const pick = (results: CellMap): unknown[] => cells.map((cell) => results[cell] ?? null)
     // Alle Pflichteingaben liegen vor: Untergrenzen, Genauigkeit 0 und die Würdigung „✔“ stehen wie in der Vorlage – mit Hinweis in Warnfarbe.

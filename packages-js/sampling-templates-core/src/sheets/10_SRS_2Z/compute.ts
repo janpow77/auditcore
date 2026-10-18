@@ -13,6 +13,7 @@ import { zValue } from '../01_Parameter/index'
 import { type Pending, type Recalculation, additionalUnits, appliedRandomSize, checkAnnualMinimum, checkLimitKept, computeBesideTemplate, conclusion, globalComputedSize, increasedSize, minimumRandomSize, netLimitedSize, NOT_APPLICABLE, periodSize, ratioProjection, recalculationOf, share, summary, weightedDeviation } from '../shared/srs'
 import { checkConfidence, checkMateriality, checkTolerableError, computedSampleSize, limitedSampleSize } from '../shared/statistical'
 import { definition } from './definition'
+import { blockedGlobal, withoutGlobalAssessment } from '../shared/periods'
 
 /**
  * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet; die Webfassung
@@ -84,7 +85,7 @@ function globalRecalculation(c: Cells, pending: Pending): void {
   c.C65 = weightedDeviation([[c.C13, c.C61], [c.C55, c.C56]], c.C64)
   c.C66 = globalComputedSize(c.C21, c.C64, c.C65, c.C59, c.C60)
   c.C67 = netLimitedSize(c.C38, c.C11, c.C53)
-  c.C68 = appliedRandomSize(c.C66, minimumRandomSize(6, c.C10, c.C52), c.C67, pending('C66'))
+  c.C68 = appliedRandomSize(c.C66, minimumRandomSize(6, c.C10, c.C52), c.C67, pending('C66'), true)
   c.C69 = additionalUnits(c.C13, c.C64, c.C68, c.C42)
   c.C70 = share(c.C55, c.C64, c.C68)
   c.C71 = guard(() => increasedSize(c.C43, [[c.C49, c.C14], [c.C55, c.C15]]))
@@ -107,7 +108,9 @@ function finalSizes(c: Cells, pending: Pending, context: SheetContext): void {
   const approach = recalculationOf(c.C32)
   const chosen = c[CHOSEN[approach]]
   c.C72 = guard(() => required(c.C42) + (approach === 'global' ? required(c.C69) : 0))
-  c.C73 = periodSize(chosen, { open: pending(CHOSEN[approach]), notApplicable: typeof chosen === 'string' }, context, () => minus(minus(minus(30, required(c.C72)), n(c.C10)), n(c.C52)))
+  // Globaler Ansatz bei AE = TE nicht anwendbar (Division durch null): Umfang offen statt Untergrenzen.
+  const blocked = approach === 'global' && blockedGlobal(c, 'C66', pending)
+  c.C73 = periodSize(chosen, { open: pending(CHOSEN[approach]) || blocked, notApplicable: typeof chosen === 'string' }, context, () => minus(minus(minus(30, required(c.C72)), n(c.C10)), n(c.C52)))
   c.C74 = guard(() => required(c.C72) + required(c.C73) + n(c.C10) + n(c.C52))
   c.C75 = isNumber(c.C73) ? guard(() => checkAnnualMinimum(required(c.C74))) : null
   const limit = c.C38
@@ -142,6 +145,7 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   projection(c, context)
   conclusion(c, 84, { bookValue: 'C58', testType: 'C20', materiality: 'C23' }, pending('C85'))
   summary(c, { method: 'Einfaches Zufallsstichprobenverfahren, 2 Zeiträume', bookValue: 'C58', first: 84, exhaustive: 'C82', sampleSize: c.C74 })
+  withoutGlobalAssessment(c, recalculationOf(c.C32), ['C66'], pending, 'C94')
 }
 
 /** Berechnet alle Formelzellen des Blatts 10; Eingaben und Ergebnisse tragen die Zelladressen der Vorlage. */

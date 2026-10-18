@@ -1,0 +1,42 @@
+[
+ {
+  "position": 12,
+  "name": "TE ≤ AE, Stichprobenumfang nicht bestimmbar",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 64687.9249789589,
+   "N10": 285,
+   "C31": 280,
+   "C39": 280,
+   "C41": 281,
+   "D41": 139,
+   "E41": 101,
+   "F41": 41,
+   "C53": 64687.9249789589,
+   "C56": 294016.49640753,
+   "C57": 164640.646449613,
+   "C58": 0.0013337716490507,
+   "C61": 0.00606219580221712,
+   "C62": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 13,
+  "name": "TE = AE genau auf der Schwelle",
+  "cells": {
+   "C31": "✖ nicht anwendbar (Division durch null)",
+   "C26": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 15,
+  "name": "TE ≤ AE mit begrenztem Umfang Kategorie 2",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C31": 70
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ }
+]

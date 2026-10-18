@@ -34,19 +34,50 @@ function watchedCells(sheet: AvailableSheet): CellAddress[] {
   return [...new Set([...resultCellsOf(sheet), sheet.definition.summary.primary.cell])]
 }
 
-/** Für sich freiwillige Eingaben der Verfahrensblätter: Leer heißt „keine“ bzw. „Wert der Planung“. */
-const OPTIONAL_ALONE = /^(systemicErrors|anomalousErrors|(updated|final)AnticipatedErrorRate)$/
-/** Freiwillige Gruppen der Verfahrensblätter je Zeitraum: hochwertige Einheiten und umfassende Schicht. */
+/**
+ * Freiwillige Eingaben nach der Original-Arbeitsmappe der Vorlage. Maßgeblich ist,
+ * was die Vorlage selbst als freiwillig erkennen lässt; alles andere ist Pflicht,
+ * sobald ein gezeigtes Ergebnis davon abhängt. Ausgewertet sind Bezeichnungen,
+ * Kommentare, Datenüberprüfungen, bedingte Formatierungen, Farblegende und
+ * Formeln (Tabelle in `docs/abweichungen.md`, Nr. 13):
+ *
+ * - **Gekennzeichnet** – „(leer = Wert aus I)“ bzw. „(leer = vorheriger Wert)“ an
+ *   der aktualisierten voraussichtlichen Fehlerquote (05 B51, 06 B54, 07 B57/B93,
+ *   10 B57, 11 B60, 12 B64/B100) und „(fakultativ)“ am Buchwert der umfassenden
+ *   Schicht (08 B9, 09 B8, 10 B9/B51, 11 B7/B53, 12 B9/B55/B94, 13 B10, 14 B8,
+ *   17 B8). Die übrigen Angaben dieser Schicht (Anzahl, davon hochwertige,
+ *   Fehlersumme) teilen das als Gruppe: leer nur gemeinsam.
+ * - **Ohne Kennzeichnung, Vorlage liest leer als 0** (`N(…)`) – nach
+ *   Entscheidung des Inhabers vom 17.10.2026 freiwillig, leer heißt „keine“:
+ *   abgegrenzte systembedingte und nicht berichtigte anomale Fehler; Anzahl,
+ *   Buchwert und Fehler der hochwertigen Einheiten (Gruppe); die Einheiten der
+ *   Zufallsschicht mit BV > Auswahlintervall (Iteration, z. B. 03 C35); in
+ *   Blatt 02 TH-Pauschale, negative Datensätze, Ausschlüsse nach Art. 15 Abs. 5,
+ *   Wiederaufnahmen und Art.-80-Einheiten; in Blatt 20 J6–J8 (Definitionen).
+ *   Gruppen: Ist ein Teil gefüllt, sind die übrigen Pflicht.
+ * - **Von keiner Formel verwendet** (Geschäftsjahr, Programm, Stichprobeneinheit,
+ *   Schichtungskriterium, Freitexte; einzelne Zahlenfelder wie N in Blatt 03):
+ *   freiwillig, weil kein Ergebnis davon abhängt – die Prüfung unten findet dort
+ *   nie eine Abhängigkeit, Textfelder prüft sie gar nicht.
+ *
+ * Die Altvorlagen X1–X4 kennen keine dieser Kennzeichnungen und verwenden ihre
+ * Eingaben unmittelbar; dort gilt keine Regel nach dem Feldnamen (`optional: false`).
+ */
+/** Für sich freiwillig. */
+const OPTIONAL_ALONE = /^(systemicErrors|anomalousErrors|(updated|final)AnticipatedErrorRate|(stratumI|i)terationUnits(Period\d)?)$/
+/** Freiwillige Gruppen je Zeitraum und Schicht: hochwertige Einheiten und umfassende Schicht. */
 const OPTIONAL_GROUPS: readonly (readonly [RegExp, string])[] = [
   [/^(?:stratumH|ppsH|h)ighValue(?:Units|BookValue|Errors)(Period\d)?$/, 'highValue'],
   [/^exhaustive(?:BookValue|Units|HighValueUnits|Errors)(Period\d)?$/, 'exhaustive'],
 ]
 
 /**
- * Freiwilligkeit eines Felds: die Angabe der Definition (`optional`), sonst nach
- * dem Namen des Felds – die Verfahrensblätter benennen gleiche Größen gleich.
+ * Freiwilligkeit eines Felds: die Angabe der Definition (`optional`; `false` heißt
+ * Pflicht trotz des Namens), sonst nach dem Namen des Felds – die Verfahrensblätter
+ * benennen gleiche Größen gleich.
  */
 export function optionalOf(field: FieldDefinition): true | string | undefined {
+  if (field.optional === false) return undefined
   if (field.optional !== undefined) return field.optional
   if (OPTIONAL_ALONE.test(field.alias)) return true
   for (const [pattern, name] of OPTIONAL_GROUPS) {
@@ -122,4 +153,24 @@ export function silentInputs(sheet: AvailableSheet, inputs: CellMap, base: CellM
     .filter(({ cell }) => !skip.has(cell))
     .filter(({ field, cell }) => depends(field, cell))
     .map(({ cell }) => cell)
+}
+
+/**
+ * Zellen, die von der Eingabe `cell` abhängen: Mit einem Probewert an ihrer
+ * Stelle ändert sich ihr Wert gegenüber `base` (Rechnung mit leerem Feld).
+ * Eingabezellen zählen nicht. Grundlage für ungültige Eingaben
+ * (`UNREADABLE_INPUT`): Ihre Folgegrößen bleiben offen, statt wie beim leeren
+ * Feld weiterzurechnen.
+ */
+export function dependentCells(sheet: AvailableSheet, inputs: CellMap, cell: CellAddress, base: CellMap, context: SheetContext): CellAddress[] {
+  const fields = inputFields(sheet.definition)
+  const field = fields.find((entry) => cellsOf(entry).includes(cell))
+  if (!field) return []
+  const own = new Set(fields.flatMap(cellsOf))
+  const found = new Set<CellAddress>()
+  for (const probe of probesOf(field, context, largeProbe(sheet, base))) {
+    const run = sheet.compute({ ...inputs, [cell]: probe }, context)
+    for (const key of new Set([...Object.keys(base), ...Object.keys(run)])) if (!own.has(key) && differs(base[key], run[key])) found.add(key)
+  }
+  return [...found]
 }

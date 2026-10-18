@@ -16,13 +16,14 @@ import { type Pending, additionalUnits, appliedTotalSize, approachOf, computeTwi
 import { checkConfidence, checkMateriality, checkTolerableError, computedSampleSize, limitedSampleSize } from '../shared/statistical'
 import { finalSizes, periodTwo, projection } from './compute-periods'
 import { definition } from './definition'
-import { type Run, checkUnits, createRun, fill, has, inputTotals, relevantInputs, total, varianceTerm } from './run'
+import { type Run, checkUnits, createRun, fill, has, inputTotals, relevantInputs, total, varianceTerm, optionalTotals } from './run'
+import { blockedGlobal, clearAfterGlobal, globalSize, withoutGlobalAssessment } from '../shared/periods'
 
 /** Standardabweichung (Zeile) zum Buchwert (Zeile), von dem abhängt, ob die Schicht sie braucht. */
 const DEVIATION_OF: readonly (readonly [bookValue: number, deviation: number])[] = [[8, 24], [9, 25], [51, 53]]
 
 /**
- * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet: Wesentlichkeitsschwelle,
+ * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet: Signifikanzschwelle,
  * voraussichtliche Fehlerquote und je Schicht die Standardabweichungen (Zeilen 24,
  * 25 und 53), soweit die Schicht im jeweiligen Zeitraum einen Buchwert hat. Die
  * Webfassung zeigt in den abhängigen Zellen „Angabe fehlt“ (deviations.ts).
@@ -73,7 +74,8 @@ function periodOne(run: Run): void {
   fill(run, 44, first((column) => guard(() => minus(required(c[at(column, 37)]), n(c[at(column, 41)])))))
   fill(run, 45, (column) => checkUnits(run, column, 8, 44))
   fill(run, 46, first((column) => guard(() => divide(required(c[at(column, 43)]), required(c[at(column, 44)])))))
-  inputTotals(run, [41, 42, 47, 48])
+  optionalTotals(run, [41, 42, 47])
+  inputTotals(run, [48])
   c.C43 = total(run, 43)
   c.C44 = total(run, 44)
 }
@@ -94,10 +96,11 @@ function recalculation(run: Run): void {
   c.C63 = standardSize(c.C62, () => required(c.C15) ** 2 * required(c.C51) * required(c.C61))
   fill(run, 64, (column) => guard(() => varianceTerm(run, column, 8, 59) + varianceTerm(run, column, 51, 53)))
   c.C64 = total(run, 64, [8, 51])
-  c.C65 = guard(() => roundUp(divide(required(c.C15) * required(c.C55) * squareRoot(divide(required(c.C64), required(c.C55))), minus(required(c.C56), required(c.C57))) ** 2))
-  c.C66 = appliedTotalSize(c.C65, run.limit, run.pending('C65'), run.context)
+  c.C65 = globalSize(c.C56, c.C57, () => roundUp(divide(required(c.C15) * required(c.C55) * squareRoot(divide(required(c.C64), required(c.C55))), minus(required(c.C56), required(c.C57))) ** 2))
+  c.C66 = appliedTotalSize(c.C65, run.limit, run.pending('C65'), run.context, true)
   fill(run, 68, (column) => (has(run, column, 8) ? additionalUnits(share(c[at(column, 8)], c.C55, c.C66), c[at(column, 37)]) : null))
-  c.C68 = total(run, 68)
+  // Bei AE = TE nicht anwendbar (Division durch null): keine Zusatzeinheiten aus der globalen Neuberechnung (statt der Summe 0).
+  c.C68 = blockedGlobal(c, 'C65', run.pending) ? null : total(run, 68)
 }
 
 /** Alle Formelzellen in Blattreihenfolge; `pending` und `context` siehe `computeTwice`. */
@@ -110,6 +113,8 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   finalSizes(run, approachOf(c.C28))
   periodTwo(run)
   projection(run)
+  withoutGlobalAssessment(c, approachOf(c.C28), ['C65'], pending, 'C99')
+  if (approachOf(c.C28) === 'global' && blockedGlobal(c, 'C65', pending)) clearAfterGlobal(c, definition, 65)
 }
 
 /** Rechnet das Blatt aus den aufgelösten Eingaben; `compute` merkt sich die Ergebnisse. */

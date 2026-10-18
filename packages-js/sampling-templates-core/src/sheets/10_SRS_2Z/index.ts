@@ -1,12 +1,14 @@
 /** Blatt 10_SRS_2Z: einfaches Zufallsstichprobenverfahren (Verhältnisschätzung), zwei Stichprobenzeiträume, nicht geschichtet. */
 import { gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
-import type { CellAddress, CellMap, WebHint } from '../../model/types'
+import type { CellAddress, CellMap, SheetContext, WebHint } from '../../model/types'
 import { precisionCells, projectionCells, recalculationOf } from '../shared/srs'
+import { exclusionReference, withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -30,7 +32,7 @@ function exceeds(results: CellMap, size: CellAddress, units: CellAddress, period
 }
 
 /** Hinweise der Webfassung zu Blatt 10; sie verändern kein Rechenergebnis. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints: WebHint[] = [...exceeds(results, 'C72', 'C13', 1), ...exceeds(results, 'C73', 'C55', 2)]
   if (recalculationOf(results.C32) === 'standard' && isNumber(results.C62) && le(results.C62, 0)) {
     hints.push({
@@ -40,7 +42,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
     })
   }
   if (sameNumber(results.C19, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return hints
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...exclusionReference(context), ...annexIIIApproximation(context, true)])
 }
 
 /**

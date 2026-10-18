@@ -11,7 +11,7 @@
  */
 import { divide, eq, guard, isBlank, isNumber, minus, n, plus, required } from '../../excel/index'
 import { resolveInputs } from '../../model/sheet'
-import { countRow, fillRow, stratumCell as at, totalRow } from '../../model/strata'
+import { countRow, fillRow, stratumCell as at, sumRow, totalRow } from '../../model/strata'
 import type { CellMap, CellValue, Cells, SheetContext } from '../../model/types'
 import { assessment, checkAdmissibility, checkCoverage, fillSummary, minimumCoverage, projectedErrorRate, stratumSampleSize, totalErrorRate, usedTotal } from '../shared/nonstatistical'
 import { definition } from './definition'
@@ -42,8 +42,9 @@ function sample(c: Cells, total: Total, context: SheetContext): void {
   c.C16 = minimumCoverage(c.C11)
   c.C17 = checkCoverage(c.C15, c.C16)
   fillRow(c, 18, (column) => (used(column) ? guard(() => divide(required(c[at(column, 9)]), required(c[at(column, 15)]))) : null))
-  c.C19 = totalRow(c, 19, context)
-  c.C20 = totalRow(c, 20, context)
+  // Hochwertige Einheiten sind freiwillig (Entscheidung des Inhabers vom 17.10.2026): leer heißt keine, die Summe ist wie in der Vorlage 0.
+  c.C19 = sumRow(c, 19)
+  c.C20 = sumRow(c, 20)
   fillRow(c, 21, (column) => (used(column) ? guard(() => minus(required(c[at(column, 9)]), n(c[at(column, 20)]))) : null))
   c.C21 = totalRow(c, 21, context)
   fillRow(c, 22, (column) => (used(column) ? guard(() => minus(required(c[at(column, 15)]), n(c[at(column, 19)]))) : null))
@@ -54,7 +55,7 @@ function sample(c: Cells, total: Total, context: SheetContext): void {
 /** Abschnitte J und K: Summen der Prüfergebnisse, Hochrechnung je Schicht, Fehlerquoten und Würdigung (C25–C36). */
 function projection(c: Cells, total: Total, context: SheetContext): void {
   const used = (column: string): boolean => !isBlank(c[at(column, 9)])
-  c.C25 = totalRow(c, 25, context)
+  c.C25 = sumRow(c, 25)
   c.C26 = totalRow(c, 26, context)
   // =IF(D9="";0;N(D25)+D23*N(D26)): die leere Spalte liefert 0.
   fillRow(c, 28, (column) => (used(column) ? guard(() => plus(n(c[at(column, 25)]), required(c[at(column, 23)]) * n(c[at(column, 26)]))) : 0))

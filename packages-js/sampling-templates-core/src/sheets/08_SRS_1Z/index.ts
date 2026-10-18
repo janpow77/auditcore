@@ -1,12 +1,14 @@
 /** Blatt 08_SRS_1Z: einfaches Zufallsstichprobenverfahren (Verhältnisschätzung), ein Stichprobenzeitraum, nicht geschichtet. */
 import { gt, isBlank, isNumber, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
-import type { CellMap, WebHint } from '../../model/types'
+import type { CellMap, SheetContext, WebHint } from '../../model/types'
 import { precisionCells } from '../shared/srs'
+import { exclusionReference } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -37,7 +39,7 @@ const sample: CellMap = {
 }
 
 /** Hinweise der Webfassung zu Blatt 08; sie verändern kein Rechenergebnis. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints: WebHint[] = []
   const { C34: size, C13: units } = results
   if (isNumber(size) && isNumber(units) && gt(size, units)) {
@@ -46,7 +48,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   if (sameNumber(results.C15, 0.95)) {
     hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
   }
-  return hints
+  return [...hints, ...komPlanningHints(definition, results), ...exclusionReference(context)]
 }
 
 /**

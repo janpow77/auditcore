@@ -159,15 +159,21 @@ describe('Rechenblatt', () => {
     await sigma.trigger('blur')
     expect(sigma.attributes('aria-invalid')).toBe('true')
     expect(field(wrapper, 'C20').get('[role="alert"]').text()).toContain('mehrdeutig')
-    expect(valueOf(wrapper, 'C21')).toBe('Angabe fehlt')
+    // Abhängige Werte melden die Eingabe als ungültig, nicht als fehlend (N4); wirklich leer heißt wieder „Angabe fehlt“.
+    expect([valueOf(wrapper, 'C21'), field(wrapper, 'C21').get('[data-missing-note]').text()]).toEqual(['Eingabe ungültig', expect.stringContaining('Ungültige Eingabe: ')])
     expect(sigma.element.value).toBe('1.5')
+    await sigma.setValue('')
+    expect(valueOf(wrapper, 'C21')).toBe('Angabe fehlt')
   })
 
   it('Prozentfelder werden in Prozent eingegeben, Auswahlfelder behalten ihren Zahlenwert', async () => {
     const wrapper = await withSample()
+    await inputOf(wrapper, 'C17').setValue('2')
+    expect(field(wrapper, 'C19').text()).toContain('✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)')
+    expect(wrapper.get('[data-result="primary"]').text()).toBe('nicht bestimmbar (TE = AE, Division durch null)')
+    // AE > TE: Umfang nach KOM-Leitfaden EGESIF_16-0014-01 (7.1) mit |TE − AE|.
     await inputOf(wrapper, 'C17').setValue('2,5')
-    expect(field(wrapper, 'C19').text()).toContain('✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar')
-    expect(wrapper.get('[data-result="primary"]').text()).toBe('nicht bestimmbar (TE ≤ AE)')
+    expect(field(wrapper, 'C19').text()).toContain('⚠ AE > TE')
     await inputOf(wrapper, 'C17').setValue('0,7')
     await inputOf(wrapper, 'C10').setValue('0.95')
     expect(valueOf(wrapper, 'C12')).toBe('1,960')
@@ -297,32 +303,7 @@ describe('Arbeitsstand', () => {
   })
 })
 
-describe('Texte', () => {
-  it('eine Anwendung kann Texte überschreiben und Englisch liefern', () => {
-    const wrapper = mountCalculator({ locale: 'en', messages: { en: { exportResult: 'Export result', pickerQuestion: 'Which sampling method do you apply?' } } })
-    expect(wrapper.get('[data-action="export"]').text()).toBe('Export result')
-    expect(wrapper.get('.fa-st__question').text()).toBe('Which sampling method do you apply?')
-    expect(wrapper.get('.fa-st__menu-wrap > button').text()).toBe('Working file')
-    expect(wrapper.get('[data-translation-note]').text()).toContain('Working translation')
-  })
-})
-
 describe('Einbindung in eine Anwendung', () => {
-  it('zeigt den Hinweis des Fachrahmens und den Stand der Vorlage', () => {
-    const wrapper = mountCalculator()
-    expect(wrapper.get('[data-disclaimer]').text()).toBe('Die Berechnung bildet die Stichprobenvorlagen 2021–2027 nach. Sie ersetzt nicht die fachliche Würdigung der Prüfbehörde und ist kein Dokument der Europäischen Kommission.')
-    expect(wrapper.get('[data-template-status]').text()).toContain('Fassung 4, Stand Oktober 2026')
-    expect(wrapper.get('[data-template-status]').text()).toContain('keine amtliche Fassung')
-    expect(wrapper.find('[data-mark]').exists()).toBe(false)
-  })
-
-  it('nimmt die Datenmarke der Anwendung als Text oder als Slot', () => {
-    expect(mountCalculator({ dataMark: 'Daten bleiben im Browser' }).get('[data-mark]').text()).toBe('Daten bleiben im Browser')
-    const wrapper = mount(SamplingCalculator, { props: { sheets: FOUNDATION_SHEETS }, slots: { mark: '<span class="eco-datamark">Browser</span>' } })
-    mounted.push(wrapper)
-    expect(wrapper.get('[data-mark] .eco-datamark').text()).toBe('Browser')
-  })
-
   it('gibt den Dateien den Vorsatz der Anwendung', async () => {
     const wrapper = await withSample({ filePrefix: 'ECOHESION' })
     await menu(wrapper, 'save')

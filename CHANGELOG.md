@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Vorbereitung Release v0.14.2 (18.10.2026): npm
+  `@auditcore/sampling-templates-core` 0.1.12 und
+  `@auditcore/sampling-templates-vue` 0.1.12. Der Stichprobenrechner rechnet
+  wie Microsoft Excel (Sollwerte aus Excel 16, 10.531 Fälle), verwendet die
+  amtlichen Begriffe der Delegierten Verordnung (EU) 2023/67
+  („Signifikanzschwelle“) und folgt dort, wo die Excel-Vorlage abweicht, den
+  Vorgaben der Kommission (DelVO 2023/67 und EGESIF_16-0014-01, belegt mit
+  den Rechenbeispielen 7.10.3.x); jede solche Stelle ist gekennzeichnet.
+  Ungültige Eingaben werden nie wie leere gerechnet, sondern mit Grund
+  gemeldet. Einzelheiten in den Paket-Changelogs. Alle übrigen Pakete sind
+  gegenüber v0.14.1 unverändert und behalten ihre Version.
 - Vorbereitung Release v0.14.1 (17.10.2026): Begriff „Signifikanzschwelle“
   statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“ für die 2-%-Schwelle der
   Fehlerquote (Delegierte Verordnung (EU) 2023/67, Anhang I Nr. 1; VO (EU)

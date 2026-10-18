@@ -1,0 +1,16 @@
+[
+ {
+  "position": 8,
+  "name": "SRS, 3 Zeiträume (12), Anpassung hochwertige Schicht Ja",
+  "cells": {}
+ },
+ {
+  "position": 20,
+  "name": "SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht",
+  "cells": {
+   "20_Druck_KOM!F14": 1604,
+   "20_Druck_KOM!G34": 130224.492622687,
+   "20_Druck_KOM!G35": 0.0781910880923268
+  }
+ }
+]

@@ -1,0 +1,92 @@
+[
+ {
+  "position": 15,
+  "name": "TE ≤ AE, Stichprobenumfang nicht bestimmbar",
+  "cells": {
+   "C23": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N5": 90320.8414011618,
+   "N7": 123623.123961054,
+   "N10": 409,
+   "N11": 0.00178853151289429,
+   "C29": 619,
+   "C35": 619,
+   "C36": 230,
+   "C37": 205,
+   "C38": 186,
+   "C39": 78260.8695652174,
+   "C43": 228,
+   "C44": "✔ ≥ 3 Einheiten",
+   "C45": 72368.4210526316,
+   "C64": 58720131478.2609,
+   "C65": 247,
+   "C66": 132,
+   "C67": 116,
+   "C71": 0,
+   "C74": 219,
+   "C75": 132,
+   "C76": 116,
+   "C77": 230,
+   "C78": 128787.878787879,
+   "C82": 130,
+   "C83": "✔ ≥ 3 Einheiten",
+   "C84": 120769.230769231,
+   "C98": 55217899269.17,
+   "C99": 47,
+   "C103": 0,
+   "C104": 0,
+   "C106": 120,
+   "C107": 230,
+   "C108": 132,
+   "C109": 47,
+   "C111": "✔ ≥ 30 Einheiten",
+   "C112": 329787.234042553,
+   "C116": 46,
+   "C117": "✔ ≥ 3 Einheiten",
+   "C118": 317391.304347826,
+   "C124": 228,
+   "C125": 130,
+   "C127": 83820.8414011618,
+   "C128": 90320.8414011618,
+   "C129": 123623.123961054,
+   "C132": 213943.965362215,
+   "C133": -33302.2825598918,
+   "C134": 0.00244798265269413,
+   "C135": 0.00178853151289429,
+   "C136": 0.00178853151289429,
+   "C137": 0.00423651416558842,
+   "C138": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 16,
+  "name": "TE = AE genau auf der Schwelle",
+  "cells": {
+   "C29": "✖ nicht anwendbar (Division durch null)",
+   "C23": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C69": "✖ nicht anwendbar (Division durch null)",
+   "C101": "✖ nicht anwendbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
+ },
+ {
+  "position": 18,
+  "name": "TE ≤ AE mit begrenztem Umfang",
+  "cells": {
+   "C23": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C29": 619
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 40,
+  "name": "Globale Neuberechnung mit TE = AE (aktualisiert)",
+  "cells": {
+   "C69": "✖ nicht anwendbar (Division durch null)",
+   "C101": "✖ nicht anwendbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)",
+  "others": null
+ }
+]

@@ -6,8 +6,7 @@ import { SamplingCalculator } from '../src/index'
 import { FOUNDATION_SHEETS, pickVariant } from './sheets'
 
 const nbsp = (text: string): string => text.replaceAll(String.fromCharCode(160), ' ')
-const mounted: VueWrapper[] = []
-const delivered: DownloadFile[] = []
+const [mounted, delivered]: [VueWrapper[], DownloadFile[]] = [[], []]
 
 function mountCalculator(props: Record<string, unknown> = {}): VueWrapper {
   const wrapper = mount(SamplingCalculator, { attachTo: document.body, props: { sheets: FOUNDATION_SHEETS, localDraft: false, saveFile: (file: DownloadFile) => void delivered.push(file), ...props } })

@@ -80,6 +80,10 @@ export interface MethodSummary {
   sampleSize: CellValue
   /** N11: Gesamtfehlerquote (blattbezogen). */
   totalErrorRate: CellValue
+  /** n_e bzw. N_e der umfassenden Schicht (Summe über die Zeiträume; nicht Teil von N3–N11). Ohne Angabe gilt in Blatt 18 die Ersatzregel EE_e ≠ 0. */
+  exhaustiveUnits?: CellValue
+  /** BV_e der umfassenden Schicht (Summe über die Zeiträume; nicht Teil von N3–N11). */
+  exhaustiveBookValue?: CellValue
 }
 
 /**
