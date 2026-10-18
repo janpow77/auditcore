@@ -1,6 +1,6 @@
 /**
  * Anzeigemodell der mitlaufenden Ergebnisspalte: Hauptgröße, Kennzahlen,
- * Skala gegen die Wesentlichkeitsschwelle und alle Prüfhinweise.
+ * Skala gegen die Signifikanzschwelle und alle Prüfhinweise.
  */
 import { formatPercent } from '@auditcore/common'
 import { isBlank, isNumber, toneOf } from '../excel/index'
@@ -10,8 +10,9 @@ import { cellsOf, fieldsOf, findField, inputFields, type FieldDefinition, type S
 import { evaluateSheet } from '../model/evaluate'
 import type { AvailableSheet, SheetModule } from '../model/sheet'
 import { SHEETS } from '../sheets/registry'
+import { SIZE_NOT_APPLICABLE } from '../sheets/shared/periods'
 import { translateValue } from '../model/texts'
-import type { CellMap, CellValue, SheetContext, Tone } from '../model/types'
+import type { CellAddress, CellMap, CellValue, SheetContext, Tone } from '../model/types'
 import { carriedLimitations, inputName, isQualified, limitationsOf, type Limitation } from './limits'
 
 export interface HintView {
@@ -45,6 +46,12 @@ export interface SummaryView {
   /** Erklärung, wenn die Hauptgröße nicht bestimmbar ist. */
   primaryNote: string
   rows: readonly { label: string; value: string; strong: boolean }[]
+  /**
+   * Größen der Übersicht (Kennzahlen, Skala), die wegen einer ungültigen
+   * Eingabe offen sind: „Eingabe ungültig. Ungültige Eingabe: …“ mit Nennung
+   * der Eingaben; leer, wenn keine betroffen ist.
+   */
+  invalidNote: string
   gauge: GaugeView | null
   hints: readonly HintView[]
 }
@@ -58,13 +65,18 @@ function gaugeLabels(gauge: NonNullable<SummaryDefinition['gauge']>, t: Translat
   return { rateLabel: gauge.rateLabel ?? t('gaugeRate'), upperLabel: gauge.upper ? (gauge.upperLabel ?? t('gaugeUpper')) : null }
 }
 
+/** Skala nur mit Quote und Schwelle; ist die obere Fehlergrenze offen (fehlende oder ungültige Angabe), keine Ampel aus der Quote allein – sie wäre grün ohne Grundlage. */
+function gaugeShown(threshold: CellValue | undefined, rate: CellValue | undefined, hasUpper: boolean, upper: CellValue | undefined): boolean {
+  return isNumber(threshold) && isNumber(rate) && !(hasUpper && isBlank(upper))
+}
+
 function gaugeOf(sheet: AvailableSheet, results: CellMap, t: Translate): GaugeView | null {
   const gauge = sheet.definition.summary.gauge
   if (!gauge) return null
   const threshold = results[gauge.threshold]
   const rate = results[gauge.rate]
   const upper = gauge.upper ? results[gauge.upper] : null
-  if (!isNumber(threshold) || !isNumber(rate)) return null
+  if (!gaugeShown(threshold, rate, gauge.upper !== undefined, upper) || !isNumber(threshold) || !isNumber(rate)) return null
   const top = isNumber(upper) ? upper : rate
   const max = Math.max(threshold * 2, top * 1.15, GAUGE_MIN)
   const position = (value: number): number => Math.min(1, Math.max(0, value) / max)
@@ -120,11 +132,20 @@ export function buildHints(sheet: AvailableSheet, inputs: CellMap, results: Cell
   return [...template, ...limiting(own), ...web, ...carried.map((entry): HintView => ({ id: entry.id, text: entry.text, tone: entry.tone, source: 'web' }))]
 }
 
-/** Warum die Hauptgröße fehlt: Text der Vorlage („TE ≤ AE“) oder die fehlenden Eingaben. */
-function primaryNote(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, reason: CellValue, t: Translate): string {
+/** Warum die Hauptgröße fehlt: TE = AE (Division durch null), ein Text der Vorlage oder die fehlenden Eingaben. */
+function primaryNote(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, reason: CellValue, t: Translate, invalid: ReadonlySet<string>): string {
+  if (reason === SIZE_NOT_APPLICABLE) return `${t('notDeterminable')} (${t('equalErrors')})`
   if (typeof reason === 'string' && reason) return `${t('notDeterminable')} (${translateValue(sheet.texts, reason)})`
-  const lacking = evaluateSheet(sheet, inputs, context).lacking.get(sheet.definition.summary.primary.cell) ?? []
-  return lacking.length ? `${t('missing')}. ${t('missingInputs', { inputs: [...new Set(lacking)].map((input) => inputName(sheet, input)).join('; ') })}` : ''
+  const named = [...new Set(evaluateSheet(sheet, inputs, context).lacking.get(sheet.definition.summary.primary.cell) ?? [])]
+  // Zeigt auch die Vorlage ohne die Eingabe keine Hauptgröße (z. B. Buchwert 0), nennt die Übersicht die ungültigen Eingaben des Blatts.
+  const lacking = named.length ? named : [...invalid].filter((cell) => findField(sheet.definition, cell))
+  if (lacking.length === 0) return ''
+  const names = (list: readonly string[]): string => list.map((input) => inputName(sheet, input)).join('; ')
+  const unreadable = lacking.filter((input) => invalid.has(input))
+  const missing = lacking.filter((input) => !invalid.has(input))
+  // Eine nicht lesbare Eingabe ist ungültig, nicht fehlend.
+  const lead = t(unreadable.length ? 'invalidInput' : 'missing')
+  return [`${lead}.`, unreadable.length ? t('invalidInputs', { inputs: names(unreadable) }) : '', missing.length ? t('missingInputs', { inputs: names(missing) }) : ''].filter(Boolean).join(' ')
 }
 
 /**
@@ -139,14 +160,39 @@ export function isEmptyForm(sheet: AvailableSheet, results: CellMap, context?: S
   return inputFields(sheet.definition).every((field) => cellsOf(field).every((cell) => isBlank(results[cell]) || results[cell] === (field.default ?? null)))
 }
 
+/**
+ * Zellen der Übersicht (Kennzahlen, Skala), die offen sind, weil eine
+ * ungültige Eingabe sie trägt; je Zelle die ungültigen Eingaben.
+ */
+function unreadableCells(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, invalid: ReadonlySet<string>): Map<CellAddress, string[]> {
+  const found = new Map<CellAddress, string[]>()
+  if (invalid.size === 0) return found
+  const { rows, gauge } = sheet.definition.summary
+  const cells = [...rows.map((row) => row.cell), ...(gauge ? [gauge.rate, ...(gauge.upper ? [gauge.upper] : [])] : [])]
+  const lacking = evaluateSheet(sheet, inputs, context).lacking
+  for (const cell of cells) {
+    const named = (lacking.get(cell) ?? []).filter((input) => invalid.has(input))
+    if (isBlank(results[cell]) && named.length) found.set(cell, named)
+  }
+  return found
+}
+
+/** „Eingabe ungültig. Ungültige Eingabe: …“ für die Übersicht, mit den Eingaben, die eine Kennzahl oder die Skala offen lassen. */
+function invalidNoteOf(sheet: AvailableSheet, unreadable: ReadonlyMap<CellAddress, readonly string[]>, t: Translate): string {
+  const inputs = [...new Set([...unreadable.values()].flat())]
+  return inputs.length ? `${t('invalidInput')}. ${t('invalidInputs', { inputs: inputs.map((input) => inputName(sheet, input)).join('; ') })}` : ''
+}
+
 /** Mitlaufende Ergebnisspalte eines Blatts. */
-export function buildSummary(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate): SummaryView {
+export function buildSummary(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate, invalid: ReadonlySet<string> = new Set()): SummaryView {
   const { primary, rows } = sheet.definition.summary
   const value = results[primary.cell] ?? null
   const field = findField(sheet.definition, primary.cell)
   const reason = primary.reason ? results[primary.reason] : null
-  const empty = isEmptyForm(sheet, results, context)
-  const note = (): string => (empty ? t('noEntries') : primaryNote(sheet, inputs, context, reason ?? null, t))
+  // Eine nicht lesbare Eingabe ist eine Angabe: Die Übersicht meldet sie als ungültig, nicht „noch keine Angaben“.
+  const empty = invalid.size === 0 && isEmptyForm(sheet, results, context)
+  const note = (): string => (empty ? t('noEntries') : primaryNote(sheet, inputs, context, reason ?? null, t, invalid))
+  const unreadable = unreadableCells(sheet, inputs, results, context, invalid)
   return {
     primaryLabel: primary.label,
     primaryValue: isNumber(value) && field ? formatFieldValue(field, value) : '',
@@ -154,8 +200,10 @@ export function buildSummary(sheet: AvailableSheet, inputs: CellMap, results: Ce
     primaryNote: isNumber(value) ? '' : note(),
     rows: rows.map((row) => {
       const rowField = findField(sheet.definition, row.cell)
+      if (isBlank(results[row.cell]) && unreadable.has(row.cell)) return { label: row.label, value: t('invalidInput'), strong: row.strong ?? false }
       return { label: row.label, value: rowField ? formatFieldValue(rowField, results[row.cell]) : '', strong: row.strong ?? false }
     }),
+    invalidNote: invalidNoteOf(sheet, unreadable, t),
     gauge: gaugeOf(sheet, results, t),
     // Leeres Formular: keine Prüfhinweise der Vorlage. Ist ein Verfahren gewählt (Blatt 18, Bericht), bleiben die Hinweise der Webfassung in Warnfarbe – etwa, dass aus einer Altvorlage nichts übernommen wird.
     hints: buildHints(sheet, inputs, results, context, t).filter((hint) => !empty || (context.method !== undefined && hint.source === 'web' && hint.tone !== 'neutral' && hint.tone !== 'success')),

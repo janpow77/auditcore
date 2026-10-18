@@ -17,7 +17,7 @@ const TOTAL_ERROR_RATE_SHEET = '18_GFQ_AnhIII'
 /** Zelle „Programm(e) / CCI“ in allen Methodenblättern. */
 const PROGRAMME_CELL = 'C4'
 
-/** Feste Werte der Formel in G43: „Wesentlichkeitsschwelle von 2 %“ und der Teiler 0,98. */
+/** Feste Werte der Formel in G43: „Signifikanzschwelle von 2 %“ und der Teiler 0,98. */
 const MATERIALITY = 0.02
 const REMAINDER = 0.98
 
@@ -105,10 +105,10 @@ function numberOrNote(value: CellValue | undefined, context: SheetContext): Cell
   return isBlank(value) ? unfounded(context, NOT_CALCULATED) : NOT_CALCULATED
 }
 
-/** A37: Satz zur Würdigung gegen die Wesentlichkeitsschwelle aus Blatt 18. */
+/** A37: Satz zur Würdigung gegen die Signifikanzschwelle aus Blatt 18. */
 function statement(rate: CellValue | undefined, threshold: CellValue | undefined): CellValue {
   if (!isNumber(rate) || !isNumber(threshold)) return null
-  return gt(rate, threshold) ? 'Die Gesamtfehlerquote liegt über der Wesentlichkeitsschwelle.' : 'Die Gesamtfehlerquote liegt unter der Wesentlichkeitsschwelle.'
+  return gt(rate, threshold) ? 'Die Gesamtfehlerquote liegt über der Signifikanzschwelle.' : 'Die Gesamtfehlerquote liegt unter der Signifikanzschwelle.'
 }
 
 /** Abschnitt 3: Kennzahlen aus Blatt 18 (G32–A37). */

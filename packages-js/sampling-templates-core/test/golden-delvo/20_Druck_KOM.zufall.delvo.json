@@ -1,0 +1,56 @@
+[
+ {
+  "position": 5,
+  "name": "Zufall 006 (08_SRS_1Z, Startwert 20261033)",
+  "cells": {
+   "G34": 41817.56076000535,
+   "G35": 0.019099395742746016
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 6,
+  "name": "Zufall 007 (09_SRS_1Z_S, Startwert 20261033)",
+  "cells": {
+   "G34": 870155.28986965,
+   "G35": 0.05406064233962267
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 33,
+  "name": "Zufall 034 (08_SRS_1Z, Startwert 20261033)",
+  "cells": {
+   "G34": 675275.7316614788,
+   "G35": 0.010069602320145445
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 48,
+  "name": "Zufall 049 (09_SRS_1Z_S, Startwert 20261033)",
+  "cells": {
+   "G34": 908323.9157472317,
+   "G35": 0.051909087682275874
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 49,
+  "name": "Zufall 050 (10_SRS_2Z, Startwert 20261033)",
+  "cells": {
+   "G34": 1003301.6551714519,
+   "G35": 0.012775038260009948
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 51,
+  "name": "Zufall 052 (12_SRS_3Z, Startwert 20261033)",
+  "cells": {
+   "G34": 183076.63026149402,
+   "G35": 0.007172381960853642
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ }
+]

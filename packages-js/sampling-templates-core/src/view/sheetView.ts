@@ -79,6 +79,8 @@ interface Scope {
   results: CellMap
   context: SheetContext
   t: Translate
+  /** Eingaben, deren Text gerade nicht als Zahl lesbar ist; sie gelten als leer. */
+  invalid: ReadonlySet<CellAddress>
 }
 
 function controlOf(field: FieldDefinition): RowControl {
@@ -93,11 +95,22 @@ function missingInputs(scope: Scope, cell: CellAddress): readonly string[] {
   return isBlank(scope.results[cell]) ? (scope.evaluation.lacking.get(cell) ?? []) : []
 }
 
-function displayOf(scope: Scope, field: FieldDefinition, value: CellValue, missing: boolean): string {
+function displayOf(scope: Scope, field: FieldDefinition, value: CellValue, missing: readonly string[]): string {
   if (typeof value === 'string' && value !== '') return translateValue(scope.sheet.texts, value)
   if (!isBlank(value)) return formatFieldValue(field, value)
-  if (missing) return scope.t('missing')
+  if (missing.length) return scope.t(missing.some((input) => scope.invalid.has(input)) ? 'invalidInput' : 'missing')
   return field.type === 'check' ? scope.t('noValue') : formatFieldValue(field, null)
+}
+
+/**
+ * Warum die Zelle offen ist: Eingaben, die nicht lesbar sind („Ungültige Eingabe“),
+ * vor solchen, die fehlen („Es fehlt“).
+ */
+function missingNote(scope: Scope, lacking: readonly string[]): string {
+  const invalid = lacking.filter((input) => scope.invalid.has(input))
+  const missing = lacking.filter((input) => !scope.invalid.has(input))
+  const names = (inputs: readonly string[]): string => inputs.map((input) => inputName(scope.sheet, input)).join('; ')
+  return [invalid.length ? scope.t('invalidInputs', { inputs: names(invalid) }) : '', missing.length ? scope.t('missingInputs', { inputs: names(missing) }) : ''].filter(Boolean).join(' ')
 }
 
 /**
@@ -119,10 +132,10 @@ function cellOf(scope: Scope, field: FieldDefinition, cell: CellAddress, isInput
     cell,
     value,
     inputText: isInput ? formatFieldInput(field, value) : '',
-    display: displayOf(scope, field, value, lacking.length > 0),
+    display: displayOf(scope, field, value, lacking),
     tone: caveat ? 'warning' : tone,
     missing: lacking.length > 0,
-    missingNote: lacking.length ? scope.t('missingInputs', { inputs: lacking.map((input) => inputName(scope.sheet, input)).join('; ') }) : '',
+    missingNote: missingNote(scope, lacking),
     zeroNote: assumed.length ? scope.t('zeroAssumedInput', { input: assumed.map((input) => inputName(scope.sheet, input)).join('; ') }) : '',
     caveatNote: caveat ? scope.t('qualifiedNote') : '',
   }
@@ -175,10 +188,10 @@ export function assumedCells(assumed: readonly ZeroAssumption[]): Map<CellAddres
 }
 
 /** Abschnitte und Zeilen eines Blatts in der Reihenfolge der Vorlage. */
-export function buildSections(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate): SectionView[] {
+export function buildSections(sheet: AvailableSheet, inputs: CellMap, results: CellMap, context: SheetContext, t: Translate, invalid: ReadonlySet<CellAddress> = new Set()): SectionView[] {
   const evaluation = evaluateSheet(sheet, inputs, context)
   const qualified = isQualified([...limitationsOf(sheet, inputs, results, context, t), ...carriedLimitations(sheet, context, t)])
-  const scope: Scope = { sheet, inputs, results, context, t, assumed: assumedCells(evaluation.assumed), evaluation, qualified }
+  const scope: Scope = { sheet, inputs, results, context, t, assumed: assumedCells(evaluation.assumed), evaluation, qualified, invalid }
   return sheet.definition.sections.map((section) => ({
     id: section.id,
     title: section.title,

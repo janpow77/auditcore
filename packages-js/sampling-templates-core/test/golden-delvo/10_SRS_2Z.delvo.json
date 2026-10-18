@@ -1,0 +1,159 @@
+[
+ {
+  "position": 22,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Standard“",
+  "cells": {
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 76796.9366077242,
+   "N10": 197,
+   "C33": 258,
+   "C41": 258,
+   "C42": 141,
+   "C43": 118,
+   "C62": 59848456181.6465,
+   "C63": 51,
+   "C69": 0,
+   "C71": 126,
+   "C72": 141,
+   "C73": 51,
+   "C74": 197,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 76796.9366077242,
+   "C88": 346463.603274391,
+   "C89": 192869.730058942,
+   "C90": 0.00153593873215448,
+   "C93": 0.00692927206548782,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 23,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Global“",
+  "cells": {
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 75054.3388029358,
+   "N10": 201,
+   "C33": 258,
+   "C41": 258,
+   "C42": 141,
+   "C43": 118,
+   "C62": 59848456181.6465,
+   "C63": 51,
+   "C69": 0,
+   "C71": 126,
+   "C72": 141,
+   "C73": 55,
+   "C74": 201,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 75054.3388029358,
+   "C88": 344721.005469602,
+   "C89": 194612.327863731,
+   "C90": 0.00150108677605872,
+   "C93": 0.00689442010939205,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 24,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Erhöhung“",
+  "cells": {
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 61090.2282036814,
+   "N10": 272,
+   "C33": 258,
+   "C41": 258,
+   "C42": 141,
+   "C43": 118,
+   "C62": 59848456181.6465,
+   "C63": 51,
+   "C69": 0,
+   "C71": 126,
+   "C72": 141,
+   "C73": 126,
+   "C74": 272,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 61090.2282036814,
+   "C88": 330756.894870348,
+   "C89": 208576.438462985,
+   "C90": 0.00122180456407363,
+   "C93": 0.00661513789740696,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 25,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „keine Neuberechnung“",
+  "cells": {
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 61902.0265310577,
+   "N10": 264,
+   "C33": 258,
+   "C41": 258,
+   "C42": 141,
+   "C43": 118,
+   "C62": 59848456181.6465,
+   "C63": 51,
+   "C69": 0,
+   "C71": 126,
+   "C72": 141,
+   "C73": 118,
+   "C74": 264,
+   "C75": "✔ ≥ 30 Einheiten",
+   "C85": 61902.0265310577,
+   "C88": 331568.693197724,
+   "C89": 207764.640135609,
+   "C90": 0.00123804053062115,
+   "C93": 0.00663137386395449,
+   "C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 26,
+  "name": "TE = AE genau auf der Schwelle",
+  "cells": {
+   "C33": "✖ nicht anwendbar (Division durch null)",
+   "C28": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 28,
+  "name": "TE ≤ AE mit begrenztem Umfang Kategorie 2",
+  "cells": {
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C33": 65
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 29,
+  "name": "TE ≤ AE mit begrenztem Umfang, globale Neuberechnung mit aktualisierter Fehlerquote",
+  "cells": {
+   "C28": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C33": 65
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 32,
+  "name": "Aktualisierte Fehlerquote gleich der Schwelle (TE = AE in der Neuberechnung), Standard",
+  "cells": {
+   "C66": "✖ nicht anwendbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)",
+  "others": null
+ },
+ {
+  "position": 33,
+  "name": "Aktualisierte Fehlerquote gleich der Schwelle (TE = AE in der Neuberechnung), Global",
+  "cells": {
+   "C66": "✖ nicht anwendbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)",
+  "others": null
+ }
+]

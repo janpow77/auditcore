@@ -8,7 +8,8 @@ import { countRow, stratumCell as at } from '../../model/strata'
 import { unfounded } from '../../model/policy'
 import type { CellValue } from '../../model/types'
 import { type Approach, appliedPeriodSize, checkLimitKept, checkYearMinimum, errorLimits, summary, underestimationFactor } from '../shared/mus'
-import { type Run, checkUnits, fill, has, inputTotals, total } from './run'
+import { type Run, checkUnits, fill, has, inputTotals, total, optionalTotals } from './run'
+import { blockedGlobal } from '../shared/periods'
 
 /**
  * Zeile 69: Umfang Zeitraum 2 je Schicht nach dem gewählten Ansatz, mindestens 3.
@@ -35,7 +36,8 @@ export function finalSizes(run: Run, approach: Approach): void {
   const { c } = run
   fill(run, 69, (column) => (has(run, column, 51) ? sizePeriodTwo(run, approach, column) : null))
   fill(run, 70, (column) => (has(run, column, 8) ? guard(() => required(c[at(column, 37)]) + (approach === 'global' ? required(c[at(column, 68)]) : 0)) : null))
-  c.C69 = total(run, 69)
+  // Globale Neuberechnung bei AE = TE nicht anwendbar (Division durch null): kein Umfang für Zeitraum 2 (statt der Summe 0 leerer Schichten).
+  c.C69 = approach === 'global' && blockedGlobal(c, 'C65', run.pending) ? null : total(run, 69)
   c.C70 = total(run, 70)
   const year = (): number => required(c.C70) + required(c.C69)
   c.C71 = checkLimitKept(run.limit, year, '⚠ Umfang überschritten – Art. 5 Abs. 7 UAbs. 4')
@@ -52,7 +54,8 @@ export function periodTwo(run: Run): void {
   fill(run, 79, (column) => checkUnits(run, column, 51, 78))
   fill(run, 80, second((column) => guard(() => divide(required(c[at(column, 77)]), required(c[at(column, 78)])))))
   fill(run, 84, (column) => (has(run, column, 8) ? guard(() => minus(required(c[at(column, 70)]), n(c[at(column, 41)]))) : null))
-  inputTotals(run, [75, 76, 81, 82])
+  optionalTotals(run, [75, 76, 81])
+  inputTotals(run, [82])
   for (const row of [77, 78, 84]) c[`C${row}`] = total(run, row)
 }
 

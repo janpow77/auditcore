@@ -2,63 +2,83 @@
 
 <!-- Erzeugt mit `npm run docs:write -w @auditcore/sampling-templates-core`; nicht von Hand ändern. -->
 
-Je Fall werden die Eingaben in eine Kopie der Excel-Vorlage geschrieben, die Mappe wird mit LibreOffice
-neu berechnet (`scripts/golden_recalc.py`), und jede Formelzelle des Blatts wird mit dem Rechenkern verglichen:
-Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Texte wortgleich.
-Bei Eurobeträgen gilt zusätzlich ein absoluter Unterschied bis 0.000001 € als gleich (Rauschen aus einer
-Auslöschung, Blatt 20 G43). Werte ab 10¹⁵ liegen außerhalb des geprüften Zahlenbereichs: Dort wird nur die
-Größenordnung verglichen (relativ 0,001), und die Webfassung weist das Ergebnis als nicht belastbar aus.
+Je Fall werden die Eingaben in eine Kopie der Excel-Vorlage geschrieben, die Mappe wird in **Microsoft Excel**
+(Microsoft 365, Version 16.0.20326, 64 Bit, de-de) neu berechnet, und jede Formelzelle des Blatts wird mit dem
+Rechenkern verglichen: Zellen mit Ganzzahlformat genau, übrige Zahlen mit relativer Toleranz 1e-9, Texte wortgleich,
+Wahrheits- und Fehlerwerte wie Excel sie zeigt. Die Sollwerte stammen aus der Excel-Gegenprobe vom 17.10.2026
+(10.531 Fälle, 728.895 Formelzellen; Ablauf in [abweichungen.md](abweichungen.md), Abschnitt 3).
 
-**Grenze dieses Nachweises:** Alle Sollwerte stammen aus der Neuberechnung der Vorlage mit LibreOffice 24.2.
-Eine Gegenprobe mit Microsoft Excel steht aus. Vergleichstoleranz (2⁻⁴⁸), `AUFRUNDEN` (Kürzung auf zwölf geltende
-Stellen) und die Summation mit Fehlerausgleich sind an LibreOffice gemessen; ob Excel an Schwellen und beim
-Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
+**Toleranzen und ihr Grund.** Der Rechenkern bildet die Rechensemantik von Excel nach (Vergleich nach Rundung auf
+15 geltende Stellen, `AUFRUNDEN` mit Vorrundung auf 15 Stellen, `VERGLEICH` genau, Summen ohne Fehlerausgleich);
+die Toleranz deckt nur die Reihenfolge der Gleitkommaoperationen, die in JavaScript und Excel nicht in jeder Formel
+gleich ist (relative Unterschiede bis etwa 1e-15). Ganzzahlzellen (Stichprobenumfänge) sind davon ausgenommen und
+müssen genau stimmen. Bei Eurobeträgen gilt zusätzlich ein absoluter Unterschied bis 0.000001 € als gleich
+(Auslöschung in Abstimmungszellen wie Blatt 02 C30, wo Excel einen Rest bis 4,8e-7 € zeigt). Werte ab 10¹⁵ liegen
+außerhalb des geprüften Zahlenbereichs: Dort wird nur die Größenordnung verglichen (relativ 0,001), und die
+Webfassung weist das Ergebnis als nicht belastbar aus.
+
+**LibreOffice** ist nur noch Hilfsmittel: Die früheren Sollwerte aus der Neuberechnung mit LibreOffice 24.2
+(`scripts/golden_recalc.py`) liegen in der Versionsgeschichte (Stand 0.1.5) und unterscheiden sich in 937 Zellen
+von Excel (Vergleichstoleranz, Aufrunden, genaue Suche, Wahrheitswert, `#DIV/0!`).
 
 - **Begründet** sind Zellen, an denen die Webfassung nach der geltenden Richtlinie für fehlende Angaben keinen Wert
   zeigt, während die Vorlage einen zeigt ([abweichungen.md](abweichungen.md)); die Gegenprobe ist bestanden. Seit der
   Regel „bei vollständigen Pflichteingaben immer wie die Vorlage“ entstehen sie nur noch, wo eine Eingabe fehlt.
-- **Toleranzkante** sind Würdigungen, bei denen die Quote genau auf der Vergleichstoleranz liegt und der Fall eine
-  Eingabe mit 16 oder 17 geltenden Stellen trägt (Prüfsonde der Abnahme). Geprüft ist je Zelle: Mit der um höchstens
-  zwei letzte Stellen verschobenen Eingabe zeigt die Webfassung genau den Text der Vorlage. Über die Oberfläche lässt
-  sich eine solche Zahl nicht eingeben.
+- **Bewusst anders dargestellt** sind Zellen, die die Webfassung nach einer festen Regel anders zeigt (`adapted`):
+  die Kopfzeile von Blatt 20 (A6), die Fehlerquote eines Falls mit Buchwert 0 (Blatt 20 E20–E27: Excel `#DIV/0!`,
+  Webfassung kein Wert mit Hinweis) und der Faktor zu einem Konfidenzniveau außerhalb der Stufen der Altvorlagen
+  (X1 C5/C6, X2 C6, X3 D10, X4 C11: Excel FALSCH, Webfassung 0 mit Hinweis). Geprüft ist je Zelle, dass die Webfassung
+  genau den Wert zeigt, der sich nach dieser Regel aus dem Wert von Excel ergibt.
+- **Amtlicher Begriff** sind Texte, in denen die Webfassung statt „Signifikanzschwelle“ der Vorlage den amtlichen
+  Begriff „Signifikanzschwelle“ zeigt (Anhang I Nr. 1 DelVO (EU) 2023/67); sonst ist der Text wortgleich.
+- **Bewusst nach KOM** sind Zellen, an denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 („Es gelten
+  die Vorgaben der KOM“: DelVO (EU) 2023/67 und KOM-Leitfaden EGESIF_16-0014-01) anders rechnet als die Vorlage:
+  Umfang bei AE > TE mit |TE − AE| (Leitfaden 7.1; Blätter 03–12, erster Zeitraum, mit allen Folgegrößen), bei AE = TE
+  „nicht anwendbar (Division durch null)“ (globale Neuberechnung mit leeren Folgegrößen) und Genauigkeit bei Ersetzung
+  in Tabelle 2 (Anhang III; Blätter 18 und 20). Je Zelle ist geprüft, dass die Webfassung den Wert zeigt, den
+  `scripts/delvo_soll.py` unabhängig vom Rechenkern nachrechnet (`test/golden-delvo/`; Folgegrößen des ersten
+  Zeitraums aus einer Neuberechnung der Vorlage in LibreOffice mit dem nach KOM bestimmten Umfang, `scripts/kom_lo.py`).
+- **Toleranzkanten** gibt es gegen Excel keine mehr: Die beiden Würdigungen, die gegen LibreOffice an der
+  Vergleichstoleranz hingen (Blatt 06 C99, Blatt 12 C138), zeigt die Webfassung mit der Vergleichsregel von Excel
+  genau wie Excel.
 - **„Wie die Vorlage“** ist dieselbe Rechnung unter der Richtlinie `TEMPLATE_POLICY` (jede fehlende Angabe mit 0
   gerechnet): Dann muss jede Zelle den Wert der Vorlage zeigen.
 - Die Fallsätze `abnahme-grund`, `abnahme-luecken` und `abnahme-schwelle` sind die 6.805 Fälle der unabhängigen
   Gesamtabnahme (eigener Generator, Einzellücken-Matrix, Schwellen- und Ganzzahlsonden).
 
-| Blatt | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| 02_Grundgesamtheit | 159 | 3021 | 2948 | 73 | 0 | 0 | 0 |
-| 03_MUS_1Z | 783 | 29754 | 29446 | 308 | 0 | 0 | 0 |
-| 04_MUS_1Z_S | 381 | 46482 | 45466 | 1016 | 0 | 0 | 0 |
-| 05_MUS_2Z | 541 | 35165 | 33223 | 1942 | 0 | 0 | 0 |
-| 06_MUS_2Z_S | 635 | 150495 | 147167 | 3327 | 1 | 0 | 0 |
-| 07_MUS_3Z | 612 | 56916 | 52646 | 4270 | 0 | 0 | 0 |
-| 08_SRS_1Z | 660 | 24420 | 24210 | 210 | 0 | 0 | 0 |
-| 09_SRS_1Z_S | 421 | 32417 | 31639 | 778 | 0 | 0 | 0 |
-| 10_SRS_2Z | 714 | 42840 | 39426 | 3414 | 0 | 0 | 0 |
-| 11_SRS_2Z_S | 724 | 118736 | 115100 | 3636 | 0 | 0 | 0 |
-| 12_SRS_3Z | 785 | 67510 | 61572 | 5937 | 1 | 0 | 0 |
-| 13_NS_GW | 399 | 8778 | 8661 | 117 | 0 | 0 | 0 |
-| 14_NS_GW_S | 410 | 16400 | 16099 | 301 | 0 | 0 | 0 |
-| 15_NS_PPS | 406 | 10556 | 10334 | 222 | 0 | 0 | 0 |
-| 16_NS_PPS_S | 412 | 28840 | 28192 | 648 | 0 | 0 | 0 |
-| 17_Unterstichprobe | 102 | 612 | 577 | 35 | 0 | 0 | 0 |
-| 18_GFQ_AnhIII | 677 | 14894 | 14609 | 285 | 0 | 0 | 0 |
-| 20_Druck_KOM | 588 | 19404 | 19161 | 243 | 0 | 0 | 0 |
-| X1_KonsMUS_2017 | 213 | 2769 | 2588 | 181 | 0 | 0 | 0 |
-| X2_DiffSch_2017 | 434 | 5642 | 5449 | 193 | 0 | 0 | 0 |
-| X3_DiffSch_S_2017 | 234 | 8424 | 7842 | 582 | 0 | 0 | 0 |
-| X4_DiffSch_2Z_2017 | 241 | 4820 | 4490 | 330 | 0 | 0 | 0 |
-| **Summe** | 10531 | 728895 | 700845 | 28048 | 2 | 0 | 0 |
+| Blatt | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 02_Grundgesamtheit | 159 | 3021 | 2877 | 73 | 0 | 71 | 0 | 0 | 0 |
+| 03_MUS_1Z | 783 | 29754 | 28884 | 328 | 0 | 99 | 443 | 0 | 0 |
+| 04_MUS_1Z_S | 381 | 46482 | 43618 | 1003 | 0 | 103 | 1758 | 0 | 0 |
+| 05_MUS_2Z | 541 | 35165 | 32489 | 1942 | 0 | 107 | 627 | 0 | 0 |
+| 06_MUS_2Z_S | 635 | 150495 | 142973 | 3266 | 0 | 132 | 4124 | 0 | 0 |
+| 07_MUS_3Z | 612 | 56916 | 51457 | 4270 | 0 | 92 | 1097 | 0 | 0 |
+| 08_SRS_1Z | 660 | 24420 | 23771 | 210 | 0 | 132 | 307 | 0 | 0 |
+| 09_SRS_1Z_S | 421 | 32417 | 30967 | 778 | 0 | 151 | 521 | 0 | 0 |
+| 10_SRS_2Z | 714 | 42840 | 38755 | 3414 | 0 | 121 | 550 | 0 | 0 |
+| 11_SRS_2Z_S | 724 | 118736 | 112139 | 3636 | 0 | 252 | 2709 | 0 | 0 |
+| 12_SRS_3Z | 785 | 67510 | 60721 | 5937 | 0 | 141 | 711 | 0 | 0 |
+| 13_NS_GW | 399 | 8778 | 8286 | 117 | 0 | 375 | 0 | 0 | 0 |
+| 14_NS_GW_S | 410 | 16400 | 15709 | 301 | 0 | 390 | 0 | 0 | 0 |
+| 15_NS_PPS | 406 | 10556 | 9970 | 222 | 0 | 364 | 0 | 0 | 0 |
+| 16_NS_PPS_S | 412 | 28840 | 27840 | 618 | 0 | 382 | 0 | 0 | 0 |
+| 17_Unterstichprobe | 102 | 612 | 577 | 35 | 0 | 0 | 0 | 0 | 0 |
+| 18_GFQ_AnhIII | 677 | 14894 | 13883 | 291 | 0 | 440 | 280 | 0 | 0 |
+| 20_Druck_KOM | 588 | 19404 | 17755 | 251 | 610 | 516 | 272 | 0 | 0 |
+| X1_KonsMUS_2017 | 213 | 2769 | 2580 | 181 | 8 | 0 | 0 | 0 | 0 |
+| X2_DiffSch_2017 | 434 | 5642 | 5445 | 193 | 4 | 0 | 0 | 0 | 0 |
+| X3_DiffSch_S_2017 | 234 | 8424 | 7838 | 582 | 4 | 0 | 0 | 0 | 0 |
+| X4_DiffSch_2Z_2017 | 241 | 4820 | 4486 | 330 | 4 | 0 | 0 | 0 | 0 |
+| **Summe** | 10531 | 728895 | 683020 | 27978 | 630 | 3868 | 13399 | 0 | 0 |
 
 ## 02_Grundgesamtheit
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 69 | 1311 | 1273 | 38 | 0 | 0 | 0 |
-| abnahme-luecken | 69 | 1311 | 1300 | 11 | 0 | 0 | 0 |
-| Hauptsatz | 21 | 399 | 375 | 24 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 69 | 1311 | 1266 | 38 | 0 | 7 | 0 | 0 | 0 |
+| abnahme-luecken | 69 | 1311 | 1236 | 11 | 0 | 64 | 0 | 0 | 0 |
+| Hauptsatz | 21 | 399 | 375 | 24 | 0 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -86,14 +106,14 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 03_MUS_1Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 2660 | 2608 | 52 | 0 | 0 | 0 |
-| abnahme-luecken | 355 | 13490 | 13442 | 48 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 2280 | 2280 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 40 | 1520 | 1417 | 103 | 0 | 0 | 0 |
-| pruefer | 158 | 6004 | 5899 | 105 | 0 | 0 | 0 |
-| zufall | 100 | 3800 | 3800 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 2660 | 2557 | 52 | 0 | 1 | 50 | 0 | 0 |
+| abnahme-luecken | 355 | 13490 | 13414 | 48 | 0 | 28 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 2280 | 2260 | 0 | 0 | 20 | 0 | 0 | 0 |
+| Hauptsatz | 40 | 1520 | 1393 | 103 | 0 | 3 | 21 | 0 | 0 |
+| pruefer | 158 | 6004 | 5811 | 125 | 0 | 17 | 51 | 0 | 0 |
+| zufall | 100 | 3800 | 3449 | 0 | 0 | 30 | 321 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -140,13 +160,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 04_MUS_1Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 8540 | 8357 | 183 | 0 | 0 | 0 |
-| abnahme-luecken | 124 | 15128 | 14872 | 256 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 7320 | 7260 | 60 | 0 | 0 | 0 |
-| Hauptsatz | 27 | 3294 | 2877 | 417 | 0 | 0 | 0 |
-| zufall | 100 | 12200 | 12100 | 100 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 8540 | 8236 | 178 | 0 | 11 | 115 | 0 | 0 |
+| abnahme-luecken | 124 | 15128 | 13996 | 256 | 0 | 28 | 848 | 0 | 0 |
+| abnahme-schwelle | 60 | 7320 | 7240 | 60 | 0 | 20 | 0 | 0 | 0 |
+| Hauptsatz | 27 | 3294 | 2841 | 409 | 0 | 3 | 41 | 0 | 0 |
+| zufall | 100 | 12200 | 11305 | 100 | 0 | 41 | 754 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -166,8 +186,8 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 14 | Gesamtfehlerquote über der Wesentlichkeitsschwelle | 122 | 1 | 0 |
 | 15 | GFQ unter, obere Fehlergrenze über der Schwelle | 122 | 1 | 0 |
 | 16 | Lücke: Schicht 2 leer, Schichten 1 und 3 belegt | 122 | 1 | 0 |
-| 17 | Leeres Formular (nur Vorgaben der Vorlage) | 122 | 21 | 0 |
-| 18 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 122 | 28 | 0 |
+| 17 | Leeres Formular (nur Vorgaben der Vorlage) | 122 | 17 | 0 |
+| 18 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 122 | 24 | 0 |
 | 19 | Teilweise: sieben Schichten, Standardabweichungen fehlen | 122 | 86 | 0 |
 | 20 | Teilweise: sieben Schichten, Standardabweichung nur in Schicht 4 fehlt | 122 | 80 | 0 |
 | 21 | Teilweise: sieben Schichten, voraussichtliche Fehlerquote fehlt | 122 | 78 | 0 |
@@ -180,14 +200,14 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 05_MUS_2Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 4550 | 4378 | 172 | 0 | 0 | 0 |
-| abnahme-luecken | 232 | 15080 | 14131 | 949 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 3900 | 3900 | 0 | 0 | 0 | 0 |
-| fehlend | 5 | 325 | 295 | 30 | 0 | 0 | 0 |
-| Hauptsatz | 74 | 4810 | 4019 | 791 | 0 | 0 | 0 |
-| zufall | 100 | 6500 | 6500 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 4550 | 4287 | 172 | 0 | 11 | 80 | 0 | 0 |
+| abnahme-luecken | 232 | 15080 | 14103 | 949 | 0 | 28 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 3900 | 3880 | 0 | 0 | 20 | 0 | 0 | 0 |
+| fehlend | 5 | 325 | 293 | 30 | 0 | 2 | 0 | 0 | 0 |
+| Hauptsatz | 74 | 4810 | 3969 | 791 | 0 | 9 | 41 | 0 | 0 |
+| zufall | 100 | 6500 | 5957 | 0 | 0 | 37 | 506 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -268,14 +288,14 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 06_MUS_2Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 110 | 26070 | 25562 | 508 | 0 | 0 | 0 |
-| abnahme-luecken | 291 | 68967 | 67339 | 1627 | 1 | 0 | 0 |
-| abnahme-schwelle | 60 | 14220 | 14220 | 0 | 0 | 0 | 0 |
-| fehlend | 14 | 3318 | 2915 | 403 | 0 | 0 | 0 |
-| Hauptsatz | 60 | 14220 | 13431 | 789 | 0 | 0 | 0 |
-| zufall | 100 | 23700 | 23700 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 110 | 26070 | 25320 | 483 | 0 | 7 | 260 | 0 | 0 |
+| abnahme-luecken | 291 | 68967 | 65117 | 1627 | 0 | 67 | 2156 | 0 | 0 |
+| abnahme-schwelle | 60 | 14220 | 14200 | 0 | 0 | 20 | 0 | 0 | 0 |
+| fehlend | 14 | 3318 | 2923 | 391 | 0 | 2 | 2 | 0 | 0 |
+| Hauptsatz | 60 | 14220 | 13276 | 765 | 0 | 3 | 176 | 0 | 0 |
+| zufall | 100 | 23700 | 22137 | 0 | 0 | 33 | 1530 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -320,11 +340,11 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 39 | Schicht 3 erst im zweiten Zeitraum (kein Buchwert Zeitraum 1) | 237 | 0 | 0 |
 | 40 | Schicht 3 ohne Prognose für Zeitraum 2, keine Neuberechnung | 237 | 25 | 0 |
 | 41 | Schicht 3 ohne Prognose für Zeitraum 2, Erhöhung | 237 | 1 | 0 |
-| 42 | Leeres Formular (nur Vorgaben der Vorlage) | 237 | 39 | 0 |
-| 43 | Leeres Formular ohne Vorgaben | 237 | 39 | 0 |
-| 44 | Teilweise: nur der erste Zeitraum ausgefüllt | 237 | 37 | 0 |
-| 45 | Teilweise: nur der erste Zeitraum ausgefüllt, sieben Schichten, globale Neuberechnung | 237 | 71 | 0 |
-| 46 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 237 | 60 | 0 |
+| 42 | Leeres Formular (nur Vorgaben der Vorlage) | 237 | 33 | 0 |
+| 43 | Leeres Formular ohne Vorgaben | 237 | 33 | 0 |
+| 44 | Teilweise: nur der erste Zeitraum ausgefüllt | 237 | 34 | 0 |
+| 45 | Teilweise: nur der erste Zeitraum ausgefüllt, sieben Schichten, globale Neuberechnung | 237 | 68 | 0 |
+| 46 | Teilweise: nur Buchwerte und Anzahlen der Schichten | 237 | 54 | 0 |
 | 47 | Teilweise: Wesentlichkeitsschwelle geleert | 237 | 49 | 0 |
 | 48 | Teilweise: voraussichtliche Fehlerquote fehlt | 237 | 84 | 0 |
 | 49 | Teilweise: sieben Schichten, voraussichtliche Standardabweichungen Zeitraum 1 und der Stichprobe fehlen | 237 | 174 | 0 |
@@ -342,14 +362,14 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 07_MUS_3Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 6510 | 6220 | 290 | 0 | 0 | 0 |
-| abnahme-luecken | 289 | 26877 | 24586 | 2291 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 5580 | 5580 | 0 | 0 | 0 | 0 |
-| fehlend | 7 | 651 | 559 | 92 | 0 | 0 | 0 |
-| Hauptsatz | 86 | 7998 | 6401 | 1597 | 0 | 0 | 0 |
-| zufall | 100 | 9300 | 9300 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 6510 | 6089 | 290 | 0 | 11 | 120 | 0 | 0 |
+| abnahme-luecken | 289 | 26877 | 24561 | 2291 | 0 | 25 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 5580 | 5560 | 0 | 0 | 20 | 0 | 0 | 0 |
+| fehlend | 7 | 651 | 557 | 92 | 0 | 2 | 0 | 0 | 0 |
+| Hauptsatz | 86 | 7998 | 6328 | 1597 | 0 | 8 | 65 | 0 | 0 |
+| zufall | 100 | 9300 | 8362 | 0 | 0 | 26 | 912 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -442,13 +462,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 08_SRS_1Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 2590 | 2551 | 39 | 0 | 0 | 0 |
-| abnahme-luecken | 362 | 13394 | 13352 | 42 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 2220 | 2220 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 68 | 2516 | 2387 | 129 | 0 | 0 | 0 |
-| zufall | 100 | 3700 | 3700 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 2590 | 2497 | 39 | 0 | 27 | 27 | 0 | 0 |
+| abnahme-luecken | 362 | 13394 | 13199 | 42 | 0 | 49 | 104 | 0 | 0 |
+| abnahme-schwelle | 60 | 2220 | 2200 | 0 | 0 | 20 | 0 | 0 | 0 |
+| Hauptsatz | 68 | 2516 | 2367 | 129 | 0 | 4 | 16 | 0 | 0 |
+| zufall | 100 | 3700 | 3508 | 0 | 0 | 32 | 160 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -523,13 +543,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 09_SRS_1Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 5390 | 5245 | 145 | 0 | 0 | 0 |
-| abnahme-luecken | 126 | 9702 | 9497 | 205 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 4620 | 4560 | 60 | 0 | 0 | 0 |
-| Hauptsatz | 65 | 5005 | 4637 | 368 | 0 | 0 | 0 |
-| zufall | 100 | 7700 | 7700 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 5390 | 5180 | 145 | 0 | 27 | 38 | 0 | 0 |
+| abnahme-luecken | 126 | 9702 | 9312 | 205 | 0 | 33 | 152 | 0 | 0 |
+| abnahme-schwelle | 60 | 4620 | 4540 | 60 | 0 | 20 | 0 | 0 | 0 |
+| Hauptsatz | 65 | 5005 | 4614 | 368 | 0 | 4 | 19 | 0 | 0 |
+| zufall | 100 | 7700 | 7321 | 0 | 0 | 67 | 312 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -601,13 +621,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 10_SRS_2Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 4200 | 4082 | 118 | 0 | 0 | 0 |
-| abnahme-luecken | 251 | 15060 | 14135 | 925 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 3600 | 3600 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 233 | 13980 | 11609 | 2371 | 0 | 0 | 0 |
-| zufall | 100 | 6000 | 6000 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 4200 | 4004 | 118 | 0 | 25 | 53 | 0 | 0 |
+| abnahme-luecken | 251 | 15060 | 13884 | 925 | 0 | 59 | 192 | 0 | 0 |
+| abnahme-schwelle | 60 | 3600 | 3580 | 0 | 0 | 20 | 0 | 0 | 0 |
+| Hauptsatz | 233 | 13980 | 11504 | 2371 | 0 | 12 | 93 | 0 | 0 |
+| zufall | 100 | 6000 | 5783 | 0 | 0 | 5 | 212 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -847,14 +867,14 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 11_SRS_2Z_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 110 | 18040 | 17492 | 548 | 0 | 0 | 0 |
-| abnahme-luecken | 315 | 51660 | 50424 | 1236 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 9840 | 9840 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 126 | 20664 | 19054 | 1610 | 0 | 0 | 0 |
-| teilbelegung | 13 | 2132 | 1890 | 242 | 0 | 0 | 0 |
-| zufall | 100 | 16400 | 16400 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 110 | 18040 | 17271 | 548 | 0 | 35 | 186 | 0 | 0 |
+| abnahme-luecken | 315 | 51660 | 49028 | 1236 | 0 | 116 | 1280 | 0 | 0 |
+| abnahme-schwelle | 60 | 9840 | 9820 | 0 | 0 | 20 | 0 | 0 | 0 |
+| Hauptsatz | 126 | 20664 | 18810 | 1610 | 0 | 7 | 237 | 0 | 0 |
+| teilbelegung | 13 | 2132 | 1890 | 242 | 0 | 0 | 0 | 0 | 0 |
+| zufall | 100 | 16400 | 15320 | 0 | 0 | 74 | 1006 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -987,13 +1007,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 12_SRS_3Z
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 70 | 6020 | 5809 | 211 | 0 | 0 | 0 |
-| abnahme-luecken | 324 | 27864 | 25630 | 2233 | 1 | 0 | 0 |
-| abnahme-schwelle | 60 | 5160 | 5160 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 231 | 19866 | 16373 | 3493 | 0 | 0 | 0 |
-| zufall | 100 | 8600 | 8600 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 70 | 6020 | 5705 | 211 | 0 | 27 | 77 | 0 | 0 |
+| abnahme-luecken | 324 | 27864 | 25294 | 2233 | 0 | 33 | 304 | 0 | 0 |
+| abnahme-schwelle | 60 | 5160 | 5140 | 0 | 0 | 20 | 0 | 0 | 0 |
+| Hauptsatz | 231 | 19866 | 16158 | 3493 | 0 | 11 | 204 | 0 | 0 |
+| zufall | 100 | 8600 | 8424 | 0 | 0 | 50 | 126 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1231,13 +1251,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 13_NS_GW
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 64 | 1408 | 1386 | 22 | 0 | 0 | 0 |
-| abnahme-luecken | 108 | 2376 | 2338 | 38 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 1320 | 1320 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 47 | 1034 | 977 | 57 | 0 | 0 | 0 |
-| zufall | 120 | 2640 | 2640 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 1408 | 1328 | 22 | 0 | 58 | 0 | 0 | 0 |
+| abnahme-luecken | 108 | 2376 | 2234 | 38 | 0 | 104 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 1320 | 1260 | 0 | 0 | 60 | 0 | 0 | 0 |
+| Hauptsatz | 47 | 1034 | 944 | 57 | 0 | 33 | 0 | 0 | 0 |
+| zufall | 120 | 2640 | 2520 | 0 | 0 | 120 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1291,13 +1311,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 14_NS_GW_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 64 | 2560 | 2520 | 40 | 0 | 0 | 0 |
-| abnahme-luecken | 112 | 4480 | 4369 | 111 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 2400 | 2400 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 54 | 2160 | 2010 | 150 | 0 | 0 | 0 |
-| zufall | 120 | 4800 | 4800 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 2560 | 2460 | 40 | 0 | 60 | 0 | 0 | 0 |
+| abnahme-luecken | 112 | 4480 | 4260 | 111 | 0 | 109 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 2400 | 2340 | 0 | 0 | 60 | 0 | 0 | 0 |
+| Hauptsatz | 54 | 2160 | 1969 | 150 | 0 | 41 | 0 | 0 | 0 |
+| zufall | 120 | 4800 | 4680 | 0 | 0 | 120 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1358,13 +1378,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 15_NS_PPS
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 64 | 1664 | 1632 | 32 | 0 | 0 | 0 |
-| abnahme-luecken | 108 | 2808 | 2704 | 104 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 1560 | 1560 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 54 | 1404 | 1318 | 86 | 0 | 0 | 0 |
-| zufall | 120 | 3120 | 3120 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 1664 | 1577 | 32 | 0 | 55 | 0 | 0 | 0 |
+| abnahme-luecken | 108 | 2808 | 2608 | 104 | 0 | 96 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 1560 | 1500 | 0 | 0 | 60 | 0 | 0 | 0 |
+| Hauptsatz | 54 | 1404 | 1280 | 86 | 0 | 38 | 0 | 0 | 0 |
+| zufall | 120 | 3120 | 3005 | 0 | 0 | 115 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1425,13 +1445,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 16_NS_PPS_S
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 64 | 4480 | 4400 | 80 | 0 | 0 | 0 |
-| abnahme-luecken | 113 | 7910 | 7538 | 372 | 0 | 0 | 0 |
-| abnahme-schwelle | 60 | 4200 | 4200 | 0 | 0 | 0 | 0 |
-| Hauptsatz | 55 | 3850 | 3654 | 196 | 0 | 0 | 0 |
-| zufall | 120 | 8400 | 8400 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 64 | 4480 | 4347 | 75 | 0 | 58 | 0 | 0 | 0 |
+| abnahme-luecken | 113 | 7910 | 7435 | 372 | 0 | 103 | 0 | 0 | 0 |
+| abnahme-schwelle | 60 | 4200 | 4140 | 0 | 0 | 60 | 0 | 0 | 0 |
+| Hauptsatz | 55 | 3850 | 3638 | 171 | 0 | 41 | 0 | 0 | 0 |
+| zufall | 120 | 8400 | 8280 | 0 | 0 | 120 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1474,11 +1494,11 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 37 | Fehlende Angabe in nur einer Schicht: Anzahl der Einheiten der Schicht 2 | 70 | 0 | 0 |
 | 38 | Fehlende Angabe in nur einer Schicht: Buchwert der Schicht 2 | 70 | 0 | 0 |
 | 39 | Fehlende Angabe in nur einer Schicht: hochwertige Einheiten der Schicht 1 | 70 | 0 | 0 |
-| 40 | Leeres Formular (nur Vorgaben der Vorlage) | 70 | 18 | 0 |
-| 41 | Leeres Formular, Wesentlichkeitsschwelle geleert | 70 | 18 | 0 |
-| 42 | Teilweise: nur Buchwerte und Einheiten der Schichten | 70 | 26 | 0 |
-| 43 | Teilweise: nur die Buchwerte je Schicht | 70 | 25 | 0 |
-| 44 | Teilweise: nur die Anzahl der Einheiten je Schicht (N ≥ 300) | 70 | 14 | 0 |
+| 40 | Leeres Formular (nur Vorgaben der Vorlage) | 70 | 13 | 0 |
+| 41 | Leeres Formular, Wesentlichkeitsschwelle geleert | 70 | 13 | 0 |
+| 42 | Teilweise: nur Buchwerte und Einheiten der Schichten | 70 | 21 | 0 |
+| 43 | Teilweise: nur die Buchwerte je Schicht | 70 | 20 | 0 |
+| 44 | Teilweise: nur die Anzahl der Einheiten je Schicht (N ≥ 300) | 70 | 9 | 0 |
 | 45 | Teilweise: nur der Stichprobenumfang | 70 | 0 | 0 |
 | 46 | Teilweise: Schichten und Stichprobe, noch keine Prüfergebnisse | 70 | 0 | 0 |
 | 47 | Teilweise: alles ausgefüllt außer dem Stichprobenumfang | 70 | 24 | 0 |
@@ -1493,11 +1513,11 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 17_Unterstichprobe
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 72 | 432 | 408 | 24 | 0 | 0 | 0 |
-| abnahme-luecken | 14 | 84 | 77 | 7 | 0 | 0 | 0 |
-| Hauptsatz | 16 | 96 | 92 | 4 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 72 | 432 | 408 | 24 | 0 | 0 | 0 | 0 | 0 |
+| abnahme-luecken | 14 | 84 | 77 | 7 | 0 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 16 | 96 | 92 | 4 | 0 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1520,12 +1540,12 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 18_GFQ_AnhIII
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 126 | 2772 | 2765 | 7 | 0 | 0 | 0 |
-| abnahme-luecken | 370 | 8140 | 7927 | 213 | 0 | 0 | 0 |
-| Hauptsatz | 55 | 1210 | 1145 | 65 | 0 | 0 | 0 |
-| zufall | 126 | 2772 | 2772 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 126 | 2772 | 2618 | 7 | 0 | 85 | 62 | 0 | 0 |
+| abnahme-luecken | 370 | 8140 | 7527 | 223 | 0 | 206 | 184 | 0 | 0 |
+| Hauptsatz | 55 | 1210 | 1102 | 61 | 0 | 37 | 10 | 0 | 0 |
+| zufall | 126 | 2772 | 2636 | 0 | 0 | 112 | 24 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1577,8 +1597,8 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 46 | Methodenblatt (03) ohne voraussichtliche Standardabweichung, Ausschluss und Anpassung Ja | 22 | 8 | 0 |
 | 47 | Methodenblatt (03) ohne Summe der Fehlerquoten | 22 | 0 | 0 |
 | 48 | Methodenblatt (03) ohne Standardabweichung der Stichprobe (mit 0 gerechnet) | 22 | 0 | 0 |
-| 49 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht (Umfang nicht bestimmbar) | 22 | 2 | 0 |
-| 50 | SRS geschichtet (09): extrapolierter Fehler bestimmt, Genauigkeit nicht, Schwelle 0,01 % | 22 | 2 | 0 |
+| 49 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht (Umfang nicht bestimmbar) | 22 | 0 | 0 |
+| 50 | SRS geschichtet (09): extrapolierter Fehler bestimmt, Genauigkeit nicht, Schwelle 0,01 % | 22 | 0 | 0 |
 | 51 | Blatt 02 leer, Methodenblatt (03) mit eigenem Buchwert | 22 | 4 | 0 |
 | 52 | Blatt 02 leer, Methodenblatt (03) mit verknüpftem Buchwert | 22 | 7 | 0 |
 | 53 | Blatt 02 ohne Summe der positiven Datensätze, mit TH-Pauschale und nicht prüfbaren Einheiten | 22 | 7 | 0 |
@@ -1587,12 +1607,12 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## 20_Druck_KOM
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 98 | 3234 | 3221 | 13 | 0 | 0 | 0 |
-| abnahme-luecken | 410 | 13530 | 13333 | 197 | 0 | 0 | 0 |
-| Hauptsatz | 24 | 792 | 759 | 33 | 0 | 0 | 0 |
-| zufall | 56 | 1848 | 1848 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 98 | 3234 | 2989 | 13 | 108 | 73 | 51 | 0 | 0 |
+| abnahme-luecken | 410 | 13530 | 12325 | 207 | 422 | 370 | 206 | 0 | 0 |
+| Hauptsatz | 24 | 792 | 717 | 31 | 24 | 17 | 3 | 0 | 0 |
+| zufall | 56 | 1848 | 1724 | 0 | 56 | 56 | 12 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1616,19 +1636,19 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 | 18 | Leeres Formular (nichts gewählt, nichts eingetragen) | 33 | 6 | 0 |
 | 19 | Methodenblatt leer (03) | 33 | 2 | 0 |
 | 20 | Methodenblatt (03) ohne voraussichtliche Standardabweichung | 33 | 9 | 0 |
-| 21 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht | 33 | 2 | 0 |
+| 21 | SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht | 33 | 0 | 0 |
 | 22 | Blatt 02 leer | 33 | 5 | 0 |
 | 23 | Blatt 02 ohne Anzahl der Datensätze und ohne Betrag laut SFC2021 | 33 | 2 | 0 |
 | 24 | Blatt 02 ohne positive Datensätze (Anzahl und Summe) | 33 | 3 | 0 |
 
 ## X1_KonsMUS_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 80 | 1040 | 951 | 89 | 0 | 0 | 0 |
-| abnahme-luecken | 9 | 117 | 82 | 35 | 0 | 0 | 0 |
-| Hauptsatz | 24 | 312 | 255 | 57 | 0 | 0 | 0 |
-| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 1040 | 943 | 89 | 8 | 0 | 0 | 0 | 0 |
+| abnahme-luecken | 9 | 117 | 82 | 35 | 0 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 24 | 312 | 255 | 57 | 0 | 0 | 0 | 0 | 0 |
+| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1659,12 +1679,12 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## X2_DiffSch_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 80 | 1040 | 962 | 78 | 0 | 0 | 0 |
-| abnahme-luecken | 226 | 2938 | 2891 | 47 | 0 | 0 | 0 |
-| Hauptsatz | 28 | 364 | 296 | 68 | 0 | 0 | 0 |
-| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 1040 | 958 | 78 | 4 | 0 | 0 | 0 | 0 |
+| abnahme-luecken | 226 | 2938 | 2891 | 47 | 0 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 28 | 364 | 296 | 68 | 0 | 0 | 0 | 0 | 0 |
+| zufall | 100 | 1300 | 1300 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1699,13 +1719,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## X3_DiffSch_S_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 80 | 2880 | 2704 | 176 | 0 | 0 | 0 |
-| abnahme-luecken | 16 | 576 | 412 | 164 | 0 | 0 | 0 |
-| Hauptsatz | 35 | 1260 | 1029 | 231 | 0 | 0 | 0 |
-| teilbelegung | 3 | 108 | 97 | 11 | 0 | 0 | 0 |
-| zufall | 100 | 3600 | 3600 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 2880 | 2700 | 176 | 4 | 0 | 0 | 0 | 0 |
+| abnahme-luecken | 16 | 576 | 412 | 164 | 0 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 35 | 1260 | 1029 | 231 | 0 | 0 | 0 | 0 | 0 |
+| teilbelegung | 3 | 108 | 97 | 11 | 0 | 0 | 0 | 0 | 0 |
+| zufall | 100 | 3600 | 3600 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|
@@ -1747,13 +1767,13 @@ Aufrunden in jedem Fall gleich entscheidet, ist nicht geprüft.
 
 ## X4_DiffSch_2Z_2017
 
-| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | Toleranzkante | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| abnahme-grund | 80 | 1600 | 1539 | 61 | 0 | 0 | 0 |
-| abnahme-luecken | 20 | 400 | 281 | 119 | 0 | 0 | 0 |
-| Hauptsatz | 38 | 760 | 623 | 137 | 0 | 0 | 0 |
-| teilbelegung | 3 | 60 | 47 | 13 | 0 | 0 | 0 |
-| zufall | 100 | 2000 | 2000 | 0 | 0 | 0 | 0 |
+| Fallsatz | Fälle | verglichene Zellen | übereinstimmend | begründete Abweichungen | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründete Abweichungen (Soll 0) | Abweichungen „wie die Vorlage“ (Soll 0) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| abnahme-grund | 80 | 1600 | 1535 | 61 | 4 | 0 | 0 | 0 | 0 |
+| abnahme-luecken | 20 | 400 | 281 | 119 | 0 | 0 | 0 | 0 | 0 |
+| Hauptsatz | 38 | 760 | 623 | 137 | 0 | 0 | 0 | 0 | 0 |
+| teilbelegung | 3 | 60 | 47 | 13 | 0 | 0 | 0 | 0 | 0 |
+| zufall | 100 | 2000 | 2000 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 | Nr. | Fall (Hauptsatz) | Zellen | begründet | unbegründet |
 |---:|---|---:|---:|---:|

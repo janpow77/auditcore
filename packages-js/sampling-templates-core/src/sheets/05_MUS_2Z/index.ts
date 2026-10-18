@@ -1,12 +1,14 @@
 /** Blatt 05_MUS_2Z: MUS-Standardansatz, zwei Stichprobenzeiträume, nicht geschichtet. */
 import { gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
-import type { CellMap, WebHint } from '../../model/types'
+import type { CellMap, SheetContext, WebHint } from '../../model/types'
 import { approachOf, errorDependents, limitWithoutSize, partialErrorSums } from '../shared/mus'
+import { withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 const STANDARD = 'Standard (Art. 5 Abs. 6 Buchst. a)'
 
@@ -32,7 +34,7 @@ function exceeds(results: CellMap, size: string, units: string, period: number):
 }
 
 /** Hinweise der Webfassung zu Blatt 05; sie verändern kein Rechenergebnis. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints: WebHint[] = [...limitWithoutSize(results, 'C32', 'C27', 'C33'), ...exceeds(results, 'C66', 'C9', 1), ...exceeds(results, 'C67', 'C49', 2)]
   if (approachOf(results.C26) === 'standard' && isNumber(results.C56) && le(results.C56, 0)) {
     hints.push({
@@ -42,7 +44,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
     })
   }
   if (sameNumber(results.C13, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return hints
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...annexIIIApproximation(context, false)])
 }
 
 /** Zellen, die von der Genauigkeit abhängen: SE, Fehlergrenzen, relative Genauigkeit, obere Grenze in %, Würdigung. */

@@ -87,7 +87,7 @@ describe('Blatt 08_SRS_1Z', () => {
   })
 
   it('eine Gesamtfehlerquote über der Schwelle wird auch bei offener Genauigkeit gewürdigt', () => {
-    expect(sheet.compute({ ...sample, C25: null, C37: 96000 }, context).C53).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(sheet.compute({ ...sample, C25: null, C37: 96000 }, context).C53).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('Summen aus den Unterstichproben: Buchwerte, Fehler und Fehler der umfassenden Schicht', () => {

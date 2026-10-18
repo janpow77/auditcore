@@ -12,7 +12,7 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 
 ## Was aus der Vorlage im Paket steckt
 
-| Inhalt | Ort | Umfang in 0.1.3 |
+| Inhalt | Ort | Umfang in 0.1.12 |
 |---|---|---|
 | Rechenwege (Formeln als TypeScript, Zelle für Zelle) | `src/sheets/<Blatt>/compute*.ts`, `src/sheets/shared/*.ts` | alle Blätter: 02–18, 20, X1–X4 |
 | Bezeichnungen (Spalte B), Fundstellen und Hinweise (Spalte D bzw. K), Abschnittstitel, Zahlenformate, Vorgaben | `src/sheets/<Blatt>/definition*.ts` | alle Blätter, wörtlich; Bezeichnungen mit Formel in Bezeichnung und Kurzformel getrennt. Altvorlagen: englischer Wortlaut der Vorlage von 2017 |
@@ -23,6 +23,7 @@ oder aus `.vorlage/` (von git ausgeschlossen); die Tests laufen ohne sie.
 | z-Werte und Auswahllisten aus Blatt 01 | `src/sheets/01_Parameter/index.ts` | vollständig (z-Werte aus Anhang I DelVO) |
 | Blattnamen, Inhaltsangaben, Rechtsgrundlagen und Bezug zur Vorlage 2017 aus Blatt 00; Hinweis zu drei Zeiträumen geschichtet | `src/catalog/catalog.ts`, `src/sheets/registry.ts` | alle 23 Blätter |
 | Erwartete Werte der Formelzellen (Zahlen, Prüfhinweistexte) aus der Neuberechnung der Vorlage | `test/golden/*.golden.json` | alle Blätter; Umfang in `docs/abgleich.md` |
+| Sollwerte nach KOM; Werte der Formelzellen aus einer Neuberechnung der Vorlage mit nach KOM gesetztem Umfang (AE > TE, erster Zeitraum) | `test/golden-delvo/*.delvo.json`, `test/golden-delvo/lo/*.json` | nur die betroffenen Fälle (03–12, 18, 20) |
 | Statistik der verwendeten Excel-Funktionen | `docs/excel-funktionen.md` | Anzahl je Funktion |
 
 Damit wären bei einer Veröffentlichung dieses Stands im Repository versioniert:
@@ -40,9 +41,23 @@ keiner Prüfung.
 
 ## Charakterisierung
 
-`scripts/golden_recalc.py` schreibt die Eingaben jedes Falls in eine Kopie der
-Vorlage, rechnet sie mit LibreOffice (hier 24.2.7.2) ohne Oberfläche neu und
-liest die Formelzellen aus. `test/golden.spec.ts` vergleicht jede Zelle
+Die Sollwerte (`test/golden/`) stammen seit Fassung 0.1.6 aus **Microsoft
+Excel** (Microsoft 365, Version 16.0.20326.20142, 64 Bit, de-de; Excel-Gegenprobe
+vom 17.10.2026): Die Eingaben jedes Falls wurden über COM in die geöffnete
+Vorlage geschrieben, die Mappe mit `CalculateFull` neu berechnet und jede
+Formelzelle bitgenau ausgelesen (10.531 Fälle, 728.895 Zellen, ohne Fehler und
+ohne Dialog). Vorher entstanden die Sollwerte mit `scripts/golden_recalc.py`,
+das die Vorlage mit LibreOffice (24.2.7.2) ohne Oberfläche neu rechnet; diese
+Fassung liegt in der Versionsgeschichte (0.1.5) und weicht in 937 Zellen von
+Excel ab. `scripts/golden_recalc.py` bleibt als Hilfsmittel für vorläufige
+Sollwerte neuer Fälle. Seit 0.1.9 rechnet die Webfassung an zwei Stellen nach
+den Vorgaben der KOM statt wie die Vorlage (DelVO und KOM-Leitfaden
+EGESIF_16-0014-01; Entscheidung des Inhabers vom 17.10.2026,
+`docs/abweichungen.md` Nr. 16); die Sollwerte dieser Zellen rechnet
+`scripts/delvo_soll.py` unabhängig vom Rechenkern aus den Excel-Sollwerten nach
+(`test/golden-delvo/`), die Folgegrößen des ersten Zeitraums bei AE > TE aus
+einer Neuberechnung der Vorlage in LibreOffice mit dem nachgerechneten Umfang
+(`scripts/kom_lo.py`, `test/golden-delvo/lo/`). `test/golden.spec.ts` vergleicht jede Zelle
 (Zellen mit Ganzzahlformat exakt, übrige relative Toleranz 1e-9, Texte
 wortgleich); Ergebnis in `docs/abgleich.md`. Eine Abweichung ist nur
 zugelassen, wenn die Webfassung keinen Wert zeigt, die Abweichung als Datum
@@ -54,10 +69,12 @@ mindestens 100 zufällige vollständige Belegungen mit festem Startwert
 (`scripts/random-cases.mjs`). 158 Fälle des Blatts 03 stammen aus einer
 unabhängigen Prüfung des Fundaments (`test/cases/03_MUS_1Z.pruefer.json`).
 Geprüft sind zwei Richtlinien für fehlende Angaben: die geltende (0
-unbegründete Abweichungen) und „wie die Vorlage“ (0 Abweichungen). Vergleiche und Aufrunden
-sind an LibreOffice gemessen (`scripts/measure_semantics.py`,
-`test/fixtures/libreoffice-semantik.json`: 451 Vergleiche, 81 Rundungen);
-Microsoft Excel ist nicht gegengeprüft. Blatt 03 stimmt zusätzlich in 500
+unbegründete Abweichungen) und „wie die Vorlage“ (0 Abweichungen). Vergleiche, Differenzen,
+Aufrunden, `VERGLEICH` und Summen sind an Microsoft Excel 16.0.20326 gemessen
+(`test/fixtures/excel-semantik.json`: 814 Vergleiche, 193 Rundungen,
+10 Summen); die frühere Messung an LibreOffice
+(`scripts/measure_semantics.py`, `test/fixtures/libreoffice-semantik.json`)
+bleibt zum Vergleich erhalten. Blatt 03 stimmt zusätzlich in 500
 zufälligen vollständigen Belegungen mit dem Referenz-Rechenkern `engine.js`
 des Ausgangsmaterials überein (lokaler Test, `AUDITCORE_SAMPLING_ENGINE03`).
 

@@ -4,6 +4,12 @@
  * Fachbegriffe nach der englischen Fassung der Delegierten Verordnung (EU) 2023/67 („DR“).
  */
 import type { SheetTexts } from '../../model/texts'
+import { delvoHintsEn, withNotApplicableNoteEn } from '../shared/delvo'
+import { EXHAUSTIVE_MINIMUM_INTERPRETATION_EN, ROUNDING_INTERPRETATION_EN, UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
+import { komHintsEn } from '../shared/kom'
+import { definition } from './definition'
+import { SIZE_NOT_APPLICABLE, SIZE_NOT_APPLICABLE_EN } from '../shared/periods'
+import { ANTICIPATED_ABOVE_TOLERABLE, TOLERABLE_EQUALS_ANTICIPATED } from '../shared/statistical'
 
 export const en: SheetTexts = {
   title: 'Simple random sampling – one period, non-stratified',
@@ -39,13 +45,13 @@ export const en: SheetTexts = {
     C23: { label: 'Anticipated error (AE = anticipated error rate × BV)' },
     C24: { label: 'Check TE > AE' },
     C25: { label: 'Anticipated standard deviation of errors (σ_e)', hint: 'Annex I point 4.' },
-    C26: { label: 'Calculated size of the random sample', formula: 'n = (N_s·z·σ_e / (TE − AE))²', hint: 'Where there is an exhaustive stratum, N of the random stratum is used (precision from the non-exhaustive strata only).' },
+    C26: { label: 'Calculated size of the random sample', formula: 'n = (N_s·z·σ_e / (TE − AE))²', hint: 'Where there is an exhaustive stratum, N of the random stratum is used (precision from the non-exhaustive strata only).', interpretation: ROUNDING_INTERPRETATION_EN },
     C27: { label: 'Category of the programme under Table 2 of Annex XI to Regulation (EU) 2021/1060 (1–4)', hint: 'Art. 5(7), first subparagraph DR; recital 10.' },
     C28: { label: 'Enhanced proportionate arrangements pursuant to Art. 83 of Regulation (EU) 2021/1060 (Yes/No)', hint: 'Annex I point (a) DR: sample of 30 sampling units.' },
     C29: { label: 'Apply the capped sample size (Yes/No)', hint: 'Art. 5(7): applied to a sample for the whole population (second subparagraph).' },
     C30: { label: 'Admissibility of the capped sample size' },
     C31: { label: 'Capped sample size (units) (n_lim)', hint: 'All units in random strata and only high value units in exhaustive strata count for the capped sample size (Art. 5(7), third subparagraph).' },
-    C32: { label: 'Minimum size of the random sample (30 less the exhaustive stratum, at least 3)', hint: 'Art. 5(5).' },
+    C32: { label: 'Minimum size of the random sample (30 less the exhaustive stratum, at least 3)', hint: 'Art. 5(5).', interpretation: EXHAUSTIVE_MINIMUM_INTERPRETATION_EN },
     C33: { label: 'Capped sample size less high value units of the exhaustive stratum' },
     C34: { label: 'Size of the random sample to be applied' },
     C35: { label: 'Total sample (random sample + exhaustive stratum)' },
@@ -66,7 +72,7 @@ export const en: SheetTexts = {
     C50: { label: 'Extrapolated random error rate (EE / BV)' },
     C51: { label: 'Total error rate ((EE + delimited systemic + uncorrected anomalous errors) / BV)', hint: 'Art. 8(1) DR; final calculation including the flat rate for technical assistance and Annex III in sheet 18.' },
     C52: { label: 'Upper error limit in % of BV' },
-    C53: { label: 'Assessment against the materiality threshold' },
+    C53: { label: 'Assessment against the materiality threshold', interpretation: UPPER_LIMIT_INTERPRETATION_EN },
   },
   summary: {
     primary: 'Size of the random sample to be applied',
@@ -84,19 +90,22 @@ export const en: SheetTexts = {
     '✔ ≤ 2 %': '✔ ≤ 2 %',
     '✖ unzulässig: höchstens 2 %': '✖ not permitted: maximum 2 %',
     '✔ TE > AE': '✔ TE > AE',
-    '✖ TE ≤ AE: Stichprobenumfang nicht bestimmbar': '✖ TE ≤ AE: sample size cannot be determined',
-    'TE ≤ AE': 'TE ≤ AE',
+    [ANTICIPATED_ABOVE_TOLERABLE]: '⚠ AE > TE: sample size with the planned precision |TE − AE| (Commission guidance EGESIF_16-0014-01, 7.1)',
+    [TOLERABLE_EQUALS_ANTICIPATED]: '✖ TE = AE: sample size cannot be determined (division by zero)',
+    [SIZE_NOT_APPLICABLE]: SIZE_NOT_APPLICABLE_EN,
     'Nicht angewandt – Anh. I und II gelten': 'Not applied – Annexes I and II apply',
     '✔ 30 Einheiten (Art. 83 VO (EU) 2021/1060)': '✔ 30 sampling units (Art. 83 of Regulation (EU) 2021/1060)',
     '✔ 50 Einheiten zulässig (Art. 5 Abs. 7)': '✔ 50 sampling units permitted (Art. 5(7))',
     '✖ unzulässig: nur Kategorie 1 oder 2': '✖ not permitted: category 1 or 2 only',
     'n. a. (einseitiger Test)': 'n/a (unilateral testing)',
-    '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle': '✖ total error rate above the materiality threshold',
+    '✖ Gesamtfehlerquote über der Signifikanzschwelle': '✖ total error rate above the materiality threshold',
     '⚠ GFQ unter, obere Fehlergrenze über der Schwelle – weitere Würdigung': '⚠ total error rate below, upper error limit above the threshold – further assessment',
     '✔ GFQ und obere Fehlergrenze unter der Schwelle': '✔ total error rate and upper error limit below the threshold',
   },
-  webHints: {
+  webHints: withNotApplicableNoteEn({
+    ...komHintsEn(definition),
+    ...delvoHintsEn('exclusion-reference-population'),
     'size-exceeds-population': 'Sample size exceeds the number of units of the population',
     'confidence-outside-annex': 'Confidence level 95 % is outside the table in Annex I',
-  },
+  }),
 }

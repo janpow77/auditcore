@@ -88,7 +88,7 @@ describe('Blatt 10_SRS_2Z', () => {
   })
 
   it('die Erhöhung bei begrenztem Umfang ist als Auslegung der Vorlage gekennzeichnet', () => {
-    expect(fieldsOf(sheet.definition).filter((field) => field.interpretation).map((field) => field.cell)).toEqual(['C71'])
+    expect(fieldsOf(sheet.definition).filter((field) => field.interpretation).map((field) => field.cell)).toEqual(['C33', 'C39', 'C71', 'C73', 'C94'])
     expect(findField(sheet.definition, 'C71')?.interpretation).toBe(INCREASE_INTERPRETATION)
   })
 
@@ -159,7 +159,7 @@ describe('Blatt 10_SRS_2Z', () => {
   })
 
   it('eine Gesamtfehlerquote über der Schwelle wird auch bei offener Genauigkeit gewürdigt', () => {
-    expect(compute({ C29: null, C45: 96000 }).C94).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(compute({ C29: null, C45: 96000 }).C94).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('nur Zeitraum 1 ausgefüllt: geplante Umfänge stehen, die Neuberechnung bleibt offen', () => {

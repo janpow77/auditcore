@@ -42,7 +42,7 @@ export const deviations: readonly Deviation[] = [
   ...deviationRows(['D1', 'D14', 'D30'], BOOK_VALUES, 'Wert ohne den Buchwert der Schicht mit fehlender Angabe', STRATUM),
   ...deviationRows(['D3'], UNITS, 'Summe ohne den Umfang der Schicht mit fehlender Angabe', STRATUM),
   ...deviationRows(['D4'], [...UNITS, ...DEVIATIONS], 'Wert ohne den Beitrag der Schicht mit fehlender Angabe', STRATUM),
-  ...deviationRows(['D10'], ['D9'], '0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH)', 'Ohne Konfidenzniveau gibt es keinen Koeffizienten z.'),
+  ...deviationRows(['D10'], ['D9'], 'FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0)', 'Ohne Konfidenzniveau gibt es keinen Koeffizienten z.'),
   ...deviationRows(['D12'], ['D11', ...BOOK_VALUES], '0 € bzw. Wert ohne den Buchwert der Schicht mit fehlender Angabe', 'Der voraussichtliche Fehler setzt die erwartete Fehlerquote und den Buchwert jeder belegten Schicht voraus.'),
   ...deviationRows(['D15', ...row(17), 'D26', 'D27'], SIZE_INPUTS, 'Wert auf Grundlage des mit 0 berechneten Umfangs (mindestens 30)', SIZE),
   ...deviationRows(

@@ -3,7 +3,7 @@ import { gt, isBlank, isNumber, ne, sum } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import { stratumCell as at } from '../../model/strata'
 import type { CellMap, WebHint } from '../../model/types'
-import { LEGACY_STRATA, LEGACY_TEMPLATE_STRATA, TOLERABLE_HINT, partialErrorSums, sizeExceedsPopulation, strataBelowThreeUnits, tolerableNotAboveAnticipated } from '../shared/legacy'
+import { LEGACY_STRATA, LEGACY_TEMPLATE_STRATA, TOLERABLE_HINT, levelAdaptations, levelOutsideSteps, partialErrorSums, sizeExceedsPopulation, strataBelowThreeUnits, tolerableNotAboveAnticipated } from '../shared/legacy'
 import { compute, usedStrata } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
@@ -29,7 +29,7 @@ function allocated(results: CellMap, used: readonly string[]): number {
 /** Hinweise der Webfassung zu Blatt X3; sie verändern kein Rechenergebnis. */
 function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   const used = usedStrata(results)
-  const hints: WebHint[] = [...tolerableNotAboveAnticipated(results.D14, results.D12, TOLERABLE_HINT), ...sizeExceedsPopulation(results.D15, results.D3)]
+  const hints: WebHint[] = [...tolerableNotAboveAnticipated(results.D14, results.D12, TOLERABLE_HINT), ...sizeExceedsPopulation(results.D15, results.D3), ...levelOutsideSteps(inputs.D9)]
   if (isNumber(results.D15) && gt(allocated(results, used), results.D15)) {
     hints.push({ id: 'strata-sum-exceeds-size', tone: 'warning', text: 'Summe der aufgerundeten Schichtumfänge ist größer als der geplante Stichprobenumfang' })
   }
@@ -65,4 +65,4 @@ function zeroAssumed(results: CellMap): ZeroAssumption[] {
   return [...errors, ...deviations]
 }
 
-export const sheet = defineSheet({ id: 'X3_DiffSch_S_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed, translations: { en } })
+export const sheet = defineSheet({ id: 'X3_DiffSch_S_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, zeroAssumed, adapted: levelAdaptations(['D10']), translations: { en } })

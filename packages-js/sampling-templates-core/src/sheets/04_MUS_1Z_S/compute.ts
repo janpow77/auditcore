@@ -57,6 +57,11 @@ function sampleSize(c: Cells): boolean {
 }
 
 /** Abschnitt K: Stichprobenauswahl je Schicht (Zeilen 35–43). */
+/*
+ * Hochwertige Einheiten (Zeilen 37, 38, 45) und Iteration (Zeile 43) sind freiwillig
+ * (Entscheidung des Inhabers vom 17.10.2026): leer heißt keine, ihre Summe ist wie
+ * in der Vorlage 0 und kein Wert ohne Grundlage.
+ */
 function selection(c: Cells, total: Total, pending: boolean, context: SheetContext): void {
   const used = (column: string): boolean => !isBlank(c[at(column, 9)])
   fillRow(c, 35, (column) => (used(column) ? guard(() => roundUp(divide(required(c[at(column, 9)]), required(c.C9)) * required(c.C33))) : null))
@@ -66,17 +71,17 @@ function selection(c: Cells, total: Total, pending: boolean, context: SheetConte
   fillRow(c, 41, (column) => (used(column) ? checkStratumUnits(c[at(column, 40)], pending, context) : null))
   fillRow(c, 42, (column) => (used(column) ? guard(() => divide(required(c[at(column, 39)]), required(c[at(column, 40)]))) : null))
   c.C35 = total(35)
-  c.C37 = totalRow(c, 37, context)
-  c.C38 = totalRow(c, 38, context)
+  c.C37 = sumRow(c, 37)
+  c.C38 = sumRow(c, 38)
   c.C39 = totalRow(c, 39, context)
   c.C40 = total(40)
-  c.C43 = totalRow(c, 43, context)
+  c.C43 = sumRow(c, 43)
 }
 
 /** Abschnitte L und M je Schicht: Fehler, Hochrechnung und Hilfszeile der Genauigkeit (Zeilen 45–52). */
 function strataProjection(c: Cells, total: Total, context: SheetContext): void {
   const used = (column: string): boolean => !isBlank(c[at(column, 9)])
-  c.C45 = totalRow(c, 45, context)
+  c.C45 = sumRow(c, 45)
   c.C46 = totalRow(c, 46, context)
   fillRow(c, 49, (column) => (used(column) ? n(c[at(column, 45)]) : null))
   fillRow(c, 50, (column) => (used(column) ? guard(() => required(c[at(column, 42)]) * n(c[at(column, 46)])) : null))

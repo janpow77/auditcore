@@ -7,6 +7,7 @@
  */
 import type { MethodDefinition } from '../../model/definition'
 import { INCREASE_INTERPRETATION } from '../shared/srs'
+import { EXHAUSTIVE_MINIMUM_INTERPRETATION, ROUNDING_INTERPRETATION, UPPER_LIMIT_INTERPRETATION } from '../shared/interpretations'
 
 export const definition: MethodDefinition = {
   sheet: '10_SRS_2Z',
@@ -42,9 +43,9 @@ export const definition: MethodDefinition = {
         { cell: 'C20', alias: 'testType', kind: 'input', type: 'choice', format: '@', list: 'testType', default: 'zweiseitig', label: 'Testart (zweiseitig / einseitig)', hint: 'Anh. I Nr. 3; Art. 2 Nr. 17 und 18 DelVO.' },
         { cell: 'C21', alias: 'zCoefficient', kind: 'formula', type: 'decimal', format: '0.000', label: "Koeffizient z der Normalverteilung (z / z')", hint: 'Anh. I Nr. 3, Tabelle der z-Werte (95 % außerhalb der Tabelle, siehe Blatt 01).' },
         { cell: 'C22', alias: 'checkConfidence', kind: 'formula', type: 'check', label: 'Prüfung Konfidenzniveau gegen Systembewertung', hint: 'Anh. I Nr. 2 legt nur die Eckwerte fest; für „mittel“ ist das Konfidenzniveau fachlich zu begründen.' },
-        { cell: 'C23', alias: 'materiality', kind: 'input', type: 'percent', format: '0.00%', default: 0.02, label: 'Wesentlichkeitsschwelle (höchstens 2 %)', hint: 'Anh. I Nr. 1 i. V. m. Anh. XX Nr. 5.9 VO (EU) 2021/1060.' },
-        { cell: 'C24', alias: 'checkMateriality', kind: 'formula', type: 'check', label: 'Prüfung Wesentlichkeitsschwelle' },
-        { cell: 'C25', alias: 'tolerableError', kind: 'formula', type: 'amount', format: '#,##0.00" €"', label: 'Zulässiger Fehler (TE = Wesentlichkeitsschwelle × BV)', hint: 'Anh. II: TE höchstens 2 % der gesamten Ausgaben.' },
+        { cell: 'C23', alias: 'materiality', kind: 'input', type: 'percent', format: '0.00%', default: 0.02, label: 'Signifikanzschwelle (höchstens 2 %)', hint: 'Anh. I Nr. 1 i. V. m. Anh. XX Nr. 5.9 VO (EU) 2021/1060.' },
+        { cell: 'C24', alias: 'checkMateriality', kind: 'formula', type: 'check', label: 'Prüfung Signifikanzschwelle' },
+        { cell: 'C25', alias: 'tolerableError', kind: 'formula', type: 'amount', format: '#,##0.00" €"', label: 'Zulässiger Fehler (TE = Signifikanzschwelle × BV)', hint: 'Anh. II: TE höchstens 2 % der gesamten Ausgaben.' },
         { cell: 'C26', alias: 'anticipatedErrorRate', kind: 'input', type: 'percent', format: '0.00%', label: 'Voraussichtliche Fehlerquote', hint: 'Anh. I Nr. 4: Pilotstichprobe, historische Daten oder fachkundiges Ermessen.' },
         { cell: 'C27', alias: 'anticipatedError', kind: 'formula', type: 'amount', format: '#,##0.00" €"', label: 'Voraussichtlicher Fehler (AE = voraussichtliche Fehlerquote × BV)' },
         { cell: 'C28', alias: 'checkTolerableError', kind: 'formula', type: 'check', label: 'Prüfung TE > AE' },
@@ -57,13 +58,13 @@ export const definition: MethodDefinition = {
     {
       id: 'J', title: 'Stichprobenumfang „Erster Zeitraum“', reference: 'Anhang II Nr. 2.2',
       fields: [
-        { cell: 'C33', alias: 'computedSampleSize', kind: 'formula', type: 'integer', format: '#,##0', label: 'Rechnerischer Gesamtumfang n₁₊₂ = (z·N₁₊₂·σ_ew / (TE − AE))² (n_1+2)' },
+        { cell: 'C33', alias: 'computedSampleSize', kind: 'formula', type: 'integer', format: '#,##0', label: 'Rechnerischer Gesamtumfang n₁₊₂ = (z·N₁₊₂·σ_ew / (TE − AE))² (n_1+2)', interpretation: ROUNDING_INTERPRETATION },
         { cell: 'C34', alias: 'programmeCategory', kind: 'input', type: 'choice', list: 'category', label: 'Kategorie des Programms nach Anh. XI Tabelle 2 VO (EU) 2021/1060 (1–4)', hint: 'Art. 5 Abs. 7 UAbs. 1 DelVO; ErwG 10.' },
         { cell: 'C35', alias: 'article83', kind: 'input', type: 'choice', format: '@', list: 'yesNo', default: 'Nein', label: 'Verbesserte angemessene Regelungen nach Art. 83 VO (EU) 2021/1060 (Ja/Nein)', hint: 'Anh. I Buchst. a DelVO: Stichprobe von 30 Einheiten.' },
         { cell: 'C36', alias: 'applyLimitedSize', kind: 'input', type: 'choice', format: '@', list: 'yesNo', default: 'Nein', label: 'Begrenzten Stichprobenumfang anwenden (Ja/Nein)', hint: 'Art. 5 Abs. 7: Anwendung auf eine Stichprobe für die gesamte Grundgesamtheit (UAbs. 2).' },
         { cell: 'C37', alias: 'checkLimitedSize', kind: 'formula', type: 'check', label: 'Zulässigkeit des begrenzten Stichprobenumfangs' },
         { cell: 'C38', alias: 'limitedSampleSize', kind: 'formula', type: 'integer', format: '#,##0', label: 'Begrenzter Stichprobenumfang (Einheiten) (n_lim)', hint: 'Angerechnet werden alle Einheiten der Zufallsschichten und nur die hochwertigen Einheiten umfassender Schichten (Art. 5 Abs. 7 UAbs. 3).' },
-        { cell: 'C39', alias: 'minimumRandomSize', kind: 'formula', type: 'integer', format: '#,##0', label: 'Mindestumfang der Zufallsstichproben', hint: 'Art. 5 Abs. 5 (mind. 3 je Zeitraum).' },
+        { cell: 'C39', alias: 'minimumRandomSize', kind: 'formula', type: 'integer', format: '#,##0', label: 'Mindestumfang der Zufallsstichproben', hint: 'Art. 5 Abs. 5 (mind. 3 je Zeitraum).', interpretation: EXHAUSTIVE_MINIMUM_INTERPRETATION },
         { cell: 'C40', alias: 'limitedSizeNet', kind: 'formula', type: 'integer', format: '#,##0', label: 'Begrenzter Umfang abzüglich hochwertiger Einheiten Zeitraum 1' },
         { cell: 'C41', alias: 'sampleSize', kind: 'result', type: 'integer', format: '#,##0', label: 'Anzuwendender Gesamtumfang der Zufallsstichproben (n_1+2)' },
         { cell: 'C42', alias: 'sampleSizePeriod1', kind: 'result', type: 'integer', format: '#,##0', label: 'Stichprobenumfang Zeitraum 1 (N₁/N₁₊₂ · n) (n_1)' },
@@ -107,7 +108,7 @@ export const definition: MethodDefinition = {
         { cell: 'C70', alias: 'globalSampleSizePeriod2', kind: 'formula', type: 'integer', format: '#,##0', label: 'Global: Umfang Zeitraum 2 (n_2)' },
         { cell: 'C71', alias: 'increasedSampleSizePeriod2', kind: 'formula', type: 'integer', format: '#,##0', label: 'Begrenzt: erhöhter Umfang Zeitraum 2 (n_2)', hint: 'Art. 5 Abs. 7 UAbs. 4 Buchst. a; proportionale Erhöhung als Vorschlag.', interpretation: INCREASE_INTERPRETATION },
         { cell: 'C72', alias: 'finalSampleSizePeriod1', kind: 'formula', type: 'integer', format: '#,##0', label: 'Endgültiger Umfang Zeitraum 1 (n_1)' },
-        { cell: 'C73', alias: 'sampleSizePeriod2', kind: 'result', type: 'integer', format: '#,##0', label: 'Anzuwendender Umfang Zeitraum 2 (mind. 3 und Auffüllung auf 30 Einheiten) (n_2)', hint: 'Art. 5 Abs. 5.' },
+        { cell: 'C73', alias: 'sampleSizePeriod2', kind: 'result', type: 'integer', format: '#,##0', label: 'Anzuwendender Umfang Zeitraum 2 (mind. 3 und Auffüllung auf 30 Einheiten) (n_2)', hint: 'Art. 5 Abs. 5.', interpretation: EXHAUSTIVE_MINIMUM_INTERPRETATION },
         { cell: 'C74', alias: 'totalSampleSize', kind: 'formula', type: 'integer', format: '#,##0', label: 'Gesamtstichprobe des Geschäftsjahres (inkl. umfassende Schichten)' },
         { cell: 'C75', alias: 'checkMinimumSize', kind: 'formula', type: 'check', label: 'Mindestumfang des Geschäftsjahres' },
         { cell: 'C76', alias: 'checkLimitedSizeKept', kind: 'formula', type: 'check', label: 'Einhaltung des begrenzten Stichprobenumfangs' },
@@ -138,7 +139,7 @@ export const definition: MethodDefinition = {
         { cell: 'C91', alias: 'projectedErrorRate', kind: 'formula', type: 'percent', format: '0.00%', label: 'Extrapolierte Zufallsfehlerquote (EE / BV)' },
         { cell: 'C92', alias: 'totalErrorRate', kind: 'result', type: 'percent', format: '0.00%', label: 'Gesamtfehlerquote ((EE + systembedingte + nicht berichtigte anomale Fehler) / BV)', hint: 'Art. 8 Abs. 1 DelVO; endgültige Berechnung inkl. TH-Pauschale und Anh. III in Blatt 18.' },
         { cell: 'C93', alias: 'upperErrorLimitRate', kind: 'result', type: 'percent', format: '0.00%', label: 'Obere Fehlergrenze in % von BV' },
-        { cell: 'C94', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Wesentlichkeitsschwelle' },
+        { cell: 'C94', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Signifikanzschwelle', interpretation: UPPER_LIMIT_INTERPRETATION },
       ],
     },
   ],

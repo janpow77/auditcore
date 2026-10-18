@@ -6,6 +6,7 @@
 import { guard, isBlank, minus, n, required } from '../../excel/index'
 import type { CellAddress, Cells, SheetContext } from '../../model/types'
 import { type Pending, type Recalculation, additionalUnits, appliedRandomSize, auditedTerm, globalComputedSize, increasedSize, minimumRandomSize, netLimitedSize, periodSize, share, standardSize, weightedDeviation } from '../shared/srs'
+import { blockedGlobal } from '../shared/periods'
 
 /** Ist-Werte des Zeitraums 2 und aktualisierte Größen des Geschäftsjahres (C58–C70). */
 function updated(c: Cells): void {
@@ -39,7 +40,7 @@ function global(c: Cells, pending: Pending): void {
   c.C76 = weightedDeviation([[c.C13, c.C68], [c.C59, c.C62], [c.C61, c.C63]], c.C75)
   c.C77 = globalComputedSize(c.C23, c.C75, c.C76, c.C66, c.C67)
   c.C78 = netLimitedSize(c.C41, c.C11, c.C57)
-  c.C79 = appliedRandomSize(c.C77, minimumRandomSize(9, c.C10, c.C56), c.C78, pending('C77'))
+  c.C79 = appliedRandomSize(c.C77, minimumRandomSize(9, c.C10, c.C56), c.C78, pending('C77'), true)
   c.C80 = additionalUnits(c.C13, c.C75, c.C79, c.C45)
   c.C81 = share(c.C59, c.C75, c.C79)
   c.C82 = share(c.C61, c.C75, c.C79)
@@ -62,7 +63,9 @@ function applied(c: Cells, pending: Pending, approach: Recalculation, context: S
   c.C83 = guard(() => increasedSize(c.C46, [[c.C53, c.C14], [c.C59, c.C15]]))
   const chosen = c[CHOSEN[approach]]
   const notApplicable = approach === 'standard' && typeof c.C72 === 'string'
-  c.C84 = periodSize(chosen, { open: pending(CHOSEN[approach]), notApplicable }, context)
+  // Globaler Ansatz bei AE = TE nicht anwendbar (Division durch null): Umfang offen statt Untergrenze.
+  const blocked = approach === 'global' && blockedGlobal(c, 'C77', pending)
+  c.C84 = periodSize(chosen, { open: pending(CHOSEN[approach]) || blocked, notApplicable }, context)
   c.C85 = c[PLANNED[approach]] ?? null
   c.C86 = guard(() => required(c.C45) + (approach === 'global' ? required(c.C80) : 0))
 }

@@ -7,6 +7,7 @@
  */
 import type { SheetTexts } from '../../model/texts'
 import { HINTS_EN, VALUES_EN } from '../shared/nonstatistical'
+import { NONSTATISTICAL_THREE_INTERPRETATION_EN } from '../shared/interpretations'
 
 export const en: SheetTexts = {
   title: 'Non-statistical sampling – PPS selection, non-stratified',
@@ -33,7 +34,7 @@ export const en: SheetTexts = {
     C15: { label: 'Book value of the high value units (BV_e)' },
     C16: { label: 'Book value of the random stratum (low value units) (BV_s)' },
     C17: { label: 'Number of units to be selected in the random stratum (n_s)' },
-    C18: { label: 'At least three units in the random stratum' },
+    C18: { label: 'At least three units in the random stratum', interpretation: NONSTATISTICAL_THREE_INTERPRETATION_EN },
     C19: { label: 'Interval of selection (SI)', hint: 'Art. 2(9); Art. 5(2), second subparagraph DR.' },
     C20: { label: 'Units of the random stratum with BV > interval of selection (iteration)', hint: 'Such units are to be assigned to the high value stratum; cut-off value and interval are to be recalculated.' },
     C21: { label: 'Check of the iteration' },

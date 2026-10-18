@@ -1,5 +1,3 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { createTranslate } from '../src/i18n/messages'
 import { isNumber, lt } from '../src/excel/index'
@@ -10,7 +8,7 @@ import { SHEETS, findAvailableSheet } from '../src/sheets/registry'
 import type { CellValue } from '../src/model/types'
 import { carriedLimitations, isQualified, limitationsOf } from '../src/view/limits'
 import { contextFor } from '../src/workspace/compute'
-import { caseState, caseWorkspace, compareCase, goldenFiles, sameValue, selectedSheets, type GoldenCase } from './golden'
+import { caseState, caseWorkspace, compareCase, goldenFiles, readGoldenFile, sameValue, selectedSheets, type GoldenCase } from './golden'
 
 /**
  * Eigenschaften, die für jedes Blatt gelten müssen (Auflagen der Gesamtabnahme):
@@ -26,7 +24,7 @@ import { caseState, caseWorkspace, compareCase, goldenFiles, sameValue, selected
  *    einen Hinweis in Warnfarbe.
  */
 const t = createTranslate()
-const casesOf = (file: string): GoldenCase[] => JSON.parse(readFileSync(fileURLToPath(new URL(`./golden/${file}`, import.meta.url)), 'utf8')) as GoldenCase[]
+const casesOf = (file: string): GoldenCase[] => readGoldenFile(file)
 const setsOf = (sheet: AvailableSheet, part: string): GoldenCase[] => goldenFiles(sheet.id).filter((file) => file.includes(part)).flatMap(casesOf)
 
 /** Zellen des Blatts, an denen sein Ergebnis hängt, soweit der Fall sie enthält. */

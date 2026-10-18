@@ -10,7 +10,7 @@ Ergebnisse herunterladen, den Arbeitsstand als Datei speichern und später
 wieder öffnen – ohne Server, ohne Anmeldung, ohne Netzanfragen. Die Oberfläche
 liegt in [`@auditcore/sampling-templates-vue`](../sampling-templates-vue/README.md).
 
-**Stand 0.1.3:** Alle Blätter der Vorlage sind gebaut und gegen sie
+**Stand 0.1.12:** Alle Blätter der Vorlage sind gebaut und gegen sie
 abgeglichen: Grundgesamtheit (02), MUS-Standardansatz (03–07), einfaches
 Zufallsstichprobenverfahren (08–12), nichtstatistische Verfahren (13–16),
 Unterstichproben (17), Gesamtfehlerquote nach Anhang III (18), Bericht (20) und
@@ -44,10 +44,10 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-core-0.1.3.tgz
+npm install @auditcore/sampling-templates-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-core-0.1.12.tgz
 ```
 
-Version 0.1.3 ist noch nicht veröffentlicht (siehe „Lizenz und
+Version 0.1.12 ist noch nicht veröffentlicht (siehe „Lizenz und
 Herkunftsnachweis“). Anleitung mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
@@ -128,7 +128,7 @@ Nachweise: [docs/abgleich.md](docs/abgleich.md) (Golden-Abgleich),
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (201):
+Exporte der Einstiegspunkte aus `package.json#exports` (208):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -180,6 +180,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (201):
 | `@auditcore/sampling-templates-core` | `Migrations` | Typ | – | `workspace/migrate` |
 | `@auditcore/sampling-templates-core` | `MissingPolicy` | Schnittstelle | Richtlinie für fehlende Angaben je Fallart; die geltende steht in `model/policy.ts`. | `model/types` |
 | `@auditcore/sampling-templates-core` | `MissingTreatment` | Typ | Behandlung einer fehlenden Angabe: Wert offen lassen oder wie die Vorlage mit 0 rechnen und das ausweisen. | `model/types` |
+| `@auditcore/sampling-templates-core` | `OFFICIAL_THRESHOLD_TERM` | Konstante | Amtlicher Begriff (DelVO, deutsche Fassung). | `model/terms` |
 | `@auditcore/sampling-templates-core` | `OpenError` | Schnittstelle | Grund, aus dem eine Datei nicht geöffnet wird. | `workspace/types` |
 | `@auditcore/sampling-templates-core` | `OpenErrorCode` | Typ | – | `workspace/types` |
 | `@auditcore/sampling-templates-core` | `OpenNotice` | Typ | Hinweis beim Öffnen; die Oberfläche formuliert daraus den Text. | `workspace/types` |
@@ -223,15 +224,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (201):
 | `@auditcore/sampling-templates-core` | `SubsampleNeeds` | Schnittstelle | Wonach das Methodenblatt die Summen der Unterstichproben unterscheidet. | `model/sheet` |
 | `@auditcore/sampling-templates-core` | `SubsampleRole` | Typ | Summen aus Blatt 17, die ein Methodenblatt per Schaltfläche übernimmt: Fehler der hochwertigen Einheiten, Summe der Fehlerquoten bzw. Fehler und Buchwerte der Zufallsschicht. | `model/definition` |
 | `@auditcore/sampling-templates-core` | `SubsampleTotals` | Typ | Summen der Unterstichproben je Rolle; `null`, solange keine Einheit dazu beiträgt. | `model/sheet` |
-| `@auditcore/sampling-templates-core` | `SummaryDefinition` | Schnittstelle | Mitlaufende Ergebnisspalte: Hauptgröße, Kennzahlen und Skala gegen die Wesentlichkeitsschwelle. | `model/definition` |
+| `@auditcore/sampling-templates-core` | `SummaryDefinition` | Schnittstelle | Mitlaufende Ergebnisspalte: Hauptgröße, Kennzahlen und Skala gegen die Signifikanzschwelle. | `model/definition` |
 | `@auditcore/sampling-templates-core` | `SummaryRow` | Schnittstelle | Zeile der mitlaufenden Ergebnisspalte. | `model/definition` |
 | `@auditcore/sampling-templates-core` | `SummaryView` | Schnittstelle | – | `view/summaryView` |
 | `@auditcore/sampling-templates-core` | `TEMPLATE_NAME` | Konstante | Nachgebildete Vorlage. | `workspace/types` |
 | `@auditcore/sampling-templates-core` | `TEMPLATE_POLICY` | Konstante | Variante „wie die Vorlage“: jede fehlende Angabe mit 0 gerechnet und ausgewiesen, Prüfhinweise wie in der Vorlage. | `model/policy` |
 | `@auditcore/sampling-templates-core` | `TEMPLATE_STRATA` | Konstante | Schichtspalten der Vorlage. | `model/strata` |
+| `@auditcore/sampling-templates-core` | `TEMPLATE_THRESHOLD_TERM` | Konstante | Begriff der Vorlage. | `model/terms` |
+| `@auditcore/sampling-templates-core` | `THRESHOLD_TERM_FIRST` | Konstante | Erstes Vorkommen je Blatt: amtlicher Begriff mit dem Begriff der Vorlage in Klammern. | `model/terms` |
 | `@auditcore/sampling-templates-core` | `Tone` | Typ | Einstufung eines Prüfhinweises (✔ / ⚠ / ✖ / ohne Zeichen). | `model/types` |
 | `@auditcore/sampling-templates-core` | `Translate` | Typ | Übersetzungsfunktion, wie sie `useI18n` aus `@auditcore/ui` liefert. | `i18n/messages` |
 | `@auditcore/sampling-templates-core` | `TranslationLocale` | Typ | Sprachen neben Deutsch. | `model/texts` |
+| `@auditcore/sampling-templates-core` | `UNREADABLE_INPUT` | Konstante | Wert einer Eingabe, deren Text die Oberfläche nicht als Zahl lesen kann. | `model/sheet` |
 | `@auditcore/sampling-templates-core` | `ValueType` | Typ | Darstellung und Eingabeprüfung eines Werts. | `model/definition` |
 | `@auditcore/sampling-templates-core` | `Variant` | Schnittstelle | Eine Variante = ein Blatt der Vorlage. | `catalog/catalog` |
 | `@auditcore/sampling-templates-core` | `WORKFLOW_STEPS` | Konstante | Arbeitsablauf: Grundgesamtheit → Verfahren → Unterstichproben → Gesamtfehlerquote → Bericht. | `catalog/catalog` |
@@ -300,6 +304,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (201):
 | `@auditcore/sampling-templates-core` | `localizeSheet` | Funktion | Blatt in der Sprache der Oberfläche: Definition mit übersetzten Texten; `shared` sind Übersetzungen, die für alle Blätter gelten (Listen aus Blatt 01). | `model/sheet` |
 | `@auditcore/sampling-templates-core` | `migrate` | Funktion | Datei schrittweise von `from` auf `to` anheben. | `workspace/migrate` |
 | `@auditcore/sampling-templates-core` | `named` | Funktion | Zellwerte unter den lesbaren Namen der Definition; bei Schichtzeilen die Summenzelle, sonst die erste Schicht. | `model/definition` |
+| `@auditcore/sampling-templates-core` | `officialWording` | Funktion | Text mit dem amtlichen Begriff statt des Begriffs der Vorlage; andere Werte bleiben. | `model/terms` |
 | `@auditcore/sampling-templates-core` | `openWorkspace` | Funktion | Öffnet den Text einer Arbeitsstandsdatei. Ältere Fassungen werden angehoben, neuere abgelehnt; unbekannte Felder werden ignoriert und gemeldet; weicht die Prüfsumme ab, ist die Dat … | `workspace/open` |
 | `@auditcore/sampling-templates-core` | `optionsOf` | Funktion | Einträge einer Auswahlliste aus Blatt 01; das Konfidenzniveau kommt aus der z-Tabelle. | `format/numbers` |
 | `@auditcore/sampling-templates-core` | `parseFieldInput` | Funktion | Liest die Texteingabe eines Felds; Prozentfelder werden in Prozent eingegeben und als Anteil gespeichert. | `format/numbers` |
@@ -309,7 +314,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (201):
 | `@auditcore/sampling-templates-core` | `plannedSheet` | Funktion | Platzhalter für ein Blatt ohne Rechenkern. | `model/sheet` |
 | `@auditcore/sampling-templates-core` | `policyOf` | Funktion | Richtlinie des Kontexts; ohne Angabe die geltende. | `model/policy` |
 | `@auditcore/sampling-templates-core` | `projectionWithoutErrors` | Funktion | Hochrechnung der Zufallsschicht: Ist keine Fehlersumme eingetragen (`entered`), rechnet die Vorlage mit `N(…)` = 0 und zeigt 0 € – ein Wert ohne Grundlage. | `model/policy` |
-| `@auditcore/sampling-templates-core` | `resolveInputs` | Funktion | Eingaben eines Blatts auflösen: eigene Werte der Eingabezellen, bei Verknüpfungen der Wert des anderen Blatts aus dem Kontext, solange die Prüfbehörde ihn nicht überschrieben hat. | `model/sheet` |
+| `@auditcore/sampling-templates-core` | `resolveInputs` | Funktion | Eingaben eines Blatts auflösen: eigene Werte der Eingabezellen, bei Verknüpfungen der Wert des anderen Blatts aus dem Kontext, solange die Prüfbehörde ihn nicht überschrieben hat ( … | `model/sheet` |
 | `@auditcore/sampling-templates-core` | `rowNumber` | Funktion | Zeilennummer einer Zelle (`D9` → `9`). | `model/definition` |
 | `@auditcore/sampling-templates-core` | `rowValues` | Funktion | Werte einer Schichtzeile über alle Schichtspalten. | `model/strata` |
 | `@auditcore/sampling-templates-core` | `samplingTemplatesMessages` | Konstante | Texte je Sprache; Deutsch vollständig, Englisch als Arbeitsübersetzung (`messages.en.ts`). | `i18n/messages` |
@@ -324,12 +329,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (201):
 | `@auditcore/sampling-templates-core` | `summaryOf` | Funktion | Ergebnisübersicht eines Methodenblatts für den Kontext von Blatt 18. | `model/sheet` |
 | `@auditcore/sampling-templates-core` | `tableOf` | Funktion | Nachschlagetabelle eines Blatts (X1a) oder `undefined`. | `sheets/registry` |
 | `@auditcore/sampling-templates-core` | `tableSheet` | Funktion | Nachschlagetabelle anmelden: kein Rechenblatt, aber als Datentabelle anzeigbar. | `model/sheet` |
+| `@auditcore/sampling-templates-core` | `templateNumber` | Funktion | Wert der Vorlage als Zellwert: Ein Wahrheitswert zählt wie in Excel als 1 bzw. 0. | `model/sheet` |
 | `@auditcore/sampling-templates-core` | `toneOf` | Funktion | Einstufung eines Prüfhinweises nach dem führenden Zeichen der Vorlage. | `excel/index` |
 | `@auditcore/sampling-templates-core` | `totalRow` | Funktion | Summe einer Schichtzeile als angezeigter Wert: `SUMME(D<zeile>:J<zeile>)`, solange mindestens eine Schicht einen Wert trägt. | `model/strata` |
 | `@auditcore/sampling-templates-core` | `translateValue` | Funktion | Anzeige eines Texts aus dem Rechenkern oder eines Listeneintrags in der Sprache der Oberfläche. | `model/texts` |
 | `@auditcore/sampling-templates-core` | `unfounded` | Funktion | Wert ohne Grundlage: `shown` ist, was die Vorlage zeigt, obwohl die geprüfte bzw. summierte Größe fehlt (z. B. | `model/policy` |
 | `@auditcore/sampling-templates-core` | `usedStrata` | Funktion | Anzahl der belegten Schichten: höchste Schicht mit einem Wert in einer der Zeilen. | `model/strata` |
 | `@auditcore/sampling-templates-core` | `withMessages` | Funktion | Kataloge mit überschriebenen Texten einer Anwendung. | `i18n/messages` |
+| `@auditcore/sampling-templates-core` | `withTemplateTerm` | Funktion | Definition mit dem Begriff der Vorlage in Klammern an der ersten Bezeichnung des Blatts, die den amtlichen Begriff trägt (Reihenfolge der Abschnitte und Felder). | `model/terms` |
 | `@auditcore/sampling-templates-core` | `workspaceChecksum` | Funktion | Prüfsumme der Eingaben eines Arbeitsstands – dieselbe, die die Arbeitsstandsdatei und der Excel-Export tragen. Damit lässt sich ein Ausdruck einem Arbeitsstand zuordnen. | `workspace/save` |
 | `@auditcore/sampling-templates-core` | `workspaceFileName` | Funktion | – | `workspace/filenames` |
 | `@auditcore/sampling-templates-core` | `zValue` | Funktion | Koeffizient z bzw. z' zum Konfidenzniveau; entspricht `INDEX(01_Parameter!C5:D9;VERGLEICH(niveau;01_Parameter!B5:B9;0);WENN(testart="einseitig";2;1))`. | `sheets/01_Parameter/index` |
@@ -370,58 +377,68 @@ Exporte der Einstiegspunkte aus `package.json#exports` (201):
 Neu geschrieben. Fachliche und rechnerische Referenz ist ausschließlich die
 Excel-Arbeitsmappe „Stichprobenvorlagen 2021–2027, Fassung 4“ (Arbeitsentwurf
 einer Prüfbehörde, Stand Oktober 2026, keine amtliche Fassung; nicht im
-Repository). Jedes Blatt ist gegen die Vorlage charakterisiert
-(LibreOffice-Neuberechnung; Zellen mit Ganzzahlformat exakt, übrige auf 1e-9
-relativ, Texte wortgleich):
+Repository). Jedes Blatt ist gegen die Vorlage charakterisiert (Neuberechnung in Microsoft
+Excel 16.0.20326; Zellen mit Ganzzahlformat exakt, übrige auf 1e-9 relativ,
+Texte wortgleich):
 
-| Blatt | Fälle | Zellen | gleich | begründet abweichend | Toleranzkante | unbegründet | abweichend „wie die Vorlage“ |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| `02_Grundgesamtheit` | 159 | 3.021 | 2.948 | 73 | 0 | 0 | 0 |
-| `03_MUS_1Z` | 783 | 29.754 | 29.446 | 308 | 0 | 0 | 0 |
-| `04_MUS_1Z_S` | 381 | 46.482 | 45.466 | 1.016 | 0 | 0 | 0 |
-| `05_MUS_2Z` | 541 | 35.165 | 33.223 | 1.942 | 0 | 0 | 0 |
-| `06_MUS_2Z_S` | 635 | 150.495 | 147.167 | 3.327 | 1 | 0 | 0 |
-| `07_MUS_3Z` | 612 | 56.916 | 52.646 | 4.270 | 0 | 0 | 0 |
-| `08_SRS_1Z` | 660 | 24.420 | 24.210 | 210 | 0 | 0 | 0 |
-| `09_SRS_1Z_S` | 421 | 32.417 | 31.639 | 778 | 0 | 0 | 0 |
-| `10_SRS_2Z` | 714 | 42.840 | 39.426 | 3.414 | 0 | 0 | 0 |
-| `11_SRS_2Z_S` | 724 | 118.736 | 115.100 | 3.636 | 0 | 0 | 0 |
-| `12_SRS_3Z` | 785 | 67.510 | 61.572 | 5.937 | 1 | 0 | 0 |
-| `13_NS_GW` | 399 | 8.778 | 8.661 | 117 | 0 | 0 | 0 |
-| `14_NS_GW_S` | 410 | 16.400 | 16.099 | 301 | 0 | 0 | 0 |
-| `15_NS_PPS` | 406 | 10.556 | 10.334 | 222 | 0 | 0 | 0 |
-| `16_NS_PPS_S` | 412 | 28.840 | 28.192 | 648 | 0 | 0 | 0 |
-| `17_Unterstichprobe` | 102 | 612 | 577 | 35 | 0 | 0 | 0 |
-| `18_GFQ_AnhIII` | 677 | 14.894 | 14.609 | 285 | 0 | 0 | 0 |
-| `20_Druck_KOM` | 588 | 19.404 | 19.161 | 243 | 0 | 0 | 0 |
-| `X1_KonsMUS_2017` | 213 | 2.769 | 2.588 | 181 | 0 | 0 | 0 |
-| `X2_DiffSch_2017` | 434 | 5.642 | 5.449 | 193 | 0 | 0 | 0 |
-| `X3_DiffSch_S_2017` | 234 | 8.424 | 7.842 | 582 | 0 | 0 | 0 |
-| `X4_DiffSch_2Z_2017` | 241 | 4.820 | 4.490 | 330 | 0 | 0 | 0 |
-| **Summe** | 10.531 | 728.895 | 700.845 | 28.048 | 2 | 0 | 0 |
+| Blatt | Fälle | Zellen | gleich | begründet abweichend | bewusst anders dargestellt | amtlicher Begriff | bewusst nach KOM | unbegründet | abweichend „wie die Vorlage“ |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `02_Grundgesamtheit` | 159 | 3.021 | 2.877 | 73 | 0 | 71 | 0 | 0 | 0 |
+| `03_MUS_1Z` | 783 | 29.754 | 28.884 | 328 | 0 | 99 | 443 | 0 | 0 |
+| `04_MUS_1Z_S` | 381 | 46.482 | 43.618 | 1.003 | 0 | 103 | 1.758 | 0 | 0 |
+| `05_MUS_2Z` | 541 | 35.165 | 32.489 | 1.942 | 0 | 107 | 627 | 0 | 0 |
+| `06_MUS_2Z_S` | 635 | 150.495 | 142.973 | 3.266 | 0 | 132 | 4.124 | 0 | 0 |
+| `07_MUS_3Z` | 612 | 56.916 | 51.457 | 4.270 | 0 | 92 | 1.097 | 0 | 0 |
+| `08_SRS_1Z` | 660 | 24.420 | 23.771 | 210 | 0 | 132 | 307 | 0 | 0 |
+| `09_SRS_1Z_S` | 421 | 32.417 | 30.967 | 778 | 0 | 151 | 521 | 0 | 0 |
+| `10_SRS_2Z` | 714 | 42.840 | 38.755 | 3.414 | 0 | 121 | 550 | 0 | 0 |
+| `11_SRS_2Z_S` | 724 | 118.736 | 112.139 | 3.636 | 0 | 252 | 2.709 | 0 | 0 |
+| `12_SRS_3Z` | 785 | 67.510 | 60.721 | 5.937 | 0 | 141 | 711 | 0 | 0 |
+| `13_NS_GW` | 399 | 8.778 | 8.286 | 117 | 0 | 375 | 0 | 0 | 0 |
+| `14_NS_GW_S` | 410 | 16.400 | 15.709 | 301 | 0 | 390 | 0 | 0 | 0 |
+| `15_NS_PPS` | 406 | 10.556 | 9.970 | 222 | 0 | 364 | 0 | 0 | 0 |
+| `16_NS_PPS_S` | 412 | 28.840 | 27.840 | 618 | 0 | 382 | 0 | 0 | 0 |
+| `17_Unterstichprobe` | 102 | 612 | 577 | 35 | 0 | 0 | 0 | 0 | 0 |
+| `18_GFQ_AnhIII` | 677 | 14.894 | 13.883 | 291 | 0 | 440 | 280 | 0 | 0 |
+| `20_Druck_KOM` | 588 | 19.404 | 17.755 | 251 | 610 | 516 | 272 | 0 | 0 |
+| `X1_KonsMUS_2017` | 213 | 2.769 | 2.580 | 181 | 8 | 0 | 0 | 0 | 0 |
+| `X2_DiffSch_2017` | 434 | 5.642 | 5.445 | 193 | 4 | 0 | 0 | 0 | 0 |
+| `X3_DiffSch_S_2017` | 234 | 8.424 | 7.838 | 582 | 4 | 0 | 0 | 0 | 0 |
+| `X4_DiffSch_2Z_2017` | 241 | 4.820 | 4.486 | 330 | 4 | 0 | 0 | 0 | 0 |
+| **Summe** | 10.531 | 728.895 | 683.020 | 27.978 | 630 | 3.868 | 13.399 | 0 | 0 |
 
 „Begründet abweichend“ heißt: Die Webfassung zeigt keinen Wert, wo die Vorlage
 einen zeigt, weil eine Eingabe fehlt; die Gegenprobe ergibt den Wert der
 Vorlage. Sind alle Pflichteingaben vorhanden, zeigt die Webfassung immer, was
-die Vorlage zeigt. „Toleranzkante“ sind zwei Würdigungen von Prüfsonden mit
-17-stelliger Eingabe, die genau auf der Vergleichstoleranz liegen; mit der um
-eine letzte Stelle verschobenen Eingabe stimmt der Text. „Wie die Vorlage“ ist
-dieselbe Rechnung unter der Richtlinie, die jede fehlende Angabe mit 0
-rechnet: Dann stimmt jede Zelle. Von den 10.531 Fällen stammen 6.805 aus der
-unabhängigen Gesamtabnahme (eigener Generator, Einzellücken-Matrix,
-Schwellen- und Ganzzahlsonden), 3.726 aus dem Bau; je Blatt gehören mindestens
-100 zufällige vollständige Belegungen dazu.
+die Vorlage zeigt. „Bewusst anders dargestellt“ sind die Kopfzeile des
+Berichts, `#DIV/0!` in Blatt 20 (kein Wert mit Hinweis) und der Wahrheitswert
+FALSCH der Altvorlagen (0 mit Hinweis). „Amtlicher Begriff“ sind Texte, die
+statt „Wesentlichkeitsschwelle“ der Vorlage „Signifikanzschwelle“ zeigen
+(Anhang I Nr. 1 DelVO), sonst wortgleich. „Bewusst nach KOM“ sind Zellen, an
+denen die Webfassung nach Entscheidung des Inhabers vom 17.10.2026 nach den
+Vorgaben der KOM rechnet (DelVO und KOM-Leitfaden EGESIF_16-0014-01); je Zelle
+gegen einen unabhängig nachgerechneten Wert geprüft (`scripts/delvo_soll.py`,
+`scripts/kom_lo.py`). Toleranzkanten gibt es gegen Excel
+keine. „Wie die Vorlage“ ist dieselbe Rechnung unter der Richtlinie, die jede
+fehlende Angabe mit 0 rechnet: Dann stimmt jede Zelle außer denen „bewusst nach KOM“. Von den 10.531 Fällen
+stammen 6.805 aus der unabhängigen Gesamtabnahme (eigener Generator,
+Einzellücken-Matrix, Schwellen- und Ganzzahlsonden), 3.726 aus dem Bau; je
+Blatt gehören mindestens 100 zufällige vollständige Belegungen dazu.
 
-**Grenze des Nachweises:** Alle Sollwerte stammen aus der Neuberechnung der
-Vorlage mit LibreOffice 24.2. Eine Gegenprobe mit Microsoft Excel steht aus;
-ob Excel an Schwellen und beim Aufrunden in jedem Fall gleich entscheidet, ist
-nicht geprüft. Die Oberfläche nennt das in der Fußzeile. Einzelheiten:
-[PROVENANCE.md](PROVENANCE.md), [docs/abgleich.md](docs/abgleich.md).
+**Grundlage des Nachweises:** Die Sollwerte stammen aus der Neuberechnung der
+Vorlage in Microsoft Excel (Microsoft 365, Version 16.0.20326, Excel-Gegenprobe
+vom 17.10.2026). LibreOffice 24.2 ist nur noch Hilfsmittel; seine früheren
+Sollwerte weichen in 937 Zellen von Excel ab. Nicht geprüft sind Eingaben von
+Hand über die Oberfläche von Excel, Datenüberprüfung, bedingte Formate und das
+Druckbild. Einzelheiten: [PROVENANCE.md](PROVENANCE.md),
+[docs/abgleich.md](docs/abgleich.md), [docs/abweichungen.md](docs/abweichungen.md) Nr. 3.
 
 ## Bewusste Verhaltensabweichungen
 
 Die Webfassung zeigt nie einen anderen Wert als die Vorlage, an manchen
-Stellen keinen. Nach der geltenden Richtlinie (vorläufige Vorgabe des
+Stellen keinen – mit zwei Ausnahmen, an denen sie nach Entscheidung des
+Inhabers vom 17.10.2026 nach der DelVO rechnet (Genauigkeit bei Ersetzung in
+Tabelle 2, globale Neuberechnung bei AE ≥ TE; `docs/abweichungen.md` Nr. 16). Nach der geltenden Richtlinie (vorläufige Vorgabe des
 Auftraggebers): „Angabe fehlt“ mit Nennung der Eingabe, wo die Vorlage wegen
 einer fehlenden Pflichteingabe mit 0 weiterrechnet; kein Wert, wo die Vorlage
 einen ohne Grundlage zeigt (bestandener Prüfhinweis ohne geprüfte Größe,
@@ -430,13 +447,19 @@ Angabe, daher mit 0 berechnet.“ ausgewiesen bei fehlender Standardabweichung
 der Stichprobe und fehlender Fehlersumme einer von mehreren Schichten bzw.
 Zeiträumen. Die Variante „durchgehend wie die Vorlage“ ist ebenfalls für jedes
 Blatt geprüft und an einer Stelle einschaltbar.
-Vergleiche und Aufrunden folgen dem an LibreOffice gemessenen Verhalten;
-Microsoft Excel ist nicht gegengeprüft. Vollständig:
+Vergleiche, Aufrunden, `VERGLEICH` und Summen folgen dem an Microsoft Excel
+16.0.20326 gemessenen Verhalten. Bewusst anders dargestellt sind nur die
+Kopfzeile des Berichts, der Wahrheitswert FALSCH der Altvorlagen (als 0) und
+`#DIV/0!` in Blatt 20 (kein Wert mit Hinweis). Begriffe folgen der DelVO
+(„Signifikanzschwelle“, beim ersten Vorkommen je Blatt mit dem Begriff der
+Vorlage in Klammern); wo die Vorlage von der DelVO abweicht, steht ein Hinweis
+in Warnfarbe mit Fundstelle (DelVO-Abgleich, `docs/abweichungen.md` Nr. 16).
+Vollständig:
 [docs/abweichungen.md](docs/abweichungen.md).
 
 ## Abhängigkeiten
 
-`@auditcore/common@0.1.2` (Zahleneingabe und -ausgabe, Datum), `fflate@^0.8.3`
+`@auditcore/common@0.1.1` (Zahleneingabe und -ausgabe, Datum), `fflate@^0.8.3`
 (MIT, ohne eigene Abhängigkeiten; nur im Einstieg `./workbook`). Bewusst keine
 Tabellenkalkulationsbibliothek: ExcelJS besteht die Lizenzprüfung des
 Repositorys nicht und bringt 193 Pakete mit, die Community-Fassung von SheetJS

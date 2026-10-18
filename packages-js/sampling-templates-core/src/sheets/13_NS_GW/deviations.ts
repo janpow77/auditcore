@@ -27,6 +27,6 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C15'], ['C8'], '0 (10 % von 0 Einheiten)', UNITS),
   ...entries(['C16'], ['C8', 'C13'], 'Prüfhinweis auf der Grundlage von 0 Einheiten der Grundgesamtheit bzw. der Zufallsstichprobe', 'Die Prüfung der Mindesterfassung setzt die Anzahl der Stichprobeneinheiten und den Umfang der Zufallsstichprobe voraus.'),
   ...entries(['C21', 'C22', 'N5'], ['C7'], 'Hochrechnung mit dem negativen Buchwert der Zufallsschicht (0 € abzüglich umfassende Schicht) bzw. 0 €', BOOK_VALUE),
-  ...entries(['C28'], ['C27'], 'Würdigung gegen eine Schwelle von 0 %', 'Die Würdigung setzt die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C28'], ['C27'], 'Würdigung gegen eine Schwelle von 0 %', 'Die Würdigung setzt die Signifikanzschwelle voraus.'),
   { cell: 'C21', whenEmpty: ['C18'], ...PROJECTION_WITHOUT_ERRORS },
 ]

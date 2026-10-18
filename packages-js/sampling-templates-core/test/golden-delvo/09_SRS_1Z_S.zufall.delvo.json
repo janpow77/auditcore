@@ -1,0 +1,475 @@
+[
+ {
+  "position": 3,
+  "name": "Zufall 004",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C31": 231423
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 4,
+  "name": "Zufall 005",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C31": 2360
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 6,
+  "name": "Zufall 007",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C31": 493618
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 7,
+  "name": "Zufall 008",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 1343585.84222192,
+   "N10": 4607,
+   "C31": 4602,
+   "C39": 4602,
+   "C41": 4605,
+   "D41": 235,
+   "E41": 737,
+   "F41": 762,
+   "G41": 731,
+   "H41": 757,
+   "I41": 828,
+   "J41": 555,
+   "C53": 1343585.84222192,
+   "C56": 12694078.3928555,
+   "C57": 10006906.7084116,
+   "C58": 0.00405831438582202,
+   "C61": 0.0383425899094647
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 8,
+  "name": "Zufall 009",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 1140058.67368827,
+   "N10": 1587,
+   "C31": 1574,
+   "C39": 1574,
+   "C41": 1577,
+   "D41": 352,
+   "E41": 337,
+   "F41": 339,
+   "G41": 71,
+   "H41": 219,
+   "I41": 68,
+   "J41": 191,
+   "C53": 1140058.67368827,
+   "C56": 7541764.22257886,
+   "C58": 0.00323783045822794,
+   "C61": 0.0214190326096466
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 11,
+  "name": "Zufall 012",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 134102.896761264,
+   "N10": 224273,
+   "C31": 224265,
+   "C39": 224265,
+   "C41": 224269,
+   "D41": 53397,
+   "E41": 31676,
+   "F41": 2354,
+   "G41": 4345,
+   "H41": 65343,
+   "I41": 52492,
+   "J41": 14662,
+   "C53": 134102.896761264,
+   "C56": 2613995.65324215,
+   "C57": 2345789.85971963,
+   "C58": 0.000968126490605379,
+   "C61": 0.0188711690750146,
+   "C62": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 13,
+  "name": "Zufall 014",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 1029981.32704235,
+   "N10": 1232,
+   "C31": 1221,
+   "C39": 1221,
+   "C41": 1223,
+   "D41": 480,
+   "E41": 48,
+   "F41": 233,
+   "G41": 55,
+   "H41": 275,
+   "I41": 51,
+   "J41": 81,
+   "C53": 1029981.32704235,
+   "C56": 14875670.4695722,
+   "C58": 0.00317999967767294,
+   "C61": 0.0459276552461844
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 15,
+  "name": "Zufall 016",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C31": 2914
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 19,
+  "name": "Zufall 020",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 207193.820568399,
+   "N10": 335272,
+   "C31": 335268,
+   "C39": 335268,
+   "C41": 335271,
+   "D41": 52014,
+   "E41": 10145,
+   "F41": 82932,
+   "G41": 44284,
+   "H41": 72465,
+   "I41": 43318,
+   "J41": 30113,
+   "C53": 207193.820568399,
+   "C56": 7927833.02298581,
+   "C57": 7513445.38184901,
+   "C58": 0.000561138594402994,
+   "C61": 0.0214707806776087
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 22,
+  "name": "Zufall 023",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C31": 33607
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 24,
+  "name": "Zufall 025",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 87948.0090171827,
+   "N10": 1493500,
+   "C31": 1493496,
+   "C39": 1493496,
+   "C41": 1493499,
+   "D41": 249038,
+   "E41": 187692,
+   "F41": 227859,
+   "G41": 333755,
+   "H41": 78144,
+   "I41": 262914,
+   "J41": 154097,
+   "C53": 87948.0090171827,
+   "C56": 8992130.81494813,
+   "C57": 8816234.79691377,
+   "C58": 0.000374321746034794,
+   "C61": 0.0382720444139564
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 29,
+  "name": "Zufall 030",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 890342.74346819,
+   "N10": 2792,
+   "C31": 2778,
+   "C39": 2778,
+   "C41": 2781,
+   "D41": 169,
+   "E41": 266,
+   "F41": 614,
+   "G41": 124,
+   "H41": 598,
+   "I41": 664,
+   "J41": 346,
+   "C53": 890342.74346819,
+   "C56": 21045795.9951395,
+   "C58": 0.00306193459101605,
+   "C61": 0.0723775773158611
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 30,
+  "name": "Zufall 031",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 485133.827361715,
+   "N10": 3491,
+   "C31": 3486,
+   "C39": 3486,
+   "C41": 3489,
+   "D41": 570,
+   "E41": 233,
+   "F41": 772,
+   "G41": 651,
+   "H41": 798,
+   "I41": 235,
+   "J41": 230,
+   "C53": 485133.827361715,
+   "C56": 13301840.2662699,
+   "C58": 0.00141907487883345,
+   "C61": 0.0389094849698962
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 37,
+  "name": "Zufall 038",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 757177.628341556,
+   "N10": 156,
+   "C31": 142,
+   "C39": 142,
+   "C41": 146,
+   "D41": 6,
+   "E41": 17,
+   "F41": 18,
+   "G41": 17,
+   "H41": 54,
+   "I41": 29,
+   "J41": 5,
+   "C53": 757177.628341556,
+   "C56": 5101808.20972243,
+   "C58": 0.00413474303366231,
+   "C61": 0.0278596001316555
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 40,
+  "name": "Zufall 041",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 122524.517320686,
+   "N10": 871861,
+   "C31": 871846,
+   "C39": 871846,
+   "C41": 871849,
+   "D41": 136447,
+   "E41": 106023,
+   "F41": 172403,
+   "G41": 163184,
+   "H41": 48556,
+   "I41": 105716,
+   "J41": 139520,
+   "C53": 122524.517320686,
+   "C56": 10276828.4395974,
+   "C57": 10031779.404956,
+   "C58": 0.000331907340388935,
+   "C61": 0.0278389572112542
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 46,
+  "name": "Zufall 047",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C31": 3118
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 60,
+  "name": "Zufall 061",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 136405.411220004,
+   "N10": 16947,
+   "C31": 16942,
+   "C39": 16942,
+   "C41": 16947,
+   "D41": 5378,
+   "E41": 2545,
+   "F41": 2150,
+   "G41": 155,
+   "H41": 5368,
+   "I41": 319,
+   "J41": 1032,
+   "C53": 136405.411220004,
+   "C56": 7525980.78934892,
+   "C58": 0.000997285851874509,
+   "C61": 0.0550238740205957
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 65,
+  "name": "Zufall 066",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 687080.82209971,
+   "N10": 8058,
+   "C31": 8045,
+   "C39": 8045,
+   "C41": 8049,
+   "D41": 456,
+   "E41": 1442,
+   "F41": 2110,
+   "G41": 1955,
+   "H41": 539,
+   "I41": 222,
+   "J41": 1325,
+   "C53": 687080.82209971,
+   "C56": 6681295.35913131,
+   "C57": 5307133.71493189,
+   "C58": 0.00441082363814893,
+   "C61": 0.042891628692897
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 68,
+  "name": "Zufall 069",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 333475.538289834,
+   "N10": 150351,
+   "C31": 150336,
+   "C39": 150336,
+   "C41": 150340,
+   "D41": 22262,
+   "E41": 38889,
+   "F41": 16349,
+   "G41": 32002,
+   "H41": 10784,
+   "I41": 26993,
+   "J41": 3061,
+   "C53": 333475.538289834,
+   "C56": 10390124.7291804,
+   "C57": 9723173.65260071,
+   "C58": 0.00104308751380379,
+   "C61": 0.0324995633186519
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 75,
+  "name": "Zufall 076",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 303143.922232717,
+   "N10": 2870,
+   "C31": 2859,
+   "C39": 2859,
+   "C41": 2864,
+   "D41": 619,
+   "E41": 707,
+   "F41": 279,
+   "G41": 383,
+   "H41": 68,
+   "I41": 716,
+   "J41": 92,
+   "C53": 303143.922232717,
+   "C56": 3685859.36222508,
+   "C58": 0.00163098306839231,
+   "C61": 0.0198307594887205,
+   "C62": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 82,
+  "name": "Zufall 083",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 1160688.86116474,
+   "N10": 2579,
+   "C31": 2571,
+   "C39": 2571,
+   "C41": 2575,
+   "D41": 197,
+   "E41": 494,
+   "F41": 384,
+   "G41": 154,
+   "H41": 496,
+   "I41": 350,
+   "J41": 500,
+   "C53": 1160688.86116474,
+   "C56": 12039452.0225231,
+   "C58": 0.00496797818276887,
+   "C61": 0.0515312388889188
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 83,
+  "name": "Zufall 084",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 652064.951394873,
+   "N10": 23054,
+   "C31": 23042,
+   "C39": 23042,
+   "C41": 23047,
+   "D41": 1688,
+   "E41": 5019,
+   "F41": 942,
+   "G41": 3451,
+   "H41": 3570,
+   "I41": 4256,
+   "J41": 4121,
+   "C53": 652064.951394873,
+   "C56": 18700428.7709096,
+   "C57": 17396298.8681198,
+   "C58": 0.0016952426156116,
+   "C61": 0.0486174938782402
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 90,
+  "name": "Zufall 091",
+  "cells": {
+   "C26": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 133744.167715682,
+   "N10": 255970,
+   "C31": 255962,
+   "C39": 255962,
+   "C41": 255966,
+   "D41": 5019,
+   "E41": 74125,
+   "F41": 20333,
+   "G41": 8623,
+   "H41": 47873,
+   "I41": 58297,
+   "J41": 41696,
+   "C53": 133744.167715682,
+   "C56": 13007244.9848058,
+   "C57": 12739756.6493744,
+   "C58": 0.000700659533326073,
+   "C61": 0.068142412163243
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ }
+]
