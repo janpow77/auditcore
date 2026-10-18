@@ -1,0 +1,64 @@
+[
+ {
+  "position": 1,
+  "name": "Abnahme 1: A001 te_eq_ae",
+  "cells": {
+   "C26": "✖ nicht anwendbar (Division durch null)",
+   "C24": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 2,
+  "name": "Abnahme 1: A002 te_lt_ae",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 3751.78347876343,
+   "N10": 91914,
+   "C26": 91914,
+   "C34": 91914,
+   "C35": 91914,
+   "C44": 3751.78347876343,
+   "C47": 38636.5982220945,
+   "C48": 31133.0312645676,
+   "C49": 0.00265684447007265,
+   "C52": 0.0273607026924229
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 57,
+  "name": "Abnahme 1: A057 te_eq_ae",
+  "cells": {
+   "C26": "✖ nicht anwendbar (Division durch null)",
+   "C24": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 66,
+  "name": "Abnahme 1: A066 te_eq_ae",
+  "cells": {
+   "C26": "✖ nicht anwendbar (Division durch null)",
+   "C24": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)"
+ },
+ {
+  "position": 67,
+  "name": "Abnahme 1: A067 te_lt_ae",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 39470.1316743831,
+   "N10": 2676,
+   "C26": 2671,
+   "C34": 2671,
+   "C35": 2676,
+   "C44": 39470.1316743831,
+   "C47": 81787.6903967116,
+   "C49": 0.012553816851518,
+   "C52": 0.0260132825099076
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ }
+]

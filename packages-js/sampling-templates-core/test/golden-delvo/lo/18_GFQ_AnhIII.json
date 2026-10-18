@@ -1,0 +1,25 @@
+[
+ {
+  "position": 9,
+  "name": "SRS, 3 Zeiträume (12)",
+  "cells": {}
+ },
+ {
+  "position": 48,
+  "name": "SRS (08): extrapolierter Fehler bestimmt, Genauigkeit nicht (Umfang nicht bestimmbar)",
+  "cells": {
+   "18_GFQ_AnhIII!C8": 130224.492622687,
+   "18_GFQ_AnhIII!C25": 130224.492622687,
+   "18_GFQ_AnhIII!C28": 0.0781910880923268
+  }
+ },
+ {
+  "position": 49,
+  "name": "SRS geschichtet (09): extrapolierter Fehler bestimmt, Genauigkeit nicht, Schwelle 0,01 %",
+  "cells": {
+   "18_GFQ_AnhIII!C8": 1343585.84222192,
+   "18_GFQ_AnhIII!C25": 1343585.84222192,
+   "18_GFQ_AnhIII!C28": 0.261733575110422
+  }
+ }
+]

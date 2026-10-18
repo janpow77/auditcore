@@ -221,14 +221,14 @@ describe('Blatt 09_SRS_1Z_S: Richtlinie für fehlende Angaben', () => {
     expect(['D49', 'C49'].some((cell) => incomplete.lacking.has(cell))).toBe(false)
   })
 
-  it('Wert ohne Grundlage (withoutBasis): bei „TE ≤ AE“ wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
-    const inputs = { ...sample, C24: 0.025 }
+  it('Wert ohne Grundlage (withoutBasis): bei TE = AE wie die Vorlage (dort „TE ≤ AE“) gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
+    const inputs = { ...sample, C24: 0.02 }
     const cells = ['C31', 'C39', 'D41', 'C41', 'D42', 'N10']
     const pick = (results: CellMap): unknown[] => cells.map((cell) => results[cell] ?? null)
     // Alle Pflichteingaben liegen vor (der Abgleich mit dem leeren Blatt 02 betrifft nur C15): Summe 0, „✔ ≥ 3“ und Gesamtstichprobe stehen wie in der Vorlage.
     const current = evaluateSheet(sheet, inputs, context)
     expect(current.complete).toBe(true)
-    expect(pick(current.cells)).toEqual(['TE ≤ AE', null, null, 0, '✔ ≥ 3', 4])
+    expect(pick(current.cells)).toEqual(['✖ nicht anwendbar (Division durch null)', null, null, 0, '✔ ≥ 3', 4])
     expect(pick(sheet.compute(inputs, likeTemplate))).toEqual(pick(current.cells))
     expect(current.withoutBasis).toEqual(['D42', 'E42', 'F42', 'C41', 'N10'])
     expect(current.lacking.has('D42')).toBe(false)
@@ -237,7 +237,7 @@ describe('Blatt 09_SRS_1Z_S: Richtlinie für fehlende Angaben', () => {
     // Fehlt dazu σ einer belegten Schicht (Pflichteingabe), bleiben die Werte ohne Grundlage offen.
     const incomplete = evaluateSheet(sheet, { ...inputs, E28: null }, context)
     expect(incomplete.complete).toBe(false)
-    expect(pick(incomplete.cells)).toEqual(['TE ≤ AE', null, null, null, null, null])
+    expect(pick(incomplete.cells)).toEqual(['✖ nicht anwendbar (Division durch null)', null, null, null, null, null])
     expect(incomplete.withoutBasis).toEqual([])
     expect(withoutBasisHint({ ...inputs, E28: null }).tone).toBeUndefined()
     // Ohne Buchwert einer Zufallsschicht baute der Buchwert der Grundgesamtheit nur auf der umfassenden Schicht auf.

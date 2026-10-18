@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { evaluateSheet } from '../src/model/evaluate'
 import { MISSING_POLICY, STRICT_POLICY, TEMPLATE_POLICY, policyOf, unfounded } from '../src/model/policy'
+import { defaultInputs } from '../src/model/definition'
 import { createContext } from '../src/model/sheet'
 import { findAvailableSheet } from '../src/sheets/registry'
 import { loadGolden, selectedSheets, templateMismatches } from './golden'
@@ -12,6 +13,22 @@ import { loadGolden, selectedSheets, templateMismatches } from './golden'
  * „wie die Vorlage“ hier – sie muss in jeder Zelle jedes Falls den Wert der Vorlage zeigen.
  */
 describe('Richtlinie für fehlende Angaben', () => {
+  it('leeres Formular 04/06/16: Summen der freiwilligen Gruppen 0 wie die Vorlage, Σ E/BV der Zufallsschicht „Angabe fehlt“', () => {
+    const empty = (id: string, policy = MISSING_POLICY) => {
+      const sheet = findAvailableSheet(id)!
+      return evaluateSheet(sheet, defaultInputs(sheet.definition), createContext({ policy })).cells
+    }
+    // Hochwertige Einheiten (n_eh, BV_eh, ΣE_eh) und Iterationseinheiten sind freiwillig: Summe 0 wie in der Vorlage.
+    const voluntary = { '04_MUS_1Z_S': ['C37', 'C38', 'C43', 'C45'], '06_MUS_2Z_S': ['C41', 'C42', 'C47', 'C75', 'C76', 'C81'], '16_NS_PPS_S': ['C19', 'C20', 'C25'] }
+    // Die Summe der Fehlerquoten der Zufallsschicht ist Ergebnis der Stichprobe, keine freiwillige Gruppe: offen, die Vorlage zeigt 0.
+    const required = { '04_MUS_1Z_S': ['C46'], '06_MUS_2Z_S': ['C48', 'C82'], '16_NS_PPS_S': ['C26'] }
+    for (const [id, cells] of Object.entries(voluntary)) expect(cells.map((cell) => empty(id)[cell]), id).toEqual(cells.map(() => 0))
+    for (const [id, cells] of Object.entries(required)) {
+      expect(cells.map((cell) => empty(id)[cell] ?? null), id).toEqual(cells.map(() => null))
+      expect(cells.map((cell) => empty(id, TEMPLATE_POLICY)[cell]), id).toEqual(cells.map(() => 0))
+    }
+  })
+
   it('geltende Richtlinie: Pflichteingaben offen, Standardabweichung der Stichprobe und Teilfehlersummen mit 0, Prüfhinweise ohne Grundlage offen', () => {
     expect(MISSING_POLICY).toEqual({ requiredInput: 'missing', sampleDeviation: 'zero', partialErrorSum: 'zero', withoutBasis: 'open' })
     expect(policyOf(undefined)).toBe(MISSING_POLICY)

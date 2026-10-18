@@ -1,0 +1,122 @@
+[
+ {
+  "position": 19,
+  "name": "Zufall 020 (08_SRS_1Z, Startwert 20261013)",
+  "cells": {
+   "C25": 12705944.88107564,
+   "C28": 0.0738706743425091,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 22,
+  "name": "Zufall 023 (11_SRS_2Z_S, Startwert 20261013)",
+  "cells": {
+   "C25": 1385325.636286537,
+   "C28": 0.08530733191095628,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 35,
+  "name": "Zufall 036 (10_SRS_2Z, Startwert 20261013)",
+  "cells": {
+   "C25": 445835.46694986336,
+   "C28": 0.006356043121051878,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 47,
+  "name": "Zufall 048 (08_SRS_1Z, Startwert 20261013)",
+  "cells": {
+   "C25": 645238.164910213,
+   "C28": 0.02699949436790618,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 50,
+  "name": "Zufall 051 (11_SRS_2Z_S, Startwert 20261013)",
+  "cells": {
+   "C25": 3759149.0913836663,
+   "C28": 0.1079171866578529,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 61,
+  "name": "Zufall 062 (08_SRS_1Z, Startwert 20261013)",
+  "cells": {
+   "C25": 713627.3875408707,
+   "C28": 0.02119551327957591,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 75,
+  "name": "Zufall 076 (08_SRS_1Z, Startwert 20261013)",
+  "cells": {
+   "C25": 1911110.4902465397,
+   "C28": 0.0996239358773666,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 77,
+  "name": "Zufall 078 (10_SRS_2Z, Startwert 20261013)",
+  "cells": {
+   "C25": 764687.863436368,
+   "C28": 0.17243919423294438,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 89,
+  "name": "Zufall 090 (08_SRS_1Z, Startwert 20261013)",
+  "cells": {
+   "C25": 9310718.774269205,
+   "C28": 0.06276577680846185,
+   "C30": "⚠ GFQ unter, obere Fehlergrenze über der Schwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 103,
+  "name": "Zufall 104 (08_SRS_1Z, Startwert 20261013)",
+  "cells": {
+   "C25": 276370.2414301266,
+   "C28": 0.01256867433311618,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 119,
+  "name": "Zufall 120 (10_SRS_2Z, Startwert 20261013)",
+  "cells": {
+   "C25": 104744.60288376658,
+   "C28": 0.0028603611577035747,
+   "C30": "✔ unter der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 120,
+  "name": "Zufall 121 (11_SRS_2Z_S, Startwert 20261013)",
+  "cells": {
+   "C25": 4262525.102461339,
+   "C28": 0.07537145512774152,
+   "C30": "✖ Gesamtfehlerquote über der Signifikanzschwelle"
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ }
+]

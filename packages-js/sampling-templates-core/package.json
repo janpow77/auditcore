@@ -1,6 +1,6 @@
 {
   "name": "@auditcore/sampling-templates-core",
-  "version": "0.1.3",
+  "version": "0.1.12",
   "description": "Framework-freier Kern der Webfassung der Stichprobenvorlagen 2021–2027 nach DelVO (EU) 2023/67: Rechenkerne je Blatt mit den Zelladressen der Vorlage, Methodendefinitionen, Arbeitsstand mit Prüfsumme und Excel-Austausch (MIT)",
   "license": "MIT",
   "repository": {
@@ -42,7 +42,7 @@
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run",
+    "test": "python3 scripts/delvo_soll.py --check && vitest run",
     "docs:write": "SAMPLING_TEMPLATES_WRITE_DOCS=1 vitest run test/docs.spec.ts"
   },
   "dependencies": {

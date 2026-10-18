@@ -74,7 +74,7 @@ const withoutBasis: Deviation[] = [
 
 export const deviations: readonly Deviation[] = [
   ...entries(['C11'], ['C7', 'C8'], ZERO, BOOK_VALUE),
-  ...entries(['C19'], ['C7', 'C8', 'C17'], ZERO, 'Der zulässige Fehler setzt beide Buchwerte und die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C19'], ['C7', 'C8', 'C17'], ZERO, 'Der zulässige Fehler setzt beide Buchwerte und die Signifikanzschwelle voraus.'),
   ...entries(['C21'], ['C7', 'C8', 'C20'], ZERO, 'Der voraussichtliche Fehler setzt beide Buchwerte und die voraussichtliche Fehlerquote voraus.'),
   ...entries(['C22'], ['C7', 'C8'], 'Prüfhinweis auf Grundlage nur eines Buchwerts', BOOK_VALUE),
   ...entries(['C25'], ['C7', 'C8', 'C23', 'C24'], 'gewichtete Standardabweichung mit 0 an Stelle der leeren Zelle', 'Die gewichtete Standardabweichung setzt Buchwert und Standardabweichung beider Zeiträume voraus.'),
@@ -82,7 +82,7 @@ export const deviations: readonly Deviation[] = [
   ...entries(['C36'], ['C8', 'C20', 'C23', 'C24'], FIRST_TEMPLATE, FIRST),
   ...entries(['C39'], ['C7'], '0 € abzüglich des Buchwerts der hochwertigen Einheiten', BOOK_VALUE),
   ...entries(['C52', 'N4'], ['C7', 'C48'], ZERO, BOOK_VALUE),
-  ...entries(['C53'], ['C7', 'C17', 'C48'], ZERO, 'Der aktualisierte zulässige Fehler setzt beide Ist-Buchwerte und die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C53'], ['C7', 'C17', 'C48'], ZERO, 'Der aktualisierte zulässige Fehler setzt beide Ist-Buchwerte und die Signifikanzschwelle voraus.'),
   ...entries(['C54'], ['C7', 'C20', 'C48'], ZERO, 'Der aktualisierte voraussichtliche Fehler setzt beide Ist-Buchwerte und eine voraussichtliche Fehlerquote voraus.'),
   ...entries(['C55'], ['C23'], '0,0000 (leere Zelle zählt als 0)', 'Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für Zeitraum 1.'),
   ...entries(['C56'], ['C8', 'C20', 'C23', 'C24', 'C48'], 'Nenner auf Grundlage des mit 0 gerechneten Werts', SECOND),

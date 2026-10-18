@@ -18,7 +18,8 @@ import {
   type Translate,
   type WorkspaceState,
 } from '@auditcore/sampling-templates-core'
-import { ref, shallowRef, type Ref, type ShallowRef } from 'vue'
+import { provide, ref, shallowRef, type Ref, type ShallowRef } from 'vue'
+import { INVALID_INPUTS, createInvalidInputs, type InvalidInputs } from './invalidInputs'
 import { useSheetActions, type SheetActions } from './sessionActions'
 import { ownInputs, useSessionView, type SessionView, type StepId } from './sessionView'
 
@@ -143,6 +144,13 @@ function sampleState(method: AvailableSheet | undefined, sheets: readonly SheetM
 
 const firstMethod = (sheets: readonly SheetModule[]): AvailableSheet | undefined => availableSheets(sheets).find((sheet) => findVariant(sheet.id) !== undefined)
 
+/** Menge der nicht lesbaren Eingaben: für die Eingabefelder bereitgestellt, für die Anzeige gelesen. */
+function providedInvalidInputs(): InvalidInputs {
+  const invalid = createInvalidInputs()
+  provide(INVALID_INPUTS, invalid)
+  return invalid
+}
+
 export function useSamplingSession(options: SessionOptions): SamplingSession {
   const sheets = options.sheets
   const workspace = shallowRef<WorkspaceState>(withDefaults(options.initial ?? emptyWorkspace(), sheets()))
@@ -150,7 +158,7 @@ export function useSamplingSession(options: SessionOptions): SamplingSession {
   const step = ref<StepId>('method')
   const selectedUnit = ref(0)
   const messages = useMessages()
-  const { find, context, usedStrata: _used, ...view } = useSessionView(workspace, step, selectedUnit, { sheets, t: options.t, locale: options.locale ?? (() => 'de') })
+  const { find, context, usedStrata: _used, ...view } = useSessionView(workspace, step, selectedUnit, { sheets, t: options.t, locale: options.locale ?? (() => 'de'), invalid: providedInvalidInputs() })
   const pickerOpen = ref(view.activeSheet.value === null)
 
   /** Eingaben eines Blatts schreiben; der Arbeitsstand gilt danach als geändert. */

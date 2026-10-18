@@ -10,17 +10,18 @@
  * der Vorlage (01_Parameter!I24:I37); Altvorlagen und Blatt 17 haben keine
  * Ergebnisübersicht.
  */
-import { divide, gt, guard, isBlank, isNumber, left, lt, minus, n, plus, required, search, sameText } from '../../excel/index'
+import { divide, gt, guard, isBlank, isNumber, lt, minus, n, plus, required, search } from '../../excel/index'
 import { unfounded } from '../../model/policy'
 import { resolveInputs } from '../../model/sheet'
 import type { CellMap, CellValue, Cells, MethodSummary, SheetContext } from '../../model/types'
+import { NOT_APPLICABLE, adjustedError, adjustedPrecision, isExclusion, randomStratum } from './annex'
 import { definition } from './definition'
+
+export { NOT_APPLICABLE, isReplacementTable2 } from './annex'
 
 /** Blatt, aus dem die Grundgesamtheiten stammen. */
 export const POPULATION_SHEET = '02_Grundgesamtheit'
 
-/** Text der Vorlage, wenn es keine Genauigkeit gibt (nichtstatistische Verfahren). */
-export const NOT_APPLICABLE = 'n. a.'
 
 /** Ergebnisübersicht des aktiven Verfahrens, wenn es in der Auswahlliste der Vorlage steht; sonst keine Übernahme. */
 export function adoptedMethod(context: SheetContext): MethodSummary | undefined {
@@ -28,8 +29,6 @@ export function adoptedMethod(context: SheetContext): MethodSummary | undefined 
   return method && context.parameters.lists.methodSheets.includes(method.sheet) ? method : undefined
 }
 
-/** `LEFT($C$15;10)="Ausschluss"` */
-const isExclusion = (c: Cells): boolean => sameText(left(c.C15, 10), 'Ausschluss')
 
 /** `ISNUMBER(SEARCH(text;C4))` */
 const contains = (text: string, value: CellValue): boolean => guard(() => search(text, value)) !== null
@@ -78,27 +77,6 @@ function populations(c: Cells, context: SheetContext): void {
   c.C19 = checkBookValue(c)
 }
 
-/** C24: angepasster extrapolierter Fehler nach Anhang III. */
-function adjustedError(c: Cells): CellValue {
-  const exclusion = isExclusion(c)
-  if (!sameText(c.C20, 'Ja')) return exclusion ? guard(() => required(c.C6) * required(c.C18)) : (c.C6 ?? null)
-  return guard(() => {
-    const random = minus(required(c.C6), required(c.C7))
-    return plus(exclusion ? random * required(c.C18) : random, required(c.C23))
-  })
-}
-
-/** C25: angepasste Genauigkeit; ohne Genauigkeit im Methodenblatt „n. a.“. */
-function adjustedPrecision(c: Cells, context: SheetContext): CellValue {
-  // Ohne Wert in C8 zeigt die Vorlage „n. a.“ – auch dann, wenn das Methodenblatt nur noch keine Genauigkeit liefert.
-  if (isBlank(c.C8)) return unfounded(context, NOT_APPLICABLE)
-  if (!isNumber(c.C8)) return NOT_APPLICABLE
-  // Wortgleich zur Vorlage: `LEFT($C$11;10)="Tabelle 2"` vergleicht zehn Zeichen („Tabelle 2 “) mit neun und trifft
-  // deshalb nie zu – bei Ersetzung wird die Genauigkeit auch in Tabelle 2 nicht angepasst (Auffälligkeit der Vorlage).
-  const scaled = isExclusion(c) || (sameText(left(c.C15, 9), 'Ersetzung') && sameText(left(c.C11, 10), 'Tabelle 2'))
-  return scaled ? guard(() => required(c.C8) * required(c.C18)) : c.C8
-}
-
 /** C28: obere Fehlergrenze in Prozent; ohne Genauigkeit „n. a.“. */
 function upperLimit(c: Cells, context: SheetContext): CellValue {
   if (isBlank(c.C25)) return unfounded(context, NOT_APPLICABLE)
@@ -106,20 +84,21 @@ function upperLimit(c: Cells, context: SheetContext): CellValue {
   return guard(() => divide(plus(plus(plus(required(c.C24), required(c.C25)), n(c.C9)), n(c.C10)), required(c.C14)))
 }
 
-/** C30: Würdigung gegen die Wesentlichkeitsschwelle. */
+/** C30: Würdigung gegen die Signifikanzschwelle. */
 function assessment(c: Cells, context: SheetContext): CellValue {
   if (!isNumber(c.C26) || !isNumber(c.C29)) return null
-  if (gt(c.C26, c.C29)) return '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle'
-  if (isNumber(c.C28)) return gt(c.C28, c.C29) ? '⚠ GFQ unter, obere Fehlergrenze über der Schwelle' : '✔ unter der Wesentlichkeitsschwelle'
+  if (gt(c.C26, c.C29)) return '✖ Gesamtfehlerquote über der Signifikanzschwelle'
+  if (isNumber(c.C28)) return gt(c.C28, c.C29) ? '⚠ GFQ unter, obere Fehlergrenze über der Schwelle' : '✔ unter der Signifikanzschwelle'
   // Ohne obere Fehlergrenze (Text „n. a.“) prüft die Vorlage nur die Gesamtfehlerquote. Fehlt sie nur, weil das
   // Methodenblatt noch keine Genauigkeit liefert, hätte der bestandene Hinweis keine Grundlage.
-  return isBlank(c.C28) ? unfounded(context, '✔ unter der Wesentlichkeitsschwelle') : '✔ unter der Wesentlichkeitsschwelle'
+  return isBlank(c.C28) ? unfounded(context, '✔ unter der Signifikanzschwelle') : '✔ unter der Signifikanzschwelle'
 }
 
 /** Abschnitte C bis E: hochwertige Schicht, Anpassung nach Anhang III, Gesamtfehlerquote und Würdigung (C23–C30). */
 function totalErrorRate(c: Cells, context: SheetContext): void {
   c.C23 = guard(() => divide(required(c.C7) * required(c.C21), required(c.C22)))
-  c.C24 = adjustedError(c)
+  randomStratum(c, context)
+  c.C24 = adjustedError(c, context)
   c.C25 = adjustedPrecision(c, context)
   c.C26 = guard(() => divide(plus(plus(required(c.C24), n(c.C9)), n(c.C10)), required(c.C14)))
   c.C27 = guard(() => required(c.C26) * required(c.C12))

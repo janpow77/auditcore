@@ -2,11 +2,12 @@
 import { gt, isBlank, isNumber, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
 import { STRATA_COLUMNS, TEMPLATE_STRATA, stratumCell, usedStrata } from '../../model/strata'
-import type { CellMap, WebHint } from '../../model/types'
+import type { CellMap, SheetContext, WebHint } from '../../model/types'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte mit drei Schichten; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -29,7 +30,7 @@ const sample: CellMap = {
 }
 
 /** Hinweise der Webfassung zu Blatt 04; sie verändern kein Rechenergebnis. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints: WebHint[] = []
   const { C33: size, C35: allocated, C10: units } = results
   if (isNumber(size) && isNumber(allocated) && gt(allocated, size)) {
@@ -42,7 +43,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   if (gt(usedStrata(inputs, [9]), TEMPLATE_STRATA.length)) {
     hints.push({ id: 'strata-beyond-template', tone: 'neutral', text: 'Mehr als sieben Schichten: Die Vorlage sieht sieben Spalten vor; die 8. bis 20. Schicht ist eine Erweiterung der Webfassung' })
   }
-  return hints
+  return [...hints, ...komPlanningHints(definition, results), ...annexIIIApproximation(context, false)]
 }
 
 const used = (results: CellMap, column: string): boolean => !isBlank(results[stratumCell(column, 9)])

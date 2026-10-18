@@ -3,7 +3,7 @@
  * zeigt nie einen anderen Wert als die Vorlage, höchstens keinen.
  *
  * - Pflichteingaben anderer Blätter, die Blatt 20 unmittelbar liest (Anzahl der
- *   Datensätze und Betrag laut SFC2021 aus Blatt 02, Wesentlichkeitsschwelle aus
+ *   Datensätze und Betrag laut SFC2021 aus Blatt 02, Signifikanzschwelle aus
  *   Blatt 18): Die Vorlage rechnet mit der leeren Zelle als 0.
  * - Werte ohne Grundlage (`withoutBasis`): Blatt 02, Blatt 18 oder das Methodenblatt
  *   zeigen in der Webfassung „Angabe fehlt“, die Vorlage rechnet dort mit 0 weiter
@@ -34,7 +34,7 @@ const required = (cell: CellAddress, whenEmpty: string, template: string, reason
 export const deviations: readonly Deviation[] = [
   required('F11', '02_Grundgesamtheit!C23', '0 (leere Zelle zählt als 0)', 'Ohne Anzahl der Datensätze in Blatt 02 ist sie unbekannt, nicht 0.'),
   required('G11', '02_Grundgesamtheit!C16', '0,00 € (leere Zelle zählt als 0)', 'Ohne Betrag laut SFC2021 in Blatt 02 ist er unbekannt, nicht 0 €.'),
-  required('A37', '18_GFQ_AnhIII!C29', 'Satz zur Würdigung gegen eine Schwelle von 0 %', 'Ohne Wesentlichkeitsschwelle in Blatt 18 gibt es nichts zu würdigen.'),
+  required('A37', '18_GFQ_AnhIII!C29', 'Satz zur Würdigung gegen eine Schwelle von 0 %', 'Ohne Signifikanzschwelle in Blatt 18 gibt es nichts zu würdigen.'),
   ...UPSTREAM.map(([cell, whenEmpty]): Deviation => ({ cell, whenEmpty, template: UPSTREAM_TEMPLATE, reason: UPSTREAM_REASON, kind: 'withoutBasis' })),
   {
     cell: 'G43',

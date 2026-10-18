@@ -10,6 +10,7 @@
  */
 import type { MethodDefinition } from '../../model/definition'
 import { STRATA_COLUMNS } from '../../model/strata'
+import { NONSTATISTICAL_ALLOCATION_INTERPRETATION } from '../shared/interpretations'
 
 const EUR = '#,##0.00" €"'
 const INT = '#,##0'
@@ -41,7 +42,7 @@ export const definition: MethodDefinition = {
       id: 'I', title: 'Stichprobe',
       fields: [
         { cell: 'C16', alias: 'randomSampleSize', kind: 'input', type: 'integer', format: INT, label: 'Umfang der Zufallsstichprobe (fachliches Ermessen)' },
-        { cell: 'D18', alias: 'stratumSampleSize', kind: 'formula', type: 'integer', format: INT, columns: STRATA_COLUMNS, total: 'C18', label: 'Umfang je Schicht', formula: 'n_h = N_h/N · n' },
+        { cell: 'D18', alias: 'stratumSampleSize', kind: 'formula', type: 'integer', format: INT, columns: STRATA_COLUMNS, total: 'C18', label: 'Umfang je Schicht', formula: 'n_h = N_h/N · n', interpretation: NONSTATISTICAL_ALLOCATION_INTERPRETATION },
         { cell: 'C19', alias: 'sampleSize', kind: 'formula', type: 'integer', format: INT, label: 'Gesamtstichprobe' },
         { cell: 'C20', alias: 'minimumCoverage', kind: 'formula', type: 'integer', format: INT, label: 'Mindesterfassung 10 % der Stichprobeneinheiten (aufgerundet)', hint: 'Art. 79 Abs. 2 VO (EU) 2021/1060; Art. 6 Abs. 2 DelVO: Einheiten umfassender Schichten werden eingerechnet. Bei Wechsel nach Art. 6 Abs. 3 bezieht sich der Mindestumfang auf das gesamte Geschäftsjahr.' },
         { cell: 'C21', alias: 'checkCoverage', kind: 'formula', type: 'check', label: 'Prüfung Mindesterfassung' },
@@ -65,8 +66,8 @@ export const definition: MethodDefinition = {
         { cell: 'C31', alias: 'anomalousErrors', kind: 'input', type: 'amount', format: EUR, label: 'Nicht berichtigte anomale Fehler (Betrag)', hint: 'Art. 2 Nr. 20, 21; Art. 8 Abs. 1 DelVO.' },
         { cell: 'C32', alias: 'projectedErrorRate', kind: 'formula', type: 'percent', format: RATE, label: 'Extrapolierte Zufallsfehlerquote', formula: 'EE / BV' },
         { cell: 'C33', alias: 'totalErrorRate', kind: 'result', type: 'percent', format: RATE, label: 'Gesamtfehlerquote', formula: '(EE + systembedingte + nicht berichtigte anomale Fehler) / BV', hint: 'Art. 8 Abs. 1 DelVO; endgültige Berechnung inkl. TH-Pauschale und Anh. III in Blatt 18.' },
-        { cell: 'C34', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Wesentlichkeitsschwelle', hint: 'Anh. I Nr. 1 DelVO.' },
-        { cell: 'C35', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Wesentlichkeitsschwelle', hint: 'Beim nichtstatistischen Verfahren werden Genauigkeit und obere Fehlergrenze nicht berechnet (Art. 8 Abs. 2).' },
+        { cell: 'C34', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Signifikanzschwelle', hint: 'Anh. I Nr. 1 DelVO.' },
+        { cell: 'C35', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Signifikanzschwelle', hint: 'Beim nichtstatistischen Verfahren werden Genauigkeit und obere Fehlergrenze nicht berechnet (Art. 8 Abs. 2).' },
       ],
     },
   ],

@@ -11,9 +11,9 @@ die Entsprechung in `src/excel/index.ts` (im Paket als `excel.*` exportiert).
 | `IFERROR` | 1197 | `guard(() => …)`: Fehlerwert → `null` für `IFERROR(…;"")`; `ifError(() => …, ersatz)` für innere Ersatzwerte wie `IFERROR(D51/D9;1)` |
 | `IF` | 1055 | `if` / bedingter Ausdruck |
 | `N` | 577 | `n(x)`: Leerwert und Text → 0 |
-| `ROUNDUP` | 195 | `roundUp(x, stellen)`: kürzt wie die Tabellenkalkulation auf zwölf signifikante Stellen und rundet dann auf (gemessen) |
+| `ROUNDUP` | 195 | `roundUp(x, stellen)`: rundet wie Excel zuerst auf 15 geltende Stellen und dann von null weg auf (gemessen) |
 | `MAX` | 125 | `Math.max` bei Zahlen, `max(bereich)` über Zellbereiche |
-| `SUM` | 110 | `sum(bereich)` |
+| `SUM` | 110 | `sum(bereich)`: der Reihe nach ohne Fehlerausgleich, letzte Addition mit der Auslöschungsregel (gemessen) |
 | `LEFT` | 97 | `left(text, n)` |
 | `OR` | 93 | `\|\|` |
 | `ISNUMBER` | 47 | `isNumber(x)` |
@@ -31,9 +31,9 @@ Operatoren:
 
 | Vorlage | Rechenkern |
 |---|---|
-| `=`, `<>`, `<`, `<=`, `>`, `>=` zwischen Zahlen | `eq`, `ne`, `lt`, `le`, `gt`, `ge` – mit der Toleranz der Tabellenkalkulation (2⁻⁴⁸ relativ); rohe Vergleiche sind in `src/sheets` per Lint-Regel gesperrt |
+| `=`, `<>`, `<`, `<=`, `>`, `>=` zwischen Zahlen | `eq`, `ne`, `lt`, `le`, `gt`, `ge` – wie Excel nach Rundung beider Seiten auf 15 geltende Stellen; rohe Vergleiche sind in `src/sheets` per Lint-Regel gesperrt |
 | `=`/`<>` mit Text | `sameText` (ohne Groß- und Kleinschreibung); Auswahl mit Zahlenwert: `sameNumber` |
-| `-`, `+` zwischen Beträgen | `minus`, `plus`: Differenz fast gleicher Werte ist 0 |
+| `-`, `+` zwischen Beträgen | `minus`, `plus`: als letzte Operation einer Formel ist ein Ergebnis 50 Binärstellen unter dem kleineren Summanden 0 (Excel) |
 | `^` (156 Formeln) | `**` |
 | `&` (9) | Zeichenkette |
 
@@ -41,10 +41,12 @@ Ein Text ist im Größenvergleich größer als jede Zahl; wo eine Formel davon
 abhängt, steht es im Rechenkern als Kommentar (`assessment` in
 `src/sheets/shared/statistical.ts`).
 
-Vergleiche und Aufrunden sind an LibreOffice 24.2 gemessen
-(`scripts/measure_semantics.py`, Messwerte in
-`test/fixtures/libreoffice-semantik.json`, geprüft in `test/excel.spec.ts`).
-Microsoft Excel ist nicht gegengeprüft ([abweichungen.md](abweichungen.md) Nr. 3).
+Vergleiche, Differenzen, Aufrunden, `VERGLEICH` und Summen sind an Microsoft
+Excel 16.0.20326 gemessen (Messwerte in `test/fixtures/excel-semantik.json`,
+geprüft in `test/excel.spec.ts`); `VERGLEICH(…;0)` (`matchExact`) sucht Zahlen
+genau. Die frühere Messung an LibreOffice 24.2 (`scripts/measure_semantics.py`,
+`test/fixtures/libreoffice-semantik.json`) bleibt zum Vergleich erhalten
+([abweichungen.md](abweichungen.md) Nr. 3).
 
 ## Leerwerte
 

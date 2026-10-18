@@ -5,9 +5,9 @@
  */
 import { isBlank } from '../excel/index'
 import { inputFields, rowNumber, strataColumnsOf } from './definition'
-import { silentInputs } from './dependence'
+import { dependentCells, silentInputs } from './dependence'
 import { policyOf } from './policy'
-import { isEmptyReference, type AvailableSheet, type ZeroAssumption } from './sheet'
+import { UNREADABLE_INPUT, isEmptyReference, type AvailableSheet, type ZeroAssumption } from './sheet'
 import type { CellAddress, CellMap, CellValue, Cells, Deviation, MissingPolicy, SheetContext, SheetId } from './types'
 
 /** Ergebnis der Auswertung eines Blatts. */
@@ -182,11 +182,29 @@ function isComplete(sheet: AvailableSheet, base: CellMap, context: SheetContext)
  */
 function computeShown(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, policy: MissingPolicy): { base: CellMap; withoutBasis: CellAddress[]; complete: boolean; used: SheetContext } {
   const open = sheet.compute(inputs, context)
-  const complete = isComplete(sheet, open, context)
+  // Eine ungültige Eingabe ist keine vollständige Angabe: Werte ohne Grundlage bleiben dann offen.
+  const complete = isComplete(sheet, open, context) && !Object.values(inputs).includes(UNREADABLE_INPUT)
   if (policy.withoutBasis !== 'open' || !complete) return { base: open, withoutBasis: [], complete, used: context }
   const used = { ...context, policy: { ...policy, withoutBasis: 'template' as const } }
   const shown = sheet.compute(inputs, used)
   return { base: shown, withoutBasis: Object.keys(shown).filter((cell) => isBlank(open[cell]) && !isBlank(shown[cell])), complete, used }
+}
+
+/**
+ * Ungültige Eingaben (`UNREADABLE_INPUT`, Text nicht als Zahl lesbar): Anders
+ * als ein leeres Feld fallen sie auf keine Leer-Regel zurück (weder 0 noch
+ * Vorbelegung noch Gruppe „keine“). Jede abhängige Zelle bleibt offen und nennt
+ * die Eingabe; die Anzeige meldet sie als ungültig.
+ */
+function applyUnreadable(sheet: AvailableSheet, inputs: CellMap, base: CellMap, context: SheetContext, cells: Cells, lacking: Lacking): ReadonlySet<CellAddress> {
+  const unreadable = new Set(Object.keys(inputs).filter((cell) => inputs[cell] === UNREADABLE_INPUT))
+  for (const input of unreadable) {
+    for (const cell of dependentCells(sheet, inputs, input, base, context)) {
+      cells[cell] = null
+      note(lacking, cell, [input])
+    }
+  }
+  return unreadable
 }
 
 function evaluate(sheet: AvailableSheet, inputs: CellMap, context: SheetContext, notes: boolean): SheetEvaluation {
@@ -204,6 +222,8 @@ function evaluate(sheet: AvailableSheet, inputs: CellMap, context: SheetContext,
       for (const input of entry.inputs) merge(assumed, input, entry.cell)
     }
   }
-  const silent = notes ? silentInputs(sheet, inputs, base, used, new Set(assumed.map((entry) => entry.input))) : []
-  return { cells, assumed, lacking, withoutBasis, silent, complete }
+  const unreadable = applyUnreadable(sheet, inputs, base, used, cells, lacking)
+  const reported = assumed.filter((entry) => !unreadable.has(entry.input))
+  const silent = notes ? silentInputs(sheet, inputs, base, used, new Set([...reported.map((entry) => entry.input), ...unreadable])) : []
+  return { cells, assumed: reported, lacking, withoutBasis, silent, complete }
 }
