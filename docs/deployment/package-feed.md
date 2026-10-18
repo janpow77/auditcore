@@ -1,6 +1,80 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Pre-release v0.12.0](https://github.com/janpow77/auditcore/releases/tag/v0.12.0)**
+**Aktuell: [Pre-release v0.14.2](https://github.com/janpow77/auditcore/releases/tag/v0.14.2)**
+mit 37 Python-Bibliotheken, 12 npm-Paketen und 248 Release-Dateien mit signierten Prüfsummen.
+Neu ist der überarbeitete Stichprobenrechner in `@auditcore/sampling-templates-core`
+0.1.12 und `@auditcore/sampling-templates-vue` 0.1.12 (vorher 0.1.3 und 0.1.4):
+Er rechnet wie Microsoft Excel (Sollwerte aus Excel 16, 10.531 Fälle), verwendet
+die Begriffe der Delegierten Verordnung (EU) 2023/67 („Signifikanzschwelle“) und
+folgt dort, wo die Excel-Vorlage abweicht, den Vorgaben der Kommission
+(DelVO (EU) 2023/67, EGESIF_16-0014-01, Rechenbeispiele 7.10.3.x); jede solche
+Stelle ist gekennzeichnet. Ungültige Eingaben werden nie wie leere gerechnet,
+sondern mit Grund gemeldet. Alle 37 Python-Bibliotheken und die übrigen zehn
+npm-Pakete sind gegenüber v0.14.1 unverändert; ihre Wheels, Debian-Pakete und
+npm-Tarballs sind bytegleich, die SDists inhaltsgleich (nur die
+Archivzeitstempel des Neubaus weichen ab).
+
+Die Versionen und Prüfsummen stehen im
+[Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.14.2/preview-manifest.json)
+und in den signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.14.2/SHA256SUMS).
+Der bestehende Signaturschlüssel bleibt unverändert:
+`E427F95CC37CBFD0876314CA0D1580A6CAE37327`.
+
+```bash
+npm install @auditcore/sampling-templates-vue@0.1.12
+# Python-Bibliotheken unverändert, etwa
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.14.2/requirements-auditcore_sampling.txt
+```
+
+Vor der Veröffentlichung am 18.10.2026 bestanden Paketbau, selektive
+pip-Installation mit Funktionsprüfung und Entfernung, APT-Installation, Upgrade
+und Entfernung sowie die PDF-/Excel-Ausgabe (291 Prüfschritte); Prüfsummen und
+Signatur der 248 Dateien wurden vor dem Hochladen geprüft. Der Workflow
+`npm-publish` hat am selben Tag die beiden Stichprobenpakete auf npmjs.org
+veröffentlicht (`latest`); ihre Integrität dort stimmt mit `npm-packages.json`
+des Releases überein. Die übrigen npm-Pakete waren bereits vorhanden. Ein
+anonymer Installationsnachweis gegen den öffentlichen Pfad liegt für v0.14.2
+nicht vor.
+Der Bibliotheksrelease stellt produktive Anwendungen nicht automatisch um.
+
+## Historischer Stand v0.14.1
+
+**[Pre-release v0.14.1](https://github.com/janpow77/auditcore/releases/tag/v0.14.1)** (17.10.2026)
+mit 37 Python-Bibliotheken, 12 npm-Paketen und 248 Release-Dateien.
+Für die 2-%-Schwelle der Fehlerquote gilt der Begriff „Signifikanzschwelle“
+(Delegierte Verordnung (EU) 2023/67, Anhang I Nr. 1; VO (EU) 2021/1060,
+Anhang XX Nr. 5.9) statt „Wesentlichkeitsschwelle“: `@auditcore/ui-core` 0.4.1,
+`@auditcore/ui` 0.5.1, `@auditcore/ui-react` 1.3.1, `auditcore_extrapolation`
+0.2.1 und `auditcore_sampling` 0.2.5; nur wegen der exakten Bindungen
+`@auditcore/bpmn-vue` 0.5.2, `@auditcore/bpmn-react` 0.5.2 und
+`@auditcore/layout` 0.1.2. Bezeichner, Schlüssel und REST-Verträge blieben
+unverändert. Geprüft wurden 291 Schritte (Paketbau, pip, APT, PDF-/Excel-Ausgabe).
+
+## Historischer Stand v0.14.0
+
+**[Pre-release v0.14.0](https://github.com/janpow77/auditcore/releases/tag/v0.14.0)** (17.10.2026)
+mit 37 Python-Bibliotheken, 12 npm-Paketen und 248 Release-Dateien.
+Neu waren der Namensbaukasten für synthetische Firmennamen in
+`auditcore_dummygenerator` 0.2.0 und `auditcore_dummybundle` 0.2.0 (gleicher
+Startwert ergibt andere Daten als 0.1.0), die Bindungsanhebungen
+`auditcore_invoicegenerator` 0.2.5 und `auditcore_invoicesynth` 0.3.1 sowie
+erstmals als Tarball `@auditcore/sampling-templates-core` 0.1.3 und
+`@auditcore/sampling-templates-vue` 0.1.4. Geprüft wurden 291 Schritte.
+
+## Historischer Stand v0.13.0
+
+**[Pre-release v0.13.0](https://github.com/janpow77/auditcore/releases/tag/v0.13.0)** (13.10.2026)
+mit 37 Python-Bibliotheken, 10 npm-Paketen und 246 Release-Dateien.
+Neu waren die EU-Schwellenwerte 2014–2027 für alle Vergaberegime in
+`auditcore_procurement` 0.3.0 (Profil `procurement.hvtg 2026.10.1`), das Paket
+`auditcore_dummybundle` 0.1.0 für zusammenhängende synthetische Testbündel und
+– nur wegen der Bindung im Extra `procurement` – `auditcore_risk` 0.4.1.
+Geprüft wurden 291 Schritte.
+
+## Historischer Stand v0.12.0
+
+**[Pre-release v0.12.0](https://github.com/janpow77/auditcore/releases/tag/v0.12.0)**
 mit 36 Python-Bibliotheken, 10 npm-Paketen und 240 Release-Dateien mit signierten Prüfsummen.
 Neu ist der Datenschutz-Assistent: `auditcore_dataprotection` 0.6.0 mit dem
 Fragenkatalog 2026.10.3 und dem Regelprofil `auditcore.hdsig_ji` 2026.10.5
