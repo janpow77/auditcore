@@ -6,6 +6,7 @@
 import { guard, isBlank, isNumber, minus, n, required } from '../../excel/index'
 import type { CellAddress, Cells, SheetContext } from '../../model/types'
 import { type Pending, type Recalculation, additionalUnits, appliedRandomSize, auditedTerm, checkAnnualMinimum, globalComputedSize, increasedSize, minimumRandomSize, netLimitedSize, periodSize, share, standardSize, weightedDeviation } from '../shared/srs'
+import { blockedGlobal } from '../shared/periods'
 
 /** Ist-Werte des Zeitraums 3 und endgültige Größen des Geschäftsjahres (C97–C104). */
 function updated(c: Cells): void {
@@ -28,7 +29,7 @@ function approaches(c: Cells, pending: Pending): void {
   c.C108 = weightedDeviation([[c.C13, c.C68], [c.C59, c.C104], [c.C98, c.C99]], c.C107)
   c.C109 = globalComputedSize(c.C23, c.C107, c.C108, c.C102, c.C103)
   c.C110 = netLimitedSize(c.C41, c.C11, c.C57, c.C96)
-  c.C111 = appliedRandomSize(c.C109, minimumRandomSize(9, c.C10, c.C56, c.C95), c.C110, pending('C109'))
+  c.C111 = appliedRandomSize(c.C109, minimumRandomSize(9, c.C10, c.C56, c.C95), c.C110, pending('C109'), true)
   c.C112 = additionalUnits(c.C13, c.C107, c.C111, c.C86)
   c.C113 = additionalUnits(c.C59, c.C107, c.C111, c.C84)
   c.C114 = share(c.C98, c.C107, c.C111)
@@ -51,7 +52,8 @@ function applied(c: Cells, pending: Pending, approach: Recalculation, context: S
   c.C117 = guard(() => required(c.C84) + (approach === 'global' ? required(c.C113) : 0))
   const exhaustive = [c.C10, c.C56, c.C95].map(n)
   const shortfall = (): number => exhaustive.reduce((rest, units) => minus(rest, units), minus(minus(30, required(c.C116)), required(c.C117)))
-  c.C118 = periodSize(chosen, { open: pending(CHOSEN[approach]), notApplicable: typeof chosen === 'string' }, context, shortfall)
+  const blocked = approach === 'global' && (blockedGlobal(c, 'C77', pending) || blockedGlobal(c, 'C109', pending))
+  c.C118 = periodSize(chosen, { open: pending(CHOSEN[approach]) || blocked, notApplicable: typeof chosen === 'string' }, context, shortfall)
   c.C119 = guard(() => exhaustive.reduce((total, units) => total + units, required(c.C116) + required(c.C117) + required(c.C118)))
   c.C120 = isNumber(c.C118) && isNumber(c.C119) ? checkAnnualMinimum(c.C119) : null
 }

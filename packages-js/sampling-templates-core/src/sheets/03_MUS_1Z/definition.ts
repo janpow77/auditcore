@@ -5,6 +5,7 @@
  * eingebettete Formeln stehen als Kurzschreibweise in `formula`.
  */
 import type { FieldDefinition, MethodDefinition } from '../../model/definition'
+import { HIGH_VALUE_INTERPRETATION, ROUNDING_INTERPRETATION, UPPER_LIMIT_INTERPRETATION } from '../shared/interpretations'
 
 const EUR = '#,##0.00" €"'
 const INT = '#,##0'
@@ -59,9 +60,9 @@ const parameters: FieldDefinition[] = [
     label: 'Prüfung Konfidenzniveau gegen Systembewertung',
     hint: 'Anh. I Nr. 2 legt nur die Eckwerte fest; für „mittel“ ist das Konfidenzniveau fachlich zu begründen.',
   },
-  { cell: 'C14', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Wesentlichkeitsschwelle (höchstens 2 %)', hint: 'Anh. I Nr. 1 i. V. m. Anh. XX Nr. 5.9 VO (EU) 2021/1060.' },
-  { cell: 'C15', alias: 'checkMateriality', kind: 'formula', type: 'check', label: 'Prüfung Wesentlichkeitsschwelle' },
-  { cell: 'C16', alias: 'tolerableError', kind: 'formula', type: 'amount', format: EUR, label: 'Zulässiger Fehler', formula: 'TE = Wesentlichkeitsschwelle × BV', hint: 'Anh. II: TE höchstens 2 % der gesamten Ausgaben.' },
+  { cell: 'C14', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Signifikanzschwelle (höchstens 2 %)', hint: 'Anh. I Nr. 1 i. V. m. Anh. XX Nr. 5.9 VO (EU) 2021/1060.' },
+  { cell: 'C15', alias: 'checkMateriality', kind: 'formula', type: 'check', label: 'Prüfung Signifikanzschwelle' },
+  { cell: 'C16', alias: 'tolerableError', kind: 'formula', type: 'amount', format: EUR, label: 'Zulässiger Fehler', formula: 'TE = Signifikanzschwelle × BV', hint: 'Anh. II: TE höchstens 2 % der gesamten Ausgaben.' },
   { cell: 'C17', alias: 'anticipatedErrorRate', kind: 'input', type: 'percent', format: RATE, label: 'Voraussichtliche Fehlerquote', hint: 'Anh. I Nr. 4: Pilotstichprobe, historische Daten oder fachkundiges Ermessen.' },
   { cell: 'C18', alias: 'anticipatedError', kind: 'formula', type: 'amount', format: EUR, label: 'Voraussichtlicher Fehler', formula: 'AE = voraussichtliche Fehlerquote × BV' },
   { cell: 'C19', alias: 'checkTolerableError', kind: 'formula', type: 'check', label: 'Prüfung TE > AE' },
@@ -69,7 +70,7 @@ const parameters: FieldDefinition[] = [
 ]
 
 const size: FieldDefinition[] = [
-  { cell: 'C21', alias: 'computedSampleSize', kind: 'formula', type: 'integer', format: INT, label: 'Rechnerischer Stichprobenumfang', formula: 'n = (z · BV · σ_r / (TE − AE))²', hint: 'Anh. II Nr. 1.1, nicht geschichtet.' },
+  { cell: 'C21', alias: 'computedSampleSize', kind: 'formula', type: 'integer', format: INT, label: 'Rechnerischer Stichprobenumfang', formula: 'n = (z · BV · σ_r / (TE − AE))²', hint: 'Anh. II Nr. 1.1, nicht geschichtet.', interpretation: ROUNDING_INTERPRETATION },
   { cell: 'C22', alias: 'programmeCategory', kind: 'input', type: 'choice', list: 'category', label: 'Kategorie des Programms nach Anh. XI Tabelle 2 VO (EU) 2021/1060 (1–4)', hint: 'Art. 5 Abs. 7 UAbs. 1 DelVO; ErwG 10.' },
   { cell: 'C23', alias: 'article83', kind: 'input', type: 'choice', format: '@', list: 'yesNo', default: 'Nein', label: 'Verbesserte angemessene Regelungen nach Art. 83 VO (EU) 2021/1060 (Ja/Nein)', hint: 'Anh. I Buchst. a DelVO: Stichprobe von 30 Einheiten.' },
   {
@@ -109,7 +110,7 @@ const selection: FieldDefinition[] = [
   { cell: 'C29', alias: 'highValueUnits', kind: 'input', type: 'integer', format: INT, label: 'Anzahl hochwertiger Einheiten (BV > Grenzwert) (n_e)' },
   { cell: 'C30', alias: 'highValueBookValue', kind: 'input', type: 'amount', format: EUR, label: 'Buchwert der hochwertigen Einheiten (BV_e)' },
   { cell: 'C31', alias: 'randomStratumBookValue', kind: 'formula', type: 'amount', format: EUR, label: 'Buchwert der Zufallsschicht (niedrigwertige Einheiten) (BV_s)' },
-  { cell: 'C32', alias: 'randomStratumUnits', kind: 'formula', type: 'integer', format: INT, label: 'Anzahl der in der Zufallsschicht auszuwählenden Einheiten (n_s)' },
+  { cell: 'C32', alias: 'randomStratumUnits', kind: 'formula', type: 'integer', format: INT, label: 'Anzahl der in der Zufallsschicht auszuwählenden Einheiten (n_s)', interpretation: HIGH_VALUE_INTERPRETATION },
   { cell: 'C33', alias: 'checkMinimumUnits', kind: 'formula', type: 'check', label: 'Mindestens drei Einheiten in der Zufallsschicht' },
   { cell: 'C34', alias: 'samplingInterval', kind: 'formula', type: 'amount', format: EUR, label: 'Auswahlintervall (SI)', formula: 'SI = BV_s / n_s', hint: 'Art. 2 Nr. 9; Art. 5 Abs. 2 UAbs. 2 DelVO.' },
   {
@@ -170,7 +171,7 @@ const projection: FieldDefinition[] = [
     hint: 'Art. 8 Abs. 1 DelVO; endgültige Berechnung inkl. TH-Pauschale und Anh. III in Blatt 18.',
   },
   { cell: 'C51', alias: 'upperErrorLimitRate', kind: 'result', type: 'percent', format: RATE, label: 'Obere Fehlergrenze in % von BV' },
-  { cell: 'C52', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Wesentlichkeitsschwelle' },
+  { cell: 'C52', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Signifikanzschwelle', interpretation: UPPER_LIMIT_INTERPRETATION },
 ]
 
 export const definition: MethodDefinition = {

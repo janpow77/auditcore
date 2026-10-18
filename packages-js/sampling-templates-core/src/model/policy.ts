@@ -38,6 +38,12 @@ import type { CellValue, MissingPolicy, SheetContext } from './types'
  * gezeigtes Ergebnis abhängt, ohne dass die Vorlage es zeigt. Die Webfassung
  * rechnet dort wie die Vorlage und weist die Eingabe in Warnfarbe aus.
  *
+ * Freiwillige Eingaben (Entscheidung des Inhabers vom 17.10.2026): Was die
+ * Vorlage als freiwillig kennzeichnet oder leer als 0 liest – systembedingte und
+ * anomale Fehler, hochwertige Einheiten, Iteration, die Abzüge in Blatt 02 und
+ * J6–J8 in Blatt 20 –, ist freiwillig; leer heißt „keine“ (0), ohne Hinweis
+ * „Angabe fehlt“. Die Einstufung je Feld steht in `model/dependence.ts`.
+ *
  * Zum Umstellen genügt es, hier einen Wert zu ändern; kein Blatt wird angefasst.
  */
 export const MISSING_POLICY: MissingPolicy = {

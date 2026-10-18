@@ -15,7 +15,7 @@ const SIZE = 'Ohne Konfidenzniveau und erwartete Fehlerquote ist der Stichproben
 const RESULTS = 'Die Hochrechnung setzt den Stichprobenumfang und die Fehler der Stichprobe voraus.'
 
 export const deviations: readonly Deviation[] = [
-  ...deviationRows(['C5', 'C6'], ['C4'], '0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH)', 'Ohne Konfidenzniveau gibt es keinen Zuverlässigkeits- und keinen Erweiterungsfaktor.'),
+  ...deviationRows(['C5', 'C6'], ['C4'], 'FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0)', 'Ohne Konfidenzniveau gibt es keinen Zuverlässigkeits- und keinen Erweiterungsfaktor.'),
   ...deviationRows(['C8'], ['C1', 'C7'], '0 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt Buchwert und erwartete Fehlerquote voraus.'),
   ...deviationRows(['C10'], ['C1'], '0 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt den Buchwert voraus.'),
   ...deviationRows(['C11', 'C12', 'C15'], ['C4', 'C7'], 'Wert auf Grundlage des mit RF = 0 bzw. AE = 0 berechneten Umfangs (z. B. Mindestumfang 30)', SIZE),

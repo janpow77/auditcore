@@ -17,7 +17,7 @@ const SIZE_INPUTS = ['C3', 'C4', 'C5', 'C7']
 const SIZE = 'Ohne Umfang der Grundgesamtheit, Standardabweichung, Konfidenzniveau und erwartete Fehlerquote ist der Stichprobenumfang nicht bestimmt; alle Folgegrößen bleiben offen.'
 
 export const deviations: readonly Deviation[] = [
-  ...deviationRows(['C6'], ['C5'], '0 (keine Stufe des Konfidenzniveaus trifft zu; Excel zeigt FALSCH)', 'Ohne Konfidenzniveau gibt es keinen Koeffizienten z.'),
+  ...deviationRows(['C6'], ['C5'], 'FALSCH (keine Stufe des Konfidenzniveaus trifft zu; zählt in der Rechnung als 0)', 'Ohne Konfidenzniveau gibt es keinen Koeffizienten z.'),
   ...deviationRows(['C8'], ['C1', 'C7'], '0 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt Buchwert und erwartete Fehlerquote voraus.'),
   ...deviationRows(['C10', 'C23'], ['C1'], '0 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt den Buchwert voraus.'),
   ...deviationRows(['C11', 'C19', 'C20'], SIZE_INPUTS, 'Wert auf Grundlage des mit 0 berechneten Umfangs (Mindestumfang 30)', SIZE),

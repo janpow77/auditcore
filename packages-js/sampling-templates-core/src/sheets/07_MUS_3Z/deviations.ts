@@ -55,7 +55,7 @@ const SIZE_WITHOUT_FIRST = SIZE_INPUTS.filter((cell) => cell !== 'C7')
 
 const sizes: Deviation[] = [
   ...entries(['C12', 'C23'], ['C7', 'C8', 'C9'], ZERO, BOOK_VALUE),
-  ...entries(['C20'], ['C7', 'C8', 'C9', 'C18'], ZERO, 'Der zulässige Fehler setzt die Buchwerte und die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C20'], ['C7', 'C8', 'C9', 'C18'], ZERO, 'Der zulässige Fehler setzt die Buchwerte und die Signifikanzschwelle voraus.'),
   ...entries(['C22'], ['C7', 'C8', 'C9', 'C21'], ZERO, 'Der voraussichtliche Fehler setzt die Buchwerte und die voraussichtliche Fehlerquote voraus.'),
   ...entries(['C27'], ['C7', 'C8', 'C9', 'C24', 'C25', 'C26'], DEVIATION, 'Die gewichtete Standardabweichung setzt Buchwert und Standardabweichung aller Zeiträume voraus.'),
   ...entries(['C29', 'C35', 'C36', 'C37', 'C38', 'C43', 'C44', 'C45'], SIZE_INPUTS, FIRST_TEMPLATE, FIRST),
@@ -66,7 +66,7 @@ const sizes: Deviation[] = [
 
 const second: Deviation[] = [
   ...entries(['C58'], ['C7', 'C51', 'C53'], ZERO, BOOK_VALUE),
-  ...entries(['C59'], ['C7', 'C18', 'C51', 'C53'], ZERO, 'Der aktualisierte zulässige Fehler setzt die Buchwerte und die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C59'], ['C7', 'C18', 'C51', 'C53'], ZERO, 'Der aktualisierte zulässige Fehler setzt die Buchwerte und die Signifikanzschwelle voraus.'),
   ...entries(['C60'], ['C7', 'C21', 'C51', 'C53'], ZERO, 'Der aktualisierte voraussichtliche Fehler setzt die Buchwerte und eine voraussichtliche Fehlerquote voraus.'),
   ...entries(['C61'], ['C24'], '0,0000 (leere Zelle zählt als 0)', 'Ohne Standardabweichung der Stichprobe und ohne voraussichtliche Standardabweichung gibt es keinen Wert für Zeitraum 1.'),
   ...entries(['C62'], ['C51', 'C53'], ZERO, BOOK_VALUE),
@@ -75,7 +75,7 @@ const second: Deviation[] = [
   ...entries(['C65', 'C66', 'C67'], [...SIZE_WITHOUT_FIRST, ...SECOND_INPUTS], SECOND_TEMPLATE, SECOND),
   ...entries(['C68'], ['C7', 'C24', ...SECOND_INPUTS], DEVIATION, SECOND),
   ...entries(['C69', 'C70', 'C72', 'C73'], ['C7', 'C18', 'C21', 'C24', ...SECOND_INPUTS], 'Umfang auf Grundlage des mit 0 gerechneten Werts (mindestens 30)', SECOND),
-  // C18: Bei der globalen Neuberechnung hängt der Umfang für Zeitraum 2 auch ohne Gesamtumfang an der Wesentlichkeitsschwelle (C59).
+  // C18: Bei der globalen Neuberechnung hängt der Umfang für Zeitraum 2 auch ohne Gesamtumfang an der Signifikanzschwelle (C59).
   ...entries(['C71', 'C75', 'C76', 'C77', 'C78', 'C82', 'C83', 'C84'], [...SIZE_INPUTS, 'C18', ...SECOND_INPUTS], SECOND_TEMPLATE, SECOND),
   ...entries(['C106'], [...SIZE_INPUTS, 'C18', ...SECOND_INPUTS, 'C90'], FACTOR_TEMPLATE, FACTOR),
   ...entries(['C81'], ['C51'], RANDOM_STRATUM, BOOK_VALUE),
@@ -83,7 +83,7 @@ const second: Deviation[] = [
 
 const third: Deviation[] = [
   ...entries(['C94', 'N4'], ['C7', 'C51', 'C90'], ZERO, BOOK_VALUE),
-  ...entries(['C95'], ['C7', 'C18', 'C51', 'C90'], ZERO, 'Der zulässige Fehler des Geschäftsjahres setzt die Ist-Buchwerte und die Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C95'], ['C7', 'C18', 'C51', 'C90'], ZERO, 'Der zulässige Fehler des Geschäftsjahres setzt die Ist-Buchwerte und die Signifikanzschwelle voraus.'),
   ...entries(['C96'], ['C7', 'C21', 'C51', 'C90'], ZERO, 'Der voraussichtliche Fehler des Geschäftsjahres setzt die Ist-Buchwerte und eine voraussichtliche Fehlerquote voraus.'),
   ...entries(['C97'], ['C55'], '0,0000 (leere Zelle zählt als 0)', 'Ohne Standardabweichung der Stichprobe und ohne aktualisierte Standardabweichung gibt es keinen Wert für Zeitraum 2.'),
   ...entries(['C98'], [...SIZE_WITHOUT_FIRST, ...SECOND_INPUTS, 'C90'], 'Nenner auf Grundlage des mit 0 gerechneten Werts', THIRD),

@@ -13,6 +13,7 @@ import type { CellAddress, CellMap, CellValue, SheetId } from '../model/types'
 import { SHEETS, findAvailableSheet } from '../sheets/registry'
 import { computeWorkspace } from '../workspace/compute'
 import type { WorkspaceState } from '../workspace/types'
+import { officialWording } from '../model/terms'
 
 /**
  * Art des Unterschieds: `value` – beide zeigen einen Wert, aber nicht denselben;
@@ -43,7 +44,8 @@ const TOLERANCE = 1e-9
 
 function same(workbook: CellValue, computed: CellValue): boolean {
   if (isNumber(workbook) && isNumber(computed)) return Math.abs(workbook - computed) <= TOLERANCE * Math.max(1, Math.abs(workbook))
-  return (isBlank(workbook) ? null : workbook) === (isBlank(computed) ? null : computed)
+  // Arbeitsmappen mit dem Begriff der Vorlage („Wesentlichkeitsschwelle“) gelten als gleich (`model/terms.ts`).
+  return (isBlank(workbook) ? null : officialWording(workbook)) === (isBlank(computed) ? null : computed)
 }
 
 function kindOf(workbook: CellValue, computed: CellValue): ImportDifferenceKind {

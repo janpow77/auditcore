@@ -10,6 +10,8 @@
  * nennt sie allgemein, weil `SheetTexts` je Kennung nur einen festen Text trägt.
  */
 import type { SheetTexts } from '../../model/texts'
+import { APPROXIMATION_EN_TEXT } from '../shared/kom'
+import { UPPER_LIMIT_INTERPRETATION_EN } from '../shared/interpretations'
 
 export const en: SheetTexts = {
   title: 'Total error rate, technical assistance and single audit arrangements',
@@ -21,6 +23,7 @@ export const en: SheetTexts = {
     C: { title: 'Adjustment of the high value stratum', reference: 'Annex III, optional' },
     D: { title: 'Adjusted extrapolated error and adjusted precision', reference: 'Annex III' },
     E: { title: 'Total error rate', reference: 'Art. 8(1) and (5)' },
+    F: { title: 'Location of the affected units', reference: 'Commission guidance EGESIF_16-0014-01, 7.10; optional' },
   },
   fields: {
     C4: { label: 'Method sheet applied', hint: 'Selection list; the values are taken over from the results summary (columns M:N).' },
@@ -48,7 +51,7 @@ export const en: SheetTexts = {
       hint: 'Exclusion: EE × factor; replacement: extrapolation to the original population. Where section C is applied, only the random part is scaled (interpretation).',
       interpretation: 'Where section C is applied, only the random part of the extrapolated error is scaled by the adjustment factor.',
     },
-    C25: { label: 'Adjusted precision (SE)', hint: 'Table 2, replacement: calculate the precision for the reduced population and adjust it by the factor.' },
+    C25: { label: 'Adjusted precision (SE)', hint: 'Table 2, replacement: calculate the precision for the reduced population and adjust it by the factor. The web version calculates in accordance with the Commission requirements: with the location recorded (section F) per random stratum SE · (N_s − A_s)/N_s · BV_s/BV_s,r, otherwise SE · (N − A)/N · BV/BV_r; exclusion with location SE · BV_s/BV_s,r (the template does not adjust on replacement).' },
     C26: {
       label: 'Total error rate',
       formula: '(EE + delimited systemic + uncorrected anomalous errors) / BV excluding TA',
@@ -57,7 +60,19 @@ export const en: SheetTexts = {
     C27: { label: 'Amount of error in relation to the audit population including TA' },
     C28: { label: 'Upper error limit in % (including sampling precision)', hint: 'Art. 2(20).' },
     C29: { label: 'Materiality threshold' },
-    C30: { label: 'Assessment' },
+    C30: { label: 'Assessment', interpretation: UPPER_LIMIT_INTERPRETATION_EN },
+    C31: {
+      label: 'Units of the high value or exhaustive stratum of the original population (N_e)',
+      hint: 'Optional; with all four entries sheet 18 adjusts per stratum in accordance with Commission guidance EGESIF_16-0014-01 (7.10.3). Where there is no such stratum, enter 0 everywhere.',
+    },
+    C32: { label: 'Book value of the high value or exhaustive stratum of the original population (BV_e)' },
+    C33: { label: 'of which affected by Art. 80(3): number (A_e)' },
+    C34: { label: 'of which affected by Art. 80(3): book value (BV_A,e)' },
+    C35: { label: 'Affected units of the random stratum (A_s)', formula: 'A_s = A − A_e' },
+    C36: { label: 'Book value of the random stratum, original (BV_s)', formula: 'BV_s = BV_u − BV_e' },
+    C37: { label: 'Book value of the random stratum, reduced (BV_s,r)', formula: 'BV_s,r = BV_s − (BV_A − BV_A,e)' },
+    C38: { label: 'Adjustment factor of the random stratum BV_s / BV_s,r', hint: 'Commission guidance EGESIF_16-0014-01, 7.10.2 and 7.10.3.' },
+    C39: { label: 'Check of the location (A_e ≤ A, BV_A,e ≤ BV_A, A_e ≤ N_e, BV_A,e ≤ BV_e, BV_e ≤ BV_u)', hint: 'Where the location is implausible, adjusted error and adjusted precision remain open; the note names the condition violated.' },
   },
   summary: {
     primary: 'Total error rate',
@@ -72,12 +87,14 @@ export const en: SheetTexts = {
   },
   values: {
     'Tabelle 1 (MUS/PPS)': 'Table 1 (MUS/PPS)',
+    '✔ Lage plausibel': '✔ location plausible',
+    '✖ Eingabe unplausibel': '✖ implausible input',
     'Tabelle 2 (SRS/gleiche Wahrscheinlichkeit)': 'Table 2 (SRS/equal probability selection)',
     '✔ Basis stimmt mit der erwarteten Grundgesamtheit überein': '✔ basis agrees with the expected population',
     '⚠ Basis weicht ab – Ausschluss: reduzierte, Ersetzung/keine: ursprüngliche Grundgesamtheit': '⚠ basis differs – exclusion: reduced population; replacement/none: original population',
-    '✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle': '✖ total error rate above the materiality threshold',
+    '✖ Gesamtfehlerquote über der Signifikanzschwelle': '✖ total error rate above the materiality threshold',
     '⚠ GFQ unter, obere Fehlergrenze über der Schwelle': '⚠ total error rate below, upper error limit above the threshold',
-    '✔ unter der Wesentlichkeitsschwelle': '✔ below the materiality threshold',
+    '✔ unter der Signifikanzschwelle': '✔ below the materiality threshold',
     'n. a.': 'n/a',
     'n. a. (Art. 8 Abs. 2)': 'n/a (Art. 8(2))',
   },
@@ -92,7 +109,20 @@ export const en: SheetTexts = {
       'No treatment of the units that cannot be audited under Art. 80(3) has been chosen in sheet 02; as in the template, the calculation is made without exclusion and without replacement',
     'reduced-population-not-positive': 'The reduced population (BV_r) is not positive; the adjustment factor is then not meaningful',
     'replacement-precision-not-scaled':
-      'Replacement with a method of Table 2: according to the note of the template, the precision is to be adjusted by the adjustment factor; the formula of the template does not do so (its comparison with “Tabelle 2” never matches). The web version calculates like the template – assess the adjusted precision and the upper error limit with professional judgement',
+      'Calculated in accordance with Delegated Regulation (EU) 2023/67, Annex III, Table 2 (replacement: precision for the reduced population, adjusted by BV(h) original / BV(h) reduced), related to the random stratum in accordance with Commission guidance EGESIF_16-0014-01 (7.10.2 with footnote 70, 7.10.3.4): precision of the method sheet times (N_s − A_s)/N_s and BV_s / BV_s,r; upper error limit and assessment rest on it. The template calculates differently here (it takes over the precision of the method sheet, calculated for the original population, without adjustment; its comparison with “Tabelle 2” never matches); decision of the owner of 17 October 2026',
+    'replacement-precision-reduced':
+      'Calculated in accordance with Delegated Regulation (EU) 2023/67, Annex III, Table 2 (replacement): precision for the reduced population (precision of the method sheet times (N − A)/N), adjusted by BV/BV_r; upper error limit and assessment rest on it. The template calculates differently here (it takes over the precision of the method sheet, calculated for the original population, without adjustment; its comparison with “Tabelle 2” never matches); decision of the owner of 17 October 2026',
+    'replacement-location-missing':
+      'Replacement (Delegated Regulation (EU) 2023/67, Annex III, Table 2) with an overall approximation: precision of the method sheet times (N − A)/N and BV/BV_r. This is not in line with the Commission requirements: there is an exhaustive stratum, and Commission guidance EGESIF_16-0014-01 (7.10.2, 7.10.3.4) relates number and book value to the random stratum. The location of the affected units is missing; please record it in section F. The template calculates differently here (it takes over the precision of the method sheet, calculated for the original population, without adjustment; its comparison with “Tabelle 2” never matches); decision of the owner of 17 October 2026',
+    'exclusion-by-stratum':
+      'Exclusion, calculated in accordance with Commission guidance EGESIF_16-0014-01 (7.10.3.2, 7.10.3.4) on Annex III to Delegated Regulation (EU) 2023/67: random part of the extrapolation and the precision adjusted by the random stratum ratio BV_s / BV_s,r, exhaustive stratum via EE_e = EE_e,r · BV_e / BV_e,r. The template calculates differently here (with the overall factor BV/BV_r, with section C for the random part only); decision of the owner of 17 October 2026',
+    'exclusion-location-missing':
+      'Exclusion as in the template with the overall factor BV/BV_r (with section C for the random part only). This is not in line with the Commission requirements: there is an exhaustive stratum, and Commission guidance EGESIF_16-0014-01 (7.10.3.2, 7.10.3.4) adjusts the random part by the random stratum ratio and the exhaustive stratum via EE_e (example 7.10.3.4: 1.44 % in accordance with the Commission; as in the template 1.49 % without section C, 1.50 % with section C). The location of the affected units is missing; please record it in section F',
+    'location-implausible':
+      'Implausible input in section F (location of the affected units): at least one of the conditions A_e ≤ A (sheet 02 C47), BV_A,e ≤ BV_A (C16), A_e ≤ N_e (C31), BV_A,e ≤ BV_e (C32), BV_e ≤ BV_u (C14) is violated. Adjusted error and adjusted precision remain open (“—”)',
+    'exhaustive-all-affected':
+      'All units of the exhaustive stratum are affected by Art. 80(3) (BV_e = BV_A,e, hence BV_e,r = 0): EE_e = EE_e,r · BV_e / BV_e,r cannot be determined (division by zero); the adjusted error remains open (“—”). In accordance with Commission guidance EGESIF_16-0014-01 (7.10.3.1 b), affected units of the high value stratum are replaced by units of the random stratum because no unit remains for replacement in the high value stratum; their error then enters through the random stratum. Please check the sample and section F',
+    ...APPROXIMATION_EN_TEXT,
     'high-value-incomplete': 'Adjustment of the high value stratum chosen, but the book value of the original (BV_e,u) or of the audited high value stratum (BV_e,r) is missing',
   },
 }

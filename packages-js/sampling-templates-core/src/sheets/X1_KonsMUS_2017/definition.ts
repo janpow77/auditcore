@@ -54,7 +54,8 @@ const size: FieldDefinition[] = [
 ]
 
 const findings: FieldDefinition[] = [
-  { cell: 'C13', alias: 'highValueErrors', kind: 'input', type: 'amount', format: EUR, label: 'Sum of errors in sampling units with BV larger than sampling interval' },
+  // Die Vorlage verwendet C13 unmittelbar (anders als Blatt 03 mit N(…)): Pflicht.
+  { cell: 'C13', alias: 'highValueErrors', kind: 'input', type: 'amount', format: EUR, optional: false, label: 'Sum of errors in sampling units with BV larger than sampling interval' },
   { cell: 'C14', alias: 'errorRateSum', kind: 'input', type: 'decimal', format: '0.0000', label: 'Sum of sample error rates' },
 ]
 

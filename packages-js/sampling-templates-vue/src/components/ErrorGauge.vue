@@ -4,7 +4,7 @@ import { FaBadge } from '@auditcore/ui'
 import { computed } from 'vue'
 
 /**
- * Skala: Gesamtfehlerquote und obere Fehlergrenze gegen die Wesentlichkeitsschwelle,
+ * Skala: Gesamtfehlerquote und obere Fehlergrenze gegen die Signifikanzschwelle,
  * mit Ampel. Maßgeblich ist die obere Fehlergrenze, ohne sie die Quote; liegt sie
  * unter der Schwelle, ist die Ampel grün, sonst rot. Die Positionen liefert der Kern.
  */

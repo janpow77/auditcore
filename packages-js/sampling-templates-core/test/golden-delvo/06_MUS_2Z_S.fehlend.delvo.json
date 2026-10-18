@@ -1,0 +1,11 @@
+[
+ {
+  "position": 11,
+  "name": "Fehlend: TE ≤ AE mit begrenztem Umfang",
+  "cells": {
+   "C22": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C29": 608
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ }
+]

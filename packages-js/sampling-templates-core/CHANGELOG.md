@@ -1,5 +1,234 @@
 # Changelog @auditcore/sampling-templates-core
 
+## 0.1.12 – 2026-10-18
+
+Rest aus dem Browsertest von 0.1.11 (noch nicht veröffentlicht). Rechenwerte
+unverändert, Golden-Abgleich 0 unbegründet.
+
+- Ergebnisübersicht (`buildSummary`): Eine Kennzahl, die wegen einer ungültigen
+  Eingabe offen ist, zeigt „Eingabe ungültig“ statt „—“; neu
+  `SummaryView.invalidNote` („Eingabe ungültig. Ungültige Eingabe: … (C39)“),
+  sobald eine Kennzahl oder die Skala deswegen offen ist. Größen, die nicht von
+  der Eingabe abhängen (etwa die Gesamtfehlerquote), bleiben sichtbar.
+- Stil `.fa-st__invalid-note`.
+
+## 0.1.11 – 2026-10-18
+
+Befund aus dem Browsertest von 0.1.10 (noch nicht veröffentlicht). Golden-Abgleich
+unverändert: 0 unbegründet.
+
+- Ungültige Eingaben in jedem Feld: Eine nicht lesbare Eingabe
+  (`UNREADABLE_INPUT`) fiel bei Feldern, die leer mit 0 rechnen (etwa s_q in
+  Blatt 08), still auf 0 zurück – Genauigkeit 0 €, OFG = GFQ, grüne Würdigung.
+  `evaluateSheet` lässt jetzt jede abhängige Zelle offen („Eingabe ungültig“),
+  ohne Hinweis „mit 0 berechnet“ und ohne Werte ohne Grundlage
+  (`dependentCells` in `model/dependence.ts`). Ein wirklich leeres Feld folgt
+  weiter seiner Leer-Regel.
+- Skala und Kennzahlenleiste: keine Ampel, solange die obere Fehlergrenze offen
+  ist (vorher grün aus der Gesamtfehlerquote allein).
+- `MethodSummary` trägt `exhaustiveUnits` (n_e bzw. N_e) und
+  `exhaustiveBookValue` (BV_e), `summaryOf` füllt sie (`model/exhaustive.ts`);
+  Blatt 18 erkennt die umfassende Schicht daran. Die Ersatzregel EE_e ≠ 0 gilt
+  nur noch, wenn ein Aufrufer die Ergebnisübersicht ohne diese Angaben übergibt.
+- Eigenschaftstest `test/unreadable.spec.ts`: Für jedes Zahlenfeld der Blätter
+  02–20 und X1–X4 liefert „ungültig“ nie das Ergebnis von „leer“.
+
+## 0.1.10 – 2026-10-17
+
+Auflagen der Nachprüfung von 0.1.9 (Freigabe mit Auflagen; noch nicht
+veröffentlicht). Golden-Abgleich unverändert: 13.399 bewusst nach KOM,
+0 unbegründet.
+
+- B1: Blatt 18 erkennt die umfassende Schicht an n_e bzw. N_e und BV_e des
+  Methodenblatts (> 0, `hasExhaustiveStratum`), nicht mehr an EE_e – das liefern
+  die Methodenblätter auch ohne Schicht als 0. Ohne Schicht kein Hinweis
+  „nicht KOM-konform“; `replacement-precision-reduced` greift wieder
+  (Beispiel 08: 60.000 · 360/400 · 10/9,5 Mio. = 56.842,11 €).
+- B2: Plausibilität von Abschnitt F (neue Prüfzelle C39): A_e ≤ A, BV_A,e ≤ BV_A,
+  A_e ≤ N_e, BV_A,e ≤ BV_e, BV_e ≤ BV_u; bei Verstoß „✖ Eingabe unplausibel“,
+  Hinweis `location-implausible` mit Feldangabe, C24/C25 und Folgegrößen „—“.
+- B3: BV_e = BV_A,e (alle Einheiten der umfassenden Schicht berührt): keine
+  Division durch null; C24 „—“ mit Hinweis `exhaustive-all-affected` nach
+  Leitfaden 7.10.3.1 b.
+- B4: Texte berichtigt (Beispiel 7.10.3.4: nach KOM 1,44 %, wie die Vorlage
+  ohne Abschnitt C 1,49 %, mit C 1,50 %; Feldhinweis C25 je Zufallsschicht;
+  Näherungshinweis „ganze Grundgesamtheit“ ohne Lage; Kommentare zu AE = TE).
+  Die nicht mehr gebildeten Vorlagentexte „TE ≤ AE“ und „✖ TE ≤ AE: …“ haben
+  keine Übersetzung mehr.
+- B5: Standardneuberechnung bei AE > TE mit demselben EGESIF-Hinweis
+  (`anticipated-above-tolerable-standard[-3]`).
+- B6: Empfehlung des Leitfadens (4,0 % bei 2 % Schwelle) als Auslegung
+  gekennzeichnet; der Hinweis löst beim Doppelten der Signifikanzschwelle aus.
+
+## 0.1.9 – 2026-10-17
+
+Entscheidung des Inhabers vom 17.10.2026: „Es gelten die Vorgaben der KOM“
+(DelVO (EU) 2023/67 und KOM-Leitfaden EGESIF_16-0014-01). Die unabhängige
+Gegenprüfung von 0.1.8 hat Nr. 2 als nicht von der DelVO gedeckt und Nr. 1 als
+ungenau bewertet; beides ist neu gefasst (noch nicht veröffentlicht).
+
+- Nr. 2 zurückgenommen und nach dem Leitfaden (7.1, S. 183) gefasst: Bei AE > TE
+  rechnen erster Zeitraum, Standard- und globale Neuberechnung den Umfang mit
+  |TE − AE|; neutraler Hinweis `anticipated-above-tolerable[-global[-3]]`, ab
+  AE ≥ 4 % zusätzlich `anticipated-at-least-4[…]` (Empfehlung 4 %, der Wert wird
+  nicht ersetzt). Im ersten Zeitraum (03–12) weicht das von der Vorlage ab
+  („TE ≤ AE“); Prüfhinweis dort „⚠ AE > TE: Umfang mit der geplanten
+  Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)“. Nur bei AE = TE
+  „✖ nicht anwendbar (Division durch null)“ (`SIZE_NOT_APPLICABLE`); im ersten
+  Zeitraum gilt ein begrenzter Umfang wie in der Vorlage, in der globalen
+  Neuberechnung bleiben Umfang und Folgegrößen offen, Warnhinweis
+  `size-not-applicable-global[-3]` mit Art. 5 Abs. 7 UAbs. 4 Buchst. a.
+  Entfallen: `global-te-not-above-ae*`. `appliedTotalSize`/`appliedRandomSize`
+  mit neuem Parameter `global`. Ergebnisspalte: „nicht bestimmbar (TE = AE,
+  Division durch null)“ (`equalErrors`).
+- Nr. 1 je Schicht nach dem Leitfaden (7.10.2, 7.10.3): Blatt 18 Abschnitt F
+  (freiwillig) erfasst die Lage der berührten Einheiten (C31–C34) und leitet
+  Zufallsschicht und Faktor ab (C35–C38). Ausschluss mit Lage: Zufallsteil und
+  Genauigkeit mal BV_s/BV_s,r, umfassende Schicht mal BV_e/BV_e,r; Ersetzung bei
+  Tabelle 2 mit Lage: SE · (N_s − A_s)/N_s · BV_s/BV_s,r. Ohne Lage
+  Gesamt-Näherung (Ersetzung) bzw. wie die Vorlage (Ausschluss), mit
+  Warnhinweis, wenn es eine umfassende Schicht gibt. Neue Hinweise
+  `exclusion-by-stratum`, `exclusion-location-missing`,
+  `replacement-precision-reduced`, `replacement-location-missing`;
+  `stratified-single-factor` ersetzt durch `annex-iii-approximation` (auch an
+  den Blättern 04–07, 09–12). Belegrechnungen aller Leitfadenbeispiele
+  7.10.3.1 a/b, 7.10.3.2, 7.10.3.4 in `test/kom-annex.spec.ts`.
+- Kontrollwerte: `scripts/delvo_soll.py` (Schwelle in Blatt 18 auch mit
+  Blattpräfix gelesen) plus `scripts/kom_lo.py` (Neuberechnung der Vorlage in
+  LibreOffice mit dem nachgerechneten Umfang, `test/golden-delvo/lo/`);
+  `delvo_soll.py --check` läuft in `npm test`. Golden-Spalte „bewusst nach KOM“.
+- Golden-Abgleich (10.531 Fälle, 728.895 Zellen): 683.020 gleich, 27.978
+  begründet, 630 bewusst anders dargestellt, 3.868 amtlicher Begriff, 13.399
+  bewusst nach KOM, 0 unbegründet, 0 abweichend „wie die Vorlage“. Gegenüber
+  0.1.7 ändern sich 13.426 Zellen in 667 Fällen (03–12, 18, 20), gegenüber
+  0.1.8 14.378 Zellen in 565 Fällen.
+
+## 0.1.8 – 2026-10-17
+
+Entscheidung des Inhabers vom 17.10.2026: Bei den Abweichungen 1 und 2 des
+DelVO-Abgleichs rechnet die Webfassung nach der DelVO (EU) 2023/67 und weicht
+dort bewusst von der Excel-Vorlage ab (noch nicht veröffentlicht).
+
+- Blatt 18, Ersetzung bei Tabelle 2 (Anhang III Tabelle 2): angepasste
+  Genauigkeit C25 = SE · (N − N_Art.80)/N · BV/BV_r – Genauigkeit für die
+  reduzierte Grundgesamtheit, danach einmal mit dem Verhältnis der Buchwerte
+  angepasst (N aus Blatt 02 C52, N_Art.80 aus C47). Daraus obere Fehlergrenze,
+  Würdigung und im Bericht G34/G35. Ausschluss und Ersetzung bei Tabelle 1
+  unverändert wie die Vorlage. Neue begründete Abweichung: C25 offen, wenn N in
+  Blatt 02 fehlt.
+- Globale Neuberechnung bei AE ≥ TE (05, 06, 07, 10, 11, 12; Anhang II):
+  „✖ nicht anwendbar: der voraussichtliche Fehler muss kleiner sein als der
+  zulässige Fehler (Anhang II)“ statt eines Umfangs (`GLOBAL_NOT_APPLICABLE`,
+  `globalSize`); anzuwendender globaler Umfang, Zusatzeinheiten,
+  Folgezeiträume, Hochrechnung, Genauigkeit und Würdigung bleiben offen.
+- Hinweise zu Nr. 1 und 2 lauten „Berechnet nach DelVO … ; die Vorlage rechnet
+  hier anders (…)“ (deutsch und englisch); Nr. 3–5 wie in 0.1.7.
+- Golden-Abgleich mit eigener Spalte „bewusst nach DelVO“, Sollwerte unabhängig
+  nachgerechnet (`scripts/delvo_soll.py`, `test/golden-delvo/`). Gegenüber 0.1.7
+  ändern sich 4.534 Zellen in 533 Fällen (nur 05–07, 10–12, 18, 20).
+
+## 0.1.7 – 2026-10-17
+
+DelVO-Abgleich vom 17.10.2026 (noch nicht veröffentlicht). Keine Rechenänderung:
+Golden-Abgleich gegen Excel 0 unbegründet.
+
+- Amtlicher Begriff „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“
+  (Anhang I Nr. 1 DelVO; Anhang XX Nr. 5.9 VO (EU) 2021/1060) in
+  Bezeichnungen, Texten des Rechenkerns, Hinweisen, Bericht und Export; beim
+  ersten Vorkommen je Blatt „Signifikanzschwelle (Vorlage:
+  Wesentlichkeitsschwelle)“. Neu `model/terms.ts` (`officialWording`,
+  `withTemplateTerm`, Konstanten). Der Vergleich beim Öffnen einer Arbeitsmappe
+  liest beide Begriffe gleich. Englisch bleibt „materiality threshold“.
+- Hinweise in Warnfarbe mit DelVO-Fundstelle, wo die Vorlage abweicht
+  (`sheets/shared/delvo.ts`, Blatt 18): globale Neuberechnung bei AE ≥ TE
+  (`global-te-not-above-ae`), Zusatz „Standardansatz nicht anwendbar“ an den
+  Hinweisen zum nicht positiven Nenner, ein Anpassungsfaktor bei Schichtung
+  (`stratified-single-factor`), Bezugsgröße beim Ausschluss als Auslegungsfrage
+  (`exclusion-reference-population`, nur einfache Zufallsstichprobe); Wortlaut
+  von `replacement-precision-not-scaled` mit Fundstelle und Wirkung. Alle auch
+  englisch.
+- Bisher nicht gekennzeichnete Auslegungen der Vorlage sind am Feld
+  gekennzeichnet (`sheets/shared/interpretations.ts`): Aufrunden der Umfänge,
+  Vergleich der oberen Fehlergrenze in der Würdigung, n einschließlich
+  hochwertiger Einheiten, Anrechnung der umfassenden Schicht auf 30, Aufteilung
+  von Zeitraum 2 in Blatt 11, proportionale Aufteilung in 14 und 16,
+  „mindestens 3“ in Blatt 15. Diese allgemeinen Auslegungen stehen am Blatt
+  und reisen nicht mit (`Limitation.local`), damit der Bericht auf einer
+  A4-Seite bleibt.
+- Kennzeichen „Auslegung der Vorlage“ in Textfarbe auf Akzentgrund (Kontrast im
+  dunklen Farbschema einer Anwendung).
+- `docs/abweichungen.md` Nr. 16 „Abgleich mit der DelVO“ mit den
+  Redaktionsversehen der deutschen Fassung von Anhang II.
+
+## 0.1.6 – 2026-10-17
+
+Referenz ist die Excel-Vorlage, also das Rechenverhalten von Microsoft Excel
+(Excel-Gegenprobe vom 17.10.2026, Microsoft 365 Version 16.0.20326). LibreOffice
+ist nur noch Hilfsmittel (noch nicht veröffentlicht).
+
+- Rechensemantik nach Excel, jede Regel an der Messung geprüft
+  (`test/fixtures/excel-semantik.json`, `test/excel.spec.ts`): Vergleiche nach
+  Rundung beider Seiten auf 15 geltende Stellen (statt Toleranz 2⁻⁴⁸);
+  `roundUp` mit Vorrundung auf 15 Stellen (statt Kürzung auf zwölf);
+  `matchExact` und der z-Wert aus Blatt 01 suchen genau (`VERGLEICH(…;0)`);
+  `sum` ohne Fehlerausgleich, nur die letzte Addition mit der
+  Auslöschungsregel; `minus`/`plus` setzen ein Ergebnis 50 Binärstellen unter
+  dem kleineren Summanden auf 0.
+- Golden-Sollwerte aus Excel (10.531 Fälle, 728.895 Zellen). Abgleich: 700.321
+  gleich, 27.944 begründet, 630 bewusst anders dargestellt, 0 Toleranzkanten,
+  0 unbegründet; „wie die Vorlage“ 0 Abweichungen. Die Sonderregel
+  „Toleranzkante“ (verschobene 17-stellige Eingabe) entfällt.
+- Bewusst anders dargestellt (`adapted`, Typ `fromTemplate` nimmt jetzt auch
+  Wahrheitswerte; neu `templateNumber`): Altvorlagen X1 C5/C6, X2 C6, X3 D10,
+  X4 C11 zeigen 0 statt FALSCH mit neuem Hinweis `level-outside-steps`;
+  Blatt 20 E20–E27 zeigt bei Buchwert 0 keinen Wert statt `#DIV/0!` (Hinweis
+  `case-book-value-zero` wie bisher).
+- Geänderte Rechenwerte gegenüber 0.1.5, nur an Prüfsonden der Abnahme
+  (138 Fälle, 760 Zellen): Stichprobenumfang um 1 größer, wenn der Rohumfang
+  ab etwa 10⁻¹⁴ relativ über einer ganzen Zahl liegt (Blätter 03, 08, X2;
+  163 Ganzzahlzellen, 487 Folgezahlen); Würdigung an der Schwelle
+  („GFQ = Schwelle ± 3e-15“, 89 Texte in 03–16 und 18); Konfidenzniveau
+  0,7000000000000001 ergibt in Blatt 03 keinen z-Wert mehr (21 Zellen leer).
+  Übrige Unterschiede liegen unter 10⁻⁹ relativ (Summen ohne Fehlerausgleich).
+- `UNREADABLE_INPUT`: Eine nicht lesbare Eingabe in einem vorbelegten Feld
+  fällt nicht mehr still auf den Wert aus Blatt 02 zurück. `buildSummary`
+  meldet „Eingabe ungültig“ auch dann, wenn die Vorlage ohne die Eingabe
+  keine Hauptgröße zeigt, und nicht mehr „noch keine Angaben“.
+- Prüfvermerk der Oberfläche (`verificationNote`) nennt Excel 16.0.20326.
+
+## 0.1.5 – 2026-10-17
+
+Zusammenführung: Stand 0.1.3/0.1.4 vom 14.10.2026 (Arbeitsassistent, Hinweise
+der Abnahme) mit den Regeln für freiwillige Eingaben vom 17.10.2026. Die
+Zwischenstände 0.1.3 und 0.1.4 dieses Strangs vom 17.10.2026 wurden nicht
+ausgeliefert; ihr Inhalt steht hier.
+
+Freiwillige Eingaben nach der Original-Arbeitsmappe (noch nicht veröffentlicht).
+Keine Änderung an Rechenwerten; der Abgleich ist unverändert.
+
+- Die Einstufung freiwilliger Eingaben (`optionalOf`, `model/dependence.ts`)
+  ist jetzt an der Vorlage begründet: Kennzeichnungen „(leer = …)“ und
+  „(fakultativ)“, Abschnitt „optional“ in Blatt 18, Kommentare in Blatt 20;
+  Felder, die keine Formel verwendet (z. B. das Geschäftsjahr), lösen nie einen
+  Hinweis aus. Tabelle in `docs/abweichungen.md`, Nr. 13.
+- `FieldDefinition.optional` kann `false` sein (Pflicht trotz des Feldnamens);
+  so in der Altvorlage X1 für C13, die die Vorlage unmittelbar verwendet.
+- Nicht lesbare Eingaben („abc“): `buildSections` und `buildSummary` nehmen die
+  Menge der ungültigen Eingaben und melden abhängige Werte als „Eingabe
+  ungültig“ mit „Ungültige Eingabe: …“ statt „Angabe fehlt“.
+
+Entscheidung des Inhabers vom 17.10.2026 zu freiwilligen Eingaben (noch nicht
+veröffentlicht). Kein Wert weicht von der Vorlage ab.
+
+- Freiwillig, leer heißt „keine“ (0), ohne Hinweis „Angabe fehlt“:
+  systembedingte und anomale Fehler, hochwertige Einheiten (Gruppe), Einheiten
+  der Zufallsschicht mit BV > Auswahlintervall (Iteration), in Blatt 02
+  TH-Pauschale, negative Datensätze, Ausschlüsse, Wiederaufnahmen und
+  Art.-80-Einheiten, in Blatt 20 J6–J8. Gruppen nur gemeinsam leer.
+- Blätter 04, 06 und 16: Die Summen der hochwertigen Einheiten und der
+  Iteration ohne Eintrag in einer Schicht zeigen wie in der Vorlage 0 statt
+  „kein Wert“; die zugehörigen Abweichungseinträge entfallen.
+
 ## 0.1.3 – 2026-10-14
 
 Nur Stile und Texte der Oberfläche (noch nicht veröffentlicht); keine Änderung

@@ -1,0 +1,73 @@
+[
+ {
+  "position": 14,
+  "name": "TE ≤ AE, Stichprobenumfang nicht bestimmbar",
+  "cells": {
+   "C22": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N5": 69212.0645312135,
+   "N7": 105132.011647338,
+   "N10": 464,
+   "N11": 0.00138424129062427,
+   "C27": 619,
+   "C33": 619,
+   "C34": 332,
+   "C35": 288,
+   "C36": 78313.2530120482,
+   "C40": 329,
+   "C41": "✔ ≥ 3 Einheiten",
+   "C42": 71732.5227963526,
+   "C56": 57036535421.6867,
+   "C57": 132,
+   "C62": 0,
+   "C65": 308,
+   "C66": 332,
+   "C67": 132,
+   "C69": "✔ ≥ 30 Einheiten",
+   "C70": 181818.181818182,
+   "C74": 130,
+   "C75": "✔ ≥ 3 Einheiten",
+   "C76": 170769.230769231,
+   "C79": 329,
+   "C84": 64212.0645312135,
+   "C85": 69212.0645312135,
+   "C86": 105132.011647338,
+   "C89": 174344.076178552,
+   "C90": -35919.9471161247,
+   "C91": 0.00210264023294676,
+   "C92": 0.00138424129062427,
+   "C93": 0.00138424129062427,
+   "C94": 0.00348688152357103,
+   "C95": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 15,
+  "name": "TE = AE genau auf der Schwelle",
+  "cells": {
+   "C27": "✖ nicht anwendbar (Division durch null)",
+   "C22": "✖ TE = AE: Stichprobenumfang nicht bestimmbar (Division durch null)",
+   "C59": "✖ nicht anwendbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null); Anhang II: TE = AE (Division durch null)",
+  "others": null
+ },
+ {
+  "position": 17,
+  "name": "TE ≤ AE mit begrenztem Umfang",
+  "cells": {
+   "C22": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C27": 619
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 39,
+  "name": "Globale Neuberechnung mit TE = AE (aktualisiert)",
+  "cells": {
+   "C59": "✖ nicht anwendbar (Division durch null)"
+  },
+  "rule": "Anhang II: TE = AE (Division durch null)",
+  "others": null
+ }
+]

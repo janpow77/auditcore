@@ -16,6 +16,7 @@ import { createContext, type AvailableSheet, type SheetModule } from '../model/s
 import { translateValue } from '../model/texts'
 import type { CellMap, SheetContext, SheetId, Tone } from '../model/types'
 import { SHEETS, findAvailableSheet } from '../sheets/registry'
+import { GENERAL_INTERPRETATIONS } from '../sheets/shared/interpretations'
 
 export type LimitationKind = 'zero' | 'missing' | 'withoutBasis' | 'negative' | 'range' | 'warning' | 'interpretation' | 'legacy'
 
@@ -24,6 +25,8 @@ export interface Limitation {
   kind: LimitationKind
   tone: Tone
   text: string
+  /** `true`: allgemeine Auslegung des Verfahrens; steht am Blatt, reist nicht in Blatt 18, Bericht und Export mit. */
+  local?: boolean
 }
 
 /** Feld der Altvorlagen mit dem Hinweis, dass sie keine gebrauchsfertige Methode sind. */
@@ -102,7 +105,13 @@ function negatives(sheet: AvailableSheet, results: CellMap, t: Translate): Limit
 function interpretations(sheet: AvailableSheet, results: CellMap, t: Translate): Limitation[] {
   return fieldsOf(sheet.definition)
     .filter((field) => field.interpretation && !isBlank(results[field.cell] ?? (field.total ? results[field.total] : null)))
-    .map((field) => ({ id: `interpretation-${field.cell}`, kind: 'interpretation' as const, tone: 'neutral' as const, text: `${t('interpretation')} – ${field.label}: ${field.interpretation}` }))
+    .map((field) => ({
+      id: `interpretation-${field.cell}`,
+      kind: 'interpretation' as const,
+      tone: 'neutral' as const,
+      text: `${t('interpretation')} – ${field.label}: ${field.interpretation}`,
+      ...(GENERAL_INTERPRETATIONS.has(field.interpretation ?? '') ? { local: true } : {}),
+    }))
 }
 
 function legacy(sheet: AvailableSheet, results: CellMap): Limitation[] {
@@ -153,7 +162,9 @@ export function carriedLimitations(sheet: AvailableSheet, context: SheetContext,
     if (!source || !cells) return []
     const own = createContext({ parameters: context.parameters, sheets: context.sheets, policy: context.policy, ...(id === TOTAL_ERROR_RATE_SHEET ? { method: context.method } : {}) })
     const prefix = t('sheetNumber', { number: source.definition.number })
-    return limitationsOf(source, cells, cells, own, t).map((entry) => ({ ...entry, id: `${id}-${entry.id}`, text: `${prefix}: ${entry.text}` }))
+    return limitationsOf(source, cells, cells, own, t)
+      .filter((entry) => !entry.local)
+      .map((entry) => ({ ...entry, id: `${id}-${entry.id}`, text: `${prefix}: ${entry.text}` }))
   })
 }
 

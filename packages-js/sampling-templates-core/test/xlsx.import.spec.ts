@@ -9,6 +9,7 @@ import { strToU8, zipSync } from 'fflate'
 import { describe, expect, it } from 'vitest'
 import { sheet as sheet03 } from '../src/sheets/03_MUS_1Z/index'
 import { sheet as sheet09 } from '../src/sheets/09_SRS_1Z_S/index'
+import { sheet as sheet13 } from '../src/sheets/13_NS_GW/index'
 import { computeWorkspace } from '../src/workspace/compute'
 import { emptyWorkspace, type WorkspaceState } from '../src/workspace/types'
 import { WorkbookError, compareWithWorkbook, importWorkbook } from '../src/xlsx/index'
@@ -16,7 +17,7 @@ import type { CellMap } from '../src/model/types'
 
 type Template = Extract<ReturnType<typeof importWorkbook>, { kind: 'template' }>
 
-const text = (cell: string, value: string): string => `<c r="${cell}" t="inlineStr"><is><t>${value}</t></is></c>`
+const text = (cell: string, value: string): string => `<c r="${cell}" t="inlineStr"><is><t>${value.replaceAll('&', '&amp;').replaceAll('<', '&lt;')}</t></is></c>`
 const number = (cell: string, value: number): string => `<c r="${cell}"><v>${value}</v></c>`
 const cellsOf = (values: CellMap): string => Object.entries(values).map(([cell, value]) => (typeof value === 'number' ? number(cell, value) : value === null ? '' : text(cell, String(value)))).join('')
 const sheetXml = (values: CellMap): string => `<worksheet><sheetData><row r="1">${cellsOf(values)}</row></sheetData></worksheet>`
@@ -69,6 +70,17 @@ describe('Gegenprobe beim Import: alle Blätter, beide Richtungen', () => {
     expect(open).toEqual([expect.objectContaining({ computed: null, kind: 'webOpen', explained: true })])
   })
 
+  it('Mappen mit „Wesentlichkeitsschwelle“ (Vorlage) und mit „Signifikanzschwelle“ (Export der Webfassung) werden gleich gelesen', () => {
+    const results13 = formulas(sheet13, computedBy(sheet13.sample.inputs, '13_NS_GW'))
+    const worded = Object.entries(results13).filter((entry): entry is [string, string] => typeof entry[1] === 'string' && entry[1].includes('Signifikanzschwelle'))
+    expect(worded.length).toBeGreaterThan(0)
+    const asTemplate = Object.fromEntries(worded.map(([cell, value]) => [cell, value.replaceAll('Signifikanzschwelle', 'Wesentlichkeitsschwelle')]))
+    for (const values of [results13, { ...results13, ...asTemplate }]) {
+      const imported = template({ '13_NS_GW': sheetXml({ ...sheet13.sample.inputs, ...values }) })
+      expect(compareWithWorkbook(state(imported, '13_NS_GW'), imported.cached)).toEqual([])
+    }
+  })
+
   it('Ergebnisübersicht N3–N11 der Verfahrensblätter wird mitverglichen', () => {
     const imported = template({ '03_MUS_1Z': sheetXml({ ...sheet03.sample.inputs, ...results03, N11: 0.9 }) })
     expect(compareWithWorkbook(state(imported, '03_MUS_1Z'), imported.cached)).toEqual([expect.objectContaining({ cell: 'N11', workbook: 0.9, kind: 'value' })])
@@ -100,7 +112,7 @@ describe('Import: nichts an der Mappe bleibt ungenannt', () => {
     const imported = template({ '03_MUS_1Z': sheetXml(withoutDefault) })
     expect(imported.sheets['03_MUS_1Z']).toMatchObject({ C14: null })
     expect(imported.notes).toEqual([{ kind: 'default-cleared', sheet: '03_MUS_1Z', detail: 'C14' }])
-    // Die Webfassung rechnet wie die Mappe ohne Wesentlichkeitsschwelle, statt 2 % wieder einzusetzen.
+    // Die Webfassung rechnet wie die Mappe ohne Signifikanzschwelle, statt 2 % wieder einzusetzen.
     expect(computeWorkspace(state(imported, '03_MUS_1Z'))['03_MUS_1Z']).toMatchObject({ C14: null, C16: null })
     // Ein Blatt, das nur Vorgaben trug, wird durch fehlende Vorgaben nicht zum ausgefüllten Blatt.
     expect(template({ '03_MUS_1Z': sheetXml({ C11: 'zweiseitig' }) }).filled).toEqual([])

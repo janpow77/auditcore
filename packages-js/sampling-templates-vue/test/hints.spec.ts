@@ -64,7 +64,7 @@ describe('Hinweise der Abnahme', () => {
     await settle()
     const strip = wrapper.get('[data-kpi-strip]')
     expect(strip.attributes('aria-hidden')).toBe('true')
-    expect(strip.text()).toContain('Wesentlichkeitsschwelle')
+    expect(strip.text()).toContain('Signifikanzschwelle')
     expect(strip.findAll('.fa-st__strip-item').length).toBeGreaterThan(1)
   })
 })

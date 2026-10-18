@@ -1,0 +1,145 @@
+[
+ {
+  "position": 5,
+  "name": "Abnahme 1: A005 Kontext",
+  "cells": {
+   "G34": 8440009.0839071,
+   "G35": 0.03469267048328514
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 8,
+  "name": "Abnahme 1: A008 Kontext",
+  "cells": {},
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
+ },
+ {
+  "position": 9,
+  "name": "Abnahme 1: A009 Kontext",
+  "cells": {
+   "G34": 1817191.215298101
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 19,
+  "name": "Abnahme 1: A019 Kontext",
+  "cells": {
+   "G34": 273161.17586156516,
+   "G35": 0.007711179238956984
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 23,
+  "name": "Abnahme 1: A023 Kontext",
+  "cells": {
+   "G34": 35632259.09731054,
+   "G35": 0.02843512649834844
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 33,
+  "name": "Abnahme 1: A033 Kontext",
+  "cells": {
+   "G34": 1425161.531289431,
+   "G35": 0.018899415037463965
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 37,
+  "name": "Abnahme 1: A037 Kontext",
+  "cells": {
+   "G34": 1202906136.4002047
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 47,
+  "name": "Abnahme 1: A047 Kontext",
+  "cells": {
+   "G34": 151294.38340392703,
+   "G35": 0.0378784513352427
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 51,
+  "name": "Abnahme 1: A051 Kontext",
+  "cells": {
+   "G34": 16429923.766679225,
+   "G35": 0.02283843199816139
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 61,
+  "name": "Abnahme 1: A061 Kontext",
+  "cells": {
+   "G34": 220462.72936808623,
+   "G35": 0.03652882000572411
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 64,
+  "name": "Abnahme 1: A064 Kontext",
+  "cells": {},
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
+ },
+ {
+  "position": 65,
+  "name": "Abnahme 1: A065 Kontext",
+  "cells": {
+   "G34": 675735.7283445662
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 75,
+  "name": "Abnahme 1: A075 Kontext",
+  "cells": {
+   "G34": 122965.36375615798,
+   "G35": 0.0224009120245765
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 79,
+  "name": "Abnahme 1: A079 Kontext",
+  "cells": {
+   "G34": 23553100.110946417,
+   "G35": 0.02045610600902474
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 89,
+  "name": "Abnahme 1: A089 Kontext",
+  "cells": {
+   "G34": 1784594.9715229538,
+   "G35": 0.03657364340288477
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ },
+ {
+  "position": 92,
+  "name": "Abnahme 1: A092 Kontext",
+  "cells": {},
+  "rule": "Anhang II: TE = AE im Verfahren 11_SRS_2Z_S",
+  "others": null
+ },
+ {
+  "position": 93,
+  "name": "Abnahme 1: A093 Kontext",
+  "cells": {
+   "G34": 2385988.3062725877
+  },
+  "rule": "Anhang III Tabelle 2: Ersetzung"
+ }
+]

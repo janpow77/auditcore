@@ -47,7 +47,7 @@ describe('Ergebnisspalte je Blattart', () => {
   it('Skala: statistisch mit oberer Fehlergrenze, nichtstatistisch ohne, Altvorlagen mit ihren Begriffen', () => {
     const statistical = summaryOf(sheetOf('03_MUS_1Z'), sheetOf('03_MUS_1Z').sample.inputs).gauge
     expect(statistical).toMatchObject({ rateLabel: 'Gesamtfehlerquote', upperLabel: 'obere Fehlergrenze' })
-    expect(nbsp(statistical?.description ?? '')).toBe('Gesamtfehlerquote 0,65 %, obere Fehlergrenze 1,09 %, Wesentlichkeitsschwelle 2,00 %')
+    expect(nbsp(statistical?.description ?? '')).toBe('Gesamtfehlerquote 0,65 %, obere Fehlergrenze 1,09 %, Signifikanzschwelle 2,00 %')
     for (const id of ['13_NS_GW', '14_NS_GW_S', '15_NS_PPS', '16_NS_PPS_S']) {
       const gauge = summaryOf(sheetOf(id), sheetOf(id).sample.inputs).gauge
       expect(gauge, id).toMatchObject({ rateLabel: 'Gesamtfehlerquote', upperLabel: null, upper: null })

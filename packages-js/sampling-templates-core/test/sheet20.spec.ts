@@ -50,8 +50,8 @@ describe('Blatt 20: Rechenkern', () => {
     expect(compute({ W5: 'Prüfbehörde Musterland', W7: 'Musterstadt' }).W8).toBe('Prüfbehörde Musterland, Musterstadt')
     expect(c.W8).toBeNull()
     expect(c).toMatchObject({ G6: '13.10.2026', F11: 432, G11: 10200000, F12: 420, G12: 10000000, F13: 12, G13: 0, F14: 60, G14: 5300000, D15: 'Einfaches Zufallsstichprobenverfahren, 1 Zeitraum' })
-    expect(c).toMatchObject({ G32: 0.0126, G33: 120000, G34: 60000, G35: 0.0186, G36: 128520, A37: 'Die Gesamtfehlerquote liegt unter der Wesentlichkeitsschwelle.' })
-    expect(compute({}, context({ C29: 0.01 })).A37).toBe('Die Gesamtfehlerquote liegt über der Wesentlichkeitsschwelle.')
+    expect(c).toMatchObject({ G32: 0.0126, G33: 120000, G34: 60000, G35: 0.0186, G36: 128520, A37: 'Die Gesamtfehlerquote liegt unter der Signifikanzschwelle.' })
+    expect(compute({}, context({ C29: 0.01 })).A37).toBe('Die Gesamtfehlerquote liegt über der Signifikanzschwelle.')
   })
 
   it('im Arbeitsstand erhält auch Blatt 20 die Ergebnisübersicht des aktiven Verfahrens', () => {
@@ -112,7 +112,7 @@ describe('Blatt 20: Rechenkern', () => {
     expect(current.lacking.get('G11')).toEqual(['02_Grundgesamtheit!C16'])
     expect(current.lacking.get('A37')).toEqual(['18_GFQ_AnhIII!C29'])
     const template = evaluateSheet(sheet, defaults, context({ C29: null }, { C23: null, C16: null }, TEMPLATE_POLICY))
-    expect(template.cells).toMatchObject({ F11: 0, G11: 0, A37: 'Die Gesamtfehlerquote liegt über der Wesentlichkeitsschwelle.' })
+    expect(template.cells).toMatchObject({ F11: 0, G11: 0, A37: 'Die Gesamtfehlerquote liegt über der Signifikanzschwelle.' })
     expect(template.assumed.map((entry) => entry.input)).toEqual(['02_Grundgesamtheit!C23', '02_Grundgesamtheit!C16', '18_GFQ_AnhIII!C29'])
   })
 
@@ -164,7 +164,7 @@ describe('Blatt 20: Berichtsansicht', () => {
     expect(figures!.columns).toEqual([])
     expect(nbsp(figures!.rows[0]!.cells[0]!.text)).toMatch(/^0,\d\d %$/)
     const [residual] = tables(page.sections[3]!.blocks)
-    expect(residual!.rows.map((row) => row.header)).toEqual(['Beträge nach Artikel 98 Absatz 6 VO (EU) 2021/1060 (E)', 'Finanzkorrekturen (H)', 'Restfehlerquote nach Finanzkorrekturen', 'Hochgerechnete Finanzkorrektur bis zur Wesentlichkeitsschwelle von 2 %'])
+    expect(residual!.rows.map((row) => row.header)).toEqual(['Beträge nach Artikel 98 Absatz 6 VO (EU) 2021/1060 (E)', 'Finanzkorrekturen (H)', 'Restfehlerquote nach Finanzkorrekturen', 'Hochgerechnete Finanzkorrektur bis zur Signifikanzschwelle von 2 %'])
     // Zahlenformat der Vorlage für 0: „nicht erforderlich“.
     expect(residual!.rows[3]!.cells[0]!.text).toBe('nicht erforderlich')
   })
@@ -181,7 +181,8 @@ describe('Blatt 20: Berichtsansicht', () => {
 
   it('Hinweise auf dem Ausdruck: jede mit 0 gerechnete Eingabe des Verfahrens, Hinweise zu Blatt 18; Hinweise zu Blatt 20 nur am Bildschirm', () => {
     const complete = report(workspace())
-    // Die Auslegung der Vorlage in Blatt 18 (C24) reist mit auf den Ausdruck; der Hinweis zu Kopf- und Fußzeile steht nur am Bildschirm.
+    // Die Auslegung der Vorlage in Blatt 18 (C24) reist mit auf den Ausdruck; allgemeine Auslegungen (Aufrunden, Würdigung, n_s) bleiben am Blatt.
+    // Der Hinweis zu Kopf- und Fußzeile steht nur am Bildschirm.
     expect(complete.hints).toEqual([expect.objectContaining({ id: '18_GFQ_AnhIII-interpretation-C24', printed: true, tone: 'neutral' }), expect.objectContaining({ id: 'own-header', printed: false })])
     // Hinweise in Warnfarbe auf dem Ausdruck (die Auslegung der Vorlage ist neutral und steht immer dabei).
     const warned = (hint: { printed: boolean; tone: string }): boolean => hint.printed && hint.tone === 'warning'
