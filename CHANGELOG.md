@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Release v0.14.2 (18.10.2026) veröffentlicht und in `docs/deployment/package-feed.md`
+  als aktueller Stand dokumentiert: `@auditcore/sampling-templates-core` 0.1.12 und
+  `@auditcore/sampling-templates-vue` 0.1.12, auf npmjs.org veröffentlicht. Die
+  Zwischenstände v0.13.0 bis v0.14.1 sind dort als historische Abschnitte nachgetragen.
 - Vorbereitung Release v0.14.2 (18.10.2026): npm
   `@auditcore/sampling-templates-core` 0.1.12 und
   `@auditcore/sampling-templates-vue` 0.1.12. Der Stichprobenrechner rechnet
