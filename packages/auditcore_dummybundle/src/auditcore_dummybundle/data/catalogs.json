@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "note": "Erfundene Straßennamen und neutrale Bezeichnungen. Firmennamen, Städte, Namen und Verwendungszwecke kommen aus den Katalogen von auditcore_dummygenerator.",
+  "streets": [
+    "Musterweg",
+    "Beispielallee",
+    "Probegasse",
+    "Platzhalterstraße",
+    "Fantasiering",
+    "Übungsplatz",
+    "Am Testfeld",
+    "Erfundene Gasse",
+    "Synthetikweg",
+    "Attrappenweg"
+  ],
+  "roles": [
+    "Sachbearbeitung",
+    "Projektleitung",
+    "Buchhaltung",
+    "Geschäftsführung",
+    "Prüfung"
+  ],
+  "cost_categories": [
+    {
+      "name": "Personalausgaben",
+      "weight": 3,
+      "staff": true
+    },
+    {
+      "name": "Sachausgaben",
+      "weight": 4,
+      "staff": false
+    },
+    {
+      "name": "Investitionen",
+      "weight": 3,
+      "staff": false
+    },
+    {
+      "name": "Fremdleistungen",
+      "weight": 3,
+      "staff": false
+    },
+    {
+      "name": "Reisekosten",
+      "weight": 1,
+      "staff": false
+    },
+    {
+      "name": "Öffentlichkeitsarbeit",
+      "weight": 1,
+      "staff": false
+    }
+  ],
+  "ineligible_cost_category": "Bewirtung (nicht im Kostenplan)",
+  "programme_groups": [
+    [
+      "FPG-A",
+      "Fördergruppe A (Platzhalter)"
+    ],
+    [
+      "FPG-B",
+      "Fördergruppe B (Platzhalter)"
+    ],
+    [
+      "FPG-C",
+      "Fördergruppe C (Platzhalter)"
+    ]
+  ],
+  "operation_titles": [
+    "Erweiterung einer Betriebsstätte",
+    "Entwicklung eines Prototyps",
+    "Energetische Sanierung eines Gebäudes",
+    "Aufbau einer Versuchsanlage",
+    "Digitalisierung der Fertigung",
+    "Qualifizierung von Beschäftigten",
+    "Einrichtung eines Gründerzentrums",
+    "Ausbau eines Radwegs"
+  ],
+  "nuts3": {
+    "Berlin": "DE300",
+    "Hamburg": "DE600",
+    "München": "DE212",
+    "Köln": "DEA23",
+    "Frankfurt": "DE712",
+    "Wien": "AT130",
+    "Graz": "AT221",
+    "Linz": "AT312",
+    "Salzburg": "AT323",
+    "Innsbruck": "AT332"
+  },
+  "country_names": {
+    "DE": "Deutschland",
+    "AT": "Österreich"
+  },
+  "vat_rates": {
+    "DE": "0.19",
+    "AT": "0.20"
+  },
+  "award_types": [
+    "Entfällt",
+    "VGV (oberhalb Schwellenwert)",
+    "VOB unterhalb Schwellenwert",
+    "VOB oberhalb Schwellenwert",
+    "VOL unterhalb Schwellenwert",
+    "Direktauftrag"
+  ],
+  "placeholders": {
+    "reduction_reason": "Kürzungsgrund (Platzhalter)",
+    "claim_status": "ausgezahlt",
+    "verification_result": "-",
+    "finding_reason": "Feststellungsart (Platzhalter)"
+  }
+}

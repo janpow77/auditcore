@@ -19,7 +19,7 @@ export const extrapolationCases: ReadonlyArray<ParityCase<ExtrapolationCaseProps
     name: 'Eingaben aus Eigenschaften, keine Methode vorgewählt',
     props: () => ({ port: fakeExtrapolationPort(), strata: fixtureStrata, units: fixtureUnits }),
     expect: {
-      texts: ['Verfahren', 'Schichten der Grundgesamtheit', 'Wesentlichkeitsschwelle (%)'],
+      texts: ['Verfahren', 'Schichten der Grundgesamtheit', 'Signifikanzschwelle (%)'],
       roles: [['combobox', 'Hochrechnungsmethode'], ['button', 'Hochrechnen'], ['textbox', 'Kennung, Zeile 1'], ['checkbox', 'Vollerhebung, Zeile 5']],
       counts: { '[data-testid="extrapolation-units"] tbody tr': 5, '[data-testid="extrapolation-strata"] tbody tr': 1, 'optgroup': 2 },
     },

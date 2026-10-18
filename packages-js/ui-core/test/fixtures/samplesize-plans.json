@@ -10,7 +10,7 @@
   },
   "response": {
    "contract": "auditcore_sampling.guidance/1",
-   "library": "auditcore_sampling 0.2.3",
+   "library": "auditcore_sampling 0.2.4",
    "status_label": "nach Leitfaden",
    "method": "guidance.mus_conservative",
    "status": "GUIDANCE_EGESIF_16_0014_01",
@@ -44,7 +44,7 @@
     },
     {
      "label": "Tolerierbarer Fehler",
-     "formula": "TE = Wesentlichkeit × BV",
+     "formula": "TE = Signifikanzschwelle × BV",
      "value": 83997640.48,
      "source": "EGESIF_16-0014-01, Abschn. 5.3"
     },
@@ -103,7 +103,7 @@
   },
   "response": {
    "contract": "auditcore_sampling.guidance/1",
-   "library": "auditcore_sampling 0.2.3",
+   "library": "auditcore_sampling 0.2.4",
    "status_label": "nach Leitfaden",
    "method": "guidance.srs_stratified",
    "status": "GUIDANCE_EGESIF_16_0014_01",
@@ -161,7 +161,7 @@
     },
     {
      "label": "Tolerierbarer Fehler",
-     "formula": "TE = Wesentlichkeit × BV",
+     "formula": "TE = Signifikanzschwelle × BV",
      "value": 27930706.38,
      "source": "EGESIF_16-0014-01, Abschn. 5.3"
     },
@@ -207,7 +207,7 @@
   },
   "response": {
    "contract": "auditcore_sampling.guidance/1",
-   "library": "auditcore_sampling 0.2.3",
+   "library": "auditcore_sampling 0.2.4",
    "status_label": "nach Leitfaden",
    "method": "guidance.nonstatistical",
    "status": "GUIDANCE_EGESIF_16_0014_01",

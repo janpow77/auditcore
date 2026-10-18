@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.1.0",
+ "library": "auditcore_extrapolation 0.2.0",
  "sources": {
   "guidance": "Europäische Kommission, Guidance on sampling methods for audit authorities, EGESIF_16-0014-01 vom 20.01.2017",
   "rer_template": "Europäische Kommission, CPRE_23-0013-01, Methodological note ACR/AO, Annex 3 (RER calculation template)",

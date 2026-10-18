@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-core
 
+## 0.4.1 – 2026-10-17
+
+- Begriff: Die 2-%-Schwelle der Fehlerquote heißt in den Texten jetzt „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“, wie in der Delegierten Verordnung (EU) 2023/67, Anhang I Nr. 1, und in der VO (EU) 2021/1060, Anhang XX Nr. 5.9. Betroffen sind `extrapolationMessages` (`materiality`, `rerExceeds`, `rerWithin`) und `samplesizeMessages` (`materiality_rate`). Schlüssel, Felder und REST-Vertrag bleiben unverändert.
+
 ## 0.3.0 – 2026-09-29
 
 Gemeinsamer Kontenformularvertrag, Controller, REST-Port, Styles und Bildlogik.

@@ -1,5 +1,10 @@
 # Changelog @auditcore/ui
 
+## 0.5.1 – 2026-10-17
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.4.1 angehoben.
+- Begriff: `ExtrapolationPanel` und `SampleSizePlanner` zeigen „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“ (Texte aus `@auditcore/ui-core`, DelVO (EU) 2023/67, Anhang I Nr. 1). Eigenschaften und Ereignisse bleiben unverändert.
+
 ## 0.4.0 – 2026-09-29
 
 Konten-/Mandantenoberfläche einschließlich Bild-Upload, Webcam und Corporate Design.

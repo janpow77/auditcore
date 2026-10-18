@@ -1,6 +1,6 @@
 # Spezifikation auditcore_procurement
 
-Stand: 26.09.2026, Paketversion 0.2.4, Datensatzvertrag `auditcore_procurement.notice/1`.
+Stand: 13.10.2026 (EU-Schwellenwerte je Regime ergänzt, Paketversion 0.3.0; übrige Teile 26.09.2026, Paketversion 0.2.4), Datensatzvertrag `auditcore_procurement.notice/1`.
 Charakterisierung: tatsächlich ausgeführtes Original (`tools/capture_procurement_legacy.py`,
 `tests/fixtures/procurement_legacy_observed.json`, `tests/test_legacy_replay.py`),
 Schwellenwerte je Jahr (`tests/test_year_thresholds.py`, `tests/test_historic_thresholds.py`);
@@ -27,6 +27,9 @@ entscheidet keinen Vergabefall**.
 | `validate_record(record, *, require_contractor=True)` | Datensatz | Hinweise `unknown_field`, `not_numeric`, `not_text`, `not_iso_date`, `missing_contractor` |
 | `load_profile(id, version)` | ausdrücklich benanntes Profil | `PrecheckProfile` mit `reference` (Kennung, Version, Fingerabdruck) |
 | `run_prechecks(profil, geschätzt, vertrag, abrechnung, leistungsart, vergabeart, stufe, dokumente, *, mode, now, reference_date, year, authority_type)` | Beträge als `Decimal` oder `None`, Dokumente mit `procurement_doc_type` | Bericht: `checks` (je Prüfung `check_id`, `status`, Meldung, Belege), `overall_status`, `timestamp`; in `strict` zusätzlich `mode` und `profile` |
+| `eu_catalogue(profil)` | Profil ab Schema 3 | Katalog der EU-Schwellenwerte: Regime, Auftragsarten, Auftraggeberarten (deutsch/englisch), Rechtsgrundlage, Werte je Zeitraum, Quellen mit Wortlaut; `ThresholdUnavailable` ohne Regimetabelle |
+| `check_eu_threshold(profil, wert, *, regime, contract_type, authority_type, reference_date, year)` | Betrag als `Decimal`, Regime und Auftragsart aus dem Katalog | `PASS` mit `above_threshold` und `eu_threshold` (Wert, Zeitraum, Verordnung, ABl., CELEX, Vorschrift) oder `REVIEW_REQUIRED` („nicht hinterlegt“, Stichtag fehlt, Auftraggeberart nötig); keine nationale Stufe |
+| `eu_regime_threshold(profil, regime, contract_type, on, authority_type)` | Stichtag | `RegimeThreshold` mit Quelle; `ThresholdUnavailable` ohne belegten Wert |
 | `ted_company_result`, `had_result` | HTTP-Status und Antwort | `SearchResult` mit Status `ok`, `no_hit`, `rate_limited`, `failed` |
 
 Status der Prüfungen: `PASS`, `WARNING`, `FAIL`, `NOT_CHECKED`,
@@ -38,6 +41,14 @@ Schwellenwert gilt ab Erreichen (§ 106 Abs. 1 Satz 1 GWB, Art. 4 RL 2014/24/EU)
 für Liefer- und Dienstleistungen getrennt nach zentralen und sonstigen
 Auftraggebern. Nationale Stufen (`BELOW_1K`, `BELOW_25K`) sind Regeln der
 Anwendungen mit Status `REVIEW_REQUIRED`, keine Normwerte.
+
+Ab Profil `procurement.hvtg 2026.10.1` (Schema 3) führt der Block `eu_regimes`
+die EU-Schwellenwerte aller Regime: öffentliche Aufträge (RL 2014/24/EU),
+Sektorenaufträge (RL 2014/25/EU), Konzessionen (RL 2014/23/EU), Verteidigung
+und Sicherheit (RL 2009/81/EG). Er ist vom nationalen Teil getrennt abfragbar.
+Die Jahrestabelle der Vorprüfung bleibt bestehen; das Profil lädt nur, wenn
+beide Tabellen an jeder Zeitraumgrenze denselben Wert nennen und jeder Wert im
+hinterlegten Wortlaut der amtlichen Quelle steht.
 
 ## Invarianten
 
@@ -62,7 +73,9 @@ Anwendungen mit Status `REVIEW_REQUIRED`, keine Normwerte.
 |---|---|
 | Unbekannter Modus | `ValueError` |
 | `authority_type` nicht `central`/`sub_central`/`None` | `ValueError` |
-| Profil unbekannt oder fehlerhaft | `ProfileError` |
+| Profil unbekannt oder fehlerhaft, Wert ohne Fundstelle oder nicht im Wortlaut der Quelle, Jahres- und Regimetabelle widersprüchlich | `ProfileError` |
+| `regime`, `contract_type` oder `authority_type` unbekannt; `regime` ohne `contract_type`, mit `mode="legacy"` oder mit `threshold_tier` | `ValueError` |
+| Regime-Abfrage: Stichtag außerhalb der belegten Zeiträume, Profil ohne Regimetabelle, Jahr mit Wertwechsel oder nur teilweiser Geltung | `REVIEW_REQUIRED` bzw. `ThresholdUnavailable` |
 | Stichtag außerhalb aller Zeiträume, Profil ohne Jahrestabelle, Wert zwischen den Schwellen zentraler und sonstiger Auftraggeber ohne `authority_type` | `REVIEW_REQUIRED` mit Begründung (kein Fehler, kein Raten) |
 | Vertrags- oder Abrechnungswert fehlt (nur einer) | `strict`: `NOT_CHECKED`; `legacy`: Prüfung entfällt |
 | TED-/HAD-Antwort mit HTTP-Fehler, kein JSON, Parserfehler | `SearchResult` `failed` bzw. `rate_limited` mit Fehlertext statt leerer Trefferliste |

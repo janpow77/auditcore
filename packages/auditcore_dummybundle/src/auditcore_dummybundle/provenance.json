@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_dummybundle",
+  "version": "0.2.0",
+  "contract": "dummybundle_ui/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [],
+  "methodology": [
+    {
+      "document": "Verordnung (EU) 2021/1060, Anhang XXIII und Anhang XXIV, ABl. L 231 vom 30.6.2021, S. 159 (deutsche Fassung, Ursprungsfassung)",
+      "use": "Titel, Kopffelder und Spaltenköpfe der Vorlagen V5 und V6; Abruf am 13.10.2026 über http://publications.europa.eu/resource/celex/32021R1060",
+      "text_included": true
+    },
+    {
+      "document": "Verordnung (EU) 2021/1060, Art. 49 Abs. 3, Art. 74 Abs. 1, Art. 91, Art. 98, Anhang XII Abschnitt 1.2",
+      "use": "Zeiträume der Zahlungsanträge, Auszahlungsfrist von 80 Tagen, Einreichung der Rechnungslegung zum 15. Februar, Abzüge nach Art. 98 Abs. 6, Meldeschwelle",
+      "text_included": false
+    },
+    {
+      "document": "Vorlagenvorschlag „Dummydaten-Generator für ecohesion.flowaudit.de“ vom 13.10.2026",
+      "use": "Spaltenlisten der Vorlagen V0 bis V9, acht Summenproben, Auffälligkeiten, Typenliste der freien Eingabe",
+      "text_included": false
+    }
+  ],
+  "builds_on": [
+    "auditcore_common",
+    "auditcore_dummygenerator",
+    "auditcore_identifiers"
+  ],
+  "characterization": {
+    "kind": "property_and_sum_check_tests",
+    "legacy_parity": "NOT_APPLICABLE_NEW_IMPLEMENTATION",
+    "tests": "packages/auditcore_dummybundle/tests"
+  },
+  "origin": "Neu in auditcore geschrieben als Bündelkern neben auditcore_dummygenerator, dessen generator.py unverändert bleibt. Ersetzt als gemeinsame Fassung die bisher getrennt programmierte Betragsverteilung mit Restausgleich der verwendenden Anwendungen.",
+  "open_points": [
+    "Reservierte Testbereiche für Bankleitzahl, IBAN und Steuernummer sind nicht belegt; garantiert ist nur die verfehlte Prüfziffer.",
+    "Konsolidierte Fassung und Berichtigungen der Verordnung (EU) 2021/1060 sind nicht abgeglichen."
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore. Die Wortlaute der Anhänge XXIII und XXIV bleiben Inhalt der Europäischen Union. Die Vorlagen V1 und V3 sind bis zur Entscheidung des Auftraggebers nicht öffentlich geschaltet."
+    }
+  },
+  "method_validation": "PROPERTY_TESTS_AND_SUM_CHECKS",
+  "profile_release": {
+    "status": "GRANTED",
+    "date": "2026-10-13",
+    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
+    "scope": "Die elf Vorlagenprofile dieses Pakets in der Fassung der genannten Inhaltshashes",
+    "not_covered": [
+      "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED)",
+      "Texte Dritter: Titel, Kopffelder und Spaltenköpfe der Anhänge XXIII und XXIV der Verordnung (EU) 2021/1060 sind Unionsrecht"
+    ],
+    "policy": "docs/profile-versioning.md",
+    "profiles": [
+      {
+        "artifact_id": "auditcore.dummybundle.template.v0",
+        "version": "0.1.0",
+        "content_hash": "8c87f977dcce64c0112d78261c67aa70ae711cff1df7187982d7418a269bf8e8"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v1",
+        "version": "0.1.0",
+        "content_hash": "bba67c6d00ec5ff4b4525c708e0e9bea14c79f70563628b0499bbd8dd4f6fb04"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v2",
+        "version": "0.1.0",
+        "content_hash": "b59ee7ccfd118e8622f3658d7dad70e1b32cbb2a1b9a7e394fccbe6fdef90b8c"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v3",
+        "version": "0.1.0",
+        "content_hash": "3f43c83c4feec7c9f0acd0bf6dd6ca48c1cc1fd38effa7b45d169770957e90d7"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v4",
+        "version": "0.1.0",
+        "content_hash": "2a86906876030265e9b894550d562412a92e8599607febc57519b82af926c152"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v5",
+        "version": "0.1.0",
+        "content_hash": "3981df4fc0bedabb0241cda5abfe110ac71481ad40fe77429738494d684555e1"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v6",
+        "version": "0.1.0",
+        "content_hash": "c9ed679b121e21480fd88fd62aa812d6d021a448d60ca6bdc019eef21efca269"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v7",
+        "version": "0.1.0",
+        "content_hash": "1af6881e0c2800cfefe77eef7bd4661ef53a61e5a7d69f7bc687e5abdca9d729"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v8",
+        "version": "0.1.0",
+        "content_hash": "6869c0300832e61aaf29d14aee533a034fae665c4102c77aa4cb6c3d3373ad3f"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.v9",
+        "version": "0.1.0",
+        "content_hash": "b87b0a1317d855ef104ea2a15838ccfb9a497c34853c3a6d387550dcce0a6c82"
+      },
+      {
+        "artifact_id": "auditcore.dummybundle.template.n1",
+        "version": "0.1.0",
+        "content_hash": "801ec536b33d18157b040ccfa144fa4bbac161a26daf40bef388004a26544c1a"
+      }
+    ]
+  }
+}

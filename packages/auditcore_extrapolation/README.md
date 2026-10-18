@@ -250,7 +250,7 @@ Schicht. Negative Einheiten (4.6): `split_population`.
 Faktorprofile (`PROFILES`): `kom_2017_tables` (empfohlen, Werte wie gedruckt:
 Tabelle 3 für z, Tabelle 4 für RF(0), Anhang 3 für RF(k); nur deren
 Konfidenzniveaus) und `exact` (Normalquantil und Poisson-Obergrenze,
-ungerundet, jedes Niveau). Wesentlichkeitsschwelle `MATERIALITY_RATE` = 2 %,
+ungerundet, jedes Niveau). Signifikanzschwelle `MATERIALITY_RATE` = 2 %,
 niedrigere Werte zulässig, höhere nicht. Formeln, Quellen je Formel und die
 nachgerechneten Beispiele: [docs/referenzfaelle.md](docs/referenzfaelle.md).
 

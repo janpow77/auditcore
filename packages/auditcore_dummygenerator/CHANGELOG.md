@@ -1,5 +1,30 @@
 # Changelog auditcore_dummygenerator
 
+## 0.2.0 – 2026-10-17
+
+Neu: Namensbaukasten für synthetische Firmennamen (`company_names.py`).
+Getrennte Listen für Branchenpräfixe (30), Geschäftsbereiche (24 gewerblich,
+12 gemeinnützig, 12 öffentlich-rechtlich), Namenszusätze (6 inkl. ohne) und
+Rechtsformen je Begünstigtentyp (`ENTITY_FORMS`: `private` mit GmbH, AG,
+GmbH & Co. KG, UG (haftungsbeschränkt), KG, eG; `nonprofit` mit e. V.,
+Stiftung, gGmbH; `public` mit AöR, Zweckverband, Eigenbetrieb) – zusammen
+28 080 Namen, davon 25 920 privatrechtliche.
+
+- `draw_company_name(rng, entity_form)`: ein Name mit genau einer Ziehung.
+- `company_name_at(position, seed=…, entity_form=…)`: deterministische,
+  kollisionsfreie Folge (affine Permutation aus dem Startwert); verschiedene
+  Positionen ergeben bis zur Größe des Namensraums verschiedene Namen.
+- `company_name_count(entity_form=None)`.
+
+Keine Änderung bestehender Ausgaben: `TestDataGenerator`, die Liste
+`companies`, der Feldtyp `company`, `generator.py` und die Profile samt
+Fingerabdrücken bleiben unverändert; gleiche Startwerte ergeben dieselben
+Zeilen wie 0.1.4. Minor-Sprung wegen neuer öffentlicher Schnittstelle.
+
+IBAN und USt-IdNr. bleiben bewusst ohne Prüfzifferzusage (Spezifikation I5);
+prüfziffernrichtige Kennungen erzeugt `auditcore_dummybundle` auf Wunsch
+(`identifiers_valid`) über `auditcore_identifiers`.
+
 ## 0.1.4 – 2026-10-03
 
 Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`

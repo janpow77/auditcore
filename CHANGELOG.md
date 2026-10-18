@@ -2,11 +2,58 @@
 
 ## Unreleased
 
+- Vorbereitung Release v0.14.1 (17.10.2026): Begriff „Signifikanzschwelle“
+  statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“ für die 2-%-Schwelle der
+  Fehlerquote (Delegierte Verordnung (EU) 2023/67, Anhang I Nr. 1; VO (EU)
+  2021/1060, Anhang XX Nr. 5.9) in npm `@auditcore/ui-core` 0.4.1,
+  `@auditcore/ui` 0.5.1, `@auditcore/ui-react` 1.3.1 sowie in
+  `auditcore_extrapolation` 0.2.1 und `auditcore_sampling` 0.2.5. Nur Texte;
+  Bezeichner, Schlüssel und REST-Verträge bleiben unverändert, die englische
+  Bezeichnung bleibt „materiality threshold“. Wegen der exakten Bindungen
+  folgen `@auditcore/bpmn-vue` 0.5.2, `@auditcore/bpmn-react` 0.5.2 und
+  `@auditcore/layout` 0.1.2 ohne Änderung am Paket selbst. Alle übrigen Pakete
+  sind gegenüber v0.14.0 unverändert und behalten ihre Version.
+- Vorbereitung Release v0.14.0 (17.10.2026): `auditcore_dummygenerator` 0.2.0
+  (Namensbaukasten für synthetische Firmennamen), `auditcore_dummybundle` 0.2.0
+  (Firmennamen aus dem Namensbaukasten; gleicher Startwert ergibt andere Daten
+  als 0.1.0) sowie – nur wegen der exakten Bindung an den Feldgenerator –
+  `auditcore_invoicegenerator` 0.2.5 und `auditcore_invoicesynth` 0.3.1, beide
+  ohne Verhaltensänderung. Erstmals als Tarball dabei: npm
+  `@auditcore/sampling-templates-core` 0.1.3 und
+  `@auditcore/sampling-templates-vue` 0.1.4. Alle übrigen Pakete sind gegenüber
+  v0.13.0 unverändert und behalten ihre Version.
+- Vorbereitung Release v0.13.0 (13.10.2026): `auditcore_procurement` 0.3.0,
+  `auditcore_dummybundle` 0.1.0 und – nur wegen der exakten Bindung im Extra
+  `procurement` – `auditcore_risk` 0.4.1. Alle übrigen Pakete, auch die
+  npm-Pakete, sind gegenüber v0.12.0 unverändert und behalten ihre Version.
+- Neues Paket `auditcore_dummybundle` 0.1.0 (veröffentlicht mit v0.13.0): zusammenhängende
+  synthetische Testbündel Vorhaben → Mittelabrufe → Belege → Zahlungsanträge an
+  die Kommission → Rechnungslegung mit Summenbindung in Dezimalrechnung
+  (`amounts.allocate`: die eine Fassung der Betragsverteilung mit Restausgleich),
+  acht Summenproben, elf Vorlagenprofile als Daten (V0 bis V9 und die kompakte
+  Belegliste N1; vom Rechteinhaber am 13.10.2026 freigegeben, jedes mit
+  Inhaltshash), freie Tabelle aus einem
+  Rezept mit 21 Feldtypen und den Regeln `when` und `sum_to`, 13 Auffälligkeiten
+  mit getrennter Lösung, REST-Vertrag `dummybundle_ui/1`. IBAN und USt-IdNr.
+  tragen im Standard eine gezielt verfehlte Prüfziffer. Firmennamen
+  kommen aus der Liste des Feldgenerators. Die Köpfe der Vorlagen
+  V5 und V6 stammen aus dem Amtsblatt (ABl. L 231 vom 30.6.2021, deutsche
+  Fassung, Abruf 13.10.2026). `auditcore_dummygenerator` bleibt unverändert.
+- `auditcore_procurement` 0.3.0 (veröffentlicht mit v0.13.0): Profil `procurement.hvtg 2026.10.1`
+  führt die EU-Schwellenwerte 2014–2027 vollständig – neben öffentlichen Bau-,
+  Liefer- und Dienstleistungsaufträgen (RL 2014/24/EU) jetzt Sektorenaufträge
+  (RL 2014/25/EU), Konzessionen (RL 2014/23/EU), Verteidigung und Sicherheit
+  (RL 2009/81/EG) sowie soziale und andere besondere Dienstleistungen. Jeder
+  Wert trägt Verordnung, ABl.-Fundstelle, CELEX-Nummer, Prüfsumme und Wortlaut
+  des am 13.10.2026 abgerufenen amtlichen Textes. Neue Funktionen
+  `eu_catalogue`, `check_eu_threshold`, `eu_regime_threshold` werten nur den
+  EU-Teil aus; bisherige Aufrufe und die Profile bis 2026.09.3 bleiben
+  unverändert. `CURRENT_PROFILE` zeigt auf 2026.10.1.
 - Release v0.12.0 (12.10.2026) veröffentlicht und in `docs/deployment/package-feed.md`
   als aktueller Stand dokumentiert: `auditcore_dataprotection` 0.6.0 mit dem
   Datenschutz-Assistenten, `auditcore_invoicesynth` 0.3.0, `auditcore_runner` 0.1.1,
   `@auditcore/ui-core` 0.4.0, `@auditcore/ui` 0.5.0, `@auditcore/ui-react` 1.3.0.
-- `auditcore_invoicesynth` (unveröffentlicht): Generatorvariante `v2` für die
+- `auditcore_invoicesynth` 0.3.0 (veröffentlicht mit v0.12.0): Generatorvariante `v2` für die
   Donut-Trainingsrunde „Stufe 5“ (`--variety v2`, Standard bleibt `v1`).
   Anlass: Fehleranalyse auf dem Layout-Holdout T2 (Fälligkeit 180× als
   Lieferdatum gelesen, Rechnungsdatum 17× vertauscht; Ziffernfehler in
