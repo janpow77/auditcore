@@ -32,6 +32,7 @@ import {
 } from '../shared/mus'
 import { checkConfidence, checkMateriality, checkTolerableError, computedSampleSize, limitedSampleSize } from '../shared/statistical'
 import { definition } from './definition'
+import { blockedGlobal, withoutGlobalAssessment } from '../shared/periods'
 
 /**
  * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet; die Webfassung
@@ -97,12 +98,14 @@ const PERIOD3: Choice = { standard: 'C99', global: 'C105', increase: 'C106', non
 function secondSizes(c: Cells, run: Run): void {
   c.C68 = weightedDeviation([[c.C7, c.C61], [c.C51, c.C55], [c.C53, c.C56]], c.C58)
   c.C69 = globalComputedSize(c.C16, c.C58, c.C68, c.C59, c.C60)
-  c.C70 = appliedTotalSize(c.C69, run.limit, run.pending('C69'), run.context)
+  c.C70 = appliedTotalSize(c.C69, run.limit, run.pending('C69'), run.context, true)
   c.C71 = additionalUnits(share(c.C7, c.C58, c.C70), c.C36)
   c.C72 = share(c.C51, c.C58, c.C70)
   c.C73 = share(c.C53, c.C58, c.C70)
   c.C74 = guard(() => roundUp(required(c.C37) * underestimationFactor(c.C51, c.C8, c.C52, c.C10)))
-  c.C75 = appliedPeriodSize(c[PERIOD2[run.approach]], run.pending(PERIOD2[run.approach]), run.context)
+  // Globaler Ansatz bei AE = TE nicht anwendbar (Division durch null): Umfang offen statt Untergrenze.
+  const blocked = run.approach === 'global' && blockedGlobal(c, 'C69', run.pending)
+  c.C75 = appliedPeriodSize(c[PERIOD2[run.approach]], run.pending(PERIOD2[run.approach]) || blocked, run.context)
   c.C76 = c[PLANNED3[run.approach]] ?? null
   c.C77 = guard(() => required(c.C36) + (run.approach === 'global' ? required(c.C71) : 0))
 }
@@ -118,7 +121,7 @@ function thirdRecalculation(c: Cells, run: Run): void {
   c.C99 = standardSize(c.C98, () => (required(c.C16) * required(c.C90) * required(c.C92)) ** 2)
   c.C100 = weightedDeviation([[c.C7, c.C61], [c.C51, c.C97], [c.C90, c.C92]], c.C94)
   c.C101 = globalComputedSize(c.C16, c.C94, c.C100, c.C95, c.C96)
-  c.C102 = appliedTotalSize(c.C101, run.limit, run.pending('C101'), run.context)
+  c.C102 = appliedTotalSize(c.C101, run.limit, run.pending('C101'), run.context, true)
   c.C103 = additionalUnits(share(c.C7, c.C94, c.C102), c.C77)
   c.C104 = additionalUnits(share(c.C51, c.C94, c.C102), c.C75)
   c.C105 = share(c.C90, c.C94, c.C102)
@@ -130,7 +133,8 @@ function finalSizes(c: Cells, run: Run): void {
   const extra = (cell: CellAddress): number => (run.approach === 'global' ? required(c[cell]) : 0)
   c.C107 = guard(() => required(c.C77) + extra('C103'))
   c.C108 = guard(() => required(c.C75) + extra('C104'))
-  c.C109 = appliedPeriodSize(c[PERIOD3[run.approach]], run.pending(PERIOD3[run.approach]), run.context, () => minus(minus(30, required(c.C107)), required(c.C108)))
+  const blocked = run.approach === 'global' && (blockedGlobal(c, 'C69', run.pending) || blockedGlobal(c, 'C101', run.pending))
+  c.C109 = appliedPeriodSize(c[PERIOD3[run.approach]], run.pending(PERIOD3[run.approach]) || blocked, run.context, () => minus(minus(30, required(c.C107)), required(c.C108)))
   const total = (): number => required(c.C107) + required(c.C108) + required(c.C109)
   c.C110 = checkLimitKept(run.limit, total, '⚠ Umfang überschritten – Art. 5 Abs. 7 UAbs. 4')
   c.C111 = isNumber(c.C109) ? checkYearMinimum(total) : null
@@ -165,6 +169,7 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   projection(c, context)
   errorLimits(c, 128, c.C15, c.C94, c.C18)
   summary(c, 'MUS-Standardansatz, 3 Zeiträume', 128, c.C94, c.C126, () => required(c.C107) + required(c.C108) + required(c.C109))
+  withoutGlobalAssessment(c, run.approach, ['C69', 'C101'], pending, 'C138')
 }
 
 const calculate = remembered((cells, context) => computeTwice(cells, REQUIRED_INPUTS, context, evaluate))

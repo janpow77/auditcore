@@ -16,6 +16,7 @@ import { checkConfidence, checkMateriality, checkTolerableError, computedSampleS
 import { secondPeriod } from './compute-period2'
 import { thirdPeriod } from './compute-period3'
 import { definition } from './definition'
+import { withoutGlobalAssessment } from '../shared/periods'
 
 /**
  * Eingaben, mit denen die Vorlage leer als 0 weiterrechnet; die Webfassung
@@ -92,6 +93,7 @@ function evaluate(c: Cells, pending: Pending, context: SheetContext): void {
   projection(c, context)
   conclusion(c, 128, { bookValue: 'C101', testType: 'C22', materiality: 'C25' }, pending('C129'))
   summary(c, { method: 'Einfaches Zufallsstichprobenverfahren, 3 Zeiträume', bookValue: 'C101', first: 128, exhaustive: 'C126', sampleSize: c.C119 })
+  withoutGlobalAssessment(c, approach, ['C77', 'C109'], pending, 'C138')
 }
 
 /** Berechnet alle Formelzellen des Blatts 12; Eingaben und Ergebnisse tragen die Zelladressen der Vorlage. */

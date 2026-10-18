@@ -33,8 +33,8 @@
    "C12": 2310.5
   },
   "erwartet": {
-   "17_Unterstichprobe!C13": 27365.7386363636,
-   "17_Unterstichprobe!C14": 0.0279242230983302,
+   "17_Unterstichprobe!C13": 27365.738636363636,
+   "17_Unterstichprobe!C14": 0.02792422309833024,
    "17_Unterstichprobe!C16": null,
    "17_Unterstichprobe!C20": null,
    "17_Unterstichprobe!C22": null,
@@ -75,7 +75,7 @@
   },
   "erwartet": {
    "17_Unterstichprobe!C13": 7000,
-   "17_Unterstichprobe!C14": 0.0233333333333333,
+   "17_Unterstichprobe!C14": 0.023333333333333334,
    "17_Unterstichprobe!C16": null,
    "17_Unterstichprobe!C20": null,
    "17_Unterstichprobe!C22": null,
@@ -95,8 +95,8 @@
   "erwartet": {
    "17_Unterstichprobe!C13": null,
    "17_Unterstichprobe!C14": null,
-   "17_Unterstichprobe!C16": 21333.3333333333,
-   "17_Unterstichprobe!C20": 21333.3333333333,
+   "17_Unterstichprobe!C16": 21333.333333333332,
+   "17_Unterstichprobe!C20": 21333.333333333332,
    "17_Unterstichprobe!C22": 17920,
    "17_Unterstichprobe!C23": 0.028
   }
@@ -118,9 +118,9 @@
    "17_Unterstichprobe!C13": null,
    "17_Unterstichprobe!C14": null,
    "17_Unterstichprobe!C16": 37500,
-   "17_Unterstichprobe!C20": 28823.5294117647,
-   "17_Unterstichprobe!C22": 54905.8823529412,
-   "17_Unterstichprobe!C23": 0.0366039215686275
+   "17_Unterstichprobe!C20": 28823.529411764706,
+   "17_Unterstichprobe!C22": 54905.882352941175,
+   "17_Unterstichprobe!C23": 0.03660392156862745
   }
  },
  {
@@ -139,7 +139,7 @@
   "erwartet": {
    "17_Unterstichprobe!C13": null,
    "17_Unterstichprobe!C14": null,
-   "17_Unterstichprobe!C16": 66666.6666666667,
+   "17_Unterstichprobe!C16": 66666.66666666667,
    "17_Unterstichprobe!C20": null,
    "17_Unterstichprobe!C22": null,
    "17_Unterstichprobe!C23": null
@@ -161,8 +161,8 @@
   "erwartet": {
    "17_Unterstichprobe!C13": null,
    "17_Unterstichprobe!C14": null,
-   "17_Unterstichprobe!C16": 13666.6666666667,
-   "17_Unterstichprobe!C20": 11428.5714285714,
+   "17_Unterstichprobe!C16": 13666.666666666666,
+   "17_Unterstichprobe!C20": 11428.57142857143,
    "17_Unterstichprobe!C22": 0,
    "17_Unterstichprobe!C23": 0
   }
@@ -187,11 +187,11 @@
   },
   "erwartet": {
    "17_Unterstichprobe!C13": 10100,
-   "17_Unterstichprobe!C14": 0.0194230769230769,
-   "17_Unterstichprobe!C16": 14857.1428571429,
+   "17_Unterstichprobe!C14": 0.01942307692307692,
+   "17_Unterstichprobe!C16": 14857.142857142857,
    "17_Unterstichprobe!C20": 11875,
    "17_Unterstichprobe!C22": 10437.5,
-   "17_Unterstichprobe!C23": 0.0200721153846154
+   "17_Unterstichprobe!C23": 0.020072115384615386
   }
  },
  {
@@ -314,7 +314,7 @@
    "17_Unterstichprobe!C13": null,
    "17_Unterstichprobe!C14": null,
    "17_Unterstichprobe!C16": 0,
-   "17_Unterstichprobe!C20": -3214.28571428571,
+   "17_Unterstichprobe!C20": -3214.285714285714,
    "17_Unterstichprobe!C22": -2200,
    "17_Unterstichprobe!C23": null
   }

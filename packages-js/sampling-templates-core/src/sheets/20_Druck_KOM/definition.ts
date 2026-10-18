@@ -110,7 +110,7 @@ const residual: FieldDefinition[] = [
   { cell: 'G40', alias: 'article98AmountsShown', kind: 'formula', type: 'amount', format: EUR, label: 'Beträge nach Artikel 98 Absatz 6 VO (EU) 2021/1060 (E)' },
   { cell: 'G41', alias: 'financialCorrectionsShown', kind: 'formula', type: 'amount', format: EUR, label: 'Finanzkorrekturen (H)' },
   { cell: 'G42', alias: 'residualErrorRate', kind: 'result', type: 'percent', format: RATE, label: 'Restfehlerquote nach Finanzkorrekturen' },
-  { cell: 'G43', alias: 'extrapolatedCorrection', kind: 'formula', type: 'amount', format: '#,##0.00" €";\\-#,##0.00" €";"nicht erforderlich"', label: 'Hochgerechnete Finanzkorrektur bis zur Wesentlichkeitsschwelle von 2 %' },
+  { cell: 'G43', alias: 'extrapolatedCorrection', kind: 'formula', type: 'amount', format: '#,##0.00" €";\\-#,##0.00" €";"nicht erforderlich"', label: 'Hochgerechnete Finanzkorrektur bis zur Signifikanzschwelle von 2 %' },
   freeText('A45', 'conclusionText'),
 ]
 

@@ -2,7 +2,7 @@
 import { isNumber } from '../../excel/index'
 import { defineSheet } from '../../model/sheet'
 import type { CellMap, WebHint } from '../../model/types'
-import { sizeExceedsPopulation, tolerableNotAboveAnticipated } from '../shared/legacy'
+import { levelAdaptations, levelOutsideSteps, sizeExceedsPopulation, tolerableNotAboveAnticipated } from '../shared/legacy'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
@@ -18,7 +18,8 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
   return [
     ...tolerableNotAboveAnticipated(results.C10, expanded, 'TE ≤ AE × EF: Die Altvorlage prüft das nicht. Stichprobenumfang und Folgegrößen sind, soweit wie in der Vorlage gezeigt, nicht belastbar; bitte die erwartete Fehlerquote prüfen'),
     ...sizeExceedsPopulation(results.C11, results.C3),
+    ...levelOutsideSteps(inputs.C4),
   ]
 }
 
-export const sheet = defineSheet({ id: 'X1_KonsMUS_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, translations: { en } })
+export const sheet = defineSheet({ id: 'X1_KonsMUS_2017', definition, compute, sample: { inputs: sample }, deviations, webHints, adapted: levelAdaptations(['C5', 'C6']), translations: { en } })

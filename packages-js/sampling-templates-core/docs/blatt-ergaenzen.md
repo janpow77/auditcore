@@ -119,7 +119,7 @@ Der Entwurf nennt ein Feld je Zeile; Schichtzeilen tragen
   an den Eingaben, in die Summen aus Blatt 17 übernommen werden; bei
   Schichtzeilen erfolgt die Übernahme je Schicht, mit `period: 1 | 2 | 3` je
   Stichprobenzeitraum.
-- `summary.gauge`: Skala gegen die Wesentlichkeitsschwelle; `upper` entfällt,
+- `summary.gauge`: Skala gegen die Signifikanzschwelle; `upper` entfällt,
   wo es keine obere Fehlergrenze gibt, `rateLabel`/`upperLabel` tragen die
   Begriffe des Blatts, wenn sie abweichen (Altvorlagen).
 - `summary`: Hauptgröße, Kennzahlen und Skala der Ergebnisspalte.
@@ -152,17 +152,16 @@ Zeilen, Komplexität höchstens 10).
 
 Regeln, die der Abgleich nicht von selbst erzwingt:
 
-- **Vergleiche nur über die Helfer.** Die Tabellenkalkulation vergleicht mit
-  Toleranz (zwei Werte, die sich um weniger als 2⁻⁴⁸ relativ unterscheiden,
-  gelten als gleich); `>`, `<`, `>=`, `<=` und `===` gegen Zahlen sind in
+- **Vergleiche nur über die Helfer.** Excel vergleicht nach Rundung beider
+  Seiten auf 15 geltende Stellen; `>`, `<`, `>=`, `<=` und `===` gegen Zahlen sind in
   `src/sheets` deshalb per Lint-Regel gesperrt. Schwellen wie „≤ 2 %“ oder
   „TE > AE“ fallen sonst bei glatten Werten anders aus als in der Vorlage.
 - **Aufrunden nur mit `roundUp`.** Es bildet das gemessene Verhalten nach
-  (Kürzen auf zwölf signifikante Stellen, dann aufrunden). Die
+  von Excel (Rundung auf 15 geltende Stellen, dann aufrunden). Die
   Schichtverteilung `ROUNDUP(D9/C9·C33)` trifft besonders oft glatte Werte.
-- **Differenzen mit `minus`**, wenn das Ergebnis verglichen, geteilt oder
-  aufgerundet wird: Die Tabellenkalkulation setzt die Differenz fast gleicher
-  Werte auf 0.
+- **Differenzen mit `minus`**, wenn die Subtraktion die letzte Operation der
+  Formel ist: Excel setzt ein Ergebnis, das 50 Binärstellen unter dem
+  kleineren Summanden liegt, auf 0.
 - **`MAX`/`MIN` mit einer leeren Zelle als Argument:** Als Einzelargument
   zählt die leere Zelle 0 (`Math.max(n(c.A), 30)`), in einem Bereich wird sie
   übergangen (`max([...])`). Ein Text als Einzelargument ist ein Fehlerwert:
@@ -246,7 +245,8 @@ const filled = countRow(c, 46)
 
 ### 6. Fehlende Angaben
 
-Die Webfassung zeigt nie einen anderen Wert als die Vorlage, höchstens keinen.
+Die Webfassung zeigt nie einen anderen Wert als die Vorlage, höchstens keinen
+(Ausnahmen nach der DelVO: [abweichungen.md](abweichungen.md) Nr. 16).
 Was sie zeigt, wenn eine Angabe fehlt, entscheidet **eine** Stelle:
 `src/model/policy.ts` (Richtlinie je Fallart) über `evaluateSheet`. Ein Blatt
 ordnet nur jede Stelle einer Fallart zu und liest die Richtlinie nie selbst
@@ -264,7 +264,7 @@ hochwertigen Einheiten, systembedingte und anomale Fehler), zählen still 0.
 
 ```ts
 // Pflichteingabe
-{ cell: 'C16', whenEmpty: ['C7', 'C14'], template: '0,00 € (leere Zelle zählt als 0)', reason: 'Der zulässige Fehler setzt Buchwert und Wesentlichkeitsschwelle voraus.' }
+{ cell: 'C16', whenEmpty: ['C7', 'C14'], template: '0,00 € (leere Zelle zählt als 0)', reason: 'Der zulässige Fehler setzt Buchwert und Signifikanzschwelle voraus.' }
 
 // Wert ohne Grundlage
 c.D41 = used ? checkStratumUnits(c.D40, pending, context) : null
@@ -367,6 +367,14 @@ Das Werkzeug schreibt die Eingaben in eine Kopie der Vorlage, lässt
 LibreOffice neu rechnen und liest alle Formelzellen aus. Es arbeitet in einem
 eigenen Verzeichnis mit eigenem LibreOffice-Profil; mehrere Läufe gleichzeitig
 sind möglich. Golden-Dateien nie von Hand ändern.
+
+Maßgeblich sind seit Fassung 0.1.6 Sollwerte aus **Microsoft Excel**. LibreOffice
+liefert nur einen vorläufigen Stand; es weicht an Schwellen (Vergleich), beim
+Aufrunden, bei `VERGLEICH`, bei Wahrheits- und Fehlerwerten von Excel ab
+([abweichungen.md](abweichungen.md) Nr. 3). Vor der Aufnahme eines Blatts sind
+die Fälle über den Office-Dienst in Excel neu zu rechnen (Werkzeugkette der
+Excel-Gegenprobe: Aufträge bauen, im Dienst rechnen, ins Golden-Format wandeln)
+und die Excel-Werte als Golden-Dateien zu übernehmen.
 
 ### 11. Abgleichen
 

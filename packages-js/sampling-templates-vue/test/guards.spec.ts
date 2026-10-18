@@ -82,7 +82,7 @@ describe('Bericht und Fußzeile', () => {
     expect(identity.classes()).toEqual(['fa-st__report-identity'])
   })
 
-  it('die Fußzeile nennt die Prüfgrundlage: LibreOffice 24.2, Gegenprobe mit Excel steht aus', () => {
-    expect(mountCalculator().get('[data-template-status]').text()).toContain('Neuberechnung der Vorlage mit LibreOffice 24.2; eine Gegenprobe mit Microsoft Excel steht aus.')
+  it('die Fußzeile nennt die Prüfgrundlage: Neuberechnung der Vorlage in Microsoft Excel', () => {
+    expect(mountCalculator().get('[data-template-status]').text()).toContain('Neuberechnung der Vorlage mit Microsoft Excel (Version 16.0.20326).')
   })
 })

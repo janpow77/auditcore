@@ -36,7 +36,7 @@ function shown(sheet: AvailableSheet, inputs: Inputs): Inputs {
 
 /**
  * Was das leere Formular zeigen darf: den Hinweis der Altvorlage und die
- * Wesentlichkeitsschwelle, die in den Altvorlagen ein fester Wert ist (2 %).
+ * Signifikanzschwelle, die in den Altvorlagen ein fester Wert ist (2 %).
  */
 const EMPTY_FORM: readonly { sheet: AvailableSheet; allowed: Inputs }[] = [
   { sheet: x1, allowed: { G1: LEGACY_NOTICE, C9: 0.02 } },
@@ -46,7 +46,7 @@ const EMPTY_FORM: readonly { sheet: AvailableSheet; allowed: Inputs }[] = [
 ]
 
 describe.each(EMPTY_FORM)('Leeres Formular $sheet.id', ({ sheet, allowed }) => {
-  it('zeigt nur den Hinweis der Altvorlage und die feste Wesentlichkeitsschwelle', () => {
+  it('zeigt nur den Hinweis der Altvorlage und die feste Signifikanzschwelle', () => {
     expect(shown(sheet, {})).toEqual(allowed)
     expect(evaluateSheet(sheet, {}, createContext()).assumed).toEqual([])
     expect(sheet.webHints?.({}, sheet.compute({}, createContext()), createContext()) ?? []).toEqual([])

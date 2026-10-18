@@ -5,6 +5,7 @@
  * Vorlage; eingebettete Formeln stehen als Kurzschreibweise in `formula`.
  */
 import type { MethodDefinition } from '../../model/definition'
+import { NONSTATISTICAL_THREE_INTERPRETATION } from '../shared/interpretations'
 
 const EUR = '#,##0.00" €"'
 const INT = '#,##0'
@@ -40,7 +41,7 @@ export const definition: MethodDefinition = {
         { cell: 'C15', alias: 'highValueBookValue', kind: 'input', type: 'amount', format: EUR, label: 'Buchwert der hochwertigen Einheiten (BV_e)' },
         { cell: 'C16', alias: 'randomStratumBookValue', kind: 'formula', type: 'amount', format: EUR, label: 'Buchwert der Zufallsschicht (niedrigwertige Einheiten) (BV_s)' },
         { cell: 'C17', alias: 'randomStratumUnits', kind: 'formula', type: 'integer', format: INT, label: 'Anzahl der in der Zufallsschicht auszuwählenden Einheiten (n_s)' },
-        { cell: 'C18', alias: 'checkMinimumUnits', kind: 'formula', type: 'check', label: 'Mindestens drei Einheiten in der Zufallsschicht' },
+        { cell: 'C18', alias: 'checkMinimumUnits', kind: 'formula', type: 'check', label: 'Mindestens drei Einheiten in der Zufallsschicht', interpretation: NONSTATISTICAL_THREE_INTERPRETATION },
         { cell: 'C19', alias: 'samplingInterval', kind: 'formula', type: 'amount', format: EUR, label: 'Auswahlintervall (SI)', formula: 'SI = BV_s / n_s', hint: 'Art. 2 Nr. 9; Art. 5 Abs. 2 UAbs. 2 DelVO.' },
         { cell: 'C20', alias: 'iterationUnits', kind: 'input', type: 'integer', format: INT, label: 'Einheiten der Zufallsschicht mit BV > Auswahlintervall (Iteration)', hint: 'Solche Einheiten sind der hochwertigen Schicht zuzuordnen; Grenzwert und Intervall sind neu zu berechnen.' },
         { cell: 'C21', alias: 'checkIteration', kind: 'formula', type: 'check', label: 'Prüfung Iteration' },
@@ -63,8 +64,8 @@ export const definition: MethodDefinition = {
         { cell: 'C28', alias: 'anomalousErrors', kind: 'input', type: 'amount', format: EUR, label: 'Nicht berichtigte anomale Fehler (Betrag)', hint: 'Art. 2 Nr. 20, 21; Art. 8 Abs. 1 DelVO.' },
         { cell: 'C29', alias: 'projectedErrorRate', kind: 'formula', type: 'percent', format: RATE, label: 'Extrapolierte Zufallsfehlerquote', formula: 'EE / BV' },
         { cell: 'C30', alias: 'totalErrorRate', kind: 'result', type: 'percent', format: RATE, label: 'Gesamtfehlerquote', formula: '(EE + systembedingte + nicht berichtigte anomale Fehler) / BV', hint: 'Art. 8 Abs. 1 DelVO; endgültige Berechnung inkl. TH-Pauschale und Anh. III in Blatt 18.' },
-        { cell: 'C31', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Wesentlichkeitsschwelle', hint: 'Anh. I Nr. 1 DelVO.' },
-        { cell: 'C32', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Wesentlichkeitsschwelle', hint: 'Beim nichtstatistischen Verfahren werden Genauigkeit und obere Fehlergrenze nicht berechnet (Art. 8 Abs. 2).' },
+        { cell: 'C31', alias: 'materiality', kind: 'input', type: 'percent', format: RATE, default: 0.02, label: 'Signifikanzschwelle', hint: 'Anh. I Nr. 1 DelVO.' },
+        { cell: 'C32', alias: 'assessment', kind: 'formula', type: 'check', label: 'Würdigung gegen die Signifikanzschwelle', hint: 'Beim nichtstatistischen Verfahren werden Genauigkeit und obere Fehlergrenze nicht berechnet (Art. 8 Abs. 2).' },
       ],
     },
   ],

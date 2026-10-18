@@ -1,0 +1,29 @@
+{
+ "18_GFQ_AnhIII.abnahme-grund.golden.json": [],
+ "18_GFQ_AnhIII.abnahme-luecken.golden.json": [
+  17
+ ],
+ "18_GFQ_AnhIII.golden.json": [
+  9,
+  48,
+  49
+ ],
+ "18_GFQ_AnhIII.zufall.golden.json": [
+  6,
+  8,
+  17,
+  32,
+  90
+ ],
+ "20_Druck_KOM.abnahme-grund.golden.json": [],
+ "20_Druck_KOM.abnahme-luecken.golden.json": [
+  17
+ ],
+ "20_Druck_KOM.golden.json": [
+  8,
+  20
+ ],
+ "20_Druck_KOM.zufall.golden.json": [
+  28
+ ]
+}

@@ -17,7 +17,7 @@ const SIZE = 'Ohne voraussichtliche Fehlerquote und Standardabweichung ist der S
 export const deviations: readonly Deviation[] = [
   ...entries(['C7', 'N4'], ['C7'], '0 (Verknüpfung auf das leere Blatt 02)', BOOK_VALUE),
   ...entries(['C8'], ['C8'], '0 (Verknüpfung auf das leere Blatt 02)', 'Ohne Angabe ist der Umfang der Grundgesamtheit unbekannt, nicht null.'),
-  ...entries(['C16'], ['C7', 'C14'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt Buchwert und Wesentlichkeitsschwelle voraus.'),
+  ...entries(['C16'], ['C7', 'C14'], '0,00 € (leere Zelle zählt als 0)', 'Der zulässige Fehler setzt Buchwert und Signifikanzschwelle voraus.'),
   ...entries(['C18'], ['C7', 'C17'], '0,00 € (leere Zelle zählt als 0)', 'Der voraussichtliche Fehler setzt Buchwert und voraussichtliche Fehlerquote voraus.'),
   ...entries(['C31'], ['C7'], '0 € abzüglich des Buchwerts der hochwertigen Einheiten', BOOK_VALUE),
   ...entries(['C21'], ['C17', 'C20'], 'Umfang mit AE = 0 bzw. σ_r = 0 (z. B. 0 oder 39)', SIZE),

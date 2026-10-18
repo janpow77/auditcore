@@ -1,0 +1,120 @@
+[
+ {
+  "position": 22,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Standard“",
+  "cells": {
+   "10_SRS_2Z!N7": 76796.9366077242,
+   "10_SRS_2Z!N10": 197,
+   "10_SRS_2Z!C33": 258,
+   "10_SRS_2Z!C41": 258,
+   "10_SRS_2Z!C42": 141,
+   "10_SRS_2Z!C43": 118,
+   "10_SRS_2Z!C62": 59848456181.6465,
+   "10_SRS_2Z!C63": 51,
+   "10_SRS_2Z!C69": 0,
+   "10_SRS_2Z!C71": 126,
+   "10_SRS_2Z!C72": 141,
+   "10_SRS_2Z!C73": 51,
+   "10_SRS_2Z!C74": 197,
+   "10_SRS_2Z!C75": "✔ ≥ 30 Einheiten",
+   "10_SRS_2Z!C85": 76796.9366077242,
+   "10_SRS_2Z!C88": 346463.603274391,
+   "10_SRS_2Z!C89": 192869.730058942,
+   "10_SRS_2Z!C90": 0.00153593873215448,
+   "10_SRS_2Z!C93": 0.00692927206548782,
+   "10_SRS_2Z!C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  }
+ },
+ {
+  "position": 23,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Global“",
+  "cells": {
+   "10_SRS_2Z!N7": 75054.3388029358,
+   "10_SRS_2Z!N10": 201,
+   "10_SRS_2Z!C33": 258,
+   "10_SRS_2Z!C41": 258,
+   "10_SRS_2Z!C42": 141,
+   "10_SRS_2Z!C43": 118,
+   "10_SRS_2Z!C62": 59848456181.6465,
+   "10_SRS_2Z!C63": 51,
+   "10_SRS_2Z!C69": 0,
+   "10_SRS_2Z!C71": 126,
+   "10_SRS_2Z!C72": 141,
+   "10_SRS_2Z!C73": 55,
+   "10_SRS_2Z!C74": 201,
+   "10_SRS_2Z!C75": "✔ ≥ 30 Einheiten",
+   "10_SRS_2Z!C85": 75054.3388029358,
+   "10_SRS_2Z!C88": 344721.005469602,
+   "10_SRS_2Z!C89": 194612.327863731,
+   "10_SRS_2Z!C90": 0.00150108677605872,
+   "10_SRS_2Z!C93": 0.00689442010939205,
+   "10_SRS_2Z!C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  }
+ },
+ {
+  "position": 24,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „Erhöhung“",
+  "cells": {
+   "10_SRS_2Z!N7": 61090.2282036814,
+   "10_SRS_2Z!N10": 272,
+   "10_SRS_2Z!C33": 258,
+   "10_SRS_2Z!C41": 258,
+   "10_SRS_2Z!C42": 141,
+   "10_SRS_2Z!C43": 118,
+   "10_SRS_2Z!C62": 59848456181.6465,
+   "10_SRS_2Z!C63": 51,
+   "10_SRS_2Z!C69": 0,
+   "10_SRS_2Z!C71": 126,
+   "10_SRS_2Z!C72": 141,
+   "10_SRS_2Z!C73": 126,
+   "10_SRS_2Z!C74": 272,
+   "10_SRS_2Z!C75": "✔ ≥ 30 Einheiten",
+   "10_SRS_2Z!C85": 61090.2282036814,
+   "10_SRS_2Z!C88": 330756.894870348,
+   "10_SRS_2Z!C89": 208576.438462985,
+   "10_SRS_2Z!C90": 0.00122180456407363,
+   "10_SRS_2Z!C93": 0.00661513789740696,
+   "10_SRS_2Z!C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  }
+ },
+ {
+  "position": 25,
+  "name": "TE ≤ AE im ersten Zeitraum, Ansatz „keine Neuberechnung“",
+  "cells": {
+   "10_SRS_2Z!N7": 61902.0265310577,
+   "10_SRS_2Z!N10": 264,
+   "10_SRS_2Z!C33": 258,
+   "10_SRS_2Z!C41": 258,
+   "10_SRS_2Z!C42": 141,
+   "10_SRS_2Z!C43": 118,
+   "10_SRS_2Z!C62": 59848456181.6465,
+   "10_SRS_2Z!C63": 51,
+   "10_SRS_2Z!C69": 0,
+   "10_SRS_2Z!C71": 126,
+   "10_SRS_2Z!C72": 141,
+   "10_SRS_2Z!C73": 118,
+   "10_SRS_2Z!C74": 264,
+   "10_SRS_2Z!C75": "✔ ≥ 30 Einheiten",
+   "10_SRS_2Z!C85": 61902.0265310577,
+   "10_SRS_2Z!C88": 331568.693197724,
+   "10_SRS_2Z!C89": 207764.640135609,
+   "10_SRS_2Z!C90": 0.00123804053062115,
+   "10_SRS_2Z!C93": 0.00663137386395449,
+   "10_SRS_2Z!C94": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  }
+ },
+ {
+  "position": 28,
+  "name": "TE ≤ AE mit begrenztem Umfang Kategorie 2",
+  "cells": {
+   "10_SRS_2Z!C33": 65
+  }
+ },
+ {
+  "position": 29,
+  "name": "TE ≤ AE mit begrenztem Umfang, globale Neuberechnung mit aktualisierter Fehlerquote",
+  "cells": {
+   "10_SRS_2Z!C33": 65
+  }
+ }
+]

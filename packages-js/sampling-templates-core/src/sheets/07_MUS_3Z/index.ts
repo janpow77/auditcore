@@ -1,12 +1,14 @@
 /** Blatt 07_MUS_3Z: MUS-Standardansatz, drei Stichprobenzeiträume, nicht geschichtet. */
 import { gt, isBlank, isNumber, le, sameNumber } from '../../excel/index'
 import { defineSheet, type ZeroAssumption } from '../../model/sheet'
-import type { CellMap, WebHint } from '../../model/types'
+import type { CellMap, SheetContext, WebHint } from '../../model/types'
 import { approachOf, errorDependents, limitWithoutSize, partialErrorSums } from '../shared/mus'
+import { withNotApplicableNote } from '../shared/delvo'
 import { compute } from './compute'
 import { definition } from './definition'
 import { deviations } from './deviations'
 import { en } from './texts.en'
+import { annexIIIApproximation, komPlanningHints } from '../shared/kom'
 
 /** Erfundene Beispielwerte; sie stammen aus keiner Prüfung. */
 const sample: CellMap = {
@@ -39,7 +41,7 @@ function negativeDenominator(results: CellMap, cell: string, id: string, periods
 }
 
 /** Hinweise der Webfassung zu Blatt 07; sie verändern kein Rechenergebnis. Die Vorlage führt für Zeitraum 1 keine Anzahl der Einheiten. */
-function webHints(inputs: CellMap, results: CellMap): WebHint[] {
+function webHints(inputs: CellMap, results: CellMap, context?: SheetContext): WebHint[] {
   const hints: WebHint[] = [
     ...limitWithoutSize(results, 'C34', 'C29', 'C35'),
     ...exceeds(results, 'C108', 'C52', 2),
@@ -48,7 +50,7 @@ function webHints(inputs: CellMap, results: CellMap): WebHint[] {
     ...negativeDenominator(results, 'C98', 'negative-denominator-3', 'Zeitraum 3'),
   ]
   if (sameNumber(results.C14, 0.95)) hints.push({ id: 'confidence-outside-annex', tone: 'warning', text: 'Konfidenzniveau 95 % liegt außerhalb der Tabelle in Anhang I' })
-  return hints
+  return withNotApplicableNote([...hints, ...komPlanningHints(definition, results), ...annexIIIApproximation(context, false)])
 }
 
 /** Zellen, die von der Genauigkeit abhängen: SE, Fehlergrenzen, relative Genauigkeit, obere Grenze in %, Würdigung. */

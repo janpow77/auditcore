@@ -9,7 +9,7 @@
  *   Hochrechnung). Die Webfassung lässt ihn offen, solange eine Pflichteingabe
  *   fehlt; bei vollständigen Eingaben zeigt sie ihn wie die Vorlage mit Hinweis.
  * - Pflichteingabe fehlt (ohne `kind`): Umfang der Zufallsstichprobe, Buchwert
- *   einer belegten Schicht, Wesentlichkeitsschwelle. Eine Zeile mit der ganzen
+ *   einer belegten Schicht, Signifikanzschwelle. Eine Zeile mit der ganzen
  *   Schichtzeile 12 unter `whenEmpty` greift, wenn der Buchwert einer belegten
  *   Schicht fehlt.
  */
@@ -71,5 +71,5 @@ export const deviations: readonly Deviation[] = [
   ...STRATA_COLUMNS.flatMap((column) => entries([stratumCell(column, 27)], [stratumCell(column, 12)], '0,00 € (leerer Buchwert der Schicht zählt als 0)', BOOK_VALUE)),
   ...entries(['C27', 'C29', 'N5'], row(12), 'Summe, in die die Schicht ohne Buchwert mit 0 € eingeht', BOOK_VALUE),
   ...entries(['C32', 'C33', 'N11'], row(12), 'Fehlerquote, in die die Schicht ohne Buchwert mit 0 € eingeht, bzw. bezogen nur auf die umfassende Schicht', BOOK_VALUE),
-  ...entries(['C35'], ['C34', ...row(12)], 'Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage der mit 0 € gerechneten Schicht', 'Die Würdigung setzt die Wesentlichkeitsschwelle und den Buchwert jeder belegten Schicht voraus.'),
+  ...entries(['C35'], ['C34', ...row(12)], 'Würdigung gegen eine Schwelle von 0 % bzw. auf Grundlage der mit 0 € gerechneten Schicht', 'Die Würdigung setzt die Signifikanzschwelle und den Buchwert jeder belegten Schicht voraus.'),
 ]

@@ -1,0 +1,274 @@
+[
+ {
+  "position": 5,
+  "name": "Zufall 006",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C26": 781
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 6,
+  "name": "Zufall 007",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "C26": 77285
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 10,
+  "name": "Zufall 011",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 130224.492622687,
+   "N10": 1604,
+   "C26": 1601,
+   "C34": 1601,
+   "C35": 1604,
+   "C44": 130224.492622687,
+   "C47": 3792267.77247785,
+   "C49": 0.00187263677007017,
+   "C52": 0.0545330600232797
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 14,
+  "name": "Zufall 015",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 98851.0553770982,
+   "N10": 20242,
+   "C26": 20239,
+   "C34": 20239,
+   "C35": 20242,
+   "C44": 98851.0553770982,
+   "C47": 5980356.7347053,
+   "C48": 5782654.6239511,
+   "C49": 0.000511537360459044,
+   "C52": 0.0309473266320165
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 27,
+  "name": "Zufall 028",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 46148.2112444467,
+   "N10": 80872,
+   "C26": 80860,
+   "C34": 80860,
+   "C35": 80872,
+   "C44": 46148.2112444467,
+   "C47": 1758511.31452915,
+   "C48": 1666214.89204026,
+   "C49": 0.000373300471964711,
+   "C52": 0.0142248872917693,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 41,
+  "name": "Zufall 042",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 354966.108006404,
+   "N10": 45130,
+   "C26": 45122,
+   "C34": 45122,
+   "C35": 45130,
+   "C44": 354966.108006404,
+   "C47": 1883744.68647377,
+   "C48": 1173812.47046097,
+   "C49": 0.00234275782012879,
+   "C52": 0.0124326167930457,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 49,
+  "name": "Zufall 050",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 195709.050255626,
+   "N10": 294,
+   "C26": 284,
+   "C34": 284,
+   "C35": 294,
+   "C44": 195709.050255626,
+   "C47": 436095.487106203,
+   "C49": 0.00224555839120071,
+   "C52": 0.00500374346080066,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 52,
+  "name": "Zufall 053",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 4497.98368880156,
+   "N10": 16908,
+   "C26": 16896,
+   "C34": 16896,
+   "C35": 16908,
+   "C44": 4497.98368880156,
+   "C47": 121406.912204934,
+   "C48": 112410.94482733,
+   "C49": 0.000500051687811312,
+   "C52": 0.0134970990471093,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 60,
+  "name": "Zufall 061",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 77522.9152346952,
+   "N10": 3416,
+   "C26": 3409,
+   "C34": 3409,
+   "C35": 3416,
+   "C44": 77522.9152346952,
+   "C47": 573633.668989479,
+   "C49": 0.0011008223681839,
+   "C52": 0.00814557569275212,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 61,
+  "name": "Zufall 062",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 19020.3184503646,
+   "N10": 105216,
+   "C26": 105208,
+   "C34": 105208,
+   "C35": 105216,
+   "C44": 19020.3184503646,
+   "C47": 184222.36622828,
+   "C49": 0.000357821257520519,
+   "C52": 0.00346569795449167,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 64,
+  "name": "Zufall 065",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 288899.151087957,
+   "N10": 10716,
+   "C26": 10709,
+   "C34": 10709,
+   "C35": 10716,
+   "C44": 288899.151087957,
+   "C47": 5613734.82948257,
+   "C49": 0.00440795238197137,
+   "C52": 0.0856529890108246
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 66,
+  "name": "Zufall 067",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 655248.889243147,
+   "N10": 116,
+   "C26": 106,
+   "C34": 106,
+   "C35": 116,
+   "C44": 655248.889243147,
+   "C47": 1012811.72708066,
+   "C49": 0.00886260356725763,
+   "C52": 0.0136988386744972,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 67,
+  "name": "Zufall 068",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 343979.940667416,
+   "N10": 8846,
+   "C26": 8845,
+   "C34": 8845,
+   "C35": 8846,
+   "C44": 343979.940667416,
+   "C47": 2006294.54038817,
+   "C49": 0.00258522168360227,
+   "C52": 0.0150785424854737,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 78,
+  "name": "Zufall 079",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 70188.85157981,
+   "N10": 65661,
+   "C26": 65656,
+   "C34": 65656,
+   "C35": 65661,
+   "C44": 70188.85157981,
+   "C47": 507276.001318534,
+   "C49": 0.00125744874788855,
+   "C52": 0.00908796138324887,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 81,
+  "name": "Zufall 082",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 2158.41083884946,
+   "N10": 761369,
+   "C26": 761367,
+   "C34": 761367,
+   "C35": 761369,
+   "C44": 2158.41083884946,
+   "C47": 813369.042692898,
+   "C48": 809052.221015199,
+   "C49": 3.89626068488295e-05,
+   "C52": 0.0146825514693695,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ },
+ {
+  "position": 95,
+  "name": "Zufall 096",
+  "cells": {
+   "C24": "⚠ AE > TE: Umfang mit der geplanten Genauigkeit |TE − AE| (KOM-Leitfaden EGESIF_16-0014-01, 7.1)",
+   "N7": 13821.899712797,
+   "N10": 14803,
+   "C26": 14797,
+   "C34": 14797,
+   "C35": 14803,
+   "C44": 13821.899712797,
+   "C47": 186404.057021712,
+   "C49": 0.000100675494684452,
+   "C52": 0.0013577236879005,
+   "C53": "✔ GFQ und obere Fehlergrenze unter der Schwelle"
+  },
+  "rule": "KOM-Leitfaden 7.1: AE > TE, Umfang mit |TE − AE|"
+ }
+]

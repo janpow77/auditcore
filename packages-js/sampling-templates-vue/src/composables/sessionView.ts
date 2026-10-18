@@ -12,6 +12,7 @@ import {
   computeWorkspace,
   contextFor,
   findAvailableSheet,
+  findField,
   listRows,
   localizeSheet,
   pasteColumns,
@@ -34,12 +35,15 @@ import {
   type Translate,
   type WorkflowStep,
   type WorkspaceState,
+  UNREADABLE_INPUT,
 } from '@auditcore/sampling-templates-core'
 import { computed, type ComputedRef, type Ref, type ShallowRef } from 'vue'
 
 export type StepId = WorkflowStep['id']
 
 export interface ViewOptions {
+  /** Eingaben, deren Text nicht lesbar ist; die Anzeige meldet sie als ungültig. */
+  invalid?: ReadonlySet<string>
   sheets: () => readonly SheetModule[]
   locale: () => 'de' | 'en'
   t: Translate
@@ -74,21 +78,40 @@ const REPORT_SHEET = '20_Druck_KOM'
 
 const isList = (sheet: AvailableSheet | null): boolean => sheet?.definition.layout === 'list'
 
+/**
+ * Arbeitsstand für die Rechnung: Jedes Feld mit nicht lesbarer Eingabe („abc“,
+ * zu viele Nachkommastellen, mehrdeutiger Trenner) zählt als ungültig
+ * (`UNREADABLE_INPUT`), nicht als leer. Es fällt auf keine Leer-Regel zurück –
+ * weder auf die Vorbelegung aus einem anderen Blatt noch auf „leer = 0“ (etwa
+ * Standardabweichungen der Stichprobe) noch auf „keine“ bei freiwilligen
+ * Feldern; alle abhängigen Größen bleiben offen und melden die ungültige
+ * Eingabe. Erst ein geleertes Feld folgt wieder der Leer-Regel.
+ */
+function withUnreadable(state: WorkspaceState, sheet: AvailableSheet | null, invalid: ReadonlySet<string>): WorkspaceState {
+  if (!sheet || isList(sheet)) return state
+  const cells = [...invalid].filter((cell) => findField(sheet.definition, cell))
+  if (cells.length === 0) return state
+  return { ...state, sheets: { ...state.sheets, [sheet.id]: { ...ownInputs(state, sheet.id), ...Object.fromEntries(cells.map((cell) => [cell, UNREADABLE_INPUT])) } } }
+}
+
 export function useSessionView(workspace: ShallowRef<WorkspaceState>, step: Ref<StepId>, selectedUnit: Ref<number>, options: ViewOptions): SessionView {
   const find = (id: SheetId | null): AvailableSheet | null => {
     const sheet = id ? findAvailableSheet(id, options.sheets()) : undefined
     return sheet ? localizeSheet(sheet, options.locale(), options.locale() === 'de' ? {} : SHARED_TEXTS[options.locale() as 'en']) : null
   }
-  const results = computed(() => computeWorkspace(workspace.value, options.sheets()))
   const activeSheet = computed(() => find(workspace.value.activeMethod))
   const currentSheet = computed(() => (step.value === 'method' ? activeSheet.value : find(WORKFLOW_STEPS.find((entry) => entry.id === step.value)?.sheet ?? null)))
+  /** Abzug der reaktiven Menge: Die Ansicht rechnet neu, sobald ein Feld ungültig oder wieder gültig wird. */
+  const invalid = (): ReadonlySet<string> => new Set(options.invalid ?? [])
+  const computedState = computed(() => withUnreadable(workspace.value, currentSheet.value, invalid()))
+  const results = computed(() => computeWorkspace(computedState.value, options.sheets()))
   /** Derselbe Kontext wie in der Rechnung des Arbeitsstands (für Blatt 18 mit der Ergebnisübersicht des gewählten Verfahrens). */
-  const context = computed(() => contextFor(currentSheet.value?.id ?? '', workspace.value, results.value))
+  const context = computed(() => contextFor(currentSheet.value?.id ?? '', computedState.value, results.value))
   /** Eingaben und Zellwerte des angezeigten Formulars: das Blatt selbst oder die gewählte Einheit einer Liste. */
   const form = computed(() => {
     const sheet = currentSheet.value
     if (!sheet) return null
-    if (!isList(sheet)) return { sheet, inputs: ownInputs(workspace.value, sheet.id), cells: results.value[sheet.id] ?? {} }
+    if (!isList(sheet)) return { sheet, inputs: ownInputs(computedState.value, sheet.id), cells: results.value[sheet.id] ?? {} }
     const row = listRows(workspace.value, sheet.id)[selectedUnit.value]
     return row ? { sheet, inputs: row, cells: sheet.compute(row, context.value) } : null
   })
@@ -98,8 +121,8 @@ export function useSessionView(workspace: ShallowRef<WorkspaceState>, step: Ref<
     activeSheet,
     currentSheet,
     context,
-    sections: computed(() => (form.value ? buildSections(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t) : [])),
-    summary: computed(() => (form.value ? buildSummary(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t) : null)),
+    sections: computed(() => (form.value ? buildSections(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t, invalid()) : [])),
+    summary: computed(() => (form.value ? buildSummary(form.value.sheet, form.value.inputs, form.value.cells, context.value, options.t, invalid()) : null)),
     guide: computed(() => buildGuide(find(POPULATION_SHEET) ?? undefined, results.value[POPULATION_SHEET], context.value.parameters, options.t)),
     hasStrata: computed(() => strata.value.length > 0),
     usedStrata: computed(() => (form.value ? usedStrata(form.value.inputs, strata.value, strataColumnsOf(form.value.sheet.definition)) : 0)),

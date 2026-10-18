@@ -126,7 +126,7 @@ describe('Blatt 12_SRS_3Z', () => {
     expect(pick(run({ C35: INCREASE, C53: 17600000, C92: 14300000 }), ['C83', 'C84', 'C85', 'C115', 'C118'])).toEqual([17, 17, 11, 13, 13])
     expect(pick(run({ C35: INCREASE, C54: 190, C93: 150 }), ['C83', 'C84', 'C115', 'C118'])).toEqual([19, 19, 15, 15])
     const marked = fieldsOf(sheet.definition).filter((field) => field.interpretation)
-    expect(marked.map((field) => field.cell)).toEqual(['C83', 'C115'])
+    expect(marked.map((field) => field.cell)).toEqual(['C36', 'C42', 'C83', 'C115', 'C118', 'C138'])
   })
 
   it('keine Neuberechnung: Die geplanten Umfänge aus J gelten weiter', () => {
@@ -181,7 +181,7 @@ describe('Blatt 12_SRS_3Z', () => {
   it('eine Gesamtfehlerquote über der Schwelle wird auch bei offener Genauigkeit gewürdigt', () => {
     const results = run({ C99: null, C49: 60000, C88: 41000 })
     expect(results.C129).toBeNull()
-    expect(results.C138).toBe('✖ Gesamtfehlerquote über der Wesentlichkeitsschwelle')
+    expect(results.C138).toBe('✖ Gesamtfehlerquote über der Signifikanzschwelle')
   })
 
   it('die Unterstichproben kennen keine Zeiträume: Kein Feld übernimmt Summen aus Blatt 17', () => {
@@ -278,21 +278,22 @@ describe('Blatt 12_SRS_3Z: Richtlinie für fehlende Angaben', () => {
   })
 
   it('Wert ohne Grundlage (withoutBasis): Umfang aus der bloßen Untergrenze wie die Vorlage gezeigt und ausgewiesen; offen, solange eine Pflichteingabe fehlt', () => {
-    // „TE ≤ AE“: Es gibt keinen Umfang; die Vorlage zeigt für Zeitraum 2 dennoch 3 Einheiten.
-    const undetermined = { ...sample, C28: 0.025, C35: NONE }
+    // TE = AE (Vorlage: „TE ≤ AE“): Es gibt keinen Umfang; die Vorlage zeigt für Zeitraum 2 dennoch 3 Einheiten.
+    const undetermined = { ...sample, C28: 0.02, C35: NONE }
     const cells = ['C36', 'C44', 'C46', 'C84', 'C113', 'C117', 'C118', 'C119']
-    const shown = ['TE ≤ AE', null, null, 3, 76, 3, null, null]
+    // C113 (Zusatzeinheiten der globalen Neuberechnung nach Zeitraum 2): Bei AE = TE ist der globale Ansatz nicht anwendbar (Division durch null, Nr. 16).
+    const shown = ['✖ nicht anwendbar (Division durch null)', null, null, 3, null, 3, null, null]
     const current = evaluateSheet(sheet, undetermined, context)
     expect(current.complete).toBe(true)
     expect(pick(current.cells, cells)).toEqual(shown)
     expect(pick(sheet.compute(undetermined, likeTemplate), cells)).toEqual(shown)
-    expect(current.withoutBasis).toEqual(['C84', 'C113', 'C117'])
+    expect(current.withoutBasis).toEqual(['C84', 'C117'])
     expect(current.lacking.size).toBe(0)
     expect(withoutBasisHint(undetermined)).toEqual({ tone: 'warning', qualified: true })
     // Fehlt dazu die Standardabweichung des dritten Zeitraums (Pflichteingabe), bleibt die Untergrenze offen.
     const incomplete = evaluateSheet(sheet, { ...undetermined, C99: null }, context)
     expect(incomplete.complete).toBe(false)
-    expect(pick(incomplete.cells, cells)).toEqual(['TE ≤ AE', null, null, null, null, null, null, null])
+    expect(pick(incomplete.cells, cells)).toEqual(['✖ nicht anwendbar (Division durch null)', null, null, null, null, null, null, null])
     expect(incomplete.withoutBasis).toEqual([])
     expect(incomplete.lacking.has('C84')).toBe(false)
     expect(withoutBasisHint({ ...undetermined, C99: null }).tone).toBeUndefined()

@@ -22,7 +22,7 @@ type Inputs = Record<string, CellValue>
 
 const context = createContext()
 const t = createTranslate()
-const PASSED = '✔ Gesamtfehlerquote unter der Wesentlichkeitsschwelle'
+const PASSED = '✔ Gesamtfehlerquote unter der Signifikanzschwelle'
 
 interface Shown {
   evaluation: SheetEvaluation
@@ -38,6 +38,9 @@ function show(sheet: AvailableSheet, inputs: Inputs): Shown {
 }
 
 const sample = (sheet: AvailableSheet, changes: Inputs = {}): Inputs => ({ ...sheet.sample.inputs, ...changes })
+/** Summen freiwilliger Schichtzeilen in Blatt 16 (hochwertige Einheiten): wie in der Vorlage 0, kein Wert ohne Grundlage (Entscheidung des Inhabers vom 17.10.2026). */
+const OPTIONAL16 = ['C19', 'C20', 'C25', 'C29', 'N6']
+const required16 = (cells: readonly string[]): string[] => cells.filter((cell) => !OPTIONAL16.includes(cell))
 const values = (shown: Shown, cells: readonly string[]): CellValue[] => cells.map((cell) => shown.cells[cell] ?? null)
 const open = (cells: readonly string[]): null[] => cells.map(() => null)
 const ids = (shown: Shown): string[] => shown.limitations.map((entry) => entry.id)
@@ -74,12 +77,13 @@ describe('Summen ohne Summanden: keine Schicht belegt', () => {
     // Ohne Summe der Fehlerquoten zeigt auch die Vorlage keinen extrapolierten Fehler und keine Würdigung.
     expect(values(shown, ['C30', 'C34', 'C36', 'N5', 'N11'])).toEqual([null, null, null, null, null])
     expect([...shown.evaluation.lacking.keys()]).toEqual([])
-    expectWithoutBasis(shown, [...totals, 'C11', 'C12', 'C16', 'C17', 'N4', 'N10'])
+    expectWithoutBasis(shown, required16([...totals, 'C11', 'C12', 'C16', 'C17', 'N4', 'N10']))
   })
 
   it('Blatt 16, Stichprobenumfang fehlt: dieselben Summen und Folgezellen bleiben offen', () => {
     const shown = show(sheet16, { ...emptied(sheet16, [9, 10, 19, 20, 25, 26]), C13: null })
-    expectOpen(shown, [...totalsOf(sheet16), 'C11', 'C12', 'C16', 'C17', 'N4', 'N10'])
+    expectOpen(shown, required16([...totalsOf(sheet16), 'C11', 'C12', 'C16', 'C17', 'N4', 'N10']))
+    expect(values(shown, ['C19', 'C20', 'C25'])).toEqual([0, 0, 0])
   })
 
   it('Blatt 14: ohne belegte Schicht fehlt der Buchwert der ersten Schicht (Pflichteingabe) – Summen und Folgezellen bleiben offen', () => {
@@ -128,17 +132,19 @@ describe('Blatt 14 und 16: keine belegte Schicht ist hochrechenbar', () => {
 describe('Blatt 16: keine Schicht trägt Fehler hochwertiger Einheiten', () => {
   const changes: Inputs = { D25: null, E25: null, F25: null }
 
-  it('vollständig: Summe, EE_e und N6 zeigen 0 wie die Vorlage und sind ausgewiesen; EE ist davon unberührt', () => {
+  it('vollständig: Summe, EE_e und N6 zeigen 0 wie die Vorlage – freiwillig, kein Wert ohne Grundlage; EE ist davon unberührt', () => {
     const shown = show(sheet16, sample(sheet16, changes))
     expect(values(shown, ['C25', 'C29', 'N6'])).toEqual([0, 0, 0])
     expect(shown.cells.C30).toBeGreaterThan(0)
-    expectWithoutBasis(shown, ['C25', 'C29', 'N6'], 'C36')
+    expect(shown.evaluation.withoutBasis).not.toEqual(expect.arrayContaining(['C25']))
     // Hochwertige Einheiten sind eingetragen, ihre Fehler nicht: stille Lücke je Schicht.
     expect(ids(shown)).toEqual(expect.arrayContaining(['missing-D25', 'missing-E25', 'missing-F25']))
   })
 
-  it('Stichprobenumfang fehlt: Summe, EE_e und N6 bleiben offen', () => {
-    expectOpen(show(sheet16, sample(sheet16, { ...changes, C13: null })), ['C25', 'C29', 'N6', 'C30'])
+  it('Stichprobenumfang fehlt: Summe, EE_e und N6 zeigen 0, die Hochrechnung bleibt offen', () => {
+    const shown = show(sheet16, sample(sheet16, { ...changes, C13: null }))
+    expect(values(shown, ['C25', 'C29', 'N6'])).toEqual([0, 0, 0])
+    expectOpen(shown, ['C30'])
   })
 })
 

@@ -1,5 +1,83 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.12 – 2026-10-18
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.12 gebunden. Ergebnisspalte,
+Kennzahlenleiste und die `aria-live`-Ansage nennen eine ungültige Eingabe, die
+eine Kennzahl offen lässt („Eingabe ungültig. Ungültige Eingabe: …“), statt
+nur „—“ zu zeigen.
+
+## 0.1.11 – 2026-10-18
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.11 gebunden.
+
+- Jedes Feld mit nicht lesbarer Eingabe geht als ungültig in die Rechnung
+  (vorher nur vorbelegte Felder): Ergebnisspalte und Kennzahlenleiste melden
+  „Eingabe ungültig“ in allen abhängigen Größen, statt still mit 0 oder „keine“
+  zu rechnen. Ohne obere Fehlergrenze keine Ampel.
+
+## 0.1.10 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.10 gebunden (Auflagen der
+Nachprüfung: Erkennung der umfassenden Schicht, Plausibilität von Abschnitt F,
+neue Prüfzelle C39, Hinweise). Ohne eigene Änderung an der Komponente.
+
+## 0.1.9 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.9 gebunden. Der Kern rechnet
+nach den Vorgaben der KOM (DelVO und KOM-Leitfaden EGESIF_16-0014-01): Umfang
+bei AE > TE mit |TE − AE|, bei AE = TE nicht anwendbar; Blatt 18 mit dem neuen
+freiwilligen Abschnitt F (Lage der berührten Einheiten). Die Komponente zeigt
+das ohne eigene Änderung; die Ergebnisspalte nennt bei AE = TE „nicht
+bestimmbar (TE = AE, Division durch null)“.
+
+## 0.1.8 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.8 gebunden. Der Kern rechnet
+nach Entscheidung des Inhabers vom 17.10.2026 an zwei Stellen nach der DelVO
+(Genauigkeit bei Ersetzung in Tabelle 2, globale Neuberechnung bei AE ≥ TE);
+die Komponente zeigt das ohne eigene Änderung mit den neuen Hinweisen.
+
+## 0.1.7 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.7 gebunden (DelVO-Abgleich).
+
+- Amtlicher Begriff „Signifikanzschwelle“ auch in Kennzahlenleiste, Skala und
+  Ampel („unter/über der Signifikanzschwelle“).
+- Neue Hinweise zu Abweichungen der Vorlage von der DelVO und die neu
+  gekennzeichneten Auslegungen erscheinen ohne Änderung an der Komponente in
+  Ergebnisspalte, Bericht und Export.
+
+## 0.1.6 – 2026-10-17
+
+Exakt an `@auditcore/sampling-templates-core` 0.1.6 gebunden (Rechensemantik
+und Sollwerte nach Microsoft Excel).
+
+- Vorbelegte Felder (z. B. BV und N aus Blatt 02): Eine nicht lesbare Eingabe
+  („abc“) rechnet nicht mehr still mit dem Wert aus Blatt 02 weiter. Das Feld
+  ist ungültig, abhängige Größen zeigen „—“, Ergebnisspalte und
+  Kennzahlenleiste „Eingabe ungültig“; erst ein geleertes Feld übernimmt
+  wieder die Vorbelegung. Hängt kein Ergebnis am Feld (N in Blatt 03), ist nur
+  das Feld markiert.
+- Summen in 04, 06, 16 bei leerem Formular, unverändert und jetzt genau
+  beschrieben: Die Summen der freiwilligen Gruppen (n_eh, BV_eh, ΣE_eh,
+  Iterationseinheiten) zeigen 0 wie die Vorlage; die Summe der Fehlerquoten
+  der Zufallsschicht (Σ E/BV) ist keine freiwillige Gruppe und zeigt „—“
+  (Angabe fehlt), die Vorlage dort 0.
+- Fußzeile: geprüft gegen die Neuberechnung der Vorlage in Microsoft Excel.
+
+## 0.1.5 – 2026-10-17
+
+Zusammenführung des Arbeitsassistenten (0.1.3/0.1.4 vom 14.10.2026) mit den
+Regeln für freiwillige Eingaben; exakt an `@auditcore/sampling-templates-core`
+0.1.5 gebunden.
+
+- Eine nicht lesbare Eingabe („abc“) meldet auch in den abhängigen Werten, in
+  der Kennzahlenspalte und in der Kennzahlenleiste „Eingabe ungültig“ statt
+  „Angabe fehlt“.
+- Kernpaket 0.1.5: freiwillige Eingaben nach der Vorlage und nach Entscheidung
+  des Inhabers vom 17.10.2026.
+
 ## 0.1.4 – 2026-10-14
 
 Hinweise der Abnahme des Einbaus (noch nicht veröffentlicht); keine Änderung

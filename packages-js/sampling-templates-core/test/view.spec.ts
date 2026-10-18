@@ -76,13 +76,20 @@ describe('Mitlaufende Ergebnisspalte', () => {
       '✔ GFQ und obere Fehlergrenze unter der Schwelle',
     ])
     expect(summary.gauge).toMatchObject({ threshold: 0.5 })
-    expect(nbsp(summary.gauge?.description ?? '')).toBe('Gesamtfehlerquote 0,65 %, obere Fehlergrenze 1,09 %, Wesentlichkeitsschwelle 2,00 %')
+    expect(nbsp(summary.gauge?.description ?? '')).toBe('Gesamtfehlerquote 0,65 %, obere Fehlergrenze 1,09 %, Signifikanzschwelle 2,00 %')
   })
 
-  it('TE ≤ AE: Umfang nicht bestimmbar, mit Grund', () => {
+  it('AE > TE: Umfang nach KOM-Leitfaden mit |TE − AE|, Hinweis neutral', () => {
     const inputs = { ...sheet.sample.inputs, C17: 0.025 }
     const summary = buildSummary(sheet, inputs, sheet.compute(inputs, context), context, t)
-    expect(summary).toMatchObject({ primaryValue: '', primaryNote: 'nicht bestimmbar (TE ≤ AE)', gauge: null })
+    expect(typeof sheet.compute(inputs, context).C21).toBe('number')
+    expect(summary.hints.find((hint) => hint.id === 'anticipated-above-tolerable')).toMatchObject({ tone: 'neutral', source: 'web' })
+  })
+
+  it('TE = AE: Umfang nicht bestimmbar, mit Grund', () => {
+    const inputs = { ...sheet.sample.inputs, C17: 0.02 }
+    const summary = buildSummary(sheet, inputs, sheet.compute(inputs, context), context, t)
+    expect(summary).toMatchObject({ primaryValue: '', primaryNote: 'nicht bestimmbar (TE = AE, Division durch null)', gauge: null })
     expect(summary.hints.map((hint) => hint.tone)).toContain('danger')
   })
 
