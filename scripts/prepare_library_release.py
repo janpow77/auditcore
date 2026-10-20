@@ -114,7 +114,13 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     # keine Bindung.
     "auditcore_dummybundle": frozenset(),
     # Portierung aus dem VBA-Modul modAKB_ToF.bas (lokales Repository ohne Remote).
-    "auditcore_tyfindings": frozenset({("akb-makro", "4799ac6c32cb09cda1575136ea8ce594201df86a")}),
+    # 0.3.0: zusaetzlich modAKB_Regeln.bas (Regelwerk efre.uebersicht_vue) aus demselben Repository.
+    "auditcore_tyfindings": frozenset(
+        {
+            ("akb-makro", "4799ac6c32cb09cda1575136ea8ce594201df86a"),
+            ("akb-makro", "2a7d4ba40f466abdf341f67188589714bf9473d1"),
+        }
+    ),
     # Neuimplementierung; Ausgangspunkt ci/runner im selben Repository.
     "auditcore_runner": frozenset(
         {("janpow77/auditcore", "7b71f1c13cda06bd375e50ad8f909618ec09986c")}
