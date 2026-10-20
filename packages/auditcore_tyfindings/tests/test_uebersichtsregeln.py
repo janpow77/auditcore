@@ -129,6 +129,11 @@ def _dokument() -> dict[str, object]:
         (lambda d: d["regeln"][0].update(stichwoerter=[]), "weder Stichwörter"),
         (lambda d: d["regeln"][1].update(wert=None), "Schwelle ohne"),
         (lambda d: d["regeln"][0].update(bereich="NEU"), "Bereich ungültig"),
+        (lambda d: d["regeln"][0].update(stichwoerter="test"), "Liste nichtleerer Texte"),
+        (lambda d: d["regeln"][0].update(stichwoerter=[" "]), "Liste nichtleerer Texte"),
+        (lambda d: d["regeln"][0].update(quelle=5), "muss ein Text sein"),
+        (lambda d: d["regeln"].append("keine Regel"), "Objekt erwartet"),
+        (lambda d: d["regeln"][0].update(name=" "), "Name fehlt"),
     ],
 )
 def test_fehlerhafte_regelwerke(aenderung: object, meldung: str) -> None:

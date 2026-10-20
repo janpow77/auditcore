@@ -211,8 +211,6 @@ def _matches(regel: OverviewRule, text: str, woerter: str, kennziffer: str) -> b
         return False
     if regel.stichwoerter and not _any_matches(text, woerter, regel.stichwoerter):
         return False
-    if not regel.stichwoerter and not regel.kennziffern:
-        return False
     if regel.zusatz and not _any_matches(text, woerter, regel.zusatz):
         return False
     return not _any_matches(text, woerter, regel.ausschluss)
