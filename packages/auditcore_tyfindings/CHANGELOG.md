@@ -1,5 +1,28 @@
 # Changelog – auditcore_tyfindings
 
+## 0.3.0 – 2026-10-20 – Regelwerk für den Abgleich der Übersicht über die Verwaltungsüberprüfungen
+
+- Neues Regelwerk `efre.uebersicht_vue` 2026.10.1 (Status `APPROVED`,
+  Fingerabdruck `6398d3ebfa8edf6de9887aedda7077f7c48102d2416c6cb25a1a23f40c9754b5`):
+  Fallgruppen der Kürzungsbeschreibungen, Merkmale (Unregelmäßigkeit, Betrug,
+  Vergabe außerhalb der Kategorie 1, nichtfinanziell mit finanziellem
+  Wortlaut, noch ausstehende Abhilfe, offene Angaben der Zwischengeschalteten
+  Stelle), Themen nichtfinanzieller Feststellungen und Schwellen (34 Regeln).
+  Portiert aus `modAKB_Regeln.bas` (AKB-Auswertung 1.8.1, `RegelnStandard`),
+  von der Prüfbehörde am 20.10.2026 fachlich bestätigt; Schwellen nach
+  Artikel 2 Nr. 33 VO (EU) 2021/1060 vorgegeben am 19.10.2026. Regeln mit
+  Gegenstück im Profil `efre.tof_2021_2027` nennen es in `quelle`.
+- `load_overview_rules`, `default_rule_set`, `rule_set_from_dict`,
+  `match_rule`, `rules_of_area`, `threshold`; Datentypen `OverviewRule` und
+  `OverviewRuleSet`. Abgleichsregeln wie in VBA: Stichwörter als
+  Teilzeichenfolge, `[wort]` als ganzes Wort, Zusatz- und Ausschlusswörter,
+  Kennziffern exakt oder mit Stern (`1.*`), erste zutreffende Regel gewinnt.
+- `tools/vba_regeln.py` erzeugt und prüft das Regelwerk aus dem VBA-Modul;
+  `tools/vba_profil.py` liest dafür zusätzlich Konstanten und Dezimalzahlen
+  (Ergebnis für `modAKB_ToF.bas` unverändert).
+- Paritätstest gegen `modAKB_Regeln.bas` (lokal über
+  `AUDITCORE_TYFINDINGS_REGELN_BAS`): 34 Regeln ohne Abweichung.
+
 ## 0.2.0 – 2026-10-05 – deutsche Kategoriebezeichnungen als Standard
 
 - `STANDARDPROFIL` ist jetzt `efre.tof_2021_2027` 2026.10.2 (Fingerabdruck

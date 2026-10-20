@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_tyfindings",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "contract": "auditcore_tyfindings/1",
   "classification": "LEGACY_PORT",
   "sources": [
@@ -10,8 +10,27 @@
       "commit": "4799ac6c32cb09cda1575136ea8ce594201df86a",
       "path": "src/modAKB_ToF.bas",
       "sha256": "4aef164d4304acf062b9691b08512cb5f4e1733a9222e01eb2b75e2152c2f0a9",
-      "symbols": ["ToFEintrag", "ToFStandard", "ToFFormalStandard", "ToFZuordnen", "ToFFormalZuordnen", "ToFKategorie"],
+      "symbols": [
+        "ToFEintrag",
+        "ToFStandard",
+        "ToFFormalStandard",
+        "ToFZuordnen",
+        "ToFFormalZuordnen",
+        "ToFKategorie"
+      ],
       "note": "Lokales Repository ohne Remote; Katalog und Regeln mit tools/vba_profil.py aus den VBA-Ausdrücken erzeugt (ChrW in echte Umlaute zurückgewandelt). Die deutschen Kategoriebezeichnungen des Profils 2026.10.2 entsprechen ToFKategorieDe in modAKB_ToF.bas (fachlich freigegeben 05.10.2026)."
+    },
+    {
+      "repository": "akb-makro",
+      "commit": "2a7d4ba40f466abdf341f67188589714bf9473d1",
+      "path": "src/modAKB_Regeln.bas",
+      "sha256": "e16a412929c57e905e4717e54a9e679b36f123b045209edd0a0dde7d4c61bcf0",
+      "symbols": [
+        "RegelnStandard",
+        "RegelTreffer",
+        "RegelWert"
+      ],
+      "note": "Regelwerk efre.uebersicht_vue 2026.10.1 mit tools/vba_regeln.py aus RegelnStandard erzeugt (#-Umlautkürzel und Konstanten aufgelöst); fachlich bestätigt von der Prüfbehörde am 20.10.2026."
     }
   ],
   "methodology": [
@@ -25,7 +44,11 @@
   "characterization": {
     "kind": "legacy_output_parity",
     "legacy_parity": "PASS_LOCAL_REAL_DATA",
-    "cases": {"tblBelege": 574, "tblMaengel": 46, "deviations": 0},
+    "cases": {
+      "tblBelege": 574,
+      "tblMaengel": 46,
+      "deviations": 0
+    },
     "run": "Ergebnismappe des VBA-Laufs vom 04.10.2026 (AKB 1.5), nur lokal über AUDITCORE_TYFINDINGS_PARITY_XLSX; keine Inhalte oder Fixtures im Repository",
     "tests": "packages/auditcore_tyfindings/tests"
   },
