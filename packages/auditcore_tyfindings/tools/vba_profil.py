@@ -25,10 +25,10 @@ PROFIL = (
     / "src/auditcore_tyfindings/profile_data/efre.tof_2021_2027-2026.10.1.json"
 )
 _TOKEN = re.compile(
-    r'\s*(?:(?P<text>"(?:[^"]|"")*")|(?P<zahl>\d+)|(?P<name>[A-Za-z]+)|(?P<zeichen>[(),&]))'
+    r'\s*(?:(?P<text>"(?:[^"]|"")*")|(?P<zahl>\d+(?:\.\d+)?)|(?P<name>[A-Za-z][A-Za-z0-9_]*)|(?P<zeichen>[(),&]))'
 )
 
-Wert = str | int | list["Wert"]
+Wert = str | int | float | list["Wert"]
 
 
 def _tokens(ausdruck: str) -> list[tuple[str, str]]:
@@ -47,9 +47,10 @@ def _tokens(ausdruck: str) -> list[tuple[str, str]]:
 class _Parser:
     """Rekursiver Abstieg über ``ausdruck := term ('&' term)*``."""
 
-    def __init__(self, ausdruck: str) -> None:
+    def __init__(self, ausdruck: str, konstanten: dict[str, str] | None = None) -> None:
         self.tokens = _tokens(ausdruck)
         self.i = 0
+        self.konstanten = konstanten or {}
 
     def _nimm(self, erwartet: str | None = None) -> tuple[str, str]:
         art, wert = self.tokens[self.i]
@@ -73,7 +74,9 @@ class _Parser:
         if art == "text":
             return wert[1:-1].replace('""', '"')
         if art == "zahl":
-            return int(wert)
+            return float(wert) if "." in wert else int(wert)
+        if wert in self.konstanten:
+            return self.konstanten[wert]
         if wert == "(":
             innen = self.ausdruck()
             self._nimm(")")

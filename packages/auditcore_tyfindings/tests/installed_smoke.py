@@ -4,11 +4,14 @@ from importlib.metadata import distribution
 from importlib.util import find_spec
 
 from auditcore_tyfindings import (
+    DEFAULT_RULE_SET,
     STANDARDPROFIL,
     formal_zuordnen,
     katalog,
     kennziffer_aus_kuerzungsgrund,
+    load_overview_rules,
     load_profile,
+    match_rule,
     zuordnen,
 )
 
@@ -16,7 +19,7 @@ from auditcore_tyfindings import (
 def main() -> None:
     """Catalogue, error-code mapping, keyword rules and profile fingerprint."""
     package = distribution("auditcore_tyfindings")
-    assert package.version == "0.2.0"
+    assert package.version == "0.3.0"
     assert [r for r in package.requires or [] if "extra ==" not in r] == ["auditcore_common==0.2.1"]
     assert find_spec("auditcore") is None
     assert len(katalog()) == 86
@@ -28,6 +31,9 @@ def main() -> None:
     assert zuordnen("1.10").zuordnungsweg == "nicht zugeordnet"
     assert formal_zuordnen("Logo fehlt").tof_unterkategorie == "8.1"
     assert kennziffer_aus_kuerzungsgrund("0") is None
+    regeln = load_overview_rules(*DEFAULT_RULE_SET)
+    assert regeln.fingerprint == "6398d3ebfa8edf6de9887aedda7077f7c48102d2416c6cb25a1a23f40c9754b5"
+    assert match_rule("UR", "Kürzung, UR", regelwerk=regeln) is not None
     print("PASS: installed auditcore_tyfindings")
 
 

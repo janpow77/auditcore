@@ -6,7 +6,10 @@ Types of Findings 2021–2027 für Feststellungen der EFRE-Verwaltungsprüfungen
 
 Gemeinsames Modul für FlowInvoice (VerwK) und den Dummydaten-Generator; es
 ersetzt die bisher nur in VBA vorhandene Logik des Moduls `modAKB_ToF` der
-AKB-Auswertung. Nicht enthalten sind das Einlesen von Prüfberichten,
+AKB-Auswertung. Ab 0.3.0 enthält es außerdem das Regelwerk
+`efre.uebersicht_vue` für den Abgleich der Übersicht über die
+Verwaltungsüberprüfungen (Fallgruppen, Merkmale, Schwellen; aus
+`modAKB_Regeln`, siehe [docs/regelwerk-vue.md](docs/regelwerk-vue.md)). Nicht enthalten sind das Einlesen von Prüfberichten,
 Beträge, Hochrechnung und Fehlerquoten sowie Feststellungen der Prüfbehörde.
 
 ## Installation
@@ -16,7 +19,7 @@ Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt);
 dem ersten Release, das 0.1.0 enthält:
 
 ```bash
-python -m pip install 'auditcore_tyfindings==0.1.0' \
+python -m pip install 'auditcore_tyfindings==0.3.0' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
@@ -25,7 +28,7 @@ der Veröffentlichung im Index unter
 `https://janpow77.github.io/auditcore/simple/auditcore-tyfindings/`):
 
 ```text
-auditcore_tyfindings @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_tyfindings-0.1.0-py3-none-any.whl#sha256=<sha256>
+auditcore_tyfindings @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_tyfindings-0.3.0-py3-none-any.whl#sha256=<sha256>
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle des Releases
@@ -60,6 +63,17 @@ assert formal_zuordnen("Förderhinweis auf der Website fehlt").tof_unterkategori
 assert kategorie("4.16") == "4"
 ```
 
+Regelwerk für den Abgleich der Übersicht (synthetische Texte):
+
+```python
+from auditcore_tyfindings import match_rule, threshold
+
+assert match_rule("UR", "Kürzung der Kosten, UR") is not None
+assert match_rule("UR", "Kürzung, stellt keine UR dar") is None
+assert match_rule("VERGABE", "Vergabe nicht dokumentiert", "1.3") is None  # Kategorie 1 ausgenommen
+assert threshold("SYS_VORHABEN_MEHR_ALS") == 5.0
+```
+
 ```pycon
 >>> zuordnen("8.3")
 Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zugeordnet', gold_plating=False, regel_id='kennziffer:8.3')
@@ -70,12 +84,13 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_tyfindings.__all__` (27):
+Öffentliche Namen aus `auditcore_tyfindings.__all__` (36):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
 | `OHNE_KENNZIFFER` | Konstante | Schlüssel der Kennziffertabelle für Belege ohne Fehlerkennziffer. | `modell` |
 | `STANDARDPROFIL` | Konstante | Profil, das :func:`auditcore_tyfindings.zuordnen` ohne ``profil`` verwendet. Ein neues Profil ändert diesen Wert nur mit einer neuen Paketversion. | `profil` |
+| `DEFAULT_RULE_SET` | Konstante | – | `uebersichtsregeln` |
 | `WEG_KENNZIFFER` | Konstante | Zuordnungsweg „Kennziffer“: Unterkategorie aus der Kennziffertabelle. | `modell` |
 | `WEG_NICHT_ZUGEORDNET` | Konstante | Zuordnungsweg und VBA-Anzeigetext, wenn keine Unterkategorie gefunden wurde. | `modell` |
 | `WEG_SCHLUESSELWORT` | Konstante | Zuordnungsweg „Schlüsselwort“: Treffer einer Schlüsselwort- oder Formalregel. | `modell` |
@@ -88,6 +103,8 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
 | `ToFEintrag` | Datenklasse | Eine Unterkategorie der Kommissionstabelle „Types of findings 2021–2027“. | `modell` |
 | `ToFProfil` | Datenklasse | Versioniertes Profil: Katalog, Kennziffertabelle und Formalregeln mit Fingerabdruck. | `modell` |
 | `TyFindingsFehler` | Ausnahme | Basisklasse aller Fehler der Bibliothek. | `errors` |
+| `OverviewRule` | Datenklasse | Eine Regel eines Bereichs; ``wert`` nur im Bereich ``SCHWELLE``. | `uebersichtsregeln` |
+| `OverviewRuleSet` | Datenklasse | Versioniertes Regelwerk mit Fingerabdruck; Regeln in fachlicher Reihenfolge. | `uebersichtsregeln` |
 | `Zuordnung` | Datenklasse | Ergebnis einer Zuordnung; ``tof_unterkategorie`` ist ``None``, wenn nicht zugeordnet. | `modell` |
 | `formal_zuordnen` | Funktion | ToF-Unterkategorie eines nichtfinanziellen Mangels über die Formalregeln. | `zuordnung` |
 | `katalog` | Funktion | Alle Unterkategorien der Kommissionstabelle in Katalogreihenfolge. | `zuordnung` |
@@ -97,8 +114,14 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
 | `kuerzungsgrund` | Funktion | Eintrag zum Schlüssel (exakter Text nach Abschneiden der Ränder) oder ``None``. | `kuerzungsgrund` |
 | `load_kuerzungsgruende` | Funktion | Eine ausdrücklich benannte, verpackte Tabellenversion laden. | `kuerzungsgrund` |
 | `load_profile` | Funktion | Ein ausdrücklich benanntes, verpacktes Profil in einer Version laden. | `profil` |
+| `load_overview_rules` | Funktion | Eine ausdrücklich benannte, verpackte Regelwerksversion laden. | `uebersichtsregeln` |
 | `profil_aus_dict` | Funktion | Profildokument prüfen und als :class:`ToFProfil` liefern. | `profil` |
+| `match_rule` | Funktion | Erste zutreffende Regel des Bereichs für Text und Kennziffer, sonst ``None``. | `uebersichtsregeln` |
+| `rules_of_area` | Funktion | Alle Regeln eines Bereichs in fachlicher Reihenfolge. | `uebersichtsregeln` |
+| `rule_set_from_dict` | Funktion | Regelwerksdokument prüfen und als :class:`OverviewRuleSet` liefern. | `uebersichtsregeln` |
+| `threshold` | Funktion | Wert der Schwelle ``name`` (Groß- und Kleinschreibung egal). | `uebersichtsregeln` |
 | `standardprofil` | Funktion | Das Profil :data:`~auditcore_tyfindings.profil.STANDARDPROFIL` (einmal geladen). | `zuordnung` |
+| `default_rule_set` | Funktion | Das Regelwerk :data:`DEFAULT_RULE_SET` (einmal geladen). | `uebersichtsregeln` |
 | `verfuegbare_profile` | Funktion | Verpackte ``(id, version)``-Paare. | `profil` |
 | `zuordnen` | Funktion | ToF-Unterkategorie einer Belegkürzung aus Fehlerkennziffer und Beschreibung. | `zuordnung` |
 
@@ -112,6 +135,8 @@ Zuordnung(tof_unterkategorie=None, tof_kategorie=None, zuordnungsweg='nicht zuge
 | `auditcore_tyfindings.modell` | Unveränderliche Datenmodelle: Katalog, Regeln, Profil und Ergebnis einer Zuordnung. |
 | `auditcore_tyfindings.profil` | Versionierte ToF-Profile laden, prüfen und mit Fingerabdruck versehen. |
 | `auditcore_tyfindings.profile_data` | Packaged ToF profiles (``<id>-<version>.json``). |
+| `auditcore_tyfindings.uebersichtsregeln` | Versioniertes Regelwerk für den Abgleich der Übersicht über die Verwaltungsüberprüfungen. |
+| `auditcore_tyfindings.uebersichtsregeln_data` | Packaged rule sets for reviewing the overview of management verifications. |
 | `auditcore_tyfindings.zuordnung` | Zuordnung von Fehlerkennziffern und nichtfinanziellen Mängeln zu ToF-Unterkategorien. |
 <!-- api-overview:end -->
 
