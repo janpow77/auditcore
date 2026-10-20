@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- `auditcore_tyfindings` 0.3.0: neues Regelwerk `efre.uebersicht_vue`
+  2026.10.1 für den Abgleich der Übersicht über die Verwaltungsüberprüfungen
+  (Fallgruppen der Kürzungsbeschreibungen, Merkmale für Unregelmäßigkeit,
+  Betrug, Vergabe, ausstehende Abhilfe und offene Angaben, Schwellen nach
+  Artikel 2 Nr. 33), portiert aus `modAKB_Regeln.bas` der AKB-Auswertung 1.8.1
+  und von der Prüfbehörde am 20.10.2026 fachlich bestätigt; neu
+  `match_rule`, `threshold`, `load_overview_rules` und `tools/vba_regeln.py`.
+  Profil `efre.tof_2021_2027` und Zuordnungsergebnisse unverändert.
 - Release v0.14.2 (18.10.2026) veröffentlicht und in `docs/deployment/package-feed.md`
   als aktueller Stand dokumentiert: `@auditcore/sampling-templates-core` 0.1.12 und
   `@auditcore/sampling-templates-vue` 0.1.12, auf npmjs.org veröffentlicht. Die

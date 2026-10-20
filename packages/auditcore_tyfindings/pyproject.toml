@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_tyfindings"
-version = "0.2.0"
-description = "Types of Findings 2021-2027 for EFRE management verifications: versioned catalogue and mapping of error codes, keyword rules and gold-plating flags"
+version = "0.3.0"
+description = "Types of Findings 2021-2027 for EFRE management verifications: versioned catalogue and mapping of error codes, keyword rules and gold-plating flags; rule set for reviewing the overview of management verifications"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -28,7 +28,7 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-auditcore_tyfindings = ["py.typed", "provenance.json", "profile_data/*.json", "kuerzungsgrund_data/*.json"]
+auditcore_tyfindings = ["py.typed", "provenance.json", "profile_data/*.json", "kuerzungsgrund_data/*.json", "uebersichtsregeln_data/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
