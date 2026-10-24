@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- CI-Lock `requirements/ci.lock`: certifi 2026.7.22 → 2026.10.23
+  (PYSEC-2026-4320), filelock 4.0.4 → 4.2.4 (CVE-2026-112940, CVE-2026-112913,
+  CVE-2026-112907) und setuptools 84.0.0 → 84.2.1 (GHSA-xmj3-9gf7-h52w)
+  angehoben, gezielt mit `uv pip compile --upgrade-package`; alle übrigen Pins
+  unverändert. `pip-audit` und AC-DEP-001 im Quality-Job wieder ohne Befund.
+  Keine Paketänderung, keine neuen Versionen.
 - `auditcore_llm_client` 0.2.0: zurückgestellte Hintergrundarbeit des
   Flow-Agents (HTTP 429, `X-Flow-Agent-Error: hintergrund-zurueckgestellt`,
   Vertrag 1.15) als eigener Fehlertyp `BackgroundDeferredError`
