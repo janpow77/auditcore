@@ -7,6 +7,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 
 from auditcore_llm_client.errors import (
+    BackgroundDeferredError,
     EgressDeniedError,
     InvalidResponseError,
     LlmClientError,
@@ -71,15 +72,17 @@ def retry_after_seconds(value: str) -> float | None:
     return max(0.0, seconds)
 
 
-#: ``X-Flow-Agent-Error`` codes (flow-agent #56) and the status they must come with.
+#: ``X-Flow-Agent-Error`` codes (flow-agent #56, contract 1.15) and the status they must
+#: come with. ``hintergrund-zurueckgestellt`` has no text fallback (header since 1.15).
 POLICY_ERROR_CODES: dict[str, tuple[int, type[LlmClientError]]] = {
     "invalid-sensitivity": (400, SensitivityRejectedError),
     "egress-denied": (403, EgressDeniedError),
+    "hintergrund-zurueckgestellt": (429, BackgroundDeferredError),
 }
 
 
 def _policy_error_type(received: ReceivedResponse) -> type[LlmClientError] | None:
-    """Flow-Agent policy answers: stable header code first, detail text as fallback.
+    """Flow-Agent policy and deferral answers: header code first, detail text as fallback.
 
     A header code only counts together with its status; a present but
     non-matching header disables the text fallback (newer gateway, other error).
@@ -101,8 +104,8 @@ def error_for_status(
 ) -> LlmClientError:
     """HTTP error with the first 200 body characters, redacted.
 
-    In Flow-Agent mode sensitivity (400) and egress (403) rejections get their
-    own, non-retryable error types.
+    In Flow-Agent mode sensitivity (400) and egress (403) rejections and
+    postponed background work (429) get their own, non-retried error types.
     """
     body = received.text[:ERROR_BODY_CHARS]
     error_type = (_policy_error_type(received) if flow_agent else None) or RouterHttpError

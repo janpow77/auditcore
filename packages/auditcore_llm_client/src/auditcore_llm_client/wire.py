@@ -70,6 +70,8 @@ def request_headers(config: ClientConfig, mode: HeaderMode) -> dict[str, str]:
             headers["X-Api-Key"] = config.api_key.reveal()
     if config.sensitivity is not None:
         headers["X-Flow-Sensitivity"] = config.sensitivity.value
+    if config.work is not None:
+        headers["X-Flow-Arbeit"] = config.work.value
     headers.update(config.extra_headers)
     if mode is HeaderMode.JSON:
         headers["Content-Type"] = "application/json"

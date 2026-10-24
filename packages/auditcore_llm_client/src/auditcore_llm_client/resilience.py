@@ -16,7 +16,8 @@ from enum import StrEnum
 
 from auditcore_llm_client.errors import (
     AVAILABILITY_KINDS,
-    POLICY_KINDS,
+    DEFERRED_KINDS,
+    UNCOUNTED_KINDS,
     CircuitOpenError,
     ErrorKind,
     LlmClientError,
@@ -45,8 +46,11 @@ class RetryPolicy:
             raise ValueError("Ungültige Wiederholungsstrategie.")
 
     def should_retry(self, error: LlmClientError, attempt: int) -> bool:
-        """True if ``error`` after ``attempt`` (1-based) justifies another try."""
-        if attempt >= self.max_attempts:
+        """True if ``error`` after ``attempt`` (1-based) justifies another try.
+
+        Deferred background work is never retried here; the caller decides.
+        """
+        if attempt >= self.max_attempts or error.kind in DEFERRED_KINDS:
             return False
         if error.kind is ErrorKind.HTTP_STATUS:
             return error.status_code in self.retry_status
@@ -136,9 +140,9 @@ class CircuitBreaker:
     def record_failure(self, error: LlmClientError) -> None:
         """Count an outage; a client error (4xx) proves the gateway answers and closes it.
 
-        Policy rejections (sensitivity, egress) change nothing.
+        Policy rejections (sensitivity, egress) and deferred background work change nothing.
         """
-        if error.kind in POLICY_KINDS:
+        if error.kind in UNCOUNTED_KINDS:
             return
         if not counts_as_outage(error):
             self.record_success()
