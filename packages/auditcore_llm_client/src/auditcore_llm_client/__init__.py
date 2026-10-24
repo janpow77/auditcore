@@ -19,6 +19,7 @@ from auditcore_llm_client.config import (
     SecretValue,
     Sensitivity,
     Timeouts,
+    WorkType,
     unwrap_secret,
     validate_base_url,
 )
@@ -31,6 +32,7 @@ from auditcore_llm_client.environment import (
 )
 from auditcore_llm_client.errors import (
     AiRouterError,
+    BackgroundDeferredError,
     CircuitOpenError,
     ConfigurationError,
     EgressDeniedError,
@@ -81,7 +83,7 @@ if TYPE_CHECKING:
     from auditcore_llm_client.async_client import AsyncLlmClient
     from auditcore_llm_client.sync_client import LlmClient
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 
 __all__ = [
     "AUDIT_DESIGNER",
@@ -93,6 +95,7 @@ __all__ = [
     "AiRouterError",
     "async_safe_call",
     "AsyncLlmClient",
+    "BackgroundDeferredError",
     "BreakerPolicy",
     "BreakerState",
     "CircuitBreaker",
@@ -147,6 +150,7 @@ __all__ = [
     "unwrap_secret",
     "UsageRecord",
     "validate_base_url",
+    "WorkType",
 ]
 
 

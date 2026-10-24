@@ -97,6 +97,18 @@ class Sensitivity(StrEnum):
     RESTRICTED = "restricted"
 
 
+class WorkType(StrEnum):
+    """Value of ``X-Flow-Arbeit`` (Flow-Agent contract 1.15): who waits for the answer.
+
+    ``BACKGROUND`` lets the gateway place the request on a machine that is free
+    for background work or postpone it (:class:`BackgroundDeferredError`). Which
+    machines, time windows and priorities apply is gateway configuration only.
+    """
+
+    INTERACTIVE = "interaktiv"
+    BACKGROUND = "hintergrund"
+
+
 @dataclass(frozen=True)
 class Timeouts:
     """Per-operation timeouts in seconds (defaults of all legacy clients)."""
@@ -146,6 +158,8 @@ class ClientConfig:
     models: ModelDefaults | None = None
     quality: Quality = Quality.HIGH
     sensitivity: Sensitivity | None = None
+    #: ``X-Flow-Arbeit``; ``None`` sends no header (the gateway treats it as interactive).
+    work: WorkType | None = None
     #: Ollama ``keep_alive`` of the audit_designer ``/api/chat`` route (``None`` = profile).
     keep_alive: str | None = None
     timeouts: Timeouts = field(default_factory=Timeouts)

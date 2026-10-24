@@ -22,6 +22,7 @@ Statuscodes ebenfalls, soweit unten nicht anders vermerkt.
 | B11 | Leere Eingabe bei `call_embed`/`call_rerank`: flowinvoice liefert `model=""`, audit_designer den Standardmodellnamen. | Immer der wirksame Modellname. | Vereinheitlicht, ohne Request. |
 | B12 | Keine Wiederholungen, kein Circuit-Breaker im Client (flowinvoice: Breaker nur im Ollama-Provider, 3 Fehler/180 s). | `RetryPolicy` (Standard: 1 Versuch = Altverhalten) und `BreakerPolicy` (Standard 3/180 s) als Opt-in. | Funktionen aus dem Auftrag, ohne das Standardverhalten zu ändern. |
 | B13 | Flow-Agent-Ablehnungen (400 Sensitivität, 403 Egress) sind gewöhnliche `AiRouterError`s. | `SensitivityRejectedError`/`EgressDeniedError`; nie wiederholt, nicht im Breaker/Health gezählt. | Richtlinienentscheidung, keine Störung (flow-agent `1d49ec3c`). |
+| B14 | Zurückgestellte Hintergrundarbeit (HTTP 429, `X-Flow-Agent-Error: hintergrund-zurueckgestellt`) ist ein gewöhnlicher `AiRouterError`; ein gewöhnliches 429 würde wiederholt und im Breaker/Health als Ausfall gezählt. | `BackgroundDeferredError` (`deferred`) mit `retry_after`; nie wiederholt, nicht im Breaker/Health gezählt. `ClientConfig.work` setzt `X-Flow-Arbeit`. | `deferred` verbraucht keinen Versuch und ist kein Ausfall (flow-agent Vertrag 1.15, `fbfa3ef0`). |
 
 Nicht übernommen: `Redis ollama:mode=fallback` (flowinvoice), statische
 Modellliste `get_available_models` (flowinvoice), Adressraterei (cockpit).
