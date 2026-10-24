@@ -8,7 +8,12 @@ from dataclasses import dataclass, replace
 from typing import Generic, TypeVar
 
 from auditcore_llm_client.config import ClientConfig, Mode
-from auditcore_llm_client.errors import POLICY_KINDS, ErrorKind, LlmClientError
+from auditcore_llm_client.errors import (
+    DEFERRED_KINDS,
+    UNCOUNTED_KINDS,
+    ErrorKind,
+    LlmClientError,
+)
 from auditcore_llm_client.health import RouterHealth
 from auditcore_llm_client.received import ReceivedResponse, error_for_status
 from auditcore_llm_client.resilience import CircuitBreaker
@@ -82,9 +87,17 @@ class Resilience:
     def failed(self, error: LlmClientError) -> None:
         """Record a failed call (an open breaker is not counted as another outage).
 
-        Flow-Agent policy rejections are no outage: neither breaker nor health count them.
+        Flow-Agent policy rejections and deferred background work are no outage:
+        neither breaker nor health count them.
         """
-        if error.kind in POLICY_KINDS:
+        if error.kind in DEFERRED_KINDS:
+            log.info(
+                "LLM-Aufruf %s zurückgestellt, erneut in %s s",
+                error.endpoint,
+                error.retry_after,
+            )
+            return
+        if error.kind in UNCOUNTED_KINDS:
             log.warning("LLM-Aufruf %s abgelehnt: %s", error.endpoint, error.kind.value)
             return
         if self.breaker is not None and error.kind is not ErrorKind.CIRCUIT_OPEN:
