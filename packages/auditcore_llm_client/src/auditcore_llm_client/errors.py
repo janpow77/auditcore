@@ -27,12 +27,17 @@ class ErrorKind(StrEnum):
     UNSUPPORTED = "unsupported"
     SENSITIVITY_REJECTED = "sensitivity_rejected"
     EGRESS_DENIED = "egress_denied"
+    DEFERRED = "deferred"
 
 
 #: Kinds that indicate the router/gateway itself is unavailable.
 AVAILABILITY_KINDS = frozenset({ErrorKind.UNREACHABLE, ErrorKind.TIMEOUT})
 #: Policy decisions of the Flow-Agent: never retried, not counted by breaker or health.
 POLICY_KINDS = frozenset({ErrorKind.SENSITIVITY_REJECTED, ErrorKind.EGRESS_DENIED})
+#: Background work postponed by the Flow-Agent: no failure, consumes no attempt, no outage.
+DEFERRED_KINDS = frozenset({ErrorKind.DEFERRED})
+#: Kinds that neither the circuit breaker nor the health tracking count.
+UNCOUNTED_KINDS = POLICY_KINDS | DEFERRED_KINDS
 
 
 class LlmClientError(RuntimeError):
@@ -127,6 +132,18 @@ class EgressDeniedError(LlmClientError):
     """
 
     kind = ErrorKind.EGRESS_DENIED
+
+
+class BackgroundDeferredError(LlmClientError):
+    """Flow-Agent HTTP 429: background work postponed, try again after ``retry_after``.
+
+    No machine was free for background work (``X-Flow-Arbeit: hintergrund``).
+    This is ``deferred``, not a failure: the client does not retry it, the
+    circuit breaker and the health tracking do not count it. The caller decides
+    when to try again; ``retry_after`` carries the gateway's ``Retry-After``.
+    """
+
+    kind = ErrorKind.DEFERRED
 
 
 class UnsupportedOperationError(LlmClientError):

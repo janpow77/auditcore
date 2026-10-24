@@ -112,7 +112,7 @@ Score-Anzahl), `OcrResult`, `ModelInfo`, `StreamEvent`.
 
 Header wie in den Apps: ai-router `X-App-Id` und optional `X-Api-Key`; Flow-Agent
 `Authorization: Bearer <App-Schlüssel>`; optional `X-Flow-Sensitivity`
-(`ClientConfig.sensitivity`) und weitere, nicht authentisierende Header
+(`ClientConfig.sensitivity`), `X-Flow-Arbeit` (`ClientConfig.work`) und weitere, nicht authentisierende Header
 (`extra_headers`).
 
 #### Sensitivität (Flow-Agent)
@@ -127,6 +127,36 @@ Upstream-Aufruf). Erkannt werden beide am Response-Header `X-Flow-Agent-Error`
 (`invalid-sensitivity`, `egress-denied`), bei älteren Gateways am `detail`-Text.
 Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
 nicht im Circuit-Breaker und nicht im Health-Zähler.
+
+#### Hintergrundarbeit (Flow-Agent)
+
+`ClientConfig.work` setzt `X-Flow-Arbeit` (`WorkType.INTERACTIVE` =
+`interaktiv`, `WorkType.BACKGROUND` = `hintergrund`); ohne Angabe wird keine
+Kopfzeile gesendet, das Gateway behandelt die Anfrage dann als interaktiv. Für
+Hintergrundarbeit legt das Gateway die Anfrage auf einen gerade freien Rechner
+oder stellt sie zurück: HTTP 429 mit `Retry-After` und
+`X-Flow-Agent-Error: hintergrund-zurueckgestellt` (Vertrag 1.15). Der Client
+macht daraus `BackgroundDeferredError` (`kind` `deferred`, `retry_after` in
+Sekunden). Das ist **kein Fehlschlag**: nicht wiederholt (auch nicht mit
+`RetryPolicy`), nicht im Circuit-Breaker und nicht im Health-Zähler; der
+Aufrufer entscheidet, wann er es erneut versucht, etwa als Celery-Retry mit
+`countdown=error.retry_after`. Welche Rechner, Zeitfenster und Rangfolgen
+gelten, steht allein in der Konfiguration des Gateways, nicht im Client. Ein
+gewöhnliches 429 ohne diesen Code bleibt ein `RouterHttpError` mit den
+bisherigen Wiederholungs- und Breaker-Regeln; im ai-router-Modus wird der Code
+nicht ausgewertet.
+
+```python no-run
+import dataclasses
+from auditcore_llm_client import BackgroundDeferredError, LlmClient, WorkType
+
+hintergrund = dataclasses.replace(config, work=WorkType.BACKGROUND)
+with LlmClient(hintergrund) as client:
+    try:
+        vektoren = client.embed(texte).embeddings
+    except BackgroundDeferredError as zurueckgestellt:
+        erneut_einplanen(zurueckgestellt.retry_after)  # verbraucht keinen Versuch
+```
 
 #### Denken/Reasoning
 
@@ -144,7 +174,8 @@ Alle Fehler sind `LlmClientError` (Alias `AiRouterError`) mit `kind`,
 `status_code`, `endpoint`, `retry_after`: `ConfigurationError`,
 `RouterUnavailableError`, `RouterTimeoutError`, `RouterHttpError`,
 `InvalidResponseError`, `CircuitOpenError`, `NotAssignedError`,
-`UnsupportedOperationError`. `safe_call`/`async_safe_call` liefern
+`UnsupportedOperationError`, `SensitivityRejectedError`, `EgressDeniedError`,
+`BackgroundDeferredError`. `safe_call`/`async_safe_call` liefern
 `(ergebnis, None)` oder `(None, geschwärzte Meldung)`.
 
 **Schlüssel erscheinen nie** in Meldungen, Logs, Health-Einträgen oder `repr`:
@@ -182,13 +213,13 @@ config = dataclasses.replace(
 )
 ```
 
-Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
+Wiederholt werden 429/502/503/504 (außer zurückgestellter Hintergrundarbeit) und Verbindungsfehler (exponentiell 0,5 s …
 8 s, `Retry-After` wird beachtet), Zeitüberschreitungen nur mit
 `retry_timeout=True`. Der Breaker öffnet nach Ausfällen (Verbindung, Timeout,
-5xx, 429) und lässt nach `reset_timeout` genau einen Probeaufruf durch.
+5xx, 429 ohne Zurückstellung) und lässt nach `reset_timeout` genau einen Probeaufruf durch.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_llm_client.__all__` (63):
+Öffentliche Namen aus `auditcore_llm_client.__all__` (65):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -201,6 +232,7 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `AiRouterError` | Wert | Migration alias for the name used in audit_designer, flowinvoice and audit-portal. | `errors` |
 | `async_safe_call` | Funktion | Async variant of :func:`safe_call`. | `health` |
 | `AsyncLlmClient` | Klasse | ai-router/Flow-Agent client with async API. | `async_client` |
+| `BackgroundDeferredError` | Ausnahme | Flow-Agent HTTP 429: background work postponed, try again after ``retry_after``. | `errors` |
 | `BreakerPolicy` | Datenklasse | Circuit breaker thresholds (legacy flowinvoice: 3 failures, 180 s). | `resilience` |
 | `BreakerState` | Aufzählung | Circuit breaker state. | `resilience` |
 | `CircuitBreaker` | Klasse | Closed → open after ``failure_threshold`` outages; one trial after ``reset_timeout``. | `resilience` |
@@ -255,6 +287,7 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `unwrap_secret` | Funktion | Accept ``str``, pydantic ``SecretStr`` or ``None`` (legacy ``_unwrap_secret``). | `config` |
 | `UsageRecord` | Datenklasse | Passed to ``ClientConfig.usage_hook`` after every LLM answer (audit-portal F3). | `results` |
 | `validate_base_url` | Funktion | Normalise and check the gateway URL; raise :class:`ConfigurationError`. | `config` |
+| `WorkType` | Aufzählung | Value of ``X-Flow-Arbeit`` (Flow-Agent contract 1.15): who waits for the answer. | `config` |
 
 Öffentliche Module:
 
@@ -315,14 +348,14 @@ Antwortverarbeitung (sync und async).
 
 ## Bewusste Verhaltensabweichungen
 
-Vollständig in [docs/behavior-changes.md](docs/behavior-changes.md) (B1–B13).
+Vollständig in [docs/behavior-changes.md](docs/behavior-changes.md) (B1–B14).
 Kurz: jede Meldung wird geschwärzt, Transportfehler ohne verkettete Ursache
 (`from None`); keine Standard-URLs und kein lokaler Ollama-Fallback;
 Flow-Agent ohne Schlüssel scheitert schon bei der Konfiguration; Health-Zählung
 zentral, sobald eine `RouterHealth` übergeben wird; `stream_chat` wirft
 HTTP-/Transportfehler statt Fehlerereignisse; Rerank mit falscher Score-Anzahl
 setzt `degraded=True`; Retry und Breaker nur als Opt-in; Flow-Agent-Ablehnungen
-als eigene Fehlerarten.
+und zurückgestellte Hintergrundarbeit als eigene Fehlerarten.
 
 ## Abhängigkeiten
 
