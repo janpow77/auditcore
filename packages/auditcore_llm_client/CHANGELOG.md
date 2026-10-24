@@ -1,5 +1,25 @@
 # Changelog – auditcore_llm_client
 
+## 0.2.0 – 2026-10-24
+
+Additiv; bestehende Aufrufe verhalten sich unverändert.
+
+- Neu `BackgroundDeferredError` mit `ErrorKind.DEFERRED` (`"deferred"`) für
+  zurückgestellte Hintergrundarbeit des Flow-Agents (Vertrag 1.15,
+  `docs/hintergrundarbeit.md`, main `fbfa3ef0`): erkannt im Flow-Agent-Modus
+  am Header `X-Flow-Agent-Error: hintergrund-zurueckgestellt` zusammen mit
+  HTTP 429; `retry_after` aus `Retry-After`. Kein Fehlschlag: `RetryPolicy`
+  wiederholt nicht (der Aufrufer entscheidet), Circuit-Breaker und
+  `RouterHealth` zählen nichts. Ein 429 ohne diesen Code bleibt
+  `RouterHttpError` mit den bisherigen Regeln.
+- Neu `WorkType` (`interaktiv`, `hintergrund`) und `ClientConfig.work`: setzt
+  die Kopfzeile `X-Flow-Arbeit`; Standard `None` sendet keine Kopfzeile
+  (bisheriges Verhalten). Rechner, Zeitfenster und Rangfolgen bleiben
+  Gateway-Konfiguration (RUN-001).
+- `errors.DEFERRED_KINDS` und `errors.UNCOUNTED_KINDS` (Richtlinie oder
+  Zurückstellung, weder Breaker noch Health).
+- Herkunftsnachweis: flow-agent-Quelle auf `fbfa3ef0` aktualisiert.
+
 ## 0.1.3 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
