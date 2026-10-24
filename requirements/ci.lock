@@ -37,7 +37,7 @@ build==1.6.1
     # via -r requirements/ci.in
 cachecontrol==0.14.4
     # via pip-audit
-certifi==2026.7.22
+certifi==2026.10.23
     # via
     #   httpcore
     #   httpx
@@ -95,7 +95,7 @@ feedparser==6.0.14
     # via -r requirements/ci.in
 feedparser-sgmllib==2.1.0
     # via feedparser
-filelock==4.0.4
+filelock==4.2.4
     # via
     #   cachecontrol
     #   huggingface-hub
@@ -369,7 +369,7 @@ safetensors==0.8.0
     #   transformers
 sentencepiece==0.2.2
     # via -r requirements/ci.in
-setuptools==84.0.0
+setuptools==84.2.1
     # via
     #   -r requirements/ci.in
     #   torch
