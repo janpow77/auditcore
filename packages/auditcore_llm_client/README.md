@@ -106,8 +106,8 @@ injiziert: `LlmClient(config, transport=httpx.MockTransport(handler))`.
 | `health(capability=…)` | `GET /health` | `GET /ready?capability=…`, sonst `NotAssignedError` |
 | `list_models()`, `model_snapshot()` | `GET /api/tags` (cockpit-Cache: 60 s, Fehler 5–60 s, veraltet ≤ 300 s) | nicht angeboten |
 
-Ergebnisse: `LlmResult` (mit `telemetry`: `X-Flow-Agent-Request-Id/-Model/-Workers`,
-`X-Llm-Spoke/-Failover`), `EmbedResult`, `RerankResult` (`degraded` bei falscher
+Ergebnisse: `LlmResult` (mit `thinking` und `telemetry`:
+`X-Flow-Agent-Request-Id/-Model/-Workers`, `X-Llm-Spoke/-Failover`), `EmbedResult`, `RerankResult` (`degraded` bei falscher
 Score-Anzahl), `OcrResult`, `ModelInfo`, `StreamEvent`.
 
 Header wie in den Apps: ai-router `X-App-Id` und optional `X-Api-Key`; Flow-Agent
@@ -138,6 +138,27 @@ setzt der ai-router für Modelle mit Präfix `qwen3.5` selbst
 Flow-Agent-Vertrag `/generate` kennt das Feld nicht; dort sendet das Gateway
 immer `think=false`.
 
+Liefert das Gateway das Denken in einem eigenen Feld, steht es in
+`LlmResult.thinking` (Eigenschaft, gelesen aus `raw_response`): Ollama `message.thinking` (`/api/chat`) bzw. `thinking`
+(`/api/generate`), OpenAI-kompatibel `choices[0].message.reasoning_content`
+oder `reasoning`. `content` bleibt unverändert die eigentliche Antwort und wird
+nie still aus `thinking` gefüllt – sonst würden Begründungstexte als Ergebnis
+weiterverarbeitet (z. B. als JSON geparst). Wer bei Modellen, die nur im
+Denkfeld antworten, bewusst darauf zurückfallen will, nutzt
+`result.content_or_thinking` (`content`, wenn nicht leer bzw. nur Leerraum,
+sonst `thinking`). Eingebettete `<think>…</think>`-Blöcke bleiben in `content`,
+außer das Profil entfernt sie (`strip_think_tags`). Gestreamte Denkanteile
+(`stream_chat`) werden nicht ausgewertet.
+
+```python
+from auditcore_llm_client import LlmResult
+
+antwort = {"message": {"content": "", "thinking": "Nur im Denkfeld geantwortet."}}
+result = LlmResult(content="", model="qwen3", raw_response=antwort)  # wie von generate()
+assert result.content == ""
+assert result.content_or_thinking == "Nur im Denkfeld geantwortet."
+```
+
 ### Fehler
 
 Alle Fehler sind `LlmClientError` (Alias `AiRouterError`) mit `kind`,
@@ -167,6 +188,66 @@ config = config_from_env(FLOWINVOICE, secret_resolver=SecretResolver.from_env().
 Ohne Resolver ist eine `secret://`-Referenz ein `ConfigurationError`; sie wird
 nie als Schlüssel gesendet. Fehler des Resolvers werden ohne dessen Text gemeldet.
 
+#### Gateway-URL zur Laufzeit wechseln
+
+Ein Client bleibt an genau eine URL gebunden (B3). Wer die Gateway-Adresse zur
+Laufzeit ändert (z. B. aus einer Einstellungsseite), nimmt `LlmClientPool` bzw.
+`AsyncLlmClientPool`: Der Pool erzeugt aus einer Vorlagenkonfiguration je
+normalisierter URL einen Client und verwendet ihn wieder. Jede URL hat damit
+ihren eigenen Verbindungspool, Circuit-Breaker und Modell-Cache – fällt ein
+Gateway aus, öffnet das nicht den Breaker eines anderen. Eine übergebene
+`RouterHealth` teilen sich alle Clients (ein Health-Status je App). Über
+`max_clients` (Standard 8) hinaus wird der am längsten ungenutzte Client
+geschlossen.
+
+```python no-run
+from auditcore_llm_client import LlmClientPool
+
+with LlmClientPool(config) as pool:  # Vorlage: Profil, Schlüssel, Zeitgrenzen, Breaker
+    antwort = pool.client(einstellungen.gateway_url).generate("Prüfe den Beleg.")
+    standard = pool.client()  # URL der Vorlagenkonfiguration
+```
+
+Gewählt wurde der Pool statt eines `base_url`-Parameters je Aufruf: Breaker,
+Verbindungspool, Health-Zählung und Modell-Cache gehören fachlich zu einem
+Gateway. Ein Aufrufparameter hätte sie entweder über URLs hinweg vermischt oder
+jede Methode um eine URL-Verwaltung erweitert; der Pool lässt Client und
+Operationen unverändert.
+
+#### Warum Port 11434 abgelehnt wird
+
+`validate_base_url` (auch in `ClientConfig` und `LlmClientPool.client`) lehnt
+jede URL mit Port `DIRECT_OLLAMA_PORT` (11434, Standardport eines nackten
+Ollama-Servers) mit `ConfigurationError` ab. Grund: FlowAgent (mit dem
+ai-router davor) ist der einzige GPU-Weg. Nur dort greifen App-Schlüssel,
+Sensitivität/Egress-Richtlinie, Audit und Failover; ein direkt angesprochenes
+Ollama umginge all das. Der lokale Ollama-Rückfall von flowinvoice wurde
+deshalb nicht übernommen (B5). Die Prüfung ist eine Schutzplanke gegen
+den häufigsten Fehlgriff, keine vollständige Erkennung – ein Ollama hinter
+anderem Port erkennt sie nicht.
+
+Anwendungen, die die Gateway-URL entgegennehmen (Formular, Umgebung,
+Einstellungs-API), sollten dieselbe Funktion schon bei der Eingabe aufrufen,
+statt eigene Regeln zu pflegen; sie normalisiert (Leerraum, abschließender `/`)
+und lehnt außerdem fehlendes Schema, Zugangsdaten, Query und Fragment ab:
+
+```python
+from auditcore_llm_client import ConfigurationError, validate_base_url
+
+
+def gateway_url_from_input(text: str) -> str | None:
+    try:
+        return validate_base_url(text)
+    except ConfigurationError:
+        return None  # Meldung der Ausnahme anzeigen; sie enthält keine URL
+
+
+assert gateway_url_from_input(" https://gateway.example.invalid/ ") == (
+    "https://gateway.example.invalid"
+)
+assert gateway_url_from_input("http://gpu.example.invalid:11434") is None
+```
+
 ### Wiederholungen und Circuit-Breaker
 
 Standard wie bisher: ein Versuch, kein Breaker. Opt-in:
@@ -188,19 +269,22 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 5xx, 429) und lässt nach `reset_timeout` genau einen Probeaufruf durch.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_llm_client.__all__` (63):
+Öffentliche Namen aus `auditcore_llm_client.__all__` (67):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
 | `AUDIT_DESIGNER` | Konstante | – | `profiles` |
 | `AUDIT_PORTAL` | Konstante | – | `profiles` |
 | `COCKPIT` | Konstante | – | `profiles` |
+| `DIRECT_OLLAMA_PORT` | Konstante | Default port of a bare Ollama server; the client must never talk to it directly. | `config` |
 | `FLOWINVOICE` | Konstante | – | `profiles` |
 | `GENERIC` | Konstante | Neutral profile for new consumers: OpenAI-compatible routes, no fixed options. | `profiles` |
+| `OLLAMA_CHAT_PLAIN` | Konstante | Plain Ollama ``/api/chat`` for ``generate``: no fixed options, no ``keep_alive``, no ``think`` flag, no sampling defaults, ``<think>`` blocks kept. | `profiles` |
 | `PROFILES` | Konstante | – | `profiles` |
 | `AiRouterError` | Wert | Migration alias for the name used in audit_designer, flowinvoice and audit-portal. | `errors` |
 | `async_safe_call` | Funktion | Async variant of :func:`safe_call`. | `health` |
 | `AsyncLlmClient` | Klasse | ai-router/Flow-Agent client with async API. | `async_client` |
+| `AsyncLlmClientPool` | Klasse | Async twin of :class:`LlmClientPool` with :class:`AsyncLlmClient` instances. | `pool` |
 | `BreakerPolicy` | Datenklasse | Circuit breaker thresholds (legacy flowinvoice: 3 failures, 180 s). | `resilience` |
 | `BreakerState` | Aufzählung | Circuit breaker state. | `resilience` |
 | `CircuitBreaker` | Klasse | Closed → open after ``failure_threshold`` outages; one trial after ``reset_timeout``. | `resilience` |
@@ -219,6 +303,7 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `InvalidResponseError` | Ausnahme | The response did not match the expected schema. | `errors` |
 | `is_secret_reference` | Funktion | True for Flow-Agent secret references (``secret://<anbieter>/<name>``). | `environment` |
 | `LlmClient` | Klasse | ai-router/Flow-Agent client with sync API. | `sync_client` |
+| `LlmClientPool` | Klasse | One :class:`LlmClient` per gateway URL, built from a template configuration. | `pool` |
 | `LlmClientError` | Ausnahme | Base error of all client calls (legacy name: ``AiRouterError``). | `errors` |
 | `LlmResult` | Datenklasse | Answer of ``generate``/``chat``. | `results` |
 | `Mode` | Aufzählung | Which gateway dialect the client speaks. | `config` |
@@ -271,6 +356,7 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `auditcore_llm_client.operations` | Public operations as (request, parser) pairs – identical for sync and async. |
 | `auditcore_llm_client.parsing` | Turn gateway responses into result objects (legacy field mapping). |
 | `auditcore_llm_client.parsing_rerank` | Reranker answers: ``{"scores": [...]}`` (``/v1/rerank``) or ``{"results": [...]}``. |
+| `auditcore_llm_client.pool` | Client caches per gateway URL for apps that change the gateway address at runtime. |
 | `auditcore_llm_client.profiles` | App profiles: the characterised differences of the legacy clients as data. |
 | `auditcore_llm_client.received` | Transport-neutral view of a gateway response and the HTTP error mapping. |
 | `auditcore_llm_client.redaction` | Remove secrets from any text that leaves the client (messages, logs, health). |
@@ -294,6 +380,7 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `AUDIT_PORTAL` | wie flowinvoice ohne Flow-Agent, App-ID `audit-portal` | Metering über `ClientConfig.usage_hook` (ersetzt `record_llm_usage`) |
 | `COCKPIT` (**abgekündigt**) | `AI_ROUTER_URL/APP_ID/API_KEY` | Modellliste und NDJSON-Streaming; cockpit wird abgeschaltet (Funktionen in flow-agent #50), Profil bleibt nur für bestehende Tests |
 | `GENERIC` | `AI_ROUTER_*`, `FLOW_AGENT_*` | neutrale Voreinstellung für neue Consumer |
+| `OLLAMA_CHAT_PLAIN` | wie `GENERIC` | `generate` über schlichtes `/api/chat` (404 → `/v1/chat/completions`): keine festen Optionen, kein `keep_alive`, kein `think`, keine Standardwerte für Temperatur/Tokens, `<think>` bleibt erhalten; gesendet wird nur, was der Aufruf angibt |
 
 `config_from_env(profile, environ=None, *, secret_resolver=None)` liest die
 Umgebungsnamen des Profils; es gibt weder Standard-URL noch Standardschlüssel.
