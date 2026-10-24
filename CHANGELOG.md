@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `auditcore_llm_client` 0.2.0: zurückgestellte Hintergrundarbeit des
+  Flow-Agents (HTTP 429, `X-Flow-Agent-Error: hintergrund-zurueckgestellt`,
+  Vertrag 1.15) als eigener Fehlertyp `BackgroundDeferredError`
+  (`ErrorKind.DEFERRED`, `retry_after`), weder wiederholt noch im
+  Circuit-Breaker oder Health gezählt; `ClientConfig.work` (`WorkType`) setzt
+  `X-Flow-Arbeit`. Ohne neue Option unverändertes Verhalten.
 - `auditcore_tyfindings` 0.3.0: neues Regelwerk `efre.uebersicht_vue`
   2026.10.1 für den Abgleich der Übersicht über die Verwaltungsüberprüfungen
   (Fallgruppen der Kürzungsbeschreibungen, Merkmale für Unregelmäßigkeit,
