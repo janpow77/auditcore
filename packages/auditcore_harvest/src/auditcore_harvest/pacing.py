@@ -54,13 +54,15 @@ class RateLimitStore(Protocol):
     Both operations must be atomic across all processes that share the store.
     """
 
-    def reserve(self, key: str, interval: float, now: float, max_wait: float) -> float | None:
-        """Reserve the next free slot of ``key``.
+    def reserve(self, key: str, interval: float, now: float, max_wait: float) -> float:
+        """Reserve the next free slot of ``key`` if it starts within ``max_wait``.
 
-        Returns the seconds until the slot starts (``0.0`` when free now) and
-        moves the next free slot to ``slot + interval``. When the slot starts
-        more than ``max_wait`` seconds after ``now``, nothing is reserved and
-        ``None`` is returned.
+        Always returns the seconds from ``now`` until the next free slot
+        (``0.0`` when free now). A result ``<= max_wait`` means the slot is
+        reserved and the next free slot moved to ``slot + interval``; a result
+        ``> max_wait`` means nothing was reserved, and the value tells the
+        caller how long to come back later (for example a task countdown
+        instead of a blocked worker).
         """
         ...
 
@@ -76,13 +78,12 @@ class MemoryRateLimitStore:
     _next: dict[str, float] = field(default_factory=dict, init=False, repr=False)
     _lock: threading.Lock = field(default_factory=threading.Lock, init=False, repr=False)
 
-    def reserve(self, key: str, interval: float, now: float, max_wait: float) -> float | None:
+    def reserve(self, key: str, interval: float, now: float, max_wait: float) -> float:
         """See :meth:`RateLimitStore.reserve`."""
         with self._lock:
             slot = max(now, self._next.get(key, now))
-            if slot - now > max_wait:
-                return None
-            self._next[key] = slot + max(0.0, interval)
+            if slot - now <= max_wait:
+                self._next[key] = slot + max(0.0, interval)
             return slot - now
 
     def defer(self, key: str, until: float) -> None:
@@ -95,9 +96,11 @@ class MemoryRateLimitStore:
 class SharedRateLimit:
     """Minimum interval between requests for one key, shared through a store.
 
-    ``wait`` blocks until the reserved slot starts. A slot further away than
-    ``max_wait`` is not reserved; ``wait`` then returns ``False`` and the
-    caller decides (typically: report a rate-limit error and retry later).
+    ``acquire`` blocks until the reserved slot starts and returns ``0.0``. A
+    slot further away than ``max_wait`` is not reserved; ``acquire`` then
+    returns the seconds until it would be free, without sleeping, and the
+    caller decides (typically: reschedule the work with that countdown rather
+    than keep a worker waiting). ``wait`` is the boolean short form.
     """
 
     key: str
@@ -105,16 +108,21 @@ class SharedRateLimit:
     store: RateLimitStore
     max_wait: float = 300.0
 
-    def wait(self, clock: Clock, sleeper: Sleeper) -> bool:
-        """Sleep until the next slot; ``False`` if it is beyond ``max_wait``."""
+    def acquire(self, clock: Clock, sleeper: Sleeper) -> float:
+        """Sleep until the next slot and return ``0.0``; beyond ``max_wait`` return
+        the seconds to come back later instead (nothing reserved, no sleep)."""
         remaining = self.store.reserve(
             self.key, self.min_interval_seconds, clock.now().timestamp(), self.max_wait
         )
-        if remaining is None:
-            return False
+        if remaining > self.max_wait:
+            return remaining
         if remaining > 0:
             sleeper.sleep(remaining)
-        return True
+        return 0.0
+
+    def wait(self, clock: Clock, sleeper: Sleeper) -> bool:
+        """Sleep until the next slot; ``False`` if it is beyond ``max_wait``."""
+        return self.acquire(clock, sleeper) == 0.0
 
     def pause(self, clock: Clock, seconds: float) -> None:
         """Hold back every process for ``seconds`` (for example after ``Retry-After``)."""

@@ -6,8 +6,13 @@ Additiv; bestehende Aufrufe verhalten sich unverändert.
 
 - Neu `pacing`: Port `RateLimitStore` (`reserve(key, interval, now, max_wait)`,
   `defer(key, until)`) für einen Abruftakt über Prozessgrenzen hinweg,
-  `SharedRateLimit` (`wait` → `False` statt zu langer Wartezeit, `pause` nach
-  `Retry-After`) und `MemoryRateLimitStore` (thread-sicher, ein Prozess).
+  `SharedRateLimit` (`acquire` → `0.0` nach dem Warten oder die Sekunden bis
+  zum nächsten freien Platz, ohne zu schlafen; `wait` als Kurzform mit `bool`;
+  `pause` nach `Retry-After`) und `MemoryRateLimitStore` (thread-sicher, ein
+  Prozess). `reserve` liefert immer die Wartezeit; ein Wert über `max_wait`
+  heißt „nicht reserviert, später wiederkommen“ – damit plant ein Aufrufer
+  eine Aufgabe mit dieser Frist neu ein, statt einen Worker schlafen zu lassen
+  (audit_designer: Takt von 30 s je Host hat drei Celery-Prozesse belegt).
   Anlass: audit_designer ruft denselben Host aus mehreren Celery-Prozessen ab;
   248 × HTTP 429 in einem Staging-Lauf am 25.10.2026.
 - Neu `parse_retry_after(value, now=None)`: Sekundenangabe wie bisher, mit
