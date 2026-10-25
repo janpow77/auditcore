@@ -39,6 +39,7 @@ from .model import (
     canonical_hash,
     page_result,
 )
+from .pacing import MemoryRateLimitStore, RateLimitStore, SharedRateLimit, parse_retry_after
 from .ports import (
     Clock,
     CredentialProvider,
@@ -51,7 +52,7 @@ from .ports import (
 )
 from .transport import FileTransport, ReplayTransport, decode_json, raise_for_status
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 __all__ = [
     "CONTRACT_VERSION",
@@ -77,17 +78,20 @@ __all__ = [
     "HarvestRequest",
     "HarvestResult",
     "LimitReached",
+    "MemoryRateLimitStore",
     "PageResult",
     "PageStatus",
     "ParserError",
     "Provenance",
     "RateLimit",
     "RateLimitError",
+    "RateLimitStore",
     "RecordIssue",
     "ReplayTransport",
     "Response",
     "RetryPolicy",
     "RunStatus",
+    "SharedRateLimit",
     "Sink",
     "SinkError",
     "SinkReceipt",
@@ -102,6 +106,7 @@ __all__ = [
     "canonical_hash",
     "decode_json",
     "page_result",
+    "parse_retry_after",
     "raise_for_status",
     "require",
 ]

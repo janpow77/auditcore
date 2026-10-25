@@ -32,6 +32,13 @@ heraus. Der Kern bleibt dabei: er löscht nie und meldet nur
 `snapshot_complete`, damit ein Consumer seine eigene Regel ausschließlich nach
 einem vollständigen Lauf von Anfang an anwendet.
 
+## Ergänzungen 0.1.5
+
+| ID | Anlass | Vertrag |
+|---|---|---|
+| HC-11 | audit_designer: Staging und Nachabruf treffen denselben Host aus mehreren Prozessen, jeder mit eigenem `RateLimit`; Folge 248 × HTTP 429 (25.10.2026). | `SharedRateLimit` über den Port `RateLimitStore`; ein `Retry-After` hält über `pause` alle Teilnehmer zurück. Ohne Store bleibt `RateLimit` unverändert. |
+| HC-12 | audit_designer leitete die Frage „noch ein Versuch?“ über `delay(…, random.Random(0))` ab, weil der Zähler in der Datenbank liegt. | `should_retry` und `backoff` ohne Zufall; `delay` unverändert. |
+
 ## Offene Entscheidungen
 
 - **HUMAN_DECISION_REQUIRED:** Ob Quellen mit harter Ergebnisbegrenzung (DIP-

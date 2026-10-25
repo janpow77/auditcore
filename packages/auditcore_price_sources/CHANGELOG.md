@@ -1,5 +1,9 @@
 # Changelog auditcore_price_sources
 
+## 0.1.5 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_harvest==0.1.5` (additiv: gemeinsame Abruf-Taktung `SharedRateLimit`/`RateLimitStore`, `parse_retry_after`, `RetryPolicy.should_retry`/`backoff`).
+
 ## 0.1.4 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und

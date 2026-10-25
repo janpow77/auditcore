@@ -10,7 +10,9 @@ from auditcore_harvest import (
     FetchContext,
     HarvestEngine,
     HarvestRequest,
+    MemoryRateLimitStore,
     ReplayTransport,
+    parse_retry_after,
 )
 from auditcore_harvest.catalog import load_catalog, summary
 from auditcore_harvest.memory import (
@@ -31,11 +33,13 @@ FEED = """<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>
 def main() -> None:
     """Catalogue, engine run and contract suite from the installed package."""
     package = distribution("auditcore_harvest")
-    assert package.version == "0.1.4"
+    assert package.version == "0.1.5"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.2.1"], runtime
     assert find_spec("auditcore") is None
     assert CONTRACT_VERSION == "auditcore_harvest.contract/1"
+    assert parse_retry_after("30") == 30.0
+    assert MemoryRateLimitStore().reserve("k", 1.0, 0.0, 5.0) == 0.0
     entries = load_catalog()
     assert len(entries) == 62
     assert summary(entries)["implementation"] == {"PLANNED": 53, "SUPPORTED": 7, "LEGACY_ONLY": 2}

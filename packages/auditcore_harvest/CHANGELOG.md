@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.5 – unveröffentlicht
+
+Additiv; bestehende Aufrufe verhalten sich unverändert.
+
+- Neu `pacing`: Port `RateLimitStore` (`reserve(key, interval, now, max_wait)`,
+  `defer(key, until)`) für einen Abruftakt über Prozessgrenzen hinweg,
+  `SharedRateLimit` (`wait` → `False` statt zu langer Wartezeit, `pause` nach
+  `Retry-After`) und `MemoryRateLimitStore` (thread-sicher, ein Prozess).
+  Anlass: audit_designer ruft denselben Host aus mehreren Celery-Prozessen ab;
+  248 × HTTP 429 in einem Staging-Lauf am 25.10.2026.
+- Neu `parse_retry_after(value, now=None)`: Sekundenangabe wie bisher, mit
+  `now` auch ein HTTP-Datum (RFC 9110, Abschnitt 10.2.3). `raise_for_status`
+  nutzt die Funktion ohne `now`; ein HTTP-Datum ergibt dort weiterhin
+  `retry_after=None`.
+- Neu `RetryPolicy.should_retry(attempt, error)` (reine Entscheidung ohne
+  Wartezeit und Zufallszahl, für gespeicherte Versuchszähler) und
+  `RetryPolicy.backoff(attempt)` (Abstand ohne Streuung). `delay` rechnet
+  über beide, das Ergebnis ist unverändert (Test gegen alle Fehlerarten).
+
 ## 0.1.4 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und

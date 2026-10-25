@@ -1,5 +1,9 @@
 # Changelog – auditcore_risk
 
+## 0.4.2 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_procurement==0.3.1` (additiv: gemeinsame Abruf-Taktung `SharedRateLimit`/`RateLimitStore`, `parse_retry_after`, `RetryPolicy.should_retry`/`backoff`).
+
 ## 0.4.1 – 2026-10-13 – Bindung an auditcore_procurement 0.3.0
 
 Keine Verhaltensänderung. Das Extra `procurement` (und `dev`) bindet
