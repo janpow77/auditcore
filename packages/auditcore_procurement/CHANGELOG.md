@@ -1,5 +1,9 @@
 # Changelog auditcore_procurement
 
+## 0.3.1 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_harvest==0.1.5` (additiv: gemeinsame Abruf-Taktung `SharedRateLimit`/`RateLimitStore`, `parse_retry_after`, `RetryPolicy.should_retry`/`backoff`).
+
 ## 0.3.0 – 2026-10-13
 
 EU-Schwellenwerte vollständig: Profil `procurement.hvtg 2026.10.1` (Schema 3,
