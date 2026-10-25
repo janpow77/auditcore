@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- `auditcore_harvest` 0.1.5: gemeinsamer Abruftakt über Prozessgrenzen
+  (`SharedRateLimit`, Port `RateLimitStore`, `MemoryRateLimitStore`),
+  `parse_retry_after` mit HTTP-Datum und `RetryPolicy.should_retry`/`backoff`
+  ohne Zufallszahl; additiv, `delay` und `raise_for_status` unverändert. Nur
+  wegen der exakten Bindung neu: `auditcore_funding_sources` 0.1.7,
+  `auditcore_geo` 0.3.3, `auditcore_legal_sources` 0.1.7,
+  `auditcore_price_sources` 0.1.5, `auditcore_procurement` 0.3.1,
+  `auditcore_property_sources` 0.1.5, `auditcore_registry_sources` 0.2.5,
+  weitergereicht `auditcore_bpmn` 0.1.4 und `auditcore_risk` 0.4.2.
+- Helfer-Katalog: Thema `py-shorten-text` (Text auf eine Länge kürzen, an der
+  Wortgrenze, mit „…“) mit Ziel `auditcore_common.text.shorten` im Status
+  `geplant` – fünf gleichartige Kopien in vier Anwendungen.
 - CI-Lock `requirements/ci.lock`: certifi 2026.7.22 → 2026.10.23
   (PYSEC-2026-4320), filelock 4.0.4 → 4.2.4 (CVE-2026-112940, CVE-2026-112913,
   CVE-2026-112907) und setuptools 84.0.0 → 84.2.1 (GHSA-xmj3-9gf7-h52w)

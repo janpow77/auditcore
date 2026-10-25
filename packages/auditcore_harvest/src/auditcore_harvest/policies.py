@@ -21,14 +21,28 @@ class RetryPolicy:
 
     def delay(self, attempt: int, error: HarvestError, rng: random.Random) -> float | None:
         """Seconds to wait before the next attempt, or ``None`` to give up."""
-        if attempt >= self.max_attempts or not error.retryable:
+        if not self.should_retry(attempt, error):
             return None
         if isinstance(error, RateLimitError) and error.retry_after is not None:
-            if error.retry_after > self.max_retry_after:
-                return None
             return max(0.0, float(error.retry_after))
-        backoff = min(self.max_delay, self.base_delay * (2.0 ** (attempt - 1)))
-        return backoff * (1.0 + self.jitter * rng.random())
+        return self.backoff(attempt) * (1.0 + self.jitter * rng.random())
+
+    def should_retry(self, attempt: int, error: HarvestError) -> bool:
+        """Whether another attempt follows after ``attempt`` failed attempts.
+
+        Pure decision without waiting time or random numbers, for consumers
+        that keep the attempt counter themselves (for example in a database)
+        and schedule the next attempt later. Same rules as :meth:`delay`.
+        """
+        if attempt >= self.max_attempts or not error.retryable:
+            return False
+        if isinstance(error, RateLimitError) and error.retry_after is not None:
+            return error.retry_after <= self.max_retry_after
+        return True
+
+    def backoff(self, attempt: int) -> float:
+        """Exponential backoff after ``attempt`` failed attempts, without jitter."""
+        return min(self.max_delay, self.base_delay * (2.0 ** (attempt - 1)))
 
 
 @dataclass

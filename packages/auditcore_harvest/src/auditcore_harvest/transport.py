@@ -17,6 +17,7 @@ from pathlib import Path
 
 from .errors import ConfigError, ParserError, RateLimitError, TransportError
 from .model import JSON
+from .pacing import parse_retry_after
 from .ports import Response
 
 MAX_BODY_BYTES = 50 * 1024 * 1024
@@ -25,8 +26,7 @@ MAX_BODY_BYTES = 50 * 1024 * 1024
 def raise_for_status(response: Response) -> Response:
     """Map HTTP status codes to structured errors; 2xx is returned unchanged."""
     if response.status == 429:
-        retry = response.header("Retry-After")
-        seconds = float(retry) if retry and retry.strip().isdigit() else None
+        seconds = parse_retry_after(response.header("Retry-After"))
         raise RateLimitError("Quelle meldet Rate-Limit (HTTP 429).", retry_after=seconds)
     if response.status in (401, 403):
         from .errors import AuthError
