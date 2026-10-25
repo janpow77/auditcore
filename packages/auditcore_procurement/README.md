@@ -247,7 +247,7 @@ gleich, `inspect_notice` meldet sie als `ambiguous_amount`.
 ## Abhängigkeiten
 
 Python ≥ 3.11. Pflicht: `auditcore_common==0.2.1`. Optional `lxml>=4.9.2`
-(`[html]`) und `auditcore_harvest==0.1.4` (`[sources]`). Keine Abhängigkeit
+(`[html]`) und `auditcore_harvest==0.1.5` (`[sources]`). Keine Abhängigkeit
 von der Plattform `auditcore`, Webframeworks oder Datenbanken.
 
 ## Sicherheit und Datenschutz
