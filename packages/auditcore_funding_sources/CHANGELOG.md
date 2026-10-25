@@ -1,5 +1,9 @@
 # Changelog auditcore_funding_sources
 
+## 0.1.7 – unveröffentlicht
+
+Keine Verhaltensänderung. Neuer exakter Pin `auditcore_harvest==0.1.5` (additiv: gemeinsame Abruf-Taktung `SharedRateLimit`/`RateLimitStore`, `parse_retry_after`, `RetryPolicy.should_retry`/`backoff`).
+
 ## 0.1.6 – 2026-10-03
 
 Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation

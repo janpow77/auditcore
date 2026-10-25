@@ -139,7 +139,7 @@ ausführbar in `docs/examples/eigener_adapter.py`.
   RSS/Atom).
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_harvest.__all__` (50):
+Öffentliche Namen aus `auditcore_harvest.__all__` (54):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -166,17 +166,20 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `HarvestRequest` | Datenklasse | What the consumer asks for; limits bound every run. | `model` |
 | `HarvestResult` | Datenklasse | Structured run result; counts are never inferred from an empty list. | `model` |
 | `LimitReached` | Ausnahme | A configured run limit (pages, records, duration) stopped the run. | `errors` |
+| `MemoryRateLimitStore` | Datenklasse | Thread-safe in-memory :class:`RateLimitStore` for one process. | `pacing` |
 | `PageResult` | Datenklasse | One bounded page: records, next cursor and an explicit completion flag. | `model` |
 | `PageStatus` | Aufzählung | Result of one page fetch as seen by the adapter. | `model` |
 | `ParserError` | Ausnahme | The response could not be interpreted; never presented as an empty result. | `errors` |
 | `Provenance` | Datenklasse | Origin of one record. | `model` |
 | `RateLimit` | Datenklasse | Minimum interval between two requests of a run. | `policies` |
 | `RateLimitError` | Ausnahme | Source signalled rate limiting; ``retry_after`` in seconds if known. | `errors` |
+| `RateLimitStore` | Protokoll | Shared schedule of request slots per key (for example a host name). | `pacing` |
 | `RecordIssue` | Datenklasse | A single source item that could not be parsed; never dropped silently. | `model` |
 | `ReplayTransport` | Datenklasse | Serves recorded responses; unmatched requests are errors, not empty data. | `transport` |
 | `Response` | Datenklasse | Transport-neutral response. | `ports` |
 | `RetryPolicy` | Datenklasse | Bounded exponential backoff with jitter; honours ``Retry-After`` up to a cap. | `policies` |
 | `RunStatus` | Aufzählung | Overall outcome of a run. | `model` |
+| `SharedRateLimit` | Datenklasse | Minimum interval between requests for one key, shared through a store. | `pacing` |
 | `Sink` | Protokoll | Receives records; must be idempotent per ``(source_id, record_id, content_hash)``. | `ports` |
 | `SinkError` | Ausnahme | The sink did not confirm the batch; the checkpoint is not advanced. | `errors` |
 | `SinkReceipt` | Datenklasse | What the sink confirmed; unknown keys in the receipt are a sink error. | `model` |
@@ -191,6 +194,7 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `canonical_hash` | Funktion | SHA-256 over canonical JSON; the stable content hash of a record. | `model` |
 | `decode_json` | Funktion | Parse a JSON response body; undecodable bodies are a :class:`ParserError`. | `transport` |
 | `page_result` | Funktion | The usual page of an adapter: complete exactly when there is no next cursor. | `model` |
+| `parse_retry_after` | Funktion | Seconds requested by a ``Retry-After`` header (RFC 9110, section 10.2.3). | `pacing` |
 | `raise_for_status` | Funktion | Map HTTP status codes to structured errors; 2xx is returned unchanged. | `transport` |
 | `require` | Funktion | Small helper for ``validate_config``: required key of a given type. | `adapter` |
 
@@ -206,6 +210,7 @@ ausführbar in `docs/examples/eigener_adapter.py`.
 | `auditcore_harvest.errors` | Structured harvest errors; the engine decides retries from ``retryable``/``retry_after``. |
 | `auditcore_harvest.memory` | Reference implementations of the ports for tests, replays and simple consumers. |
 | `auditcore_harvest.model` | Versioned data contracts of the harvest core (``auditcore_harvest.contract/1``). |
+| `auditcore_harvest.pacing` | Request pacing shared across processes and the ``Retry-After`` header. |
 | `auditcore_harvest.policies` | Run policies of the engine: bounded retry, request pacing and cooperative cancellation. |
 | `auditcore_harvest.ports` | Ports the consumer (or a test) provides: transport, credentials, state, sink, time, events. |
 | `auditcore_harvest.reference` | Executable reference adapters used by the adapter guide and the contract tests. |
@@ -223,6 +228,18 @@ Adapter deklarieren `adapter_version`, `profile_version`, Filter,
 Authentifizierung und Fähigkeiten in `Source`; die Konfiguration je Lauf prüft
 `validate_config`, ohne die Quelle anzufragen. Geheimnisse liefert nur der
 `CredentialProvider`.
+
+Mehrere Prozesse, die denselben Host abfragen, teilen sich über
+`SharedRateLimit(key, min_interval_seconds, store, max_wait=300.0)` einen
+Takt. Der `RateLimitStore` (Port mit `reserve`/`defer`) gehört der Anwendung,
+etwa auf Basis eines Schlüssel-Wert-Servers; `MemoryRateLimitStore` genügt für
+Tests und einen einzelnen Prozess. `wait` liefert `False`, statt länger als
+`max_wait` zu warten; `pause(clock, seconds)` hält nach einem `Retry-After`
+alle Teilnehmer zurück. `parse_retry_after(value, now=None)` liest Sekunden und
+– mit `now` – auch ein HTTP-Datum. `RetryPolicy.should_retry(attempt, error)`
+entscheidet ohne Wartezeit und Zufall, ob ein weiterer Versuch folgt (für
+Zähler in der Datenbank), `RetryPolicy.backoff(attempt)` liefert den Abstand
+ohne Streuung.
 
 Der versionierte Quellenkatalog (`auditcore_harvest.catalog/1`,
 `catalogs/sources.json`) nennt belegte Quellen mit Herkunft, Zielpaket,

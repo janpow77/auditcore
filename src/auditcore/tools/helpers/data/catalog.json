@@ -450,6 +450,21 @@
       ]
     },
     {
+      "id": "py-shorten-text",
+      "title": "Text auf eine Länge kürzen (Wortgrenze, Auslassungszeichen)",
+      "languages": [
+        "python"
+      ],
+      "name": "^(truncate|shorten|ellipsize|kuerze|kuerzen|abkuerzen)(text|string|str|title|titel|label)?$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "text.shorten",
+          "status": "geplant"
+        }
+      ]
+    },
+    {
       "id": "py-client-ip",
       "title": "Client-IP ermitteln",
       "languages": [
