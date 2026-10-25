@@ -233,8 +233,10 @@ Mehrere Prozesse, die denselben Host abfragen, teilen sich über
 `SharedRateLimit(key, min_interval_seconds, store, max_wait=300.0)` einen
 Takt. Der `RateLimitStore` (Port mit `reserve`/`defer`) gehört der Anwendung,
 etwa auf Basis eines Schlüssel-Wert-Servers; `MemoryRateLimitStore` genügt für
-Tests und einen einzelnen Prozess. `wait` liefert `False`, statt länger als
-`max_wait` zu warten; `pause(clock, seconds)` hält nach einem `Retry-After`
+Tests und einen einzelnen Prozess. `acquire` liefert `0.0`, sobald der Platz
+erreicht ist, oder – statt länger als `max_wait` zu warten – die Sekunden bis
+zum nächsten freien Platz (Frist für eine Neueinplanung); `wait` ist die
+Kurzform mit `bool`; `pause(clock, seconds)` hält nach einem `Retry-After`
 alle Teilnehmer zurück. `parse_retry_after(value, now=None)` liest Sekunden und
 – mit `now` – auch ein HTTP-Datum. `RetryPolicy.should_retry(attempt, error)`
 entscheidet ohne Wartezeit und Zufall, ob ein weiterer Versuch folgt (für

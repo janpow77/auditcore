@@ -3,7 +3,8 @@
 ## Unreleased
 
 - `auditcore_harvest` 0.1.5: gemeinsamer Abruftakt über Prozessgrenzen
-  (`SharedRateLimit`, Port `RateLimitStore`, `MemoryRateLimitStore`),
+  (`SharedRateLimit` mit `acquire` – Wartezeit zurück statt Schlafen über
+  `max_wait` –, Port `RateLimitStore`, `MemoryRateLimitStore`),
   `parse_retry_after` mit HTTP-Datum und `RetryPolicy.should_retry`/`backoff`
   ohne Zufallszahl; additiv, `delay` und `raise_for_status` unverändert. Nur
   wegen der exakten Bindung neu: `auditcore_funding_sources` 0.1.7,

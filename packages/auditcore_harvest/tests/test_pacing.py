@@ -64,7 +64,8 @@ def test_store_hands_out_consecutive_slots_and_respects_max_wait() -> None:
     assert store.reserve("quelle", 5.0, 100.0, 60.0) == 5.0
     assert store.reserve("quelle", 5.0, 101.0, 60.0) == 9.0
     assert store.reserve("andere", 5.0, 101.0, 60.0) == 0.0
-    assert store.reserve("quelle", 5.0, 101.0, 8.0) is None
+    # Refused: the result is the time until the next free slot.
+    assert store.reserve("quelle", 5.0, 101.0, 8.0) == 14.0
     # Nothing was reserved by the refused call.
     assert store.reserve("quelle", 5.0, 101.0, 60.0) == 14.0
 
@@ -83,7 +84,6 @@ def test_store_is_safe_under_threads() -> None:
 
     def take() -> None:
         wait = store.reserve("quelle", 1.0, 0.0, 1000.0)
-        assert wait is not None
         with lock:
             waits.append(wait)
 
@@ -104,6 +104,7 @@ def test_shared_rate_limit_waits_pauses_and_gives_up() -> None:
     assert first.wait(clock, sleeper) and second.wait(clock, sleeper)
     assert sleeper.sleeps == [2.0]
     first.pause(clock, 60.0)
+    assert second.acquire(clock, sleeper) == pytest.approx(60.0)
     assert second.wait(clock, sleeper) is False
     assert sleeper.sleeps == [2.0]
     clock.elapsed += 45.0
