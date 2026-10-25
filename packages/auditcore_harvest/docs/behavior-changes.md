@@ -36,7 +36,7 @@ einem vollständigen Lauf von Anfang an anwendet.
 
 | ID | Anlass | Vertrag |
 |---|---|---|
-| HC-11 | audit_designer: Staging und Nachabruf treffen denselben Host aus mehreren Prozessen, jeder mit eigenem `RateLimit`; Folge 248 × HTTP 429 (25.10.2026). | `SharedRateLimit` über den Port `RateLimitStore`; ein `Retry-After` hält über `pause` alle Teilnehmer zurück. Ohne Store bleibt `RateLimit` unverändert. |
+| HC-11 | audit_designer: Staging und Nachabruf treffen denselben Host aus mehreren Prozessen, jeder mit eigenem `RateLimit`; Folge 248 × HTTP 429 (25.10.2026). | `SharedRateLimit` über den Port `RateLimitStore`; ein `Retry-After` hält über `pause` alle Teilnehmer zurück. Ohne Store bleibt `RateLimit` unverändert. Über `max_wait` liefert `acquire` die Frist zurück, statt einen Worker schlafen zu lassen. |
 | HC-12 | audit_designer leitete die Frage „noch ein Versuch?“ über `delay(…, random.Random(0))` ab, weil der Zähler in der Datenbank liegt. | `should_retry` und `backoff` ohne Zufall; `delay` unverändert. |
 
 ## Offene Entscheidungen
