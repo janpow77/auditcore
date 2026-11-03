@@ -119,9 +119,27 @@ assert freigabe.released
 
 Keine Konfigurationsdateien und keine Umgebungsvariablen. Stellschrauben sind
 Parameter: `neighbourhood` (Nachbarschaft für Widerspruch, Standard 10 %),
-`allowed_years` (ausdrücklich erlaubte Jahreszahlen im Fließtext),
+`allowed_years` (ausdrücklich erlaubte Jahreszahlen im Fließtext; siehe unten),
 `missing_markers` (Fehlwertzeichen) und `dash_is_zero` (Strich nach Destatis
 als genau null).
+
+**Jahreszahlen im Fließtext.** Eine ganze Zahl 1900–2100 gilt nur mit
+Jahreskontext als Jahr: Jahreswort, `im`/`seit`, Spanne `2022–2024`,
+kurze Präposition (`bis`, `ab`, `von`, `vor`, `nach`, `zwischen`) oder
+Satzanfang direkt vor Verb oder Komma (`2023 stieg die Quote`). Eine
+Einheit (`Euro`, `%`) oder ein Zählwort (`Vorhaben`, `Teilnehmende` …)
+danach ist Gegenbeleg: `bis 2050 Vorhaben` und `zwischen 1950 und 2100 Euro`
+bleiben prüfpflichtige Zahlen, ebenso `2023 Vorhaben wurden gefördert`. Wo die
+Heuristik nicht reicht, nennt der Aufrufer die Berichtsjahre ausdrücklich
+über `allowed_years` – das ist der verlässliche Weg; eine dort genannte
+Zahl ist immer Jahr.
+
+**Spaltenschlüssel im Wertegate.** Spalten werden über die Überschrift ohne
+Einheit zugeordnet (`Betrag (Mio. Euro)` → `betrag`). Zwei Spalten, die sich
+nur in der Einheit unterscheiden (`Betrag (Euro)`, `Betrag (%)`), teilen sich
+den Schlüssel; wird er für den Vergleich gebraucht, ergibt das den Befund
+`spalte_mehrdeutig`, keine geratene Zuordnung. Abhilfe: Überschrift um ein
+unterscheidendes Wort ergänzen (`Betrag (Plan)`).
 
 ## Herkunft und Charakterisierung
 

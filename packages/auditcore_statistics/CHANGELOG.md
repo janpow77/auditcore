@@ -1,8 +1,8 @@
 # Changelog auditcore_statistics
 
-## Unveröffentlicht – Konzentrationsmaße
+## 0.3.6 – 2026-11-03 – Konzentrationsmaße
 
-Keine Versionsanhebung (Release-Ablauf). Abwärtskompatible Erweiterung.
+Abwärtskompatible Erweiterung.
 
 - Neues Modul `concentration`: `gini` (exakte diskrete Formel, identisch mit
   der Trapezregel auf den Lorenzpunkten), `lorenz_curve` (`LorenzCurve` mit
