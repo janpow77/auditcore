@@ -1,5 +1,17 @@
 # Changelog auditcore_statistics
 
+## Unveröffentlicht – Konzentrationsmaße
+
+Keine Versionsanhebung (Release-Ablauf). Abwärtskompatible Erweiterung.
+
+- Neues Modul `concentration`: `gini` (exakte diskrete Formel, identisch mit
+  der Trapezregel auf den Lorenzpunkten), `lorenz_curve` (`LorenzCurve` mit
+  n + 1 Punkten), `herfindahl_hirschman`, `concentration_ratio` (CR_k).
+- Negative oder nicht endliche Werte ergeben `StatisticsInputError`; leere
+  Grundgesamtheit oder Summe null ergibt `None` statt eines Gini von 0.
+  Abweichung gegenüber FlowStat `chart_service.lorenz_curve` (verwarf
+  negative Werte still und meldete 0,0): siehe `docs/behavior-changes.md`.
+
 ## 0.3.5 – 2026-10-03
 
 Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
