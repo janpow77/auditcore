@@ -42,16 +42,33 @@ def estimate_tokens(text: str) -> int:
     return max(1, len(text) // CHARS_PER_TOKEN)
 
 
-def render(findings: list[Finding], limit: int = 200, token_budget: int = 0) -> str:
-    """Markdown; stops early when the token budget would be exceeded."""
+def tools_run(document: dict[str, object]) -> list[str]:
+    """Names of the tools a result document actually ran (status not ``entfaellt``)."""
+    tools = document.get("werkzeuge", [])
+    return [
+        str(t.get("werkzeug", ""))
+        for t in (tools if isinstance(tools, list) else [])
+        if isinstance(t, dict) and t.get("status") != "entfaellt"
+    ]
+
+
+def render(findings: list[Finding], limit: int = 200, token_budget: int = 0, ran: Iterable[str] | None = None) -> str:
+    """Markdown; stops early when the token budget would be exceeded.
+
+    ``ran`` names the tools that ran; without it the report cannot tell
+    "no findings" from "nothing ran", so the line is omitted.
+    """
     fixable = [f for f in findings if f.fixable]
     manual = [f for f in findings if not f.fixable]
     counts = Counter(f.tool for f in manual)
     lines = [
         f"# Befunde ({len(manual)} zu bearbeiten, {len(fixable)} automatisch behebbar)",
         "",
-        "Werkzeuge: " + (", ".join(f"{tool} {count}" for tool, count in counts.most_common()) or "keine"),
+        "Werkzeuge mit Befunden: " + (", ".join(f"{tool} {count}" for tool, count in counts.most_common()) or "keine"),
     ]
+    if ran is not None:
+        names = list(ran)
+        lines.append(f"Gelaufene Werkzeuge ({len(names)}): " + (", ".join(names) or "keine"))
     if fixable:
         lines.append(
             f"Automatisch behebbar ({len(fixable)}): zuerst `auditcore-runner lokal <profil> --beheben` ausführen."

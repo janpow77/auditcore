@@ -41,3 +41,14 @@ Nicht übernommen: die abweichende Implementierung in `audit-portal`
 charakterisierendes Profil. HUMAN_DECISION_REQUIRED: Konvention für
 einstellige Werte im Zwei-Ziffern-Test (`exclude` nach verbreiteter Praxis
 oder `pad`).
+
+## Konzentrationsmaße (Modul `concentration`)
+
+Quelle: FlowStat `backend/app/modules/flowstat/services/chart_service.py`,
+`lorenz_curve` (audit_designer, Commit c4391723).
+
+| Fall | FlowStat | auditcore_statistics |
+|---|---|---|
+| negative Werte | still verworfen | `StatisticsInputError` |
+| leere Menge / Summe 0 | Gini 0,0 (Scheinergebnis „gleich verteilt“) | `None` |
+| Berechnung | `numpy.trapz` auf den Lorenzpunkten, auf [0, 1] gekappt | exakte Summenformel, mathematisch identisch, ohne Kappung |
