@@ -121,6 +121,10 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("akb-makro", "2a7d4ba40f466abdf341f67188589714bf9473d1"),
         }
     ),
+    # Herausgelöst aus FlowStat (audit_designer, privat) und korrigiert.
+    "auditcore_reportgates": frozenset(
+        {("janpow77/audit_designer", "c43917231f706b731c7933c679f89ce65c2b19c7")}
+    ),
     # Neuimplementierung; Ausgangspunkt ci/runner im selben Repository.
     "auditcore_runner": frozenset(
         {("janpow77/auditcore", "7b71f1c13cda06bd375e50ad8f909618ec09986c")}

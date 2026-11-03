@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- `auditcore_reportgates` 0.1.0 (neu): Fail-closed-Zahlengates für erzeugte
+  Berichte – Prosa-Zahlen-Gate, Wertegate gegen Referenztabellen mit
+  Datenstandsbindung, Freigabeentscheidung über Pflicht-Gates. Herausgelöst
+  aus FlowStat (HIS-Bericht) mit sechs Korrekturen (Prozent ≠ Prozentpunkte,
+  ungebundene Zahl ist Befund, nicht prüfbar = `not_run`, Skala aus der
+  Spalteneinheit, Zählzeilen im Wertegate, Fehlwert ≠ Null).
+- `auditcore_statistics`: Konzentrationsmaße `gini`, `lorenz_curve`,
+  `herfindahl_hirschman`, `concentration_ratio` (abwärtskompatibel).
 - `auditcore_harvest` 0.1.5: gemeinsamer Abruftakt über Prozessgrenzen
   (`SharedRateLimit` mit `acquire` – Wartezeit zurück statt Schlafen über
   `max_wait` –, Port `RateLimitStore`, `MemoryRateLimitStore`),

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_reportgates",
+  "version": "0.1.0",
+  "contract": "auditcore_reportgates/1",
+  "classification": "EXTRACTED_AND_CORRECTED_FROM_CHARACTERIZED_SOURCE",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "c43917231f706b731c7933c679f89ce65c2b19c7",
+      "files": [
+        {
+          "path": "backend/app/modules/flowstat/services/his_prose_number_gate_service.py"
+        },
+        {
+          "path": "backend/app/modules/flowstat/services/his_oracle_value_gate_service.py"
+        },
+        {
+          "path": "backend/app/modules/flowstat/services/his_native_release_service.py"
+        }
+      ],
+      "note": "Zahlerkennung im Fließtext (Masken, Jahreszahlen, Einheitenerbe) und Rundungstoleranz (halbe gedruckte Einheit) übernommen; HIS-spezifische Objektkataloge, Slotmaster und Zuordnung Absatz→Objekt bleiben in der Anwendung. Stand des Arbeitsbaums mit fremden uncommitteten Änderungen; die genannten Dateien sind im Commit enthalten, aber dort zum Teil verändert."
+    }
+  ],
+  "methodology": [],
+  "builds_on": [
+    "auditcore_common==0.2.1"
+  ],
+  "characterization": {
+    "kind": "synthetic_contract",
+    "legacy_parity": "NOT_APPLICABLE_CORRECTED_BEHAVIOR",
+    "tests": "packages/auditcore_reportgates/tests",
+    "corrections": "docs/behavior-changes.md"
+  },
+  "origin": "Herausgelöst aus dem HIS-Monitoringbericht in FlowStat (audit_designer), damit Prosa-Zahlen-Gate, Wertegate und Freigabeentscheidung für jeden erzeugten Bericht nutzbar sind. Bekannte Fehler der Quelle sind beim Herauslösen korrigiert (siehe docs/behavior-changes.md).",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für den Bibliothekscode in auditcore; audit_designer wird nicht umlizenziert."
+    }
+  },
+  "method_validation": "NOT_PERFORMED"
+}

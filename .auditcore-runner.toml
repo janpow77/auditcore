@@ -287,3 +287,26 @@ zeitlimit_s = 300
 [pruefprofile.officebank.werkzeug.codegate]
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_officebank", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
+
+# Fail-closed-Zahlengates für erzeugte Berichte (Prosa, Referenzwerte, Freigabe).
+[pruefprofile.reportgates]
+werkzeuge = ["ruff", "pytest", "mypy", "codegate"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 600
+autofix = false
+
+[pruefprofile.reportgates.werkzeug.ruff]
+befehl = ["python3", "-m", "ruff", "check", "packages/auditcore_reportgates", "--output-format=json", "--exit-zero"]
+zeitlimit_s = 120
+
+[pruefprofile.reportgates.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_reportgates/tests", "-n", "2", "--junitxml={ausgabe}"]
+zeitlimit_s = 300
+
+[pruefprofile.reportgates.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_reportgates && exec python3 -m mypy src --no-color-output --no-error-summary"]
+zeitlimit_s = 300
+
+[pruefprofile.reportgates.werkzeug.codegate]
+befehl = ["auditcore-codegate", "check", "--package", "auditcore_reportgates", "--skip-mypy", "--output", "{ausgabe}"]
+zeitlimit_s = 300

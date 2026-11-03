@@ -1,0 +1,10 @@
+auditcore_reportgates 0.1.0 — attribution and authorization
+
+Extracted from FlowStat in audit_designer (HIS monitoring report: prose
+number gate, oracle value gate and release QA, by Jan Riener) and corrected
+while extracting; see docs/behavior-changes.md. Report-specific catalogues,
+slot masters and the paragraph-to-object mapping stay in the application.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library.
