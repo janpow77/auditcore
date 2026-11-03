@@ -47,6 +47,7 @@ def normalise_label(text: object) -> str:
 
 
 def _column_key(header: str) -> str:
+    """Header without its unit: ``Betrag (Mio. Euro)`` and ``Betrag (%)`` both key ``betrag``."""
     return normalise_label(_UNIT_IN_HEADER.sub(" ", header))
 
 
@@ -203,6 +204,12 @@ def compare_tables(
     A column is numeric when the reference holds a number in it; any other
     text there is a finding ``text_in_zahlenspalte``. ``missing_markers`` and
     ``dash_is_zero`` are passed to :func:`read_cell` for both sides.
+
+    Columns are matched by header without unit (``Betrag (Mio. Euro)`` keys
+    ``betrag``). Two columns that differ only in their unit therefore share a
+    key; when such a key is needed for the comparison it is the finding
+    ``spalte_mehrdeutig`` instead of a guess which column is meant. Distinguish
+    such columns by a word in the header (``Betrag (Plan)``).
     """
     reading = _Reading(frozenset(m.lower() for m in missing_markers), dash_is_zero)
     reason = _vintage_reason(actual, expected)

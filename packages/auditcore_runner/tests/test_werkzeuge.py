@@ -411,3 +411,16 @@ def test_findings_refuses_last_result_of_another_repository(tmp_path: Path, caps
     assert main(["befunde", "--pfad", str(own)]) == 2
     assert "anderes" in capsys.readouterr().err
     assert main(["befunde", "--pfad", str(other)]) == 0
+
+
+def test_findings_compares_resolved_paths_on_both_sides(tmp_path: Path) -> None:
+    from auditcore_runner.werkzeuge.ausfuehren import last_result_path
+
+    real = tmp_path / "repo"
+    real.mkdir()
+    link = tmp_path / "verweis"
+    link.symlink_to(real)
+    last_result_path().parent.mkdir(parents=True, exist_ok=True)
+    document = {"pfad": str(link), "gesamt": "gruen", "werkzeuge": [], "befunde": []}
+    last_result_path().write_text(json.dumps(document), encoding="utf-8")
+    assert main(["befunde", "--pfad", str(real)]) == 0

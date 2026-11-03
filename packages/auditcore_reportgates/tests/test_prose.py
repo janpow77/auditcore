@@ -163,3 +163,38 @@ def test_no_claims_ist_vor_verwendung_definiert() -> None:
 
     source = Path(prose.__file__).read_text(encoding="utf-8")
     assert source.index("NO_CLAIMS =") < source.index("def check_paragraph")
+
+
+def _years_of(text: str) -> list[tuple[str, bool]]:
+    return [(c.number.text, c.is_year) for c in extract_claims(text)]
+
+
+def test_betraege_und_zaehlwerte_mit_praeposition_sind_keine_jahre() -> None:
+    assert _years_of("von 10 bis 2000 Euro") == [("10", False), ("2000", False)]
+    assert _years_of("zwischen 1950 und 2100 Euro") == [("1950", False), ("2100", False)]
+    assert _years_of("bis 2050 Vorhaben") == [("2050", False)]
+    assert _years_of("ab 2000 Teilnehmenden") == [("2000", False)]
+    assert _years_of("zwischen 2000 und 2050 Vorhaben") == [("2000", False), ("2050", False)]
+
+
+def test_euro_ist_einheit() -> None:
+    (claim,) = extract_claims("Es flossen 2000 Euro.")
+    assert claim.unit_stated and not claim.is_year
+    (mio,) = extract_claims("Es flossen 1,5 Mio. Euro.")
+    assert mio.unit.exponent == 6
+    assert extract_claims("rund 300 € je Fall")[0].unit_stated
+    assert not extract_claims("in Europa 2000 Vorhaben")[0].unit_stated
+
+
+def test_jahreskontext_bleibt_jahr() -> None:
+    assert _years_of("bis 2027") == [("2027", True)]
+    assert _years_of("im Jahr 2024") == [("2024", True)]
+    assert _years_of("2022–2024") == [("2022", True), ("2024", True)]
+
+
+def test_satzanfang_vor_verb_oder_komma_ist_jahr() -> None:
+    assert _years_of("2023 stieg die Quote.") == [("2023", True)]
+    assert _years_of("Gut. 2023, als die Quote stieg.") == [("2023", True)]
+    assert _years_of("2023 Vorhaben wurden gefördert.") == [("2023", False)]
+    result = check_paragraph("2023 Vorhaben wurden gefördert.", [_value("12", "Anzahl")])
+    assert result.verdict is Verdict.FAILED
