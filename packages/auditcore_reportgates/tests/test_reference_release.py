@@ -159,3 +159,13 @@ def test_fehlwertzeichen_konfigurierbar_und_strich_als_null() -> None:
     referenz = _table(("Bereich", "Wert"), ("A", "0"), ("B", "n/a"), ("C", "n/a"))
     assert compare_tables(eigene, referenz).findings[0].code == "text_in_zahlenspalte"
     assert compare_tables(eigene, referenz, missing_markers={"n/a"}).verdict is Verdict.PASSED
+
+
+def test_punkt_doppelpunkt_auslassung_sind_fehlwerte() -> None:
+    from auditcore_reportgates import MISSING, read_cell
+
+    for marker in (".", ":", "..."):
+        assert read_cell(marker) is MISSING, marker
+    expected = _table(("Merkmal", "Betrag"), ("A", "1"))
+    result = compare_tables(_table(("Merkmal", "Betrag"), ("A", ".")), expected)
+    assert [f.code for f in result.findings] == ["wert_fehlt"]
