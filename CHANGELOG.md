@@ -8,7 +8,12 @@
   aus FlowStat (HIS-Bericht) mit sechs Korrekturen (Prozent ≠ Prozentpunkte,
   ungebundene Zahl ist Befund, nicht prüfbar = `not_run`, Skala aus der
   Spalteneinheit, Zählzeilen im Wertegate, Fehlwert ≠ Null).
-- `auditcore_statistics`: Konzentrationsmaße `gini`, `lorenz_curve`,
+- `auditcore_reportgates` 0.1.0, Folgebefunde der Gegenprüfung: Jahreszahlen
+  mit Gegenbeleg (Einheit `Euro`/`€`, Zählwort), Satzanfang vor Verb als Jahr,
+  Fehlwertzeichen `.`, `:`, `...` und `spalte_mehrdeutig` dokumentiert.
+- `auditcore_runner`: `befunde` vergleicht den Pfad des letzten Laufs
+  beidseitig aufgelöst (Symlinks, relative Pfade).
+- `auditcore_statistics` 0.3.6: Konzentrationsmaße `gini`, `lorenz_curve`,
   `herfindahl_hirschman`, `concentration_ratio` (abwärtskompatibel).
 - `auditcore_harvest` 0.1.5: gemeinsamer Abruftakt über Prozessgrenzen
   (`SharedRateLimit` mit `acquire` – Wartezeit zurück statt Schlafen über

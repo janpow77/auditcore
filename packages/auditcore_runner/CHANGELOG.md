@@ -1,5 +1,11 @@
 # Changelog – auditcore_runner
 
+## Unveröffentlicht
+
+- `befunde`: Der Pfad des letzten Laufs wird beidseitig mit `resolve()`
+  verglichen; ein Lauf über einen Symlink oder relativen Pfad wird nicht mehr
+  als fremdes Repository abgewiesen.
+
 ## 0.1.1 – 2026-10-11
 
 - Nichts geprüft ist rot: Ein JUnit-Bericht ohne ausgeführten Testfall (fehlt,

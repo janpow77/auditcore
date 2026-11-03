@@ -71,7 +71,10 @@ def cmd_findings(args: argparse.Namespace) -> int:
     document = json.loads(source.read_text(encoding="utf-8"))
     if not args.ergebnis and isinstance(document, dict):
         # The last result is shared by all repositories; never report another repository's run.
-        recorded, wanted = str(document.get("pfad", "")), str(Path(args.pfad).resolve())
+        # Resolve both sides: a recorded symlink or relative path names the same repository.
+        raw = str(document.get("pfad", ""))
+        recorded = str(Path(raw).resolve()) if raw else ""
+        wanted = str(Path(args.pfad).resolve())
         if recorded != wanted:
             print(
                 f"letzter Lauf gehört zu {recorded or 'unbekanntem Pfad'}, nicht zu {wanted};"
