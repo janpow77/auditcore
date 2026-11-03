@@ -52,9 +52,7 @@ def tools_run(document: dict[str, object]) -> list[str]:
     ]
 
 
-def render(
-    findings: list[Finding], limit: int = 200, token_budget: int = 0, ran: Iterable[str] | None = None
-) -> str:
+def render(findings: list[Finding], limit: int = 200, token_budget: int = 0, ran: Iterable[str] | None = None) -> str:
     """Markdown; stops early when the token budget would be exceeded.
 
     ``ran`` names the tools that ran; without it the report cannot tell
@@ -66,8 +64,7 @@ def render(
     lines = [
         f"# Befunde ({len(manual)} zu bearbeiten, {len(fixable)} automatisch behebbar)",
         "",
-        "Werkzeuge mit Befunden: "
-        + (", ".join(f"{tool} {count}" for tool, count in counts.most_common()) or "keine"),
+        "Werkzeuge mit Befunden: " + (", ".join(f"{tool} {count}" for tool, count in counts.most_common()) or "keine"),
     ]
     if ran is not None:
         names = list(ran)
