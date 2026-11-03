@@ -69,7 +69,7 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_statistics.__all__` (17):
+Öffentliche Namen aus `auditcore_statistics.__all__` (22):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -79,16 +79,21 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 | `ChiSquareTest` | Datenklasse | Pearson chi-square test of one digit test against Benford's law. | `significance` |
 | `DigitRow` | Datenklasse | Observed and expected frequency of one leading digit (group). | `benford` |
 | `DigitZTest` | Datenklasse | z per digit and the digits above an explicitly chosen critical value. | `significance` |
+| `LorenzCurve` | Datenklasse | Points of the Lorenz curve, starting at (0, 0), and the Gini coefficient. | `concentration` |
 | `StatisticsInputError` | Ausnahme | Input does not satisfy the documented contract. | `benford` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `benford_test` | Funktion | Compare leading digits with Benford's law. | `benford` |
 | `chi2_critical_value` | Funktion | Quantile x with P(X ≥ x) = level for a chi-square distribution (bisection). | `significance` |
 | `chi2_survival` | Funktion | P(X ≥ statistic) for a chi-square distribution. | `numeric` |
 | `chi_square_test` | Funktion | Chi-square statistic, p-value and critical values of ``test`` (see module docstring). | `significance` |
+| `concentration_ratio` | Funktion | Share of the ``top`` largest units in the total (CR_k); ``None`` as :func:`gini`. | `concentration` |
 | `digit_z_test` | Funktion | z per digit of ``test``; digits are marked only against an explicit ``z_critical``. | `significance` |
 | `expected_share` | Funktion | Benford probability log10(1 + 1/d) of a leading digit group d. | `benford` |
+| `gini` | Funktion | Gini coefficient ``sum_i (2i - n - 1) x_(i) / (n * sum x)`` of sorted values. | `concentration` |
+| `herfindahl_hirschman` | Funktion | Sum of squared shares on the scale 0..1 (between ``1/n`` and 1, not 0..10.000). | `concentration` |
 | `legacy_flowinvoice_benford` | Funktion | Result fields of the source ``BenfordResult`` as a dictionary (same values). | `legacy_flowinvoice` |
 | `legacy_run_benford` | Funktion | Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``. | `benford` |
+| `lorenz_curve` | Funktion | Lorenz curve with ``n + 1`` points and its Gini coefficient; ``None`` as :func:`gini`. | `concentration` |
 | `recommended_flowinvoice_benford` | Funktion | ``benford_test`` with the decided parameters (replaces the legacy variant). | `legacy_flowinvoice` |
 
 Öffentliche Module:
@@ -96,6 +101,7 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 | Modul | Kurzbeschreibung |
 |---|---|
 | `auditcore_statistics.benford` | Benford first-digit and first-two-digit distribution with a chi-square statistic. |
+| `auditcore_statistics.concentration` | Concentration measures: Lorenz curve, Gini coefficient, HHI and concentration ratio. |
 | `auditcore_statistics.conformity` | Benford conformity measures (MAD, z per digit, second digit) with named profiles. |
 | `auditcore_statistics.legacy_flowinvoice` | Exact legacy variant of flowinvoice ``BenfordsLawAnalyzer.analyze`` (fraud detection). |
 | `auditcore_statistics.numeric` | Standard-library numerics with explicitly documented floating-point behavior. |

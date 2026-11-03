@@ -69,6 +69,16 @@ def _print_problems(document: dict[str, object]) -> None:
 def cmd_findings(args: argparse.Namespace) -> int:
     source = Path(args.ergebnis) if args.ergebnis else last_result_path()
     document = json.loads(source.read_text(encoding="utf-8"))
+    if not args.ergebnis and isinstance(document, dict):
+        # The last result is shared by all repositories; never report another repository's run.
+        recorded, wanted = str(document.get("pfad", "")), str(Path(args.pfad).resolve())
+        if recorded != wanted:
+            print(
+                f"letzter Lauf gehört zu {recorded or 'unbekanntem Pfad'}, nicht zu {wanted};"
+                " --ergebnis angeben oder dort `lokal` ausführen",
+                file=sys.stderr,
+            )
+            return 2
     findings = deduplicate(bericht.findings_from_documents([document]))
     if args.baseline_setzen:
         save_baseline(Path(args.baseline_setzen), findings)
@@ -84,7 +94,8 @@ def cmd_findings(args: argparse.Namespace) -> int:
         target = Path(args.aufgabenpaket)
         target.write_text(aufgaben.render(package), encoding="utf-8")
         print(aufgaben.command(package, target, args.art), file=sys.stderr)
-    print(bericht.render(new, args.max, args.budget), end="")
+    ran = bericht.tools_run(document) if isinstance(document, dict) else None
+    print(bericht.render(new, args.max, args.budget, ran), end="")
     if isinstance(document, dict):
         _print_problems(document)
     return 1 if new or (isinstance(document, dict) and document.get("gesamt") == "rot") else 0
