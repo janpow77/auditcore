@@ -396,7 +396,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 98.92
+      "coverage_percent": 99.02
     },
     "auditcore_tyfindings": {
       "metrics": {
