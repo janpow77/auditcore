@@ -14,6 +14,13 @@ from .benford import (
     expected_share,
     legacy_run_benford,
 )
+from .concentration import (
+    LorenzCurve,
+    concentration_ratio,
+    gini,
+    herfindahl_hirschman,
+    lorenz_curve,
+)
 from .legacy_flowinvoice import legacy_flowinvoice_benford, recommended_flowinvoice_benford
 from .numeric import chi2_survival
 from .significance import (
@@ -33,15 +40,20 @@ __all__ = [
     "ChiSquareTest",
     "DigitRow",
     "DigitZTest",
+    "LorenzCurve",
     "StatisticsInputError",
     "__version__",
     "benford_test",
     "chi2_critical_value",
     "chi2_survival",
     "chi_square_test",
+    "concentration_ratio",
     "digit_z_test",
     "expected_share",
+    "gini",
+    "herfindahl_hirschman",
     "legacy_flowinvoice_benford",
     "legacy_run_benford",
+    "lorenz_curve",
     "recommended_flowinvoice_benford",
 ]

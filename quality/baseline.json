@@ -335,6 +335,18 @@
       },
       "coverage_percent": 97.28
     },
+    "auditcore_reportgates": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      },
+      "coverage_percent": 99.59
+    },
     "auditcore_reporting": {
       "metrics": {
         "any_usages": 4,
@@ -360,7 +372,7 @@
       "coverage_percent": 98.37
     },
     "auditcore_runner": {
-      "coverage_percent": 86.32
+      "coverage_percent": 86.36
     },
     "auditcore_sampling": {
       "metrics": {
@@ -384,7 +396,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 98.92
+      "coverage_percent": 99.02
     },
     "auditcore_tyfindings": {
       "metrics": {
