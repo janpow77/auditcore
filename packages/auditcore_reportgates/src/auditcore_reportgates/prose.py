@@ -37,14 +37,30 @@ _NUMBER = re.compile(
     r"(?<![\d.,])"
     r"(?P<number>\d{1,3}(?:\.\d{3})+(?:,\d+)?(?![.,]\d)|\d+(?:,\d+)?(?![.,]\d)"
     r"|(?P<ambiguous>\d+(?:[.,]\d+)+))"
-    r"(?:\s?(?P<unit>%-Punkte?n?|Prozentpunkten?|Pp\.|%|Prozent|Mio\.|Mrd\.|Tsd\."
-    r"|Millionen|Milliarden))?"
+    r"(?:\s?(?P<unit>%-Punkte?n?|Prozentpunkten?|Pp\.|%|Prozent"
+    r"|(?:Mio\.|Mrd\.|Tsd\.|Millionen|Milliarden)(?:\s?(?:Euro|EUR)\b|\s?€)?"
+    r"|(?:Euro|EUR)\b|€))?"
 )
 _YEAR_CONTEXT = re.compile(
-    r"\b(?:im|seit|bis|ab|vor|nach|von|vom|zwischen|Jahre?s?n?|Zeitraum|Zeitraums"
-    r"|Haushaltsjahr|Berichtsjahr|Förderjahr)\s+(?:dem\s+|den\s+|Jahre?n?\s+)?$",
+    r"\b(?:im|seit|Jahre?s?n?|Zeitraum|Zeitraums|Haushaltsjahr|Berichtsjahr|Förderjahr)"
+    r"\s+(?:dem\s+|den\s+|Jahre?n?\s+)?$",
     re.IGNORECASE,
 )
+"""Strong year context: a year word or ``im``/``seit`` directly before the number."""
+_WEAK_YEAR_CONTEXT = re.compile(
+    r"\b(?:bis|ab|vor|nach|von|vom|zwischen)\s+(?:dem\s+|den\s+)?$", re.IGNORECASE
+)
+"""Short prepositions: a year only without counter-evidence (``bis 2050 Vorhaben``)."""
+_COUNT_AFTER = re.compile(
+    r"^\s?(?:Vorhaben|Projekt\w*|Teilnehm\w*|Person\w*|Unternehm\w*|Beschäftigt\w*"
+    r"|Begünstigt\w*|Förderf\w*|Fälle\w*|Anträge\w*|Arbeitsplätze\w*|Stellen"
+    r"|Einrichtung\w*|Kommunen|Gemeinden|Betriebe\w*|Haushalte\w*|Schüler\w*"
+    r"|Studierend\w*|Euro|EUR)\b",
+)
+"""A count word or currency after the number is counter-evidence against a year."""
+_SENTENCE_START = re.compile(r"(?:^|[.;:!?]\s+)\s*$")
+_VERB_OR_COMMA_AFTER = re.compile(r"^\s?(?:,|[a-zäöüß]\w*\b)")
+"""At sentence start, ``2023 stieg`` / ``2023,`` reads as a year; nouns are capitalised."""
 _YEAR_LINK = re.compile(r"^\s*(?:[-–]|und|bis|bzw\.|oder|sowie|,)\s*$")
 _YEAR_RANGE_AFTER = re.compile(r"^\s?[-–]\s?\d{4}(?!\d)")
 _MASKS = (
@@ -143,25 +159,55 @@ def _raw_claims(source: str) -> tuple[list[tuple[Claim, int]], list[str]]:
     return found, ambiguous
 
 
+def _counter_evidence(source: str, raw: Sequence[tuple[Claim, int]], index: int) -> bool:
+    """Count word after the number, or a range partner that carries a unit or count word."""
+    end = raw[index][1]
+    if _COUNT_AFTER.match(source[end:]):
+        return True
+    if index + 1 < len(raw):
+        partner, partner_end = raw[index + 1]
+        if _YEAR_LINK.match(source[end : partner.position]) and (
+            partner.unit_stated or _COUNT_AFTER.match(source[partner_end:])
+        ):
+            return True
+    return False
+
+
+def _year_context(source: str, raw: Sequence[tuple[Claim, int]], index: int) -> bool:
+    claim, end = raw[index]
+    before, after = source[: claim.position], source[end:]
+    if _counter_evidence(source, raw, index):
+        return False
+    return (
+        _YEAR_CONTEXT.search(before) is not None
+        or _YEAR_RANGE_AFTER.match(after) is not None
+        or _WEAK_YEAR_CONTEXT.search(before) is not None
+        or (
+            _SENTENCE_START.search(before) is not None
+            and _VERB_OR_COMMA_AFTER.match(after) is not None
+        )
+    )
+
+
 def _years(source: str, raw: Sequence[tuple[Claim, int]], allowed: frozenset[int]) -> list[bool]:
-    """Year flags: year-like and either in ``allowed`` or in year context."""
+    """Year flags: year-like and either in ``allowed`` or in year context.
+
+    Counter-evidence (count word or unit after the number or after its range
+    partner) beats every context, but not ``allowed_years``.
+    """
     flags: list[bool] = []
-    for index, (claim, end) in enumerate(raw):
+    for index, (claim, _) in enumerate(raw):
         if not _year_like(claim):
             flags.append(False)
             continue
-        value = int(claim.number.value)
-        before = source[: claim.position]
         linked = (
             index > 0
             and flags[index - 1]
             and _YEAR_LINK.match(source[raw[index - 1][1] : claim.position]) is not None
+            and not _COUNT_AFTER.match(source[raw[index][1] :])
         )
         flags.append(
-            value in allowed
-            or linked
-            or _YEAR_CONTEXT.search(before) is not None
-            or _YEAR_RANGE_AFTER.match(source[end:]) is not None
+            int(claim.number.value) in allowed or linked or _year_context(source, raw, index)
         )
     return flags
 
@@ -181,11 +227,17 @@ def _inherited(source: str, end: int, following: Sequence[tuple[Claim, int]]) ->
 def extract_claims(text: str, *, allowed_years: Iterable[int] = ()) -> list[Claim]:
     """All numbers of a paragraph; dates, footnotes and cross references are masked.
 
-    An integer 1900..2100 is a year only in year context (``im``, ``seit``,
-    ``bis``, ``Jahr``, ``Zeitraum``, a range ``2022–2024`` or a year list
-    ``2021 und 2022``) or when listed in ``allowed_years``; with a thousands
-    point it is never a year. A number without unit inherits the unit of the
-    next number in the same sentence (``"8,4 bzw. 8,5 %"``); years never inherit.
+    An integer 1900..2100 is a year only in year context or when listed in
+    ``allowed_years``. Context is a year word or ``im``/``seit`` before it, a
+    range ``2022–2024``, a year list ``2021 und 2022``, a short preposition
+    (``bis``, ``ab``, ``von``, ``vor``, ``nach``, ``zwischen``) or the start of a
+    sentence followed by a verb or comma (``2023 stieg …``). A unit (``Euro``,
+    ``%``) or count word (``Vorhaben``, ``Teilnehmende``) after the number or
+    its range partner is counter-evidence and beats the context
+    (``bis 2050 Vorhaben``, ``zwischen 1950 und 2100 Euro``); only
+    ``allowed_years`` overrides it. With a thousands point it is never a year.
+    A number without unit inherits the unit of the next number in the same
+    sentence (``"8,4 bzw. 8,5 %"``); years never inherit.
     """
     source = _masked(text)
     raw, _ = _raw_claims(source)
