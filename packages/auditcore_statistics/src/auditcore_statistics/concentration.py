@@ -5,6 +5,11 @@ numerical integration.
 Negative values are rejected instead of being dropped, because a silently
 shortened population changes the result without notice. An empty population
 or a population with total zero has no concentration (``None``).
+
+Scales: Gini, HHI and CR_k are shares between 0 and 1. The HHI is *not*
+given on the competition-law scale 0..10.000; multiply by 10.000 for it.
+A single unit (``n = 1``) gives Gini 0, HHI 1 and CR_k 1: one unit holds
+everything, and its distribution is trivially equal.
 """
 
 from __future__ import annotations
@@ -64,18 +69,27 @@ def lorenz_curve(values: Sequence[Number]) -> LorenzCurve | None:
     coefficient = gini(ordered)
     if coefficient is None:
         return None
-    running = 0.0
     shares = [0.0]
+    running, compensation = 0.0, 0.0
     for value in ordered:
-        running += value
-        shares.append(running / total)
+        # Neumaier summation: each prefix share as exact as math.fsum, in O(n).
+        step = running + value
+        if abs(running) >= abs(value):
+            compensation += (running - step) + value
+        else:
+            compensation += (value - step) + running
+        running = step
+        shares.append((running + compensation) / total)
     shares[-1] = 1.0
     population = tuple(rank / count for rank in range(count + 1))
     return LorenzCurve(population, tuple(shares), coefficient, count)
 
 
 def herfindahl_hirschman(values: Sequence[Number]) -> float | None:
-    """Sum of squared shares between ``1/n`` and 1; ``None`` as :func:`gini`."""
+    """Sum of squared shares on the scale 0..1 (between ``1/n`` and 1, not 0..10.000).
+
+    ``n = 1`` gives 1. ``None`` as :func:`gini`.
+    """
     checked = _checked(values)
     total = math.fsum(checked)
     if not checked or total == 0:

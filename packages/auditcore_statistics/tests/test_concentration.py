@@ -1,5 +1,6 @@
 """Konzentrationsmaße: Gini, Lorenzkurve, HHI und CR_k."""
 
+import math
 from decimal import Decimal
 
 import pytest
@@ -66,3 +67,18 @@ def test_gini_gleich_trapezregel_und_im_bereich(values: list[float]) -> None:
         return
     assert -1e-9 <= coefficient <= (len(values) - 1) / len(values) + 1e-9
     assert coefficient == pytest.approx(_trapz_gini(values), abs=1e-9)
+
+
+def test_lorenz_teilsummen_kompensiert() -> None:
+    werte = [0.1] * 10
+    kurve = lorenz_curve(werte)
+    assert kurve is not None
+    gesamt = math.fsum(werte)
+    erwartet = [math.fsum(sorted(werte)[:k]) / gesamt for k in range(len(werte) + 1)]
+    assert list(kurve.value_share) == erwartet
+
+
+def test_eine_einheit_hhi_eins_gini_null() -> None:
+    assert gini([5]) == 0.0
+    assert herfindahl_hirschman([5]) == 1.0
+    assert concentration_ratio([5], 3) == 1.0
