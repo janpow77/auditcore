@@ -352,8 +352,8 @@ def test_skipped_only_junit_is_red(tmp_path: Path, capsys: pytest.CaptureFixture
     assert main(["lokal", "pr", "--host", "--pfad", str(tmp_path)]) == 1
     assert "pytest: nichts geprüft – Kein lokaler Backend-Container" in capsys.readouterr().err
     baseline = tmp_path / "baseline.json"
-    assert main(["befunde", "--baseline-setzen", str(baseline)]) == 0
-    assert main(["befunde", "--baseline", str(baseline)]) == 1
+    assert main(["befunde", "--baseline-setzen", str(baseline), "--pfad", str(tmp_path)]) == 0
+    assert main(["befunde", "--baseline", str(baseline), "--pfad", str(tmp_path)]) == 1
     assert "Kein lokaler Backend-Container" in capsys.readouterr().out
 
 
@@ -389,3 +389,25 @@ def test_web_serves_last_result() -> None:
     last_result_path().parent.mkdir(parents=True, exist_ok=True)
     last_result_path().write_text(json.dumps({"gesamt": "rot", "probleme": ["pytest: x"]}), encoding="utf-8")
     assert web.last_result()["probleme"] == ["pytest: x"]
+
+
+def test_report_names_tools_with_findings_and_tools_run() -> None:
+    text = bericht.render([], ran=["ruff", "pytest"])
+    assert "Werkzeuge mit Befunden: keine" in text
+    assert "Gelaufene Werkzeuge (2): ruff, pytest" in text
+    document = {"werkzeuge": [{"werkzeug": "ruff", "status": "ok"}, {"werkzeug": "eslint", "status": "entfaellt"}]}
+    assert bericht.tools_run(document) == ["ruff"]
+
+
+def test_findings_refuses_last_result_of_another_repository(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    from auditcore_runner.werkzeuge.ausfuehren import last_result_path
+
+    other, own = tmp_path / "anderes", tmp_path / "eigenes"
+    other.mkdir()
+    own.mkdir()
+    last_result_path().parent.mkdir(parents=True, exist_ok=True)
+    document = {"pfad": str(other.resolve()), "gesamt": "gruen", "werkzeuge": [], "befunde": []}
+    last_result_path().write_text(json.dumps(document), encoding="utf-8")
+    assert main(["befunde", "--pfad", str(own)]) == 2
+    assert "anderes" in capsys.readouterr().err
+    assert main(["befunde", "--pfad", str(other)]) == 0
