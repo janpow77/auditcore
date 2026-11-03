@@ -112,3 +112,50 @@ def test_freigabe_fail_closed() -> None:
     assert missing.verdict is Verdict.NOT_RUN and missing.missing == ("d",)
     with pytest.raises(ValueError):
         release([ok], [])
+
+
+def test_freigabe_lehnt_doppelte_gate_namen_ab() -> None:
+    ok = decide("a", 1, [])
+    fehler = decide("a", 1, [Finding("x", "y")])
+    with pytest.raises(ValueError, match="doppelt: a"):
+        release([fehler, ok], ["a"])
+    with pytest.raises(ValueError, match="Pflicht-Gate doppelt"):
+        release([ok], ["a", "a"])
+
+
+def test_nur_einheitsklammern_werden_entfernt() -> None:
+    actual = _table(("Merkmal", "Betrag (Mio. Euro)", "Betrag (Plan)"), ("A", "1,0", "2,0"))
+    expected = _table(("Merkmal", "Betrag (in Mio. EUR)", "Betrag (Plan)"), ("A", "1,0", "2,0"))
+    result = compare_tables(actual, expected)
+    assert result.verdict is Verdict.PASSED and result.checked == 2
+
+
+def test_doppelter_spaltenschluessel_ist_befund() -> None:
+    actual = _table(("Merkmal", "Betrag (Plan)", "Betrag (Ist)"), ("A", "1", "2"))
+    expected = _table(("Merkmal", "Betrag (Plan)", "Betrag (Ist)"), ("A", "1", "2"))
+    assert compare_tables(actual, expected).verdict is Verdict.PASSED
+    doppelt = _table(("Merkmal", "Betrag (Euro)", "Betrag (%)"), ("A", "1", "2"))
+    result = compare_tables(doppelt, expected)
+    assert "spalte_mehrdeutig" not in {f.code for f in result.findings}
+    result = compare_tables(doppelt, _table(("Merkmal", "Betrag"), ("A", "1")))
+    assert result.verdict is Verdict.FAILED
+    assert [f.code for f in result.findings] == ["spalte_mehrdeutig"]
+
+
+def test_unbekannter_text_in_zahlenspalte_ist_befund() -> None:
+    actual = _table(("Bereich", "Wert"), ("A", "5"), ("B", "6"))
+    expected = _table(("Bereich", "Wert"), ("A", "5"), ("B", "geheim"))
+    result = compare_tables(actual, expected)
+    assert result.verdict is Verdict.FAILED
+    assert [f.code for f in result.findings] == ["text_in_zahlenspalte"]
+
+
+def test_fehlwertzeichen_konfigurierbar_und_strich_als_null() -> None:
+    actual = _table(("Bereich", "Wert"), ("A", "0"), ("B", "."), ("C", ":"))
+    expected = _table(("Bereich", "Wert"), ("A", "–"), ("B", "k. A."), ("C", "k. A."))
+    assert compare_tables(actual, expected).findings[0].code == "fehlend_vs_wert"
+    assert compare_tables(actual, expected, dash_is_zero=True).verdict is Verdict.PASSED
+    eigene = _table(("Bereich", "Wert"), ("A", "0"), ("B", "n/a"), ("C", "n/a"))
+    referenz = _table(("Bereich", "Wert"), ("A", "0"), ("B", "n/a"), ("C", "n/a"))
+    assert compare_tables(eigene, referenz).findings[0].code == "text_in_zahlenspalte"
+    assert compare_tables(eigene, referenz, missing_markers={"n/a"}).verdict is Verdict.PASSED

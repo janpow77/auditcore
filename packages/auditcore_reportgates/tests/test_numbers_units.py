@@ -129,3 +129,40 @@ def test_format_und_lesen_umkehrbar(value: Decimal) -> None:
     number = read_number(format_de(value, 2))
     assert number is not None
     assert number.value == value
+
+
+@pytest.mark.parametrize("wert", [float("nan"), float("inf"), Decimal("NaN"), Decimal("-Infinity")])
+def test_nan_und_unendlich_werden_abgewiesen(wert: object) -> None:
+    with pytest.raises(ValueError):
+        exact(wert)  # type: ignore[arg-type]
+    with pytest.raises(ValueError):
+        read_cell(wert)
+    with pytest.raises(ValueError):
+        format_de(wert)  # type: ignore[arg-type]
+    assert read_number("NaN") is None
+
+
+def test_punkt_und_doppelpunkt_sind_fehlwerte() -> None:
+    assert read_cell(".") is MISSING and read_cell(":") is MISSING
+    assert read_cell("–") is MISSING
+    null = read_cell("–", dash_is_zero=True)
+    assert isinstance(null, PrintedNumber) and null.value == 0
+    assert read_cell("k. A.", missing_markers={"n/a"}) == "k. A."
+
+
+@pytest.mark.parametrize(
+    ("kopf", "dimension"),
+    [
+        ("Förderquote", Dimension.SHARE),
+        ("Frauenanteil", Dimension.SHARE),
+        ("%-Punkte", Dimension.POINTS),
+    ],
+)
+def test_quote_und_anteil_in_komposita(kopf: str, dimension: Dimension) -> None:
+    assert unit_of(kopf).dimension is dimension
+
+
+def test_europa_ist_keine_waehrung() -> None:
+    assert unit_of("Europa").exponent is None
+    assert unit_of("Mittel in Euro").exponent == 0
+    assert unit_of("EUR").exponent == 0

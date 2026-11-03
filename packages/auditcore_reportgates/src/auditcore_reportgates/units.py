@@ -43,8 +43,10 @@ _SCALES = (
     (re.compile(r"\btsd\b\.?|tausend"), 3),
 )
 _POINTS = re.compile(r"prozentpunkt|\bpp\b\.?|%-punkt")
-_SHARE = re.compile(r"%|prozent|\banteil|\bquote")
-_EURO = re.compile(r"euro|\beur\b|€")
+_SHARE = re.compile(r"%|prozent|anteil|quote")
+"""Also in compounds: ``Förderquote``, ``Frauenanteil``."""
+_EURO = re.compile(r"\beuro\b|\beur\b|€")
+"""Word boundaries: ``Europa`` names no currency."""
 
 
 def _scale(text: str) -> int | None:

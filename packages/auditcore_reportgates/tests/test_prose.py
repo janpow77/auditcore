@@ -27,7 +27,7 @@ def _value(text: str, unit: str, source: str = "Tabelle 1") -> BoundValue:
 
 def test_masken_und_jahreszahlen() -> None:
     claims = extract_claims(
-        "Laut Tabelle 7 (Stand 15.02.2024) stieg der Wert 2023 nach Art. 5 "
+        "Laut Tabelle 7 (Stand 15.02.2024) stieg der Wert im Jahr 2023 nach Art. 5 "
         "je 100.000 Einwohner auf 3,4 %."
     )
     assert [c.number.text for c in claims if not c.is_year] == ["3,4"]
@@ -108,3 +108,58 @@ def test_combine() -> None:
     assert combine("prose", [neutral]).verdict is Verdict.NOT_RUN
     failed = check_paragraph("Es waren 99 Vorhaben.", [_value("12", "Anzahl")])
     assert combine("prose", [passed, failed]).verdict is Verdict.FAILED
+
+
+def test_ganzzahl_ohne_kontext_ist_keine_jahreszahl() -> None:
+    claims = extract_claims("Gefördert wurden 2000 Vorhaben.")
+    assert not claims[0].is_year
+    assert (
+        check_paragraph("Gefördert wurden 2000 Vorhaben.", [_value("1990", "")]).verdict
+        is Verdict.FAILED
+    )
+
+
+def test_tausenderpunkt_ist_nie_jahr() -> None:
+    assert not extract_claims("Im Jahr 2.024 Vorhaben.")[0].is_year
+
+
+def test_jahr_im_kontext_und_als_spanne() -> None:
+    texte = ("seit 2019 gefördert", "im Zeitraum 2021 bis 2023", "Werte 2022–2024", "2022 – 2024")
+    for text in texte:
+        claims = extract_claims(text)
+        assert claims and all(c.is_year for c in claims), text
+    spanne = extract_claims("2022 – 2024")
+    assert [c.number.value for c in spanne] == [Decimal(2022), Decimal(2024)]
+
+
+def test_jahr_per_parameter() -> None:
+    assert extract_claims("Der Wert 2023 stieg.", allowed_years=[2023])[0].is_year
+    result = check_paragraph("Der Wert 2023 stieg.", [], allowed_years=[2023])
+    assert result.reason == NO_CLAIMS
+
+
+def test_prozentpunkt_schreibweisen() -> None:
+    for text in ("um 1,5 %-Punkte", "um 1,5 %-Punkt", "um 1,5 Prozentpunkten", "um 1,5 Pp."):
+        (claim,) = extract_claims(text)
+        assert claim.unit.dimension.value == "points", text
+
+
+def test_maske_je_mit_dezimalkomma() -> None:
+    claims = extract_claims("Kosten je 1,5 Stellen lagen bei 3,4 %.")
+    assert [c.number.text for c in claims] == ["3,4"]
+
+
+def test_mehrdeutige_zahl_wird_nicht_zerlegt() -> None:
+    assert extract_claims("Es flossen 2.5 Mio. Euro.") == []
+    result = check_paragraph("Es flossen 2.5 Mio. Euro.", [_value("5", "Mio. Euro")])
+    assert result.verdict is Verdict.FAILED
+    assert [f.code for f in result.findings] == ["zahl_mehrdeutig"]
+
+
+def test_no_claims_ist_vor_verwendung_definiert() -> None:
+    from pathlib import Path
+
+    import auditcore_reportgates.prose as prose
+
+    source = Path(prose.__file__).read_text(encoding="utf-8")
+    assert source.index("NO_CLAIMS =") < source.index("def check_paragraph")

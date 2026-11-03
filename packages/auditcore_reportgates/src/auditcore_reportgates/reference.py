@@ -13,15 +13,19 @@ vintage. Undeclared or different vintages give ``not_run``, never ``passed``.
 from __future__ import annotations
 
 import re
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
-from .numbers import MISSING, PrintedNumber, read_cell, same_value
+from .numbers import MISSING, MISSING_MARKERS, PrintedNumber, read_cell, same_value
 from .units import Unit, conversion_exponent, unit_of
 from .verdict import Finding, GateResult, Verdict, decide
 
+_UNIT_WORD = (
+    r"(?:%|€|eur|euro|prozent(?:punkte)?|pp\.?|%-punkte|mio\.?|mrd\.?|tsd\.?"
+    r"|millionen|milliarden|tausend)"
+)
 _UNIT_IN_HEADER = re.compile(
-    r"\(.*?\)|\bin\s+(?:mio|mrd|tsd)\.?\s*(?:euro|eur)?|%|\b(?:mio|mrd|tsd)\.\s*(?:euro|eur)?"
+    rf"\(\s*(?:in\s+)?{_UNIT_WORD}(?:\s*{_UNIT_WORD})*\s*\)|\bin\s+(?:mio|mrd|tsd)\.?\s*(?:euro|eur)?|%|\b(?:mio|mrd|tsd)\.\s*(?:euro|eur)?"
     r"|\beuro\b|\beur\b|€",
     re.IGNORECASE,
 )
@@ -65,14 +69,39 @@ class _Column:
     header: str
 
 
+def _positions(headers: Sequence[str]) -> tuple[dict[str, int], set[str]]:
+    positions: dict[str, int] = {}
+    doubled: set[str] = set()
+    for index, header in enumerate(headers):
+        if index == 0:
+            continue
+        key = _column_key(header)
+        if key in positions:
+            doubled.add(key)
+        positions[key] = index
+    return positions, doubled
+
+
 def _columns(actual: Table, expected: Table) -> tuple[list[_Column], list[Finding]]:
-    positions = {_column_key(h): i for i, h in enumerate(actual.headers) if i > 0}
+    """Columns matched by key; a key that occurs twice on either side is ``spalte_mehrdeutig``."""
+    positions, doubled_actual = _positions(actual.headers)
+    _, doubled_expected = _positions(expected.headers)
     columns: list[_Column] = []
     findings: list[Finding] = []
+    reported: set[str] = set()
     for index, header in enumerate(expected.headers):
         if index == 0:
             continue
-        found = positions.get(_column_key(header))
+        key = _column_key(header)
+        if key in doubled_actual or key in doubled_expected:
+            if key not in reported:
+                reported.add(key)
+                side = "Ergebnis" if key in doubled_actual else "Referenz"
+                findings.append(
+                    Finding("spalte_mehrdeutig", f"Spaltenschlüssel doppelt im {side}", header)
+                )
+            continue
+        found = positions.get(key)
         if found is None:
             findings.append(Finding("spalte_fehlt", "Spalte fehlt im Ergebnis", header))
             continue
@@ -98,11 +127,20 @@ def _compare_numbers(
     return Finding("abweichung", "Wert weicht ab", where, expected.text, actual.text)
 
 
+@dataclass(frozen=True)
+class _Reading:
+    markers: frozenset[str]
+    dash_is_zero: bool
+
+    def cell(self, raw: object) -> object:
+        return read_cell(raw, missing_markers=self.markers, dash_is_zero=self.dash_is_zero)
+
+
 def _compare_cell(
-    actual_raw: object, expected_raw: object, column: _Column, where: str
+    actual_raw: object, expected_raw: object, column: _Column, where: str, reading: _Reading
 ) -> Finding | None:
-    """``None`` when equal; text cells are not compared and return ``None``."""
-    actual, expected = read_cell(actual_raw), read_cell(expected_raw)
+    """``None`` when equal; a text reference cell is ``text_in_zahlenspalte``."""
+    actual, expected = reading.cell(actual_raw), reading.cell(expected_raw)
     if expected is MISSING:
         if actual is MISSING:
             return None
@@ -114,7 +152,13 @@ def _compare_cell(
             str(actual_raw),
         )
     if not isinstance(expected, PrintedNumber):
-        return None
+        return Finding(
+            "text_in_zahlenspalte",
+            "Referenzzelle in einer Zahlenspalte ist weder Zahl noch Fehlwertzeichen",
+            where,
+            str(expected),
+            str(actual_raw),
+        )
     if actual is MISSING:
         return Finding("wert_fehlt", "Wert fehlt im Ergebnis", where, expected.text, "k. A.")
     if not isinstance(actual, PrintedNumber):
@@ -122,9 +166,20 @@ def _compare_cell(
     return _compare_numbers(actual, expected, column, where)
 
 
-def _is_number_cell(raw: object) -> bool:
-    cell = read_cell(raw)
+def _is_number_cell(raw: object, reading: _Reading) -> bool:
+    cell = reading.cell(raw)
     return cell is MISSING or isinstance(cell, PrintedNumber)
+
+
+def _numeric_columns(
+    rows: Sequence[tuple[object, ...]], columns: Sequence[_Column], reading: _Reading
+) -> set[int]:
+    """Reference columns with at least one number; text there is a finding, not skipped."""
+    return {
+        column.expected
+        for column in columns
+        if any(isinstance(reading.cell(_cell(row, column.expected)), PrintedNumber) for row in rows)
+    }
 
 
 def _vintage_reason(actual: Table, expected: Table) -> str:
@@ -135,10 +190,24 @@ def _vintage_reason(actual: Table, expected: Table) -> str:
     return ""
 
 
-def compare_tables(actual: Table, expected: Table, *, gate: str = "reference_values") -> GateResult:
-    """Compare every numeric reference cell; extra and missing rows are findings."""
+def compare_tables(
+    actual: Table,
+    expected: Table,
+    *,
+    gate: str = "reference_values",
+    missing_markers: Iterable[str] = MISSING_MARKERS,
+    dash_is_zero: bool = False,
+) -> GateResult:
+    """Compare every numeric reference cell; extra and missing rows are findings.
+
+    A column is numeric when the reference holds a number in it; any other
+    text there is a finding ``text_in_zahlenspalte``. ``missing_markers`` and
+    ``dash_is_zero`` are passed to :func:`read_cell` for both sides.
+    """
+    reading = _Reading(frozenset(m.lower() for m in missing_markers), dash_is_zero)
     reason = _vintage_reason(actual, expected)
     columns, findings = _columns(actual, expected)
+    numeric = _numeric_columns(expected.rows, columns, reading)
     actual_rows, expected_rows = _row_keys(actual.rows), _row_keys(expected.rows)
     checked = 0
     for key, expected_row in expected_rows.items():
@@ -149,11 +218,13 @@ def compare_tables(actual: Table, expected: Table, *, gate: str = "reference_val
             continue
         for column in columns:
             expected_raw = _cell(expected_row, column.expected)
-            if not _is_number_cell(expected_raw):
+            if column.expected not in numeric and not _is_number_cell(expected_raw, reading):
                 continue
             checked += 1
             where = f"{label} / {column.header}"
-            finding = _compare_cell(_cell(actual_row, column.actual), expected_raw, column, where)
+            finding = _compare_cell(
+                _cell(actual_row, column.actual), expected_raw, column, where, reading
+            )
             if finding is not None:
                 findings.append(finding)
     extra = [str(row[0]) for key, row in actual_rows.items() if key not in expected_rows and row]

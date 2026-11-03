@@ -7,6 +7,7 @@ fails the release, one gate that did not run keeps the release ``not_run``.
 
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -72,14 +73,26 @@ class ReleaseDecision:
         return self.verdict is Verdict.PASSED
 
 
+def _reject_duplicates(kind: str, names: Sequence[str]) -> None:
+    counts = Counter(names)
+    doubled = sorted(name for name, count in counts.items() if count > 1)
+    if doubled:
+        raise ValueError(f"{kind} doppelt: {', '.join(doubled)}")
+
+
 def release(results: Iterable[GateResult], required: Sequence[str]) -> ReleaseDecision:
     """Combine gate results; a required gate without result counts as not run.
 
-    Raises ``ValueError`` when ``required`` is empty: a release without any
-    required gate would pass without evidence.
+    Raises ``ValueError`` when ``required`` is empty (a release without any
+    required gate would pass without evidence) and when a gate name occurs
+    twice in ``results`` or ``required`` (one result would silently replace
+    the other).
     """
     if not required:
         raise ValueError("Mindestens ein Pflicht-Gate ist anzugeben.")
+    _reject_duplicates("Pflicht-Gate", required)
+    results = tuple(results)
+    _reject_duplicates("Gate-Ergebnis", [result.gate for result in results])
     by_gate = {result.gate: result for result in results}
     missing = tuple(gate for gate in required if gate not in by_gate)
     present = tuple(by_gate[gate] for gate in required if gate in by_gate)

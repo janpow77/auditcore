@@ -8,6 +8,7 @@ mixed up: a missing value is not zero and zero is never printed as ``k. A.``.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import ROUND_HALF_UP, Decimal
 from enum import Enum
@@ -15,8 +16,16 @@ from enum import Enum
 from auditcore_common.numbers_de import parse_number
 from auditcore_common.text import group_thousands_de
 
-MISSING_MARKERS = frozenset({"k. a.", "k.a.", "-", "–", "—", "n. v.", "n.v.", "x. x."})
-"""Markers that stand for a missing value (compared case-insensitively)."""
+MISSING_MARKERS = frozenset(
+    {"k. a.", "k.a.", "-", "–", "—", "n. v.", "n.v.", "x. x.", ".", ":", "..."}
+)
+"""Markers that stand for a missing value (compared case-insensitively).
+
+``.`` (Zahlenwert unbekannt) and ``:`` (Eurostat: not available) included.
+"""
+
+ZERO_DASHES = frozenset({"-", "–", "—"})
+"""Destatis notation: a dash means "genau null". Used when ``dash_is_zero``."""
 
 MISSING_TEXT = "k. A."
 """Printed form of a missing value."""
@@ -65,29 +74,47 @@ def read_number(text: str) -> PrintedNumber | None:
     if _THOUSANDS_ONLY.fullmatch(cleaned):
         cleaned = cleaned.replace(".", "")
     value = parse_number(cleaned, "de", max_fraction_digits=None)
-    if value is None:
+    if value is None or not value.is_finite():
         return None
     return PrintedNumber(value, _decimals(cleaned), text.strip())
 
 
+def _finite(value: int | float | Decimal) -> Decimal:
+    number = Decimal(str(value))
+    if not number.is_finite():
+        raise ValueError(f"Kein endlicher Zahlwert: {value!r}")
+    return number
+
+
 def exact(value: int | float | Decimal) -> PrintedNumber:
-    """A computed value without printed rounding."""
+    """A computed value without printed rounding; NaN and infinity are rejected."""
     if isinstance(value, bool):
         raise TypeError("Wahrheitswerte sind keine Zahlen.")
-    return PrintedNumber(Decimal(str(value)), None, str(value))
+    return PrintedNumber(_finite(value), None, str(value))
 
 
-def read_cell(raw: object) -> Cell:
+def read_cell(
+    raw: object,
+    *,
+    missing_markers: Iterable[str] = MISSING_MARKERS,
+    dash_is_zero: bool = False,
+) -> Cell:
     """Classify a cell: number, ``MISSING`` or text (returned stripped).
 
-    ``None`` and empty text are missing. Numbers from a computation are exact.
+    ``None`` and empty text are missing. Numbers from a computation are exact;
+    NaN and infinity raise ``ValueError``. ``missing_markers`` replaces the
+    default markers; with ``dash_is_zero`` a lone dash is exactly zero
+    (Destatis) instead of missing.
     """
     if raw is None:
         return MISSING
     if isinstance(raw, int | float | Decimal) and not isinstance(raw, bool):
         return exact(raw)
     text = str(raw).strip()
-    if not text or text.lower() in MISSING_MARKERS:
+    if dash_is_zero and text in ZERO_DASHES:
+        return PrintedNumber(Decimal(0), None, text)
+    markers = {marker.lower() for marker in missing_markers}
+    if not text or text.lower() in markers:
         return MISSING
     number = read_number(text)
     return number if number is not None else text
@@ -122,7 +149,7 @@ def format_de(value: Decimal | int | float | Missing | None, decimals: int = 2) 
     if decimals < 0:
         raise ValueError("decimals darf nicht negativ sein.")
     quantum = Decimal(1).scaleb(-decimals)
-    rounded = Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP)
+    rounded = _finite(value).quantize(quantum, rounding=ROUND_HALF_UP)
     if rounded.is_zero():
         rounded = abs(rounded)
     sign = "-" if rounded < 0 else ""

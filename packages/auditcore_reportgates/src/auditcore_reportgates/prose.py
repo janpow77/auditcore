@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from decimal import Decimal
 from enum import StrEnum
 
@@ -29,12 +29,24 @@ UNIT_INHERITANCE_DISTANCE = 40
 
 YEAR_RANGE = (1900, 2100)
 
+NO_CLAIMS = "ohne_pruefbare_zahl"
+"""Reason of a paragraph without numbers; neutral for :func:`combine`."""
+
 _NUMBER = re.compile(
-    r"(?:(?<![\w\d])(?P<sign>[-–−])\s?)?"
-    r"(?P<number>\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:,\d+)?)"
-    r"(?:\s?(?P<unit>%|Prozentpunkte|Prozentpunkt|Prozent|Pp\.|Mio\.|Mrd\.|Tsd\."
+    r"(?:(?<![\w\d])(?<!\d\s)(?P<sign>[-–−])\s?)?"
+    r"(?<![\d.,])"
+    r"(?P<number>\d{1,3}(?:\.\d{3})+(?:,\d+)?(?![.,]\d)|\d+(?:,\d+)?(?![.,]\d)"
+    r"|(?P<ambiguous>\d+(?:[.,]\d+)+))"
+    r"(?:\s?(?P<unit>%-Punkte?n?|Prozentpunkten?|Pp\.|%|Prozent|Mio\.|Mrd\.|Tsd\."
     r"|Millionen|Milliarden))?"
 )
+_YEAR_CONTEXT = re.compile(
+    r"\b(?:im|seit|bis|ab|vor|nach|von|vom|zwischen|Jahre?s?n?|Zeitraum|Zeitraums"
+    r"|Haushaltsjahr|Berichtsjahr|Förderjahr)\s+(?:dem\s+|den\s+|Jahre?n?\s+)?$",
+    re.IGNORECASE,
+)
+_YEAR_LINK = re.compile(r"^\s*(?:[-–]|und|bis|bzw\.|oder|sowie|,)\s*$")
+_YEAR_RANGE_AFTER = re.compile(r"^\s?[-–]\s?\d{4}(?!\d)")
 _MASKS = (
     re.compile(r"\b\d{1,2}\.\d{1,2}\.\d{2,4}\b"),
     re.compile(r"\*\s?\d+"),
@@ -42,7 +54,7 @@ _MASKS = (
         r"\b(?:Tabelle|Abbildung|Kapitel|Abschnitt|Ziffer|Nummer|Anhang|Anlage)\s+\d+(?:\.\d+)*"
     ),
     re.compile(r"\bArt\.\s?\d+|\bNr\.\s?\d+|§\s?\d+|\bAbs\.\s?\d+"),
-    re.compile(r"\b(?:je|pro)\s+\d[\d.]*"),
+    re.compile(r"\b(?:je|pro)\s+\d[\d.]*(?:,\d+)?"),
     re.compile(r"(?<=[A-Za-zÄÖÜäöüß])\d{1,3}(?=[A-Za-zÄÖÜäöüß])"),
 )
 _ABBREVIATION = re.compile(
@@ -59,18 +71,26 @@ class Claim:
     unit: Unit
     position: int
     unit_stated: bool
+    year: bool = False
 
     @property
     def is_year(self) -> bool:
-        """Integer in the year range without own or inherited unit."""
-        low, high = YEAR_RANGE
-        value = self.number.value
-        return (
-            not self.unit_stated
-            and self.number.decimals == 0
-            and value == value.to_integral_value()
-            and low <= value <= high
-        )
+        """Read as a year: decided at extraction from context or ``allowed_years``."""
+        return self.year
+
+
+def _year_like(claim: Claim) -> bool:
+    """Integer 1900..2100 without unit and without thousands point (``2.024`` is no year)."""
+    low, high = YEAR_RANGE
+    value = claim.number.value
+    return (
+        not claim.unit_stated
+        and claim.number.decimals == 0
+        and "." not in claim.number.text
+        and value >= 0
+        and value == value.to_integral_value()
+        and low <= value <= high
+    )
 
 
 @dataclass(frozen=True)
@@ -106,11 +126,13 @@ def _masked(text: str) -> str:
     return text
 
 
-def _raw_claims(source: str) -> list[tuple[Claim, int]]:
+def _raw_claims(source: str) -> tuple[list[tuple[Claim, int]], list[str]]:
     found: list[tuple[Claim, int]] = []
+    ambiguous: list[str] = []
     for match in _NUMBER.finditer(source):
-        number = read_number(match["number"])
+        number = None if match["ambiguous"] else read_number(match["number"])
         if number is None:
+            ambiguous.append(match.group().strip())
             continue
         if match["sign"]:
             number = PrintedNumber(-number.value, number.decimals, match.group().strip())
@@ -118,7 +140,30 @@ def _raw_claims(source: str) -> list[tuple[Claim, int]]:
         unit = unit_of(token) if token else PLAIN
         claim = Claim(number, unit, match.start(), bool(token))
         found.append((claim, match.end()))
-    return found
+    return found, ambiguous
+
+
+def _years(source: str, raw: Sequence[tuple[Claim, int]], allowed: frozenset[int]) -> list[bool]:
+    """Year flags: year-like and either in ``allowed`` or in year context."""
+    flags: list[bool] = []
+    for index, (claim, end) in enumerate(raw):
+        if not _year_like(claim):
+            flags.append(False)
+            continue
+        value = int(claim.number.value)
+        before = source[: claim.position]
+        linked = (
+            index > 0
+            and flags[index - 1]
+            and _YEAR_LINK.match(source[raw[index - 1][1] : claim.position]) is not None
+        )
+        flags.append(
+            value in allowed
+            or linked
+            or _YEAR_CONTEXT.search(before) is not None
+            or _YEAR_RANGE_AFTER.match(source[end:]) is not None
+        )
+    return flags
 
 
 def _inherited(source: str, end: int, following: Sequence[tuple[Claim, int]]) -> Unit | None:
@@ -133,14 +178,19 @@ def _inherited(source: str, end: int, following: Sequence[tuple[Claim, int]]) ->
     return None
 
 
-def extract_claims(text: str) -> list[Claim]:
+def extract_claims(text: str, *, allowed_years: Iterable[int] = ()) -> list[Claim]:
     """All numbers of a paragraph; dates, footnotes and cross references are masked.
 
-    A number without unit inherits the unit of the next number in the same
-    sentence (``"8,4 bzw. 8,5 %"``); year-like integers never inherit.
+    An integer 1900..2100 is a year only in year context (``im``, ``seit``,
+    ``bis``, ``Jahr``, ``Zeitraum``, a range ``2022–2024`` or a year list
+    ``2021 und 2022``) or when listed in ``allowed_years``; with a thousands
+    point it is never a year. A number without unit inherits the unit of the
+    next number in the same sentence (``"8,4 bzw. 8,5 %"``); years never inherit.
     """
     source = _masked(text)
-    raw = _raw_claims(source)
+    raw, _ = _raw_claims(source)
+    flags = _years(source, raw, frozenset(allowed_years))
+    raw = [(replace(c, year=flag), end) for (c, end), flag in zip(raw, flags, strict=True)]
     claims: list[Claim] = []
     for index, (claim, end) in enumerate(raw):
         if claim.unit_stated or claim.is_year:
@@ -149,6 +199,11 @@ def extract_claims(text: str) -> list[Claim]:
         unit = _inherited(source, end, raw[index + 1 :])
         claims.append(claim if unit is None else Claim(claim.number, unit, claim.position, True))
     return claims
+
+
+def ambiguous_numbers(text: str) -> list[str]:
+    """Numbers that cannot be read unambiguously (``"2.5 Mio."``); never split into parts."""
+    return _raw_claims(_masked(text))[1]
 
 
 def _converted(value: BoundValue, claim: Claim) -> PrintedNumber | None:
@@ -207,25 +262,27 @@ def check_paragraph(
     location: str = "",
     gate: str = "prose_numbers",
     neighbourhood: Decimal = NEIGHBOURHOOD,
+    allowed_years: Iterable[int] = (),
 ) -> GateResult:
     """Gate result for one paragraph.
 
     ``not_run`` with reason ``ohne_pruefbare_zahl`` when the paragraph states
     no number besides years, ``not_run`` with ``keine_werte`` when numbers are
-    stated but no value is bound to the paragraph.
+    stated but no value is bound to the paragraph. An ambiguous number
+    (``"2.5"``) is a finding ``zahl_mehrdeutig``.
     """
-    claims = [claim for claim in extract_claims(text) if not claim.is_year]
-    if not claims:
+    claims = [c for c in extract_claims(text, allowed_years=allowed_years) if not c.is_year]
+    unreadable = [
+        Finding("zahl_mehrdeutig", "Zahl nicht eindeutig lesbar", location, "", token)
+        for token in ambiguous_numbers(text)
+    ]
+    if not claims and not unreadable:
         return GateResult(gate, Verdict.NOT_RUN, NO_CLAIMS)
-    if not values:
+    if not values and not unreadable:
         return GateResult(gate, Verdict.NOT_RUN, "keine_werte")
     checks = [check_claim(claim, values, neighbourhood=neighbourhood) for claim in claims]
     findings = [_finding(c, location) for c in checks if c.status is not ClaimStatus.MATCH]
-    return decide(gate, len(checks), findings)
-
-
-NO_CLAIMS = "ohne_pruefbare_zahl"
-"""Reason of a paragraph without numbers; neutral for :func:`combine`."""
+    return decide(gate, len(checks) + len(unreadable), unreadable + findings)
 
 
 def combine(gate: str, parts: Iterable[GateResult]) -> GateResult:
