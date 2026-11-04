@@ -13,11 +13,12 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from decimal import Decimal
 from enum import StrEnum
 
 from .numbers import PrintedNumber, format_de, read_number, relative_deviation, same_value
+from .syntax import DEFAULT_SYNTAX, ClaimSyntax, masked, number_pattern
 from .units import PLAIN, Unit, conversion_exponent, unit_of
 from .verdict import Finding, GateResult, Verdict, decide
 
@@ -32,15 +33,6 @@ YEAR_RANGE = (1900, 2100)
 NO_CLAIMS = "ohne_pruefbare_zahl"
 """Reason of a paragraph without numbers; neutral for :func:`combine`."""
 
-_NUMBER = re.compile(
-    r"(?:(?<![\w\d])(?<!\d\s)(?P<sign>[-–−])\s?)?"
-    r"(?<![\d.,])"
-    r"(?P<number>\d{1,3}(?:\.\d{3})+(?:,\d+)?(?![.,]\d)|\d+(?:,\d+)?(?![.,]\d)"
-    r"|(?P<ambiguous>\d+(?:[.,]\d+)+))"
-    r"(?:\s?(?P<unit>%-Punkte?n?|Prozentpunkten?|Pp\.|%|Prozent"
-    r"|(?:Mio\.|Mrd\.|Tsd\.|Millionen|Milliarden)(?:\s?(?:Euro|EUR)\b|\s?€)?"
-    r"|(?:Euro|EUR)\b|€))?"
-)
 _YEAR_CONTEXT = re.compile(
     r"\b(?:im|seit|Jahre?s?n?|Zeitraum|Zeitraums|Haushaltsjahr|Berichtsjahr|Förderjahr)"
     r"\s+(?:dem\s+|den\s+|Jahre?n?\s+)?$",
@@ -63,16 +55,6 @@ _VERB_OR_COMMA_AFTER = re.compile(r"^\s?(?:,|[a-zäöüß]\w*\b)")
 """At sentence start, ``2023 stieg`` / ``2023,`` reads as a year; nouns are capitalised."""
 _YEAR_LINK = re.compile(r"^\s*(?:[-–]|und|bis|bzw\.|oder|sowie|,)\s*$")
 _YEAR_RANGE_AFTER = re.compile(r"^\s?[-–]\s?\d{4}(?!\d)")
-_MASKS = (
-    re.compile(r"\b\d{1,2}\.\d{1,2}\.\d{2,4}\b"),
-    re.compile(r"\*\s?\d+"),
-    re.compile(
-        r"\b(?:Tabelle|Abbildung|Kapitel|Abschnitt|Ziffer|Nummer|Anhang|Anlage)\s+\d+(?:\.\d+)*"
-    ),
-    re.compile(r"\bArt\.\s?\d+|\bNr\.\s?\d+|§\s?\d+|\bAbs\.\s?\d+"),
-    re.compile(r"\b(?:je|pro)\s+\d[\d.]*(?:,\d+)?"),
-    re.compile(r"(?<=[A-Za-zÄÖÜäöüß])\d{1,3}(?=[A-Za-zÄÖÜäöüß])"),
-)
 _ABBREVIATION = re.compile(
     r"\b(?:bzw|ca|rd|ggf|inkl|zzgl|evtl|Mio|Mrd|Tsd|Nr|Abs|Art|vgl|z|B|d|h|u|a)\."
 )
@@ -81,13 +63,23 @@ _SENTENCE_END = re.compile(r"[.;:!?]\s+[A-ZÄÖÜ]")
 
 @dataclass(frozen=True)
 class Claim:
-    """A number printed in prose with its unit and position."""
+    """A number printed in prose with its unit and position.
+
+    ``unit_text``, ``unit_inherited`` and ``token`` are descriptive and not part
+    of equality, so comparisons written against 0.1.0 keep working.
+    """
 
     number: PrintedNumber
     unit: Unit
     position: int
     unit_stated: bool
     year: bool = False
+    unit_text: str = field(default="", compare=False)
+    """Unit token as printed (``"Mio. Euro"``), inherited tokens included."""
+    unit_inherited: bool = field(default=False, compare=False)
+    """Unit taken from the next number in the sentence (``"8,4 bzw. 8,5 %"``)."""
+    token: str = field(default="", compare=False)
+    """Printed claim with sign and its own unit, stripped (``"– 5,1 %"``)."""
 
     @property
     def is_year(self) -> bool:
@@ -136,25 +128,32 @@ class ClaimCheck:
     deviation: Decimal | None = None
 
 
-def _masked(text: str) -> str:
-    for pattern in _MASKS:
-        text = pattern.sub(lambda m: " " * len(m.group()), text)
-    return text
+def _read(match: re.Match[str]) -> PrintedNumber | None:
+    groups = match.groupdict()
+    if groups.get("ambiguous"):
+        return None
+    point = groups.get("point")
+    if point:
+        return PrintedNumber(Decimal(point), len(point.split(".", 1)[1]), point)
+    return read_number(match["number"])
 
 
-def _raw_claims(source: str) -> tuple[list[tuple[Claim, int]], list[str]]:
+def _raw_claims(source: str, syntax: ClaimSyntax) -> tuple[list[tuple[Claim, int]], list[str]]:
     found: list[tuple[Claim, int]] = []
     ambiguous: list[str] = []
-    for match in _NUMBER.finditer(source):
-        number = None if match["ambiguous"] else read_number(match["number"])
+    for match in number_pattern(syntax).finditer(source):
+        token = match.group().strip()
+        number = _read(match)
         if number is None:
-            ambiguous.append(match.group().strip())
+            ambiguous.append(token)
             continue
         if match["sign"]:
-            number = PrintedNumber(-number.value, number.decimals, match.group().strip())
-        token = match["unit"] or ""
-        unit = unit_of(token) if token else PLAIN
-        claim = Claim(number, unit, match.start(), bool(token))
+            number = PrintedNumber(-number.value, number.decimals, token)
+        unit_text = match["unit"] or ""
+        unit = unit_of(unit_text) if unit_text else PLAIN
+        claim = Claim(
+            number, unit, match.start(), bool(unit_text), unit_text=unit_text, token=token
+        )
         found.append((claim, match.end()))
     return found, ambiguous
 
@@ -212,7 +211,7 @@ def _years(source: str, raw: Sequence[tuple[Claim, int]], allowed: frozenset[int
     return flags
 
 
-def _inherited(source: str, end: int, following: Sequence[tuple[Claim, int]]) -> Unit | None:
+def _inherited(source: str, end: int, following: Sequence[tuple[Claim, int]]) -> Claim | None:
     for claim, _ in following:
         gap = source[end : claim.position]
         if len(gap) > UNIT_INHERITANCE_DISTANCE:
@@ -220,11 +219,13 @@ def _inherited(source: str, end: int, following: Sequence[tuple[Claim, int]]) ->
         if _SENTENCE_END.search(_ABBREVIATION.sub("  ", gap)):
             return None
         if claim.unit_stated:
-            return claim.unit
+            return claim
     return None
 
 
-def extract_claims(text: str, *, allowed_years: Iterable[int] = ()) -> list[Claim]:
+def extract_claims(
+    text: str, *, allowed_years: Iterable[int] = (), syntax: ClaimSyntax = DEFAULT_SYNTAX
+) -> list[Claim]:
     """All numbers of a paragraph; dates, footnotes and cross references are masked.
 
     An integer 1900..2100 is a year only in year context or when listed in
@@ -238,9 +239,12 @@ def extract_claims(text: str, *, allowed_years: Iterable[int] = ()) -> list[Clai
     ``allowed_years`` overrides it. With a thousands point it is never a year.
     A number without unit inherits the unit of the next number in the same
     sentence (``"8,4 bzw. 8,5 %"``); years never inherit.
+
+    ``syntax`` sets the unit set, the reading of a lone point and the masks
+    (:class:`~.syntax.ClaimSyntax`); the default is the strict reading.
     """
-    source = _masked(text)
-    raw, _ = _raw_claims(source)
+    source = masked(text, syntax)
+    raw, _ = _raw_claims(source, syntax)
     flags = _years(source, raw, frozenset(allowed_years))
     raw = [(replace(c, year=flag), end) for (c, end), flag in zip(raw, flags, strict=True)]
     claims: list[Claim] = []
@@ -248,14 +252,25 @@ def extract_claims(text: str, *, allowed_years: Iterable[int] = ()) -> list[Clai
         if claim.unit_stated or claim.is_year:
             claims.append(claim)
             continue
-        unit = _inherited(source, end, raw[index + 1 :])
-        claims.append(claim if unit is None else Claim(claim.number, unit, claim.position, True))
+        donor = _inherited(source, end, raw[index + 1 :])
+        if donor is not None:
+            claim = replace(
+                claim,
+                unit=donor.unit,
+                unit_stated=True,
+                unit_text=donor.unit_text,
+                unit_inherited=True,
+            )
+        claims.append(claim)
     return claims
 
 
-def ambiguous_numbers(text: str) -> list[str]:
-    """Numbers that cannot be read unambiguously (``"2.5 Mio."``); never split into parts."""
-    return _raw_claims(_masked(text))[1]
+def ambiguous_numbers(text: str, *, syntax: ClaimSyntax = DEFAULT_SYNTAX) -> list[str]:
+    """Numbers that cannot be read unambiguously (``"2.5 Mio."``); never split into parts.
+
+    Empty for :attr:`~.syntax.PointReading.SPLIT`, which splits instead.
+    """
+    return _raw_claims(masked(text, syntax), syntax)[1]
 
 
 def _converted(value: BoundValue, claim: Claim) -> PrintedNumber | None:
@@ -315,6 +330,7 @@ def check_paragraph(
     gate: str = "prose_numbers",
     neighbourhood: Decimal = NEIGHBOURHOOD,
     allowed_years: Iterable[int] = (),
+    syntax: ClaimSyntax = DEFAULT_SYNTAX,
 ) -> GateResult:
     """Gate result for one paragraph.
 
@@ -323,10 +339,11 @@ def check_paragraph(
     stated but no value is bound to the paragraph. An ambiguous number
     (``"2.5"``) is a finding ``zahl_mehrdeutig``.
     """
-    claims = [c for c in extract_claims(text, allowed_years=allowed_years) if not c.is_year]
+    claims = extract_claims(text, allowed_years=allowed_years, syntax=syntax)
+    claims = [c for c in claims if not c.is_year]
     unreadable = [
         Finding("zahl_mehrdeutig", "Zahl nicht eindeutig lesbar", location, "", token)
-        for token in ambiguous_numbers(text)
+        for token in ambiguous_numbers(text, syntax=syntax)
     ]
     if not claims and not unreadable:
         return GateResult(gate, Verdict.NOT_RUN, NO_CLAIMS)
