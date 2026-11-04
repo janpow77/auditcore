@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.15.0 – 2026-11-04
+
+Versionen: `auditcore_statistics` 0.4.0 (Minor wegen neuer Funktionen),
+`auditcore_reportgates` 0.1.0 (Erstveröffentlichung), `auditcore_runner` 0.1.2.
+
 - `auditcore_reportgates` 0.1.0 (neu): Fail-closed-Zahlengates für erzeugte
   Berichte – Prosa-Zahlen-Gate, Wertegate gegen Referenztabellen mit
   Datenstandsbindung, Freigabeentscheidung über Pflicht-Gates. Herausgelöst
@@ -11,9 +16,9 @@
 - `auditcore_reportgates` 0.1.0, Folgebefunde der Gegenprüfung: Jahreszahlen
   mit Gegenbeleg (Einheit `Euro`/`€`, Zählwort), Satzanfang vor Verb als Jahr,
   Fehlwertzeichen `.`, `:`, `...` und `spalte_mehrdeutig` dokumentiert.
-- `auditcore_runner`: `befunde` vergleicht den Pfad des letzten Laufs
+- `auditcore_runner` 0.1.2: `befunde` vergleicht den Pfad des letzten Laufs
   beidseitig aufgelöst (Symlinks, relative Pfade).
-- `auditcore_statistics` 0.3.6: Konzentrationsmaße `gini`, `lorenz_curve`,
+- `auditcore_statistics` 0.4.0: Konzentrationsmaße `gini`, `lorenz_curve`,
   `herfindahl_hirschman`, `concentration_ratio` (abwärtskompatibel).
 - `auditcore_harvest` 0.1.5: gemeinsamer Abruftakt über Prozessgrenzen
   (`SharedRateLimit` mit `acquire` – Wartezeit zurück statt Schlafen über
