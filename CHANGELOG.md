@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.16.0 – 2026-11-04
+
+Versionen: `auditcore_reportgates` 0.2.0 (Minor wegen neuer Parameter); die
+übrigen Pakete bleiben auf dem Stand von v0.15.0.
+
 - `auditcore_reportgates` 0.2.0: Parameter, mit denen bestehende Lesarten
   abbildbar sind, ohne den Standard zu ändern – `ClaimSyntax` (Einheitenmenge,
   Lesart „2.5“, Masken), `scale_of` für Mischüberschriften, `epsilon` in
