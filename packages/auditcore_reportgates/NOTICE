@@ -1,4 +1,4 @@
-auditcore_reportgates 0.1.0 — attribution and authorization
+auditcore_reportgates 0.2.0 — attribution and authorization
 
 Extracted from FlowStat in audit_designer (HIS monitoring report: prose
 number gate, oracle value gate and release QA, by Jan Riener) and corrected

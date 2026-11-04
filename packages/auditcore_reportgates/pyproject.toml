@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_reportgates"
-version = "0.1.0"
+version = "0.2.0"
 description = "Fail-closed number gates for generated reports: printed German numbers, prose claims and reference values"
 readme = "README.md"
 requires-python = ">=3.11"

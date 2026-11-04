@@ -203,7 +203,7 @@ Paket-README und `provenance.json` erzeugt.
 | [`auditcore_price_analysis`](packages/auditcore_price_analysis) | 0.1.4 | Exakte Jahreskostenberechnung für regulierte Tarife (Nahwärme, Wasser mit Staffeln), deterministische Tarifauswahl und Vergleichsregeln (Abweichung, Ampel, Gruppenstatistik) auf versionierten, quellengebundenen Profilen. | `auditcore_common==0.2.1` | spezifiziert |
 | [`auditcore_privacy`](packages/auditcore_privacy) | 0.1.0 | Deterministische, kollisionsfreie Pseudonymisierung, Maskierung und Scoped-Zuordnungsverwaltung für Prüf- und Kontrollprozesse. | `auditcore_common==0.2.1` | neu, gegen charakterisierte Verträge |
 | [`auditcore_procurement`](packages/auditcore_procurement) | 0.3.1 | Vergabebekanntmachungen (TED, HAD) als kanonischer Datensatz mit verhaltensgleicher TED-Normalisierung und Dateiimport sowie deterministische, versionierte Vergabe-Vorprüfungen mit EU-Schwellenwerten je Geltungszeitraum. | `auditcore_common==0.2.1`; Extras: `html`, `sources` | spezifiziert |
-| [`auditcore_reportgates`](packages/auditcore_reportgates) | 0.1.0 | Fail-closed-Zahlengates für erzeugte Berichte: Fließtextzahlen gegen Berichtsobjekte, Tabellen gegen Referenzwerte, Freigabe über alle Pflicht-Gates. | `auditcore_common==0.2.1` | charakterisiert |
+| [`auditcore_reportgates`](packages/auditcore_reportgates) | 0.2.0 | Fail-closed-Zahlengates für erzeugte Berichte: Fließtextzahlen gegen Berichtsobjekte, Tabellen gegen Referenzwerte, Freigabe über alle Pflicht-Gates. | `auditcore_common==0.2.1` | charakterisiert |
 | [`auditcore_reporting`](packages/auditcore_reporting) | 0.3.1 | Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahlenformat) mit benannten Formatprofilen, optionalem, abgesichertem XLSX-Export und versionierten Berichtsvorlagen (DOCX, PDF, HTML). | `auditcore_common==0.2.1`; Extras: `excel`, `docx`, `pdf`, `web`, `fastapi` | spezifiziert |
 | [`auditcore_risk`](packages/auditcore_risk) | 0.4.2 | Risiko-Merkmale (Red Flags) aus ausdrücklich gewählten, versionierten und quellengebundenen Regelprofilen, jedes Merkmal mit Code, Begründung, Belegwerten und Quellfundstelle. | `auditcore_common==0.2.1`, `auditcore_compute==0.1.0`, `auditcore_entity_matching==0.2.5`, `numpy>=1.24`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | spezifiziert |
 | [`auditcore_runner`](packages/auditcore_runner) | 0.1.2 | Ephemere self-hosted GitHub-Runner auf eigenen Rechnern – isoliert, dynamisch nach Last skaliert – und eine lokale Prüfbank mit einheitlichen, baseline-gefilterten Befunden. | keine; Extras: `github-app`, `workflows` | neu |
@@ -241,8 +241,8 @@ Paket-README und `provenance.json` erzeugt.
 
 </details>
 
-Der aktuelle [Pre-release v0.14.2](https://github.com/janpow77/auditcore/releases/tag/v0.14.2)
-bündelt 37 Python-Bibliotheken und 12 npm-Pakete: Wheels, Source-Distributionen,
+Der aktuelle [Pre-release v0.15.0](https://github.com/janpow77/auditcore/releases/tag/v0.15.0)
+bündelt 38 Python-Bibliotheken und 12 npm-Pakete: Wheels, Source-Distributionen,
 signierte Debian-Pakete und npm-Tarballs mit `npm-packages.json`.
 Installationshinweise und Prüfnachweise stehen in der [Paketquellen-Anleitung](docs/deployment/package-feed.md). Der Paketindex `https://janpow77.github.io/auditcore/simple/` verlinkt
 alle Versionen mit SHA-256. Weiteres: [vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md),
