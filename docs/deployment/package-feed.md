@@ -3,15 +3,18 @@
 **Aktuell: [Pre-release v0.16.0](https://github.com/janpow77/auditcore/releases/tag/v0.16.0)**
 mit 38 Python-Bibliotheken, 12 npm-Paketen und 254 Release-Dateien mit signierten Prüfsummen.
 Neu ist allein `auditcore_reportgates` 0.1.0 → 0.2.0: Lesarten für Zahlen im
-Fließtext (`ClaimSyntax`, `PointReading`), zulässige Jahreszahlen in
-`extract_claims` (`allowed_years`), Einheit und Fundstelle je Behauptung
+Fließtext (`ClaimSyntax`, `PointReading`, je Aufruf über
+`extract_claims(..., syntax=...)`), Einheit und Fundstelle je Behauptung
 (`unit_text`, `unit_inherited`, `token`), Währungsbezug in `scale_of`
 (`currency=…`), Gleitkommapuffer in `same_value` (`epsilon=…`) und
-Rundungsart in `format_de` (`rounding=…`).
+Rundungsart in `format_de` (`rounding=…`). Verhaltensänderung ohne neuen
+Parameter: Formen wie „10.10“ oder „1.2345“ werden nicht mehr zu 1 bzw. 1234
+abgeschnitten, sondern gelten als mehrdeutig.
 
 Alle übrigen 37 Python-Bibliotheken und alle 12 npm-Pakete sind gegenüber
-v0.15.0 unverändert; ihre Wheels und Debian-Pakete sind bytegleich. Gebaut
-wurde wie bei v0.15.0 mit setuptools 84.0.0 und Dateimodus 0644.
+v0.15.0 unverändert; ihre Wheels und Debian-Pakete sind bytegleich, die SDists
+inhaltsgleich (nur Zeitstempel abweichend). Gebaut wurde wie bei v0.15.0 mit
+setuptools 84.0.0 (der CI-Lock führt inzwischen 84.2.1) und Dateimodus 0644.
 
 Die Versionen und Prüfsummen stehen im
 [Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.16.0/preview-manifest.json)
