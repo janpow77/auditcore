@@ -6,11 +6,24 @@ Neu ist `auditcore_reportgates` 0.1.0: deutsche Zahlen lesen (`read_number`,
 `read_cell`; mehrdeutige Formen wie „2.5“ werden nicht geraten), Wertvergleich mit
 Drucktoleranz (`same_value`), deutsche Ausgabe (`format_de`), Zahlenbehauptungen
 aus Fließtext (`extract_claims`) und Prüfergebnisse mit Freigaberegel (`release`:
-ein Fehlschlag wiegt schwerer als „nicht ausgeführt“). `auditcore_statistics`
-steigt von 0.3.5 auf 0.4.0 (Lorenzkurve mit Gini-Koeffizient), `auditcore_runner`
-von 0.1.1 auf 0.1.2. Alle übrigen Python-Bibliotheken und npm-Pakete sind
-gegenüber v0.14.2 unverändert; ihre Wheels und Debian-Pakete sind bytegleich, die
-SDists inhaltsgleich. Damit das gilt, liefen die Wheel-Bauten mit setuptools
+ein Fehlschlag wiegt schwerer als „nicht ausgeführt“). Weitere neue Versionen:
+
+- `auditcore_statistics` 0.3.5 → 0.4.0 (Konzentrationsmaße `gini`, `lorenz_curve`,
+  `herfindahl_hirschman`, `concentration_ratio`),
+- `auditcore_runner` 0.1.1 → 0.1.2,
+- `auditcore_llm_client` 0.1.3 → 0.2.0 (neuer Fehlertyp `BackgroundDeferredError`
+  für zurückgestellte Hintergrundarbeit, `ClientConfig.work`),
+- `auditcore_tyfindings` 0.2.0 → 0.3.0 (Regelwerk `efre.uebersicht_vue` 2026.10.1),
+- `auditcore_harvest` 0.1.4 → 0.1.5 (gemeinsamer Abruftakt `SharedRateLimit`),
+- nur wegen der exakten Bindung an harvest: `auditcore_funding_sources` 0.1.7,
+  `auditcore_geo` 0.3.3, `auditcore_legal_sources` 0.1.7,
+  `auditcore_price_sources` 0.1.5, `auditcore_procurement` 0.3.1,
+  `auditcore_property_sources` 0.1.5, `auditcore_registry_sources` 0.2.5,
+  weitergereicht `auditcore_bpmn` 0.1.4 und `auditcore_risk` 0.4.2.
+
+Die übrigen 23 Python-Bibliotheken und alle 12 npm-Pakete sind gegenüber v0.14.2
+unverändert; ihre Wheels und Debian-Pakete sind bytegleich, die SDists
+inhaltsgleich. Damit das gilt, liefen die Wheel-Bauten mit setuptools
 84.0.0 wie bei v0.14.2 (der CI-Lock führt inzwischen 84.2.1, das nur die Zeile
 `Generator` im Wheel ändert) und mit Dateimodus 0644.
 
