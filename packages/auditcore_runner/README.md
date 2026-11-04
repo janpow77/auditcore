@@ -28,7 +28,7 @@ Direkt-URL und `sha256` stehen nach dem Release im Index unter
 `https://janpow77.github.io/auditcore/simple/auditcore-runner/`):
 
 ```text
-auditcore_runner @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_runner-0.1.0-py3-none-any.whl#sha256=<sha256>
+auditcore_runner @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_runner-0.1.2-py3-none-any.whl#sha256=<sha256>
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

@@ -1,4 +1,4 @@
-auditcore_runner 0.1.1 — attribution and authorization
+auditcore_runner 0.1.2 — attribution and authorization
 
 New implementation in auditcore (runner management, scaling rules, check
 bench). It replaces the ad-hoc self-hosted runner scripts under ci/runner/ of this
