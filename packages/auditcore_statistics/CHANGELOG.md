@@ -1,6 +1,6 @@
 # Changelog auditcore_statistics
 
-## 0.3.6 – 2026-11-03 – Konzentrationsmaße
+## 0.4.0 – 2026-11-04 – Konzentrationsmaße
 
 Abwärtskompatible Erweiterung.
 
