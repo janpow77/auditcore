@@ -40,7 +40,9 @@ class PointReading(StrEnum):
 
     No guards against adjacent digits, points or commas, and a dash after
     ``"5 "`` is a sign (``"5 - 3"`` gives 5 and -3). This is the tokeniser of
-    the FlowStat prose gate before the extraction.
+    the FlowStat prose gate before the extraction. Only the tokeniser is
+    reproduced: year detection, unit inheritance and masks remain those of
+    :func:`~.prose.extract_claims` and :class:`ClaimSyntax`.
     """
 
 
@@ -93,7 +95,8 @@ def number_pattern(syntax: ClaimSyntax) -> re.Pattern[str]:
     """Compiled pattern with the groups ``sign``, ``number``, ``unit``.
 
     Depending on :attr:`ClaimSyntax.point` also ``ambiguous`` and ``point``.
-    An invalid ``units`` expression raises :class:`re.error`.
+    An invalid ``units`` expression raises :class:`re.error`; it must not
+    contain named groups.
     """
     return re.compile(_NUMBERS[syntax.point] + f"(?:\\s?(?P<unit>{syntax.units}))?")
 

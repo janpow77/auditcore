@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 from decimal import ROUND_HALF_EVEN, Decimal
 
 import pytest
@@ -265,3 +266,16 @@ def test_half_even_auf_binaerwert_entspricht_format(wert: float, stellen: int) -
         python = python.lstrip("-")  # format_de druckt keine negative Null
     erwartet = python.replace(",", "\x00").replace(".", ",").replace("\x00", ".")
     assert format_de(Decimal(wert), stellen, rounding=ROUND_HALF_EVEN) == erwartet
+
+
+def test_beschreibende_felder_zaehlen_nicht_zur_gleichheit() -> None:
+    (claim,) = extract_claims("5 %")
+    assert claim == replace(claim, token="", unit_text="", unit_inherited=True)
+
+
+def test_typpruefung_epsilon_und_stellen() -> None:
+    with pytest.raises(ValueError, match="endlich"):
+        tolerance(exact(1), exact(1), epsilon=True)
+    for falsch in (True, 1.5):
+        with pytest.raises(ValueError, match="nichtnegative ganze Zahl"):
+            format_de(1, falsch)  # type: ignore[arg-type]

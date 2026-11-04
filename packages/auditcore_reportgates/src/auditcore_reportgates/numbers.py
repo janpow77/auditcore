@@ -145,6 +145,8 @@ def read_cell(
 
 
 def _epsilon(epsilon: Decimal | int | float) -> Decimal:
+    if isinstance(epsilon, bool):
+        raise ValueError(f"epsilon muss eine endliche Zahl sein: {epsilon!r}")
     number = _finite(epsilon)
     if number < 0:
         raise ValueError(f"epsilon darf nicht negativ sein: {epsilon!r}")
@@ -202,7 +204,7 @@ def format_de(
         return MISSING_TEXT
     if isinstance(value, Missing):  # pragma: no cover - single member
         return MISSING_TEXT
-    if decimals < 0:
+    if isinstance(decimals, bool) or not isinstance(decimals, int) or decimals < 0:
         raise ValueError(
             f"decimals muss eine nichtnegative ganze Zahl sein, erhalten: {decimals!r}; "
             "für Rundung auf Zehner den Wert vorher durch 10 teilen."

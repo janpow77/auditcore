@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from decimal import Decimal
 from enum import StrEnum
 
@@ -63,18 +63,22 @@ _SENTENCE_END = re.compile(r"[.;:!?]\s+[A-ZÄÖÜ]")
 
 @dataclass(frozen=True)
 class Claim:
-    """A number printed in prose with its unit and position."""
+    """A number printed in prose with its unit and position.
+
+    ``unit_text``, ``unit_inherited`` and ``token`` are descriptive and not part
+    of equality, so comparisons written against 0.1.0 keep working.
+    """
 
     number: PrintedNumber
     unit: Unit
     position: int
     unit_stated: bool
     year: bool = False
-    unit_text: str = ""
+    unit_text: str = field(default="", compare=False)
     """Unit token as printed (``"Mio. Euro"``), inherited tokens included."""
-    unit_inherited: bool = False
+    unit_inherited: bool = field(default=False, compare=False)
     """Unit taken from the next number in the sentence (``"8,4 bzw. 8,5 %"``)."""
-    token: str = ""
+    token: str = field(default="", compare=False)
     """Printed claim with sign and its own unit, stripped (``"– 5,1 %"``)."""
 
     @property
