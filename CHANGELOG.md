@@ -2,14 +2,20 @@
 
 ## Unreleased
 
+- Release v0.15.0 (04.11.2026) veröffentlicht und in `docs/deployment/package-feed.md`
+  als aktueller Stand dokumentiert; v0.14.2 ist dort historischer Abschnitt.
+
+## v0.16.0 – 2026-11-04
+
+Versionen: `auditcore_reportgates` 0.2.0 (Minor wegen neuer Parameter); die
+übrigen Pakete bleiben auf dem Stand von v0.15.0.
+
 - `auditcore_reportgates` 0.2.0: Parameter, mit denen bestehende Lesarten
   abbildbar sind, ohne den Standard zu ändern – `ClaimSyntax` (Einheitenmenge,
   Lesart „2.5“, Masken), `scale_of` für Mischüberschriften, `epsilon` in
   `same_value`/`tolerance`, `rounding` in `format_de`. Korrektur: „10.10“ und
   „1.2345“ werden nicht mehr zu 1 bzw. 1234 abgeschnitten, sondern sind
   mehrdeutig.
-- Release v0.15.0 (04.11.2026) veröffentlicht und in `docs/deployment/package-feed.md`
-  als aktueller Stand dokumentiert; v0.14.2 ist dort historischer Abschnitt.
 
 ## v0.15.0 – 2026-11-04
 
