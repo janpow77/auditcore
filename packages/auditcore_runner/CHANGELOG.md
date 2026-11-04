@@ -1,6 +1,6 @@
 # Changelog – auditcore_runner
 
-## Unveröffentlicht
+## 0.1.2 – 2026-11-04
 
 - `befunde`: Der Pfad des letzten Laufs wird beidseitig mit `resolve()`
   verglichen; ein Lauf über einen Symlink oder relativen Pfad wird nicht mehr
