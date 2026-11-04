@@ -1,6 +1,41 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Pre-release v0.14.2](https://github.com/janpow77/auditcore/releases/tag/v0.14.2)**
+**Aktuell: [Pre-release v0.15.0](https://github.com/janpow77/auditcore/releases/tag/v0.15.0)**
+mit 38 Python-Bibliotheken, 12 npm-Paketen und 254 Release-Dateien mit signierten Prüfsummen.
+Neu ist `auditcore_reportgates` 0.1.0: deutsche Zahlen lesen (`read_number`,
+`read_cell`; mehrdeutige Formen wie „2.5“ werden nicht geraten), Wertvergleich mit
+Drucktoleranz (`same_value`), deutsche Ausgabe (`format_de`), Zahlenbehauptungen
+aus Fließtext (`extract_claims`) und Prüfergebnisse mit Freigaberegel (`release`:
+ein Fehlschlag wiegt schwerer als „nicht ausgeführt“). `auditcore_statistics`
+steigt von 0.3.5 auf 0.4.0 (Lorenzkurve mit Gini-Koeffizient), `auditcore_runner`
+von 0.1.1 auf 0.1.2. Alle übrigen Python-Bibliotheken und npm-Pakete sind
+gegenüber v0.14.2 unverändert; ihre Wheels und Debian-Pakete sind bytegleich, die
+SDists inhaltsgleich. Damit das gilt, liefen die Wheel-Bauten mit setuptools
+84.0.0 wie bei v0.14.2 (der CI-Lock führt inzwischen 84.2.1, das nur die Zeile
+`Generator` im Wheel ändert) und mit Dateimodus 0644.
+
+Die Versionen und Prüfsummen stehen im
+[Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.15.0/preview-manifest.json)
+und in den signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.15.0/SHA256SUMS).
+Der bestehende Signaturschlüssel bleibt unverändert:
+`E427F95CC37CBFD0876314CA0D1580A6CAE37327`.
+
+```bash
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.15.0/requirements-auditcore_reportgates.txt
+```
+
+Vor der Veröffentlichung am 04.11.2026 bestanden Paketbau, selektive
+pip-Installation mit Funktionsprüfung und Entfernung, APT-Installation, Upgrade
+und Entfernung sowie die PDF-/Excel-Ausgabe (298 Prüfschritte); die Prüfsummen
+aller 254 hochgeladenen Dateien stimmen mit den lokalen überein. Die Workflows
+`package-index` und `npm-publish` liefen grün. Ein anonymer Installationsnachweis
+gegen den öffentlichen Pfad liegt für v0.15.0 nicht vor.
+Der Bibliotheksrelease stellt produktive Anwendungen nicht automatisch um.
+
+## Historischer Stand v0.14.2
+
+**[Pre-release v0.14.2](https://github.com/janpow77/auditcore/releases/tag/v0.14.2)** (18.10.2026)
 mit 37 Python-Bibliotheken, 12 npm-Paketen und 248 Release-Dateien mit signierten Prüfsummen.
 Neu ist der überarbeitete Stichprobenrechner in `@auditcore/sampling-templates-core`
 0.1.12 und `@auditcore/sampling-templates-vue` 0.1.12 (vorher 0.1.3 und 0.1.4):

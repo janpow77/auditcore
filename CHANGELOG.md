@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Release v0.15.0 (04.11.2026) veröffentlicht und in `docs/deployment/package-feed.md`
+  als aktueller Stand dokumentiert; v0.14.2 ist dort historischer Abschnitt.
+
 ## v0.15.0 – 2026-11-04
 
 Versionen: `auditcore_statistics` 0.4.0 (Minor wegen neuer Funktionen),
