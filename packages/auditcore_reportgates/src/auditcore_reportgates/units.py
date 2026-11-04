@@ -45,8 +45,8 @@ _SCALES = (
 _POINTS = re.compile(r"prozentpunkt|\bpp\b\.?|%-punkt")
 _SHARE = re.compile(r"%|prozent|anteil|quote")
 """Also in compounds: ``Förderquote``, ``Frauenanteil``."""
-_EURO = re.compile(r"\beuro\b|\beur\b|€")
-"""Word boundaries: ``Europa`` names no currency."""
+CURRENCY = re.compile(r"\beuro\b|\beur\b|€")
+"""Currency in a lowered header; word boundaries: ``Europa`` names no currency."""
 
 
 def _scale(text: str) -> int | None:
@@ -54,6 +54,22 @@ def _scale(text: str) -> int | None:
         if pattern.search(text):
             return exponent
     return None
+
+
+def scale_of(text: str, *, currency: re.Pattern[str] = CURRENCY) -> int | None:
+    """Decimal exponent of the amount scale named in ``text``, whatever the dimension.
+
+    ``Mrd.``/``Mio.``/``Tsd.`` (also spelled out) give 9/6/3, a currency
+    without scale gives 0, nothing gives ``None``. Unlike :func:`unit_of` a
+    percent or points word does not suppress the scale, so a mixed header
+    (``"Veränderung Mio. Euro (%)"``) keeps 6. ``currency`` is matched against
+    the lowered text.
+    """
+    lowered = text.lower()
+    exponent = _scale(lowered)
+    if exponent is None and currency.search(lowered):
+        return 0
+    return exponent
 
 
 def unit_of(text: str) -> Unit:
@@ -67,10 +83,7 @@ def unit_of(text: str) -> Unit:
         return PERCENTAGE_POINTS
     if _SHARE.search(lowered):
         return PERCENT
-    exponent = _scale(lowered)
-    if exponent is None and _EURO.search(lowered):
-        exponent = 0
-    return Unit(Dimension.ABSOLUTE, exponent)
+    return Unit(Dimension.ABSOLUTE, scale_of(lowered))
 
 
 def conversion_exponent(source: Unit, target: Unit) -> int | None:
