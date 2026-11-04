@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_runner"
-version = "0.1.1"
+version = "0.1.2"
 description = "Self-hosted GitHub runners with local autoscaling and a local check bench with unified, baseline-filtered findings"
 readme = "README.md"
 requires-python = ">=3.11"
