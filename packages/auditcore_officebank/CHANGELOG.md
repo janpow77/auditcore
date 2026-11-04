@@ -1,6 +1,9 @@
 # Änderungen
 
-## 0.1.0 – unveröffentlicht
+## 0.1.0 – 2026-10-06
+
+Erstmals veröffentlicht mit Release v0.9.0 (06.10.2026); in v0.14.0
+unverändert enthalten.
 
 - Etappe 0 (Gerüst): Rechnerprofil (`auditcore-officebank/rechner/1`) und
   Projektdatei `.officebank.toml` (`auditcore-officebank/projekt/1`) mit
