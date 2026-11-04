@@ -10,7 +10,17 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import (
+    ROUND_05UP,
+    ROUND_CEILING,
+    ROUND_DOWN,
+    ROUND_FLOOR,
+    ROUND_HALF_DOWN,
+    ROUND_HALF_EVEN,
+    ROUND_HALF_UP,
+    ROUND_UP,
+    Decimal,
+)
 from enum import Enum
 
 from auditcore_common.numbers_de import parse_number
@@ -29,6 +39,20 @@ ZERO_DASHES = frozenset({"-", "–", "—"})
 
 MISSING_TEXT = "k. A."
 """Printed form of a missing value."""
+
+ROUNDING_MODES = frozenset(
+    {
+        ROUND_05UP,
+        ROUND_CEILING,
+        ROUND_DOWN,
+        ROUND_FLOOR,
+        ROUND_HALF_DOWN,
+        ROUND_HALF_EVEN,
+        ROUND_HALF_UP,
+        ROUND_UP,
+    }
+)
+"""Rounding modes of :mod:`decimal` accepted by :func:`format_de`."""
 
 _THOUSANDS_ONLY = re.compile(r"-?\d{1,3}(?:\.\d{3})+")
 _FOOTNOTE = re.compile(r"\*+$")
@@ -120,17 +144,35 @@ def read_cell(
     return number if number is not None else text
 
 
-def tolerance(left: PrintedNumber, right: PrintedNumber) -> Decimal:
-    """Half a unit of the coarser printed side; zero when both are exact."""
+def _epsilon(epsilon: Decimal | int | float) -> Decimal:
+    number = _finite(epsilon)
+    if number < 0:
+        raise ValueError(f"epsilon darf nicht negativ sein: {epsilon!r}")
+    return number
+
+
+def tolerance(
+    left: PrintedNumber, right: PrintedNumber, *, epsilon: Decimal | int | float = 0
+) -> Decimal:
+    """Half a unit of the coarser printed side plus ``epsilon``.
+
+    Zero (plus ``epsilon``) when both sides are exact. ``epsilon`` is an
+    absolute buffer for values that went through binary floating point
+    (``15.850000000000001`` against a printed ``15,8``); the default ``0``
+    compares strictly. A negative or non-finite ``epsilon`` raises ``ValueError``.
+    """
+    buffer = _epsilon(epsilon)
     printed = [n.decimals for n in (left, right) if n.decimals is not None]
     if not printed:
-        return Decimal(0)
-    return Decimal(5) * Decimal(10) ** -(min(printed) + 1)
+        return buffer
+    return Decimal(5) * Decimal(10) ** -(min(printed) + 1) + buffer
 
 
-def same_value(left: PrintedNumber, right: PrintedNumber) -> bool:
-    """Equal within the printed rounding of the coarser side."""
-    return abs(left.value - right.value) <= tolerance(left, right)
+def same_value(
+    left: PrintedNumber, right: PrintedNumber, *, epsilon: Decimal | int | float = 0
+) -> bool:
+    """Equal within the printed rounding of the coarser side (plus ``epsilon``)."""
+    return abs(left.value - right.value) <= tolerance(left, right, epsilon=epsilon)
 
 
 def relative_deviation(actual: Decimal, expected: Decimal) -> Decimal | None:
@@ -140,16 +182,35 @@ def relative_deviation(actual: Decimal, expected: Decimal) -> Decimal | None:
     return abs(actual - expected) / abs(expected)
 
 
-def format_de(value: Decimal | int | float | Missing | None, decimals: int = 2) -> str:
-    """Print a value German style; ``None``/``MISSING`` become ``k. A.``, zero stays ``0,00``."""
+def format_de(
+    value: Decimal | int | float | Missing | None,
+    decimals: int = 2,
+    *,
+    rounding: str = ROUND_HALF_UP,
+) -> str:
+    """Print a value German style; ``None``/``MISSING`` become ``k. A.``, zero stays ``0,00``.
+
+    ``rounding`` is a :mod:`decimal` mode, by default ``ROUND_HALF_UP``
+    (kaufmännisch); ``ROUND_HALF_EVEN`` rounds half to even. A float is taken
+    by its shortest representation (``str``): ``2.675`` is the tie 2,675. Pass
+    ``Decimal(x)`` to round the exact binary value as Python's ``format`` does.
+    A negative zero prints without sign. ``decimals`` must be a non-negative
+    integer; rounding to tens is not offered (``ValueError``), scale the value
+    first. An unknown ``rounding`` and NaN or infinity raise ``ValueError``.
+    """
     if value is None or value is MISSING:
         return MISSING_TEXT
     if isinstance(value, Missing):  # pragma: no cover - single member
         return MISSING_TEXT
     if decimals < 0:
-        raise ValueError("decimals darf nicht negativ sein.")
+        raise ValueError(
+            f"decimals muss eine nichtnegative ganze Zahl sein, erhalten: {decimals!r}; "
+            "für Rundung auf Zehner den Wert vorher durch 10 teilen."
+        )
+    if rounding not in ROUNDING_MODES:
+        raise ValueError(f"Unbekannte Rundungsart: {rounding!r}")
     quantum = Decimal(1).scaleb(-decimals)
-    rounded = _finite(value).quantize(quantum, rounding=ROUND_HALF_UP)
+    rounded = _finite(value).quantize(quantum, rounding=rounding)
     if rounded.is_zero():
         rounded = abs(rounded)
     sign = "-" if rounded < 0 else ""
