@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- `scripts/regulierung_package_test.py`: neue Option `--accel auto|kvm|tcg`
+  (Standard `auto`). Ist `/dev/kvm` für den aufrufenden Benutzer nutzbar,
+  läuft die Test-VM mit KVM und dem festen CPU-Modell `Westmere`
+  (x86-64-v2 plus AES-NI/PCLMULQDQ) statt der Host-CPU; der Container bekommt
+  das Gerät und dessen Gruppe. Bei rootless Docker, userns-remap oder einem
+  entfernten Docker-Daemon wählt `auto` TCG. Sonst unverändert TCG mit
+  `-cpu max`. Der Regulierung-Upgradetest dauerte damit auf der NUC 64 s statt
+  rund 15 min (31/31 PASS). `result.json` nennt Beschleuniger, Anforderung,
+  QEMU-Argumente und Host-CPU.
+- Fund dabei: Die Regulierung-Laufzeit braucht mehr als x86-64-v2. Mit
+  `-cpu Nehalem` startet das Backend nicht (Neustartschleife), mit `Westmere`
+  besteht der Test.
+
 ## v0.16.0 – 2026-11-04
 
 Versionen: `auditcore_reportgates` 0.2.0 (Minor wegen neuer Parameter); die
