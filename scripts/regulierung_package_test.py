@@ -10,8 +10,10 @@ import argparse
 import base64
 import hashlib
 import json
+import os
 import re
 import shutil
+import stat
 import subprocess
 import tempfile
 import uuid
@@ -75,7 +77,8 @@ RUN echo '127.0.0.1 localhost' > /guest/etc/hosts \
  && truncate -s 12G /disk.raw && mkfs.ext4 -q -F -d /guest /disk.raw \\
  && chmod 0644 /kernel /initrd /disk.raw && rm -rf /guest
 USER 65534:65534
-ENTRYPOINT ["qemu-system-x86_64", "-accel", "tcg", "-cpu", "max", "-m", "4096", "-smp", "4", \\
+# Accelerator and CPU model are appended at run time (see accelerator_arguments).
+ENTRYPOINT ["qemu-system-x86_64", "-m", "4096", "-smp", "4", \\
  "-nographic", "-no-reboot", "-nic", "none", "-kernel", "/kernel", "-initrd", "/initrd", \\
  "-append", "root=/dev/vda rw console=ttyS0 \
 systemd.unit=auditcore-test.service auditcore.regulierung-test=1", \\
@@ -95,6 +98,46 @@ TimeoutStartSec=3600
 """
 
 
+KVM_DEVICE = Path("/dev/kvm")
+
+
+def kvm_usable(device: Path = KVM_DEVICE) -> bool:
+    """True when the host offers a KVM device this user may open read-write."""
+    try:
+        return stat.S_ISCHR(device.stat().st_mode) and os.access(device, os.R_OK | os.W_OK)
+    except OSError:
+        return False
+
+
+def resolve_accelerator(requested: str, device: Path = KVM_DEVICE) -> str:
+    """Map --accel auto|kvm|tcg to the accelerator actually used."""
+    if requested == "tcg":
+        return "tcg"
+    if kvm_usable(device):
+        return "kvm"
+    if requested == "kvm":
+        raise ValueError(f"--accel kvm requested, but {device} is missing or not accessible")
+    return "tcg"
+
+
+def accelerator_arguments(
+    accelerator: str, device: Path = KVM_DEVICE
+) -> tuple[list[str], list[str]]:
+    """Return (docker run options, QEMU arguments) for the chosen accelerator.
+
+    TCG emulates ``-cpu max`` (x86-64-v2 and newer, needed by the NumPy wheel).
+    KVM passes the host CPU through; the unprivileged container user gets the
+    device's group so it can open /dev/kvm without further capabilities.
+    """
+    if accelerator == "kvm":
+        gid = device.stat().st_gid
+        return (
+            ["--device", str(device), "--group-add", str(gid)],
+            ["-accel", "kvm", "-cpu", "host"],
+        )
+    return [], ["-accel", "tcg", "-cpu", "max"]
+
+
 def main() -> int:
     """Build and run the isolated guest, preserving exact package-bound evidence."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -109,7 +152,18 @@ def main() -> int:
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=3600)
+    parser.add_argument(
+        "--accel",
+        choices=("auto", "kvm", "tcg"),
+        default="auto",
+        help="QEMU accelerator: auto uses KVM when /dev/kvm is usable, otherwise TCG",
+    )
     args = parser.parse_args()
+    try:
+        accelerator = resolve_accelerator(args.accel)
+    except ValueError as exc:
+        parser.error(str(exc))
+    docker_options, qemu_arguments = accelerator_arguments(accelerator)
     args.output.mkdir(parents=True, exist_ok=True, mode=0o700)
     configuration = json.loads(args.configuration.read_text())
     run_id = uuid.uuid4().hex[:12]
@@ -117,7 +171,8 @@ def main() -> int:
     container = f"auditcore-regulierung-test-{run_id}"
     report: dict = {
         "status": "NOT_EXECUTED",
-        "runtime": "offline QEMU TCG, real systemd",
+        "runtime": f"offline QEMU {accelerator.upper()}, real systemd",
+        "accelerator": accelerator,
         "guest_script_sha256": hashlib.sha256(
             Path(__file__).with_name("regulierung_guest_test.py").read_bytes()
         ).hexdigest(),
@@ -184,7 +239,9 @@ def main() -> int:
                     "4",
                     "--pids-limit",
                     "128",
+                    *docker_options,
                     image,
+                    *qemu_arguments,
                 ],
                 stdout=log,
                 stderr=subprocess.STDOUT,

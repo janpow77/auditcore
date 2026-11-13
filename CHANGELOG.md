@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- `scripts/regulierung_package_test.py`: neue Option `--accel auto|kvm|tcg`
+  (Standard `auto`). Ist `/dev/kvm` für den aufrufenden Benutzer nutzbar,
+  läuft die Test-VM mit KVM und `-cpu host`; der Container bekommt das Gerät
+  und dessen Gruppe, sonst unverändert TCG mit `-cpu max`. Der
+  Regulierung-Upgradetest dauerte damit auf der NUC 64 s statt rund 15 min
+  (31/31 PASS). `result.json` nennt den Beschleuniger (`accelerator`,
+  `runtime`).
+
 ## v0.16.0 – 2026-11-04
 
 Versionen: `auditcore_reportgates` 0.2.0 (Minor wegen neuer Parameter); die

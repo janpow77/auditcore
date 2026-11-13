@@ -131,7 +131,11 @@ python scripts/regulierung_package_test.py /private/old.deb /private/new.deb \
 ```
 
 Der Test erstellt eine kurzlebige QEMU-VM mit echtem systemd und eigener Datenbank.
-QEMU emuliert dafür eine CPU mit dem benötigten x86-64-v2-Befehlssatz
+Mit `--accel auto` (Standard) nutzt er KVM, wenn `/dev/kvm` für den aufrufenden
+Benutzer les- und schreibbar ist; die VM bekommt dann die Host-CPU (`-cpu host`),
+und der Lauf dauert etwa eine Minute statt einer Viertelstunde. `--accel kvm`
+bricht ohne nutzbares Gerät ab, `--accel tcg` erzwingt die Emulation.
+Ohne KVM emuliert QEMU eine CPU mit dem benötigten x86-64-v2-Befehlssatz
 (`-cpu max`); das verwendete NumPy-Wheel meldet diese Baseline ausdrücklich.
 Ein erster Lauf mit QEMUs älterer Standard-CPU scheiterte mit SIGILL und gilt
 nicht als bestanden. Der VM fehlt eine Netzwerkkarte. Signierte APT-Feeds sind ausschließlich lokale
