@@ -10,11 +10,14 @@ import argparse
 import base64
 import hashlib
 import json
+import os
 import re
 import shutil
+import stat
 import subprocess
 import tempfile
 import uuid
+from collections.abc import Callable
 from pathlib import Path
 
 DOCKERFILE = """ARG GUEST_IMAGE=ubuntu:24.04
@@ -75,7 +78,8 @@ RUN echo '127.0.0.1 localhost' > /guest/etc/hosts \
  && truncate -s 12G /disk.raw && mkfs.ext4 -q -F -d /guest /disk.raw \\
  && chmod 0644 /kernel /initrd /disk.raw && rm -rf /guest
 USER 65534:65534
-ENTRYPOINT ["qemu-system-x86_64", "-accel", "tcg", "-cpu", "max", "-m", "4096", "-smp", "4", \\
+# Accelerator and CPU model are appended at run time (see accelerator_arguments).
+ENTRYPOINT ["qemu-system-x86_64", "-m", "4096", "-smp", "4", \\
  "-nographic", "-no-reboot", "-nic", "none", "-kernel", "/kernel", "-initrd", "/initrd", \\
  "-append", "root=/dev/vda rw console=ttyS0 \
 systemd.unit=auditcore-test.service auditcore.regulierung-test=1", \\
@@ -95,6 +99,103 @@ TimeoutStartSec=3600
 """
 
 
+KVM_DEVICE = Path("/dev/kvm")
+#: Named CPU model under KVM instead of the host CPU, so a pass does not depend
+#: on the test machine's extensions. Westmere = x86-64-v2 plus AES-NI and
+#: PCLMULQDQ (QEMU's ``x86-64-v2-AES`` ABI model is missing in QEMU 8.2). The
+#: regulierung runtime needs AES-NI/PCLMULQDQ: with Nehalem (plain x86-64-v2)
+#: the backend of 2026.11.12-1 and 2026.11.13-1 crash-loops, with Westmere both
+#: pass (measured 13.11.2026).
+KVM_CPU = "Westmere"
+
+
+def kvm_usable(device: Path = KVM_DEVICE) -> bool:
+    """True when the KVM device is usable for the unprivileged container user.
+
+    The guest runs as UID 65534 and reaches the device only through its group,
+    so group read-write permission is required in addition to the caller's own
+    access (``os.access`` is always true for root).
+    """
+    try:
+        mode = device.stat().st_mode
+    except OSError:
+        return False
+    group_rw = stat.S_IRGRP | stat.S_IWGRP
+    return (
+        stat.S_ISCHR(mode) and mode & group_rw == group_rw and os.access(device, os.R_OK | os.W_OK)
+    )
+
+
+def docker_passes_devices() -> bool:
+    """True when the Docker daemon is local, rootful and without userns-remap.
+
+    Only then does ``--device``/``--group-add`` give the container the host's
+    /dev/kvm with the host's group ID.
+    """
+    host = os.environ.get("DOCKER_HOST", "")
+    if host and not host.startswith("unix://"):
+        return False
+    try:
+        info = subprocess.run(
+            ["docker", "info", "--format", "{{json .SecurityOptions}}"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=True,
+        ).stdout
+        options = json.loads(info or "[]") or []
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return False
+    return not any("rootless" in o or "userns" in o for o in options)
+
+
+def resolve_accelerator(
+    requested: str,
+    device: Path = KVM_DEVICE,
+    daemon_ok: Callable[[], bool] = docker_passes_devices,
+) -> str:
+    """Map --accel auto|kvm|tcg to the accelerator actually used."""
+    if requested == "tcg":
+        return "tcg"
+    if kvm_usable(device) and daemon_ok():
+        return "kvm"
+    if requested == "kvm":
+        raise ValueError(
+            f"--accel kvm requested, but {device} is not usable for the container "
+            "(missing, no group read-write access, rootless/userns or remote Docker)"
+        )
+    return "tcg"
+
+
+def accelerator_arguments(
+    accelerator: str, device: Path = KVM_DEVICE
+) -> tuple[list[str], list[str]]:
+    """Return (docker run options, QEMU arguments) for the chosen accelerator.
+
+    TCG emulates ``-cpu max`` (x86-64-v2 and newer, needed by the NumPy wheel).
+    KVM uses the named baseline model `KVM_CPU`; the unprivileged container user
+    gets the device's group so it can open /dev/kvm without capabilities.
+    """
+    if accelerator == "kvm":
+        gid = device.stat().st_gid
+        return (
+            ["--device", str(device), "--group-add", str(gid)],
+            ["-accel", "kvm", "-cpu", KVM_CPU],
+        )
+    return [], ["-accel", "tcg", "-cpu", "max"]
+
+
+def host_cpu_model() -> str:
+    """CPU model of the test machine for the report (empty when unknown)."""
+    try:
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return ""
+
+
 def main() -> int:
     """Build and run the isolated guest, preserving exact package-bound evidence."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -109,7 +210,18 @@ def main() -> int:
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=3600)
+    parser.add_argument(
+        "--accel",
+        choices=("auto", "kvm", "tcg"),
+        default="auto",
+        help="QEMU accelerator: auto uses KVM when /dev/kvm is usable, otherwise TCG",
+    )
     args = parser.parse_args()
+    try:
+        accelerator = resolve_accelerator(args.accel)
+    except ValueError as exc:
+        parser.error(str(exc))
+    docker_options, qemu_arguments = accelerator_arguments(accelerator)
     args.output.mkdir(parents=True, exist_ok=True, mode=0o700)
     configuration = json.loads(args.configuration.read_text())
     run_id = uuid.uuid4().hex[:12]
@@ -117,7 +229,11 @@ def main() -> int:
     container = f"auditcore-regulierung-test-{run_id}"
     report: dict = {
         "status": "NOT_EXECUTED",
-        "runtime": "offline QEMU TCG, real systemd",
+        "runtime": f"offline QEMU {accelerator.upper()}, real systemd",
+        "accelerator": accelerator,
+        "accelerator_requested": args.accel,
+        "qemu_arguments": qemu_arguments,
+        "host_cpu": host_cpu_model(),
         "guest_script_sha256": hashlib.sha256(
             Path(__file__).with_name("regulierung_guest_test.py").read_bytes()
         ).hexdigest(),
@@ -184,7 +300,9 @@ def main() -> int:
                     "4",
                     "--pids-limit",
                     "128",
+                    *docker_options,
                     image,
+                    *qemu_arguments,
                 ],
                 stdout=log,
                 stderr=subprocess.STDOUT,
