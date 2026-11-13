@@ -17,6 +17,7 @@ import stat
 import subprocess
 import tempfile
 import uuid
+from collections.abc import Callable
 from pathlib import Path
 
 DOCKERFILE = """ARG GUEST_IMAGE=ubuntu:24.04
@@ -99,24 +100,70 @@ TimeoutStartSec=3600
 
 
 KVM_DEVICE = Path("/dev/kvm")
+#: Named CPU model under KVM instead of the host CPU, so a pass does not depend
+#: on the test machine's extensions. Westmere = x86-64-v2 plus AES-NI and
+#: PCLMULQDQ (QEMU's ``x86-64-v2-AES`` ABI model is missing in QEMU 8.2). The
+#: regulierung runtime needs AES-NI/PCLMULQDQ: with Nehalem (plain x86-64-v2)
+#: the backend of 2026.11.12-1 and 2026.11.13-1 crash-loops, with Westmere both
+#: pass (measured 13.11.2026).
+KVM_CPU = "Westmere"
 
 
 def kvm_usable(device: Path = KVM_DEVICE) -> bool:
-    """True when the host offers a KVM device this user may open read-write."""
+    """True when the KVM device is usable for the unprivileged container user.
+
+    The guest runs as UID 65534 and reaches the device only through its group,
+    so group read-write permission is required in addition to the caller's own
+    access (``os.access`` is always true for root).
+    """
     try:
-        return stat.S_ISCHR(device.stat().st_mode) and os.access(device, os.R_OK | os.W_OK)
+        mode = device.stat().st_mode
     except OSError:
         return False
+    group_rw = stat.S_IRGRP | stat.S_IWGRP
+    return (
+        stat.S_ISCHR(mode) and mode & group_rw == group_rw and os.access(device, os.R_OK | os.W_OK)
+    )
 
 
-def resolve_accelerator(requested: str, device: Path = KVM_DEVICE) -> str:
+def docker_passes_devices() -> bool:
+    """True when the Docker daemon is local, rootful and without userns-remap.
+
+    Only then does ``--device``/``--group-add`` give the container the host's
+    /dev/kvm with the host's group ID.
+    """
+    host = os.environ.get("DOCKER_HOST", "")
+    if host and not host.startswith("unix://"):
+        return False
+    try:
+        info = subprocess.run(
+            ["docker", "info", "--format", "{{json .SecurityOptions}}"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=True,
+        ).stdout
+        options = json.loads(info or "[]") or []
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return False
+    return not any("rootless" in o or "userns" in o for o in options)
+
+
+def resolve_accelerator(
+    requested: str,
+    device: Path = KVM_DEVICE,
+    daemon_ok: Callable[[], bool] = docker_passes_devices,
+) -> str:
     """Map --accel auto|kvm|tcg to the accelerator actually used."""
     if requested == "tcg":
         return "tcg"
-    if kvm_usable(device):
+    if kvm_usable(device) and daemon_ok():
         return "kvm"
     if requested == "kvm":
-        raise ValueError(f"--accel kvm requested, but {device} is missing or not accessible")
+        raise ValueError(
+            f"--accel kvm requested, but {device} is not usable for the container "
+            "(missing, no group read-write access, rootless/userns or remote Docker)"
+        )
     return "tcg"
 
 
@@ -126,16 +173,27 @@ def accelerator_arguments(
     """Return (docker run options, QEMU arguments) for the chosen accelerator.
 
     TCG emulates ``-cpu max`` (x86-64-v2 and newer, needed by the NumPy wheel).
-    KVM passes the host CPU through; the unprivileged container user gets the
-    device's group so it can open /dev/kvm without further capabilities.
+    KVM uses the named baseline model `KVM_CPU`; the unprivileged container user
+    gets the device's group so it can open /dev/kvm without capabilities.
     """
     if accelerator == "kvm":
         gid = device.stat().st_gid
         return (
             ["--device", str(device), "--group-add", str(gid)],
-            ["-accel", "kvm", "-cpu", "host"],
+            ["-accel", "kvm", "-cpu", KVM_CPU],
         )
     return [], ["-accel", "tcg", "-cpu", "max"]
+
+
+def host_cpu_model() -> str:
+    """CPU model of the test machine for the report (empty when unknown)."""
+    try:
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return ""
 
 
 def main() -> int:
@@ -173,6 +231,9 @@ def main() -> int:
         "status": "NOT_EXECUTED",
         "runtime": f"offline QEMU {accelerator.upper()}, real systemd",
         "accelerator": accelerator,
+        "accelerator_requested": args.accel,
+        "qemu_arguments": qemu_arguments,
+        "host_cpu": host_cpu_model(),
         "guest_script_sha256": hashlib.sha256(
             Path(__file__).with_name("regulierung_guest_test.py").read_bytes()
         ).hexdigest(),

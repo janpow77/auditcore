@@ -132,9 +132,15 @@ python scripts/regulierung_package_test.py /private/old.deb /private/new.deb \
 
 Der Test erstellt eine kurzlebige QEMU-VM mit echtem systemd und eigener Datenbank.
 Mit `--accel auto` (Standard) nutzt er KVM, wenn `/dev/kvm` für den aufrufenden
-Benutzer les- und schreibbar ist; die VM bekommt dann die Host-CPU (`-cpu host`),
-und der Lauf dauert etwa eine Minute statt einer Viertelstunde. `--accel kvm`
-bricht ohne nutzbares Gerät ab, `--accel tcg` erzwingt die Emulation.
+Benutzer und über die Gruppe les- und schreibbar ist und der Docker-Daemon lokal,
+ohne rootless-Modus und ohne userns-remap läuft. Die VM bekommt dann das feste
+CPU-Modell `Westmere` (x86-64-v2 plus AES-NI/PCLMULQDQ), nicht die Host-CPU, und
+der Lauf dauert etwa eine Minute statt einer Viertelstunde. `--accel kvm` bricht
+ohne nutzbares Gerät ab, `--accel tcg` erzwingt die Emulation.
+
+Mit `-cpu Nehalem` (reines x86-64-v2) startet das Backend von 2026.11.12-1 und
+2026.11.13-1 nicht, mit `Westmere` bestehen beide (gemessen am 13.11.2026). Die
+Laufzeit braucht also zusätzlich AES-NI/PCLMULQDQ.
 Ohne KVM emuliert QEMU eine CPU mit dem benötigten x86-64-v2-Befehlssatz
 (`-cpu max`); das verwendete NumPy-Wheel meldet diese Baseline ausdrücklich.
 Ein erster Lauf mit QEMUs älterer Standard-CPU scheiterte mit SIGILL und gilt
