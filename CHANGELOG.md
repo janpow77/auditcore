@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `auditcore-runner`: Exitcode 127 unter `sh -c`/`bash -c` meldet jetzt
+  „Programm im Befehl nicht gefunden (Exitcode 127)“ mit der letzten
+  stderr-Zeile statt „sh im Image bzw. auf dem Rechner nicht gefunden“. Anlass:
+  Ein Worktree ohne `frontend/node_modules` erschien als fehlende Shell.
 - `scripts/regulierung_package_test.py`: neue Option `--accel auto|kvm|tcg`
   (Standard `auto`). Ist `/dev/kvm` für den aufrufenden Benutzer nutzbar,
   läuft die Test-VM mit KVM und dem festen CPU-Modell `Westmere`
