@@ -151,6 +151,17 @@ def test_missing_tool_is_reported(tmp_path: Path) -> None:
     assert document["werkzeuge"][0]["status"] == "fehlt"  # type: ignore[index]
 
 
+def test_missing_program_inside_shell_names_the_command(tmp_path: Path) -> None:
+    befehl = ("sh", "-c", "cd . && exec gibt-es-nicht-xyz --version")
+    registry = Registry({"innen": Tool("innen", "python", befehl, "ruff-json")})
+    document = run_profile(Runner(tmp_path), registry, CheckProfile("t", ("innen",)), use_cache=False)
+    werkzeug = document["werkzeuge"][0]  # type: ignore[index]
+    assert werkzeug["status"] == "fehlt"
+    assert werkzeug["meldung"].startswith("Programm im Befehl nicht gefunden (Exitcode 127)")
+    assert "gibt-es-nicht-xyz" in werkzeug["meldung"]
+    assert "sh im Image" not in werkzeug["meldung"]
+
+
 def _custom_profile(tmp_path: Path, tools: dict[str, str]) -> CheckProfile:
     """Profile ``pr`` with one script per tool; ``{ausgabe}`` is passed when the script name says so."""
     lines = ["[pruefprofile.pr]", f"werkzeuge = {json.dumps(list(tools))}"]

@@ -193,9 +193,7 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         return ToolResult(tool.name, "zeitlimit", float(timeout), message=f"nach {timeout} s abgebrochen")
     seconds = time.monotonic() - started
     if result.returncode == COMMAND_NOT_FOUND and COMMAND_NOT_FOUND not in tool.success_codes:
-        return ToolResult(
-            tool.name, "fehlt", seconds, message=f"{argv[0]} im Image bzw. auf dem Rechner nicht gefunden"
-        )
+        return ToolResult(tool.name, "fehlt", seconds, message=_not_found_message(argv, result.stderr))
     if tool.parser == EXIT_CODE_PARSER:
         return ToolResult(tool.name, "ok", seconds, _exit_code_findings(tool, result))
     if result.returncode not in tool.success_codes:
@@ -216,6 +214,16 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         empty = Finding(tool=tool.name, rule=NOTHING_CHECKED_STATUS, path=REPO_FILE, line=0, message=message)
         return ToolResult(tool.name, NOTHING_CHECKED_STATUS, seconds, [*checked, empty], message)
     return ToolResult(tool.name, "ok", seconds, checked)
+
+
+def _not_found_message(argv: list[str], stderr: str) -> str:
+    """Exit code 127 names no program: with ``sh -c`` it may come from inside the command."""
+    detail = stderr.strip().splitlines()[-1][-300:] if stderr.strip() else ""
+    if argv[:2] in (["sh", "-c"], ["bash", "-c"]):
+        message = "Programm im Befehl nicht gefunden (Exitcode 127)"
+    else:
+        message = f"{argv[0]} im Image bzw. auf dem Rechner nicht gefunden (Exitcode 127)"
+    return f"{message}: {detail}" if detail else message
 
 
 def _exit_code_findings(tool: Tool, result: subprocess.CompletedProcess[str]) -> list[Finding]:
