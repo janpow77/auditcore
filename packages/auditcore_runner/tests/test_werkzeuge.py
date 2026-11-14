@@ -12,7 +12,7 @@ import pytest
 from auditcore_runner import codemods
 from auditcore_runner.cli import main
 from auditcore_runner.werkzeuge import aufgaben, bericht, einstellungen, parser
-from auditcore_runner.werkzeuge.ausfuehren import Runner, content_key, run_profile
+from auditcore_runner.werkzeuge.ausfuehren import Runner, _not_found_message, content_key, run_profile
 from auditcore_runner.werkzeuge.befunde import (
     Finding,
     deduplicate,
@@ -149,6 +149,52 @@ def test_missing_tool_is_reported(tmp_path: Path) -> None:
     registry = Registry({"weg": Tool("weg", "python", ("gibt-es-nicht-xyz",), "ruff-json")})
     document = run_profile(Runner(tmp_path), registry, CheckProfile("t", ("weg",)), use_cache=False)
     assert document["werkzeuge"][0]["status"] == "fehlt"  # type: ignore[index]
+
+
+def test_missing_program_inside_shell_names_the_command(tmp_path: Path) -> None:
+    befehl = ("sh", "-c", "cd . && exec gibt-es-nicht-xyz --version")
+    registry = Registry({"innen": Tool("innen", "python", befehl, "ruff-json")})
+    document = run_profile(Runner(tmp_path), registry, CheckProfile("t", ("innen",)), use_cache=False)
+    werkzeug = document["werkzeuge"][0]  # type: ignore[index]
+    assert werkzeug["status"] == "fehlt"
+    assert werkzeug["meldung"].startswith("Programm im Befehl nicht gefunden (Exitcode 127)")
+    assert "gibt-es-nicht-xyz" in werkzeug["meldung"]
+    assert "sh im Image" not in werkzeug["meldung"]
+
+
+DOCKER_127 = (
+    'docker: Error response from daemon: failed to create task: exec: "ruff": '
+    "executable file not found in $PATH\n\nRun 'docker run --help' for more information\n"
+)
+
+
+@pytest.mark.parametrize(
+    ("argv", "stderr", "stdout", "erwartet"),
+    [
+        (
+            ["ruff", "check"],
+            DOCKER_127,
+            "",
+            'ruff im Image bzw. auf dem Rechner nicht gefunden (Exitcode 127): docker: Error response from daemon: failed to create task: exec: "ruff": executable file not found in $PATH',
+        ),
+        (
+            ["sh", "-c", "prettier --check . 2>&1"],
+            "",
+            "sh: 1: prettier: not found\n",
+            "Programm im Befehl nicht gefunden (Exitcode 127): sh: 1: prettier: not found",
+        ),
+        (["/bin/bash", "-lc", "x"], "", "", "Programm im Befehl nicht gefunden (Exitcode 127)"),
+        (["sh", "-euc", "x"], "zeile 1\nletzte\n", "", "Programm im Befehl nicht gefunden (Exitcode 127): letzte"),
+        (["sh", "--version"], "", "", "sh im Image bzw. auf dem Rechner nicht gefunden (Exitcode 127)"),
+    ],
+)
+def test_not_found_message(argv: list[str], stderr: str, stdout: str, erwartet: str) -> None:
+    assert _not_found_message(argv, stderr, stdout) == erwartet
+
+
+def test_not_found_message_kuerzt_lange_zeilen() -> None:
+    meldung = _not_found_message(["sh", "-c", "x"], "a" * 1000 + " not found")
+    assert len(meldung) <= len("Programm im Befehl nicht gefunden (Exitcode 127): ") + 300
 
 
 def _custom_profile(tmp_path: Path, tools: dict[str, str]) -> CheckProfile:
