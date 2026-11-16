@@ -40,7 +40,16 @@ def root_dir() -> Path:
 def program_path() -> str:
     """Absolute path of the console script, so units work without PATH."""
     found = shutil.which("auditcore-runner")
-    return found or f"{sys.executable} -m auditcore_runner"
+    if found:
+        return found
+    # A systemd unit can start this package with ``python -m`` while its PATH
+    # intentionally omits the user's bin directory. The console script is
+    # installed next to that interpreter by uv/pip, and remains a single
+    # executable path for shell callers (not a command string with arguments).
+    colocated = Path(sys.executable).absolute().parent / "auditcore-runner"
+    if colocated.is_file():
+        return str(colocated)
+    raise FileNotFoundError("auditcore-runner console script is not on PATH or beside Python")
 
 
 def unit_name(runner_class: str, instance: int | None = None) -> str:

@@ -215,6 +215,17 @@ def cmd_token(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_select_target(args: argparse.Namespace) -> int:
+    """Print the API base for the repository this slot should serve next."""
+    profile = profile_io.load(_profile_path(args))
+    if args.klasse not in profile.classes:
+        print(f"Fehler: Klasse {args.klasse!r} fehlt im Profil", file=sys.stderr)
+        return 2
+    client = github.Client(github.resolve_token(profile.auth))
+    print(github.cached_registration_base(client, profile, args.klasse, args.platz))
+    return 0
+
+
 def cmd_gpu_choose(args: argparse.Namespace) -> int:
     """Print the card for the next job of a GPU class; exit 3 when none is usable now."""
     from . import gpu
@@ -344,6 +355,10 @@ def _add_runner_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser
     regulator.add_argument("--ohne-github", action="store_true")
     regulator.set_defaults(func=cmd_regulator)
     sub.add_parser("token", help="GitHub-Token gemäß Profil ausgeben (für den Supervisor)").set_defaults(func=cmd_token)
+    target = sub.add_parser("ziel", help="Repository für einen Runner-Slot nach Warteschlange auswählen")
+    target.add_argument("klasse")
+    target.add_argument("platz", help="eindeutiger Slotname, z. B. cpu-2")
+    target.set_defaults(func=cmd_select_target)
     ui = sub.add_parser("ui", help="lokale Oberfläche und JSON-API")
     ui.add_argument("--adresse", default="127.0.0.1")
     ui.add_argument("--port", type=int, default=7860)

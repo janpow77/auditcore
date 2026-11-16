@@ -72,6 +72,17 @@ def _target(found: Findings, target: Target) -> None:
     bad = [r for r in target.watched_repos if not REPO.fullmatch(r)]
     if bad:
         found.add("ziel.repos_beobachten", "ungültig: " + ", ".join(bad))
+    target_owner = target.name.split("/", 1)[0]
+    cross_owner = [repo for repo in target.watched_repos if repo.split("/", 1)[0] != target_owner]
+    if cross_owner:
+        found.add(
+            "ziel.repos_beobachten",
+            "Repositories müssen demselben Eigentümer wie das Ziel gehören: " + ", ".join(cross_owner),
+        )
+    if target.scope == "repo" and target.name in target.watched_repos:
+        found.add("ziel.repos_beobachten", "das Haupt-Repository nicht zusätzlich aufführen")
+    if len(set(target.watched_repos)) != len(target.watched_repos):
+        found.add("ziel.repos_beobachten", "Repositories dürfen nicht doppelt vorkommen")
     found.within("ziel.runner_gruppe", target.runner_group_id, 1, 10**9)
 
 
@@ -223,6 +234,11 @@ def _scale_set(found: Findings, profile: Profile) -> None:
         found.add("scale_set.runner_gruppe", "Repositories kennen nur die Gruppe „default“")
 
 
+def _repo_pool(found: Findings, profile: Profile) -> None:
+    if profile.backend == "scaleset" and profile.target.scope == "repo" and profile.target.watched_repos:
+        found.add("ziel.repos_beobachten", "Repo-Pools mit mehreren Zielen benötigen das JIT-Backend")
+
+
 def validate(profile: Profile, facts: HostFacts) -> list[Problem]:
     """All findings; an empty list means the profile may be applied."""
     found = Findings()
@@ -236,6 +252,7 @@ def validate(profile: Profile, facts: HostFacts) -> list[Problem]:
         found.add("aenderung.quelle", "lokal oder flow-agent")
     if profile.backend not in BACKENDS:
         found.add("backend", "verfügbar: " + ", ".join(BACKENDS))
+    _repo_pool(found, profile)
     if profile.gpu_access not in GPU_ACCESS:
         found.add("gpu_zugriff", "cdi oder gpus")
     _scale_set(found, profile)

@@ -33,13 +33,18 @@ HOST="$(hostname -s)"
 runner_id=""
 container=""
 jit_file=""
+current_base=""
 
 log() { printf '%s [%s %s] %s\n' "$(date -Is)" "$CLASS" "$INSTANCE" "$*"; }
 
 cfg() { jq -r --arg c "$CLASS" --arg g "$GPU" "$1" "$PROFILE"; }
 
-# API-Pfad des Ziels: repos/<besitzer>/<repo> oder orgs/<organisation>.
-repo() { cfg 'if .ziel.art == "org" then "orgs/" + .ziel.name else "repos/" + .ziel.name end'; }
+# Alle Repo-Ziele werden geprüft; die konkrete JIT-Registrierung wird je Slot gewählt.
+registration_bases() {
+  cfg 'if .ziel.art == "org" then "orgs/" + .ziel.name else ([.ziel.name] + (.ziel.repos_beobachten // []) | unique[] | "repos/" + .) end'
+}
+
+registration_base() { "$PROGRAM" ziel "$CLASS" "$SLOT"; }
 
 # Token nur über das Paket (PAT-Datei oder GitHub App); bei „gh“ gilt gh auth.
 load_token() {
@@ -54,13 +59,13 @@ remove_registration() {
   if [[ "$BACKEND" == "scaleset" ]]; then
     "$PROGRAM" scaleset entfernen "$1" >/dev/null 2>&1
   else
-    gh api -X DELETE "$(repo)/actions/runners/$1" >/dev/null 2>&1
+    gh api -X DELETE "$2/actions/runners/$1" >/dev/null 2>&1
   fi
 }
 
 cleanup() {
   if [[ -n "$container" ]]; then docker stop --time 20 "$container" >/dev/null 2>&1 || true; fi
-  if [[ -n "$runner_id" ]]; then remove_registration "$runner_id" || true; fi
+  if [[ -n "$runner_id" ]]; then remove_registration "$runner_id" "$current_base" || true; fi
   if [[ -n "$jit_file" ]]; then rm -f "$jit_file"; fi
   if [[ -n "$GPU_CLASS" ]]; then "$PROGRAM" gpu freigeben "$SLOT" >/dev/null 2>&1 || true; fi
 }
@@ -111,7 +116,7 @@ wait_until_allowed() {
 
 wait_for_prerequisites() {
   load_token
-  until docker info >/dev/null 2>&1 && gh api "$(repo)" --silent >/dev/null 2>&1; do
+  until docker info >/dev/null 2>&1 && all_targets_accessible; do
     log "warte auf Docker und GitHub-Erreichbarkeit"
     sleep 30
     load_token
@@ -124,6 +129,13 @@ wait_for_prerequisites() {
   fi
 }
 
+all_targets_accessible() {
+  local base
+  while IFS= read -r base; do
+    [[ -n "$base" ]] && gh api "$base" --silent >/dev/null 2>&1 || return 1
+  done <<<"$(registration_bases)"
+}
+
 request_jit_config() {
   local name labels
   name="$(cfg '.rechner')-$HOST-$CLASS-$INSTANCE-$(date +%s)"
@@ -131,18 +143,19 @@ request_jit_config() {
     "$PROGRAM" scaleset jit "$CLASS" "$name"
     return
   fi
+  current_base="$(registration_base)"
   labels="$(cfg '.klassen[$c].labels')"
   jq -n --arg name "$name" --argjson labels "$labels" \
     --argjson group "$(cfg '.ziel.runner_gruppe // 1')" \
     '{name: $name, runner_group_id: $group, labels: $labels, work_folder: "_work"}' \
-    | gh api -X POST "$(repo)/actions/runners/generate-jitconfig" --input -
+    | gh api -X POST "$current_base/actions/runners/generate-jitconfig" --input -
 }
 
 # Sinkt Soll oder Maximum, während die Registrierung noch auf einen Job wartet,
 # wird sie gelöscht und der leere Container beendet. Einen belegten Runner lehnt
 # GitHub beim Löschen ab; dann läuft der Job normal zu Ende.
 watch_allowed() {
-  local id="$1" name="$2"
+  local id="$1" name="$2" base="$3" desired busy
   while docker inspect "$name" >/dev/null 2>&1; do
     sleep 20
     # Nutzer-Vorrang: Karte sofort räumen, auch mitten im Job (der Workflow stößt ihn neu an).
@@ -151,9 +164,19 @@ watch_allowed() {
       docker stop --time 20 "$name" >/dev/null 2>&1 || true
       return
     fi
+    busy="$(gh api "$base/actions/runners/$id" -q .busy 2>/dev/null || echo unknown)"
+    if [[ "$(cfg '.ziel.art')" == "repo" ]]; then
+      desired="$(registration_base 2>/dev/null || true)"
+      if [[ "$busy" == "false" && -n "$desired" && "$desired" != "$base" ]] \
+        && remove_registration "$id" "$base"; then
+        log "freie Registrierung $id wechselt zum nachgefragten Repository"
+        docker stop --time 5 "$name" >/dev/null 2>&1 || true
+        return
+      fi
+    fi
     if ! allowed \
-      && [[ "$(gh api "$(repo)/actions/runners/$id" -q .busy 2>/dev/null)" == "false" ]] \
-      && remove_registration "$id"; then
+      && [[ "$busy" == "false" ]] \
+      && remove_registration "$id" "$base"; then
       log "unbenutzte Registrierung $id entfernt"
       docker stop --time 5 "$name" >/dev/null 2>&1 || true
       return
@@ -207,15 +230,16 @@ run_one_job() {
   log "Runner $runner_id registriert, starte Container"
   docker run "${args[@]}" "$(cfg '.image')" &
   job=$!
-  watch_allowed "$runner_id" "$container" &
+  watch_allowed "$runner_id" "$container" "$current_base" &
   watcher=$!
   wait "$job" || log "Container endete mit Fehler"
   kill "$watcher" 2>/dev/null || true
   container=""
   rm -f "$jit_file"
   jit_file=""
-  remove_registration "$runner_id" || true
+  remove_registration "$runner_id" "$current_base" || true
   runner_id=""
+  current_base=""
   if [[ -n "$GPU" ]]; then "$PROGRAM" gpu freigeben "$SLOT" >/dev/null 2>&1 || true; fi
   GPU=""
 }

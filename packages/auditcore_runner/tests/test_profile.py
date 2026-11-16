@@ -37,6 +37,29 @@ def test_propose_small_machine(server_facts: HostFacts) -> None:
     assert validate(profile, server_facts) == []
 
 
+def test_multi_repo_jit_profile_is_valid_but_scale_set_is_rejected(workstation_facts: HostFacts) -> None:
+    profile = profile_io.from_json(
+        json.loads(files("auditcore_runner").joinpath("data", "beispiele", "workstation-2gpu.json").read_text())
+    )
+    target = replace(profile.target, watched_repos=("owner/flow-agent",))
+    assert validate(replace(profile, target=target), workstation_facts) == []
+    problems = validate(replace(profile, target=target, backend="scaleset"), workstation_facts)
+    assert any(problem.field == "ziel.repos_beobachten" for problem in problems)
+
+
+def test_multi_repo_profile_rejects_different_owner(workstation_facts: HostFacts) -> None:
+    profile = profile_io.from_json(
+        json.loads(files("auditcore_runner").joinpath("data", "beispiele", "workstation-2gpu.json").read_text())
+    )
+    target = replace(profile.target, watched_repos=("another-owner/flow-agent",))
+
+    problems = validate(replace(profile, target=target), workstation_facts)
+
+    assert any(
+        problem.field == "ziel.repos_beobachten" and "demselben Eigentümer" in problem.message for problem in problems
+    )
+
+
 def test_roundtrip_and_content_hash(workstation_facts: HostFacts) -> None:
     profile = propose(workstation_facts, "owner/repo")
     assert profile_io.from_json(json.loads(profile_io.dumps(profile))) == profile

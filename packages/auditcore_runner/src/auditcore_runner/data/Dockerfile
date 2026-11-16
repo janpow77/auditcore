@@ -18,8 +18,11 @@ RUN apt-get update \
       libxml2 libxslt1.1 \
       libpango-1.0-0 libpangoft2-1.0-0 libpangocairo-1.0-0 libcairo2 libgdk-pixbuf-2.0-0 \
       libharfbuzz0b libjpeg-turbo8 libopenjp2-7 shared-mime-info \
+      libgtk-3-dev libwebkit2gtk-4.1-dev libsoup-3.0-dev libxdo-dev wget file \
+      libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev \
       fonts-dejavu-core fonts-liberation fonts-noto-core fonts-noto-color-emoji locales \
  && sed -i 's/^# *de_DE.UTF-8/de_DE.UTF-8/' /etc/locale.gen \
+ && sed -i 's/^# *en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen \
  && locale-gen \
  && rm -rf /var/lib/apt/lists/*
 
@@ -44,6 +47,7 @@ RUN grep -vE '^[[:space:]]*(#|$)' /tmp/werkzeuge/requirements.txt | xargs -n1 uv
 # Node-Werkzeuge aus dem Lockfile; Playwright-Chromium mit Systemabhängigkeiten und
 # festen Schriften (stabile Screenshots). Lighthouse CI nutzt denselben Browser.
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
+ENV PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=120000
 RUN mkdir -p /opt/node-tools \
  && cp /tmp/werkzeuge/package.json /tmp/werkzeuge/package-lock.json /opt/node-tools/ \
  && cd /opt/node-tools && npm ci --no-audit --no-fund \

@@ -78,6 +78,53 @@ def test_queue_and_busy_by_class(workstation: Profile) -> None:
     assert github.busy_by_class(runners, workstation, workstation.runner_prefix()) == {"cpu-gross": 1}
 
 
+def test_repo_pool_routes_toward_the_larger_matching_queue(workstation: Profile) -> None:
+    target = replace(
+        workstation.target,
+        name="owner/auditcore",
+        watched_repos=("owner/flow-agent",),
+    )
+    profile = replace(workstation, target=target)
+
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        if "/actions/runs?" in url:
+            run_id = 11 if "owner/auditcore" in url else 22
+            payload = {"workflow_runs": [{"id": run_id}]}
+        elif "/runs/11/jobs?" in url:
+            payload = {"jobs": [{"status": "queued", "labels": ["self-hosted", "auditcore", "cpu-gross"]}]}
+        elif "/runs/22/jobs?" in url:
+            payload = {
+                "jobs": [
+                    {"status": "queued", "labels": ["self-hosted", "auditcore", "cpu-gross"]},
+                    {"status": "queued", "labels": ["self-hosted", "auditcore", "cpu-gross"]},
+                ]
+            }
+        else:
+            payload = {}
+        return 200, {}, json.dumps(payload).encode()
+
+    client = github.Client("t", fetch)
+    assert github.queued_by_repo(client, profile) == {
+        "owner/auditcore": {"cpu-gross": 1},
+        "owner/flow-agent": {"cpu-gross": 2},
+    }
+    assert github.registration_base(client, profile, "cpu-gross", "cpu-gross-1") == "repos/owner/flow-agent"
+
+
+def test_empty_repo_pool_spreads_slots_deterministically(workstation: Profile) -> None:
+    target = replace(
+        workstation.target,
+        name="owner/auditcore",
+        watched_repos=("owner/flow-agent",),
+    )
+    profile = replace(workstation, target=target)
+    client = github.Client("t", lambda method, url, headers, body: (200, {}, b'{"workflow_runs":[]}'))
+    first = github.registration_base(client, profile, "cpu-gross", "cpu-gross-1")
+    second = github.registration_base(client, profile, "cpu-gross", "cpu-gross-2")
+    assert first == github.registration_base(client, profile, "cpu-gross", "cpu-gross-1")
+    assert {first, second} == {"repos/owner/auditcore", "repos/owner/flow-agent"}
+
+
 def test_http_error_raises_without_token(workstation: Profile) -> None:
     client = github.Client("geheim", lambda method, url, headers, body: (401, {}, b""))
     with pytest.raises(github.GitHubError) as error:
