@@ -5,6 +5,8 @@
 - Runner-Image enthält die Tauri-v2-Buildabhängigkeiten und `en_US.UTF-8`;
   dadurch laufen der Desktop-Build und Bash-Integrationstests ohne
   Paketinstallation mit `sudo` im ephemeren Jobcontainer.
+- Installiert Rust 1.98.1 mit `clippy` und `rustfmt` aus einem Digest-gepinnten
+  Image und speichert Cargo-Abhängigkeiten in einem NVMe-Volume je Runner-Instanz.
 
 ## 0.1.4 – 2026-11-16
 

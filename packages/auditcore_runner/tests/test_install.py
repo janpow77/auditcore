@@ -88,6 +88,13 @@ def test_supervisor_checks_busy_for_all_target_scopes() -> None:
     assert script.index(busy_query) < script.index('if [[ "$(cfg \'.ziel.art\')" == "repo" ]]')
 
 
+def test_supervisor_persists_cargo_cache_per_runner_instance() -> None:
+    script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
+
+    assert "auditcore-runner-cargo-$CLASS-$INSTANCE:/home/runner/.cargo" in script
+    assert "--env CARGO_HOME=/home/runner/.cargo" in script
+
+
 def test_static_source_has_no_regulator_and_empty_pool(workstation: Profile, tmp_path: Path) -> None:
     static = replace(workstation, source=TargetSource("statisch"))
     changes = install.plan(static, tmp_path / "p.json")

@@ -32,6 +32,7 @@ Binärdateien werden mit Version und Prüfsumme gemeinsam angehoben.
 |---|---|---|---|
 | GitHub Actions Runner (Basis-Image) | 2.337.0 (Digest gepinnt) | MIT | github.com/actions/runner |
 | uv | 0.12.19 (Digest gepinnt) | MIT oder Apache-2.0 | github.com/astral-sh/uv |
+| Rust-Toolchain (rustc, cargo, rustup, clippy, rustfmt) | 1.98.1 (Digest gepinnt) | MIT oder Apache-2.0 | github.com/rust-lang/rust |
 | Node.js | 24.21.0 (SHA-256) | MIT (enthaltene Bibliotheken: siehe LICENSE im Archiv) | github.com/nodejs/node |
 | Ubuntu-Pakete (Compiler, Pango, Cairo, DejaVu, Liberation, Noto …) | aus dem Basis-Image | jeweilige Paketlizenzen (Schriften u. a. OFL-1.1) | Ubuntu |
 | Chrome for Testing (über Playwright) | zu Playwright 1.63.0 | BSD-3-Clause und enthaltene Lizenzen | chromium.googlesource.com |

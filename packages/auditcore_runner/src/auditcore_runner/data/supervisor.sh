@@ -197,6 +197,8 @@ container_args() {
     --volume "auditcore-runner-tool-$CLASS-$INSTANCE:/home/runner/_work/_tool"
     --volume "auditcore-runner-cache-$CLASS-$INSTANCE:/home/runner/.cache"
     --volume "auditcore-runner-npm-$CLASS-$INSTANCE:/home/runner/.npm"
+    --volume "auditcore-runner-cargo-$CLASS-$INSTANCE:/home/runner/.cargo"
+    --env CARGO_HOME=/home/runner/.cargo
   )
   network="$(cfg 'if .netz.aktiv then .netz.name else "" end')"
   if [[ -n "$network" ]]; then args+=(--network "$network"); fi

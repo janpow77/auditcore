@@ -10,7 +10,9 @@ On 2026-09-27 the rights holder decided that auditcore_runner is part of
 auditcore under the MIT license (copyright janpow77). No third-party code is
 included. External checkers (ruff, mypy, zizmor, gitleaks, actionlint, …) are
 separate programs that are only invoked; their versions and licenses are
-listed in THIRD_PARTY.md. There are no required runtime dependencies; the
+listed in THIRD_PARTY.md. The runner image also contains a digest-pinned
+Rust 1.98.1 toolchain (MIT/Apache-2.0) for Rust/Tauri projects. There are no
+required runtime dependencies; the
 optional extra workflows uses PyYAML (MIT), github-app uses PyJWT (MIT) with
 cryptography (Apache-2.0/BSD).
 
