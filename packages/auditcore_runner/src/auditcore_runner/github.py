@@ -10,13 +10,15 @@ from __future__ import annotations
 
 import http.client
 import json
+import os
 import subprocess
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import cast
 
-from .profile import Auth, Profile, Target, expand
+from .profile import Auth, Profile, Target, expand, state_dir
 
 API_HOST = "api.github.com"
 # (method, path, headers, body) → (status, response headers, body)
@@ -132,20 +134,21 @@ def _label_names(item: dict[str, object]) -> tuple[str, ...]:
 def list_runners(client: Client, target: Target, max_pages: int = 20) -> list[RunnerInfo]:
     """Every registered runner of the target (all pages)."""
     runners: list[RunnerInfo] = []
-    for page in range(1, max_pages + 1):
-        items = _objects(client.get(f"{target.api_base}/actions/runners?per_page=100&page={page}"), "runners")
-        runners += [
-            RunnerInfo(
-                runner_id=int(str(item.get("id", 0))),
-                name=str(item.get("name", "")),
-                online=item.get("status") == "online",
-                busy=bool(item.get("busy")),
-                labels=_label_names(item),
-            )
-            for item in items
-        ]
-        if len(items) < 100:
-            break
+    for base in target.registration_bases:
+        for page in range(1, max_pages + 1):
+            items = _objects(client.get(f"{base}/actions/runners?per_page=100&page={page}"), "runners")
+            runners += [
+                RunnerInfo(
+                    runner_id=int(str(item.get("id", 0))),
+                    name=str(item.get("name", "")),
+                    online=item.get("status") == "online",
+                    busy=bool(item.get("busy")),
+                    labels=_label_names(item),
+                )
+                for item in items
+            ]
+            if len(items) < 100:
+                break
     return runners
 
 
@@ -158,9 +161,9 @@ def class_of(labels: tuple[str, ...], profile: Profile) -> str | None:
     return None
 
 
-def queued_by_class(client: Client, profile: Profile) -> dict[str, int]:
-    """Waiting jobs that one of this machine's classes could take."""
-    counts: dict[str, int] = {}
+def queued_by_repo(client: Client, profile: Profile) -> dict[str, dict[str, int]]:
+    """Waiting jobs by repository and runner class for repo-level pool routing."""
+    counts: dict[str, dict[str, int]] = {repo: {} for repo in profile.target.queue_repos}
     for repo in profile.target.queue_repos:
         runs = client.get(f"repos/{repo}/actions/runs?status=queued&per_page=50")
         for run in _objects(runs, "workflow_runs"):
@@ -168,8 +171,87 @@ def queued_by_class(client: Client, profile: Profile) -> dict[str, int]:
             for job in _objects(jobs, "jobs"):
                 name = class_of(_label_names(job), profile) if job.get("status") == "queued" else None
                 if name:
-                    counts[name] = counts.get(name, 0) + 1
+                    counts[repo][name] = counts[repo].get(name, 0) + 1
     return counts
+
+
+def queued_by_class(client: Client, profile: Profile) -> dict[str, int]:
+    """Waiting jobs that one of this machine's classes could take."""
+    totals: dict[str, int] = {}
+    for classes in queued_by_repo(client, profile).values():
+        for name, count in classes.items():
+            totals[name] = totals.get(name, 0) + count
+    return totals
+
+
+def registration_base(client: Client, profile: Profile, runner_class: str, slot: str) -> str:
+    """Choose the repo with the most queued work; spread idle slots deterministically."""
+    target = profile.target
+    if target.scope == "org":
+        return target.api_base
+    repos = target.registration_repos
+    if len(repos) < 2:
+        return target.api_base
+    return _registration_base(target, queued_by_repo(client, profile), runner_class, slot)
+
+
+def cached_registration_base(client: Client, profile: Profile, runner_class: str, slot: str) -> str:
+    """Share a short-lived queue snapshot across slots to keep GitHub API use bounded."""
+    target = profile.target
+    if target.scope == "org" or len(target.registration_repos) < 2:
+        return target.api_base
+    from .profile_io import content_hash
+
+    directory = state_dir() / "routing"
+    cache_path = directory / f"{content_hash(profile)}-{runner_class}.json"
+    lock_path = cache_path.with_suffix(".lock")
+    try:
+        directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+        with lock_path.open("a", encoding="utf-8") as lock_file:
+            import fcntl
+
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+            counts = _read_queue_cache(cache_path)
+            if counts is not None and (
+                set(counts) != set(target.queue_repos)
+                or any(
+                    not isinstance(count, int) or count < 0 for values in counts.values() for count in values.values()
+                )
+            ):
+                counts = None
+            if counts is None:
+                counts = queued_by_repo(client, profile)
+                temporary = cache_path.with_suffix(f".{os.getpid()}.tmp")
+                temporary.write_text(json.dumps(counts, sort_keys=True), encoding="utf-8")
+                temporary.chmod(0o600)
+                temporary.replace(cache_path)
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+    except (ImportError, OSError):
+        counts = queued_by_repo(client, profile)
+    return _registration_base(target, counts, runner_class, slot)
+
+
+def _read_queue_cache(path: Path) -> dict[str, dict[str, int]] | None:
+    try:
+        if time.time() - path.stat().st_mtime > 15:
+            return None
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return None
+    if not isinstance(raw, dict) or any(not isinstance(value, dict) for value in raw.values()):
+        return None
+    return cast(dict[str, dict[str, int]], raw)
+
+
+def _registration_base(target: Target, counts: dict[str, dict[str, int]], runner_class: str, slot: str) -> str:
+    repos = target.registration_repos
+    busiest = max((classes.get(runner_class, 0) for classes in counts.values()), default=0)
+    if busiest:
+        candidates = [repo for repo in repos if counts[repo].get(runner_class, 0) == busiest]
+        offset = sum(map(ord, slot)) % len(candidates)
+        return f"repos/{candidates[offset]}"
+    offset = sum(map(ord, slot)) % len(repos)
+    return f"repos/{repos[offset]}"
 
 
 def busy_by_class(runners: list[RunnerInfo], profile: Profile, prefix: str) -> dict[str, int]:

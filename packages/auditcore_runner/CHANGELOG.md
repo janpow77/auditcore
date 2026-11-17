@@ -1,5 +1,27 @@
 # Changelog – auditcore_runner
 
+## 0.1.5 – 2026-11-16
+
+- Runner-Image enthält die Tauri-v2-Buildabhängigkeiten und `en_US.UTF-8`;
+  dadurch laufen der Desktop-Build und Bash-Integrationstests ohne
+  Paketinstallation mit `sudo` im ephemeren Jobcontainer.
+- Installiert Rust 1.98.1 mit `clippy` und `rustfmt` aus einem Digest-gepinnten
+  Image und speichert Cargo-Abhängigkeiten in einem NVMe-Volume je Runner-Instanz.
+
+## 0.1.4 – 2026-11-16
+
+- Supervisor-CLI-Aufruf auf Hosts ohne `~/.local/bin` im systemd-PATH korrigiert;
+  installiertes Console-Script wird relativ zum aktiven Python-Interpreter gesucht.
+- Regressionstests für explizite und nicht verfügbare Console-Script-Pfade ergänzt.
+
+## 0.1.3 – 2026-11-16
+
+- Repo-Runner-Pools können mehrere persönliche Repositories bedienen. JIT-Slots
+  wählen anhand passender wartender Jobs ein Ziel, freie Slots verteilen sich
+  stabil und wechseln bei Bedarf ohne laufende Jobs abzubrechen.
+- Runner-Status und Warteschlangen werden über alle Repo-Ziele zusammengeführt;
+  das Scale-Set-Backend weist Mehrrepo-Profile zurück.
+
 ## 0.1.2 – 2026-11-04
 
 - `befunde`: Der Pfad des letzten Laufs wird beidseitig mit `resolve()`

@@ -28,7 +28,7 @@ Direkt-URL und `sha256` stehen nach dem Release im Index unter
 `https://janpow77.github.io/auditcore/simple/auditcore-runner/`):
 
 ```text
-auditcore_runner @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_runner-0.1.2-py3-none-any.whl#sha256=<sha256>
+auditcore_runner @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_runner-0.1.5-py3-none-any.whl#sha256=<sha256>
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -140,7 +140,7 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 
 - **Runner-Profil** `~/.config/auditcore-runner/profil.json` (Schema
   `auditcore-runner/profil/3`, ausgeben mit `auditcore-runner profil schema`):
-  Ziel (Repository oder Organisation), Anmeldung (GitHub App empfohlen und
+  Ziel (ein oder mehrere Repositories oder Organisation), Anmeldung (GitHub App empfohlen und
   Standard, sobald konfiguriert; sonst Token-Datei; `gh` nur für
   Einzelrechner), frei benennbare Klassen der Art `cpu` oder `gpu` mit Min/Max,
   CPU/RAM je Runner, erlaubte GPUs, Prioritäten, Netz, Soll-Quelle. Versioniert
@@ -153,6 +153,10 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 - **Soll-Quelle** `statisch` (Maximum), `lokal` (eingebauter Autoskalierer
   `auditcore-runner regler`) oder `datei` (externer Regler, Vertrag
   `data/schemas/runner-pool.schema.json`).
+- **Repo-Pool:** Mit `ziel.repos_beobachten` kann ein Repo-Profil weitere
+  Repositories desselben Eigentümers aufnehmen. JIT-Slots verteilen sich nach
+  passender Warteschlange und verschieben freie Registrierungen bei Bedarf;
+  Scale-Sets sind für diesen Mehrrepo-Modus nicht unterstützt.
 - **Optionale Regeln**, standardmäßig aus: Thermik-Quelle mit Feldzuordnung,
   Vorrang interaktiver Nutzung, Volllast-Fenster.
 - **Prüfprofile** `schnell`, `pr`, `voll`, `sicherheit`, `gui`, `gpu`, `fuell`
