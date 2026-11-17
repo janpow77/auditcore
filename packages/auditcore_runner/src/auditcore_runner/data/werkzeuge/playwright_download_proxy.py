@@ -19,9 +19,7 @@ class _Handler(BaseHTTPRequestHandler):
         path = self.path.split("?", maxsplit=1)[0]
         if path.startswith(_PREFIX):
             host = "storage.googleapis.com"
-            upstream_path = "/chrome-for-testing-public/" + path.removeprefix(
-                _PREFIX
-            )
+            upstream_path = "/chrome-for-testing-public/" + path.removeprefix(_PREFIX)
         elif path.startswith(_FFMPEG_PREFIX):
             host = "playwright.download.prss.microsoft.com"
             upstream_path = "/dbazure/download/playwright" + path
@@ -30,10 +28,7 @@ class _Handler(BaseHTTPRequestHandler):
             return
 
         parts = upstream_path.lstrip("/").split("/")
-        if not all(
-            part not in {".", ".."} and _PATH_PART.fullmatch(part)
-            for part in parts
-        ):
+        if not all(part not in {".", ".."} and _PATH_PART.fullmatch(part) for part in parts):
             self.send_error(404)
             return
 
@@ -42,9 +37,7 @@ class _Handler(BaseHTTPRequestHandler):
             headers = {}
             if range_header := self.headers.get("Range"):
                 headers["Range"] = range_header
-            connection.request(
-                "GET", upstream_path, headers=headers
-            )
+            connection.request("GET", upstream_path, headers=headers)
             response = connection.getresponse()
             if response.status not in {200, 206}:
                 self.send_error(502)
