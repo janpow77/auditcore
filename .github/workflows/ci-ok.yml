@@ -18,8 +18,8 @@ concurrency:
 
 jobs:
   ci-ok:
-    # Leichter Warte-Job: bewusst auf GitHub-Runnern, damit er keinen Platz auf den eigenen Runnern belegt.
-    runs-on: ubuntu-latest
+    # Eigene PRs warten lokal; nicht vertrauenswürdige PRs bleiben auf GitHub-Runnern.
+    runs-on: ${{ (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
     timeout-minutes: 120
     permissions:
       actions: read
