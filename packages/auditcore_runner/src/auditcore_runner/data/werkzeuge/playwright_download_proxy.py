@@ -6,7 +6,7 @@ from http.client import HTTPException, HTTPSConnection
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 _PREFIX = "/builds/cft/"
-_FFMPEG_PREFIX = "/dbazure/download/playwright/builds/ffmpeg/"
+_FFMPEG_PREFIX = "/builds/ffmpeg/"
 _PATH_PART = re.compile(r"[A-Za-z0-9._-]+")
 
 
@@ -24,7 +24,7 @@ class _Handler(BaseHTTPRequestHandler):
             )
         elif path.startswith(_FFMPEG_PREFIX):
             host = "playwright.download.prss.microsoft.com"
-            upstream_path = path
+            upstream_path = "/dbazure/download/playwright" + path
         else:
             self.send_error(404)
             return
