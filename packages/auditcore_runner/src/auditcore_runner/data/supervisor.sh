@@ -188,7 +188,7 @@ container_args() {
   local network volume shares
   shares="$(cfg '.klassen[$c].cpu_shares')"
   args=(
-    --rm --name "$container"
+    --init --rm --name "$container"
     --volume "$jit_file:/run/auditcore/jit:ro"
     --cpus "$(cfg '.klassen[$c].cpus')" --cpu-shares "$shares"
     --memory "$(cfg '.klassen[$c].speicher_gb')g" --pids-limit 4096

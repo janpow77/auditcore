@@ -91,6 +91,7 @@ def test_supervisor_checks_busy_for_all_target_scopes() -> None:
 def test_supervisor_persists_cargo_cache_per_runner_instance() -> None:
     script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
 
+    assert '--init --rm --name "$container"' in script
     assert "auditcore-runner-cargo-$CLASS-$INSTANCE:/home/runner/.cargo" in script
     assert "--env CARGO_HOME=/home/runner/.cargo" in script
 

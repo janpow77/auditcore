@@ -158,3 +158,19 @@ def test_cli_findings_and_workflows(tmp_path: Path, capsys: pytest.CaptureFixtur
     assert {f["regel"] for f in json.loads(capsys.readouterr().out)} == {"fork", "dependabot"}
     assert cli.main(["hook", "--pfad", str(tmp_path)]) == 0
     assert "auditcore-runner lokal schnell" in capsys.readouterr().out
+
+
+def test_cli_selects_target_for_runner_slot(
+    profile_file: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr(cli.github, "resolve_token", lambda auth: "test-token")
+    monkeypatch.setattr(
+        cli.github, "cached_registration_base", lambda client, profile, klasse, platz: "orgs/flowaudit-ai"
+    )
+    prefix = ["--profil", str(profile_file)]
+
+    assert cli.main([*prefix, "ziel", "unbekannt", "cpu-1"]) == 2
+    assert "Klasse 'unbekannt' fehlt" in capsys.readouterr().err
+
+    assert cli.main([*prefix, "ziel", "cpu-gross", "cpu-1"]) == 0
+    assert capsys.readouterr().out.strip() == "orgs/flowaudit-ai"
