@@ -68,7 +68,7 @@ def expand(path: str) -> Path:
 
 @dataclass(frozen=True)
 class Target:
-    """Where runners register: one repository or a whole organisation."""
+    """Where runners register: one/multiple repositories or a whole organisation."""
 
     scope: str = "repo"
     name: str = ""
@@ -82,7 +82,21 @@ class Target:
 
     @property
     def queue_repos(self) -> tuple[str, ...]:
-        return (self.name,) if self.scope == "repo" else self.watched_repos
+        return self.registration_repos if self.scope == "repo" else self.watched_repos
+
+    @property
+    def registration_repos(self) -> tuple[str, ...]:
+        """Repositories that can receive a JIT runner; org runners use one org registration."""
+        if self.scope != "repo":
+            return ()
+        return tuple(dict.fromkeys((self.name, *self.watched_repos)))
+
+    @property
+    def registration_bases(self) -> tuple[str, ...]:
+        """API bases containing runners owned by this profile."""
+        if self.scope == "org":
+            return (self.api_base,)
+        return tuple(f"repos/{repo}" for repo in self.registration_repos)
 
 
 @dataclass(frozen=True)
