@@ -65,9 +65,10 @@
         "repos_beobachten": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^[A-Za-z0-9-]+/[A-Za-z0-9._-]+$"
           },
-          "description": "für Organisationen: Repos der Warteschlange"
+          "description": "bei Organisationen Repos der Warteschlange; bei Repo-Zielen zusätzliche JIT-Registrierungsziele"
         },
         "bekannte_runner": {
           "type": "array",

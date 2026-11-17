@@ -20,6 +20,25 @@ def workstation() -> Profile:
     return profile_io.from_json(json.loads(text))
 
 
+def test_program_path_uses_console_script_beside_python(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    binary_dir = tmp_path / "bin"
+    binary_dir.mkdir()
+    executable = binary_dir / "auditcore-runner"
+    executable.touch()
+    monkeypatch.setattr(install.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(install.sys, "executable", str(binary_dir / "python"))
+
+    assert install.program_path() == str(executable)
+
+
+def test_program_path_fails_closed_without_console_script(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(install.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(install.sys, "executable", str(tmp_path / "bin" / "python"))
+
+    with pytest.raises(FileNotFoundError, match="console script"):
+        install.program_path()
+
+
 def test_plan_renders_units_without_placeholders(workstation: Profile, tmp_path: Path) -> None:
     changes = install.plan(workstation, tmp_path / "profil.json")
     names = {c.path.name for c in changes}
@@ -59,6 +78,22 @@ def test_rendered_scripts_pass_shellcheck(workstation: Profile, tmp_path: Path) 
     supervisor = files("auditcore_runner").joinpath("data", "supervisor.sh")
     result = subprocess.run(["shellcheck", str(supervisor)], capture_output=True, text=True, check=False)
     assert result.returncode == 0, result.stdout
+
+
+def test_supervisor_checks_busy_for_all_target_scopes() -> None:
+    script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
+    busy_query = 'busy="$(gh api "$base/actions/runners/$id" -q .busy 2>/dev/null || echo unknown)"'
+
+    assert script.count(busy_query) == 1
+    assert script.index(busy_query) < script.index('if [[ "$(cfg \'.ziel.art\')" == "repo" ]]')
+
+
+def test_supervisor_persists_cargo_cache_per_runner_instance() -> None:
+    script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
+
+    assert '--init --rm --name "$container"' in script
+    assert "auditcore-runner-cargo-$CLASS-$INSTANCE:/home/runner/.cargo" in script
+    assert "--env CARGO_HOME=/home/runner/.cargo" in script
 
 
 def test_static_source_has_no_regulator_and_empty_pool(workstation: Profile, tmp_path: Path) -> None:

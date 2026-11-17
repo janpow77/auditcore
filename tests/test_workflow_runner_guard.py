@@ -54,7 +54,14 @@ def test_workflow_is_safe_for_own_runners(workflow: str) -> None:
 
 
 def test_dependabot_is_routed_to_hosted_runners() -> None:
-    for name in ("quality.yml", "domain-packages.yml", "js-packages.yml"):
+    for name in ("quality.yml", "domain-packages.yml", "js-packages.yml", "code-quality-gate.yml"):
         jobs = DOCUMENTS[name]["jobs"]
         runs_on = [str(body.get("runs-on", "")) for body in jobs.values() if "uses" not in body]
         assert any("github.actor == 'dependabot[bot]'" in r for r in runs_on), name
+
+
+def test_code_quality_gate_routes_trusted_pull_requests_locally() -> None:
+    runs_on = DOCUMENTS["code-quality-gate.yml"]["jobs"]["code-quality-gate"]["runs-on"]
+    assert "vars.AUDITCORE_RUNNER" in runs_on
+    assert "head.repo.full_name != github.repository" in runs_on
+    assert "ubuntu-latest" in runs_on

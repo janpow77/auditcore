@@ -8,13 +8,20 @@ benennbare Klassen mit `art`, die Migration leitet `art` aus dem alten Namen,
 Änderungen immer über `auditcore-runner profil anwenden` oder die Oberfläche –
 beide validieren gleich, erhöhen `version` und schreiben `aenderung`.
 
+Bei `art: repo` kann `repos_beobachten` weitere Repositories desselben Eigentümers
+enthalten. JIT-Slots wählen anhand der passenden wartenden Jobs ein Ziel; freie
+Slots verteilen sich bei leerer Warteschlange stabil auf die Ziele und wechseln
+bei neuer Nachfrage, sofern sie gerade keinen Job ausführen. Dafür müssen die
+gewählte GitHub-App oder der Token auf jedes Zielrepo zugreifen können. Das
+Scale-Set-Backend unterstützt diese Mehrfachregistrierung nicht.
+
 | Bereich | Feld | Bedeutung | Standard |
 |---|---|---|---|
 | Kopf | `version`, `aenderung.{zeit,quelle,wer}` | fortlaufende Version, letzte Änderung (`lokal` oder `flow-agent`) | 0 |
 | | `sync` | nur Anzeige: `aus` oder `flow-agent` (zentral mitgepflegt) | `aus` |
 | | `rechner` | Name; Präfix der Runner-Namen | Hostname |
 | `ziel` | `art`, `name` | `repo` (`<owner>/<repo>`) oder `org` | – |
-| | `runner_gruppe`, `repos_beobachten`, `bekannte_runner` | Runner-Gruppe; bei `org` Repos für die Warteschlange; Namenspräfixe anderer eigener Rechner | 1, [], [] |
+| | `runner_gruppe`, `repos_beobachten`, `bekannte_runner` | Runner-Gruppe; bei `org` Repos für die Warteschlange, bei `repo` zusätzliche Registrierungsziele im selben Pool; Namenspräfixe anderer eigener Rechner | 1, [], [] |
 | `auth` | `art` | `app` (GitHub App, empfohlen), `pat` (fein granulares Token) oder `gh` (gh-Anmeldung, nur Einzelrechner) | Vorschlag: `app`, wenn `github-app.json` im Konfigurationsverzeichnis liegt, sonst `pat`, wenn `github-token` dort liegt, sonst `gh` |
 | | `token_datei`, `app_id`, `app_schluessel_datei`, `installation_id` | nur Pfade und IDs, nie Geheimnisse | – |
 | | `image`, `backend` | Runner-Image; Backend `jit` (REST-JIT je Job) oder `scaleset` (Runner-Scale-Set, siehe [backends.md](backends.md)) | `auditcore-runner:local`, `jit` |
