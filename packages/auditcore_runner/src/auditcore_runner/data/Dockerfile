@@ -66,6 +66,10 @@ RUN set -eu; \
  && cd /opt/node-tools && npm ci --no-audit --no-fund \
  && (python3 /tmp/werkzeuge/playwright_download_proxy.py >/dev/null 2>&1 & proxy_pid=$!; \
      trap 'kill "$proxy_pid" 2>/dev/null || true' EXIT; \
+     ready=0; for attempt in $(seq 1 50); do \
+       if python3 -c 'import socket; socket.create_connection(("127.0.0.1", 8765), timeout=0.2).close()' 2>/dev/null; then ready=1; break; fi; \
+       sleep 0.1; \
+     done; test "$ready" -eq 1; \
      PLAYWRIGHT_CHROMIUM_DOWNLOAD_HOST=http://127.0.0.1:8765 ./node_modules/.bin/playwright install --with-deps chromium) \
  && ln -sf "$(ls -d /opt/ms-playwright/chromium-*/chrome-linux*/chrome | head -n1)" /usr/local/bin/chromium \
  && chmod -R a+rX /opt/ms-playwright /opt/node-tools \
