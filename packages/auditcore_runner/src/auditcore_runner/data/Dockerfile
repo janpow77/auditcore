@@ -59,13 +59,14 @@ RUN grep -vE '^[[:space:]]*(#|$)' /tmp/werkzeuge/requirements.txt | xargs -n1 uv
 # Node-Werkzeuge aus dem Lockfile; Playwright-Chromium mit Systemabhängigkeiten und
 # festen Schriften (stabile Screenshots). Lighthouse CI nutzt denselben Browser.
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
-# Chromium archives are large; the default CDN path can take several minutes
-# on local runner hosts even when the storage endpoint is reachable.
-ENV PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=600000
-RUN mkdir -p /opt/node-tools \
+# The CFT object path in Playwright differs from the official GCS object path.
+RUN set -eu; \
+ mkdir -p /opt/node-tools \
  && cp /tmp/werkzeuge/package.json /tmp/werkzeuge/package-lock.json /opt/node-tools/ \
  && cd /opt/node-tools && npm ci --no-audit --no-fund \
- && ./node_modules/.bin/playwright install --with-deps chromium \
+ && (python3 /tmp/werkzeuge/playwright_download_proxy.py >/dev/null 2>&1 & proxy_pid=$!; \
+     trap 'kill "$proxy_pid" 2>/dev/null || true' EXIT; \
+     PLAYWRIGHT_CHROMIUM_DOWNLOAD_HOST=http://127.0.0.1:8765 ./node_modules/.bin/playwright install --with-deps chromium) \
  && ln -sf "$(ls -d /opt/ms-playwright/chromium-*/chrome-linux*/chrome | head -n1)" /usr/local/bin/chromium \
  && chmod -R a+rX /opt/ms-playwright /opt/node-tools \
  && rm -rf /var/lib/apt/lists/* /root/.npm /tmp/werkzeuge
