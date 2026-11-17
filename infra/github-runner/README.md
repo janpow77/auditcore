@@ -23,7 +23,7 @@ Beide Host-Profile enthalten `janpow77/flow-agent` als beobachtetes Ziel. Die Re
 ## NUC in Betrieb nehmen
 
 1. Das bestehende NUC-Profil ist auf `auditcore` ausgerichtet und beobachtet zusätzlich `flow-agent`.
-2. `auditcore_runner` 0.1.4 ist installiert; sechs CPU-Worker laufen als ephemere JIT-Runner.
+2. Vor diesem Rollout war `auditcore_runner` 0.1.4 installiert; der PR hebt auf 0.1.5 an. Sechs CPU-Worker laufen als ephemere JIT-Runner.
 3. `auditcore-runner runner status` prüft Soll, Registrierungen und Cache-Status. Runner erscheinen repoübergreifend nach Queue-Bedarf.
 4. Bei Änderungen zuerst Profil validieren und einen leerlaufenden Slot neu starten; laufende Jobs bleiben unangetastet.
 
