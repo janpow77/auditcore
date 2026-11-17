@@ -372,7 +372,7 @@
       "coverage_percent": 98.37
     },
     "auditcore_runner": {
-      "coverage_percent": 86.42,
+      "coverage_percent": 86.56,
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
