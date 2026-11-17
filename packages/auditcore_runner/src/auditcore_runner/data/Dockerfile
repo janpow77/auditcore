@@ -70,7 +70,7 @@ RUN set -eu; \
        if python3 -c 'import socket; socket.create_connection(("127.0.0.1", 8765), timeout=0.2).close()' 2>/dev/null; then ready=1; break; fi; \
        sleep 0.1; \
      done; test "$ready" -eq 1; \
-     PLAYWRIGHT_CHROMIUM_DOWNLOAD_HOST=http://127.0.0.1:8765 ./node_modules/.bin/playwright install --with-deps chromium) \
+     PLAYWRIGHT_DOWNLOAD_HOST=http://127.0.0.1:8765 PLAYWRIGHT_CHROMIUM_DOWNLOAD_HOST=http://127.0.0.1:8765 ./node_modules/.bin/playwright install --with-deps chromium) \
  && ln -sf "$(ls -d /opt/ms-playwright/chromium-*/chrome-linux*/chrome | head -n1)" /usr/local/bin/chromium \
  && chmod -R a+rX /opt/ms-playwright /opt/node-tools \
  && rm -rf /var/lib/apt/lists/* /root/.npm /tmp/werkzeuge

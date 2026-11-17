@@ -6,6 +6,7 @@ from http.client import HTTPException, HTTPSConnection
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 _PREFIX = "/builds/cft/"
+_FFMPEG_PREFIX = "/dbazure/download/playwright/builds/ffmpeg/"
 _PATH_PART = re.compile(r"[A-Za-z0-9._-]+")
 
 
@@ -16,22 +17,33 @@ class _Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         path = self.path.split("?", maxsplit=1)[0]
-        suffix = path.removeprefix(_PREFIX)
-        parts = suffix.split("/")
-        if not path.startswith(_PREFIX) or not parts or not all(
+        if path.startswith(_PREFIX):
+            host = "storage.googleapis.com"
+            upstream_path = "/chrome-for-testing-public/" + path.removeprefix(
+                _PREFIX
+            )
+        elif path.startswith(_FFMPEG_PREFIX):
+            host = "playwright.download.prss.microsoft.com"
+            upstream_path = path
+        else:
+            self.send_error(404)
+            return
+
+        parts = upstream_path.lstrip("/").split("/")
+        if not all(
             part not in {".", ".."} and _PATH_PART.fullmatch(part)
             for part in parts
         ):
             self.send_error(404)
             return
 
-        connection = HTTPSConnection("storage.googleapis.com", timeout=60)
+        connection = HTTPSConnection(host, timeout=60)
         try:
             headers = {}
             if range_header := self.headers.get("Range"):
                 headers["Range"] = range_header
             connection.request(
-                "GET", f"/chrome-for-testing-public/{suffix}", headers=headers
+                "GET", upstream_path, headers=headers
             )
             response = connection.getresponse()
             if response.status not in {200, 206}:
