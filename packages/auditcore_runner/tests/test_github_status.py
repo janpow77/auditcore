@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import replace
 from importlib.resources import files
 from pathlib import Path
@@ -76,6 +77,140 @@ def test_queue_and_busy_by_class(workstation: Profile) -> None:
     assert github.queued_by_class(client, workstation) == {"cpu-gross": 1}
     runners = github.list_runners(client, workstation.target)
     assert github.busy_by_class(runners, workstation, workstation.runner_prefix()) == {"cpu-gross": 1}
+
+
+def test_repo_pool_routes_toward_the_larger_matching_queue(workstation: Profile) -> None:
+    target = replace(
+        workstation.target,
+        name="owner/auditcore",
+        watched_repos=("owner/flow-agent",),
+    )
+    profile = replace(workstation, target=target)
+
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        if "/actions/runs?" in url:
+            run_id = 11 if "owner/auditcore" in url else 22
+            payload = {"workflow_runs": [{"id": run_id}]}
+        elif "/runs/11/jobs?" in url:
+            payload = {"jobs": [{"status": "queued", "labels": ["self-hosted", "auditcore", "cpu-gross"]}]}
+        elif "/runs/22/jobs?" in url:
+            payload = {
+                "jobs": [
+                    {"status": "queued", "labels": ["self-hosted", "auditcore", "cpu-gross"]},
+                    {"status": "queued", "labels": ["self-hosted", "auditcore", "cpu-gross"]},
+                ]
+            }
+        else:
+            payload = {}
+        return 200, {}, json.dumps(payload).encode()
+
+    client = github.Client("t", fetch)
+    assert github.queued_by_repo(client, profile) == {
+        "owner/auditcore": {"cpu-gross": 1},
+        "owner/flow-agent": {"cpu-gross": 2},
+    }
+    assert github.registration_base(client, profile, "cpu-gross", "cpu-gross-1") == "repos/owner/flow-agent"
+
+
+def test_empty_repo_pool_spreads_slots_deterministically(workstation: Profile) -> None:
+    target = replace(
+        workstation.target,
+        name="owner/auditcore",
+        watched_repos=("owner/flow-agent",),
+    )
+    profile = replace(workstation, target=target)
+    client = github.Client("t", lambda method, url, headers, body: (200, {}, b'{"workflow_runs":[]}'))
+    first = github.registration_base(client, profile, "cpu-gross", "cpu-gross-1")
+    second = github.registration_base(client, profile, "cpu-gross", "cpu-gross-2")
+    assert first == github.registration_base(client, profile, "cpu-gross", "cpu-gross-1")
+    assert {first, second} == {"repos/owner/auditcore", "repos/owner/flow-agent"}
+
+
+def test_cached_repo_routing_reuses_a_fresh_queue_snapshot(
+    workstation: Profile, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = replace(workstation.target, name="owner/auditcore", watched_repos=("owner/flow-agent",))
+    profile = replace(workstation, target=target)
+    monkeypatch.setattr(github, "state_dir", lambda: tmp_path)
+    calls: list[str] = []
+
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        calls.append(url)
+        if "/actions/runs?" in url:
+            run_id = 11 if "owner/auditcore" in url else 22
+            payload = {"workflow_runs": [{"id": run_id}]}
+        elif "/runs/11/jobs?" in url or "/runs/22/jobs?" in url:
+            payload = {"jobs": [{"status": "queued", "labels": ["self-hosted", "cpu-gross"]}]}
+        else:
+            payload = {}
+        return 200, {}, json.dumps(payload).encode()
+
+    client = github.Client("t", fetch)
+    first = github.cached_registration_base(client, profile, "cpu-gross", "slot-1")
+    call_count = len(calls)
+    second = github.cached_registration_base(client, profile, "cpu-gross", "slot-1")
+
+    assert first == second == "repos/owner/auditcore"
+    assert call_count > 0 and len(calls) == call_count
+    cache = next((tmp_path / "routing").glob("*.json"))
+    assert cache.stat().st_mode & 0o777 == 0o600
+
+
+def test_cached_repo_routing_refreshes_stale_queue_snapshot(
+    workstation: Profile, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from auditcore_runner.profile_io import content_hash
+
+    target = replace(workstation.target, name="owner/auditcore", watched_repos=("owner/flow-agent",))
+    profile = replace(workstation, target=target)
+    monkeypatch.setattr(github, "state_dir", lambda: tmp_path)
+    cache_dir = tmp_path / "routing"
+    cache_dir.mkdir()
+    cache = cache_dir / f"{content_hash(profile)}-cpu-gross.json"
+    cache.write_text('{"owner/auditcore":{"cpu-gross":99},"owner/flow-agent":{"cpu-gross":0}}', encoding="utf-8")
+    os.utime(cache, (0, 0))
+
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        if "/actions/runs?" in url:
+            payload = {"workflow_runs": [{"id": 11 if "owner/auditcore" in url else 22}]}
+        elif "/runs/11/jobs?" in url:
+            payload = {"jobs": [{"status": "queued", "labels": ["self-hosted", "cpu-gross"]}]}
+        elif "/runs/22/jobs?" in url:
+            payload = {}
+        else:
+            payload = {}
+        return 200, {}, json.dumps(payload).encode()
+
+    selected = github.cached_registration_base(github.Client("t", fetch), profile, "cpu-gross", "slot-1")
+
+    assert selected == "repos/owner/auditcore"
+    refreshed = json.loads(cache.read_text(encoding="utf-8"))
+    assert refreshed["owner/auditcore"]["cpu-gross"] == 1
+
+
+def test_org_routing_uses_one_registration_scope(workstation: Profile) -> None:
+    target = replace(workstation.target, scope="org", name="flowaudit-ai", watched_repos=("owner/auditcore",))
+    profile = replace(workstation, target=target)
+    client = github.Client("t", lambda *args: (_ for _ in ()).throw(AssertionError("no queue fetch for org")))
+
+    assert github.registration_base(client, profile, "cpu-gross", "slot-1") == "orgs/flowaudit-ai"
+    assert github.cached_registration_base(client, profile, "cpu-gross", "slot-1") == "orgs/flowaudit-ai"
+
+
+def test_repo_routing_falls_back_when_cache_storage_is_unavailable(
+    workstation: Profile, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = replace(workstation.target, name="owner/auditcore", watched_repos=("owner/flow-agent",))
+    profile = replace(workstation, target=target)
+    monkeypatch.setattr(github, "state_dir", lambda: Path("/dev/null"))
+
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        payload = {"workflow_runs": []} if "/actions/runs?" in url else {}
+        return 200, {}, json.dumps(payload).encode()
+
+    selected = github.cached_registration_base(github.Client("t", fetch), profile, "cpu-gross", "slot-1")
+
+    assert selected == "repos/owner/auditcore"
 
 
 def test_http_error_raises_without_token(workstation: Profile) -> None:

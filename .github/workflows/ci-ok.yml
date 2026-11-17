@@ -18,8 +18,8 @@ concurrency:
 
 jobs:
   ci-ok:
-    # Leichter Warte-Job: bewusst auf GitHub-Runnern, damit er keinen Platz auf den eigenen Runnern belegt.
-    runs-on: ubuntu-latest
+    # Eigene PRs warten lokal; nicht vertrauenswürdige PRs bleiben auf GitHub-Runnern.
+    runs-on: ${{ (github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
     timeout-minutes: 120
     permissions:
       actions: read
@@ -36,7 +36,9 @@ jobs:
           TIMEOUT_SECONDS: '6600'
         run: |
           python3 - <<'PY'
-          import json, os, subprocess, sys, time
+          import json, os, re, sys, time
+          from urllib.parse import urlparse
+          from urllib.request import Request, urlopen
 
           repo, sha, own = os.environ["REPO"], os.environ["HEAD_SHA"], int(os.environ["OWN_RUN_ID"])
           ignored = set(os.environ["IGNORED"].split(","))
@@ -45,11 +47,30 @@ jobs:
           deadline = time.monotonic() + int(os.environ["TIMEOUT_SECONDS"])
 
           def latest_runs():
-              out = subprocess.run(
-                  ["gh", "api", "--paginate", "--slurp",
-                   f"repos/{repo}/actions/runs?head_sha={sha}&event=pull_request&per_page=100"],
-                  check=True, capture_output=True, text=True).stdout
-              runs = [r for page in json.loads(out) for r in page["workflow_runs"]]
+              url = f"https://api.github.com/repos/{repo}/actions/runs?head_sha={sha}&event=pull_request&per_page=100"
+              runs = []
+              while url:
+                  request = Request(
+                      url,
+                      headers={
+                          "Accept": "application/vnd.github+json",
+                          "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                      },
+                  )
+                  with urlopen(request, timeout=30) as response:
+                      runs.extend(json.load(response)["workflow_runs"])
+                      link = response.headers.get("Link", "")
+                  next_page = re.search(r'<([^>]+)>;\s*rel="next"', link)
+                  url = next_page.group(1) if next_page else ""
+                  if url:
+                      parsed = urlparse(url)
+                      expected_path = f"/repos/{repo}/actions/runs"
+                      if (
+                          parsed.scheme != "https"
+                          or parsed.netloc != "api.github.com"
+                          or parsed.path != expected_path
+                      ):
+                          raise SystemExit("GitHub-API lieferte einen unerwarteten Paginierungslink")
               latest = {}
               for run in runs:
                   if run["id"] == own or run["name"] in ignored:
