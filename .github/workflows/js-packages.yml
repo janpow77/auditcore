@@ -31,6 +31,13 @@ on:
       - 'quality/ui-parity-exceptions.json'
       - 'docs/ui/**'
       - '.github/workflows/js-packages.yml'
+  workflow_dispatch:
+    inputs:
+      runner_fallback:
+        description: Runner für manuelle Notfallläufe
+        type: choice
+        options: [local, ubuntu-latest]
+        default: local
 permissions:
   contents: read
 concurrency:
@@ -39,7 +46,8 @@ concurrency:
 
 jobs:
   js-packages:
-    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || github.actor == 'dependabot[bot]') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
+    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || github.actor == 'dependabot[bot]' || (github.event_name == 'workflow_dispatch' && inputs.runner_fallback == 'ubuntu-latest')) && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:

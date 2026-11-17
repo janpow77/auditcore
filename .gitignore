@@ -12,6 +12,7 @@ htmlcov/
 build/
 dist/
 .env
+.secrets
 *.deb
 graphify-out/
 

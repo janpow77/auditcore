@@ -31,6 +31,13 @@ on:
       - 'quality/baseline.json'
       - 'src/auditcore/tools/quality/codegate*.py'
       - '.github/workflows/domain-packages.yml'
+  workflow_dispatch:
+    inputs:
+      runner_fallback:
+        description: Runner für manuelle Notfallläufe
+        type: choice
+        options: [local, ubuntu-latest]
+        default: local
 permissions:
   contents: read
 concurrency:
@@ -40,7 +47,8 @@ concurrency:
 
 jobs:
   packages:
-    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || github.actor == 'dependabot[bot]' || matrix.python == '3.12' || matrix.python == '3.11') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
+    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || github.actor == 'dependabot[bot]' || matrix.python == '3.12' || (github.event_name == 'workflow_dispatch' && inputs.runner_fallback == 'ubuntu-latest')) && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
