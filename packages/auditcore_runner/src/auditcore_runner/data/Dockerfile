@@ -62,8 +62,6 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
 # Chromium archives are large; the default CDN path can take several minutes
 # on local runner hosts even when the storage endpoint is reachable.
 ENV PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=600000
-# Use Playwright's documented override to avoid the stalled default CDN route.
-ENV PLAYWRIGHT_CHROMIUM_DOWNLOAD_HOST=https://storage.googleapis.com/chrome-for-testing-public
 RUN mkdir -p /opt/node-tools \
  && cp /tmp/werkzeuge/package.json /tmp/werkzeuge/package-lock.json /opt/node-tools/ \
  && cd /opt/node-tools && npm ci --no-audit --no-fund \
