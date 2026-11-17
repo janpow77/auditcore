@@ -59,7 +59,9 @@ RUN grep -vE '^[[:space:]]*(#|$)' /tmp/werkzeuge/requirements.txt | xargs -n1 uv
 # Node-Werkzeuge aus dem Lockfile; Playwright-Chromium mit Systemabhängigkeiten und
 # festen Schriften (stabile Screenshots). Lighthouse CI nutzt denselben Browser.
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
-ENV PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=120000
+# Chromium archives are large; the default CDN path can take several minutes
+# on local runner hosts even when the storage endpoint is reachable.
+ENV PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=600000
 RUN mkdir -p /opt/node-tools \
  && cp /tmp/werkzeuge/package.json /tmp/werkzeuge/package-lock.json /opt/node-tools/ \
  && cd /opt/node-tools && npm ci --no-audit --no-fund \
