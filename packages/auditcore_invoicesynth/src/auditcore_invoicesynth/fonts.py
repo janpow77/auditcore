@@ -3,8 +3,9 @@
 Zulässig sind nur Familien mit freier Lizenz (Katalog ``FONT_CATALOG``):
 DejaVu (Bitstream-Vera-Lizenz), Liberation, Noto und Lato (SIL OFL 1.1), dazu
 URW Gothic (nur Diagnosesatz T2b) und C059 (nur T2c), beide AGPL-3.0 mit
-Schrift-Ausnahme, sowie ab Variante v4 Nimbus Sans, URW Bookman und P052
-(gleiche Lizenz, nur Training). Die
+Schrift-Ausnahme, IBM Plex Serif (nur T2d, SIL OFL 1.1), sowie ab Variante v4
+Nimbus Sans, URW Bookman und P052 (AGPL-3.0 mit Schrift-Ausnahme, nur
+Training). Die
 Schriftdateien werden **nicht** mit dem Paket verteilt; der Generator sucht
 sie in Systemverzeichnissen (``fonts-dejavu-core``, ``fonts-liberation2``,
 ``fonts-noto-core``) oder lädt sie über einen injizierten Abruf mit fester
@@ -93,6 +94,14 @@ FONT_CATALOG: dict[str, FontFamilySpec] = {
         ("C059-Roman.otf",),
         ("C059-Bold.otf",),
     ),
+    # Nur Diagnosesatz T2d (fonts-ibm-plex liefert OTF, die Originalausgabe TTF);
+    # eigenständige Serifenschrift, kein Klon einer Trainings- oder Holdout-Schrift.
+    "IBM Plex Serif": FontFamilySpec(
+        "OFL-1.1",
+        ("fonts-ibm-plex",),
+        ("IBMPlexSerif-Regular.ttf", "IBMPlexSerif-Regular.otf"),
+        ("IBMPlexSerif-Bold.ttf", "IBMPlexSerif-Bold.otf"),
+    ),
     # Generatorvariante v4 (Stufe 7): weitere Ziffernschriften aus fonts-urw-base35,
     # bewusst weder URW Gothic (T2b) noch C059 (T2c) noch deren Klone.
     "Nimbus Sans": FontFamilySpec(
@@ -122,7 +131,12 @@ V4_FONT_FAMILIES: tuple[str, ...] = ("Nimbus Sans", "URW Bookman", "P052")
 # Familien nur für Diagnosesätze; kein Trainings-, Validierungs- oder T1/T2-Plan nutzt sie.
 HOLDOUT_B_FONT_FAMILIES: tuple[str, ...] = ("URW Gothic",)
 HOLDOUT_C_FONT_FAMILIES: tuple[str, ...] = ("C059",)
-DIAGNOSTIC_FONT_FAMILIES: tuple[str, ...] = (*HOLDOUT_B_FONT_FAMILIES, *HOLDOUT_C_FONT_FAMILIES)
+HOLDOUT_D_FONT_FAMILIES: tuple[str, ...] = ("IBM Plex Serif",)
+DIAGNOSTIC_FONT_FAMILIES: tuple[str, ...] = (
+    *HOLDOUT_B_FONT_FAMILIES,
+    *HOLDOUT_C_FONT_FAMILIES,
+    *HOLDOUT_D_FONT_FAMILIES,
+)
 
 
 FONT_SUFFIXES = frozenset({".ttf", ".otf"})

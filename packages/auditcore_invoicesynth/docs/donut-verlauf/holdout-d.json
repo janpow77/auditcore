@@ -1,0 +1,14 @@
+{
+  "satz": "test_layout_holdout_d",
+  "kurzname": "T2d",
+  "dataset_hash": "5be3b80db943e114a3ee8888f38ac7f795815d2975d2d71e3fb5f27e55bd2cb1",
+  "seed": 42,
+  "count": 500,
+  "dpi_choices": [150, 200, 300],
+  "base_date": "2026-01-15",
+  "schrift": "IBM Plex Serif (IBMPlexSerif-Regular.ttf 77cd233a…, IBMPlexSerif-Bold.ttf b8d294e9…)",
+  "verzeichnis": "~/donut/datasets/holdout-d-5be3b80db943e114",
+  "befehl": "auditcore-invoicesynth build-diagnostics --sets holdout_d --seed 42 --count 500 --font-pins ~/donut/tools/font-pins.json",
+  "commit_hinweis": "gebaut mit dem Quellstand des Branches feat/invoicesynth-holdout-d (Basis origin/main d28dfd8); Neubau muss denselben Hash liefern",
+  "regel": "erst zur Abschlussbewertung von Stufe 8 ansehen/bewerten"
+}

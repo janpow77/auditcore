@@ -29,12 +29,14 @@ from auditcore_invoicesynth.layout_head import (
     sender,
 )
 from auditcore_invoicesynth.layout_holdout_c import render_holdout_c
+from auditcore_invoicesynth.layout_holdout_d import render_holdout_d
 from auditcore_invoicesynth.layout_model import BLACK as BLACK
 from auditcore_invoicesynth.layout_model import DIAGNOSTIC_LAYOUTS as DIAGNOSTIC_LAYOUTS
 from auditcore_invoicesynth.layout_model import FOOTER_TOP as FOOTER_TOP
 from auditcore_invoicesynth.layout_model import GRAY as GRAY
 from auditcore_invoicesynth.layout_model import HOLDOUT_B_LAYOUTS as HOLDOUT_B_LAYOUTS
 from auditcore_invoicesynth.layout_model import HOLDOUT_C_LAYOUTS as HOLDOUT_C_LAYOUTS
+from auditcore_invoicesynth.layout_model import HOLDOUT_D_LAYOUTS as HOLDOUT_D_LAYOUTS
 from auditcore_invoicesynth.layout_model import HOLDOUT_LAYOUTS as HOLDOUT_LAYOUTS
 from auditcore_invoicesynth.layout_model import LAYOUTS as LAYOUTS
 from auditcore_invoicesynth.layout_model import PAGE_BOTTOM as PAGE_BOTTOM
@@ -97,6 +99,9 @@ def render_layout(canvas: Canvas, inv: SynthInvoice, variant: Variant, name: str
     """Beleg vollständig auf die Zeichenfläche bringen (Seitenwechsel inklusive)."""
     if name in HOLDOUT_C_LAYOUTS:
         render_holdout_c(canvas, inv, variant, name)
+        return
+    if name in HOLDOUT_D_LAYOUTS:
+        render_holdout_d(canvas, inv, variant, name)
         return
     spec = effective_spec(name, variant)
     markers(canvas)
