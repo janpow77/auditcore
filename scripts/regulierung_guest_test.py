@@ -27,6 +27,16 @@ def command(*args: str) -> str:
     return result.stdout.strip()
 
 
+def run_hook(report: dict, key: str, argv: list[str]) -> None:
+    """Run a configured seed/verify program; keep its output even when it fails."""
+    result = subprocess.run(
+        argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=900
+    )
+    print(result.stdout, flush=True)
+    report[key] = result.stdout.strip()[-4000:]
+    result.check_returncode()
+
+
 def request(url: str, statuses: list[int]) -> bytes:
     """Read the actual HTTP response, including expected authorization errors."""
     try:
@@ -52,6 +62,20 @@ def main() -> None:
     }
     checks = report["checks"]
     config = json.loads(Path("/auditcore-configuration.json").read_text())
+    seed = config.get("seed")
+    verify = config.get("verify")
+    for argv in (seed, verify):
+        if argv is not None and not (
+            isinstance(argv, list) and argv and all(isinstance(part, str) for part in argv)
+        ):
+            raise SystemExit("seed/verify must be non-empty argv lists")
+    if verify and not seed:
+        raise SystemExit("verify requires seed: it compares against the seeded state")
+    if seed:
+        report["limitations"][0] = (
+            "Synthetic application data from the configured seed command; "
+            "no production data migration exercised"
+        )
     services = config.get("services", ["regulierung.service", "regulierung-web.service"])
     configuration = Path(config.get("configuration", "/etc/regulierung/regulierung.env"))
     state = Path(config.get("state_directory", "/var/lib/regulierung"))
@@ -129,6 +153,9 @@ def main() -> None:
                     if created.returncode:
                         raise RuntimeError("Administrator creation failed; secret output withheld")
                     checks["administrator_created"] = "PASS"
+                if seed:
+                    run_hook(report, "install_seed_output", seed)
+                    checks["install_seed_application_data"] = "PASS"
                 sentinel.parent.mkdir(parents=True, exist_ok=True)
                 sentinel.write_text("synthetic persistent application state\n")
                 with configuration.open("a") as stream:
@@ -221,6 +248,9 @@ def main() -> None:
                     identity = json.loads(response.read())
                     assert identity["username"] == "vm-admin" and identity["is_admin"]
                 checks[f"{phase}_real_administrator_login"] = "PASS"
+            if verify and phase in {"upgrade", "reinstall"}:
+                run_hook(report, f"{phase}_verify_output", verify)
+                checks[f"{phase}_verify_application_data"] = "PASS"
             if phase in {"upgrade", "reinstall"}:
                 command("apt-get", "remove", "-y", name)
                 for service in services:

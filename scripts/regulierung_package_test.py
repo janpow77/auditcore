@@ -55,6 +55,7 @@ RUN apt-get install -y --no-install-recommends initramfs-tools \
  && for kernel in /lib/modules/*; do update-initramfs -c -k "${kernel##*/}"; done
 COPY regulierung_guest_test.py /auditcore-test.py
 COPY configuration.json /auditcore-configuration.json
+COPY fixtures /auditcore-fixtures
 COPY auditcore-test.service /etc/systemd/system/auditcore-test.service
 RUN mkdir -m 700 /signing && gpg --batch --homedir /signing --passphrase '' \\
  --quick-generate-key 'Disposable package verification' ed25519 sign 1d \\
@@ -196,6 +197,24 @@ def host_cpu_model() -> str:
     return ""
 
 
+def fixtures_digest(directory: Path | None) -> str | None:
+    """SHA-256 over relative paths and contents of all fixture files, or None."""
+    if directory is None:
+        return None
+    if directory.is_symlink() or not directory.is_dir():
+        raise SystemExit(f"--fixtures is not a directory: {directory}")
+    # Links would make the copied content differ from the digest (rglob does
+    # not follow them, copytree does) and could pull files from outside.
+    links = sorted(str(p.relative_to(directory)) for p in directory.rglob("*") if p.is_symlink())
+    if links:
+        raise SystemExit(f"--fixtures must not contain symbolic links: {', '.join(links)}")
+    digest = hashlib.sha256()
+    for path in sorted(p for p in directory.rglob("*") if p.is_file()):
+        digest.update(path.relative_to(directory).as_posix().encode() + b"\0")
+        digest.update(hashlib.sha256(path.read_bytes()).digest())
+    return digest.hexdigest()
+
+
 def main() -> int:
     """Build and run the isolated guest, preserving exact package-bound evidence."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -207,6 +226,12 @@ def main() -> int:
         type=Path,
         required=True,
         help="Guest test contract JSON: initialization argv, service, URLs and paths",
+    )
+    parser.add_argument(
+        "--fixtures",
+        type=Path,
+        help="Optional directory copied to /auditcore-fixtures in the guest (seed and "
+        "verify programs referenced by the configuration); symbolic links are rejected",
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--timeout", type=int, default=3600)
@@ -239,6 +264,7 @@ def main() -> int:
         ).hexdigest(),
         "dockerfile_sha256": hashlib.sha256(DOCKERFILE.encode()).hexdigest(),
         "configuration_sha256": hashlib.sha256(args.configuration.read_bytes()).hexdigest(),
+        "fixtures_sha256": fixtures_digest(args.fixtures),
         "packages": [
             {"path": str(p), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
             for p in (args.old, args.new)
@@ -254,6 +280,10 @@ def main() -> int:
                 context / "regulierung_guest_test.py",
             )
             (context / "configuration.json").write_text(json.dumps(configuration))
+            if args.fixtures:
+                shutil.copytree(args.fixtures, context / "fixtures", symlinks=False)
+            else:
+                (context / "fixtures").mkdir()
             (context / "Dockerfile").write_text(DOCKERFILE)
             (context / "auditcore-test.service").write_text(UNIT)
             with (args.output / "build.log").open("w") as log:
