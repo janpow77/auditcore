@@ -94,3 +94,39 @@ def test_guest_hook_runner_is_not_shadowed_by_a_local_name():
         if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store)
     }
     assert "run_hook" not in names
+
+
+@pytest.mark.parametrize(
+    ("configuration", "problem"),
+    [
+        ({}, None),
+        ({"seed": ["python3", "/auditcore-fixtures/seed.py"]}, None),
+        ({"seed": ["a"], "verify": ["b"]}, None),
+        ({"seed": "python3 seed.py"}, "seed/verify must be non-empty argv lists"),
+        ({"seed": []}, "seed/verify must be non-empty argv lists"),
+        ({"seed": ["a", 1]}, "seed/verify must be non-empty argv lists"),
+        ({"verify": ["b"]}, "verify requires seed: it compares against the seeded state"),
+    ],
+)
+def test_hook_configuration_is_checked_on_the_host(configuration, problem):
+    assert modul.hook_configuration_error(configuration) == problem
+
+
+_GAST = importlib.util.spec_from_file_location(
+    "regulierung_guest_test",
+    Path(__file__).resolve().parents[1] / "scripts" / "regulierung_guest_test.py",
+)
+assert _GAST is not None and _GAST.loader is not None
+gast = importlib.util.module_from_spec(_GAST)
+_GAST.loader.exec_module(gast)
+
+
+def test_hook_timeout_keeps_the_partial_output(monkeypatch):
+    def zu_lang(*_args, **_kwargs):
+        raise gast.subprocess.TimeoutExpired(["seed"], 900, output=b"halb fertig\n")
+
+    monkeypatch.setattr(gast.subprocess, "run", zu_lang)
+    report: dict = {}
+    with pytest.raises(gast.subprocess.TimeoutExpired):
+        gast.run_hook(report, "seed_output", ["seed"])
+    assert report["seed_output"] == "halb fertig\n[timeout after 900 s]"

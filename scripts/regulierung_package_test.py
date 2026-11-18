@@ -197,6 +197,23 @@ def host_cpu_model() -> str:
     return ""
 
 
+def hook_configuration_error(configuration: dict) -> str | None:
+    """Check seed/verify on the host, before a VM is started for nothing.
+
+    The guest checks the same again; this only saves the wait for its timeout.
+    """
+    seed = configuration.get("seed")
+    verify = configuration.get("verify")
+    for argv in (seed, verify):
+        if argv is not None and not (
+            isinstance(argv, list) and argv and all(isinstance(part, str) for part in argv)
+        ):
+            return "seed/verify must be non-empty argv lists"
+    if verify and not seed:
+        return "verify requires seed: it compares against the seeded state"
+    return None
+
+
 def fixtures_digest(directory: Path | None) -> str | None:
     """SHA-256 over relative paths and contents of all fixture files, or None."""
     if directory is None:
@@ -249,6 +266,9 @@ def main() -> int:
     docker_options, qemu_arguments = accelerator_arguments(accelerator)
     args.output.mkdir(parents=True, exist_ok=True, mode=0o700)
     configuration = json.loads(args.configuration.read_text())
+    problem = hook_configuration_error(configuration)
+    if problem:
+        parser.error(problem)
     run_id = uuid.uuid4().hex[:12]
     image = f"auditcore-regulierung-test:{run_id}"
     container = f"auditcore-regulierung-test-{run_id}"

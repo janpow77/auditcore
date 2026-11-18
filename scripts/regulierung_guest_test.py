@@ -29,9 +29,17 @@ def command(*args: str) -> str:
 
 def run_hook(report: dict, key: str, argv: list[str]) -> None:
     """Run a configured seed/verify program; keep its output even when it fails."""
-    result = subprocess.run(
-        argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=900
-    )
+    try:
+        result = subprocess.run(
+            argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=900
+        )
+    except subprocess.TimeoutExpired as exc:
+        partial = exc.stdout or ""
+        if isinstance(partial, bytes):
+            partial = partial.decode(errors="replace")
+        print(partial, flush=True)
+        report[key] = (partial.strip() + "\n[timeout after 900 s]")[-4000:]
+        raise
     print(result.stdout, flush=True)
     report[key] = result.stdout.strip()[-4000:]
     result.check_returncode()
@@ -61,25 +69,28 @@ def main() -> None:
         ],
     }
     checks = report["checks"]
-    config = json.loads(Path("/auditcore-configuration.json").read_text())
-    seed = config.get("seed")
-    verify = config.get("verify")
-    for argv in (seed, verify):
-        if argv is not None and not (
-            isinstance(argv, list) and argv and all(isinstance(part, str) for part in argv)
-        ):
-            raise SystemExit("seed/verify must be non-empty argv lists")
-    if verify and not seed:
-        raise SystemExit("verify requires seed: it compares against the seeded state")
-    if seed:
-        report["limitations"][0] = (
-            "Synthetic application data from the configured seed command; "
-            "no production data migration exercised"
-        )
-    services = config.get("services", ["regulierung.service", "regulierung-web.service"])
-    configuration = Path(config.get("configuration", "/etc/regulierung/regulierung.env"))
-    state = Path(config.get("state_directory", "/var/lib/regulierung"))
+    config: dict = {}
     try:
+        # Inside the try: a configuration error still reaches the result line
+        # and the poweroff in ``finally`` instead of leaving the host waiting.
+        config = json.loads(Path("/auditcore-configuration.json").read_text())
+        seed = config.get("seed")
+        verify = config.get("verify")
+        for argv in (seed, verify):
+            if argv is not None and not (
+                isinstance(argv, list) and argv and all(isinstance(part, str) for part in argv)
+            ):
+                raise ValueError("seed/verify must be non-empty argv lists")
+        if verify and not seed:
+            raise ValueError("verify requires seed: it compares against the seeded state")
+        if seed:
+            report["limitations"][0] = (
+                "Synthetic application data from the configured seed command; "
+                "no production data migration exercised"
+            )
+        services = config.get("services", ["regulierung.service", "regulierung-web.service"])
+        configuration = Path(config.get("configuration", "/etc/regulierung/regulierung.env"))
+        state = Path(config.get("state_directory", "/var/lib/regulierung"))
         assert Path("/proc/1/comm").read_text().strip() == "systemd"
         assert not any(Path("/sys/class/net").glob("eth*")), "Guest unexpectedly has a network NIC"
         report["kernel"] = os.uname().release
