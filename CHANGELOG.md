@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `scripts/regulierung_package_test.py`: neue Option `--fixtures DIR` und
+  optionale Konfigurationsschlüssel `seed`/`verify`. Damit befüllt der
+  Upgrade-Test die VM mit künstlichen Fachdaten und prüft sie nach Upgrade und
+  Neuinstallation (Checks `install_seed_application_data`,
+  `{upgrade,reinstall}_verify_application_data`).
+
 - `auditcore-runner`: Exitcode 127 unter `sh -c`/`bash -c` meldet jetzt
   „Programm im Befehl nicht gefunden (Exitcode 127)“ mit der letzten
   stderr-Zeile statt „sh im Image bzw. auf dem Rechner nicht gefunden“. Anlass:

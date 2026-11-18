@@ -147,3 +147,23 @@ Ein erster Lauf mit QEMUs älterer Standard-CPU scheiterte mit SIGILL und gilt
 nicht als bestanden. Der VM fehlt eine Netzwerkkarte. Signierte APT-Feeds sind ausschließlich lokale
 Testfeeds; der kurzlebige private Testschlüssel wird nicht veröffentlicht.
 Der Host bekommt weder Anwendungspaket noch PostgreSQL-Installation.
+
+Upgrade mit Fachdaten: Ohne weitere Angaben prüft der Test eine leere
+Anwendungsdatenbank. Mit `--fixtures DIR` wird das Verzeichnis nach
+`/auditcore-fixtures` in die VM kopiert. Die Konfiguration kann dann zwei
+Programme als argv-Liste nennen. `seed` läuft einmal nach Ersteinrichtung und
+Administratoranlage mit dem alten Paket. `verify` läuft nach dem Upgrade und
+nach der Neuinstallation bei laufenden Diensten. Ein Exitcode ungleich 0 lässt
+den Lauf scheitern. Beide Ausgaben stehen gekürzt im Bericht
+(`install_seed_output`, `upgrade_verify_output`, `reinstall_verify_output`), der
+Fingerabdruck des Verzeichnisses unter `fixtures_sha256`:
+
+```json
+{
+  "seed": ["/usr/bin/python3", "/auditcore-fixtures/fachdaten.py", "aufbauen"],
+  "verify": ["/usr/bin/python3", "/auditcore-fixtures/fachdaten.py", "pruefen"]
+}
+```
+
+Die Programme selbst liefert die Anwendung; sie dürfen nur künstliche Daten
+anlegen.
