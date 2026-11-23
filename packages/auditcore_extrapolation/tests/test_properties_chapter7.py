@@ -13,6 +13,7 @@ from auditcore_extrapolation import (
     KOM_TABLES,
     Group,
     Period,
+    Projection,
     SampleUnit,
     Stratum,
     SubSample,
@@ -48,6 +49,15 @@ def _level(method_id: str) -> tuple[float | None, str | None]:
     return (None, None) if method_id in NON_STATISTICAL else (0.8, KOM_TABLES)
 
 
+def _formula_precision(projection: Projection) -> float | None:
+    """SE of the formula: a single complete MUS sample without errors gets SI × RF(0)
+    instead of 0 (``limits``), a period of a multi-period sample keeps the formula."""
+    zero = projection.extra.get("zero_errors")
+    if isinstance(zero, dict):
+        return float(zero["standard_precision"])
+    return projection.precision
+
+
 @SETTINGS
 @given(strata("a"), strata("b"), st.sampled_from(METHODS + NON_STATISTICAL))
 def test_periods_add_projections_and_squared_precisions(
@@ -64,11 +74,12 @@ def test_periods_add_projections_and_squared_precisions(
     two = project(method_id, [second], confidence_level=level, factor_profile=profile)
     total = one.projected_random_error + two.projected_random_error
     assert both.projected_random_error == pytest.approx(total)
-    if one.precision is None or two.precision is None or both.precision is None:
+    first_se, second_se = _formula_precision(one), _formula_precision(two)
+    if first_se is None or second_se is None or both.precision is None:
         assert both.precision is None
     else:
-        assert both.precision == pytest.approx(math.hypot(one.precision, two.precision))
-        assert both.precision >= max(one.precision, two.precision) - 1e-9
+        assert both.precision == pytest.approx(math.hypot(first_se, second_se))
+        assert both.precision >= max(first_se, second_se) - 1e-9
     assert {s.period for s in both.strata} == {"H1", "H2"}
 
 

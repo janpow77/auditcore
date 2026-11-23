@@ -81,11 +81,24 @@ def test_order_of_units_does_not_matter(
 @SETTINGS
 @given(units(), st.sampled_from(STATISTICAL + ("mus.standard",)))
 def test_clean_sample_projects_zero(sample: tuple[SampleUnit, ...], method: str) -> None:
+    """Ohne Fehler: EE = 0. Seit 0.3.0 ist SE = 0 keine stille Obergrenze mehr:
+    MUS-Standard rechnet mit SI × RF(0), die übrigen Verfahren weisen die
+    Einschränkung aus."""
     clean = tuple(SampleUnit(u.id, u.book_value) for u in sample)
-    result = assess(method, [equal_stratum(clean)], confidence_level=0.9, factor_profile=KOM_TABLES)
-    assert result.projection.projected_random_error == 0
-    assert result.projection.precision == 0
-    assert result.total_error_rate.conclusion == "not_material"
+    stratum = equal_stratum(clean)
+    result = assess(method, [stratum], confidence_level=0.9, factor_profile=KOM_TABLES)
+    projection = result.projection
+    assert projection.projected_random_error == 0
+    if method == "mus.standard":
+        interval = stratum.sampling_book_value / len(clean)
+        assert projection.precision == pytest.approx(interval * 2.31)
+        assert projection.extra["zero_errors"]["standard_precision"] == 0  # type: ignore[index]
+    else:
+        assert projection.precision == 0
+        assert any("Präzision 0" in text for text in projection.limitations)
+        assert result.total_error_rate.limitations == projection.limitations
+    if result.total_error_rate.upper_limit == 0:
+        assert result.total_error_rate.conclusion == "not_material"
 
 
 @SETTINGS

@@ -1,19 +1,24 @@
 {
   "schema_version": 1,
   "package": "auditcore_extrapolation",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "contract": "auditcore_extrapolation.evaluation/1",
   "classification": "NEW_IMPLEMENTATION",
   "sources": [],
   "methodology": [
     {
-      "document": "Europäische Kommission, Guidance on sampling methods for audit authorities, EGESIF_16-0014-01 (20.01.2017)",
+      "document": "Europäische Kommission, Guidance on sampling methods for audit authorities, EGESIF_16-0014-01 (20.01.2017; Programmplanungszeiträume 2007–2013 und 2014–2020)",
       "use": "Formeln für Hochrechnung, Präzision und Fehlerobergrenze (Abschn. 4.12, 5.3, 6.1–6.4, Anhang 1, 3, 6); Referenzfälle aus den Beispielen der Abschnitte 6.1.1.6, 6.1.2.6, 6.2.1.6, 6.3.1.7, 6.3.2.7, 6.3.5.7 und 6.4.7",
       "text_included": false
     },
     {
       "document": "Europäische Kommission, CPRE_23-0013-01, Methodological note ACR/AO, Annex 3 (RER calculation template)",
       "use": "Zeilen A–M der Restfehlerquote; Referenzfälle aus den Blättern Examples und Negative units example",
+      "text_included": false
+    },
+    {
+      "document": "Delegierte Verordnung (EU) 2023/67 der Kommission, Art. 5 Abs. 5 und Anhang II",
+      "use": "Mindestumfang 30 Einheiten und 3 Einheiten je Zufallsschicht (Programmplanungszeitraum 2021–2027); Formel der geschichteten Präzision bei proportionaler Aufteilung",
       "text_included": false
     },
     {
