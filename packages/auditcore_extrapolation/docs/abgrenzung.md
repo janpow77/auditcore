@@ -18,6 +18,11 @@ Anwendungsverhalten charakterisiert.
 
 ## Abdeckung des Leitfadens EGESIF_16-0014-01 (Fassung vom 20.01.2017)
 
+Der Leitfaden gilt für die Programmplanungszeiträume 2007–2013 und 2014–2020.
+Für 2021–2027 sind die Stichprobenregeln in der Delegierten Verordnung (EU)
+2023/67 festgelegt (Art. 5, Anhang II); die Bibliothek prüft daraus den
+Mindestumfang (Art. 5 Abs. 5) und die Voraussetzung der geschichteten Formel.
+
 Geprüft am Inhaltsverzeichnis der Fassung vom 20.01.2017 (275 Seiten). Die
 Bibliothek deckt die **Auswertung** ab. Stichprobenumfang und Auswahl
 (Abschnitte *.2 „Sample size“ und *.3 „Sample selection“, 7.1, 7.2.2 Umfang,

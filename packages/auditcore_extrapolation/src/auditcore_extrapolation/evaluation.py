@@ -4,7 +4,7 @@ TER = projected random errors + delimited systemic errors + uncorrected
 anomalous errors, divided by the audited population (Art. 2 Nr. 35 of
 Regulation (EU) 2021/1060; guidance glossary and Appendix 1). Corrected
 anomalous errors are not part of the TER. With systemic or anomalous errors
-the upper limit of error is ULE = TER + SE (Appendix 1, section 1). The
+the upper limit of error is ULE = total error + SE (Appendix 1, section 1). The
 conclusion follows guidance section 4.12 (statistical) or 6.4.6
 (non-statistical). The residual error rate (RER) is a separate calculation,
 see :mod:`auditcore_extrapolation.residual`.
@@ -75,6 +75,8 @@ class TotalErrorRate:
     explanation: tuple[str, ...]
     steps: tuple[Step, ...]
     difference: DifferenceFigures | None = None
+    #: Limitations of the projection (see :attr:`Projection.limitations`).
+    limitations: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         """JSON-compatible TER."""
@@ -95,6 +97,7 @@ class TotalErrorRate:
             "explanation": list(self.explanation),
             "steps": [s.to_dict() for s in self.steps],
             "difference": None if self.difference is None else self.difference.to_dict(),
+            "limitations": list(self.limitations),
         }
 
 
@@ -138,6 +141,8 @@ def _explanation(projection: Projection, conclusion: str) -> tuple[str, ...]:
         )
     if projection.error_classes.anomalous_corrected:
         lines.append("Korrigierte anomale Fehler sind nicht Teil der Gesamtfehlerquote.")
+    if projection.limitations:
+        lines.append("Eingeschränkte Aussagekraft: " + " ".join(projection.limitations))
     return tuple(lines)
 
 
@@ -159,27 +164,7 @@ def evaluate(
     )
     upper = None if projection.precision is None else total + projection.precision
     conclusion = conclude(total, upper, tolerable)
-    steps = [
-        Step("Tolerierbarer Fehler", "TE = Signifikanzschwelle × BV", tolerable, guidance("4.10")),
-        Step(
-            "Gesamtfehler",
-            "EE + systemische + nicht korrigierte anomale Fehler",
-            total,
-            guidance("Anhang 1"),
-        ),
-        Step("Gesamtfehlerquote (TER)", "TER / BV", total / book_value, cpr("2 Nr. 35")),
-    ]
-    if upper is not None:
-        steps.append(Step("Fehlerobergrenze", "ULE = TER + SE", upper, guidance("4.12, Anhang 1")))
-    difference = None
-    if projection.method == "difference" and projection.precision is not None:
-        corrected = book_value - total
-        difference = DifferenceFigures(
-            corrected, corrected - projection.precision, book_value - tolerable
-        )
-        steps.append(
-            Step("Korrigierter Buchwert", "CBV = BV − TER", corrected, guidance("Anhang 1, 3"))
-        )
+    steps, difference = _ter_steps(projection, book_value, tolerable, total, upper)
     return TotalErrorRate(
         book_value,
         rate,
@@ -197,7 +182,51 @@ def evaluate(
         _explanation(projection, conclusion),
         tuple(steps),
         difference,
+        projection.limitations,
     )
+
+
+def _ter_steps(
+    projection: Projection,
+    book_value: float,
+    tolerable: float,
+    total: float,
+    upper: float | None,
+) -> tuple[list[Step], DifferenceFigures | None]:
+    steps = [
+        Step("Tolerierbarer Fehler", "TE = Signifikanzschwelle × BV", tolerable, guidance("4.10")),
+        Step(
+            "Gesamtfehler",
+            "EE + systemische + nicht korrigierte anomale Fehler",
+            total,
+            guidance("Anhang 1"),
+        ),
+        Step("Gesamtfehlerquote (TER)", "Gesamtfehler / BV", total / book_value, cpr("2 Nr. 35")),
+    ]
+    if upper is not None:
+        steps.append(
+            Step(
+                "Fehlerobergrenze",
+                "ULE = Gesamtfehler + SE",
+                upper,
+                guidance("4.12, Anhang 1"),
+            )
+        )
+    difference = None
+    if projection.method == "difference" and projection.precision is not None:
+        corrected = book_value - total
+        difference = DifferenceFigures(
+            corrected, corrected - projection.precision, book_value - tolerable
+        )
+        steps.append(
+            Step(
+                "Korrigierter Buchwert",
+                "CBV = BV − Gesamtfehler",
+                corrected,
+                guidance("Anhang 1, 3"),
+            )
+        )
+    return steps, difference
 
 
 @dataclass(frozen=True)

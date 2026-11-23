@@ -81,11 +81,15 @@ def check_unit(unit: SampleUnit) -> SampleUnit:
     return unit
 
 
-def check_units(units: Sequence[SampleUnit], *, minimum: int = 1) -> tuple[SampleUnit, ...]:
-    """Validate a sample; ids must be unique."""
+def check_units(
+    units: Sequence[SampleUnit], *, minimum: int = 1, stratum: str | None = None
+) -> tuple[SampleUnit, ...]:
+    """Validate a sample; ids must be unique. ``stratum`` names the stratum in messages."""
     checked = tuple(check_unit(u) for u in units)
     if len(checked) < minimum:
-        raise ExtrapolationInputError(f"Mindestens {minimum} geprüfte Einheiten erforderlich.")
+        needed = "eine geprüfte Einheit" if minimum == 1 else f"{minimum} geprüfte Einheiten"
+        where = "" if stratum is None else f"Schicht '{stratum}': "
+        raise ExtrapolationInputError(f"{where}Mindestens {needed} erforderlich.")
     ids = [u.id for u in checked]
     if len(set(ids)) != len(ids):
         raise ExtrapolationInputError("Die Kennungen der Einheiten müssen eindeutig sein.")

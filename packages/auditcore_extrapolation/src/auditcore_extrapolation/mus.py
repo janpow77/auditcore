@@ -136,7 +136,9 @@ def project_ratio(
         exhaustive = exhaustive_random_error(s)
         own = projected_s if s is stratum else 0.0
         figures = (
-            {"book_value_adjusted": adjusted_total, "rate": rate, "sd_rates": sd} if own else {}
+            {"book_value_adjusted": adjusted_total, "rate": rate, "sd_rates": sd}
+            if s is stratum
+            else {}
         )
         results.append(
             StratumResult(

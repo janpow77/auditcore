@@ -16,7 +16,7 @@ from types import MappingProxyType
 from .design import Stratum
 from .errors import ExtrapolationInputError
 from .projection import StratumResult, exhaustive_random_error
-from .sources import Step, guidance
+from .sources import DELVO, Step, guidance
 from .units import sample_covariance, sample_sd, sample_variance
 
 MEAN_PER_UNIT = "mean_per_unit"
@@ -48,11 +48,67 @@ def stratified_precision(z: float, strata: Sequence[tuple[float, float, int]]) -
     """SE = N × z × s_w / √n with s_w² = Σ N_h/N × s_h² (sections 6.1.2.4, 6.2.2.4).
 
     ``strata`` holds (N_h, s_h, n_h) of the sampling strata; N = ΣN_h, n = Σn_h.
+    The formula of Annex II of Delegated Regulation (EU) 2023/67 and of the
+    guidance; it equals :func:`general_stratified_precision` only under
+    proportional allocation n_h = n × N_h / N.
     """
     total = math.fsum(n for n, _, _ in strata)
     size = sum(n for _, _, n in strata)
     weighted = math.fsum(n / total * sd**2 for n, sd, _ in strata)
     return total * z * math.sqrt(weighted) / math.sqrt(size)
+
+
+def general_stratified_precision(z: float, strata: Sequence[tuple[float, float, int]]) -> float:
+    """SE = z × √(Σ N_h² × s_h² / n_h) for any allocation (no finite population correction).
+
+    Variance of the stratified estimator Σ N_h × ē_h (Cochran 1977, *Sampling
+    Techniques*, eq. 5.6, without the factor 1 − n_h/N_h, as the unstratified
+    formula of section 6.1.1.4). With n_h = n × N_h / N it reduces to
+    :func:`stratified_precision`.
+    """
+    return z * math.sqrt(math.fsum(size**2 * sd**2 / n for size, sd, n in strata))
+
+
+def is_proportional(strata: Sequence[tuple[float, float, int]]) -> bool:
+    """True if every n_h is within one unit of n × N_h / N (allocation up to rounding).
+
+    The allocation assumed by the stratified formula of Annex II of Delegated
+    Regulation (EU) 2023/67 and guidance section 6.1.2.4.
+    """
+    total = math.fsum(size for size, _, _ in strata)
+    sample = sum(n for _, _, n in strata)
+    return all(abs(n - sample * size / total) < 1 for size, _, n in strata)
+
+
+def _precision_step(
+    z: float, sampled: Sequence[tuple[float, float, int]]
+) -> tuple[float, Step, list[str]]:
+    """Precision with the Annex II formula, or the general one if allocation is not proportional."""
+    if len(sampled) == 1 or is_proportional(sampled):
+        se = stratified_precision(z, sampled)
+        section = "6.1.1.4" if len(sampled) == 1 else "6.1.2.4"
+        return se, Step("Präzision", "SE = N × z × s_w / √n", se, guidance(section)), []
+    se = general_stratified_precision(z, sampled)
+    annex = stratified_precision(z, sampled)
+    warning = (
+        "Aufteilung der Stichprobe auf die Schichten nicht proportional (n_h ≠ n × N_h / N): "
+        "Die Präzision ist mit der allgemeinen Formel z × √(Σ N_h² × s_h² / n_h) berechnet "
+        f"({_euro(se)}); die Formel N × z × s_w / √n aus Anhang II der {DELVO} und dem "
+        f"Leitfaden (Abschn. 6.1.2.4) setzt proportionale Aufteilung voraus und ergäbe "
+        f"{_euro(annex)}."
+    )
+    step = Step(
+        "Präzision (nicht proportionale Aufteilung)",
+        "SE = z × √(Σ N_h² × s_h² / n_h)",
+        se,
+        guidance("6.1.2.4"),
+    )
+    return se, step, [warning]
+
+
+def _euro(amount: float) -> str:
+    """German amount notation, whole euros."""
+    return f"{amount:,.0f} €".replace(",", ".")
 
 
 @dataclass(frozen=True)
@@ -151,18 +207,15 @@ def project(
     if estimator not in (MEAN_PER_UNIT, RATIO):
         raise ExtrapolationInputError(f"Unbekannter Schätzer '{estimator}'.")
     parts = [_stratum(s, estimator, z is not None) for s in strata]
-    warnings = [
-        f"Schicht '{p.result.name}': weniger als 3 Einheiten (Leitfaden, Abschn. 6.1.2.2)."
-        for p in parts
-        if 0 < p.result.sample_size < 3 and z is not None
-    ]
+    warnings: list[str] = []
     projected = math.fsum(p.result.projected_error for p in parts)
     steps = _steps(parts, estimator, z)
     sampled = [
         (float(p.population), p.sd or 0.0, p.result.sample_size) for p in parts if p.sd is not None
     ]
-    se = stratified_precision(z, sampled) if z is not None else None
-    if se is not None:
-        section = "6.1.1.4" if len(sampled) == 1 else "6.1.2.4"
-        steps.append(Step("Präzision", "SE = N × z × s_w / √n", se, guidance(section)))
+    se = None
+    if z is not None:
+        se, step, more = _precision_step(z, sampled)
+        steps.append(step)
+        warnings += more
     return tuple(p.result for p in parts), projected, se, steps, warnings

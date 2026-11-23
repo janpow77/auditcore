@@ -7,7 +7,7 @@ result would be conclusive:
     z* = z × (TE − EE) / SE,   confidence level* = 1 − 2 × (1 − Φ(z*))
 
 With delimited systemic or uncorrected anomalous errors the upper limit is
-TER + SE (Appendix 1), so the total error takes the place of EE; without
+total error + SE (Appendix 1), so the total error takes the place of EE; without
 them both coincide. If the recalculated level is still compatible with the
 assessment of the management and control system (Table 1 of section 3.2.1),
 the population is not materially misstated without further audit work;

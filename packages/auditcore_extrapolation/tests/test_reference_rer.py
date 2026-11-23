@@ -30,7 +30,12 @@ def test_example_a_individual_corrections_bring_rer_below_2_percent() -> None:
     assert result.rate_rounded == Decimal("0.0199")
     assert not result.exceeds_materiality
     assert result.extrapolated_correction is None and result.rate_after_correction is None
-    assert result.to_dict()["not_applicable"] == "NA RTER not exceeding 2%"
+    # Seit 0.3.0 deutsche Begründung; der Wortlaut der Vorlage bleibt als eigenes Feld.
+    shown = result.to_dict()
+    assert shown["not_applicable"] == (
+        "Entfällt: Restfehlerquote nicht über der Signifikanzschwelle von 2 %."
+    )
+    assert shown["not_applicable_template"] == "NA RTER not exceeding 2%"
 
 
 def test_example_b_extrapolated_correction_needed() -> None:
