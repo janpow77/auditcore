@@ -8,32 +8,34 @@ import auditcore_identifiers as ai
 from auditcore_identifiers import CheckDigit, Reason, Verdict
 from auditcore_identifiers.web import contract
 
-#: Confirmed as valid and registered by the VIES REST service of the European Commission
-#: (``/taxation_customs/vies/rest-api/ms/{CC}/vat/{number}``) on 23.11.2026.
-VIES_CONFIRMED = (
-    "BG175074752",
-    "CZ25123891",
-    "CZ00006947",
-    "DE811569869",
-    "DK13585628",
-    "EL094259216",
-    "ESA28015865",
-    "FI20774740",
-    "FR40303265045",
-    "FR61954506077",
-    "HR33392005961",
-    "HU12892312",
-    "IE6433435F",
-    "IT00743110157",
-    "IT00488410010",
-    "LT119511515",
-    "LU15027442",
-    "NL004495445B01",
-    "NL001545668B01",
-    "PL5260250995",
-    "PT500100144",
-    "SE556464687401",
-    "SI50223054",
+#: Synthetic numbers with a valid national check digit: drawn at random by
+#: ``tools/crosscheck_stdnum.py`` (``vat_valid_by_country`` in
+#: ``tests/fixtures/stdnum_crosscheck.json``) and accepted there by python-stdnum 2.2.
+#: Not taken from any register; tests use synthetic data only (AGENTS.md).
+SYNTHETIC_VALID = (
+    "BG662404571",
+    "CZ67267068",
+    "CZ8746084468",
+    "DE801752040",
+    "DK54958498",
+    "EL062125293",
+    "ESB37172087",
+    "FI29604457",
+    "FR16796035319",
+    "FR09751916354",
+    "HR21619732144",
+    "HU14772667",
+    "IE5365209J",
+    "IT23086660679",
+    "IT89139130747",
+    "LT508608012",
+    "LU62423174",
+    "NL000001545B35",
+    "NL000009350B57",
+    "PL7539778793",
+    "PT566879344",
+    "SE330585586201",
+    "SI60576235",
 )
 
 
@@ -54,17 +56,17 @@ def test_lei_check_digits_outside_02_to_98_are_invalid() -> None:
     assert ai.check_lei("7LTWFZYICNSX8D621K86").verdict is Verdict.VALID
 
 
-@pytest.mark.parametrize("value", VIES_CONFIRMED)
-def test_vies_confirmed_numbers_have_a_verified_check_digit(value: str) -> None:
+@pytest.mark.parametrize("value", SYNTHETIC_VALID)
+def test_synthetic_valid_numbers_have_a_verified_check_digit(value: str) -> None:
     result = ai.check_vat_id(value)
     assert result.check_digit is CheckDigit.VERIFIED and result.verdict is Verdict.VALID
 
 
 @pytest.mark.parametrize(
     "value",
-    # One digit changed in a VIES-confirmed number (FR, IT) or in the Belgian and Polish
-    # numbers of the task description: the national check digit no longer matches.
-    ["FR41303265045", "IT00743110158", "BE0403170702", "PL5260001247", "DK13585629"],
+    # Last digit of a synthetic valid number changed (``vat_mutated`` in the stdnum
+    # fixture, rejected there as well): the national check digit no longer matches.
+    ["FR16796035310", "IT23086660670", "BE0239792909", "PL7539778794", "DK54958499"],
 )
 def test_wrong_national_check_digit_is_invalid(value: str) -> None:
     result = ai.check_vat_id(value)
@@ -82,8 +84,8 @@ def test_vat_without_verifiable_check_digit_is_only_format_valid() -> None:
 
 
 def test_structural_rules_of_the_national_numbers() -> None:
-    assert ai.check_vat_id("IT0074311" + "3007").reason is Reason.INVALID_FORMAT  # office 300
-    assert ai.check_vat_id("NL004495445B00").reason is Reason.INVALID_FORMAT
+    assert ai.check_vat_id("IT2308666" + "3009").reason is Reason.INVALID_FORMAT  # office 300
+    assert ai.check_vat_id("NL000001545B00").reason is Reason.INVALID_FORMAT
     assert ai.check_vat_id("PT000000000").reason is Reason.INVALID_FORMAT
     assert ai.check_vat_id("CZ5602301234").reason is Reason.INVALID_FORMAT  # 30 Feb
 

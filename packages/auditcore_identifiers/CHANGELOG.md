@@ -17,8 +17,9 @@ Korrekturen gegen falsch-positive Ergebnisse; neue Ergebnisfelder.
   Strukturregeln in den Formaten (BE nicht nur Nullen, DK/MT/PT erste Ziffer
   ≠ 0, IT Amtscode, LT 8./11. Stelle `1`, NL nicht `B00`, CZ 8-stellig nicht
   mit 9 beginnend, Geburtsdatum bei CZ/SK/BG/LV). Abgleich offline gegen
-  python-stdnum 2.2 (Gültige und je eine verfälschte Nummer je Stichprobe) und
-  23 VIES-bestätigte Nummern. `GB`/`XI` und französische Buchstabenschlüssel:
+  python-stdnum 2.2 (Gültige und je eine verfälschte Nummer je Stichprobe); die
+  Testnummern sind synthetisch (zufällig erzeugt, keiner Registerauskunft
+  entnommen). `GB`/`XI` und französische Buchstabenschlüssel:
   `not_checked`, Meldung „Prüfziffer … nicht prüfbar“.
 - **Handelsregisternummer:** Nummer ab 1 ohne führende Null (`HRB 0` ungültig);
   Registergericht vor oder hinter der Nummer wird abgetrennt
