@@ -27,6 +27,8 @@ bcrypt==5.0.0
     # via -r requirements/ci.in
 beautifulsoup4==4.15.0
     # via -r requirements/ci.in
+blis==1.3.4
+    # via thinc
 boolean-py==5.0
     # via license-expression
 brotli==1.2.0 ; platform_python_implementation == 'CPython'
@@ -37,6 +39,11 @@ build==1.6.1
     # via -r requirements/ci.in
 cachecontrol==0.14.4
     # via pip-audit
+catalogue==2.0.10
+    # via
+    #   spacy
+    #   srsly
+    #   thinc
 certifi==2026.10.23
     # via
     #   httpcore
@@ -53,7 +60,12 @@ charset-normalizer==3.5.1
     #   reportlab
     #   requests
 click==8.5.0
-    # via huggingface-hub
+    # via
+    #   huggingface-hub
+    #   spacy
+    #   weasel
+cloudpathlib==0.26.0
+    # via weasel
 cloudpickle==3.1.2
     # via joblib
 colorama==0.4.6 ; os_name == 'nt' or sys_platform == 'win32'
@@ -63,6 +75,12 @@ colorama==0.4.6 ; os_name == 'nt' or sys_platform == 'win32'
     #   pytest
     #   tqdm
     #   typer
+    #   wasabi
+confection==1.3.4
+    # via
+    #   spacy
+    #   thinc
+    #   weasel
 coverage==7.16.1
     # via pytest-cov
 cryptography==50.0.1
@@ -81,6 +99,11 @@ cyclonedx-python-lib==11.12.0
     # via
     #   -r requirements/ci.in
     #   pip-audit
+cymem==2.0.16
+    # via
+    #   preshed
+    #   spacy
+    #   thinc
 defusedxml==0.7.1
     # via
     #   -r requirements/ci.in
@@ -118,6 +141,7 @@ httpx==0.28.1
     # via
     #   -r requirements/ci.in
     #   huggingface-hub
+    #   weasel
 huggingface-hub==1.33.0
     # via
     #   tokenizers
@@ -135,7 +159,9 @@ iniconfig==2.3.0
 isoduration==20.11.0
     # via jsonschema
 jinja2==3.1.6
-    # via torch
+    # via
+    #   spacy
+    #   torch
 joblib==1.6.0
     # via -r requirements/ci.in
 jsonpointer==3.1.1
@@ -168,6 +194,11 @@ mpmath==1.3.0
     # via sympy
 msgpack==1.2.4
     # via cachecontrol
+murmurhash==1.0.16
+    # via
+    #   preshed
+    #   spacy
+    #   thinc
 mypy==2.3.1
     # via -r requirements/ci.in
 mypy-extensions==1.1.0
@@ -181,14 +212,20 @@ numba==0.68.0
 numpy==2.4.6 ; python_full_version < '3.12'
     # via
     #   -r requirements/ci.in
+    #   blis
     #   numba
     #   pandas
+    #   spacy
+    #   thinc
     #   transformers
 numpy==2.5.3 ; python_full_version >= '3.12'
     # via
     #   -r requirements/ci.in
+    #   blis
     #   numba
     #   pandas
+    #   spacy
+    #   thinc
     #   transformers
 nvidia-cublas==13.1.1.3 ; sys_platform == 'linux'
     # via
@@ -242,7 +279,10 @@ packaging==26.3
     #   pip-audit
     #   pip-requirements-parser
     #   pytest
+    #   spacy
+    #   thinc
     #   transformers
+    #   weasel
     #   wheel
 pandas==3.0.6
     # via -r requirements/ci.in
@@ -273,6 +313,10 @@ polars==1.44.2
     # via -r requirements/ci.in
 polars-runtime-32==1.44.2
     # via polars
+preshed==3.0.15
+    # via
+    #   spacy
+    #   thinc
 prettytable==3.18.0
     # via pip-licenses
 py-serializable==2.1.0
@@ -280,7 +324,11 @@ py-serializable==2.1.0
 pycparser==3.0 ; implementation_name != 'PyPy'
     # via cffi
 pydantic==2.13.5
-    # via fastapi
+    # via
+    #   fastapi
+    #   spacy
+    #   thinc
+    #   weasel
 pydantic-core==2.46.5
     # via pydantic
 pydyf==0.12.1
@@ -346,6 +394,8 @@ requests==2.34.2
     # via
     #   cachecontrol
     #   pip-audit
+    #   smart-open
+    #   spacy
 rfc3339-validator==0.1.4
     # via jsonschema
 rfc3986-validator==0.1.1
@@ -372,6 +422,8 @@ sentencepiece==0.2.2
 setuptools==84.2.1
     # via
     #   -r requirements/ci.in
+    #   spacy
+    #   thinc
     #   torch
 shellingham==1.5.4
     # via typer
@@ -379,12 +431,25 @@ six==1.17.0
     # via
     #   python-dateutil
     #   rfc3339-validator
+smart-open==10.0.0
+    # via weasel
 sortedcontainers==2.4.0
     # via
     #   cyclonedx-python-lib
     #   hypothesis
 soupsieve==2.10
     # via beautifulsoup4
+spacy==3.8.18
+    # via -r requirements/ci.in
+spacy-legacy==3.0.12
+    # via spacy
+spacy-loggers==1.0.5
+    # via spacy
+srsly==2.5.6
+    # via
+    #   spacy
+    #   thinc
+    #   weasel
 starlette==1.7.0
     # via
     #   -r requirements/ci.in
@@ -393,6 +458,8 @@ stevedore==5.9.1
     # via bandit
 sympy==1.14.0
     # via torch
+thinc==8.3.14
+    # via spacy
 tinycss2==1.5.1
     # via
     #   cssselect2
@@ -414,13 +481,17 @@ torch==2.14.0
 tqdm==4.70.1
     # via
     #   huggingface-hub
+    #   spacy
     #   transformers
 transformers==5.17.0
     # via -r requirements/ci.in
 triton==3.8.0 ; python_full_version < '3.15' and sys_platform == 'linux'
     # via torch
 typer==0.27.2
-    # via transformers
+    # via
+    #   spacy
+    #   transformers
+    #   weasel
 types-defusedxml==0.7.0.20260504
     # via -r requirements/ci.in
 types-openpyxl==3.1.5.20260827
@@ -454,8 +525,15 @@ uri-template==1.3.0
     # via jsonschema
 urllib3==2.8.0
     # via requests
+wasabi==1.1.3
+    # via
+    #   spacy
+    #   thinc
+    #   weasel
 wcwidth==0.9.1
     # via prettytable
+weasel==1.0.1
+    # via spacy
 weasyprint==70.0
     # via -r requirements/ci.in
 webcolors==25.10.0
@@ -467,5 +545,7 @@ webencodings==0.6.1
     #   tinyhtml5
 wheel==0.48.0
     # via -r requirements/ci.in
+wrapt==2.5.2
+    # via smart-open
 zopfli==0.4.3
     # via fonttools

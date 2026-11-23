@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_pdf",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contract": "auditcore_pdf/1",
   "classification": "NEW_IMPLEMENTATION",
   "sources": [
@@ -12,6 +12,12 @@
     {
       "repository": "janpow77/pdf-editor",
       "commit": "ce34413129751dfd72fac6cefa55b02718bff27b"
+    },
+    {
+      "repository": "janpow77/pdf-editor",
+      "commit": "c5b3e1d1174739b530cc7945baf2ecd4d76c00c0",
+      "path": "backend/app/services/redaction.py",
+      "module": "auditcore_pdf.redaction"
     }
   ],
   "references": [
@@ -22,7 +28,15 @@
   "characterization": {
     "kind": "synthetic_contract_regression",
     "legacy_parity": "SUPERSEDED_WITH_REDACTION_FIXES",
-    "tests": "packages/auditcore_pdf/tests"
+    "tests": "packages/auditcore_pdf/tests",
+    "redaction": {
+      "kind": "golden_differential",
+      "classification": "LEGACY_PORT",
+      "legacy_parity": "IDENTICAL_LOCAL_DIFFERENTIAL",
+      "verified": "2026-11-23",
+      "detail": "Lokal geprüft, nicht als CI-Fixture hinterlegt: 44 synthetische Fälle (Muster; Muster mit KI-Namen über spaCy 3.7.5 / de_core_news_sm 3.7.0) gegen pdf-editor@c5b3e1d, Plan, Bericht und Ausgabetext gleich (PyMuPDF 2.1 mit MuPDF 1.28.6, Python 3.12). Unabhängiger Differenztest (Code-Audit): 362 Aufrufe der Bibliothekstests gegen das Original, 20 000 Eingaben für Selection.from_dict, 30 000 Texte je Muster, 300 Dokumente mit Ersatz-NER; keine Abweichung. Die 247 Schwärzungstests des pdf-editor liefen lokal über eine Übergangsschicht gegen die Bibliothek; dauerhaft laufen sie nach der Umstellung in der CI des pdf-editor.",
+      "behavior_changes": "packages/auditcore_pdf/docs/behavior-changes.md"
+    }
   },
   "license": "MIT",
   "rights": {
@@ -33,6 +47,12 @@
       "date": "2026-09-22",
       "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
       "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung anderer Repositories. PyMuPDF (AGPL-3.0 oder kommerziell) wird nicht mitgeliefert, sondern nur als optionales Extra [pymupdf] installiert; das Paket selbst bleibt MIT."
+    },
+    "authorization_redaction": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-11-23",
+      "confirmation": "Ja, als MIT übernehmen",
+      "limitation": "Der Rechteinhaber (alleiniger Urheber) gibt den Schwärzungscode aus pdf-editor@c5b3e1d für auditcore_pdf.redaction unter MIT frei. pdf-editor selbst bleibt AGPL-3.0-or-later. spaCy (MIT) und seine Sprachmodelle werden nicht mitgeliefert, nur über das Extra [ner] bzw. von der Anwendung installiert."
     }
   },
   "publication": "NOT_EXECUTED"
