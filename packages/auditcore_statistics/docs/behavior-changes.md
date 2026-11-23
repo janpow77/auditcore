@@ -15,6 +15,7 @@ p-Wert relativ ≤ 3·10⁻¹³). Parameter- und Spaltenprüfung bleiben beim Co
 | ST-C04 | Booleans brechen ab; Texte werden still zu NaN (`"4,5"` fällt weg). | Booleans, Texte und Unendlich werden abgewiesen. | Keine stille Umdeutung. |
 | ST-C05 | Fehlende, Null- und negative Werte verschwinden ohne Ausweis. | Anzahlen `missing`, `zero`, `negative_absolute`, `short` im Ergebnis. | Nachvollziehbarkeit. |
 | ST-C06 | `significant = p < 0.05` fest eingebaut. | Aussage nur mit ausdrücklichem `significance_level`. | Keine automatisch gewählten Schwellen, keine Befunde. |
+| ST-C08 | (`benford_test` bis 0.4.0) `Decimal.normalize()` verwarf nachgestellte Nullen: 500, 1 000 und 10,00 galten als einstellig und fielen mit `exclude` aus dem Zwei-Ziffern-Test. | Ab 0.5.0 sind Nullen des ganzzahligen Teils Ziffern (500 → 50, 1 000 → 10); „kurz“ sind nur einstellig geschriebene Werte (5, 0,3). Standard `pad`; `exclude` nur ausdrücklich, mit `short_share` und Warnung über 5 %. | Signifikanden-Definition (Hill 1995); gerade Häufungen runder Beträge soll der Test zeigen (Nigrini 2012, Kap. 5). |
 
 ## Ergänzung 0.2.0: `legacy_flowinvoice_benford`
 
@@ -40,7 +41,8 @@ Nicht übernommen: die abweichende Implementierung in `audit-portal`
 (`audit_tests_service.benford_test`); sie wäre ein eigenes, getrennt zu
 charakterisierendes Profil. HUMAN_DECISION_REQUIRED: Konvention für
 einstellige Werte im Zwei-Ziffern-Test (`exclude` nach verbreiteter Praxis
-oder `pad`).
+oder `pad`). DECIDED 23.11.2026 (0.5.0): Standard `pad`, `exclude` nur
+ausdrücklich mit Ausweis des Anteils (ST-C08).
 
 ## Konzentrationsmaße (Modul `concentration`)
 

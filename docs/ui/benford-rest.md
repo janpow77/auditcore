@@ -1,6 +1,6 @@
 # REST-Vertrag Benford (`auditcore_statistics.web`)
 
-Stand: auditcore_statistics 0.3.0, Kennzahlen `metrics` nach 0.3.4 (unveröffentlicht). Oberfläche: `<flowaudit-benford>` aus `@auditcore/ui`.
+Stand: auditcore_statistics 0.5.0 (Kennzahlen `metrics` seit 0.3.4). Oberfläche: `<flowaudit-benford>` aus `@auditcore/ui`.
 
 `analyse` und `catalogue` sind framework-frei. `create_app`/`routes` benötigen das Extra
 `web` (Starlette, Debian `python3-starlette`), `create_router` zusätzlich FastAPI.
@@ -28,11 +28,12 @@ fastapi_app.include_router(create_router("/api/benford"))
 ## `GET /profiles`
 
 ```json
-{"library": "auditcore_statistics 0.3.0", "method": "auditcore_statistics.benford/1",
+{"library": "auditcore_statistics 0.3.0", "method": "auditcore_statistics.benford/2",
  "tests": [{"id": "first", "label": "Erste Ziffer (1–9)", "digits": 1},
            {"id": "first_two", "label": "Erste zwei Ziffern (10–99)", "digits": 2},
            {"id": "second", "label": "Zweite Ziffer (0–9)", "digits": 2}],
- "short_values": [{"id": "exclude", "…": "…"}, {"id": "pad", "…": "…"}],
+ "short_values": [{"id": "pad", "default": true, "…": "…"}, {"id": "exclude", "default": false, "…": "…"}],
+ "defaults": {"short_values": "pad", "lower_bound": {"first": null, "first_two": 10.0, "second": 10.0}},
  "profiles": [{"id": "nigrini.2012", "mad_bounds": {"first": [0.006, 0.012, 0.015],
    "first_two": [0.0012, 0.0018, 0.0022], "second": [0.008, 0.010, 0.012]},
    "level_labels": ["Enge Übereinstimmung", "Akzeptable Übereinstimmung",
@@ -48,15 +49,18 @@ fastapi_app.include_router(create_router("/api/benford"))
 {"test": "first", "profile": "nigrini.2012", "values": [123.45, 18, null, 0, -12.5]}
 ```
 
-`short_values` (`exclude` | `pad`) ist für `first_two` und `second` Pflicht und für `first`
-unzulässig. `null` zählt als fehlend, 0 wird ausgeschlossen, negative Werte gehen mit ihrem
+`short_values` (`pad` | `exclude`) gilt für `first_two` und `second`, Standard seit 0.5.0
+`pad` (5 → 50); für `first` ist es unzulässig. `lower_bound` (Zahl > 0 oder `null`) schließt
+Beträge unterhalb der Grenze aus; fehlt das Feld, gilt bei `first_two` und `second` 10, bei
+`first` keine Grenze. Runde Beträge bleiben im Test: 500 → 50, 1 000 und 10,00 → 10. `null` zählt als fehlend, 0 wird ausgeschlossen, negative Werte gehen mit ihrem
 Betrag ein und werden gezählt. Texte und Wahrheitswerte werden abgewiesen – das Einlesen von
 Dateien (Dezimalkomma, Tausenderpunkte) übernimmt die Oberfläche und zeigt verworfene Zeilen an.
 
 Antwort:
 
 - `distribution`: `benford_test(...).to_dict()` – `analysed`, `excluded`
-  (`missing`, `zero`, `short`), `negative_absolute`, `rows[]` je Zifferngruppe
+  (`missing`, `zero`, `short`, `below_lower_bound`), `short_share`, `lower_bound`,
+  `warnings` (u. a. bei mehr als 5 % ausgeschlossenen kurzen Werten), `negative_absolute`, `rows[]` je Zifferngruppe
   (`observed_count`, `observed_share`, `expected_share`, `deviation`), Chi² der Gruppen.
 - `conformity`: `profile`, `test`, `analysed`, `mad`, `mad_level` (0–3), `mad_label`,
   `chi2_statistic`, `degrees_of_freedom`, `p_value`, `significance_level`, `chi2_exceeds`,

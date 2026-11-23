@@ -4,6 +4,15 @@ The result is a descriptive statistic. It names the method profile, reports
 every excluded value and never classifies records or data sets as suspicious;
 a significance statement is only made for an explicitly supplied level.
 
+Leading digits follow the mathematical definition of Benford's law: the
+significand of x > 0 is x / 10^floor(log10 x), and its first two digits are
+the first-two-digit group (Hill 1995, *A statistical derivation of the
+significant-digit law*; Berger/Hill 2015, *An Introduction to Benford's
+Law*, ch. 2). Trailing zeros of the integer part are digits: 500 belongs to
+group 50, 1 000 and 10,00 to group 10. Round amounts therefore stay in the
+first-two digits test, where their clustering at 10, 20, 50 … is exactly the
+pattern the test is meant to show (Nigrini 2012, ch. 5).
+
 ``legacy_run_benford`` reproduces ``flowstat@d665ac2``
 ``analysis_core_service.run_benford`` exactly, including its behavior that
 this contract corrects (see ``docs/behavior-changes.md``).
@@ -17,11 +26,29 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any, Literal
 
-from .numeric import chi2_survival, numpy_pairwise_sum, numpy_round
+from ._legacy_flowstat import LEGACY_METHOD, legacy_run_benford
+from .numeric import chi2_survival, numpy_pairwise_sum
 
-METHOD = "auditcore_statistics.benford/1"
-LEGACY_METHOD = "flowstat.run_benford@d665ac221f50ba1f465b7337bdd4aa218d78ec8a"
+__all__ = [
+    "LEGACY_METHOD",
+    "METHOD",
+    "SHORT_SHARE_WARNING",
+    "BenfordResult",
+    "DigitRow",
+    "ShortValues",
+    "StatisticsInputError",
+    "benford_test",
+    "expected_share",
+    "legacy_run_benford",
+]
+
+#: Version 2: trailing zeros count as digits (version 1 dropped them, see CHANGELOG 0.5.0).
+METHOD = "auditcore_statistics.benford/2"
 ShortValues = Literal["exclude", "pad"]
+#: Share of explicitly excluded single-digit values above which the result warns.
+#: Application default, not a statistical norm.
+SHORT_SHARE_WARNING = 0.05
+_VERSION = "0.5.0"  # keep equal to __version__ (tests/test_version.py)
 
 
 class StatisticsInputError(ValueError):
@@ -60,6 +87,10 @@ class BenfordResult:
     degrees_of_freedom: int
     p_value: float
     significance_level: float | None
+    #: Explicit lower bound on the absolute value; ``None`` without a bound.
+    lower_bound: float | None = None
+    below_lower_bound: int = 0
+    warnings: tuple[str, ...] = ()
 
     @property
     def deviates_at_level(self) -> bool | None:
@@ -68,25 +99,35 @@ class BenfordResult:
             return None
         return self.p_value < self.significance_level
 
+    @property
+    def short_share(self) -> float:
+        """Excluded single-digit values relative to all values that reached the digit step."""
+        considered = self.analysed + self.short_excluded
+        return self.short_excluded / considered if considered else 0.0
+
     def to_dict(self) -> dict[str, Any]:
-        """JSON-compatible result including exclusion counts."""
+        """JSON-compatible result including exclusion counts and warnings."""
         return {
-            "library": "auditcore_statistics 0.4.0",
+            "library": f"auditcore_statistics {_VERSION}",
             "method": self.method,
             "digits": self.digits,
             "short_values": self.short_values,
+            "lower_bound": self.lower_bound,
             "analysed": self.analysed,
             "excluded": {
                 "missing": self.missing,
                 "zero": self.zero,
                 "short": self.short_excluded,
+                "below_lower_bound": self.below_lower_bound,
             },
+            "short_share": self.short_share,
             "negative_absolute": self.negative_absolute,
             "chi2_statistic": self.chi2_statistic,
             "degrees_of_freedom": self.degrees_of_freedom,
             "p_value": self.p_value,
             "significance_level": self.significance_level,
             "deviates_at_level": self.deviates_at_level,
+            "warnings": list(self.warnings),
             "rows": [
                 {
                     "digit": r.digit,
@@ -106,26 +147,43 @@ def expected_share(digit: int) -> float:
 
 
 def _significant_digits(value: int | float | Decimal) -> str:
-    """Significant digits of a positive finite number, from its exact decimal form."""
+    """Digits of a positive finite number from its first non-zero digit on.
+
+    The value is read exactly (floats via their shortest repr) and normalised,
+    so 5, 5.0 and Decimal("5.00") give the same digits. Zeros of the integer
+    part are kept: 500 → "500", 1E+3 → "1000", 10.00 → "10"; only zeros after
+    the decimal point are dropped, they do not change the significand.
+    """
     text = repr(value) if isinstance(value, float) else str(value)
-    digits = "".join(str(d) for d in Decimal(text).normalize().as_tuple().digits)
-    return digits.lstrip("0")
+    sign, digits, exponent = Decimal(text).normalize().as_tuple()
+    del sign
+    places = exponent if isinstance(exponent, int) else 0
+    # Two digits suffice for every test; capping the zeros keeps 1e300 cheap.
+    written = "".join(str(d) for d in digits) + "0" * min(max(places, 0), 2)
+    return written.lstrip("0")
 
 
 def _check_options(
-    digits: int, short_values: ShortValues | None, significance_level: float | None
+    digits: int,
+    short_values: ShortValues | None,
+    significance_level: float | None,
+    lower_bound: float | None,
 ) -> None:
     if isinstance(digits, bool) or digits not in (1, 2):
         raise StatisticsInputError("'digits' muss 1 oder 2 sein.")
-    if digits == 2 and short_values not in ("exclude", "pad"):
-        raise StatisticsInputError(
-            "Für die Analyse der ersten zwei Ziffern ist 'short_values' ausdrücklich "
-            "als 'exclude' oder 'pad' anzugeben."
-        )
+    if digits == 2 and short_values not in (None, "exclude", "pad"):
+        raise StatisticsInputError("'short_values' ist 'pad' (Standard) oder 'exclude'.")
     if digits == 1 and short_values is not None:
         raise StatisticsInputError("'short_values' gilt nur für digits=2.")
     if significance_level is not None and not 0 < significance_level < 1:
         raise StatisticsInputError("'significance_level' muss zwischen 0 und 1 liegen.")
+    if lower_bound is not None and not (
+        not isinstance(lower_bound, bool)
+        and isinstance(lower_bound, (int, float, Decimal))
+        and math.isfinite(lower_bound)
+        and lower_bound > 0
+    ):
+        raise StatisticsInputError("'lower_bound' muss eine endliche Zahl größer als 0 sein.")
 
 
 def _checked_number(value: object) -> int | float | Decimal | None:
@@ -142,14 +200,14 @@ def _checked_number(value: object) -> int | float | Decimal | None:
 
 
 def _leading_group(significant: str, digits: int, short_values: ShortValues | None) -> int | None:
-    """Digit group of the significant digits; ``None`` for an excluded short value."""
+    """Digit group of the significant digits; ``None`` for an excluded single-digit value."""
     if digits == 1:
         return int(significant[0])
     if len(significant) >= 2:
         return int(significant[:2])
-    if short_values == "pad":
-        return int(significant[0]) * 10
-    return None
+    if short_values == "exclude":
+        return None
+    return int(significant[0]) * 10
 
 
 def benford_test(
@@ -158,6 +216,7 @@ def benford_test(
     digits: int,
     short_values: ShortValues | None = None,
     significance_level: float | None = None,
+    lower_bound: float | None = None,
 ) -> BenfordResult:
     """Compare leading digits with Benford's law.
 
@@ -165,16 +224,26 @@ def benford_test(
         values: Numbers; ``None`` and NaN count as missing, zero is excluded,
             negative numbers are analysed by absolute value and counted.
         digits: 1 (first digit 1..9) or 2 (first two digits 10..99).
-        short_values: Required for ``digits=2``: ``"exclude"`` values with a
-            single significant digit, or ``"pad"`` them (5 → 50).
+        short_values: Only for ``digits=2``. Default ``"pad"``: a value with
+            one significant digit gets its second digit 0 (5 → 50, 0.07 → 70),
+            as the significand of Benford's law defines it. ``"exclude"``
+            drops such values (only d × 10^k with k ≤ 0, such as 5 or 0.3;
+            never round amounts like 500, 1 000 or 10,00) and the result
+            states their number, their share and, above
+            :data:`SHORT_SHARE_WARNING`, a warning.
         significance_level: Optional α for ``deviates_at_level``.
+        lower_bound: Optional bound on the absolute value; smaller values are
+            excluded and counted as ``below_lower_bound``. Small amounts
+            often follow other processes than the bulk of the data, which is
+            why applications commonly analyse amounts from 10 on.
 
     Raises:
-        StatisticsInputError: invalid digits/short_values/level, booleans,
-            non-numeric or infinite values, or no analysable value.
+        StatisticsInputError: invalid digits/short_values/level/bound,
+            booleans, non-numeric or infinite values, or no analysable value.
     """
-    _check_options(digits, short_values, significance_level)
-    tally = _classify(values, digits, short_values)
+    _check_options(digits, short_values, significance_level, lower_bound)
+    mode: ShortValues | None = (short_values or "pad") if digits == 2 else None
+    tally = _classify(values, digits, mode, lower_bound)
     if not tally.groups:
         raise StatisticsInputError("Keine auswertbaren Werte vorhanden.")
     total = len(tally.groups)
@@ -188,7 +257,7 @@ def benford_test(
     return BenfordResult(
         method=METHOD,
         digits=digits,
-        short_values=short_values,
+        short_values=mode,
         rows=rows,
         analysed=total,
         missing=tally.missing,
@@ -199,7 +268,27 @@ def benford_test(
         degrees_of_freedom=dof,
         p_value=chi2_survival(statistic, dof),
         significance_level=significance_level,
+        lower_bound=None if lower_bound is None else float(lower_bound),
+        below_lower_bound=tally.below,
+        warnings=_warnings(tally, total),
     )
+
+
+def _warnings(tally: _Tally, total: int) -> tuple[str, ...]:
+    share = tally.short / (total + tally.short)
+    if share <= SHORT_SHARE_WARNING:
+        return ()
+    return (
+        f"{tally.short} Werte mit nur einer signifikanten Ziffer ausgeschlossen "
+        f"({_percent(share)} der Werte, mehr als {_percent(SHORT_SHARE_WARNING, 0)}). "
+        "Der Ausschluss kann die Verteilung der ersten zwei Ziffern verzerren; mit der "
+        "Standardregel 'pad' zählen diese Werte mit der zweiten Ziffer 0.",
+    )
+
+
+def _percent(share: float, places: int = 1) -> str:
+    """German percent notation (decimal comma)."""
+    return f"{share * 100:.{places}f} %".replace(".", ",")
 
 
 @dataclass
@@ -211,12 +300,14 @@ class _Tally:
     zero: int = 0
     negative: int = 0
     short: int = 0
+    below: int = 0
 
 
 def _classify(
     values: Sequence[int | float | Decimal | None],
     digits: int,
     short_values: ShortValues | None,
+    lower_bound: float | None,
 ) -> _Tally:
     """Validate every value in input order and sort it into a group or an exclusion."""
     tally = _Tally()
@@ -231,6 +322,9 @@ def _classify(
         if number < 0:
             tally.negative += 1
             number = -number
+        if lower_bound is not None and number < lower_bound:
+            tally.below += 1
+            continue
         group = _leading_group(_significant_digits(number), digits, short_values)
         if group is None:
             tally.short += 1
@@ -246,135 +340,3 @@ def _chi2_statistic(rows: tuple[DigitRow, ...], total: int) -> float:
         for row in rows
     ]
     return numpy_pairwise_sum(terms)
-
-
-# ---------------------------------------------------------------------------
-# Legacy adapter (flowstat run_benford)
-# ---------------------------------------------------------------------------
-
-LegacyDtype = Literal["int", "float", "bool"]
-_TOLERANCE = 1e-8
-
-
-def _legacy_text(value: int | float | bool, dtype: LegacyDtype) -> str:
-    if dtype == "bool":
-        return str(bool(value))
-    if dtype == "int":
-        return str(int(value))
-    return repr(float(value))
-
-
-def _legacy_positive(values: Sequence[int | float | bool | None]) -> list[int | float]:
-    """Absolute values above zero; ``None`` and NaN are dropped like ``dropna``."""
-    positive = []
-    for value in values:
-        if value is None or (isinstance(value, float) and math.isnan(value)):
-            continue
-        absolute = abs(value)
-        if absolute > 0:
-            positive.append(absolute)
-    if not positive:
-        raise ValueError("Keine positiven Werte in der Spalte gefunden.")
-    return positive
-
-
-def _legacy_leading(positive: list[int | float], dtype: LegacyDtype, digit: object) -> list[int]:
-    """Leading digit (group) from the source's string form; 0 for a short value."""
-    leading: list[int] = []
-    for value in positive:
-        text = _legacy_text(value, dtype).replace(".", "").lstrip("0")
-        if digit == 1:
-            leading.append(int(text[0]))
-        else:
-            leading.append(int(text[:2]) if len(text) >= 2 else 0)
-    return leading
-
-
-def _legacy_row(d: int, count: int, total: int) -> tuple[dict[str, object], float]:
-    """Table row of one digit and its expected count (pandas/NumPy rounding paths)."""
-    expected_percent = math.log10(1 + 1 / d) * 100
-    if count:
-        observed_percent = count / total * 100
-        observed_rounded = numpy_round(observed_percent, 2)
-        deviation = numpy_round(observed_percent - expected_percent, 2)
-    else:
-        observed_percent = 0 / total * 100
-        observed_rounded = round(observed_percent, 2)
-        deviation = round(observed_percent - expected_percent, 2)
-    row = {
-        "digit": str(d),
-        "observed_count": count,
-        "observed_percent": observed_rounded,
-        "expected_percent": round(expected_percent, 2),
-        "deviation": deviation,
-    }
-    return row, (expected_percent / 100) * total
-
-
-def _legacy_check_sums(observed: list[float], expected: list[float]) -> None:
-    """SciPy 1.11 ``chisquare`` frequency-sum check with its original message."""
-    observed_sum = numpy_pairwise_sum(observed)
-    expected_sum = numpy_pairwise_sum(expected)
-    relative = abs(observed_sum - expected_sum) / min(observed_sum, expected_sum)
-    if relative > _TOLERANCE:
-        raise ValueError(
-            "For each axis slice, the sum of the observed frequencies must agree with the "
-            f"sum of the expected frequencies to a relative tolerance of {_TOLERANCE}, but the "
-            "percent differences are:"
-            f"\n{relative!r}"
-        )
-
-
-def legacy_run_benford(
-    values: Sequence[int | float | bool | None],
-    *,
-    dtype: LegacyDtype,
-    digit: object,
-    column: str,
-) -> dict[str, Any]:
-    """Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``.
-
-    ``dtype`` is the pandas dtype family of the coerced column (``int64``,
-    ``float64`` or ``bool``); it determines the string form the source uses
-    for digit extraction. Column/parameter checks stay with the caller.
-
-    Raises:
-        ValueError: with the source application's messages, including the
-            chi-square frequency-sum error of SciPy 1.11.
-    """
-    if digit not in [1, 2]:
-        raise ValueError("Parameter 'digit' muss 1 oder 2 sein.")
-    leading = _legacy_leading(_legacy_positive(values), dtype, digit)
-    domain = range(1, 10) if digit == 1 else range(10, 100)
-    total = len(leading)
-    counts: dict[int, int] = {}
-    for d in leading:
-        counts[d] = counts.get(d, 0) + 1
-    rows: list[dict[str, object]] = []
-    observed: list[float] = []
-    expected: list[float] = []
-    for d in domain:
-        count = counts.get(d, 0)
-        row, expected_count = _legacy_row(d, count, total)
-        rows.append(row)
-        observed.append(float(count))
-        expected.append(expected_count)
-    _legacy_check_sums(observed, expected)
-    statistic = numpy_pairwise_sum(
-        [(o - e) ** 2 / e for o, e in zip(observed, expected, strict=True)]
-    )
-    p_value = chi2_survival(statistic, len(observed) - 1)
-    return {
-        "type": "table",
-        "columns": ["digit", "observed_count", "observed_percent", "expected_percent", "deviation"],
-        "rows": rows,
-        "meta": {
-            "analysis": "core_benford",
-            "column": column,
-            "digit": digit,
-            "chi2_statistic": numpy_round(statistic, 4),
-            "p_value": numpy_round(p_value, 4),
-            "significant": p_value < 0.05,
-            "sample_size": total,
-        },
-    }

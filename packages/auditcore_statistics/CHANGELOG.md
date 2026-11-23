@@ -1,5 +1,30 @@
 # Changelog auditcore_statistics
 
+## 0.5.0 – 2026-11-23 – Runde Beträge im Test der ersten zwei Ziffern
+
+Fehlerbehebung mit geänderter Voreinstellung.
+
+- Korrektur: Die Ziffernbildung verwarf nachgestellte Nullen
+  (`Decimal.normalize()`), 500, 1 000 und 10,00 galten als einstellig und
+  fielen mit `short_values="exclude"` aus dem Test. Jetzt zählen 500 zu 50,
+  1 000 und 10,00 zu 10. Als „kurz“ gelten nur einstellig geschriebene Werte
+  wie 5 oder 0,3 (ST-C08). Methode heißt deshalb `auditcore_statistics.benford/2`.
+- Voreinstellung: `short_values` ist für `digits=2` nicht mehr Pflicht,
+  Standard `"pad"` (Signifikand 5 → 5,0 → Gruppe 50). `"exclude"` nur
+  ausdrücklich; das Ergebnis nennt dann Anzahl und Anteil (`short_share`) und
+  warnt über 5 % (`warnings`, Konstante `SHORT_SHARE_WARNING`).
+- Neu: Parameter `lower_bound` (Betrag, > 0); Ausschlüsse in
+  `below_lower_bound`. `BenfordResult` erhält `lower_bound`,
+  `below_lower_bound`, `warnings` und die Eigenschaft `short_share`;
+  `to_dict` zusätzlich `lower_bound`, `excluded.below_lower_bound`,
+  `short_share`, `warnings`.
+- REST `/analyze`: `short_values` optional (Standard `pad`), neues Feld
+  `lower_bound` (fehlt → 10 bei `first_two`/`second`, keine Grenze bei
+  `first`; `null` schaltet die Grenze ab). Katalog mit `defaults`.
+- Legacy-Adapter `legacy_run_benford` in `_legacy_flowstat.py` verschoben,
+  öffentlicher Import unverändert.
+- Zielwerttests `tests/test_zielwerte_benford.py` (Fälle B3, B7).
+
 ## 0.4.0 – 2026-11-04 – Konzentrationsmaße
 
 Abwärtskompatible Erweiterung.

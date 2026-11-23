@@ -11,19 +11,28 @@ from auditcore_statistics.web._http import decode
 from auditcore_statistics.web.analysis import MAX_VALUES
 
 VALUES = [123, 187, 2450, 31, 4.2, 1.9, 0, None, -12.5, 999, 15, 18, 1100, 27, 36]
+VALUES_BODY = {"test": "first_two", "profile": "nigrini.2012", "values": VALUES}
 
 
 def test_catalogue_offers_tests_short_values_and_profiles() -> None:
     data = catalogue()
     assert [t["id"] for t in data["tests"]] == ["first", "first_two", "second"]
-    assert [s["id"] for s in data["short_values"]] == ["exclude", "pad"]
+    assert [s["id"] for s in data["short_values"]] == ["pad", "exclude"]
+    assert data["defaults"]["short_values"] == "pad"
+    assert data["defaults"]["lower_bound"] == {"first": None, "first_two": 10.0, "second": 10.0}
     assert data["profiles"][0]["id"] == "nigrini.2012"
 
 
 def test_analyse_reports_distribution_exclusions_and_conformity() -> None:
     result = analyse({"test": "first", "profile": "nigrini.2012", "values": VALUES})
     distribution, conformity = result["distribution"], result["conformity"]
-    assert distribution["excluded"] == {"missing": 1, "zero": 1, "short": 0}
+    assert distribution["excluded"] == {
+        "missing": 1,
+        "zero": 1,
+        "short": 0,
+        "below_lower_bound": 0,
+    }
+    assert distribution["lower_bound"] is None
     assert distribution["negative_absolute"] == 1 and distribution["analysed"] == 13
     assert conformity["test"] == "first" and len(conformity["rows"]) == 9
     assert conformity["mad_label"] in {p for p in catalogue()["profiles"][0]["level_labels"]}
@@ -32,7 +41,7 @@ def test_analyse_reports_distribution_exclusions_and_conformity() -> None:
 def test_json_numbers_are_analysed_exactly_as_sent() -> None:
     payload = decode(
         b'{"test": "first_two", "profile": "nigrini.2012", '
-        b'"short_values": "exclude", "values": [0.1, 1e-7, 0.000123, 5]}'
+        b'"short_values": "exclude", "lower_bound": null, "values": [0.1, 1e-7, 0.000123, 5]}'
     )
     result = analyse(payload)
     assert result["distribution"]["excluded"]["short"] == 3
@@ -58,13 +67,21 @@ def test_analyse_rejects_invalid_requests(change: dict[str, object], message: st
         analyse(body)
 
 
-def test_second_digit_requires_explicit_short_value_rule() -> None:
-    with pytest.raises(ContractError, match="short_values"):
-        analyse({"test": "second", "profile": "nigrini.2012", "values": VALUES})
-    padded = analyse(
-        {"test": "second", "profile": "nigrini.2012", "values": VALUES, "short_values": "pad"}
+def test_two_digit_tests_default_to_pad_and_lower_bound_10() -> None:
+    """Ohne Angaben: ``pad`` und Untergrenze 10; 4,2 und 1,9 fallen unter die Grenze."""
+    result = analyse({"test": "second", "profile": "nigrini.2012", "values": VALUES})
+    distribution = result["distribution"]
+    assert distribution["short_values"] == "pad" and distribution["lower_bound"] == 10.0
+    assert distribution["excluded"]["below_lower_bound"] == 2
+    assert result["conformity"]["analysed"] == 11
+    unbounded = analyse(
+        {"test": "second", "profile": "nigrini.2012", "values": VALUES, "lower_bound": None}
     )
-    assert padded["conformity"]["analysed"] == 13
+    assert unbounded["conformity"]["analysed"] == 13
+    with pytest.raises(ContractError, match="short_values"):
+        analyse({**VALUES_BODY, "short_values": "drop"})
+    with pytest.raises(ContractError, match="lower_bound"):
+        analyse({**VALUES_BODY, "lower_bound": -1})
 
 
 def test_value_limit() -> None:

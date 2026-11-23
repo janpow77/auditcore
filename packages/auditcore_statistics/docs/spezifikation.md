@@ -19,7 +19,7 @@ wählt keine Schwellen still.
 
 | Funktion/Klasse | Eingabe | Ausgabe | Nebenwirkungen |
 |---|---|---|---|
-| `benford_test(values, *, digits, short_values=None, significance_level=None)` | Folge aus `int`, `float`, `Decimal`, `None`/NaN (fehlend); `digits` 1 oder 2; bei `digits=2` Pflichtangabe `short_values` = `"exclude"` oder `"pad"`; optional α ∈ (0, 1) | `BenfordResult` (Methode `auditcore_statistics.benford/1`) mit Zeilen je Ziffer(ngruppe), Ausschlusszählern `missing`, `zero`, `short_excluded`, Zähler `negative_absolute`, χ², Freiheitsgraden, p-Wert, `deviates_at_level` | keine, deterministisch |
+| `benford_test(values, *, digits, short_values=None, significance_level=None, lower_bound=None)` | Folge aus `int`, `float`, `Decimal`, `None`/NaN (fehlend); `digits` 1 oder 2; bei `digits=2` `short_values` = `"pad"` (Standard) oder `"exclude"`; optional α ∈ (0, 1); optional Untergrenze > 0 auf den Betrag | `BenfordResult` (Methode `auditcore_statistics.benford/2`) mit Zeilen je Ziffer(ngruppe), Ausschlusszählern `missing`, `zero`, `short_excluded`, `below_lower_bound`, `short_share`, `warnings`, Zähler `negative_absolute`, χ², Freiheitsgraden, p-Wert, `deviates_at_level` | keine, deterministisch |
 | `expected_share(d)` | Ziffer bzw. Zifferngruppe d ≥ 1 | log10(1 + 1/d) | keine |
 | `chi2_survival(x, dof)` | Statistik, Freiheitsgrade ≥ 1 | P(X ≥ x) der Chi-Quadrat-Verteilung | keine |
 | `conformity.assess(result, test, profile_id)` | Ergebnis von `benford_test`; `test` = `first` (digits=1), `first_two` oder `second` (digits=2); Profil ausdrücklich (derzeit `nigrini.2012`) | `Conformity` mit MAD, MAD-Stufe und -Bezeichnung, z je Ziffer, auffälligen Ziffern, χ² und p-Wert | keine |
@@ -46,7 +46,7 @@ NumPy-Paarweisenreihenfolge (bitgleich zu den Quellen).
 | I5 | χ² ≥ 0, p ∈ [0, 1], Freiheitsgrade 8 bzw. 89; `chi2_survival` fällt monoton mit der Statistik. | `test_i5_statistik_nichtnegativ_p_wert_im_einheitsintervall`, `test_i5_p_wert_faellt_mit_der_statistik` |
 | I6 | Ohne ausdrückliches Signifikanzniveau gibt es keine Aussage (`deviates_at_level` = `None`); mit Niveau gilt genau p < α. | `test_i6_aussage_nur_mit_ausdruecklichem_niveau` |
 | I7 | Konformität: MAD ≥ 0 und liegt im gemeldeten Band des Profils; auffällige Ziffern sind genau die mit z > z_krit; der Zweitziffertest hat 10 Zeilen, deren Erwartungsanteile zu 1 summieren. | `test_i7_konformitaet_mad_band_und_z_test_konsistent` |
-| I8 | Werte mit nur einer signifikanten Ziffer werden im Zwei-Ziffern-Test nur nach ausdrücklicher Regel behandelt: ohne `short_values` Fehler, `pad` zählt d als 10·d, `exclude` weist sie als kurz aus. | `test_i8_einstellige_werte_im_zweiziffertest_nur_mit_ausdruecklicher_regel` |
+| I8 | Im Zwei-Ziffern-Test zählt ein Wert mit nur einer signifikanten Ziffer ohne Angabe nach `pad` als 10·d; `exclude` weist nur einstellig geschriebene Werte (5, 0,3) als kurz aus, runde Beträge (10·d, 100·d, d0,00) bleiben in der Gruppe 10·d. | `test_i8_einstellige_werte_im_zweiziffertest` |
 | I9 | Wahrheitswerte, Texte und unendliche Werte werden abgewiesen, nie still umgedeutet. | `test_i9_nicht_numerisches_wird_abgewiesen_nicht_umgedeutet` |
 | I10 | Chi²-Test: χ² und p gleich der Konformität desselben Tests; jeder kritische Wert x erfüllt P(X ≥ x) = Niveau, kritische Werte fallen mit dem Niveau; ohne α keine Entscheidung, mit α gilt `rejects` genau bei p < α. | `test_i10_chi_quadrat_test_kritische_werte_und_entscheidung` |
 | I11 | z je Ziffer: z ≥ 0; mit Stetigkeitskorrektur gleich den z-Werten der Konformität; auffällige Ziffern genau die mit z > z_krit, ohne z_krit keine Markierung. | `test_i11_auffaellige_ziffern_nur_gegen_ausdrueckliche_grenze` |
@@ -55,8 +55,8 @@ NumPy-Paarweisenreihenfolge (bitgleich zu den Quellen).
 
 `StatisticsInputError` (`ValueError`) mit deutscher Meldung:
 
-- `digits` nicht 1 oder 2; `short_values` fehlt bei `digits=2` oder ist bei
-  `digits=1` angegeben; Signifikanzniveau nicht in (0, 1);
+- `digits` nicht 1 oder 2; `short_values` unbekannt oder bei `digits=1`
+  angegeben; Signifikanzniveau nicht in (0, 1); `lower_bound` nicht > 0;
 - Wert ist Wahrheitswert, Text oder anderer Nicht-Zahlentyp; `±inf` bzw.
   nicht endliches `Decimal`;
 - kein auswertbarer Wert (alles fehlend, null oder kurz ausgeschlossen);
@@ -95,7 +95,6 @@ Aufrufer gedacht.
 | flowinvoice: Einzelziffer-Markierung mit z > 2,576 ohne Korrektur (seit K10 nicht mehr in der Prüfentscheidung) | beschreibende Kennzahl `digit_z_test(..., continuity_correction=False, z_critical=2.576)`, nur auf Anfrage | – (Parität `tests/test_significance_parity.py`) | I11 |
 | flowinvoice: `±inf` Endlosschleife (ST-C07) | `ValueError` | – (auch die Legacy-Variante bricht ab) | `test_legacy_flowinvoice.py` |
 
-Offen (HUMAN_DECISION_REQUIRED aus `docs/behavior-changes.md`): welche
-Konvention (`exclude` oder `pad`) Anwendungen für einstellige Werte im
-Zwei-Ziffern-Test verwenden; das Paket verlangt deshalb die ausdrückliche
-Angabe.
+Entschieden am 23.11.2026 (0.5.0): Standard ist `pad` nach der
+Signifikanden-Definition des Benford-Gesetzes; `exclude` nur ausdrücklich,
+mit Anzahl, Anteil und Warnung über 5 %.
