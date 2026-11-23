@@ -180,6 +180,32 @@ def test_extracted_authorization_fails_closed(change):
         release.check_extracted_authorization("auditcore_statistics", provenance)
 
 
+def _pdf_provenance():
+    root = Path(__file__).resolve().parents[1] / "packages" / "auditcore_pdf" / "src"
+    return json.loads((root / "auditcore_pdf" / "provenance.json").read_text())
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda p: p["rights"].pop("authorization_redaction"),
+        lambda p: p["rights"]["authorization_redaction"].update(date="2026-11-22"),
+        lambda p: p["rights"]["authorization_redaction"].update(status="UNKNOWN"),
+        lambda p: p["rights"]["authorization_redaction"].update(confirmation="ja"),
+        lambda p: p["rights"].update(authorization_redaction="ja"),
+        lambda p: p["sources"].pop(),
+        lambda p: p["sources"][-1].update(commit="c" * 40),
+    ],
+)
+def test_later_authorization_fails_closed(change):
+    # Der spätere Quell-Commit gilt nur zusammen mit seiner eigenen datierten Freigabe.
+    provenance = _pdf_provenance()
+    release.check_extracted_authorization("auditcore_pdf", provenance)
+    change(provenance)
+    with pytest.raises(ValueError, match="authorization missing"):
+        release.check_extracted_authorization("auditcore_pdf", provenance)
+
+
 def test_same_named_extra_of_another_package_is_not_a_published_renderer():
     wheel = "auditcore_dataprotection-0.1.0-py3-none-any.whl"
     assets = {
