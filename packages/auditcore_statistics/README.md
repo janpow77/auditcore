@@ -73,8 +73,8 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
-| `LEGACY_METHOD` | Konstante | – | `benford` |
-| `METHOD` | Konstante | – | `benford` |
+| `LEGACY_METHOD` | Konstante | – | `_legacy_flowstat` |
+| `METHOD` | Konstante | Version 2: trailing zeros count as digits (version 1 dropped them, see CHANGELOG 0.5.0). | `benford` |
 | `BenfordResult` | Datenklasse | Distribution, exclusions and chi-square statistic of one analysis. | `benford` |
 | `ChiSquareTest` | Datenklasse | Pearson chi-square test of one digit test against Benford's law. | `significance` |
 | `DigitRow` | Datenklasse | Observed and expected frequency of one leading digit (group). | `benford` |
@@ -92,7 +92,7 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 | `gini` | Funktion | Gini coefficient ``sum_i (2i - n - 1) x_(i) / (n * sum x)`` of sorted values. | `concentration` |
 | `herfindahl_hirschman` | Funktion | Sum of squared shares on the scale 0..1 (between ``1/n`` and 1, not 0..10.000). | `concentration` |
 | `legacy_flowinvoice_benford` | Funktion | Result fields of the source ``BenfordResult`` as a dictionary (same values). | `legacy_flowinvoice` |
-| `legacy_run_benford` | Funktion | Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``. | `benford` |
+| `legacy_run_benford` | Funktion | Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``. | `_legacy_flowstat` |
 | `lorenz_curve` | Funktion | Lorenz curve with ``n + 1`` points and its Gini coefficient; ``None`` as :func:`gini`. | `concentration` |
 | `recommended_flowinvoice_benford` | Funktion | ``benford_test`` with the decided parameters (replaces the legacy variant). | `legacy_flowinvoice` |
 
@@ -116,9 +116,16 @@ enthält den REST-Vertrag für `<flowaudit-benford>`
 
 ## Profile und Konfiguration
 
-- `benford_test(values, *, digits, short_values=None, significance_level=None)`:
-  Methode `METHOD` mit exakten Erwartungswerten und χ²-p-Wert; für zwei
-  Ziffern ist `short_values="exclude"` oder `"pad"` ausdrücklich anzugeben.
+- `benford_test(values, *, digits, short_values=None, significance_level=None, lower_bound=None)`:
+  Methode `METHOD` (`auditcore_statistics.benford/2`) mit exakten
+  Erwartungswerten und χ²-p-Wert. Die ersten zwei Ziffern sind die des
+  Signifikanden: 500 → 50, 1 000 und 10,00 → 10. Werte mit nur einer
+  signifikanten Ziffer (5, 0,3) zählen standardmäßig mit der zweiten Ziffer 0
+  (`short_values="pad"`); `"exclude"` schließt nur sie aus und weist Anzahl,
+  Anteil (`short_share`) und ab mehr als 5 % eine Warnung (`warnings`) aus.
+  `lower_bound` schließt kleine Beträge aus und zählt sie
+  (`below_lower_bound`); ohne Angabe gilt keine Grenze, auch in der
+  REST-Schnittstelle.
 - `legacy_run_benford`: Profil `LEGACY_METHOD`, reproduziert
   `flowstat@d665ac2 run_benford`.
 - `legacy_flowinvoice_benford`: Profil `flowinvoice.fraud_benford`
@@ -158,8 +165,9 @@ durchgeführt. Die abweichende Benford-Implementierung in audit-portal
 ([docs/behavior-changes.md](docs/behavior-changes.md)):
 
 - ST-C01: Zwei-Ziffern-Test mit einstelligen Werten bricht nicht ab;
-  `short_values` wird ausdrücklich gewählt (Konvention noch
-  `HUMAN_DECISION_REQUIRED`).
+  Standard seit 0.5.0 `short_values="pad"`, `exclude` nur ausdrücklich.
+- ST-C08: Nachgestellte Nullen sind Ziffern; runde Beträge bleiben im
+  Zwei-Ziffern-Test (bis 0.4.0 fielen sie als „kurz“ heraus).
 - ST-C02/ST-C03: Ziffern aus der exakten Dezimaldarstellung, unabhängig vom
   Datentyp und auch bei wissenschaftlicher Notation.
 - ST-C04: Booleans, Texte und Unendlich werden abgewiesen.

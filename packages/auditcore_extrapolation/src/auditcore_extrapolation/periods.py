@@ -24,6 +24,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from types import MappingProxyType
 
+from . import limits
 from .design import Stratum
 from .errors import ExtrapolationInputError
 from .evaluation import MATERIALITY_RATE, Assessment, evaluate
@@ -159,6 +160,37 @@ def _combine(
 ) -> Projection:
     projected = math.fsum(p.projected_random_error for p in parts)
     se = _combined_precision(parts)
+    warnings, extra, limitations = _notes(chosen, periods, parts, population_units)
+    all_strata = [s for period in periods for s in period.strata]
+    first = parts[0]
+    return Projection(
+        method=chosen.id,
+        projected_random_error=projected,
+        precision=se,
+        confidence_level=first.confidence_level,
+        factor_profile=first.factor_profile,
+        coefficient=first.coefficient,
+        strata=tuple(
+            replace(result, period=period.name)
+            for period, p in zip(periods, parts, strict=True)
+            for result in p.strata
+        ),
+        error_classes=error_classes(all_strata),
+        systemic_population=systemic_population(all_strata),
+        steps=tuple(_combined_steps(chosen, periods, parts, projected, se)),
+        warnings=tuple(warnings),
+        extra=MappingProxyType(extra),
+        limitations=limitations,
+    )
+
+
+def _combined_steps(
+    chosen: Method,
+    periods: tuple[Period, ...],
+    parts: list[Projection],
+    projected: float,
+    se: float | None,
+) -> list[Step]:
     ee_source, se_source = _sources(chosen)
     steps = [
         s for period, p in zip(periods, parts, strict=True) for s in _prefixed(period.name, p.steps)
@@ -180,6 +212,16 @@ def _combine(
                 guidance(f"{se_source}; Anhang 2"),
             )
         )
+    return steps
+
+
+def _notes(
+    chosen: Method,
+    periods: tuple[Period, ...],
+    parts: list[Projection],
+    population_units: int | None,
+) -> tuple[list[str], dict[str, object], tuple[str, ...]]:
+    """Warnings, extra figures and limitations of the combined projection."""
     warnings = [
         f"{period.name}: {w}" for period, p in zip(periods, parts, strict=True) for w in p.warnings
     ]
@@ -187,29 +229,19 @@ def _combine(
         "periods": [_summary(period, p) for period, p in zip(periods, parts, strict=True)]
     }
     all_strata = [s for period in periods for s in period.strata]
+    limitations: tuple[str, ...] = tuple(
+        f"{period.name}: {text}"
+        for period, p in zip(periods, parts, strict=True)
+        for text in p.limitations
+    )
+    if chosen.statistical:
+        limitations, more = limits.combine_periods(all_strata, limitations)
+        warnings += more
     if not chosen.statistical:
         coverage, more = non_statistical_coverage(all_strata, population_units)
         extra["coverage"] = coverage
         warnings += more
-    first = parts[0]
-    return Projection(
-        method=chosen.id,
-        projected_random_error=projected,
-        precision=se,
-        confidence_level=first.confidence_level,
-        factor_profile=first.factor_profile,
-        coefficient=first.coefficient,
-        strata=tuple(
-            replace(result, period=period.name)
-            for period, p in zip(periods, parts, strict=True)
-            for result in p.strata
-        ),
-        error_classes=error_classes(all_strata),
-        systemic_population=systemic_population(all_strata),
-        steps=tuple(steps),
-        warnings=tuple(warnings),
-        extra=MappingProxyType(extra),
-    )
+    return warnings, extra, limitations
 
 
 def assess_periods(
