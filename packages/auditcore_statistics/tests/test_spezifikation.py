@@ -82,9 +82,15 @@ def test_i3_reihenfolge_der_werte_ist_ohne_einfluss(values, modus, rnd: random.R
 @EINSTELLUNG
 @given(st.lists(POSITIV, min_size=1, max_size=120), MODUS, st.integers(-6, 6))
 def test_i4_vorzeichen_skala_und_datentyp_sind_ohne_einfluss(values, modus, exponent: int) -> None:
-    """I4: −x, x · 10^k und int/float/Decimal desselben Werts liefern dieselben Ziffern."""
+    """I4: −x, x · 10^k und int/float/Decimal desselben Werts liefern dieselben Ziffern.
+
+    Die Skalierung gilt für alle Werte mit mindestens zwei signifikanten Ziffern;
+    ``exclude`` schließt nur einstellig geschriebene Werte unter 10 aus (5, 0,3),
+    deshalb wären dort 5 und 50 nicht gleich behandelt."""
     digits, short = modus
-    if not _auswertbar(values, digits, short):
+    if short == "exclude":
+        values = [v for v in values if len(str(v).rstrip("0")) >= 2]
+    if not values or not _auswertbar(values, digits, short):
         return
     basis = benford_test(values, digits=digits, short_values=short)  # type: ignore[arg-type]
     skaliert = [Decimal(v).scaleb(exponent) for v in values]
@@ -167,12 +173,16 @@ def test_i7_konformitaet_mad_band_und_z_test_konsistent(values, test) -> None:
     st.integers(min_value=1, max_value=9),
     st.lists(st.integers(10, 10**6).filter(lambda n: len(str(n).rstrip("0")) >= 2), max_size=30),
 )
-def test_i8_einstellige_werte_im_zweiziffertest_nur_mit_ausdruecklicher_regel(d: int, rest) -> None:
-    """I8: Zwei-Ziffern-Test verlangt ``short_values``; ``pad`` zählt d als 10·d,
-    ``exclude`` weist den Wert als kurz aus (Werte mit einer signifikanten Ziffer,
-    auch 10 oder 300, sind „kurz“)."""
-    with pytest.raises(StatisticsInputError):
-        benford_test([d, *rest], digits=2)
+def test_i8_einstellige_werte_im_zweiziffertest(d: int, rest) -> None:
+    """I8: Zwei-Ziffern-Test zählt ohne Angabe nach ``pad`` d als 10·d; ``exclude``
+    weist nur einstellig geschriebene Werte als kurz aus. Runde Beträge wie 10·d
+    oder 100·d bleiben in beiden Regeln mit der Gruppe 10·d im Test."""
+    assert benford_test([d, *rest], digits=2) == benford_test(
+        [d, *rest], digits=2, short_values="pad"
+    )
+    for runde in (10 * d, 100 * d, Decimal(d * 10).quantize(Decimal("0.01"))):
+        ex = benford_test([runde, *rest], digits=2, short_values="exclude")
+        assert ex.short_excluded == 0 and ex.rows[10 * d - 10].observed_count >= 1
     pad = benford_test([d, *rest], digits=2, short_values="pad")
     assert pad.short_excluded == 0
     assert pad.rows[10 * d - 10].observed_count >= 1

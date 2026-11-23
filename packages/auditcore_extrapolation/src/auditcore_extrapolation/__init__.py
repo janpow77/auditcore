@@ -31,6 +31,8 @@ from .design import Stratum, TopStratum, split_top_stratum, split_top_stratum_fo
 from .equal_probability import (
     EstimatorCheck,
     estimator_check,
+    general_stratified_precision,
+    is_proportional,
     mean_per_unit_error,
     precision,
     ratio_error,
@@ -69,6 +71,7 @@ from .groups import (
     assess_groups,
     assess_groups_over_periods,
 )
+from .limits import MINIMUM_SAMPLE_UNITS, MINIMUM_STRATUM_UNITS, TComparison
 from .methods import METHODS, Method, project
 from .mus import mus_precision, tainting_projection
 from .negative import (
@@ -92,7 +95,7 @@ from .subsampling import (
 )
 from .units import ErrorClasses, SampleUnit
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 __all__ = [
     "EXACT",
@@ -101,6 +104,8 @@ __all__ = [
     "MATERIAL",
     "MATERIALITY_RATE",
     "METHODS",
+    "MINIMUM_SAMPLE_UNITS",
+    "MINIMUM_STRATUM_UNITS",
     "NOT_MATERIAL",
     "PROFILES",
     "RECOMMENDED_PROFILE",
@@ -134,6 +139,7 @@ __all__ = [
     "StratumResult",
     "SubSample",
     "SubSampleResult",
+    "TComparison",
     "TopStratum",
     "TotalErrorRate",
     "__version__",
@@ -150,7 +156,9 @@ __all__ = [
     "evaluate_discovery",
     "evaluate_stop_or_go",
     "extension_factor",
+    "general_stratified_precision",
     "incremental_allowances",
+    "is_proportional",
     "mean_per_unit_error",
     "mus_precision",
     "poisson_factor",

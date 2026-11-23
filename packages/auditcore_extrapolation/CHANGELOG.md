@@ -1,5 +1,66 @@
 # Changelog auditcore_extrapolation
 
+## 0.3.0 – 2026-11-23
+
+Korrekturen nach der Prüfung vom 23.11.2026. Ergebnisse können sich ändern.
+Der REST-Vertrag `evaluation/1` erhält neue Felder; geändert ist zudem der
+Wert von `not_applicable` der RER (deutsche Begründung statt Vorlagenwortlaut,
+dieser steht jetzt in `not_applicable_template`).
+
+- **Geschichtete Präzision bei nicht proportionaler Aufteilung:** Die Formel
+  N × z × s_w / √n (Anhang II DelVO (EU) 2023/67, Leitfaden 6.1.2.4/6.2.2.4)
+  setzt n_h = n × N_h / N voraus. Weicht die Aufteilung ab (`is_proportional`),
+  rechnet die Bibliothek mit SE = z × √(Σ N_h² s_h² / n_h)
+  (`general_stratified_precision`), nennt den Wert der Anhang-Formel in einer
+  Warnung und weist den Schritt „Präzision (nicht proportionale Aufteilung)“
+  aus. Beispiel: 285 302 € → 637 955 €, Ergebnis „nicht schlüssig“ statt
+  „nicht wesentlich“.
+- **Mindestumfang (Art. 5 Abs. 5 DelVO (EU) 2023/67):** Unter 30 geprüften
+  Einheiten (über alle Zeiträume) Warnung und Einschränkung, bei einer
+  Zufallsschicht zusätzlich der Vergleichswert mit dem t-Quantil
+  (`extra.minimum_sample`, `TComparison`); maßgeblich bleibt z. Unter 3
+  Einheiten je Zufallsschicht Warnung und Einschränkung mit Fundstelle. Bei
+  der Basispräzision SI × RF(0) (MUS ohne Fehler) entfällt der t-Vergleich,
+  weil sie eine Poisson-Grenze ist und nicht auf z beruht.
+- **MUS-Standardansatz ohne Fehler:** Statt SE = 0 gilt die Basispräzision
+  SI × RF(0) (Leitfaden 6.3.5.5), ebenso bei MUS-Verhältnisschätzung ohne
+  systemische Fehler; Formelwert in `extra.zero_errors`. In allen anderen
+  Fällen mit Präzision 0 oder Schichten ohne Streuung wird die Einschränkung
+  ausgewiesen.
+- Neue Felder `Projection.limitations` und `TotalErrorRate.limitations`; die
+  Erläuterung beginnt dann mit „Eingeschränkte Aussagekraft“.
+- **Konservativer Ansatz:** Basispräzision und erster Zuschlag verwenden
+  dasselbe RF(0) = 2,31 (Tabelle 4 des Leitfadens, 90 %); vorher nahm der
+  erste Zuschlag 2,30 aus Anhang 3. Begründung: Der Text von 6.3.5.5 rechnet
+  den ersten Zuschlag mit (RF(1) − RF(0) − 1) = (3,89 − 2,31 − 1) = 0,58, also
+  mit dem Wert aus Tabelle 4, mit dem auch die Basispräzision SI × RF(0)
+  gebildet wird. Ein RF(0) für beide Schritte hält die Rechnung in sich
+  stimmig; 2,31 ist zudem die aufgerundete und damit vorsichtigere Fassung des
+  Poisson-Werts −ln 0,10 = 2,3026, die Anhang 3 als 2,30 druckt. Das
+  Rechenbeispiel 6.3.5.7 mischt beide Werte. Wirkung: Faktor des ersten
+  Zuschlags 0,58 statt 0,59; die Basispräzision bleibt unverändert. Im
+  Beispiel 6.3.5.7 (SI 30.881.485 €) sinkt der erste Zuschlag um
+  0,01 × t₁ × SI, bei einem Fehleranteil t₁ ≤ 1 um höchstens 308.815 €
+  (0,24 % der ULE 126.869.926 €); die Zeile ist im Leitfaden nicht gedruckt.
+  Die Umstellung gilt für jedes Niveau der Tabelle 4: Wo sie von Anhang 3
+  abweicht, ändert sich der erste Zuschlag ebenso (70 %: 1,21 statt 1,20;
+  50 %: 0,70 statt 0,69). Niveaus, die Tabelle 4 nicht enthält, ergeben beim
+  Profil `kom_2017_tables` einen Eingabefehler; dann das Profil `exact`
+  wählen. `reliability_factor(0, …)` gibt weiterhin den gedruckten Wert von
+  Anhang 3 zurück (2,30 bei 90 %).
+- Herleitung: „Gesamtfehler / BV“, „ULE = Gesamtfehler + SE“, „CBV = BV −
+  Gesamtfehler“ statt „TER“ für den Betrag.
+- RER: deutsche Begründung in `not_applicable` („Entfällt: Restfehlerquote nicht
+  über der Signifikanzschwelle von 2 %.“), Wortlaut der Vorlage in
+  `not_applicable_template`; neues Feld `residual_negative` und Hinweis bei
+  negativem J/K (nicht auf null begrenzt).
+- Meldung zu leeren Schichten nennt die Schicht: „Schicht 'B': Mindestens eine
+  geprüfte Einheit erforderlich.“
+- Quellen: DelVO (EU) 2023/67 als Rechtsgrundlage 2021–2027; EGESIF_16-0014-01
+  als Fassung für 2007–2013 und 2014–2020 gekennzeichnet.
+- MUS-Verhältnisschätzung: Kennzahlen der Schicht auch bei Quote 0.
+- Zielwerttests `tests/test_zielwerte_hochrechnung.py` (unabhängig nachgerechnet).
+
 ## 0.2.1 – 2026-10-17
 
 - Extra `dev`: Testabhängigkeit `auditcore_sampling==0.2.5`.

@@ -108,7 +108,7 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_extrapolation.__all__` (80):
+Öffentliche Namen aus `auditcore_extrapolation.__all__` (85):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -118,6 +118,8 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `MATERIAL` | Konstante | – | `evaluation` |
 | `MATERIALITY_RATE` | Konstante | Materiality threshold of 2 % of the expenditure (guidance section 4.9). | `evaluation` |
 | `METHODS` | Konstante | – | `methods` |
+| `MINIMUM_SAMPLE_UNITS` | Konstante | – | `limits` |
+| `MINIMUM_STRATUM_UNITS` | Konstante | – | `limits` |
 | `NOT_MATERIAL` | Konstante | – | `evaluation` |
 | `PROFILES` | Konstante | – | `factors` |
 | `RECOMMENDED_PROFILE` | Konstante | – | `factors` |
@@ -151,6 +153,7 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `StratumResult` | Datenklasse | Projection of one stratum (sampling part plus exhaustive units). | `projection` |
 | `SubSample` | Datenklasse | Audited sub-sample of one unit: the unit id, estimator and sub-strata. | `subsampling` |
 | `SubSampleResult` | Datenklasse | Projected error of one unit from its sub-sample (section 7.6.3). | `subsampling` |
+| `TComparison` | Datenklasse | Precision with Student's t for n − 1 degrees of freedom instead of z. | `limits` |
 | `TopStratum` | Datenklasse | Result of the iterative separation of the high-value stratum. | `design` |
 | `TotalErrorRate` | Datenklasse | TER with its components, upper limit and conclusion (not the RER). | `evaluation` |
 | `__version__` | Wert | – | `(Paketstamm)` |
@@ -167,7 +170,9 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `evaluate_discovery` | Funktion | Discovery sampling (guidance section 7.9.6): no deviation and p_u ≤ critical rate → met. | `attribute_variants` |
 | `evaluate_stop_or_go` | Funktion | Stop-or-go sampling (guidance section 7.9.6): stop when p_u ≤ tolerable rate, else extend. | `attribute_variants` |
 | `extension_factor` | Funktion | f = original / reduced (book values or numbers of units, guidance section 7.10.2). | `exclusion` |
+| `general_stratified_precision` | Funktion | SE = z × √(Σ N_h² × s_h² / n_h) for any allocation (no finite population correction). | `equal_probability` |
 | `incremental_allowances` | Funktion | IA_i for the positive taintings by decreasing projected error (guidance section 6.3.5.5). | `conservative` |
+| `is_proportional` | Funktion | True if every n_h is within one unit of n × N_h / N (allocation up to rounding). | `equal_probability` |
 | `mean_per_unit_error` | Funktion | EE₁ = N × ΣE_i / n (section 6.1.1.3, also 6.2.1.3 and 6.4.5.1). | `equal_probability` |
 | `mus_precision` | Funktion | SE = z × √(Σ BV_hs² / n_hs × s_rh²) (section 6.3.2.5; H = 1: 6.3.1.5). | `mus` |
 | `poisson_factor` | Funktion | Upper Poisson limit λ with P(X ≤ errors \| λ) = 1 − CL (exact Appendix 3 factor). | `factors` |
@@ -208,6 +213,7 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `auditcore_extrapolation.exclusion` | Units excluded under proportional control: extension to the original population. |
 | `auditcore_extrapolation.factors` | Confidence coefficients: z values and Poisson reliability factors. |
 | `auditcore_extrapolation.groups` | Groups of programmes and multi-fund programmes (guidance section 7.8). |
+| `auditcore_extrapolation.limits` | Minimum sample sizes and the reliability of the precision of statistical samples. |
 | `auditcore_extrapolation.methods` | Named projection methods and the single entry point :func:`project`. |
 | `auditcore_extrapolation.mus` | Monetary unit sampling (MUS), standard approach, also stratified. |
 | `auditcore_extrapolation.negative` | Negative sampling units: separate population and reconciliation (guidance section 4.6). |
@@ -257,8 +263,10 @@ nachgerechneten Beispiele: [docs/referenzfaelle.md](docs/referenzfaelle.md).
 ## Herkunft und Charakterisierung
 
 Neuimplementierung ohne Vorläufercode (`provenance.json`: `NEW_IMPLEMENTATION`).
-Grundlage sind der KOM-Leitfaden EGESIF_16-0014-01 (20.01.2017) und die
-RER-Vorlage CPRE_23-0013-01 Annex 3; beide sind nur mit Fundstellen zitiert.
+Grundlage sind der KOM-Leitfaden EGESIF_16-0014-01 (20.01.2017; Fassung für
+die Programmplanungszeiträume 2007–2013 und 2014–2020), für 2021–2027 die
+Delegierte Verordnung (EU) 2023/67 (Art. 5 Abs. 5, Anhang II) und die
+RER-Vorlage CPRE_23-0013-01 Annex 3; alle sind nur mit Fundstellen zitiert.
 Nachweis: die Beispiele 6.1.1.6, 6.1.2.6, 6.2.1.6, 6.3.1.7, 6.3.2.7, 6.3.5.7
 und 6.4.7 des Leitfadens sowie die Beispiele A, B, C.1, C.2 und „Negative
 units“ der Vorlage sind als Tests nachgerechnet; alle 510 Faktoren aus Anhang 3
@@ -269,7 +277,11 @@ Hochrechnungen in audit_designer und audit-portal steht in
 
 ## Bewusste Verhaltensabweichungen
 
-Keine gegenüber einem Vorläufer (Neuimplementierung). Druckfehler und
+Keine gegenüber einem Vorläufer (Neuimplementierung). Seit 0.3.0 prüft die
+Bibliothek zusätzlich die Grenzen der Formeln: nicht proportionale Aufteilung
+(allgemeine Formel statt Anhang II), Mindestumfang nach Art. 5 Abs. 5 DelVO (EU)
+2023/67 mit t-Vergleichswert, Basispräzision SI × RF(0) beim MUS ohne Fehler;
+Einschränkungen stehen in `limitations` (siehe CHANGELOG). Druckfehler und
 Rundungen des Leitfadens sind in [docs/referenzfaelle.md](docs/referenzfaelle.md)
 festgehalten.
 

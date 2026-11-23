@@ -99,6 +99,16 @@ Antwort (gekürzt):
 (nicht-statistisch, Art. 79 Abs. 2 VO (EU) 2021/1060: unter 300 Einheiten, mindestens 10 %).
 Bei `difference` enthält `difference` den korrigierten Buchwert, die Untergrenze und BV − TE.
 
+Seit 0.3.0 tragen `projection` und `total_error_rate` die Liste `limitations`
+(Einschränkungen der Aussagekraft; jede steht auch in `warnings`). Weitere
+`extra`-Schlüssel: `minimum_sample` (unter 30 geprüften Einheiten, Art. 5 Abs. 5
+DelVO (EU) 2023/67: `audited_units`, `minimum`, `t_comparison` mit
+`degrees_of_freedom`, `t`, `z`, `precision_t` bei einer Zufallsschicht, sonst
+`null`) und `zero_errors` (MUS ohne Fehler: `standard_precision`, `interval`,
+`reliability_factor`, `basic_precision`; `precision` ist dann SI × RF(0)). Bei
+nicht proportionaler Aufteilung geschichteter SRS-Stichproben ist `precision`
+z × √(Σ N_h² s_h²/n_h); der Wert der Anhang-II-Formel steht in `warnings`.
+
 ### `POST /residual`
 
 ```json
@@ -109,7 +119,10 @@ Bei `difference` enthält `difference` den korrigierten Buchwert, die Untergrenz
 `total_error_rate` ist ein Anteil (0,025 = 2,5 %). Zahlen werden als Dezimalzahlen
 gelesen; die Antwort enthält je Zeile A–M `value` (Zahl) und `exact` (Dezimaltext),
 `rate`, `rate_rounded` (ROUND(K; 4)), `exceeds_materiality`, bei Überschreitung
-`extrapolated_correction` (L) und `rate_after_correction` (M), sonst `not_applicable`.
+`extrapolated_correction` (L) und `rate_after_correction` (M), sonst `not_applicable`
+(deutsche Begründung; Wortlaut der Vorlage in `not_applicable_template`).
+`residual_negative` ist `true`, wenn die Finanzkorrekturen den Risikobetrag übersteigen
+(J und K negativ, nicht auf null begrenzt; Hinweis in `notes`).
 
 ### `POST /evaluate/export`
 

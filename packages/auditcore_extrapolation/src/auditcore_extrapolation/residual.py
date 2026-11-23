@@ -26,7 +26,16 @@ from .sources import RER_TEMPLATE_ID, cpr
 Number = Decimal | int | float
 THRESHOLD_QUANTUM = Decimal("0.0001")
 DEFAULT_MATERIALITY = Decimal("0.02")
+#: Wording of the template for rows L and M when K does not exceed the threshold.
 NOT_APPLICABLE = "NA RTER not exceeding 2%"
+
+
+def not_applicable_text(materiality: Decimal, rate: Decimal | None) -> str:
+    """German reason why rows L and M stay empty."""
+    if rate is None:
+        return "Entfällt: Restfehlerquote nicht berechenbar (I = 0)."
+    percent = f"{(materiality * 100).normalize():f}".replace(".", ",")
+    return f"Entfällt: Restfehlerquote nicht über der Signifikanzschwelle von {percent} %."
 
 
 def to_decimal(value: object, name: str) -> Decimal:
@@ -116,7 +125,13 @@ class ResidualErrorRate:
                 }
                 for row, label, value in self.rows()
             ],
-            "not_applicable": None if self.exceeds_materiality else NOT_APPLICABLE,
+            "not_applicable": (
+                None
+                if self.exceeds_materiality
+                else not_applicable_text(self.materiality_rate, self.rate)
+            ),
+            "not_applicable_template": None if self.exceeds_materiality else NOT_APPLICABLE,
+            "residual_negative": self.residual_amount < 0,
             "notes": list(self.notes),
         }
 
@@ -166,6 +181,13 @@ def residual_error_rate(
             after = (j - correction) / (i - correction)
     if k is None:
         notes.append("I = 0: Restfehlerquote nicht berechenbar (Vorlage: IFERROR).")
+    if j < 0:
+        notes.append(
+            "Die Finanzkorrekturen (H) übersteigen den Risikobetrag (G): Verbleibender "
+            "Risikobetrag (J) und Restfehlerquote (K) sind negativ. Der Wert ist rechnerisch und "
+            "bedeutet nur, dass mehr korrigiert wurde als der Risikobetrag; er ist keine "
+            "Fehlerquote unter null und wird hier nicht auf null begrenzt."
+        )
     notes.append(
         f"RER nach {cpr('2 Nr. 36')}; nicht mit der Gesamtfehlerquote (TER) zu verwechseln."
     )
