@@ -180,6 +180,39 @@ def test_e2_mus_standard_without_errors_uses_the_basic_precision() -> None:
     assert result.total_error_rate.conclusion == INCONCLUSIVE
 
 
+def test_mus_without_errors_below_30_units_has_no_t_comparison() -> None:
+    """10 Einheiten ohne Fehler: Präzision ist die Basispräzision SI × RF(0)
+    (Poisson-Grenze), deshalb kein t-Vergleich und kein Hinweis auf die
+    Normalverteilung. SI = 1 000 000 / 10 = 100 000 €; SE = 100 000 × 2,31."""
+    units = tuple(SampleUnit(f"u{i}", 10_000 + i * 1000) for i in range(1, 11))
+    projection = project(
+        "mus.standard",
+        [Stratum("A", 1_000_000, units)],
+        confidence_level=0.9,
+        factor_profile=KOM_TABLES,
+    )
+    assert projection.precision == pytest.approx(100_000 * 2.31)
+    minimum = projection.extra["minimum_sample"]
+    assert isinstance(minimum, dict) and "t_comparison" not in minimum
+    text = " ".join(projection.limitations)
+    assert "Basispräzision SI × RF(0)" in text and "Normalverteilung" not in text
+    assert any("× 2,31 =" in w for w in projection.warnings)
+
+
+def test_random_stratum_below_three_units_is_a_limitation() -> None:
+    """Schicht B mit 2 Einheiten, gesamt 32: Art. 5 Abs. 5 verlangt je
+    Zufallsschicht mindestens 3 Einheiten; das ist eine Einschränkung."""
+    a = Stratum(
+        "A", 3_000_000, _units("a", 10_000, [0.0] * 28 + [100.0, 50.0]), population_size=300
+    )
+    b = Stratum("B", 200_000, _units("b", 10_000, [0.0, 80.0]), population_size=20)
+    result = assess("srs.mean_per_unit", [a, b], confidence_level=0.9, factor_profile=KOM_TABLES)
+    small = [t for t in result.projection.limitations if t.startswith("Schicht 'B'")]
+    assert len(small) == 1 and "mindestens 3" in small[0]
+    assert small[0] in result.projection.warnings
+    assert result.total_error_rate.limitations == result.projection.limitations
+
+
 def test_e4_conservative_allowances_use_one_basic_factor() -> None:
     """E4: n 50, BV 10 Mio. €, SI 200 000 €, Fehlerquoten 0,5 und 0,1.
 

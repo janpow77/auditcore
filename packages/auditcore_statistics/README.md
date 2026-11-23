@@ -124,8 +124,8 @@ enthält den REST-Vertrag für `<flowaudit-benford>`
   (`short_values="pad"`); `"exclude"` schließt nur sie aus und weist Anzahl,
   Anteil (`short_share`) und ab mehr als 5 % eine Warnung (`warnings`) aus.
   `lower_bound` schließt kleine Beträge aus und zählt sie
-  (`below_lower_bound`); die REST-Schnittstelle setzt für die zweistelligen
-  Tests 10 voreingestellt.
+  (`below_lower_bound`); ohne Angabe gilt keine Grenze, auch in der
+  REST-Schnittstelle.
 - `legacy_run_benford`: Profil `LEGACY_METHOD`, reproduziert
   `flowstat@d665ac2 run_benford`.
 - `legacy_flowinvoice_benford`: Profil `flowinvoice.fraud_benford`

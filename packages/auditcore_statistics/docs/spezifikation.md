@@ -40,9 +40,9 @@ NumPy-Paarweisenreihenfolge (bitgleich zu den Quellen).
 | Nr. | Invariante | Test |
 |---|---|---|
 | I1 | Die Benford-Erwartungswerte summieren über 1..9 und über 10..99 zu 1 und fallen streng mit der Ziffer. | `test_i1_erwartete_anteile_summieren_zu_eins` |
-| I2 | Jeder Eingabewert ist entweder analysiert oder als fehlend, null bzw. kurz ausgeschlossen ausgewiesen (Summe = Eingabelänge); beobachtete Anzahlen summieren zur Zahl der analysierten Werte, Anteile zu 1; negative Werte werden gezählt. | `test_i2_jeder_wert_ist_gezaehlt_oder_als_ausschluss_ausgewiesen` |
+| I2 | Jeder Eingabewert ist entweder analysiert oder als fehlend, null, kurz bzw. unter der Untergrenze (`below_lower_bound`) ausgeschlossen ausgewiesen (Summe = Eingabelänge); beobachtete Anzahlen summieren zur Zahl der analysierten Werte, Anteile zu 1; negative Werte werden gezählt. | `test_i2_jeder_wert_ist_gezaehlt_oder_als_ausschluss_ausgewiesen` |
 | I3 | Das Ergebnis hängt nicht von der Reihenfolge der Werte ab. | `test_i3_reihenfolge_der_werte_ist_ohne_einfluss` |
-| I4 | Vorzeichen, Skalierung mit Zehnerpotenzen und Datentyp (int, float, Decimal) desselben Werts ändern die Ziffernzeilen nicht. | `test_i4_vorzeichen_skala_und_datentyp_sind_ohne_einfluss` |
+| I4 | Vorzeichen, Skalierung mit Zehnerpotenzen und Datentyp (int, float, Decimal) desselben Werts ändern die Ziffernzeilen nicht. Ausnahme bei `short_values="exclude"`: Ob ein Wert kurz ist, hängt von der Schreibweise ab (500 zählt zu 50, 5,00 ist kurz); die Invariante gilt dort für die analysierten Werte gleicher Schreibweise. | `test_i4_vorzeichen_skala_und_datentyp_sind_ohne_einfluss` |
 | I5 | χ² ≥ 0, p ∈ [0, 1], Freiheitsgrade 8 bzw. 89; `chi2_survival` fällt monoton mit der Statistik. | `test_i5_statistik_nichtnegativ_p_wert_im_einheitsintervall`, `test_i5_p_wert_faellt_mit_der_statistik` |
 | I6 | Ohne ausdrückliches Signifikanzniveau gibt es keine Aussage (`deviates_at_level` = `None`); mit Niveau gilt genau p < α. | `test_i6_aussage_nur_mit_ausdruecklichem_niveau` |
 | I7 | Konformität: MAD ≥ 0 und liegt im gemeldeten Band des Profils; auffällige Ziffern sind genau die mit z > z_krit; der Zweitziffertest hat 10 Zeilen, deren Erwartungsanteile zu 1 summieren. | `test_i7_konformitaet_mad_band_und_z_test_konsistent` |
@@ -59,7 +59,8 @@ NumPy-Paarweisenreihenfolge (bitgleich zu den Quellen).
   angegeben; Signifikanzniveau nicht in (0, 1); `lower_bound` nicht > 0;
 - Wert ist Wahrheitswert, Text oder anderer Nicht-Zahlentyp; `±inf` bzw.
   nicht endliches `Decimal`;
-- kein auswertbarer Wert (alles fehlend, null oder kurz ausgeschlossen);
+- kein auswertbarer Wert (alles fehlend, null, kurz oder unter `lower_bound`
+  ausgeschlossen);
 - unbekanntes Bewertungsprofil oder unbekannter Test; Test passt nicht zu
   `digits` des Ergebnisses.
 

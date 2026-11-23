@@ -18,11 +18,19 @@ Fehlerbehebung mit geänderter Voreinstellung.
   `below_lower_bound`, `warnings` und die Eigenschaft `short_share`;
   `to_dict` zusätzlich `lower_bound`, `excluded.below_lower_bound`,
   `short_share`, `warnings`.
-- REST `/analyze`: `short_values` optional (Standard `pad`), neues Feld
-  `lower_bound` (fehlt → 10 bei `first_two`/`second`, keine Grenze bei
-  `first`; `null` schaltet die Grenze ab). Katalog mit `defaults`.
+- REST `/analyze`: `short_values` optional (Standard `pad`), neues optionales
+  Feld `lower_bound` (Zahl > 0 oder `null`). Fehlt es, gilt keine Grenze; der
+  Dienst lässt ohne Anforderung keinen Wert weg, Anfragen ohne das Feld
+  rechnen wie bisher. Katalog mit `defaults`.
+- Vertragsänderung `/analyze`: Fehlt `short_values` bei `first_two`/`second`,
+  gilt jetzt `pad` (vorher Pflichtfeld); `excluded` hat zusätzlich
+  `below_lower_bound`, `distribution` die Felder `lower_bound`, `short_share`
+  und `warnings`; `method` lautet `auditcore_statistics.benford/2`.
+- Ziffern werden exakt gelesen, ohne Rundung auf die Decimal-Kontextgenauigkeit
+  von 28 Stellen: 10**29 − 1 gehört zur Gruppe 99 (vorher 10).
 - Legacy-Adapter `legacy_run_benford` in `_legacy_flowstat.py` verschoben,
-  öffentlicher Import unverändert.
+  öffentlicher Import unverändert; `LegacyDtype` und `numpy_round` bleiben aus
+  `auditcore_statistics.benford` importierbar.
 - Zielwerttests `tests/test_zielwerte_benford.py` (Fälle B3, B7).
 
 ## 0.4.0 – 2026-11-04 – Konzentrationsmaße

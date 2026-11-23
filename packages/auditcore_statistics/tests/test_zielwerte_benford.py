@@ -124,3 +124,27 @@ def test_version_strings_agree() -> None:
     result = benford_test([12], digits=1)
     assert result.to_dict()["library"] == f"auditcore_statistics {auditcore_statistics.__version__}"
     assert result.method == "auditcore_statistics.benford/2"
+
+
+def test_digits_are_read_without_context_rounding() -> None:
+    """29 Neunen (10**29 − 1) gehören zur Gruppe 99, nicht nach Rundung auf
+    28 Stellen zur Gruppe 10; ebenso ``Decimal('9.999…')`` mit 29 Ziffern."""
+    long = Decimal("9." + "9" * 28)
+    result = benford_test([10**29 - 1, long, 5, Decimal("5.00")], digits=2, short_values="pad")
+    groups = {row.digit: row.observed_count for row in result.rows if row.observed_count}
+    assert groups == {50: 2, 99: 2}
+
+
+def test_every_value_is_counted_with_a_lower_bound() -> None:
+    """I2 mit Untergrenze: analysiert + fehlend + null + kurz + unter der Grenze = Eingabe."""
+    values = [None, 0, 3, 9.99, 12, 500, 5, -40, 1_000]
+    r = benford_test(values, digits=2, short_values="exclude", lower_bound=10)
+    total = r.analysed + r.missing + r.zero + r.short_excluded + r.below_lower_bound
+    assert total == len(values)
+    assert (r.analysed, r.below_lower_bound) == (4, 3)
+
+
+def test_legacy_names_stay_importable_from_benford() -> None:
+    from auditcore_statistics.benford import LegacyDtype, numpy_round
+
+    assert numpy_round(2.5, 0) == 2.0 and LegacyDtype is not None

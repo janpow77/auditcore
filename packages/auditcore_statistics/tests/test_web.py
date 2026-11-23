@@ -19,7 +19,7 @@ def test_catalogue_offers_tests_short_values_and_profiles() -> None:
     assert [t["id"] for t in data["tests"]] == ["first", "first_two", "second"]
     assert [s["id"] for s in data["short_values"]] == ["pad", "exclude"]
     assert data["defaults"]["short_values"] == "pad"
-    assert data["defaults"]["lower_bound"] == {"first": None, "first_two": 10.0, "second": 10.0}
+    assert data["defaults"]["lower_bound"] == {"first": None, "first_two": None, "second": None}
     assert data["profiles"][0]["id"] == "nigrini.2012"
 
 
@@ -67,17 +67,21 @@ def test_analyse_rejects_invalid_requests(change: dict[str, object], message: st
         analyse(body)
 
 
-def test_two_digit_tests_default_to_pad_and_lower_bound_10() -> None:
-    """Ohne Angaben: ``pad`` und Untergrenze 10; 4,2 und 1,9 fallen unter die Grenze."""
+def test_two_digit_tests_default_to_pad_without_lower_bound() -> None:
+    """Ohne Angaben: ``pad`` und keine Untergrenze, kein Wert fällt still weg.
+
+    Mit ``lower_bound`` 10 fallen 4,2 und 1,9 unter die Grenze und werden gezählt.
+    """
     result = analyse({"test": "second", "profile": "nigrini.2012", "values": VALUES})
     distribution = result["distribution"]
-    assert distribution["short_values"] == "pad" and distribution["lower_bound"] == 10.0
-    assert distribution["excluded"]["below_lower_bound"] == 2
-    assert result["conformity"]["analysed"] == 11
-    unbounded = analyse(
-        {"test": "second", "profile": "nigrini.2012", "values": VALUES, "lower_bound": None}
+    assert distribution["short_values"] == "pad" and distribution["lower_bound"] is None
+    assert distribution["excluded"]["below_lower_bound"] == 0
+    assert result["conformity"]["analysed"] == 13
+    bounded = analyse(
+        {"test": "second", "profile": "nigrini.2012", "values": VALUES, "lower_bound": 10}
     )
-    assert unbounded["conformity"]["analysed"] == 13
+    assert bounded["distribution"]["excluded"]["below_lower_bound"] == 2
+    assert bounded["conformity"]["analysed"] == 11
     with pytest.raises(ContractError, match="short_values"):
         analyse({**VALUES_BODY, "short_values": "drop"})
     with pytest.raises(ContractError, match="lower_bound"):

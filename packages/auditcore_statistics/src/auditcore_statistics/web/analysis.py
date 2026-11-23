@@ -49,10 +49,6 @@ SHORT_VALUES = (
         "default": False,
     },
 )
-#: Default lower bound of the two-digit tests when the request omits ``lower_bound``;
-#: amounts below 10 are commonly left out of the first-two digits test. ``null``
-#: in the request switches the bound off. Application default, not a norm.
-DEFAULT_LOWER_BOUND_TWO_DIGITS = 10.0
 
 
 class ContractError(rest.ContractError):
@@ -73,11 +69,7 @@ def catalogue() -> dict[str, object]:
         "standard_levels": list(STANDARD_LEVELS),
         "defaults": {
             "short_values": "pad",
-            "lower_bound": {
-                "first": None,
-                "first_two": DEFAULT_LOWER_BOUND_TWO_DIGITS,
-                "second": DEFAULT_LOWER_BOUND_TWO_DIGITS,
-            },
+            "lower_bound": {"first": None, "first_two": None, "second": None},
         },
         "limits": {"max_values": MAX_VALUES},
     }
@@ -152,9 +144,14 @@ def _short_values(body: Mapping[str, object], digits: int) -> ShortValues | None
     return cast(ShortValues, _field(body, "short_values", ("exclude", "pad")))
 
 
-def _lower_bound(body: Mapping[str, object], digits: int) -> float | None:
+def _lower_bound(body: Mapping[str, object]) -> float | None:
+    """Optional lower bound on the amount; without it no value is excluded.
+
+    No default bound: the service does not set a threshold that is not given
+    by a norm or by the client, and leaves no value out unasked.
+    """
     if "lower_bound" not in body:
-        return DEFAULT_LOWER_BOUND_TWO_DIGITS if digits == 2 else None
+        return None
     bound = _number(body["lower_bound"], "lower_bound")
     if bound is not None and not (math.isfinite(bound) and bound > 0):
         raise ContractError("'lower_bound' muss größer als 0 sein oder null.")
@@ -170,7 +167,7 @@ def analyse(payload: object) -> dict[str, object]:
     profile_id = _field(body, "profile", tuple(PROFILES))
     digits = TEST_LABELS[test][1]
     short = _short_values(body, digits)
-    bound = _lower_bound(body, digits)
+    bound = _lower_bound(body)
     values = _values(body.get("values"))
     try:
         result = benford_test(values, digits=digits, short_values=short, lower_bound=bound)

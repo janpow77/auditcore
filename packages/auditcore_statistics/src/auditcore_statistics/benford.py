@@ -27,7 +27,9 @@ from decimal import Decimal
 from typing import Any, Literal
 
 from ._legacy_flowstat import LEGACY_METHOD, legacy_run_benford
+from ._legacy_flowstat import LegacyDtype as LegacyDtype  # import path before 0.5.0
 from .numeric import chi2_survival, numpy_pairwise_sum
+from .numeric import numpy_round as numpy_round  # import path before 0.5.0
 
 __all__ = [
     "LEGACY_METHOD",
@@ -149,15 +151,19 @@ def expected_share(digit: int) -> float:
 def _significant_digits(value: int | float | Decimal) -> str:
     """Digits of a positive finite number from its first non-zero digit on.
 
-    The value is read exactly (floats via their shortest repr) and normalised,
-    so 5, 5.0 and Decimal("5.00") give the same digits. Zeros of the integer
-    part are kept: 500 → "500", 1E+3 → "1000", 10.00 → "10"; only zeros after
-    the decimal point are dropped, they do not change the significand.
+    The value is read exactly (floats via their shortest repr), without
+    rounding to a context precision, so 5, 5.0 and Decimal("5.00") give the
+    same digits and 10**29 − 1 stays "999…". Zeros of the integer part are
+    kept: 500 → "500", 1E+3 → "100…", 10.00 → "10"; only zeros after the
+    decimal point are dropped, they do not change the significand.
     """
     text = repr(value) if isinstance(value, float) else str(value)
-    sign, digits, exponent = Decimal(text).normalize().as_tuple()
-    del sign
+    _, raw, exponent = Decimal(text).as_tuple()
+    digits = list(raw)
     places = exponent if isinstance(exponent, int) else 0
+    while places < 0 and len(digits) > 1 and digits[-1] == 0:
+        digits.pop()
+        places += 1
     # Two digits suffice for every test; capping the zeros keeps 1e300 cheap.
     written = "".join(str(d) for d in digits) + "0" * min(max(places, 0), 2)
     return written.lstrip("0")

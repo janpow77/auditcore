@@ -2,8 +2,10 @@
 
 ## 0.3.0 – 2026-11-23
 
-Korrekturen nach der Prüfung vom 23.11.2026. Ergebnisse können sich ändern;
-der REST-Vertrag `evaluation/1` ist nur um Felder erweitert.
+Korrekturen nach der Prüfung vom 23.11.2026. Ergebnisse können sich ändern.
+Der REST-Vertrag `evaluation/1` erhält neue Felder; geändert ist zudem der
+Wert von `not_applicable` der RER (deutsche Begründung statt Vorlagenwortlaut,
+dieser steht jetzt in `not_applicable_template`).
 
 - **Geschichtete Präzision bei nicht proportionaler Aufteilung:** Die Formel
   N × z × s_w / √n (Anhang II DelVO (EU) 2023/67, Leitfaden 6.1.2.4/6.2.2.4)
@@ -17,7 +19,9 @@ der REST-Vertrag `evaluation/1` ist nur um Felder erweitert.
   Einheiten (über alle Zeiträume) Warnung und Einschränkung, bei einer
   Zufallsschicht zusätzlich der Vergleichswert mit dem t-Quantil
   (`extra.minimum_sample`, `TComparison`); maßgeblich bleibt z. Unter 3
-  Einheiten je Zufallsschicht Warnung mit Fundstelle.
+  Einheiten je Zufallsschicht Warnung und Einschränkung mit Fundstelle. Bei
+  der Basispräzision SI × RF(0) (MUS ohne Fehler) entfällt der t-Vergleich,
+  weil sie eine Poisson-Grenze ist und nicht auf z beruht.
 - **MUS-Standardansatz ohne Fehler:** Statt SE = 0 gilt die Basispräzision
   SI × RF(0) (Leitfaden 6.3.5.5), ebenso bei MUS-Verhältnisschätzung ohne
   systemische Fehler; Formelwert in `extra.zero_errors`. In allen anderen
@@ -34,7 +38,16 @@ der REST-Vertrag `evaluation/1` ist nur um Felder erweitert.
   stimmig; 2,31 ist zudem die aufgerundete und damit vorsichtigere Fassung des
   Poisson-Werts −ln 0,10 = 2,3026, die Anhang 3 als 2,30 druckt. Das
   Rechenbeispiel 6.3.5.7 mischt beide Werte. Wirkung: Faktor des ersten
-  Zuschlags 0,58 statt 0,59; die Basispräzision bleibt unverändert.
+  Zuschlags 0,58 statt 0,59; die Basispräzision bleibt unverändert. Im
+  Beispiel 6.3.5.7 (SI 30.881.485 €) sinkt der erste Zuschlag um
+  0,01 × t₁ × SI, bei einem Fehleranteil t₁ ≤ 1 um höchstens 308.815 €
+  (0,24 % der ULE 126.869.926 €); die Zeile ist im Leitfaden nicht gedruckt.
+  Die Umstellung gilt für jedes Niveau der Tabelle 4: Wo sie von Anhang 3
+  abweicht, ändert sich der erste Zuschlag ebenso (70 %: 1,21 statt 1,20;
+  50 %: 0,70 statt 0,69). Niveaus, die Tabelle 4 nicht enthält, ergeben beim
+  Profil `kom_2017_tables` einen Eingabefehler; dann das Profil `exact`
+  wählen. `reliability_factor(0, …)` gibt weiterhin den gedruckten Wert von
+  Anhang 3 zurück (2,30 bei 90 %).
 - Herleitung: „Gesamtfehler / BV“, „ULE = Gesamtfehler + SE“, „CBV = BV −
   Gesamtfehler“ statt „TER“ für den Betrag.
 - RER: deutsche Begründung in `not_applicable` („Entfällt: Restfehlerquote nicht

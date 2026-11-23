@@ -38,6 +38,11 @@ def _euro(amount: float) -> str:
     return f"{amount:,.0f} €".replace(",", ".")
 
 
+def _decimal(value: float, places: int) -> str:
+    """German decimal comma (2,31; 1,833)."""
+    return f"{value:.{places}f}".replace(".", ",")
+
+
 def stratum_minimum(strata: Sequence[Stratum]) -> list[str]:
     """Warnings for random strata with fewer than three sampled units."""
     return [
@@ -54,14 +59,23 @@ def audited_units(strata: Sequence[Stratum]) -> int:
     return sum(len(s.units) + len(s.exhaustive_units) for s in strata)
 
 
-def sample_minimum_text(count: int) -> str:
-    """Limitation text for a sample below 30 units."""
+def sample_minimum_text(count: int, *, basic_precision: bool = False) -> str:
+    """Limitation text for a sample below 30 units.
+
+    ``basic_precision`` True when the precision is the Poisson basic precision
+    SI × RF(0) (MUS without errors) rather than a z-based normal approximation.
+    """
+    basis = (
+        "Die Präzision ist die Basispräzision SI × RF(0) und beruht auf dieser kleinen Stichprobe; "
+        if basic_precision
+        else "Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen "
+        "Stichproben die Unsicherheit; "
+    )
     return (
         f"Stichprobe mit {count} {'Einheit' if count == 1 else 'Einheiten'} unter dem "
         f"Mindestumfang von {MINIMUM_SAMPLE_UNITS} Einheiten (Art. 5 Abs. 5 der {DELVO}; "
-        "Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und "
-        "unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und "
-        "Schlussfolgerung sind nur eingeschränkt belastbar."
+        f"Leitfaden, Abschn. 5.1). {basis}Fehlerobergrenze und Schlussfolgerung sind nur "
+        "eingeschränkt belastbar."
     )
 
 
@@ -85,10 +99,16 @@ class TComparison:
 
 
 def t_comparison(projection: Projection, strata: Sequence[Stratum]) -> TComparison | None:
-    """Comparison value for one random stratum of a z-based method, else ``None``."""
+    """Comparison value for one random stratum of a z-based method, else ``None``.
+
+    ``None`` as well when the precision is the basic precision SI × RF(0) of a
+    MUS sample without errors: it is a Poisson limit, not z-based.
+    """
     sampled = [s for s in strata if s.units]
     level, z, se = projection.confidence_level, projection.coefficient, projection.precision
     if projection.method not in Z_METHODS or len(sampled) != 1:
+        return None
+    if "zero_errors" in projection.extra:
         return None
     if level is None or z is None or se is None or z <= 0 or len(sampled[0].units) < 2:
         return None
@@ -101,7 +121,7 @@ def _with_sample_minimum(projection: Projection, strata: Sequence[Stratum]) -> P
     count = audited_units(strata)
     if count >= MINIMUM_SAMPLE_UNITS:
         return projection
-    text = sample_minimum_text(count)
+    text = sample_minimum_text(count, basic_precision="zero_errors" in projection.extra)
     details: dict[str, object] = {"audited_units": count, "minimum": MINIMUM_SAMPLE_UNITS}
     steps = list(projection.steps)
     warnings = [*projection.warnings, text]
@@ -118,7 +138,7 @@ def _with_sample_minimum(projection: Projection, strata: Sequence[Stratum]) -> P
         )
         warnings.append(
             f"Vergleichswert mit dem t-Quantil ({comparison.degrees_of_freedom} Freiheitsgrade, "
-            f"t = {comparison.t:.3f} statt z = {comparison.z:.3f}): Präzision "
+            f"t = {_decimal(comparison.t, 3)} statt z = {_decimal(comparison.z, 3)}): Präzision "
             f"{_euro(comparison.precision_t)} statt {_euro(projection.precision or 0.0)}. "
             "Maßgeblich bleibt nach Anhang II der z-Wert."
         )
@@ -153,8 +173,8 @@ def _mus_zero_errors(projection: Projection, strata: Sequence[Stratum]) -> Proje
     basic = interval * factor
     warning = (
         "Keine Fehler in der Stichprobe: Die Standardformel ergäbe die Präzision 0. Als "
-        f"Präzision gilt die Basispräzision SI × RF(0) = {_euro(interval)} × {factor:.2f} = "
-        f"{_euro(basic)} (Leitfaden, Abschn. 6.3.5.5)."
+        f"Präzision gilt die Basispräzision SI × RF(0) = {_euro(interval)} × "
+        f"{_decimal(factor, 2)} = {_euro(basic)} (Leitfaden, Abschn. 6.3.5.5)."
     )
     steps = [
         *projection.steps,
@@ -237,7 +257,12 @@ def apply(projection: Projection, strata: Sequence[Stratum], *, complete: bool) 
     is only stated as a limitation, so that the periods keep matching the
     stratified formulas (guidance sections 6.3.3.4/6.3.3.5).
     """
-    checked = replace(projection, warnings=(*projection.warnings, *stratum_minimum(strata)))
+    small = stratum_minimum(strata)
+    checked = replace(
+        projection,
+        warnings=(*projection.warnings, *small),
+        limitations=(*projection.limitations, *small),
+    )
     checked = _with_zero_spread(checked, strata, complete=complete)
     return _with_sample_minimum(checked, strata) if complete else checked
 
