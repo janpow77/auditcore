@@ -26,8 +26,15 @@ der REST-Vertrag `evaluation/1` ist nur um Felder erweitert.
 - Neue Felder `Projection.limitations` und `TotalErrorRate.limitations`; die
   Erläuterung beginnt dann mit „Eingeschränkte Aussagekraft“.
 - **Konservativer Ansatz:** Basispräzision und erster Zuschlag verwenden
-  dasselbe RF(0) (Tabelle 4, 2,31 bei 90 %; vorher 2,30 aus Anhang 3 für den
-  Zuschlag). Wie im Text von 6.3.5.5 (Faktor 0,58).
+  dasselbe RF(0) = 2,31 (Tabelle 4 des Leitfadens, 90 %); vorher nahm der
+  erste Zuschlag 2,30 aus Anhang 3. Begründung: Der Text von 6.3.5.5 rechnet
+  den ersten Zuschlag mit (RF(1) − RF(0) − 1) = (3,89 − 2,31 − 1) = 0,58, also
+  mit dem Wert aus Tabelle 4, mit dem auch die Basispräzision SI × RF(0)
+  gebildet wird. Ein RF(0) für beide Schritte hält die Rechnung in sich
+  stimmig; 2,31 ist zudem die aufgerundete und damit vorsichtigere Fassung des
+  Poisson-Werts −ln 0,10 = 2,3026, die Anhang 3 als 2,30 druckt. Das
+  Rechenbeispiel 6.3.5.7 mischt beide Werte. Wirkung: Faktor des ersten
+  Zuschlags 0,58 statt 0,59; die Basispräzision bleibt unverändert.
 - Herleitung: „Gesamtfehler / BV“, „ULE = Gesamtfehler + SE“, „CBV = BV −
   Gesamtfehler“ statt „TER“ für den Betrag.
 - RER: deutsche Begründung in `not_applicable` („Entfällt: Restfehlerquote nicht
