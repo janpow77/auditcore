@@ -44,6 +44,29 @@ class Reason(StrEnum):
     INVALID_CHECKSUM = "invalid_checksum"
 
 
+class CheckDigit(StrEnum):
+    """What the check of the check digit established (:attr:`CheckResult.check_digit`)."""
+
+    #: The check digit was computed and matches.
+    VERIFIED = "verified"
+    #: The check digit was computed and does not match (result INVALID).
+    FAILED = "failed"
+    #: The identifier (variant) carries a check digit, but the library cannot verify it.
+    NOT_CHECKED = "not_checked"
+    #: The identifier (variant) has no check digit (e.g. BIC, Handelsregisternummer).
+    NONE = "none"
+
+
+class Verdict(StrEnum):
+    """Overall verdict: ``valid`` only if the format holds *and* the check digit is verified."""
+
+    VALID = "valid"
+    #: Format valid, but no check digit exists or it could not be verified.
+    FORMAT_VALID = "format_valid"
+    INVALID = "invalid"
+    MISSING = "missing"
+
+
 _EMPTY: Mapping[str, DetailValue] = MappingProxyType({})
 
 
@@ -65,6 +88,9 @@ class CheckResult:
     country: str | None = None
     profile: str = "strict"
     details: Mapping[str, DetailValue] = field(default_factory=lambda: _EMPTY)
+    #: Check digit status; ``None`` if the check did not get that far (or a legacy
+    #: profile does not report it).
+    check_digit: CheckDigit | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "details", MappingProxyType(dict(self.details)))
@@ -76,6 +102,17 @@ class CheckResult:
 
     def __bool__(self) -> bool:
         return self.valid
+
+    @property
+    def verdict(self) -> Verdict:
+        """``valid`` only with a verified check digit; otherwise ``format_valid``."""
+        if self.status is Status.MISSING:
+            return Verdict.MISSING
+        if self.status is Status.INVALID:
+            return Verdict.INVALID
+        if self.check_digit is CheckDigit.VERIFIED:
+            return Verdict.VALID
+        return Verdict.FORMAT_VALID
 
     def to_dict(self) -> dict[str, DetailValue | dict[str, DetailValue]]:
         """JSON-compatible representation (``raw`` as ``str`` or ``None``)."""
@@ -89,6 +126,8 @@ class CheckResult:
             "country": self.country,
             "profile": self.profile,
             "details": dict(self.details),
+            "check_digit": None if self.check_digit is None else self.check_digit.value,
+            "verdict": self.verdict.value,
         }
 
 
@@ -101,10 +140,20 @@ def valid(
     profile: str = "strict",
     message: str = "",
     details: Mapping[str, DetailValue] | None = None,
+    check_digit: CheckDigit | None = None,
 ) -> CheckResult:
     """Build a VALID result."""
     return CheckResult(
-        kind, Status.VALID, raw, normalized, None, message, country, profile, details or _EMPTY
+        kind,
+        Status.VALID,
+        raw,
+        normalized,
+        None,
+        message,
+        country,
+        profile,
+        details or _EMPTY,
+        check_digit,
     )
 
 
@@ -118,8 +167,13 @@ def invalid(
     profile: str = "strict",
     details: Mapping[str, DetailValue] | None = None,
 ) -> CheckResult:
-    """Build an INVALID (or MISSING, if ``reason`` is MISSING) result."""
+    """Build an INVALID (or MISSING, if ``reason`` is MISSING) result.
+
+    A wrong check digit (``INVALID_CHECKSUM``) sets :attr:`CheckResult.check_digit`
+    to ``failed``; other reasons leave it ``None`` (check not reached).
+    """
     status = Status.MISSING if reason is Reason.MISSING else Status.INVALID
+    check_digit = CheckDigit.FAILED if reason is Reason.INVALID_CHECKSUM else None
     return CheckResult(
-        kind, status, raw, None, reason, message, country, profile, details or _EMPTY
+        kind, status, raw, None, reason, message, country, profile, details or _EMPTY, check_digit
     )

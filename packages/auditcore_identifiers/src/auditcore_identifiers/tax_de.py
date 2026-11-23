@@ -8,7 +8,14 @@ from collections.abc import Mapping
 from types import MappingProxyType
 
 from auditcore_identifiers.checksums import is_ascii_digits, mod_11_10_check_digit, prepare
-from auditcore_identifiers.result import CheckResult, IdentifierKind, Reason, invalid, valid
+from auditcore_identifiers.result import (
+    CheckDigit,
+    CheckResult,
+    IdentifierKind,
+    Reason,
+    invalid,
+    valid,
+)
 
 #: First digits of the 13-digit federal Steuernummer (ELSTER) per Land.
 #: Layout ``FFFF0BBBUUUUP``; NRW uses ``FFFF0BBBBUUUP`` (same length and position of the 0).
@@ -33,7 +40,20 @@ FEDERAL_TAX_NUMBER_PREFIXES: Mapping[str, str] = MappingProxyType(
     }
 )
 _TAX_NUMBER_SEPARATORS = "/-."
-_REGISTER = re.compile(r"(HRA|HRB|GNR|GSR|PR|VR)([0-9]{1,6})([A-Z]{1,2})?", re.ASCII)
+_REGISTER = re.compile(r"(HRA|HRB|GNR|GSR|PR|VR)([1-9][0-9]{0,5})([A-Z]{1,2})?", re.ASCII)
+_REGISTER_WORD = r"(?:HRA|HRB|GnR|GsR|PR|VR)"
+#: ``Amtsgericht Köln HRB 123`` / ``AG Köln, HRB 123`` (court in front).
+_COURT_FIRST = re.compile(
+    rf"\s*(?:Registergericht\s*:?\s*)?(?:Amtsgericht|AG)\s+(?P<court>[^,;:()]+?)\s*[,;:]?\s*"
+    rf"(?:Registernummer\s*:?\s*)?(?P<number>{_REGISTER_WORD}\b.*?)\s*",
+    re.IGNORECASE,
+)
+#: ``HRB 123, Amtsgericht Köln`` / ``HRB 123 (AG Köln)`` (court behind).
+_COURT_LAST = re.compile(
+    rf"\s*(?P<number>{_REGISTER_WORD}\b[^,;(]*?)\s*[,;]?\s*\(?\s*"
+    rf"(?:Registergericht\s*:?\s*)?(?:Amtsgericht|AG)\s+(?P<court>[^,;:()]+?)\s*\)?\s*",
+    re.IGNORECASE,
+)
 _REGISTER_TYPES = {"HRA": "HRA", "HRB": "HRB", "GNR": "GnR", "GSR": "GsR", "PR": "PR", "VR": "VR"}
 
 
@@ -71,7 +91,7 @@ def check_tax_id(value: object) -> CheckResult:
         )
     if mod_11_10_check_digit(text[:10]) != int(text[10]):
         return invalid(kind, value, Reason.INVALID_CHECKSUM, "Prüfziffer der Steuer-ID ist falsch")
-    return valid(kind, value, text, country="DE")
+    return valid(kind, value, text, country="DE", check_digit=CheckDigit.VERIFIED)
 
 
 def format_tax_id(value: str) -> str:
@@ -107,7 +127,12 @@ def check_tax_number(value: object) -> CheckResult:
         )
     if len(text) in (10, 11):
         return valid(
-            kind, value, text, country="DE", details={"format": "land", "checksum": "not_checked"}
+            kind,
+            value,
+            text,
+            country="DE",
+            details={"format": "land", "checksum": "not_checked"},
+            check_digit=CheckDigit.NOT_CHECKED,
         )
     if len(text) != 13:
         return invalid(
@@ -130,15 +155,34 @@ def check_tax_number(value: object) -> CheckResult:
         text,
         country="DE",
         details={"format": "federal", "land": land, "checksum": "not_checked"},
+        check_digit=CheckDigit.NOT_CHECKED,
     )
+
+
+def _split_court(value: object) -> tuple[object, str | None]:
+    """Separate a register court given in front of or behind the number."""
+    if not isinstance(value, str):
+        return value, None
+    for pattern in (_COURT_FIRST, _COURT_LAST):
+        match = pattern.fullmatch(value)
+        if match is not None:
+            return match.group("number"), " ".join(match.group("court").split())
+    return value, None
 
 
 def check_register_number(value: object) -> CheckResult:
     """Handelsregisternummer (format only): ``HRA``/``HRB``/``GnR``/``GsR``/``PR``/``VR``
-    plus 1–6 digits and an optional suffix of one or two letters (e.g. ``HRB 12345 B``).
-    The register court is not part of the number and not checked."""
+    plus a number from 1 to 999999 without leading zero and an optional suffix of one or
+    two letters (e.g. ``HRB 12345 B``).
+
+    A register court in front of or behind the number (``Amtsgericht Köln HRB 123``,
+    ``HRB 123, AG Köln``) is separated and reported in ``details["court"]``; the court
+    name itself is taken over as written and not checked against a list of courts.
+    Whether the number is registered is not checked either (no check digit).
+    """
     kind = IdentifierKind.REGISTER_NUMBER
-    text = prepare(kind, value, separators=".")
+    number_part, court = _split_court(value)
+    text = prepare(kind, number_part, separators=".")
     if isinstance(text, CheckResult):
         return text
     match = _REGISTER.fullmatch(text)
@@ -147,7 +191,8 @@ def check_register_number(value: object) -> CheckResult:
             kind,
             value,
             Reason.INVALID_FORMAT,
-            "Registernummer: Registerart (HRA, HRB, GnR, GsR, PR, VR) und Nummer",
+            "Registernummer: Registerart (HRA, HRB, GnR, GsR, PR, VR) und Nummer ab 1 "
+            "ohne führende Null",
         )
     register, number, suffix = match.group(1), match.group(2), match.group(3)
     normalized = f"{_REGISTER_TYPES[register]} {number}" + (f" {suffix}" if suffix else "")
@@ -156,5 +201,11 @@ def check_register_number(value: object) -> CheckResult:
         value,
         normalized,
         country="DE",
-        details={"register": _REGISTER_TYPES[register], "number": number, "suffix": suffix},
+        details={
+            "register": _REGISTER_TYPES[register],
+            "number": number,
+            "suffix": suffix,
+            "court": court,
+        },
+        check_digit=CheckDigit.NONE,
     )

@@ -66,37 +66,52 @@ fehlt im Original) – deshalb ist dieselbe IBAN dort gültig.
 
 ### Ergebnis
 
-`CheckResult(kind, status, raw, normalized, reason, message, country, profile, details)`
+`CheckResult(kind, status, raw, normalized, reason, message, country, profile, details, check_digit)`
 
 - `status`: `VALID`, `INVALID`, `MISSING` (wie `ValidationStatus` in flowinvoice).
+  `VALID` heißt „Format gültig“ – ob eine Prüfziffer geprüft wurde, sagt erst
+  `check_digit`.
+- `check_digit` (`CheckDigit`, neu in 0.3.0): `verified` (Prüfziffer gerechnet und
+  richtig), `failed` (falsch, Status `INVALID`), `not_checked` (die Kennung hat eine
+  Prüfziffer, das Verfahren ist aber nicht veröffentlicht oder nicht umgesetzt:
+  USt-IdNr. `GB`/`XI`, französische Nummern mit Buchstabenschlüssel, Landesformat
+  der Steuernummer), `none` (keine Prüfziffer: BIC, Handelsregisternummer,
+  tschechische Geburtsnummer bis 1953, `GBGD…`/`GBHA…`). Legacy-Profile setzen kein
+  `check_digit` (`None`).
+- `verdict` (`Verdict`, abgeleitet, neu in 0.3.0): `valid` **nur** mit
+  `check_digit == verified`; ein `VALID` ohne geprüfte Prüfziffer ist
+  `format_valid`; sonst `invalid` bzw. `missing`. Tabellen und Exporte sollen
+  `verdict` und `check_digit` zeigen, nicht `status` allein.
 - `reason`: `missing`, `invalid_type`, `invalid_characters`, `invalid_length`,
   `invalid_format`, `unknown_country`, `country_mismatch`, `invalid_checksum`.
 - `message`: deutsch (Profil `strict`) bzw. Originalwortlaut (Legacy-Profile).
 - `details`: z. B. `bban`, `expected_length`, `test_bic`, `checksum`
-  (`verified`/`not_checked`), `land`, `format`. `to_dict()` liefert JSON.
+  (`verified`/`not_checked`, nur noch zur Abwärtsverträglichkeit), `court`, `land`,
+  `format`. `to_dict()` liefert JSON einschließlich `check_digit` und `verdict`.
 
 ### Prüfungen (Profil `strict`)
 
 | Funktion | Prüfung |
 |---|---|
-| `check_iban` | Zeichen A–Z/0–9, Land im SWIFT-IBAN-Register (Release 101, 89 Länder), Länge, BBAN-Aufbau, ISO 7064 MOD 97-10; Papierform mit Leerzeichen, Bindestrichen und Präfix `IBAN` wird angenommen. Nationale Kontoprüfziffern werden nicht geprüft. |
-| `check_bic` | 8 oder 11 Zeichen, ISO 9362:2014 (Institutskennung alphanumerisch), Land nach ISO 3166-1 (+XK); `details["test_bic"]` |
-| `check_vat_id` | Formate aller 27 EU-Staaten (`EL` für Griechenland), `XI`, `GB`; Prüfziffer DE (ISO 7064 MOD 11,10) und AT (BMF); andere Länder `checksum: not_checked`. `country=` schränkt ein und ergänzt ein fehlendes Präfix. |
+| `check_iban` | Zeichen A–Z/0–9, Land im SWIFT-IBAN-Register (Release 101, 89 Länder), Länge, BBAN-Aufbau, ISO 7064 MOD 97-10 (Prüfziffern nur 02–98; `00`, `01`, `99` sind ungültig); Papierform mit Leerzeichen, Bindestrichen und Präfix `IBAN` wird angenommen. Nationale Kontoprüfziffern werden nicht geprüft. |
+| `check_bic` | 8 oder 11 Zeichen, ISO 9362:2014 (Institutskennung alphanumerisch), Land nach ISO 3166-1 (+XK); `details["test_bic"]`. Keine Prüfziffer, kein Abgleich mit dem SWIFT-Verzeichnis: Ergebnis höchstens `format_valid` (auch ein Wort wie `DEUTSCHLAND` ist dem Aufbau nach eine BIC mit Land `SC`). |
+| `check_vat_id` | Formate und nationale Prüfziffern aller 27 EU-Staaten (`EL` für Griechenland; DE ISO 7064 MOD 11,10, AT BMF, übrige in `vat_checks`/`vat_checks_mixed`, öffentlich `CHECK_DIGIT_PROCEDURES`), Strukturregeln wie Amtscode IT, `B00` NL, Geburtsdatum CZ/SK/BG/LV; `XI`, `GB` nur Format (`not_checked`). `country=` schränkt ein und ergänzt ein fehlendes Präfix. |
 | `check_tax_id` | Steuer-ID: 11 Ziffern, erste ≠ 0, genau eine Ziffer zwei- oder dreimal (nicht drei direkt hintereinander), MOD 11,10 |
 | `check_tax_number` | Steuernummer grob: 10/11 Ziffern (Landesformat) oder 13 Ziffern (Bundesformat, Länderpräfix, 5. Stelle 0); keine Länderprüfziffer |
-| `check_lei` | 20 Zeichen, zwei Prüfziffern, ISO 7064 MOD 97-10; `extract_lei` für Freitext |
-| `check_register_number` | HRA/HRB/GnR/GsR/PR/VR + Nummer + optionaler Buchstabenzusatz (nur Format) |
+| `check_lei` | 20 Zeichen, zwei Prüfziffern, ISO 7064 MOD 97-10 (nur 02–98); `extract_lei` für Freitext |
+| `check_register_number` | HRA/HRB/GnR/GsR/PR/VR + Nummer 1–999999 ohne führende Null + optionaler Buchstabenzusatz (nur Format); ein Registergericht davor oder dahinter (`Amtsgericht Köln HRB 123`, `HRB 123, AG Köln`, `Registergericht: …, Registernummer: …`) wird abgetrennt und in `details["court"]` ausgewiesen, aber nicht gegen ein Gerichtsverzeichnis geprüft |
 
 Hilfen: `format_iban`, `iban_check_digits`, `lei_check_digits`,
 `de_vat_check_digit`, `at_uid_check_digit`, `normalize_vat_id`, `format_tax_id`.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_identifiers.__all__` (28):
+Öffentliche Namen aus `auditcore_identifiers.__all__` (30):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
 | `PROFILES` | Konstante | – | `profiles` |
 | `STRICT` | Konstante | – | `profiles` |
+| `CheckDigit` | Aufzählung | What the check of the check digit established (:attr:`CheckResult.check_digit`). | `result` |
 | `CheckResult` | Datenklasse | Outcome of one identifier check. | `result` |
 | `IdentifierKind` | Aufzählung | Kinds of identifiers the library checks. | `result` |
 | `Profile` | Datenklasse | A named set of check functions with its origin and reason for existence. | `profiles` |
@@ -104,16 +119,17 @@ Hilfen: `format_iban`, `iban_check_digits`, `lei_check_digits`,
 | `Status` | Aufzählung | Outcome of a check (same three values as the flowinvoice ``ValidationStatus``). | `result` |
 | `UnknownProfileError` | Ausnahme | The profile name is not registered (a programming error, not a bad value). | `profiles` |
 | `UnsupportedKindError` | Ausnahme | The profile has no check for this identifier kind. | `profiles` |
+| `Verdict` | Aufzählung | Overall verdict: ``valid`` only if the format holds *and* the check digit is verified. | `result` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `at_uid_check_digit` | Funktion | Check digit of the Austrian UID (``ATU`` + 8 digits, BMF procedure). | `vat` |
 | `check` | Funktion | Check ``value`` as identifier ``kind`` under ``profile``. | `(Paketstamm)` |
 | `check_bic` | Funktion | BIC (ISO 9362): 8/11 characters, ISO 3166 country code (strict). | `(Paketstamm)` |
 | `check_iban` | Funktion | IBAN (ISO 13616): register length, BBAN structure, MOD 97-10 (strict). | `(Paketstamm)` |
 | `check_lei` | Funktion | LEI (ISO 17442): 20 characters, MOD 97-10 (strict). | `(Paketstamm)` |
-| `check_register_number` | Funktion | Handelsregisternummer (format only). | `(Paketstamm)` |
+| `check_register_number` | Funktion | Handelsregisternummer (format only, register court separated). | `(Paketstamm)` |
 | `check_tax_id` | Funktion | Steuerliche Identifikationsnummer (11 digits, MOD 11,10). | `(Paketstamm)` |
 | `check_tax_number` | Funktion | Steuernummer (coarse: Land format 10/11 digits, federal format 13 digits). | `(Paketstamm)` |
-| `check_vat_id` | Funktion | USt-IdNr./VAT ID: EU formats, check digits DE and AT (strict). | `(Paketstamm)` |
+| `check_vat_id` | Funktion | USt-IdNr./VAT ID: EU formats and check digits of all member states (strict). | `(Paketstamm)` |
 | `de_vat_check_digit` | Funktion | Check digit of the German USt-IdNr. (ISO 7064 MOD 11,10). | `vat` |
 | `extract_lei` | Funktion | First LEI with correct check digits in a free-text field (e.g. ``"LEI: …"``). | `lei` |
 | `format_iban` | Funktion | Paper form in groups of four (``grouped``) or the electronic form. | `iban` |
@@ -138,6 +154,8 @@ Hilfen: `format_iban`, `iban_check_digits`, `lei_check_digits`,
 | `auditcore_identifiers.result` | Result objects: every check returns a :class:`CheckResult`, never raises for bad input. |
 | `auditcore_identifiers.tax_de` | German tax identifiers: Steuer-IdNr. (§ 139b AO), Steuernummer, Handelsregisternummer. |
 | `auditcore_identifiers.vat` | VAT identification numbers (USt-IdNr.): formats of all EU member states. |
+| `auditcore_identifiers.vat_checks` | Check digits of VAT identification numbers with a plain weighted-sum procedure. |
+| `auditcore_identifiers.vat_checks_mixed` | Check digits of VAT numbers whose number part has several variants. |
 | `auditcore_identifiers.web` | REST contract ``identifiers_ui/1`` for "Kennung prüfen" (extras ``web``, ``fastapi``). |
 <!-- api-overview:end -->
 

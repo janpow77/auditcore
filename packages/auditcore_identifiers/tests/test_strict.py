@@ -93,13 +93,13 @@ def test_vat_normalisation_and_country_argument() -> None:
     assert ai.check_vat_id("de 136.695-976").normalized == "DE136695976"
     assert ai.check_vat_id("136695976", country="de").normalized == "DE136695976"
     assert ai.check_vat_id("U13585627", country="AT").normalized == "ATU13585627"
-    assert ai.check_vat_id("123456789", country="GR").normalized == "EL123456789"
-    assert "EL" in ai.check_vat_id("GR123456789").message
+    assert ai.check_vat_id("094259216", country="GR").normalized == "EL094259216"
+    assert "EL" in ai.check_vat_id("GR094259216").message
     gb = ai.check_vat_id("GB 123 4567 89")
     assert gb.valid and gb.details["eu"] is False and gb.details["checksum"] == "not_checked"
     assert ai.check_vat_id("XI123456789").details["eu"] is True
-    assert ai.check_vat_id("IE1234567WA").valid and ai.check_vat_id("IE1+23456W").valid
-    assert ai.check_vat_id("SE123456789001").valid
+    assert ai.check_vat_id("IE1234567FA").valid and ai.check_vat_id("IE1+23456W").valid
+    assert ai.check_vat_id("SE123456783001").valid
     assert ai.normalize_vat_id(" de-136.695/976 ") == "DE136695976"
 
 

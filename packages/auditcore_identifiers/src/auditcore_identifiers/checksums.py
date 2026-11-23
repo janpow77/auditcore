@@ -31,6 +31,16 @@ def mod97(text: str) -> int:
     return int(alnum_to_digits(text)) % 97
 
 
+def mod97_ok(text: str, check_digits: str) -> bool:
+    """ISO 7064 MOD 97-10: remainder 1 *and* check digits 02–98.
+
+    The check digits are computed as ``98 - (body * 100 mod 97)`` and can therefore only
+    be 02 … 98; ``00``, ``01`` and ``99`` pass the remainder test (they are congruent to
+    97, 98 and 02) but can never be issued (ISO 13616 for IBAN, ISO 17442 for LEI).
+    """
+    return 2 <= int(check_digits) <= 98 and mod97(text) == 1
+
+
 def mod97_check_digits(body: str) -> str:
     """Two check digits so that ``body + digits`` has remainder 1 (ISO 7064 MOD 97-10)."""
     return f"{98 - mod97(body + '00'):02d}"

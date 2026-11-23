@@ -1,5 +1,34 @@
 # Changelog – auditcore_identifiers
 
+## 0.3.0 – 2026-11-23
+
+Korrekturen gegen falsch-positive Ergebnisse; neue Ergebnisfelder.
+
+- **Neu:** `CheckResult.check_digit` (`CheckDigit`: `verified`, `failed`,
+  `not_checked`, `none`) und die abgeleitete Eigenschaft `CheckResult.verdict`
+  (`Verdict`: `valid` nur mit geprüfter Prüfziffer, sonst `format_valid`,
+  `invalid`, `missing`). `to_dict()` enthält beide Felder; `status` bleibt
+  unverändert (`VALID` = Format gültig). Legacy-Profile: `check_digit = None`,
+  `verdict = format_valid`.
+- **IBAN und LEI:** Prüfziffern `00`, `01` und `99` sind ungültig (ISO 7064
+  MOD 97-10 erzeugt nur 02–98), auch wenn der Rest Modulo 97 eins ist.
+- **USt-IdNr.:** nationale Prüfziffernverfahren aller 27 EU-Staaten
+  (`vat_checks`, `vat_checks_mixed`, Tabelle `vat.CHECK_DIGIT_PROCEDURES`) und
+  Strukturregeln in den Formaten (BE nicht nur Nullen, DK/MT/PT erste Ziffer
+  ≠ 0, IT Amtscode, LT 8./11. Stelle `1`, NL nicht `B00`, CZ 8-stellig nicht
+  mit 9 beginnend, Geburtsdatum bei CZ/SK/BG/LV). Abgleich offline gegen
+  python-stdnum 2.2 (Gültige und je eine verfälschte Nummer je Stichprobe) und
+  23 VIES-bestätigte Nummern. `GB`/`XI` und französische Buchstabenschlüssel:
+  `not_checked`, Meldung „Prüfziffer … nicht prüfbar“.
+- **Handelsregisternummer:** Nummer ab 1 ohne führende Null (`HRB 0` ungültig);
+  Registergericht vor oder hinter der Nummer wird abgetrennt
+  (`details["court"]`); `check_digit = none`.
+- **BIC:** `check_digit = none`, damit höchstens `format_valid`.
+- **Steuer-ID** `verified`, **Steuernummer** `not_checked`.
+- REST-Vertrag `identifiers_ui/1` erweitert (abwärtsverträglich): je Zeile
+  `check_digit_label` und `verdict_label`, im Katalog `check_digit_labels` und
+  `verdict_labels`, in der Stapelsumme `format_valid`.
+
 ## 0.2.1 – 2026-10-03
 
 Gemeinsamer Release v0.6.0 mit aktuellem Paketstand, Dokumentation und
