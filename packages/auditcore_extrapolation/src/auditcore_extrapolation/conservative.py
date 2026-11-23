@@ -52,10 +52,17 @@ def incremental_allowances(
     confidence_level: float,
     profile_id: str,
 ) -> tuple[Allowance, ...]:
-    """IA_i for the positive taintings by decreasing projected error (guidance section 6.3.5.5)."""
+    """IA_i for the positive taintings by decreasing projected error (guidance section 6.3.5.5).
+
+    RF(0) of the first allowance is the factor of the basic precision
+    (:func:`basic_reliability_factor`), so that BP and allowances use one RF(0):
+    with ``kom_2017_tables`` 2.31 at 90 % from Table 4, as in the text of
+    section 6.3.5.5 ((3.89 − 2.31 − 1) = 0.58). Appendix 3 prints 2.30 for
+    zero errors, and the worked example 6.3.5.7 mixes both values.
+    """
     ordered = sorted((t for t in taintings if t[1] > 0), key=lambda t: (-t[1], t[0]))
     rows = []
-    previous = reliability_factor(0, confidence_level, profile_id)
+    previous = basic_reliability_factor(confidence_level, profile_id)
     for order, (unit_id, tainting) in enumerate(ordered, start=1):
         current = reliability_factor(order, confidence_level, profile_id)
         factor = current - previous - 1
