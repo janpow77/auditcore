@@ -132,7 +132,7 @@ def check_stratum(stratum: Stratum, *, needs_population_size: bool) -> Stratum:
     """Validate a stratum for the chosen method."""
     if not stratum.name.strip():
         raise ExtrapolationInputError("Jede Schicht braucht einen Namen.")
-    check_units(stratum.units + stratum.exhaustive_units, minimum=1)
+    check_units(stratum.units + stratum.exhaustive_units, minimum=1, stratum=stratum.name)
     _check_numbers(stratum)
     _check_exclusions(stratum)
     size = stratum.population_size
