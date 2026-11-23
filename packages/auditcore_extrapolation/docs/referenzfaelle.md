@@ -1,10 +1,13 @@
 # Formeln, Quellen und Referenzfälle
 
 Quelle der Formeln: Europäische Kommission, *Guidance on sampling methods for
-audit authorities*, EGESIF_16-0014-01 vom 20.01.2017 (im Folgenden „Leitfaden“),
-und die Vorlage *RER calculation* CPRE_23-0013-01 Annex 3. Die Formeln gelten
-für den Zeitraum 2021–2027 unverändert (Art. 79 VO (EU) 2021/1060); Begriffe
-TER und RER nach Art. 2 Nr. 35 und 36 der Verordnung.
+audit authorities*, EGESIF_16-0014-01 vom 20.01.2017 (Fassung für die
+Programmplanungszeiträume 2007–2013 und 2014–2020; im Folgenden „Leitfaden“),
+und die Vorlage *RER calculation* CPRE_23-0013-01 Annex 3. Für 2021–2027 regelt
+die Delegierte Verordnung (EU) 2023/67 die Stichprobe (Art. 5, Anhang II;
+gestützt auf Art. 79 VO (EU) 2021/1060); daraus prüft die Bibliothek den
+Mindestumfang von 30 Einheiten und 3 Einheiten je Zufallsschicht (Art. 5
+Abs. 5). Begriffe TER und RER nach Art. 2 Nr. 35 und 36 VO (EU) 2021/1060.
 
 ## Formeln
 
@@ -14,18 +17,18 @@ TER und RER nach Art. 2 Nr. 35 und 36 der Verordnung.
 | Mittelwertschätzung | EE = N × ΣE / n | 6.1.1.3 | `mean_per_unit_error` |
 | Verhältnisschätzung | EE = BV′ × ΣE / ΣBV′ᵢ | 6.1.1.3; Anhang 1, 2.3 | `ratio_error` |
 | Präzision | SE = N × z × s / √n; q-Variable qᵢ = Eᵢ − (ΣE/ΣBV) × BVᵢ | 6.1.1.4 | `precision`, `ratio_q_values` |
-| geschichtet | SE = N × z × s_w / √n, s_w² = Σ N_h/N × s_h² | 6.1.2.4, 6.2.2.4 | `stratified_precision` |
+| geschichtet | SE = N × z × s_w / √n, s_w² = Σ N_h/N × s_h² (nur bei proportionaler Aufteilung, Anhang II DelVO (EU) 2023/67); sonst SE = z × √(Σ N_h² s_h²/n_h) | 6.1.2.4, 6.2.2.4 | `stratified_precision`, `general_stratified_precision`, `is_proportional` |
 | Schätzerwahl | Verhältnis, wenn COV(E, BV)/VAR(BV) > ER/2 | 6.1.1.3 | `estimator_check` |
-| Differenzenschätzung | CBV = BV − TER, LL = CBV − SE, Vergleich mit BV − TE | 6.2.1.5; Anhang 1, 3 | `evaluate` |
+| Differenzenschätzung | CBV = BV − Gesamtfehler, LL = CBV − SE, Vergleich mit BV − TE | 6.2.1.5; Anhang 1, 3 | `evaluate` |
 | MUS | EE = EE_e + Σ BV_hs/n_hs × Σ Eᵢ/BVᵢ | 6.3.1.4, 6.3.2.4 | `tainting_projection` |
 | MUS-Präzision | SE = z × √(Σ BV_hs²/n_hs × s_rh²) | 6.3.1.5, 6.3.2.5 | `mus_precision` |
 | MUS-Verhältnis | EE_s = BV′_s × Σ(E/BV)/Σ(BV′/BV), SE = z × BV_s/√n_s × s_rq | Anhang 1, 4.2 | `project` |
 | Hochwertschicht | BVᵢ > BV/n, iterativ BVᵢ > BV_s/n_s | 6.3.1.3 | `split_top_stratum` |
-| konservativ | SI = BV/n, BP = SI × RF(0), IAᵢ = (RF(i) − RF(i−1) − 1) × SI × Eᵢ/BVᵢ | 6.3.5 | `incremental_allowances` |
+| konservativ | SI = BV/n, BP = SI × RF(0), IAᵢ = (RF(i) − RF(i−1) − 1) × SI × Eᵢ/BVᵢ; RF(0) für BP und ersten Zuschlag einheitlich aus Tabelle 4 | 6.3.5 | `incremental_allowances` |
 | Faktoren | Tabelle 4 (RF(0)), Anhang 3 (RF(k)) bzw. exakte Poisson-Obergrenze | 6.3.5.2, Anhang 3 | `reliability_factor`, `poisson_factor` |
 | TER | EE + abgegrenzte systemische + nicht korrigierte anomale Fehler, geteilt durch BV | Anhang 1, Anhang 6 | `evaluate` |
-| Obergrenze | ULE = TER + SE | 4.12; Anhang 1 | `evaluate` |
-| Ergebnis | TER > TE wesentlich; ULE < TE nicht wesentlich; sonst nicht schlüssig | 4.12, 6.4.6 | `conclude` |
+| Obergrenze | ULE = Gesamtfehler + SE | 4.12; Anhang 1 | `evaluate` |
+| Ergebnis | Gesamtfehler > TE wesentlich; ULE < TE nicht wesentlich; sonst nicht schlüssig | 4.12, 6.4.6 | `conclude` |
 | Mehrere Zeiträume | EE = Σ_t EE_t; SE = √(Σ_t SE_t²), d. h. z × √(Σ_t N_t² s_t²/n_t) bzw. z × √(Σ_t Σ_h BV_hts²/n_hts × s_rhts²) | 6.1.3.3/4, 6.2.3.3/4, 6.3.3.4/5, 6.3.4.4/5, 6.4.9, 7.3; Anhang 2 | `project_periods`, `combined_precision` |
 | Teilstichprobe | EE_i = BV_i × ΣE_ij/ΣBV_ij, N_i × ΣE_ij/n_i oder BV_is/n_is × ΣE_ij/BV_ij je Teilschicht, plus Vollerhebung (z. B. Lead-Partner) | 7.6.3, 6.5.3.3.1 | `project_subsample` |
 | Neuberechnung Konfidenzniveau | z* = z × (TE − Gesamtfehler)/SE; KN* = 1 − 2 × (1 − Φ(z*)) | 7.7; Tabelle 1 in 3.2.1 | `recalculate_confidence` |

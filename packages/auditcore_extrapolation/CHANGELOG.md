@@ -1,5 +1,46 @@
 # Changelog auditcore_extrapolation
 
+## 0.3.0 – 2026-11-23
+
+Korrekturen nach der Prüfung vom 23.11.2026. Ergebnisse können sich ändern;
+der REST-Vertrag `evaluation/1` ist nur um Felder erweitert.
+
+- **Geschichtete Präzision bei nicht proportionaler Aufteilung:** Die Formel
+  N × z × s_w / √n (Anhang II DelVO (EU) 2023/67, Leitfaden 6.1.2.4/6.2.2.4)
+  setzt n_h = n × N_h / N voraus. Weicht die Aufteilung ab (`is_proportional`),
+  rechnet die Bibliothek mit SE = z × √(Σ N_h² s_h² / n_h)
+  (`general_stratified_precision`), nennt den Wert der Anhang-Formel in einer
+  Warnung und weist den Schritt „Präzision (nicht proportionale Aufteilung)“
+  aus. Beispiel: 285 302 € → 637 955 €, Ergebnis „nicht schlüssig“ statt
+  „nicht wesentlich“.
+- **Mindestumfang (Art. 5 Abs. 5 DelVO (EU) 2023/67):** Unter 30 geprüften
+  Einheiten (über alle Zeiträume) Warnung und Einschränkung, bei einer
+  Zufallsschicht zusätzlich der Vergleichswert mit dem t-Quantil
+  (`extra.minimum_sample`, `TComparison`); maßgeblich bleibt z. Unter 3
+  Einheiten je Zufallsschicht Warnung mit Fundstelle.
+- **MUS-Standardansatz ohne Fehler:** Statt SE = 0 gilt die Basispräzision
+  SI × RF(0) (Leitfaden 6.3.5.5), ebenso bei MUS-Verhältnisschätzung ohne
+  systemische Fehler; Formelwert in `extra.zero_errors`. In allen anderen
+  Fällen mit Präzision 0 oder Schichten ohne Streuung wird die Einschränkung
+  ausgewiesen.
+- Neue Felder `Projection.limitations` und `TotalErrorRate.limitations`; die
+  Erläuterung beginnt dann mit „Eingeschränkte Aussagekraft“.
+- **Konservativer Ansatz:** Basispräzision und erster Zuschlag verwenden
+  dasselbe RF(0) (Tabelle 4, 2,31 bei 90 %; vorher 2,30 aus Anhang 3 für den
+  Zuschlag). Wie im Text von 6.3.5.5 (Faktor 0,58).
+- Herleitung: „Gesamtfehler / BV“, „ULE = Gesamtfehler + SE“, „CBV = BV −
+  Gesamtfehler“ statt „TER“ für den Betrag.
+- RER: deutsche Begründung in `not_applicable` („Entfällt: Restfehlerquote nicht
+  über der Signifikanzschwelle von 2 %.“), Wortlaut der Vorlage in
+  `not_applicable_template`; neues Feld `residual_negative` und Hinweis bei
+  negativem J/K (nicht auf null begrenzt).
+- Meldung zu leeren Schichten nennt die Schicht: „Schicht 'B': Mindestens eine
+  geprüfte Einheit erforderlich.“
+- Quellen: DelVO (EU) 2023/67 als Rechtsgrundlage 2021–2027; EGESIF_16-0014-01
+  als Fassung für 2007–2013 und 2014–2020 gekennzeichnet.
+- MUS-Verhältnisschätzung: Kennzahlen der Schicht auch bei Quote 0.
+- Zielwerttests `tests/test_zielwerte_hochrechnung.py` (unabhängig nachgerechnet).
+
 ## 0.2.1 – 2026-10-17
 
 - Extra `dev`: Testabhängigkeit `auditcore_sampling==0.2.5`.

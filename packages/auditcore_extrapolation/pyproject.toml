@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_extrapolation"
-version = "0.2.1"
+version = "0.3.0"
 description = "Projected errors, precision, TER and RER for audit authorities along the Commission sampling guidance"
 readme = "README.md"
 requires-python = ">=3.11"
