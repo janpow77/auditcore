@@ -265,6 +265,20 @@ def bound_bytes(path: Path, root: Path, expected: str) -> bytes:
     return data
 
 
+#: Later reviewed source commits, each released under its own dated MIT statement
+#: of the rights holder. The binding is accepted only together with that statement
+#: under ``rights.<key>``; the original 2026-09-22 authorization stays required.
+LATER_AUTHORIZATIONS: dict[str, dict[tuple[str, str], tuple[str, str]]] = {
+    # Schwärzung auditcore_pdf.redaction aus pdf-editor (Freigabe vom 2026-11-23).
+    "auditcore_pdf": {
+        ("janpow77/pdf-editor", "c5b3e1d1174739b530cc7945baf2ecd4d76c00c0"): (
+            "authorization_redaction",
+            "2026-11-23",
+        )
+    },
+}
+
+
 def _source_bindings(value: Any) -> set[tuple[str, str]]:
     """All repository/commit pairs recorded anywhere in a provenance document."""
     found: set[tuple[str, str]] = set()
@@ -283,16 +297,27 @@ def _source_bindings(value: Any) -> set[tuple[str, str]]:
 
 def check_extracted_authorization(name: str, provenance: dict[str, Any]) -> None:
     """Dated USER_AUTHORIZED_MIT statement and exactly the reviewed source commits."""
-    authorization = provenance.get("rights", {}).get("authorization", {})
-    statement = authorization.get("confirmation")
+    rights = provenance.get("rights", {})
+    later = LATER_AUTHORIZATIONS.get(name, {})
+    statements = [("authorization", "2026-09-22"), *later.values()]
     if (
-        authorization.get("status") != "USER_AUTHORIZED_MIT"
-        or authorization.get("date") != "2026-09-22"
-        or not isinstance(statement, str)
-        or "mit" not in statement.casefold()
-        or _source_bindings(provenance) != EXPECTED_SOURCES[name]
+        not all(_mit_statement(rights.get(key, {}), date) for key, date in statements)
+        or _source_bindings(provenance) != EXPECTED_SOURCES[name] | later.keys()
     ):
         raise ValueError(f"Source-scoped user MIT authorization missing: {name}")
+
+
+def _mit_statement(authorization: Any, date: str) -> bool:
+    """Dated USER_AUTHORIZED_MIT statement that names MIT."""
+    if not isinstance(authorization, dict):
+        return False
+    statement = authorization.get("confirmation")
+    return (
+        authorization.get("status") == "USER_AUTHORIZED_MIT"
+        and authorization.get("date") == date
+        and isinstance(statement, str)
+        and "mit" in statement.casefold()
+    )
 
 
 def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:

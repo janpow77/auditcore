@@ -30,6 +30,18 @@ else:
             PYMUPDF_AVAILABLE = False
 
 
+__all__ = [
+    "MAX_PAGES",
+    "PYMUPDF_AVAILABLE",
+    "fitz",
+    "is_pymupdf_available",
+    "make_matrix",
+    "make_rect",
+    "new_pdf",
+    "open_pdf",
+    "require_engine",
+]
+
 #: Maximale Seitenzahl zur Verhinderung von Ressourcen-Überlastung
 MAX_PAGES = 5000
 
@@ -39,7 +51,7 @@ def is_pymupdf_available() -> bool:
     return PYMUPDF_AVAILABLE
 
 
-def _require_engine() -> None:
+def require_engine() -> None:
     """Bricht mit einem klaren Hinweis ab, wenn PyMuPDF fehlt."""
     if not PYMUPDF_AVAILABLE:
         msg = "PyMuPDF ist nicht verfügbar. Bitte auditcore_pdf[pymupdf] installieren."
@@ -48,25 +60,25 @@ def _require_engine() -> None:
 
 def new_pdf() -> Document:
     """Legt ein leeres PDF-Dokument an (Zusammenführen und Aufteilen)."""
-    _require_engine()
+    require_engine()
     return fitz.open()
 
 
 def make_rect(x0: float, y0: float, x1: float, y1: float) -> Rect:
     """Erzeugt ein Rechteck der PDF-Engine aus Seitenkoordinaten."""
-    _require_engine()
+    require_engine()
     return fitz.Rect(x0, y0, x1, y1)
 
 
 def make_matrix(zoom_x: float, zoom_y: float) -> Matrix:
     """Erzeugt eine Skalierungsmatrix der PDF-Engine."""
-    _require_engine()
+    require_engine()
     return fitz.Matrix(zoom_x, zoom_y)
 
 
 def open_pdf(content: bytes) -> Document:
     """Öffnet ein PDF-Dokument sicher aus einem Byte-Puffer im Arbeitsspeicher."""
-    _require_engine()
+    require_engine()
     if not content:
         raise ValueError("PDF-Inhalt darf nicht leer sein.")
     doc = fitz.open(stream=content, filetype="pdf")
