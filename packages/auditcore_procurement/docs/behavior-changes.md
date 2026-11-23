@@ -130,6 +130,47 @@ Anhang XVII), eingetragen vom 18.04.2016 bis 31.12.2027. Keine der
   so gebauten Profils ändert sich, die Ergebnisse nicht. Mit
   `eu_version="2026.09.3"` bleibt der bisherige Fingerprint.
 
+## Profil 2026.11.1: feste Werte ohne Enddatum, Fassungen nach Stichtag (23.11.2026)
+
+Anlass: Prüfung des Schwellenwert-Rechners einer Anwendung. Soziale und andere
+besondere Dienstleistungen endeten in 2026.10.1 am 31.12.2027, obwohl die
+Richtlinien diese Werte nicht befristen; der Hinweis zu zentralen
+Regierungsbehörden zitierte § 106 Abs. 2 Nr. 1 GWB mit dem Abrufdatum statt der
+Fassung; die Ausnahme für kleine Lose (§ 3 Abs. 9 VgV) fehlte. 2026.10.1 und
+alle älteren Profile bleiben bytegleich und ladbar.
+
+- **Feste Richtlinienwerte ohne Enddatum:** 750.000 EUR (Art. 4 Buchst. d
+  RL 2014/24/EU) und 1.000.000 EUR (Art. 15 Buchst. c RL 2014/25/EU) gelten ab
+  18.04.2016 mit `valid_to: null`. Grundlage: Nach Art. 6 Abs. 1 Unterabs. 1
+  RL 2014/24/EU überprüft die Kommission nur „die in Artikel 4 Buchstaben a, b
+  und c genannten Schwellenwerte“ alle zwei Jahre; für Buchstabe d legt sie nach
+  Art. 6 Abs. 3 Unterabs. 2 lediglich den Gegenwert in nationalen Währungen fest
+  (entsprechend Art. 17 Abs. 1 und Abs. 2 Unterabs. 2 RL 2014/25/EU für
+  Art. 15 Buchst. c). Der Wortlaut steht im Profil (`review_quote`) und wurde
+  gegen die gespeicherte Prüfsumme des amtlichen Textes bestätigt. Die
+  Änderungsrechtsakte beider Richtlinien wurden am 23.11.2026 über die
+  Cellar-Abfrage erneut gelistet: Richtlinie (EU) 2026/806 ändert nur Art. 10
+  RL 2014/24/EU; keine Änderung von Art. 4 Buchst. d oder Art. 15 Buchst. c.
+- **Ladeprüfung:** `valid_to: null` ist nur mit Begründung `open_end` zulässig;
+  eine Zeile mit Enddatum darf keine tragen; nach einer offenen Zeile darf keine
+  weitere folgen. Die Katalogausgabe (`eu_catalogue`, `RegimeThreshold.to_dict`)
+  führt `open_end` in jeder Zeile (`None` bei befristeten Werten).
+- **Alle übrigen Werte ab 2028** bleiben „nicht hinterlegt“ (`REVIEW_REQUIRED`).
+- **§ 106 Abs. 2 Nr. 1 GWB:** Der Hinweis nennt die Fassung ab 01.07.2026
+  (Bundeskanzleramt und Bundesministerien, Art. 1 Gesetz vom 12.05.2026,
+  BGBl. 2026 I Nr. 137) und die Fassung vom 18.04.2016 bis 30.06.2026 (alle
+  obersten und oberen Bundesbehörden und vergleichbare Bundeseinrichtungen).
+  `central_government_rule(on)` liefert die Fassung zum Stichtag.
+- **§ 3 VgV:** `check_small_lots` prüft die Ausnahme für kleine Lose zum
+  Stichtag, `estimation_hints` liefert den Wortlaut von Abs. 1 (Optionen,
+  Prämien), Abs. 4 (Rahmenvereinbarungen), Abs. 7 (Lose; bis 23.08.2023 mit dem
+  Satz zu Planungsleistungen), Abs. 8 (gleichartige Lieferungen) und Abs. 9.
+  Vom 24.08.2023 bis 13.02.2024 verwies Abs. 9 noch auf „Absatz 7 Satz 3“; das
+  Ergebnis trägt dafür einen Hinweis.
+- **`CURRENT_PROFILE`** ist jetzt 2026.11.1; `profile_from_ruleset(...,
+  year_bound=True)` übernimmt es (anderer Fingerprint). Mit
+  `eu_version="2026.10.1"` bleibt der bisherige Fingerprint.
+
 ## Offene fachliche Entscheidungen (HUMAN_DECISION_REQUIRED)
 
 1. **Nationale Stufen** (1.000/25.000 €), Verfahrenszuordnung nach HVTG und

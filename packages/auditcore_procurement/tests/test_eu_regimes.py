@@ -125,10 +125,13 @@ CASES = [
     for period, value, celex in rows
     for day in period
 ]
+#: Released bytes of 2026.10.1 (package 0.3.x); 2026.11.1 is built from them.
+RELEASED_2026_10_1_SHA256 = "0e47776b174864bb665d804738894697d62719bfb5820ce26ebf5e5a981303e1"
 #: Released bytes and fingerprint of 2026.09.3 and consumer fingerprints before this change.
 PREVIOUS_SHA256 = "d8378ae85c90ab17331b25ba0c3563a4351a029d594ddff61b86b90fc6d3dbb2"
 PREVIOUS_FINGERPRINT = "04b7464ff17c7c3bde20e9dba3a995eec63324447bbeda6b4e4975f37890160f"
 RULESET_FINGERPRINTS = {
+    "2026.10.1": "52893f2a4557ab0ca280998135e48a70510c8966200f33b316ad55176d417846",
     "2026.09.3": "cba9088791bc3bf20c29af23e9c3dd3441c7ef8c081e947d3a57b750d8eebbfc",
     "2026.09.2": "744488924db8b36da3648c330b57bf5f0263c108ab44061e1ea2ab3fcb8c2e0a",
 }
@@ -385,6 +388,7 @@ def test_check_threshold_accepts_a_regime_and_keeps_the_national_part_out() -> N
 
 def test_released_profile_2026_09_3_and_pinned_consumers_are_unchanged() -> None:
     assert hashlib.sha256(_raw("2026.09.3")).hexdigest() == PREVIOUS_SHA256
+    assert hashlib.sha256(_raw("2026.10.1")).hexdigest() == RELEASED_2026_10_1_SHA256
     assert PREVIOUS.fingerprint == PREVIOUS_FINGERPRINT and PREVIOUS.eu_regimes is None
     for version, fingerprint in RULESET_FINGERPRINTS.items():
         bound = prechecks.profile_from_ruleset(
@@ -395,11 +399,13 @@ def test_released_profile_2026_09_3_and_pinned_consumers_are_unchanged() -> None
             year_bound=True,
             eu_version=version,
         )
-        assert bound.fingerprint == fingerprint and bound.eu_regimes is None
+        assert bound.fingerprint == fingerprint
+        assert (bound.eu_regimes is None) == (version != "2026.10.1")
     current = prechecks.profile_from_ruleset(
         LEGACY["ruleset"], profile_id="app", version="1", source={}, year_bound=True
     )
-    assert current.eu_regimes == NEW.eu_regimes and current.eu_periods == PREVIOUS.eu_periods
+    latest = prechecks.load_profile(*prechecks.CURRENT_PROFILE)
+    assert current.eu_regimes == latest.eu_regimes and current.eu_periods == PREVIOUS.eu_periods
     old = auditcore_procurement.check_eu_threshold(
         PREVIOUS, Decimal("1"), regime="utilities", contract_type="works", year=2020
     )
@@ -524,6 +530,5 @@ def test_packaged_profile_is_reproducible_from_the_builder() -> None:
     spec.loader.exec_module(builder)
     built = builder.build(json.loads(_raw("2026.09.3")))
     assert (json.dumps(built, indent=1, ensure_ascii=False) + "\n").encode() == _raw("2026.10.1")
-    assert prechecks.CURRENT_PROFILE == ("procurement.hvtg", builder.VERSION)
     quotes = json.loads((TOOLS / "eu_threshold_sources.json").read_text(encoding="utf-8"))
     assert set(quotes) == set(builder.ACTS) == set(NEW.eu_regimes.sources if NEW.eu_regimes else ())

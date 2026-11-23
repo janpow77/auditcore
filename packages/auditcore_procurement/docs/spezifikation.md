@@ -50,6 +50,17 @@ Die Jahrestabelle der Vorprüfung bleibt bestehen; das Profil lädt nur, wenn
 beide Tabellen an jeder Zeitraumgrenze denselben Wert nennen und jeder Wert im
 hinterlegten Wortlaut der amtlichen Quelle steht.
 
+Ab Profil 2026.11.1 gelten die festen Richtlinienwerte für soziale und andere
+besondere Dienstleistungen (Art. 4 Buchst. d RL 2014/24/EU, Art. 15 Buchst. c
+RL 2014/25/EU) ohne Enddatum: Eine Zeile mit `valid_to: null` lädt nur mit
+Begründung `open_end`, eine Zeile mit Enddatum darf keine tragen. Nationale
+Vorschriften wählen ihre Fassung nach dem Stichtag des Falls:
+`central_government_rule` (§ 106 Abs. 2 Nr. 1 GWB, Wechsel am 01.07.2026) und
+`check_small_lots` (§ 3 Abs. 9 VgV: jedes ausgenommene Los „unter“ 80 000 bzw.
+1 000 000 Euro, ihre Summe „nicht übersteigt“ 20 % aller Lose). Ohne Stichtag
+oder vor dem 18.04.2016 lautet das Ergebnis `REVIEW_REQUIRED` bzw.
+`ThresholdUnavailable`.
+
 ## Invarianten
 
 | Nr. | Invariante | Test |
