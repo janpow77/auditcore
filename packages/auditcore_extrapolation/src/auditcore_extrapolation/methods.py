@@ -11,7 +11,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from types import MappingProxyType
 
-from . import conservative, equal_probability, mus
+from . import conservative, equal_probability, limits, mus
 from .design import Stratum, check_strata
 from .errors import ExtrapolationInputError
 from .exclusion import extend_to_original
@@ -86,7 +86,7 @@ METHODS = MappingProxyType(
                 _EQ,
                 True,
                 guidance("6.2.1, 6.2.2; Anhang 1, 3"),
-                "EE = Σ N_h × ΣE_h / n_h, CBV = BV − TER",
+                "EE = Σ N_h × ΣE_h / n_h, CBV = BV − Gesamtfehler",
             ),
             Method(
                 "mus.standard",
@@ -289,7 +289,12 @@ def project_strata(
     *,
     coverage: bool,
 ) -> Projection:
-    """:func:`project` for a resolved method; ``coverage`` False skips the coverage check."""
+    """:func:`project` for a resolved method.
+
+    ``coverage`` False (one period of a multi-period sample) skips the coverage
+    check of non-statistical samples and the 30-unit minimum, which the caller
+    checks over all periods.
+    """
     _check_parameters(chosen, confidence_level, factor_profile)
     needs_n = chosen.selection == "equal_probability" or not chosen.statistical
     checked = check_strata(strata, needs_population_size=needs_n)
@@ -318,7 +323,9 @@ def project_strata(
         extra=MappingProxyType(extra),
     )
     if any(s.has_exclusions for s in checked):
-        return extend_to_original(chosen.id, checked, result)
+        result = extend_to_original(chosen.id, checked, result)
+    if statistical:
+        result = limits.apply(result, checked, complete=coverage)
     return result
 
 

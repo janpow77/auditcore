@@ -2,7 +2,11 @@
 
 Every formula of this package is taken from the Commission guidance on
 sampling for audit authorities; each :class:`Step` names the section it comes
-from so that an auditor can retrace a result line by line.
+from so that an auditor can retrace a result line by line. The guidance
+EGESIF_16-0014-01 is the edition for the programming periods 2007–2013 and
+2014–2020; for 2021–2027 the sampling rules are laid down in Delegated
+Regulation (EU) 2023/67 (Art. 5, Annex II), whose formulas the guidance
+sections cited here correspond to.
 """
 
 from __future__ import annotations
@@ -11,7 +15,7 @@ from dataclasses import dataclass
 
 GUIDANCE = (
     "Europäische Kommission, Guidance on sampling methods for audit authorities, "
-    "EGESIF_16-0014-01 vom 20.01.2017"
+    "EGESIF_16-0014-01 vom 20.01.2017 (Programmplanungszeiträume 2007–2013 und 2014–2020)"
 )
 GUIDANCE_ID = "EGESIF_16-0014-01"
 RER_TEMPLATE = (
@@ -20,6 +24,8 @@ RER_TEMPLATE = (
 )
 RER_TEMPLATE_ID = "CPRE_23-0013-01 Annex 3"
 CPR = "Verordnung (EU) 2021/1060"
+DELVO = "Delegierten Verordnung (EU) 2023/67"
+DELVO_ID = "DelVO (EU) 2023/67"
 
 
 def guidance(section: str) -> str:
@@ -31,6 +37,11 @@ def guidance(section: str) -> str:
 def cpr(article: str) -> str:
     """Reference to one provision of Regulation (EU) 2021/1060."""
     return f"Art. {article} {CPR}"
+
+
+def delegated(provision: str) -> str:
+    """Reference to one provision of Delegated Regulation (EU) 2023/67."""
+    return f"{provision} {DELVO_ID}"
 
 
 @dataclass(frozen=True)

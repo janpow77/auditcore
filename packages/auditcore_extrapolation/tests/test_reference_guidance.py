@@ -138,12 +138,13 @@ def test_mus_conservative_first_allowance_example_6_3_5_5() -> None:
     """Section 6.3.5.5: 10,000 of 40,000 (25 %), SI 200,000, factor from Appendix 3.
 
     The text computes 0.58 × 0.25 × 200,000 = 29,000 with RF(0) = 2.31 of
-    Table 4; the worked example 6.3.5.7 uses RF(0) = 2.30 of Appendix 3
-    (0.59), which is what the library applies for the allowances.
+    Table 4. Since 0.3.0 the library uses this RF(0) for the basic precision
+    and the first allowance alike; the worked example 6.3.5.7 mixes 2.31 (BP)
+    and 2.30 of Appendix 3 (allowance factor 0.59).
     """
     rows = incremental_allowances([("a", 0.25)], 200_000, 0.90, KOM_TABLES)
-    assert rows[0].factor == pytest.approx(0.59)
-    assert rows[0].allowance == pytest.approx(29_500)
+    assert rows[0].factor == pytest.approx(0.58)
+    assert rows[0].allowance == pytest.approx(29_000)
     text_value = (3.89 - 2.31 - 1) * 0.25 * 200_000
     assert text_value == pytest.approx(29_000)
 

@@ -64,6 +64,9 @@ class Projection:
     warnings: tuple[str, ...] = ()
     #: Method-specific, JSON-ready details (estimator check, allowances, coverage).
     extra: Mapping[str, object] = field(default_factory=lambda: MappingProxyType({}))
+    #: Reasons why precision and upper limit are less reliable than stated (minimum
+    #: sample size not met, precision 0 without spread). Each is also in ``warnings``.
+    limitations: tuple[str, ...] = ()
 
     @property
     def anomalous_uncorrected(self) -> float:
@@ -90,6 +93,7 @@ class Projection:
             "systemic_population": self.systemic_population,
             "steps": [s.to_dict() for s in self.steps],
             "warnings": list(self.warnings),
+            "limitations": list(self.limitations),
             "extra": dict(self.extra),
         }
 

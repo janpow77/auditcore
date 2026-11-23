@@ -88,7 +88,7 @@ def test_conservative_units_basic_precision_and_allowances() -> None:
     assert projection.projected_random_error == pytest.approx(3_000 + 100_000 * 0.6)
     rows = cast(list[dict[str, object]], projection.extra["allowances"])
     assert [r["unit_id"] for r in rows] == ["high", "low"]
-    first = (3.89 - 2.30 - 1) * 50_000
+    first = (3.89 - 2.31 - 1) * 50_000  # one RF(0) for BP and allowances (Table 4)
     second = (5.32 - 3.89 - 1) * 10_000
     assert projection.precision == pytest.approx(100_000 * 2.31 + first + second)
     assert projection.coefficient == 2.31

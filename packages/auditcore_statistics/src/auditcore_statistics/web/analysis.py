@@ -42,8 +42,12 @@ METRICS = (
     },
 )
 SHORT_VALUES = (
-    {"id": "exclude", "label": "Werte mit nur einer signifikanten Ziffer ausschließen"},
-    {"id": "pad", "label": "Mit 0 auffüllen (5 → 50)"},
+    {"id": "pad", "label": "Zweite Ziffer 0 (5 → 50, Standard)", "default": True},
+    {
+        "id": "exclude",
+        "label": "Werte mit nur einer signifikanten Ziffer ausschließen (5, 0,3)",
+        "default": False,
+    },
 )
 
 
@@ -63,6 +67,10 @@ def catalogue() -> dict[str, object]:
         "profiles": [p.to_dict() for p in PROFILES.values()],
         "metrics": [dict(m) for m in METRICS],
         "standard_levels": list(STANDARD_LEVELS),
+        "defaults": {
+            "short_values": "pad",
+            "lower_bound": {"first": None, "first_two": None, "second": None},
+        },
         "limits": {"max_values": MAX_VALUES},
     }
 
@@ -125,6 +133,31 @@ def _metrics(raw: object, result: BenfordResult, test: Test) -> dict[str, object
     return out
 
 
+def _short_values(body: Mapping[str, object], digits: int) -> ShortValues | None:
+    raw = body.get("short_values")
+    if digits == 1:
+        if raw is not None:
+            raise ContractError("'short_values' gilt nur für zweistellige Tests.")
+        return None
+    if raw is None:
+        return "pad"
+    return cast(ShortValues, _field(body, "short_values", ("exclude", "pad")))
+
+
+def _lower_bound(body: Mapping[str, object]) -> float | None:
+    """Optional lower bound on the amount; without it no value is excluded.
+
+    No default bound: the service does not set a threshold that is not given
+    by a norm or by the client, and leaves no value out unasked.
+    """
+    if "lower_bound" not in body:
+        return None
+    bound = _number(body["lower_bound"], "lower_bound")
+    if bound is not None and not (math.isfinite(bound) and bound > 0):
+        raise ContractError("'lower_bound' muss größer als 0 sein oder null.")
+    return bound
+
+
 def analyse(payload: object) -> dict[str, object]:
     """``POST /analyze``: distribution, exclusions and conformity under a named profile."""
     if not isinstance(payload, Mapping):
@@ -133,14 +166,11 @@ def analyse(payload: object) -> dict[str, object]:
     test = cast(Test, _field(body, "test", TESTS))
     profile_id = _field(body, "profile", tuple(PROFILES))
     digits = TEST_LABELS[test][1]
-    short = (
-        cast(ShortValues, _field(body, "short_values", ("exclude", "pad"))) if digits == 2 else None
-    )
-    if digits == 1 and body.get("short_values") is not None:
-        raise ContractError("'short_values' gilt nur für zweistellige Tests.")
+    short = _short_values(body, digits)
+    bound = _lower_bound(body)
     values = _values(body.get("values"))
     try:
-        result = benford_test(values, digits=digits, short_values=short)
+        result = benford_test(values, digits=digits, short_values=short, lower_bound=bound)
         conformity = assess(result, test, profile_id)
         metrics = None if body.get("metrics") is None else _metrics(body["metrics"], result, test)
     except StatisticsInputError as exc:
