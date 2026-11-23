@@ -57,7 +57,9 @@ Begründung `open_end`, eine Zeile mit Enddatum darf keine tragen. Nationale
 Vorschriften wählen ihre Fassung nach dem Stichtag des Falls:
 `central_government_rule` (§ 106 Abs. 2 Nr. 1 GWB, Wechsel am 01.07.2026) und
 `check_small_lots` (§ 3 Abs. 9 VgV: jedes ausgenommene Los „unter“ 80 000 bzw.
-1 000 000 Euro, ihre Summe „nicht übersteigt“ 20 % aller Lose). Ohne Stichtag
+1 000 000 Euro, ihre Summe „nicht übersteigt“ 20 % aller Lose; `PASS`, wenn die
+Ausnahme möglich ist, sonst `WARNING`, weil die ausgenommenen Lose dann unter
+das EU-Verfahren fallen). Ohne Stichtag
 oder vor dem 18.04.2016 lautet das Ergebnis `REVIEW_REQUIRED` bzw.
 `ThresholdUnavailable`.
 

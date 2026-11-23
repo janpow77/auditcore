@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import time
+
 import pytest
 
 import auditcore_identifiers as ai
@@ -120,6 +122,26 @@ def test_register_number_with_court(value: str, number: str, court: str | None) 
     assert result.valid and result.normalized == number
     assert result.details.get("court") == court
     assert result.check_digit is CheckDigit.NONE and result.verdict is Verdict.FORMAT_VALID
+
+
+def test_cyprus_prefix_12_is_not_issued() -> None:
+    """CY 12xxxxxx is rejected like python-stdnum 2.2 (InvalidComponent), even
+    with a matching check letter (12345670X)."""
+    result = ai.check_vat_id("CY12345670X")
+    assert result.reason is Reason.INVALID_FORMAT and result.verdict is Verdict.INVALID
+
+
+def test_register_court_with_runs_of_blanks_is_fast_and_kept() -> None:
+    """Runs of blanks (OCR) are one gap; no backtracking blow-up (ReDoS).
+
+    Before the fix ``"AG " + 196 blanks + "x"`` took about 4 s per value.
+    """
+    assert ai.check_register_number("Amtsgericht   Köln ,   HRB  123").details["court"] == "Köln"
+    started = time.perf_counter()
+    for value in ("AG " + " " * 196 + "x", "HRB " + " " * 194 + "AG", "AG " + "x " * 98):
+        row = contract.check_one({"profile": "strict", "kind": "register_number", "value": value})
+        assert row["result"]["verdict"] == "invalid"
+    assert time.perf_counter() - started < 0.5
 
 
 def test_check_digit_and_verdict_in_dict_labels_and_summary() -> None:

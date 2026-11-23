@@ -30,7 +30,10 @@ def main() -> None:
     assert all(outcome.passed for outcome in run_checks(build_bundle(config)))
     public = [key for key, template in templates().items() if template.public]
     assert public == ["V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "N1"]
-    assert {template.status for template in templates().values()} == {"Freigegeben"}
+    status = {key: template.status for key, template in templates().items()}
+    # N1 stays a draft until the rights holder grants the release (0.3.0).
+    assert status.pop("N1") == "Entwurf"
+    assert set(status.values()) == {"Freigegeben"}
     result = generate_templates(config, public)
     assert result.meta["marking"] == "SYNTHETISCH" and len(result.tables) > 20
     assert web.catalogue()["contract"] == "dummybundle_ui/1"

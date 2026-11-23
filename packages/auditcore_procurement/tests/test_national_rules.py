@@ -88,7 +88,7 @@ def test_lot_just_below_the_limit_qualifies_the_limit_itself_does_not() -> None:
     ok = _check(Lot(LOT_SERVICES - Decimal("0.01"), "supplies_services", exempt=True), rest)
     at = _check(Lot(LOT_SERVICES, "supplies_services", exempt=True), rest)
     assert ok["status"] == "PASS" and ok["exemption_possible"] is True
-    assert at["exemption_possible"] is False
+    assert at["status"] == "WARNING" and at["exemption_possible"] is False
     works_ok = _check(
         Lot(LOT_WORKS - Decimal("0.01"), "works", exempt=True), Lot(LOT_WORKS * 5, "works")
     )
@@ -150,6 +150,8 @@ def test_small_lots_without_date_or_before_2016_need_review() -> None:
         [Lot(Decimal("1"), "works")],
         [Lot(Decimal("1"), "planning", exempt=True)],
         [Lot(Decimal("-1"), "works", exempt=True)],
+        [Lot(Decimal("NaN"), "works", exempt=True)],
+        [Lot(Decimal("Infinity"), "works", exempt=True)],
     ],
 )
 def test_invalid_lot_input_is_an_error(lots: list[Lot]) -> None:

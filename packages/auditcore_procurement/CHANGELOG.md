@@ -22,7 +22,9 @@ bytegleich und ladbar; Ergebnisse mit gepinntem Profil ändern sich nicht.
 - Neue öffentliche Namen: `central_government_rule`, `CentralGovernmentRule`
   (Modul `authority_rules`); `check_small_lots`, `Lot`, `estimation_hints`,
   `small_lots_rule`, `VgvProvision` (Modul `lot_rules`, § 3 Abs. 1, 4, 7, 8
-  und 9 VgV in allen Fassungen seit 18.04.2016).
+  und 9 VgV in allen Fassungen seit 18.04.2016). `check_small_lots` meldet
+  `PASS`, wenn die Ausnahme möglich ist, und `WARNING`, wenn als ausgenommen
+  markierte Lose die Bedingungen nicht erfüllen.
 - `profile_from_ruleset(..., year_bound=True)` ohne `eu_version` übernimmt
   jetzt 2026.11.1 (anderer Fingerprint); `eu_version="2026.10.1"` reproduziert
   den bisherigen.

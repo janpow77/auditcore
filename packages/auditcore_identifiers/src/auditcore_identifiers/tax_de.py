@@ -44,14 +44,14 @@ _REGISTER = re.compile(r"(HRA|HRB|GNR|GSR|PR|VR)([1-9][0-9]{0,5})([A-Z]{1,2})?",
 _REGISTER_WORD = r"(?:HRA|HRB|GnR|GsR|PR|VR)"
 #: ``Amtsgericht Köln HRB 123`` / ``AG Köln, HRB 123`` (court in front).
 _COURT_FIRST = re.compile(
-    rf"\s*(?:Registergericht\s*:?\s*)?(?:Amtsgericht|AG)\s+(?P<court>[^,;:()]+?)\s*[,;:]?\s*"
+    rf"\s*(?:Registergericht\s*:?\s*)?(?:Amtsgericht|AG)\s+(?P<court>[^\s,;:()][^,;:()]*?)\s*[,;:]?\s*"
     rf"(?:Registernummer\s*:?\s*)?(?P<number>{_REGISTER_WORD}\b.*?)\s*",
     re.IGNORECASE,
 )
 #: ``HRB 123, Amtsgericht Köln`` / ``HRB 123 (AG Köln)`` (court behind).
 _COURT_LAST = re.compile(
     rf"\s*(?P<number>{_REGISTER_WORD}\b[^,;(]*?)\s*[,;]?\s*\(?\s*"
-    rf"(?:Registergericht\s*:?\s*)?(?:Amtsgericht|AG)\s+(?P<court>[^,;:()]+?)\s*\)?\s*",
+    rf"(?:Registergericht\s*:?\s*)?(?:Amtsgericht|AG)\s+(?P<court>[^\s,;:()][^,;:()]*?)\s*\)?\s*",
     re.IGNORECASE,
 )
 _REGISTER_TYPES = {"HRA": "HRA", "HRB": "HRB", "GNR": "GnR", "GSR": "GsR", "PR": "PR", "VR": "VR"}
@@ -163,8 +163,11 @@ def _split_court(value: object) -> tuple[object, str | None]:
     """Separate a register court given in front of or behind the number."""
     if not isinstance(value, str):
         return value, None
+    # One space per gap: runs of blanks (OCR lines) would otherwise let the
+    # court and the optional separators split them in very many ways.
+    text = " ".join(value.split())
     for pattern in (_COURT_FIRST, _COURT_LAST):
-        match = pattern.fullmatch(value)
+        match = pattern.fullmatch(text)
         if match is not None:
             return match.group("number"), " ".join(match.group("court").split())
     return value, None

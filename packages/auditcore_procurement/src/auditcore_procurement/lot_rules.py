@@ -24,7 +24,7 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 
-from .precheck_common import PASS, REVIEW_REQUIRED, CheckResult, result
+from .precheck_common import PASS, REVIEW_REQUIRED, WARNING, CheckResult, result
 
 _CHECK = ("precheck_small_lots", "Ausnahme für kleine Lose (§ 3 Abs. 9 VgV)")
 #: Lot limits of § 3 Abs. 9 VgV in EUR (net), unchanged in all versions.
@@ -168,8 +168,8 @@ def _lot_findings(lots: Sequence[Lot]) -> list[dict[str, object]]:
     for number, lot in enumerate(lots, start=1):
         if lot.kind not in LOT_LIMITS:
             raise ValueError(f"Los {number}: kind muss eine von {tuple(LOT_LIMITS)} sein.")
-        if lot.value < 0:
-            raise ValueError(f"Los {number}: Wert darf nicht negativ sein.")
+        if not Decimal(lot.value).is_finite() or lot.value < 0:
+            raise ValueError(f"Los {number}: Wert muss eine endliche Zahl ≥ 0 sein.")
         if lot.exempt:
             limit = LOT_LIMITS[lot.kind]
             below = lot.value < limit
@@ -183,9 +183,12 @@ def check_small_lots(lots: Sequence[Lot], *, reference_date: date | None) -> Che
     """Whether the lots marked ``exempt`` meet § 3 Abs. 9 VgV on the reference date.
 
     ``lots`` are all lots of the project (the total value is their sum).
-    ``PASS`` carries ``exemption_possible``; the exception is a permission of
-    the contracting authority, not an obligation. ``REVIEW_REQUIRED`` means the
-    date is missing or no version is recorded for it.
+    ``PASS`` when the exception is possible (``exemption_possible`` True); the
+    exception is a permission of the contracting authority, not an obligation.
+    ``WARNING`` when lots are marked ``exempt`` although the exception is not
+    possible: they fall under the EU procedure, which the reviewer has to
+    examine. ``REVIEW_REQUIRED`` means the date is missing or no version is
+    recorded for it.
 
     Raises:
         ValueError: unknown lot kind, negative value, no lot marked ``exempt``.
@@ -216,7 +219,7 @@ def check_small_lots(lots: Sequence[Lot], *, reference_date: date | None) -> Che
     )
     return result(
         *_CHECK,
-        PASS,
+        PASS if possible else WARNING,
         message,
         exemption_possible=possible,
         exempt_total=str(exempt),

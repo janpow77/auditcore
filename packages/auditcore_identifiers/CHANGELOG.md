@@ -15,7 +15,7 @@ Korrekturen gegen falsch-positive Ergebnisse; neue Ergebnisfelder.
 - **USt-IdNr.:** nationale Prüfziffernverfahren aller 27 EU-Staaten
   (`vat_checks`, `vat_checks_mixed`, Tabelle `vat.CHECK_DIGIT_PROCEDURES`) und
   Strukturregeln in den Formaten (BE nicht nur Nullen, DK/MT/PT erste Ziffer
-  ≠ 0, IT Amtscode, LT 8./11. Stelle `1`, NL nicht `B00`, CZ 8-stellig nicht
+  ≠ 0, IT Amtscode, LT 8./11. Stelle `1`, NL nicht `B00`, CY nicht mit `12` beginnend, CZ 8-stellig nicht
   mit 9 beginnend, Geburtsdatum bei CZ/SK/BG/LV). Abgleich offline gegen
   python-stdnum 2.2 (Gültige und je eine verfälschte Nummer je Stichprobe); die
   Testnummern sind synthetisch (zufällig erzeugt, keiner Registerauskunft
@@ -23,7 +23,9 @@ Korrekturen gegen falsch-positive Ergebnisse; neue Ergebnisfelder.
   `not_checked`, Meldung „Prüfziffer … nicht prüfbar“.
 - **Handelsregisternummer:** Nummer ab 1 ohne führende Null (`HRB 0` ungültig);
   Registergericht vor oder hinter der Nummer wird abgetrennt
-  (`details["court"]`); `check_digit = none`.
+  (`details["court"]`); `check_digit = none`. Leerzeichenfolgen gelten als
+  ein Zwischenraum, die Abtrennung läuft linear (kein Backtracking bei langen
+  Leerzeichenfolgen aus OCR-Zeilen).
 - **BIC:** `check_digit = none`, damit höchstens `format_valid`.
 - **Steuer-ID** `verified`, **Steuernummer** `not_checked`.
 - REST-Vertrag `identifiers_ui/1` erweitert (abwärtsverträglich): je Zeile
