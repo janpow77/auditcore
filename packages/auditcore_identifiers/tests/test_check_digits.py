@@ -154,3 +154,25 @@ def test_check_digit_and_verdict_in_dict_labels_and_summary() -> None:
     assert contract.result_dict(ai.check_lei("")).get("check_digit_label") is None
     legacy = ai.check_iban("DE89370400440532013000", profile="flowinvoice.legacy")
     assert legacy.check_digit is None and legacy.verdict is Verdict.FORMAT_VALID
+
+
+def test_national_branches_without_a_fixture_number() -> None:
+    """Synthetic numbers for branches the cross-check sample does not reach."""
+    from auditcore_identifiers import vat_checks_mixed as vm
+    from auditcore_identifiers.iban import iban_check_digits
+
+    # CZ/SK nine-digit birth number after 1953 does not exist (10 digits since 1954).
+    assert vm.cz("550101123") is None
+    # CZ nine digits starting with 6: weights 8 … 2 over digits 2–8.
+    body = "6" + "1234567"
+    remainder = sum(int(d) * w for d, w in zip(body[1:], (8, 7, 6, 5, 4, 3, 2), strict=True)) % 11
+    digit = (8 - (10 - remainder) % 11) % 10
+    assert vm.cz(body + str(digit)) is CheckDigit.VERIFIED
+    assert vm.cz(body + str((digit + 1) % 10)) is CheckDigit.FAILED
+    # LV natural person with an impossible date (month 13).
+    assert vm.lv("31130012345") is None
+    # ES K/L/M: letter of the seven digits mod 23.
+    letters = "TRWAGMYFPDXBNJZSQVHLCKE"
+    assert vm.es("K1234567" + letters[1234567 % 23]) is CheckDigit.VERIFIED
+    with pytest.raises(ValueError, match="BBAN"):
+        iban_check_digits("DE", "")
