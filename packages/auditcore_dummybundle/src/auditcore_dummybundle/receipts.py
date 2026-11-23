@@ -3,6 +3,13 @@
 The project-related amounts of the receipts add up to the requested amount of
 their claim, to the cent. Net, VAT, gross, cash discount and paid amount are
 derived backwards from the project-related amount.
+
+Suppliers come from the country of the operation. A cross-border supply
+between businesses would carry no domestic VAT of the supplier (reverse
+charge or tax-free intra-Community supply), so the bundle keeps every invoice
+domestic: the VAT rate and the award procedure follow one country. Award
+procedures of Austrian contracting authorities use the procedure names of the
+Bundesvergabegesetz 2018 (§ 31 Abs. 2, 3 and 11, free choice by § 33).
 """
 
 from __future__ import annotations
@@ -22,8 +29,14 @@ from auditcore_dummybundle.seeds import derive_seed, stream
 
 YES = "Ja"
 NOT_APPLICABLE = "Entfällt"
-DIRECT_AWARD = "Direktauftrag"
-_BELOW_THRESHOLD = ("VOL unterhalb Schwellenwert", "VOB unterhalb Schwellenwert")
+_DIRECT_AWARD = {"DE": "Direktauftrag", "AT": "Direktvergabe (BVergG 2018)"}
+_PROCEDURES = {
+    "DE": ("VOL unterhalb Schwellenwert", "VOB unterhalb Schwellenwert"),
+    "AT": (
+        "Offenes Verfahren (BVergG 2018)",
+        "Nicht offenes Verfahren mit vorheriger Bekanntmachung (BVergG 2018)",
+    ),
+}
 _REDUCTION_PERCENT = (10, 25, 50, 100)
 #: Suppliers take name positions above every possible operation index, so a
 #: supplier never carries the name of a beneficiary of the same bundle.
@@ -44,7 +57,8 @@ def build_suppliers(config: BundleConfig) -> tuple[Supplier, ...]:
     suppliers = []
     for index in range(min(60, max(6, config.operations * 2))):
         rng = stream(config.seed, "supplier", index)
-        country = cat.country_of(rng, config.country)
+        # Alternating countries: a mixed bundle always has suppliers of both.
+        country = cat.COUNTRIES[index % 2] if config.country == "DE+AT" else config.country
         suppliers.append(
             Supplier(
                 cat.company_name(derive_seed(config.seed, "company"), SUPPLIER_NAME_OFFSET + index),
@@ -62,20 +76,37 @@ def _category(rng: Random, operation: Row) -> cat.CostCategory:
     return next(c for c in allowed if c.name == name)
 
 
-def _money(config: BundleConfig, rng: Random, operation: Row, claimed: Decimal, staff: bool) -> Row:
-    """Net, VAT, gross, discount and paid amount for a project-related amount."""
-    rate = ZERO if staff else cat.catalogs().vat_rates[str(operation["country"])]
+def direct_award_label(country: str) -> str:
+    """Name of the direct award in the country of the contracting authority."""
+    return _DIRECT_AWARD[country]
+
+
+def _money(
+    config: BundleConfig, rng: Random, claimed: Decimal, country: str | None, net_basis: bool
+) -> Row:
+    """Net, VAT, gross, discount and paid amount for a project-related amount.
+
+    ``country`` is the supplier's country, ``None`` for staff costs (no VAT, no
+    cash discount); ``net_basis`` says whether the claim basis is net (staff
+    costs or VAT deduction). ``discount_amount`` is the cash discount on the
+    claim basis, ``discount_gross`` the one on the invoice: gross minus
+    ``discount_gross`` is the paid amount, to the cent.
+    """
+    staff = country is None
+    rate = ZERO if country is None else cat.catalogs().vat_rates[country]
     discounted = not staff and rng.randrange(100) < int(config.discount_share * 100)
     discount_rate = Decimal(rng.randrange(2, 6)) / 100 if discounted else ZERO
     basis = quantize(claimed / (1 - discount_rate))
-    if staff or operation["vat_deduction"]:
+    if net_basis:
         net = basis
         vat = share(net, rate)
         gross = net + vat
+        discount_gross = share(gross, discount_rate)
     else:
         gross = basis
         net = quantize(gross / (1 + rate))
         vat = gross - net
+        discount_gross = basis - claimed
     return {
         "vat_rate": rate,
         "net": net,
@@ -84,7 +115,8 @@ def _money(config: BundleConfig, rng: Random, operation: Row, claimed: Decimal, 
         "discount_rate": discount_rate,
         "claim_basis": basis,
         "discount_amount": basis - claimed,
-        "paid": gross - share(gross, discount_rate),
+        "discount_gross": discount_gross,
+        "paid": gross - discount_gross,
         "project_related": claimed,
     }
 
@@ -101,15 +133,20 @@ def _reduction(config: BundleConfig, rng: Random, claimed: Decimal) -> Row:
 
 
 def _award(config: BundleConfig, rng: Random, operation: Row, net: Decimal, staff: bool) -> Row:
+    """Award procedure by the law of the contracting authority's country."""
+    country = str(operation["country"])
+    direct = False
     if staff or not operation["contracting_authority"]:
         award_type = NOT_APPLICABLE
     elif net < config.direct_award_limit:
-        award_type = DIRECT_AWARD
+        award_type = direct_award_label(country)
+        direct = True
     else:
-        award_type = _BELOW_THRESHOLD[rng.randrange(len(_BELOW_THRESHOLD))]
+        procedures = _PROCEDURES[country]
+        award_type = procedures[rng.randrange(len(procedures))]
     return {
         "award_type": award_type,
-        "direct_award": award_type == DIRECT_AWARD,
+        "direct_award": direct,
         "evidence_award": NOT_APPLICABLE if award_type == NOT_APPLICABLE else YES,
     }
 
@@ -126,13 +163,20 @@ def _evidence(staff: bool) -> Row:
 
 
 def _party(rng: Random, operation: Row, suppliers: tuple[Supplier, ...], staff: bool) -> Row:
+    """Invoicing party: the beneficiary for staff costs, else a domestic supplier."""
     if staff:
         return {
             "supplier_name": operation["beneficiary_name"],
             "supplier_vat_id": operation["beneficiary_vat_id"],
+            "supplier_country": operation["country"],
         }
-    supplier = suppliers[rng.randrange(len(suppliers))]
-    return {"supplier_name": supplier.name, "supplier_vat_id": supplier.vat_id}
+    domestic = tuple(s for s in suppliers if s.country == operation["country"])
+    supplier = domestic[rng.randrange(len(domestic))]
+    return {
+        "supplier_name": supplier.name,
+        "supplier_vat_id": supplier.vat_id,
+        "supplier_country": supplier.country,
+    }
 
 
 def _dates(rng: Random, operation: Row, claim: Row) -> Row:
@@ -169,7 +213,9 @@ def _receipt(
     }
     row.update(_dates(rng, operation, claim))
     row.update(_party(rng, operation, suppliers, category.staff))
-    row.update(_money(config, rng, operation, claimed, category.staff))
+    country = None if category.staff else str(row["supplier_country"])
+    net_basis = category.staff or bool(operation["vat_deduction"])
+    row.update(_money(config, rng, claimed, country, net_basis))
     row.update(_reduction(config, rng, claimed))
     row.update(_award(config, rng, operation, amount(row, "net"), category.staff))
     row.update(_evidence(category.staff))

@@ -25,13 +25,18 @@ def request(**changes: Any) -> dict[str, Any]:
 def test_catalogue_lists_public_templates_types_and_limits() -> None:
     data = web.catalogue()
     assert data["contract"] == "dummybundle_ui/1"
-    assert data["library"] == "auditcore_dummybundle 0.2.0"
+    assert data["library"] == "auditcore_dummybundle 0.3.0"
     assert data["marking"] == "SYNTHETISCH"
     ids = [t["id"] for t in data["templates"]]
     assert ids == ["V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "N1"]
     for entry in data["templates"]:
         assert entry["purpose"] and entry["legal_basis"] and entry["column_count"] > 0
-        assert entry["status"] == "Freigegeben" and len(entry["content_hash"]) == 64
+        assert len(entry["content_hash"]) == 64
+        if entry["id"] == "N1":  # changed in 0.3.0, new release pending
+            assert entry["status"] == "Entwurf" and entry["version"] == "0.2.0"
+            assert entry["release"]["human_release_approval"] == "NOT_GRANTED"
+            continue
+        assert entry["status"] == "Freigegeben"
         assert entry["release"]["human_release_approval"] == "GRANTED"
         assert entry["release"]["approved_on"] == "2026-10-13"
     sources = {t["id"]: {table["source"] for table in t["tables"]} for t in data["templates"]}
@@ -62,7 +67,7 @@ def test_generate_returns_document_with_metadata() -> None:
     data = web.generate(request(templates=["V0", "N1"]))
     meta = data["_meta"]
     assert meta["marking"] == "SYNTHETISCH" and meta["seed"] == 42
-    assert meta["version"] == "0.2.0" and meta["max_workers"] == 1
+    assert meta["version"] == "0.3.0" and meta["max_workers"] == 1
     assert [t["name"] for t in data["tables"]] == ["Vorhaben", "Belegliste"]
     assert "solution" not in data
     assert data == web.generate(request(templates=["V0", "N1"]))

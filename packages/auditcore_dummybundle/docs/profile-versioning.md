@@ -42,3 +42,13 @@ Profil- und Paketversion mit neuem Inhaltshash und braucht eine neue
 Freigabe; bis dahin steht das geänderte Profil nicht auf „Freigegeben“.
 Der Schalter `public` steuert nur die Sichtbarkeit und ist nicht Teil des
 Hashes.
+
+## Änderung mit 0.3.0: N1 in Fassung 0.2.0
+
+Die Spalte „Skontobetrag“ der Belegliste N1 zeigt seit Paketversion 0.3.0 das
+Skonto auf den Bruttobetrag (`discount_gross`), damit brutto − Skontobetrag =
+gezahlter Betrag gilt; dazu kommt ein Spaltenhinweis. Das ist eine Änderung des
+Rechenbezugs: N1 trägt die Profilversion 0.2.0 und einen neuen Inhaltshash und
+steht auf „Entwurf“ mit `NOT_GRANTED`, bis der Rechteinhaber die Fassung
+freigibt. `provenance.json` führt sie unter `profile_release.pending`; die
+Freigabe vom 13.10.2026 bleibt für die Fassung 0.1.0 dokumentiert.

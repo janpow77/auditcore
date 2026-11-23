@@ -28,6 +28,8 @@ from auditcore_dummybundle.templates import project
 
 PACKAGE = Path(auditcore_dummybundle.__file__).parent
 templates_module = import_module("auditcore_dummybundle.templates")
+#: Profiles changed after the release of 13.10.2026; they wait for a new release.
+CHANGED_SINCE_RELEASE = frozenset({"N1"})
 ALL = list(templates())
 PUBLIC = [key for key, template in templates().items() if template.public]
 #: Bezeichnungen, die in einem öffentlichen Paket nichts zu suchen haben. Die Namen
@@ -77,22 +79,47 @@ def test_non_public_profiles_need_explicit_choice(monkeypatch: pytest.MonkeyPatc
 
 def test_profiles_are_released_by_the_rights_holder_with_hash() -> None:
     folder = files("auditcore_dummybundle").joinpath("template_data")
+    released = {
+        entry["artifact_id"]: entry["content_hash"]
+        for entry in json.loads((PACKAGE / "provenance.json").read_text(encoding="utf-8"))[
+            "profile_release"
+        ]["profiles"]
+    }
     hashes = set()
     for key in ALL:
         raw = json.loads(folder.joinpath(f"{key.lower()}.json").read_text(encoding="utf-8"))
         review = raw["review"]
+        assert raw["content_hash"] == canonical_sha256(templates_module.profile_content(raw))
+        assert templates()[key].content_hash == raw["content_hash"]
+        assert ("third_party" in review) == (key in {"V5", "V6"})
+        assert "auditcore_dummygenerator" in review["not_covered"]
+        hashes.add(raw["content_hash"])
+        if key in CHANGED_SINCE_RELEASE:
+            continue
         assert raw["status"] == "Freigegeben"
         assert review["human_release_approval"] == "GRANTED"
         assert review["approved_on"] == "2026-10-13" and "Rechteinhaber" in review["approved_by"]
         assert "elf Vorlagenprofile von auditcore_dummybundle 0.1.0" in review["scope"]
-        assert "auditcore_dummygenerator" in review["not_covered"]
-        assert raw["content_hash"] == canonical_sha256(templates_module.profile_content(raw))
-        assert templates()[key].content_hash == raw["content_hash"]
-        assert ("third_party" in review) == (key in {"V5", "V6"})
-        hashes.add(raw["content_hash"])
+        assert released[raw["artifact_id"]] == raw["content_hash"]
     assert len(hashes) == 11
     union = dict(templates()["V5"].release)["third_party"]
     assert "Unionsrecht" in union and "erstreckt sich nicht" in union
+
+
+def test_changed_profile_is_not_marked_as_released() -> None:
+    """Profile versioning: a changed profile needs a new release (docs/profile-versioning.md)."""
+    provenance = json.loads((PACKAGE / "provenance.json").read_text(encoding="utf-8"))
+    released = {e["artifact_id"]: e for e in provenance["profile_release"]["profiles"]}
+    pending = {e["artifact_id"]: e for e in provenance["profile_release"]["pending"]}
+    for key in CHANGED_SINCE_RELEASE:
+        template = templates()[key]
+        review = dict(template.release)
+        artifact = f"auditcore.dummybundle.template.{key.lower()}"
+        assert template.status == "Entwurf" and review["human_release_approval"] == "NOT_GRANTED"
+        assert released[artifact]["content_hash"] != template.content_hash
+        assert released[artifact]["content_hash"] in review["previous_release"]
+        assert pending[artifact]["content_hash"] == template.content_hash
+        assert pending[artifact]["version"] == template.version == "0.2.0"
 
 
 def test_changed_profile_content_is_rejected() -> None:
@@ -209,7 +236,7 @@ def test_template_files_are_plain_data_with_identity() -> None:
     for name in names:
         raw = json.loads(folder.joinpath(name).read_text(encoding="utf-8"))
         assert raw["artifact_id"] == f"auditcore.dummybundle.template.{raw['id'].lower()}"
-        assert raw["version"] == "0.1.0"
+        assert raw["version"] == ("0.2.0" if raw["id"] in CHANGED_SINCE_RELEASE else "0.1.0")
         assert raw["legal_basis"] and raw["sources"]
     assert not (PACKAGE / "template_code").exists()
 
