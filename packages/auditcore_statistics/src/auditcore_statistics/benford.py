@@ -210,6 +210,15 @@ def _leading_group(significant: str, digits: int, short_values: ShortValues | No
     return int(significant[0]) * 10
 
 
+def _digit_rows(groups: Sequence[int], digits: int) -> tuple[DigitRow, ...]:
+    domain = range(1, 10) if digits == 1 else range(10, 100)
+    counts = {d: 0 for d in domain}
+    for group in groups:
+        counts[group] += 1
+    total = len(groups)
+    return tuple(DigitRow(d, counts[d], counts[d] / total, expected_share(d)) for d in domain)
+
+
 def benford_test(
     values: Sequence[int | float | Decimal | None],
     *,
@@ -247,11 +256,7 @@ def benford_test(
     if not tally.groups:
         raise StatisticsInputError("Keine auswertbaren Werte vorhanden.")
     total = len(tally.groups)
-    domain = range(1, 10) if digits == 1 else range(10, 100)
-    counts = {d: 0 for d in domain}
-    for group in tally.groups:
-        counts[group] += 1
-    rows = tuple(DigitRow(d, counts[d], counts[d] / total, expected_share(d)) for d in domain)
+    rows = _digit_rows(tally.groups, digits)
     statistic = _chi2_statistic(rows, total)
     dof = len(rows) - 1
     return BenfordResult(

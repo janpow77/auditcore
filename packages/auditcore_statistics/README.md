@@ -73,8 +73,8 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
-| `LEGACY_METHOD` | Konstante | – | `benford` |
-| `METHOD` | Konstante | – | `benford` |
+| `LEGACY_METHOD` | Konstante | – | `_legacy_flowstat` |
+| `METHOD` | Konstante | Version 2: trailing zeros count as digits (version 1 dropped them, see CHANGELOG 0.5.0). | `benford` |
 | `BenfordResult` | Datenklasse | Distribution, exclusions and chi-square statistic of one analysis. | `benford` |
 | `ChiSquareTest` | Datenklasse | Pearson chi-square test of one digit test against Benford's law. | `significance` |
 | `DigitRow` | Datenklasse | Observed and expected frequency of one leading digit (group). | `benford` |
@@ -92,7 +92,7 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 | `gini` | Funktion | Gini coefficient ``sum_i (2i - n - 1) x_(i) / (n * sum x)`` of sorted values. | `concentration` |
 | `herfindahl_hirschman` | Funktion | Sum of squared shares on the scale 0..1 (between ``1/n`` and 1, not 0..10.000). | `concentration` |
 | `legacy_flowinvoice_benford` | Funktion | Result fields of the source ``BenfordResult`` as a dictionary (same values). | `legacy_flowinvoice` |
-| `legacy_run_benford` | Funktion | Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``. | `benford` |
+| `legacy_run_benford` | Funktion | Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``. | `_legacy_flowstat` |
 | `lorenz_curve` | Funktion | Lorenz curve with ``n + 1`` points and its Gini coefficient; ``None`` as :func:`gini`. | `concentration` |
 | `recommended_flowinvoice_benford` | Funktion | ``benford_test`` with the decided parameters (replaces the legacy variant). | `legacy_flowinvoice` |
 
