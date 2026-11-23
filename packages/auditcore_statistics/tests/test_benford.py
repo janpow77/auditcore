@@ -52,9 +52,13 @@ def test_st_c01_two_digit_analysis_does_not_crash_on_short_values() -> None:
     assert sum(r.observed_count for r in excluded.rows) == excluded.analysed
 
 
-def test_st_c01_short_value_rule_must_be_explicit() -> None:
+def test_st_c01_short_value_rule_defaults_to_pad() -> None:
+    """Seit 0.5.0: ohne Angabe gilt ``pad`` (Signifikand 5 → 5,0 → Gruppe 50)."""
+    result = benford_test([12, 34, 5], digits=2)
+    assert result.short_values == "pad" and result.short_excluded == 0
+    assert result.rows[50 - 10].observed_count == 1
     with pytest.raises(StatisticsInputError, match="short_values"):
-        benford_test([12, 34], digits=2)
+        benford_test([12, 34], digits=2, short_values="drop")  # type: ignore[arg-type]
     with pytest.raises(StatisticsInputError):
         benford_test([12, 34], digits=1, short_values="pad")
 
@@ -71,7 +75,8 @@ def test_st_c02_integer_and_float_forms_give_the_same_digits() -> None:
     assert {r["digit"] for r in legacy_two["rows"] if r["observed_count"]} >= {"50", "70"}
     a = benford_test(ints, digits=2, short_values="exclude")
     b = benford_test(floats, digits=2, short_values="exclude")
-    assert a == b and a.short_excluded == 7  # 1, 2, 3, 5, 7, 9 and 100
+    assert a == b and a.short_excluded == 6  # 1, 2, 3, 5, 7 and 9; 100 counts as 10
+    assert a.rows[0].observed_count == 1
 
 
 def test_st_c03_scientific_notation_and_small_values_use_exact_digits() -> None:
@@ -116,5 +121,10 @@ def test_result_is_serialisable_and_input_is_not_mutated() -> None:
     before = list(values)
     data = benford_test(values, digits=1).to_dict()
     assert values == before
-    assert json.loads(json.dumps(data))["excluded"] == {"missing": 1, "zero": 0, "short": 0}
+    assert json.loads(json.dumps(data))["excluded"] == {
+        "missing": 1,
+        "zero": 0,
+        "short": 0,
+        "below_lower_bound": 0,
+    }
     assert math.isclose(sum(r["observed_share"] for r in data["rows"]), 1.0)
