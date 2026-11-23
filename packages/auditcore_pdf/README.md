@@ -4,14 +4,14 @@
 
 Vollständige PDF-Verarbeitung, Seitenoperationen, visuelle Anzeige und nachprüfbare Schwärzung für Prüf- und Kontrollprozesse.
 
-Die Bibliothek stellt Fachanwendungen der Prüfbehörde robuste Funktionen für Dokumentenanalyse, Seitenmanipulationen (Umsortieren, Drehen, Extrahieren, Zusammenführen, Aufteilen) und mehrschichtige Schwärzungen bereit. Nicht enthalten sind Web-Endpunkte, Benutzeroberflächen oder Datenbankbindungen.
+Die Bibliothek stellt Fachanwendungen der Prüfbehörde robuste Funktionen für Dokumentenanalyse, Seitenmanipulationen (Umsortieren, Drehen, Extrahieren, Zusammenführen, Aufteilen) und mehrschichtige Schwärzungen bereit. Das Unterpaket `auditcore_pdf.redaction` schwärzt in zwei Schritten: `build_plan` sucht Fundstellen (Muster mit Prüfziffer, Begriffe, optional KI-Namenserkennung) und liefert einen Plan zur Vorschau; `apply_plan` schwärzt genau die bestätigte Auswahl, bereinigt versteckte Ablagen und prüft das Ergebnis fail-closed nach. Nicht enthalten sind Web-Endpunkte, Benutzeroberflächen oder Datenbankbindungen.
 
 ## Installation
 
 Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt):
 
 ```bash
-python -m pip install 'auditcore_pdf==0.1.0' \
+python -m pip install 'auditcore_pdf==0.2.0' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
@@ -29,23 +29,24 @@ Debian/Ubuntu über die signierte APT-Quelle des Releases
 sudo apt-get install python3-auditcore-pdf
 ```
 
-Extras: `[pymupdf]` – PDF-Engine über PyMuPDF; `[pillow]` – Bildverarbeitung; `[dev]` – Test- und Prüfwerkzeuge.
+Extras: `[pymupdf]` – PDF-Engine über PyMuPDF; `[pillow]` – Bildverarbeitung; `[ner]` – KI-Namenserkennung über spaCy (das Sprachmodell, etwa `de_core_news_sm`, installiert die Anwendung); `[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
 
 ```python
-from auditcore_pdf import (
-    STANDARD_PATTERNS,
-    DocumentInfo,
-    PageInfo,
-    RedactionBox,
-    SanitizationPolicy,
-)
+from auditcore_pdf import STANDARD_PATTERNS, SanitizationPolicy
+from auditcore_pdf.redaction import PATTERNS, Criteria, Selection
 
 assert "email" in STANDARD_PATTERNS
-assert "iban" in STANDARD_PATTERNS
 policy = SanitizationPolicy(scrub_metadata=True, strip_attachments=True)
 assert policy.scrub_metadata is True
+
+# Zweistufige Schwärzung: Kriterien festlegen, Plan bauen, Auswahl bestätigen.
+criteria = Criteria.from_input(patterns=["iban", "email"], terms=["Erika Mustermann"])
+assert "iban" in PATTERNS
+# plan = build_plan(pdf_bytes, criteria)             # Vorschau: plan.to_dict()
+# selection = Selection.from_dict(antwort_der_vorschau)
+# out, report = apply_plan(pdf_bytes, selection)     # fail-closed nachgeprüft
 ```
 
 ## API-Überblick
@@ -93,6 +94,7 @@ assert policy.scrub_metadata is True
 | `auditcore_pdf.models` | Datenmodelle für PDF-Verarbeitung, Seitenoperationen und Schwärzung. |
 | `auditcore_pdf.operations` | Seiten- und Dokumentenoperationen für PDF-Dateien. |
 | `auditcore_pdf.redact` | Vollständige Schwärzungslogik mit Koordinaten-, Begriffs- und Mustererkennung. |
+| `auditcore_pdf.redaction` | Schwärzung mit Pflichtvorschau: Plan, Auswahl, Anwendung und Nachprüfung. |
 | `auditcore_pdf.sanitize` | Metadaten-, Anhangs- und Anmerkungsbereinigung zur Verhinderung von Datenabflüssen. |
 | `auditcore_pdf.verification` | Unabhängige Nachprüfung und Verifikation von Schwärzungsergebnissen. |
 | `auditcore_pdf.viewer` | Anzeige-, Lese- und Analysefunktionen für PDF-Dokumente. |
@@ -108,17 +110,17 @@ Hervorgegangen aus den Anforderungen und Untersuchungen in `audit_designer/pdf-e
 
 ## Bewusste Verhaltensabweichungen
 
-Keine Verhaltensabweichungen gegenüber einem Vorgängerpaket, da es sich um eine Neukonzeption als saubere Fachbibliothek handelt. Gegenüber einfachen visuellen Schwärzungswerkzeugen werden zugrundeliegende Textströme, Metadaten und Anhänge unwiderruflich physisch entfernt und vor der Rückgabe unabhängig verifiziert.
+Die Schwärzung `auditcore_pdf.redaction` übernimmt den Stand von pdf-editor@c5b3e1d ohne fachliche Abweichung; Einzelheiten und die Abgrenzung zu den Funktionen aus 0.1.0 in [`docs/behavior-changes.md`](docs/behavior-changes.md). Gegenüber einfachen visuellen Schwärzungswerkzeugen werden zugrundeliegende Textströme, Metadaten und Anhänge unwiderruflich physisch entfernt und vor der Rückgabe unabhängig verifiziert.
 
 ## Abhängigkeiten
 
-- Pflicht: `auditcore_common==0.2.0`, Python `>=3.11`
-- Optional: `pymupdf>=1.23.8` (Ausführung der PDF-Engine), `Pillow>=10.0` (Bildoperationen)
+- Pflicht: `auditcore_common==0.2.1`, Python `>=3.11`
+- Optional: `pymupdf>=1.23.8` (Ausführung der PDF-Engine), `Pillow>=10.0` (Bildoperationen), `spacy>=3.8` (KI-Namenserkennung)
 - Bewusst keine Abhängigkeit: kein Web-Framework (kein FastAPI, Starlette), kein ORM, keine Datenbank-Treiber.
 
 ## Sicherheit und Datenschutz
 
-Die Bibliothek dient dem Schutz personenbezogener und vertraulicher Daten in Prüfunterlagen. Schwärzungen entfernen Zeichen und Vektoren physisch aus den Seitenobjekten; Metadaten und XMP-Datenströme werden aktiv bereinigt. Eine unabhängige Nachprüfung (`verify_redaction`) stellt sicher, dass keine vertraulichen Begriffe im Ausgabedokument verbleiben. Es erfolgen keinerlei Netzwerkzugriffe.
+Die Bibliothek dient dem Schutz personenbezogener und vertraulicher Daten in Prüfunterlagen. Schwärzungen entfernen Zeichen und Vektoren physisch aus den Seitenobjekten; Metadaten und XMP-Datenströme werden aktiv bereinigt. Eine unabhängige Nachprüfung (`verify_redaction`) stellt sicher, dass keine vertraulichen Begriffe im Ausgabedokument verbleiben. Es erfolgen keinerlei Netzwerkzugriffe. Ein Schwärzungsplan (`Plan.to_dict()`) enthält die gefundenen Texte im Klartext: Er darf nur zwischen Vorschau und Anwendung übertragen, nie protokolliert oder gespeichert werden. Klartext steht auch in `Selection.criteria.terms`, in den Schlüsseln von `ApplyReport.by_source` und als Zeichenanfang in `RedactionVerificationError`; auch diese nicht protokollieren. Dateigröße und Seitenzahl begrenzt die Anwendung; Einzelheiten in [`docs/behavior-changes.md`](docs/behavior-changes.md#was-die-anwendung-selbst-begrenzen-und-schützen-muss). Die Anwendung prüft über SHA-256, dass Plan und Datei zusammengehören, und lehnt eine veraltete Auswahl ab.
 
 ## Lizenz und Herkunftsnachweis
 
