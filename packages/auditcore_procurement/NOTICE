@@ -1,4 +1,4 @@
-auditcore_procurement 0.3.0 — source attribution and authorization
+auditcore_procurement 0.4.0 — source attribution and authorization
 
 Derived from (Git blobs verified against GitHub on 2026-09-22):
   janpow77/audit-portal@d8eefa426826bdecb67036774f3128ae05e7d0d0
@@ -36,3 +36,12 @@ http://publications.europa.eu/resource/celex/<CELEX>; source: EUR-Lex,
 © European Union; the reuse conditions of the EUR-Lex legal notice apply and
 were not reviewed beyond acknowledging the source). Only the Official Journal
 is authentic; the quotes serve as evidence for the values.
+
+Profile procurement.hvtg 2026.11.1 (since 0.4.0) additionally quotes Article 4
+point (d) and Article 6 of Directive 2014/24/EU and Article 15 point (c) and
+Article 17 of Directive 2014/25/EU and lists the amending Commission
+regulations checked on 2026-11-23 (official German texts, Publications Office
+of the European Union, source: EUR-Lex, © European Union; same reuse
+conditions and limitations as above). It also cites § 106 Abs. 2 Nr. 1 GWB and
+§ 3 VgV in their versions since 2016-04-18 (German federal law, official works
+under § 5 UrhG).

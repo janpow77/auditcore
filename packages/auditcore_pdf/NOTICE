@@ -1,2 +1,16 @@
-auditcore_pdf – auditcore Monorepo.
-Eigenständige Implementierung für PDF-Verarbeitung, Seitenoperationen und Schwärzung.
+auditcore_pdf 0.2.0 — source attribution and authorization
+
+PDF processing and page operations: new implementation in auditcore
+(rights holder's authorization under MIT of 2026-09-22).
+
+The subpackage auditcore_pdf.redaction (since 0.2.0) is derived from a
+repository of the same rights holder (janpow77):
+  janpow77/pdf-editor@c5b3e1d1174739b530cc7945baf2ecd4d76c00c0
+    backend/app/services/redaction.py
+The rights holder (sole author) released this code for auditcore_pdf.redaction
+under the MIT License on 2026-11-23. janpow77/pdf-editor itself remains under
+AGPL-3.0-or-later; this release does not relicense that repository.
+
+PyMuPDF (AGPL-3.0 or commercial) and spaCy with its language models are not
+distributed with this package; they are installed only through the optional
+extras [pymupdf] and [ner] or by the application.
