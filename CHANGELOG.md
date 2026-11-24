@@ -25,6 +25,9 @@ dummybundle → `auditcore_identifiers==0.3.0`, risk (Extras `procurement`,
   Vergabeart folgen dem Land (AT 20 %, BVergG 2018); Auszahlungsverzögerung
   endet spätestens am Bezugsdatum bzw. Stichtag; `discount_gross` macht
   Brutto − Skonto = gezahlt centgenau; Hinweis zu `company` berichtigt.
+  Derselbe Seed erzeugt deshalb andere Daten als 0.2.0. Die mit v0.16.0
+  veröffentlichte 0.2.0 trug in N1 noch den Stand „Entwurf“/`NOT_GRANTED`;
+  0.3.0 führt die erteilte Freigabe.
 - `auditcore_procurement` 0.4.0: Profil `procurement.hvtg 2026.11.1`
   (soziale und andere besondere Dienstleistungen ab 2028 als fester Wert ohne
   Enddatum, Werttests gegen zitierte Richtlinienbeträge), § 3 Abs. 9 VgV
@@ -46,16 +49,24 @@ dummybundle → `auditcore_identifiers==0.3.0`, risk (Extras `procurement`,
   RF(0) = 2,31 aus Tabelle 4 des Leitfadens, weil 6.3.5.5 den ersten Zuschlag
   mit (3,89 − 2,31 − 1) = 0,58 rechnet; vorher nahm der erste Zuschlag 2,30
   aus Anhang 3. Im Beispiel 6.3.5.7 sinkt der erste Zuschlag um höchstens
-  308.815 € (0,24 % der ULE). RER `not_applicable` mit deutscher Begründung,
-  Vorlagenwortlaut in `not_applicable_template`.
+  308.815 € (0,24 % der ULE). Vertragsänderung in `evaluation/1`: RER
+  `not_applicable` trägt jetzt die deutsche Begründung statt des
+  Vorlagenwortlauts, dieser steht in `not_applicable_template`; wer den Wert
+  bisher als Vorlage auswertete, muss auf das neue Feld umstellen.
 - `auditcore_pdf` 0.2.0: Unterpaket `auditcore_pdf.redaction` mit
   zweistufiger Schwärzung (`build_plan` → bestätigte `Selection` →
   `apply_plan`, fail-closed nachgeprüft), Mustern mit Prüfziffer, Prüfung
   versteckter Ablagen und `sanitize`; übernommen aus pdf-editor unter MIT.
-- `auditcore_runner` 0.1.5: Runner-Pools über mehrere Repositories (#334).
-  Exitcode 127 unter `sh -c`/`bash -c` meldet jetzt „Programm im Befehl
-  nicht gefunden (Exitcode 127)“ mit der letzten stderr-Zeile statt „sh im
-  Image bzw. auf dem Rechner nicht gefunden“; Anlass: Ein Worktree ohne
+- `auditcore_runner` 0.1.5 (enthält 0.1.3 und 0.1.4): Runner-Pools über
+  mehrere Repositories (#334); Supervisor findet das Console-Script relativ
+  zum aktiven Python, wenn `~/.local/bin` im systemd-PATH fehlt; Runner-Image
+  mit Tauri-v2-Buildabhängigkeiten, `en_US.UTF-8` und Rust 1.98.1 (`clippy`,
+  `rustfmt`). Exitcode 127 in einem Shell-Befehl (`sh`, `bash`, `dash`, auch
+  `/bin/sh`, `bash -lc`, `sh -euc`) meldet jetzt „Programm im Befehl nicht
+  gefunden (Exitcode 127)“ statt „sh im Image bzw. auf dem Rechner nicht
+  gefunden“, mit der aussagekräftigsten Zeile (enthält „not found“, „no such
+  file“ oder „nicht gefunden“, sonst die letzte; Docker-Zeilen „Run '…“
+  übersprungen; ohne stderr aus stdout); Anlass: Ein Worktree ohne
   `frontend/node_modules` erschien als fehlende Shell (#330). Das
   Runner-Image lädt Chromium und FFmpeg für Playwright über einen engen
   lokalen Proxy (#335).
