@@ -1,6 +1,6 @@
 # Changelog auditcore_procurement
 
-## 0.4.0 – unveröffentlicht
+## 0.4.0 – 2026-11-24
 
 Neues Profil `procurement.hvtg 2026.11.1` (`CURRENT_PROFILE`) und Abfragen
 nationaler Vorschriften je Stichtag. 2026.10.1 und ältere Profile bleiben
