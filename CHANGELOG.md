@@ -2,13 +2,17 @@
 
 ## Unreleased
 
-Paketversionen (Korrekturen gegen falsche Ergebnisse in Kennungsprüfung,
-Schwellenwerten und Testdaten): `auditcore_identifiers` 0.3.0,
-`auditcore_documents` 0.5.1, `auditcore_dummybundle` 0.3.0,
-`auditcore_procurement` 0.4.0, `auditcore_risk` 0.4.3. Bindungen:
-documents und dummybundle → `auditcore_identifiers==0.3.0`, risk (Extras
-`procurement`, `dev`) → `auditcore_procurement==0.4.0`;
-`auditcore_dummygenerator` bleibt 0.2.0.
+## v0.17.0 – 2026-11-24
+
+Versionen: `auditcore_identifiers` 0.3.0, `auditcore_documents` 0.5.1,
+`auditcore_dummybundle` 0.3.0, `auditcore_procurement` 0.4.0,
+`auditcore_risk` 0.4.3 (#339), `auditcore_statistics` 0.5.0,
+`auditcore_extrapolation` 0.3.0 (#340), `auditcore_pdf` 0.2.0 (#341),
+`auditcore_runner` 0.1.5 (erstmals seit 0.1.2 veröffentlicht); die übrigen
+Pakete bleiben auf dem Stand von v0.16.0. Bindungen: documents und
+dummybundle → `auditcore_identifiers==0.3.0`, risk (Extras `procurement`,
+`dev`) → `auditcore_procurement==0.4.0`; `auditcore_dummygenerator` bleibt
+0.2.0.
 
 - `auditcore_identifiers` 0.3.0: neues Feld `CheckResult.check_digit`
   (`verified`/`failed`/`not_checked`/`none`) und Gesamturteil
@@ -28,10 +32,33 @@ documents und dummybundle → `auditcore_identifiers==0.3.0`, risk (Extras
   Stichtag (`central_government_rule`; alte Fassung bis 30.06.2026, neue ab
   01.07.2026).
 - `auditcore_risk` 0.4.3: nur Bindung an procurement 0.4.0.
-- `auditcore-runner`: Exitcode 127 unter `sh -c`/`bash -c` meldet jetzt
-  „Programm im Befehl nicht gefunden (Exitcode 127)“ mit der letzten
-  stderr-Zeile statt „sh im Image bzw. auf dem Rechner nicht gefunden“. Anlass:
-  Ein Worktree ohne `frontend/node_modules` erschien als fehlende Shell.
+- `auditcore_statistics` 0.5.0: Benford-Ziffern werden exakt gelesen
+  (500 → 50, 1 000 und 10,00 → 10; vorher verwarf `Decimal.normalize()` die
+  nachgestellten Nullen und die Werte fielen als einstellig heraus), Methode
+  `auditcore_statistics.benford/2`. `short_values` ist bei zwei Ziffern
+  optional (Standard `pad`), neuer Parameter `lower_bound` (REST: fehlt das
+  Feld, gilt keine Grenze), Warnung über 5 % kurzer Werte.
+- `auditcore_extrapolation` 0.3.0: geschichtete Präzision bei nicht
+  proportionaler Aufteilung, Mindestumfang nach Art. 5 Abs. 5 DelVO (EU)
+  2023/67 als Einschränkung (`limitations`), Basispräzision SI × RF(0) beim
+  MUS-Standardansatz ohne Fehler (ohne t-Vergleich, weil Poisson-Grenze).
+  Konservativer Ansatz: Basispräzision und erster Zuschlag verwenden dasselbe
+  RF(0) = 2,31 aus Tabelle 4 des Leitfadens, weil 6.3.5.5 den ersten Zuschlag
+  mit (3,89 − 2,31 − 1) = 0,58 rechnet; vorher nahm der erste Zuschlag 2,30
+  aus Anhang 3. Im Beispiel 6.3.5.7 sinkt der erste Zuschlag um höchstens
+  308.815 € (0,24 % der ULE). RER `not_applicable` mit deutscher Begründung,
+  Vorlagenwortlaut in `not_applicable_template`.
+- `auditcore_pdf` 0.2.0: Unterpaket `auditcore_pdf.redaction` mit
+  zweistufiger Schwärzung (`build_plan` → bestätigte `Selection` →
+  `apply_plan`, fail-closed nachgeprüft), Mustern mit Prüfziffer, Prüfung
+  versteckter Ablagen und `sanitize`; übernommen aus pdf-editor unter MIT.
+- `auditcore_runner` 0.1.5: Runner-Pools über mehrere Repositories (#334).
+  Exitcode 127 unter `sh -c`/`bash -c` meldet jetzt „Programm im Befehl
+  nicht gefunden (Exitcode 127)“ mit der letzten stderr-Zeile statt „sh im
+  Image bzw. auf dem Rechner nicht gefunden“; Anlass: Ein Worktree ohne
+  `frontend/node_modules` erschien als fehlende Shell (#330). Das
+  Runner-Image lädt Chromium und FFmpeg für Playwright über einen engen
+  lokalen Proxy (#335).
 - `scripts/regulierung_package_test.py`: neue Option `--accel auto|kvm|tcg`
   (Standard `auto`). Ist `/dev/kvm` für den aufrufenden Benutzer nutzbar,
   läuft die Test-VM mit KVM und dem festen CPU-Modell `Westmere`
