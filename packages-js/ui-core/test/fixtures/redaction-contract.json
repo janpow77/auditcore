@@ -1,0 +1,489 @@
+{
+ "catalogue": {
+  "contract": "pdf_redaction/1",
+  "library": "auditcore_pdf 0.3.0",
+  "ner_available": true,
+  "patterns": [
+   {
+    "id": "iban",
+    "label": "IBAN",
+    "hint": "Kontonummern, auch in Vierergruppen geschrieben; nur mit gültiger Prüfziffer",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "email",
+    "label": "E-Mail-Adresse",
+    "hint": "Adressen in Anschreiben und Verteilern",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "telefon",
+    "label": "Telefonnummer",
+    "hint": "deutsche Rufnummern; ohne „/“ oder „-“ nur nach „Tel.“, „Telefon“, „Fax“ o. Ä.",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "steuer_id",
+    "label": "Steuer-Identifikationsnummer",
+    "hint": "11-stellige Steuer-ID; nur mit gültiger Prüfziffer",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "ust_id",
+    "label": "Umsatzsteuer-Identifikationsnummer",
+    "hint": "USt-IdNr. der Begünstigten",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "kreditkarte",
+    "label": "Kreditkartennummer",
+    "hint": "16-stellige Kartennummern; nur mit gültiger Prüfziffer (Luhn)",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "geburtsdatum",
+    "label": "Datum (TT.MM.JJJJ)",
+    "hint": "z. B. Geburtsdaten — trifft alle gültigen Datumsangaben dieses Formats",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "ip_adresse",
+    "label": "IP-Adresse",
+    "hint": "IPv4-Adressen aus Protokollauszügen; nicht nach „Version“ oder „Kapitel“",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "aktenzeichen",
+    "label": "Aktenzeichen",
+    "hint": "Muster wie AZ-1234/26; nicht bei Rechtsgrundlagen wie „VO 2021/1060“",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "ki_namen",
+    "label": "Personennamen (KI-Erkennung)",
+    "hint": "spaCy-NER statt Regex — erkennt Namen im Fließtext, ist aber unsicherer als die übrigen Muster: Vorschau vor dem Schwärzen prüfen",
+    "ai": true,
+    "available": true
+   }
+  ],
+  "limits": {
+   "max_upload_bytes": 20971520,
+   "max_pages": 500,
+   "max_selection_bytes": 8388608,
+   "max_terms": 200,
+   "max_term_length": 200,
+   "max_areas": 500,
+   "max_areas_per_page": 100
+  }
+ },
+ "catalogue_without_ner": {
+  "contract": "pdf_redaction/1",
+  "library": "auditcore_pdf 0.3.0",
+  "ner_available": false,
+  "patterns": [
+   {
+    "id": "iban",
+    "label": "IBAN",
+    "hint": "Kontonummern, auch in Vierergruppen geschrieben; nur mit gültiger Prüfziffer",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "email",
+    "label": "E-Mail-Adresse",
+    "hint": "Adressen in Anschreiben und Verteilern",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "telefon",
+    "label": "Telefonnummer",
+    "hint": "deutsche Rufnummern; ohne „/“ oder „-“ nur nach „Tel.“, „Telefon“, „Fax“ o. Ä.",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "steuer_id",
+    "label": "Steuer-Identifikationsnummer",
+    "hint": "11-stellige Steuer-ID; nur mit gültiger Prüfziffer",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "ust_id",
+    "label": "Umsatzsteuer-Identifikationsnummer",
+    "hint": "USt-IdNr. der Begünstigten",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "kreditkarte",
+    "label": "Kreditkartennummer",
+    "hint": "16-stellige Kartennummern; nur mit gültiger Prüfziffer (Luhn)",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "geburtsdatum",
+    "label": "Datum (TT.MM.JJJJ)",
+    "hint": "z. B. Geburtsdaten — trifft alle gültigen Datumsangaben dieses Formats",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "ip_adresse",
+    "label": "IP-Adresse",
+    "hint": "IPv4-Adressen aus Protokollauszügen; nicht nach „Version“ oder „Kapitel“",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "aktenzeichen",
+    "label": "Aktenzeichen",
+    "hint": "Muster wie AZ-1234/26; nicht bei Rechtsgrundlagen wie „VO 2021/1060“",
+    "ai": false,
+    "available": true
+   },
+   {
+    "id": "ki_namen",
+    "label": "Personennamen (KI-Erkennung)",
+    "hint": "spaCy-NER statt Regex — erkennt Namen im Fließtext, ist aber unsicherer als die übrigen Muster: Vorschau vor dem Schwärzen prüfen",
+    "ai": true,
+    "available": false
+   }
+  ],
+  "limits": {
+   "max_upload_bytes": 52428800,
+   "max_pages": 500,
+   "max_selection_bytes": 8388608,
+   "max_terms": 200,
+   "max_term_length": 200,
+   "max_areas": 500,
+   "max_areas_per_page": 100
+  }
+ },
+ "plan": {
+  "contract": "pdf_redaction/1",
+  "version": 1,
+  "sha256": "9d696ab434201a64ff41bca7b0659b646db6d25e470897223b0a5934b14d718b",
+  "criteria": {
+   "patterns": [
+    "email",
+    "iban",
+    "ki_namen"
+   ],
+   "terms": [
+    "Prüfvermerk"
+   ],
+   "case_sensitive": false,
+   "whole_word": true
+  },
+  "page_count": 3,
+  "pages": [
+   {
+    "page": 1,
+    "width": 595.0,
+    "height": 842.0,
+    "rotation": 0,
+    "has_text": true
+   },
+   {
+    "page": 2,
+    "width": 595.0,
+    "height": 842.0,
+    "rotation": 0,
+    "has_text": true
+   },
+   {
+    "page": 3,
+    "width": 595.0,
+    "height": 842.0,
+    "rotation": 0,
+    "has_text": false
+   }
+  ],
+  "pages_without_text": [
+   3
+  ],
+  "total": 9,
+  "by_source": {
+   "begriff:Prüfvermerk": 2,
+   "email": 3,
+   "iban": 1,
+   "ki_namen": 3
+  },
+  "candidates": [
+   {
+    "id": "d2ca468f171ccd46",
+    "kind": "text",
+    "source": "begriff:Prüfvermerk",
+    "label": "Begriff „Prüfvermerk“",
+    "text": "Prüfvermerk",
+    "page": 1,
+    "rects": [
+     [
+      0.37889,
+      0.09284,
+      0.47955,
+      0.11079
+     ]
+    ],
+    "pdf_rect": [
+     225.44,
+     78.18,
+     285.33,
+     93.29
+    ],
+    "location": "Seitentext",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "0ce2c1cbe48e019a",
+    "kind": "text",
+    "source": "email",
+    "label": "E-Mail-Adresse",
+    "text": "max.muster@beispiel-firma.example",
+    "page": 1,
+    "rects": [
+     [
+      0.24637,
+      0.11897,
+      0.54661,
+      0.13692
+     ]
+    ],
+    "pdf_rect": [
+     146.59,
+     100.18,
+     325.23,
+     115.29
+    ],
+    "location": "Seitentext",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "47da27def93d4f06",
+    "kind": "text",
+    "source": "iban",
+    "label": "IBAN",
+    "text": "DE89 3704 0044 0532 0130 00",
+    "page": 1,
+    "rects": [
+     [
+      0.31317,
+      0.1451,
+      0.57012,
+      0.16305
+     ]
+    ],
+    "pdf_rect": [
+     186.33,
+     122.18,
+     339.22,
+     137.29
+    ],
+    "location": "Seitentext",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "bc1fa5efc36ba454",
+    "kind": "text",
+    "source": "ki_namen",
+    "label": "Personennamen (KI-Erkennung)",
+    "text": "Erika Beispiel",
+    "page": 1,
+    "rects": [
+     [
+      0.27719,
+      0.17123,
+      0.38917,
+      0.18918
+     ]
+    ],
+    "pdf_rect": [
+     164.93,
+     144.18,
+     231.55,
+     159.29
+    ],
+    "location": "Seitentext",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "4f7c27dbcf2c4c27",
+    "kind": "text",
+    "source": "ki_namen",
+    "label": "Personennamen (KI-Erkennung)",
+    "text": "Erika Beispiel",
+    "page": 1,
+    "rects": [
+     [
+      0.12101,
+      0.19736,
+      0.23299,
+      0.21531
+     ]
+    ],
+    "pdf_rect": [
+     72.0,
+     166.18,
+     138.63,
+     181.29
+    ],
+    "location": "Seitentext",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "a2b3af8f31d955e8",
+    "kind": "text",
+    "source": "ki_namen",
+    "label": "Personennamen (KI-Erkennung)",
+    "text": "Max Mustermann",
+    "page": 2,
+    "rects": [
+     [
+      0.12101,
+      0.11897,
+      0.2638,
+      0.13692
+     ]
+    ],
+    "pdf_rect": [
+     72.0,
+     100.18,
+     156.96,
+     115.29
+    ],
+    "location": "Seitentext",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "42902b572ef3caeb",
+    "kind": "text",
+    "source": "email",
+    "label": "E-Mail-Adresse",
+    "text": "max.muster@beispiel-firma.example",
+    "page": 2,
+    "rects": [
+     [
+      0.19912,
+      0.1451,
+      0.49935,
+      0.16305
+     ]
+    ],
+    "pdf_rect": [
+     118.47,
+     122.18,
+     297.11,
+     137.29
+    ],
+    "location": "Seitentext",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "b14862d02f44728b",
+    "kind": "hidden",
+    "source": "begriff:Prüfvermerk",
+    "label": "Begriff „Prüfvermerk“",
+    "text": "Prüfvermerk",
+    "page": null,
+    "rects": [],
+    "pdf_rect": null,
+    "location": "Metadaten (title)",
+    "outside_view": false,
+    "selected": true
+   },
+   {
+    "id": "331966b4449b8566",
+    "kind": "hidden",
+    "source": "email",
+    "label": "E-Mail-Adresse",
+    "text": "max.muster@beispiel-firma.example",
+    "page": null,
+    "rects": [],
+    "pdf_rect": null,
+    "location": "Metadaten (author)",
+    "outside_view": false,
+    "selected": true
+   }
+  ],
+  "cleanup": {
+   "metadata_fields": [
+    "author",
+    "title"
+   ],
+   "xmp": false,
+   "attachments": 0,
+   "javascript": false
+  }
+ },
+ "empty_plan": {
+  "contract": "pdf_redaction/1",
+  "version": 1,
+  "sha256": "9d696ab434201a64ff41bca7b0659b646db6d25e470897223b0a5934b14d718b",
+  "criteria": {
+   "patterns": [],
+   "terms": [
+    "gibt es nicht"
+   ],
+   "case_sensitive": false,
+   "whole_word": true
+  },
+  "page_count": 3,
+  "pages": [
+   {
+    "page": 1,
+    "width": 595.0,
+    "height": 842.0,
+    "rotation": 0,
+    "has_text": true
+   },
+   {
+    "page": 2,
+    "width": 595.0,
+    "height": 842.0,
+    "rotation": 0,
+    "has_text": true
+   },
+   {
+    "page": 3,
+    "width": 595.0,
+    "height": 842.0,
+    "rotation": 0,
+    "has_text": false
+   }
+  ],
+  "pages_without_text": [
+   3
+  ],
+  "total": 0,
+  "by_source": {},
+  "candidates": [],
+  "cleanup": {
+   "metadata_fields": [
+    "author",
+    "title"
+   ],
+   "xmp": false,
+   "attachments": 0,
+   "javascript": false
+  }
+ }
+}
