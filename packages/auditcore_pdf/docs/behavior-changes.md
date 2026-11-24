@@ -5,7 +5,9 @@
 einzelnes Modul). Der Code (2 444 Zeilen) wurde in 22 Module zerlegt,
 durchgehend typisiert (`mypy --strict`, ohne `Any`) und auf die
 Qualitätsgrenzen von auditcore gebracht (Funktionen höchstens 60 Zeilen,
-Komplexität höchstens 10). Fachlich ist nichts geändert.
+Komplexität höchstens 10). Fachlich ist nichts geändert. Einzige Ausnahme seit
+0.3.0 ist die strengere Typprüfung von `Selection.from_dict` (siehe
+Abweichungen).
 
 ## Nachweis
 
@@ -24,7 +26,8 @@ des pdf-editor in dessen CI.
   Umbauschritt erneut geprüft.
 - Differenzieller Zufallstest von `Selection.from_dict` (alt gegen neu):
   keine Abweichung, auch bei ungültigen Eingaben (gleiche Fehlerklasse und
-  Meldung).
+  Meldung). Das gilt für 0.2.0; seit 0.3.0 weist `from_dict`
+  falsch typisierte Eingaben ab, die das Original umgedeutet hat.
 - Unabhängige Gegenprüfung (Code-Audit): jeder Aufruf von `build_plan`,
   `apply_plan`, `redact_all` und `Selection.from_dict` aus den
   Bibliothekstests zusätzlich gegen das Original (362 Aufrufe),
@@ -47,6 +50,7 @@ des pdf-editor in dessen CI.
 | Einstieg | ein Modul `app.services.redaction` | Unterpaket mit ausdrücklichem `__all__`; interne Helfer in Untermodulen | Wartbarkeit; der öffentliche Vertrag (`build_plan`, `apply_plan`, `redact_all`, `Plan`, `Selection`, `Criteria`, Fehlerklassen, `PATTERNS`, Grenzwerte) ist gleich |
 | `spacy_ner(nlp)` | nimmt jedes Objekt | erwartet ein Objekt mit `pipe` (Protokoll `SpacyPipeline`) | Typisierung; eine spaCy-Pipeline erfüllt das Protokoll, das Verhalten ist gleich |
 | Fehlende PDF-Engine | `RedactionError("PyMuPDF nicht verfügbar")` beim Öffnen | `RuntimeError("PyMuPDF ist nicht verfügbar. Bitte auditcore_pdf[pymupdf] installieren.")` aus `engine.require_engine` | einheitliche Meldung aller auditcore_pdf-Funktionen; ein fehlendes Extra ist ein Installationsfehler, kein Eingabefehler. Der Import gelingt in beiden Fällen auch ohne Engine |
+| `Selection.from_dict` (seit 0.3.0) | `sanitize`, `case_sensitive`, `whole_word` über `bool()`; `rect` jede Folge (auch ein Text wie `"0101"`) | Wahrheitswerte und eine Liste aus Zahlen verlangt, sonst `RedactionError` | `"false"` oder `0` wurden bisher stillschweigend umgedeutet; über REST hätte das eine andere Schwärzung ergeben als ausgewählt. Gültige Eingaben verhalten sich gleich |
 | KI-Namenserkennung | spaCy im Anwendungscode | austauschbare `NerFn`; spaCy nur über Extra `[ner]`, Sprachmodell installiert die Anwendung | keine Pflichtabhängigkeit und kein Modell im Paket |
 
 ## Abgrenzung zu 0.1.0
