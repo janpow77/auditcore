@@ -52,8 +52,7 @@ class RegimeThreshold:
             "value": self.row.value,
             "key": f"{self.regime.id}.{self.contract_type}"
             + (f".{authority}" if authority else ""),
-            "valid_from": self.row.valid_from.isoformat(),
-            "valid_to": self.row.valid_to.isoformat(),
+            **self.row.period_view(),
             "regulation": self.source["regulation"],
             "official_journal": self.source["official_journal"],
             "celex": self.source["celex"],
@@ -200,8 +199,7 @@ def _series_view(series: Series) -> dict[str, object]:
         "note": _label(series.note),
         "thresholds": [
             {
-                "valid_from": row.valid_from.isoformat(),
-                "valid_to": row.valid_to.isoformat(),
+                **row.period_view(),
                 "value": row.value,
                 "source": row.source,
                 "provision": row.provision,

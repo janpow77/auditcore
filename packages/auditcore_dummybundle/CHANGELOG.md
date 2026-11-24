@@ -1,5 +1,45 @@
 # Changelog auditcore_dummybundle
 
+## 0.3.0 – 2026-11-23
+
+**Verhaltensänderung:** Gleicher Startwert ergibt andere Daten als 0.2.0 –
+in der Ländermischung DE+AT (Rechnungssteller und ihre USt-IdNr., damit der
+Steuersatz je Beleg, Vergabearten), in AT-Bündeln (Vergabearten), beim
+gezahlten Betrag von Belegen ohne Vorsteuerabzug (bis zu einem Cent) und bei
+den eingestreuten Auffälligkeiten `payment_deadline_exceeded` und
+`direct_award_above_limit` (AT). Vorhaben und Mittelabrufe bleiben gleich.
+
+- **Ländermischung DE+AT:** Rechnungssteller kommen aus dem Land des
+  Vorhabens; der Lieferantenpool wechselt zwischen DE und AT ab. Der
+  Steuersatz folgt dem Land des Rechnungsstellers (DE 19 %, AT 20 %). Bisher
+  stellten österreichische Lieferanten deutschen Vorhaben 19 % in Rechnung
+  und umgekehrt, obwohl eine grenzüberschreitende Leistung zwischen
+  Unternehmern keine Inlandssteuer des Leistenden trägt. Neues Belegfeld
+  `supplier_country`.
+- **Vergabeart nach dem Recht des Auftraggebers:** Österreichische öffentliche
+  Auftraggeber tragen „Direktvergabe (BVergG 2018)“, „Offenes Verfahren
+  (BVergG 2018)“ oder „Nicht offenes Verfahren mit vorheriger Bekanntmachung
+  (BVergG 2018)“ (§ 31 Abs. 2, 3 und 11, § 33 BVergG 2018) statt VOB/VOL. Die
+  Auffälligkeit `direct_award_above_limit` setzt die Bezeichnung des Landes.
+- **Skonto:** Neues Belegfeld `discount_gross` (Skonto auf den Bruttobetrag);
+  brutto − `discount_gross` = gezahlter Betrag gilt auf den Cent. Ohne
+  Vorsteuerabzug ist der gezahlte Betrag gleich dem projektbezogenen.
+  `discount_amount` bleibt das Skonto auf die Bemessungsgrundlage (V4).
+  Negative Belege negieren beide Skontofelder mit.
+- **Vorlage N1 0.2.0:** Spalte „Skontobetrag“ zeigt `discount_gross` und hat
+  einen Spaltenhinweis. Das Profil hat einen neuen Inhaltshash und steht bis
+  zur neuen Freigabe des Rechteinhabers auf „Entwurf“ / `NOT_GRANTED`
+  (`provenance.json` → `profile_release.pending`). Die übrigen zehn Profile
+  sind unverändert freigegeben.
+- **Auszahlungsfrist überschritten:** Die eingestreute Verzögerung endet
+  spätestens am Bezugsdatum, am Stichtag des Zahlungsantrags des
+  Mittelabrufs und vor der Aufdeckung einer Korrektur; die Grundgesamtheit
+  übernimmt das Auszahlungsdatum. Bisher lagen Auszahlungen mit Status
+  „ausgezahlt“ hinter dem Bezugsdatum.
+- Hinweis zum Feldtyp `company` berichtigt: Namen sind innerhalb einer Spalte
+  verschieden und wiederholen sich erst nach 25.920 Zeilen.
+- Pin `auditcore_identifiers==0.3.0`.
+
 ## 0.2.0 – 2026-10-17
 
 **Verhaltensänderung:** Gleicher Startwert ergibt andere Daten als 0.1.0.

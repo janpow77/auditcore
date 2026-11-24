@@ -15,9 +15,9 @@ DATA: dict[str, Any] = json.loads(
 NATIONAL_BBAN_CHECKS = {"BE", "ES", "FI", "FR", "IT", "ME", "MK", "NO", "PT", "SI", "SM"}
 
 
-def _disagreements(kind: str) -> list[tuple[str, bool, ai.CheckResult]]:
+def _disagreements(kind: str, key: str | None = None) -> list[tuple[str, bool, ai.CheckResult]]:
     result = []
-    for entry in DATA[kind]:
+    for entry in DATA[key or kind]:
         checked = ai.check(kind, entry["value"])
         if checked.valid is not entry["stdnum_valid"]:
             result.append((entry["value"], entry["stdnum_valid"], checked))
@@ -35,6 +35,21 @@ def test_strict_accepts_every_number_stdnum_accepts_per_eu_country() -> None:
         for value in values:
             result = ai.check_vat_id(value)
             assert result.valid and result.country == country, value
+            if country == "FR" and not value[2:4].isdigit():  # letter key: no published procedure
+                assert result.check_digit is ai.CheckDigit.NOT_CHECKED, value
+            elif country == "CZ" and len(value) == 11:  # birth number until 1953: no check digit
+                assert result.check_digit is ai.CheckDigit.NONE, value
+            else:
+                assert result.check_digit is ai.CheckDigit.VERIFIED, value
+                assert result.verdict is ai.Verdict.VALID, value
+
+
+def test_one_wrong_check_character_is_rejected_like_stdnum() -> None:
+    """Last character of every number above changed: same verdict as stdnum, except where
+    strict cannot verify (FR letter keys) – those are VALID but only ``format_valid``."""
+    assert len(DATA["vat_mutated"]) > 190
+    for value, stdnum_valid, result in _disagreements("vat_id", "vat_mutated"):
+        assert not stdnum_valid and result.verdict is ai.Verdict.FORMAT_VALID, value
 
 
 def test_iban_differences_are_prefix_or_national_checks() -> None:
@@ -53,10 +68,11 @@ def test_bic_and_lei_differences_are_documented() -> None:
         assert stdnum_valid and "-" in value
 
 
-def test_vat_differences_only_for_countries_without_checksum_in_strict() -> None:
+def test_vat_differences_only_where_strict_cannot_verify_the_check_digit() -> None:
     for value, stdnum_valid, result in _disagreements("vat_id"):
         assert not stdnum_valid and result.valid, value
-        assert result.details["checksum"] == "not_checked"
+        assert result.check_digit in (ai.CheckDigit.NOT_CHECKED, ai.CheckDigit.NONE), value
+        assert result.verdict is ai.Verdict.FORMAT_VALID, value
 
 
 def test_tax_id_differences_are_the_three_in_a_row_rule() -> None:

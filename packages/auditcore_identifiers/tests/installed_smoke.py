@@ -9,7 +9,7 @@ from auditcore_identifiers.web import check_one
 
 def main() -> None:
     package = distribution("auditcore_identifiers")
-    assert package.version == "0.2.1"
+    assert package.version == "0.3.0"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.2.1"], runtime
     assert find_spec("auditcore") is None

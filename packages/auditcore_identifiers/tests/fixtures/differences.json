@@ -57,7 +57,7 @@
   "comparison": "Pipeline VatIdFormatRule",
   "legacy": "INVALID",
   "strict": "VALID",
-  "count": 46,
+  "count": 9,
   "example": {
    "value": "de136695976"
   }
@@ -75,7 +75,7 @@
   "comparison": "Pipeline VatIdFormatRule",
   "legacy": "VALID",
   "strict": "INVALID:invalid_checksum",
-  "count": 27,
+  "count": 36,
   "example": {
    "value": "DE940317595"
   }
@@ -84,7 +84,7 @@
   "comparison": "Pipeline VatIdFormatRule",
   "legacy": "VALID",
   "strict": "INVALID:invalid_format",
-  "count": 4,
+  "count": 6,
   "example": {
    "value": "BE903955048"
   }
@@ -156,7 +156,7 @@
   "comparison": "documents vat_id_check (Donut)",
   "legacy": "INVALID",
   "strict": "VALID",
-  "count": 44,
+  "count": 7,
   "example": {
    "value": "DE136.695.976"
   }
@@ -173,8 +173,17 @@
  {
   "comparison": "documents vat_id_check (Donut)",
   "legacy": "VALID",
+  "strict": "INVALID:invalid_checksum",
+  "count": 9,
+  "example": {
+   "value": "BE0990836873"
+  }
+ },
+ {
+  "comparison": "documents vat_id_check (Donut)",
+  "legacy": "VALID",
   "strict": "INVALID:invalid_format",
-  "count": 4,
+  "count": 6,
   "example": {
    "value": "BE903955048"
   }
@@ -238,7 +247,7 @@
   "comparison": "flowinvoice validate_eu_vat_id",
   "legacy": "INVALID",
   "strict": "VALID",
-  "count": 17,
+  "count": 16,
   "example": {
    "country_code": null,
    "value": "DE136.695.976"
@@ -258,7 +267,7 @@
   "comparison": "flowinvoice validate_eu_vat_id",
   "legacy": "VALID",
   "strict": "INVALID:invalid_checksum",
-  "count": 40,
+  "count": 80,
   "example": {
    "country_code": null,
    "value": "DE940317595"
@@ -268,7 +277,7 @@
   "comparison": "flowinvoice validate_eu_vat_id",
   "legacy": "VALID",
   "strict": "INVALID:invalid_format",
-  "count": 7,
+  "count": 15,
   "example": {
    "country_code": null,
    "value": "BE903955048"
@@ -521,7 +530,7 @@
   "comparison": "invoicesynth vat_id_valid",
   "legacy": "INVALID",
   "strict": "VALID",
-  "count": 65,
+  "count": 17,
   "example": {
    "value": "DE136.695.976"
   }

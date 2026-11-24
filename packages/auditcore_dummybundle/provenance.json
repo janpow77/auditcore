@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_dummybundle",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "contract": "dummybundle_ui/1",
   "classification": "NEW_IMPLEMENTATION",
   "sources": [],
@@ -20,6 +20,11 @@
       "document": "Vorlagenvorschlag „Dummydaten-Generator für ecohesion.flowaudit.de“ vom 13.10.2026",
       "use": "Spaltenlisten der Vorlagen V0 bis V9, acht Summenproben, Auffälligkeiten, Typenliste der freien Eingabe",
       "text_included": false
+    },
+    {
+      "document": "Bundesvergabegesetz 2018 (BVergG 2018), BGBl. I Nr. 65/2018, §§ 31 und 33 (RIS, Abruf am 23.11.2026)",
+      "use": "Bezeichnungen der Vergabeverfahren österreichischer öffentlicher Auftraggeber: offenes Verfahren (§ 31 Abs. 2), nicht offenes Verfahren mit vorheriger Bekanntmachung (§ 31 Abs. 3), Direktvergabe (§ 31 Abs. 11); freie Wahl zwischen den beiden ersten (§ 33)",
+      "text_included": false
     }
   ],
   "builds_on": [
@@ -35,7 +40,9 @@
   "origin": "Neu in auditcore geschrieben als Bündelkern neben auditcore_dummygenerator, dessen generator.py unverändert bleibt. Ersetzt als gemeinsame Fassung die bisher getrennt programmierte Betragsverteilung mit Restausgleich der verwendenden Anwendungen.",
   "open_points": [
     "Reservierte Testbereiche für Bankleitzahl, IBAN und Steuernummer sind nicht belegt; garantiert ist nur die verfehlte Prüfziffer.",
-    "Konsolidierte Fassung und Berichtigungen der Verordnung (EU) 2021/1060 sind nicht abgeglichen."
+    "Konsolidierte Fassung und Berichtigungen der Verordnung (EU) 2021/1060 sind nicht abgeglichen.",
+    "Die deutschen Vergabearten der Belege lauten unabhängig vom Auftragswert „VOB/VOL unterhalb Schwellenwert“; EU-Schwellenwerte und die UVgO sind nicht abgebildet.",
+    "Das Zeitgerüst bildet das ganze Geschäftsjahr des Bezugsdatums ab. Liegt das Bezugsdatum vor dem 30. Juni, liegen auch saubere Belege, Auszahlungen und Zahlungsanträge nach dem Bezugsdatum."
   ],
   "rights": {
     "license_status": "MIT",
@@ -113,6 +120,15 @@
         "artifact_id": "auditcore.dummybundle.template.n1",
         "version": "0.1.0",
         "content_hash": "801ec536b33d18157b040ccfa144fa4bbac161a26daf40bef388004a26544c1a"
+      }
+    ],
+    "pending": [
+      {
+        "artifact_id": "auditcore.dummybundle.template.n1",
+        "version": "0.2.0",
+        "content_hash": "803d82cb33b7456321fd06cfb093dfff6ebd91ca9cf57cd7c15f82dfb6f35cf1",
+        "status": "NOT_GRANTED",
+        "change": "Spalte „Skontobetrag“ zeigt das Skonto auf den Bruttobetrag; Spaltenhinweis ergänzt. Neue Freigabe des Rechteinhabers ausstehend."
       }
     ]
   }

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import timedelta
+from datetime import date, timedelta
 from decimal import Decimal
 from random import Random
 
@@ -18,12 +18,23 @@ from auditcore_dummybundle import catalogs as cat
 from auditcore_dummybundle.amounts import ZERO, quantize
 from auditcore_dummybundle.bundle import Bundle
 from auditcore_dummybundle.model import Cell, Row, SolutionEntry, amount, day
-from auditcore_dummybundle.receipts import DIRECT_AWARD
+from auditcore_dummybundle.receipts import direct_award_label
 from auditcore_dummybundle.seeds import stream
 
-_AMOUNT_KEYS = ("net", "vat", "gross", "paid", "claim_basis", "project_related", "recognised")
+_AMOUNT_KEYS = (
+    "net",
+    "vat",
+    "gross",
+    "paid",
+    "claim_basis",
+    "discount_amount",
+    "discount_gross",
+    "project_related",
+    "recognised",
+)
 #: Days within which the beneficiary must receive the payment (Art. 74(1)(b) CPR).
 PAYMENT_DEADLINE_DAYS = 80
+_LONGEST_DELAY = 140
 
 
 @dataclass(frozen=True)
@@ -199,16 +210,17 @@ def _arithmetic_error(_: Bundle, row: Row, rng: Random) -> Planted | None:
 
 
 def _direct_award_above_limit(bundle: Bundle, row: Row, _: Random) -> Planted | None:
-    eligible = _operation(bundle, row)["contracting_authority"] and not row["staff_cost"]
+    operation = _operation(bundle, row)
+    eligible = operation["contracting_authority"] and not row["staff_cost"]
     if not eligible or amount(row, "net") < bundle.config.direct_award_limit:
         return None
     original = row["award_type"]
-    row["award_type"] = DIRECT_AWARD
+    row["award_type"] = direct_award_label(str(operation["country"]))
     row["direct_award"] = True
     return Planted(
         "award_type",
         original,
-        DIRECT_AWARD,
+        row["award_type"],
         amount(row, "project_related"),
         f"Direktauftrag trotz Nettobetrag ab der eingestellten Wertgrenze von "
         f"{bundle.config.direct_award_limit} EUR.",
@@ -228,11 +240,38 @@ def _claim_above_receipts(_: Bundle, row: Row, rng: Random) -> Planted | None:
     )
 
 
-def _payment_deadline_exceeded(_: Bundle, row: Row, rng: Random) -> Planted | None:
+def _latest_payment(bundle: Bundle, row: Row) -> date:
+    """Latest payout that keeps the bundle plausible apart from the planted delay.
+
+    The payout stays on or before the base date (the status remains "paid"),
+    within the cut-off of the payment application the claim is booked in and
+    before any correction of the claim was detected.
+    """
+    cutoffs = [
+        day(item, "cutoff_date")
+        for item in bundle.table("payment_applications")
+        if item["application_no"] == row["application_no"]
+    ]
+    detections = [
+        day(item, "detection_date") - timedelta(days=1)
+        for item in bundle.table("corrections")
+        if item["claim_id"] == row["claim_id"]
+    ]
+    return min([bundle.config.base_date, *cutoffs, *detections])
+
+
+def _payment_deadline_exceeded(bundle: Bundle, row: Row, rng: Random) -> Planted | None:
+    received = day(row, "receipt_date")
+    longest = min(_LONGEST_DELAY, (_latest_payment(bundle, row) - received).days)
+    if longest <= PAYMENT_DEADLINE_DAYS:
+        return None
     original = row["payment_date"]
-    days = rng.randrange(PAYMENT_DEADLINE_DAYS + 1, 141)
-    row["payment_date"] = day(row, "receipt_date") + timedelta(days=days)
+    days = rng.randrange(PAYMENT_DEADLINE_DAYS + 1, longest + 1)
+    row["payment_date"] = received + timedelta(days=days)
     row["processing_days"] = days
+    for unit in bundle.table("population"):
+        if unit["unit_id"] == f"AE-{row['claim_id']}":
+            unit["payment_date"] = row["payment_date"]
     return Planted(
         "payment_date",
         original,
