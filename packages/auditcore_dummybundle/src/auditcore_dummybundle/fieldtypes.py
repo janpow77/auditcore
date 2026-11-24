@@ -56,7 +56,9 @@ FIELD_TYPES: tuple[FieldType, ...] = (
     ), "Standard sind Rollenbezeichnungen. Die Namenskataloge enthalten häufige echte "
        "Vor- und Nachnamen; Kombinationen treffen lebende Personen."),
     FieldType("company", "Firma mit Rechtsform", "text", (),
-              "Generischer Beispielname aus einer kurzen Liste; Namen wiederholen sich. "
+              "Generischer Beispielname aus dem Namensbaukasten von auditcore_dummygenerator; "
+              "innerhalb einer Spalte verschieden, erst nach 25.920 Zeilen wiederholen sich "
+              "Namen. "
               "Ähnlichkeiten mit bestehenden Unternehmen sind zufällig und nicht beabsichtigt."),
     FieldType("address", "Anschrift", "text", (
         Param("part", "choice", "Bestandteil", "full",

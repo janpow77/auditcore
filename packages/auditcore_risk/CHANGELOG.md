@@ -1,6 +1,15 @@
 # Changelog – auditcore_risk
 
-## 0.4.2 – unveröffentlicht
+## 0.4.3 – unveröffentlicht
+
+Keine Verhaltensänderung. Das Extra `procurement` (und `dev`) bindet
+`auditcore_procurement==0.4.0` statt 0.3.1, weil interne Bindungen exakt sind.
+Die Profile `riskanalysis.year_bound` und `flowinvoice.risk_checker` nennen
+ihre Vergabeprofile ausdrücklich; das neue `CURRENT_PROFILE`
+`procurement.hvtg 2026.11.1` wirkt sich daher nicht auf Ergebnisse oder
+Fingerprints aus.
+
+## 0.4.2 – 2026-11-04
 
 Keine Verhaltensänderung. Neuer exakter Pin `auditcore_procurement==0.3.1` (additiv: gemeinsame Abruf-Taktung `SharedRateLimit`/`RateLimitStore`, `parse_retry_after`, `RetryPolicy.should_retry`/`backoff`).
 

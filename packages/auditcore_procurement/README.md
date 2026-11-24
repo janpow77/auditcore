@@ -107,12 +107,17 @@ Angebote übergeben werden.
   `eu_catalogue` (Regime, Auftragsarten, Auftraggeberarten, Fundstellen),
   `check_eu_threshold` (Schwellenwert erreicht oder nicht) und
   `eu_regime_threshold` (Wert eines Stichtags mit Quelle).
+- **Nationale Vorschriften je Stichtag** (`authority_rules`, `lot_rules`):
+  `central_government_rule` (Fassung von § 106 Abs. 2 Nr. 1 GWB, wer den
+  Schwellenwert für zentrale Regierungsbehörden anwendet),
+  `check_small_lots` (Ausnahme für kleine Lose nach § 3 Abs. 9 VgV) und
+  `estimation_hints` (Wortlaut von § 3 Abs. 1, 4, 7, 8 und 9 VgV).
 - **Harvest-Adapter** (Extra `sources`) holen genau eine Seite; Seitenfolge,
   Wiederholung, Rate-Limit, Checkpoint und Senke steuert `auditcore_harvest`.
   Beide bestehen dessen Contract-Suite.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_procurement.__all__` (22):
+Öffentliche Namen aus `auditcore_procurement.__all__` (29):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -120,15 +125,21 @@ Angebote übergeben werden.
 | `COVERAGE_AWARDS_WITH_WINNER` | Konstante | Coverage labels. Award-only results must not be presented as full coverage. | `records` |
 | `NOTICE_FIELDS` | Konstante | – | `records` |
 | `RECORD_CONTRACT` | Konstante | – | `records` |
+| `CentralGovernmentRule` | Datenklasse | One version of § 106 Abs. 2 Nr. 1 GWB with its verbatim wording. | `authority_rules` |
 | `Issue` | Datenklasse | Validation or plausibility note; ``blocking`` means the value is unreliable. | `records` |
+| `Lot` | Datenklasse | One lot of the project: estimated net value, kind and whether it is to be exempted. | `lot_rules` |
 | `PrecheckProfile` | Datenklasse | Versioned, source-bound rules of the deterministic prechecks. | `precheck_profile` |
+| `VgvProvision` | Datenklasse | One paragraph of § 3 VgV in one version, with verbatim wording. | `lot_rules` |
 | `SearchResult` | Datenklasse | Explicit outcome of one company search; ``notices`` is complete only if ``ok``. | `company_sources` |
 | `ThresholdUnavailable` | Ausnahme | No verified EU threshold is recorded for the requested date/year. | `precheck_profile` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `build_ted_query` | Funktion | TED expert query. An explicit ``query`` wins; otherwise filters are AND-combined and always restricted to award notices with a winner (:data:`AWARD_FILTER`). | `ted` |
+| `central_government_rule` | Funktion | Version of § 106 Abs. 2 Nr. 1 GWB in force on ``on`` (reference date of the case). | `authority_rules` |
 | `check_eu_threshold` | Funktion | Whether the estimated value reaches the EU threshold of the case (EU part only). | `eu_thresholds` |
+| `check_small_lots` | Funktion | Whether the lots marked ``exempt`` meet § 3 Abs. 9 VgV on the reference date. | `lot_rules` |
 | `eu_catalogue` | Funktion | Catalogue of the EU thresholds: regimes, contract types, authority types, sources. | `eu_thresholds` |
 | `eu_regime_threshold` | Funktion | Verified threshold of a regime and contract type on ``on``; no fallback. | `eu_thresholds` |
+| `estimation_hints` | Funktion | Verbatim provisions of § 3 VgV on value estimation in force on ``on``. | `lot_rules` |
 | `had_result` | Funktion | Corrected contract. HTTP 404 is ``no_hit`` only in the ``designer`` variant (source semantics); in ``flowinvoice`` it is a failure. 403 is rate limiting. | `company_sources` |
 | `inspect_notice` | Funktion | Visible warnings the legacy normalisation does not report (never alters records). | `ted` |
 | `load_profile` | Funktion | Load an explicitly named packaged profile version. | `precheck_profile` |
@@ -136,6 +147,7 @@ Angebote übergeben werden.
 | `normalize_notices` | Funktion | Normalise a list of notices; ``None`` results are skipped. | `ted` |
 | `parse_ted_file` | Funktion | Parse a TED JSON upload (raw v3 notices or already normalised records). | `ted` |
 | `run_prechecks` | Funktion | All prechecks in source order; overall status is the worst of FAIL > REVIEW_REQUIRED > WARNING > PASS (REVIEW_REQUIRED only in strict mode). | `prechecks` |
+| `small_lots_rule` | Funktion | Version of § 3 Abs. 9 VgV in force on ``on``; ``None`` if not recorded. | `lot_rules` |
 | `ted_company_result` | Funktion | Corrected contract: HTTP errors, invalid JSON and parser errors are explicit failures. | `company_sources` |
 | `validate_record` | Funktion | Check a canonical record: known fields, value types, ISO dates, required contractor. | `records` |
 
@@ -143,9 +155,11 @@ Angebote übergeben werden.
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_procurement.authority_rules` | Who applies the threshold for central government authorities in Germany, by date. |
 | `auditcore_procurement.company_sources` | TED company search (mnemonic fields) and HAD (Hessische Ausschreibungsdatenbank). |
 | `auditcore_procurement.eu_regimes` | EU procurement thresholds by legal regime, contract type, authority type and date. |
 | `auditcore_procurement.eu_thresholds` | EU thresholds of all regimes: catalogue, lookup and classification without national tiers. |
+| `auditcore_procurement.lot_rules` | Estimation of the contract value with lots under § 3 VgV, by reference date. |
 | `auditcore_procurement.precheck_common` | Result statuses and shared helpers of the procurement prechecks. |
 | `auditcore_procurement.precheck_profile` | Versioned precheck profiles: validation, packaged profiles and EU threshold periods. |
 | `auditcore_procurement.precheck_threshold` | Threshold classification of the prechecks (legacy table and strict EU periods). |
@@ -167,13 +181,18 @@ Mitgelieferte Precheck-Profile (versioniert, mit Herkunft und Fingerprint):
   Zweijahreszeiträumen, je Wert mit amtlicher Fundstelle (VO (EU) Nr. 1336/2013,
   2015/2170 und 2015/2342, 2017/2365, 2019/1828, 2021/1952, 2023/2495,
   2025/2152).
-- `procurement.hvtg 2026.10.1` (`CURRENT_PROFILE`) – wie 2026.09.3, zusätzlich
-  der Block `eu_regimes` mit den EU-Schwellenwerten aller Regime 2014–2027.
+- `procurement.hvtg 2026.10.1` – wie 2026.09.3, zusätzlich der Block
+  `eu_regimes` mit den EU-Schwellenwerten aller Regime 2014–2027.
+- `procurement.hvtg 2026.11.1` (`CURRENT_PROFILE`) – wie 2026.10.1; die festen
+  Richtlinienwerte für soziale und andere besondere Dienstleistungen gelten ab
+  18.04.2016 ohne Enddatum (`valid_to: null` mit Begründung `open_end`), der
+  Hinweis zu zentralen Regierungsbehörden zitiert § 106 Abs. 2 Nr. 1 GWB in der
+  Fassung ab 01.07.2026.
 
 | Regime (`regime`) | Auftragsarten (`contract_type`) | Rechtsgrundlage |
 |---|---|---|
-| `public_contracts` | `works`; `supplies_services` mit `authority_type` `central` (zentrale Regierungsbehörden) oder `sub_central` (subzentrale öffentliche Auftraggeber); `social_services` (750.000 EUR, ab 18.04.2016) | Art. 4 RL 2014/24/EU, bis 17.04.2016 Art. 7 RL 2004/18/EG |
-| `utilities` | `works`; `supplies_services`; `social_services` (1.000.000 EUR, ab 18.04.2016) | Art. 15 RL 2014/25/EU, bis 17.04.2016 Art. 16 RL 2004/17/EG |
+| `public_contracts` | `works`; `supplies_services` mit `authority_type` `central` (zentrale Regierungsbehörden) oder `sub_central` (subzentrale öffentliche Auftraggeber); `social_services` (750.000 EUR, ab 18.04.2016 ohne Enddatum) | Art. 4 RL 2014/24/EU, bis 17.04.2016 Art. 7 RL 2004/18/EG |
+| `utilities` | `works`; `supplies_services`; `social_services` (1.000.000 EUR, ab 18.04.2016 ohne Enddatum) | Art. 15 RL 2014/25/EU, bis 17.04.2016 Art. 16 RL 2004/17/EG |
 | `concessions` | `concession` (ab 18.04.2016) | Art. 8 Abs. 1 RL 2014/23/EU |
 | `defence` | `works`; `supplies_services` | Art. 8 RL 2009/81/EG |
 
@@ -183,7 +202,7 @@ from decimal import Decimal
 
 from auditcore_procurement import check_eu_threshold, eu_catalogue, load_profile
 
-profil = load_profile("procurement.hvtg", "2026.10.1")
+profil = load_profile("procurement.hvtg", "2026.11.1")
 ergebnis = check_eu_threshold(
     profil,
     Decimal("431999.99"),
@@ -195,6 +214,35 @@ assert ergebnis["above_threshold"] is False
 assert ergebnis["eu_threshold"]["value"] == 432000
 assert ergebnis["eu_threshold"]["celex"] == "32025R2150"
 katalog = eu_catalogue(profil)  # Bezeichnungen deutsch/englisch, je Wert die Fundstelle
+sozial = check_eu_threshold(
+    profil,
+    Decimal("750000"),
+    regime="public_contracts",
+    contract_type="social_services",
+    reference_date=date(2030, 1, 1),
+)
+assert sozial["above_threshold"] is True and sozial["eu_threshold"]["valid_to"] is None
+```
+
+Nationale Vorschriften werden ebenfalls nach dem Stichtag des Falls gewählt,
+nie nach dem heutigen Datum:
+
+```python
+from datetime import date
+from decimal import Decimal
+
+from auditcore_procurement import Lot, central_government_rule, check_small_lots
+
+assert central_government_rule(date(2026, 6, 30)).applies_to_de.startswith("alle obersten")
+assert central_government_rule(date(2026, 7, 1)).applies_to_de == (
+    "das Bundeskanzleramt und die Bundesministerien"
+)
+lose = [
+    Lot(Decimal("79999.99"), "supplies_services", exempt=True),
+    Lot(Decimal("320000"), "supplies_services"),
+]
+ergebnis = check_small_lots(lose, reference_date=date(2026, 3, 1))
+assert ergebnis["exemption_possible"] is True  # unter 80 000 Euro, höchstens 20 %
 ```
 
 Jede Zeile nennt die Verordnung, die den Wert festsetzt, mit ABl.-Fundstelle,
@@ -202,9 +250,13 @@ CELEX-Nummer, Prüfsumme des abgerufenen amtlichen Textes und dem Wortlaut der
 einschlägigen Artikel (`sources[...]["quote"]`); das Profil lädt nicht, wenn
 ein Wert nicht in diesem Wortlaut steht. Ein Stichtag ohne belegten Wert
 ergibt `REVIEW_REQUIRED` („nicht hinterlegt“), nie den Wert eines
-Nachbarzeitraums. Nicht enthalten: Zeiträume vor 2014 und ab 2028,
-Baukonzessionen nach Art. 56 RL 2004/18/EG vor dem 18.04.2016, subventionierte
-Aufträge (Art. 13 RL 2014/24/EU) und die Regeln zur Schätzung des Auftragswerts.
+Nachbarzeitraums. Nicht enthalten: Zeiträume vor 2014 und ab 2028 (außer den
+festen Werten für soziale und andere besondere Dienstleistungen),
+Baukonzessionen nach Art. 56 RL 2004/18/EG vor dem 18.04.2016 und
+subventionierte Aufträge (Art. 13 RL 2014/24/EU). Von den Regeln zur Schätzung
+des Auftragswerts sind nur § 3 Abs. 1, 4, 7, 8 und 9 VgV als Wortlaut
+(`estimation_hints`) und die Ausnahme für kleine Lose als Prüfung
+(`check_small_lots`) abgebildet; SektVO, KonzVgV und VSVgV nicht.
 `check_threshold(..., regime=..., contract_type=...)` führt dieselbe
 Auswertung; ohne diese Angaben bleibt das bisherige Verhalten unverändert.
 
