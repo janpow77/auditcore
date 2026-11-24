@@ -2,6 +2,13 @@
 
 Alle wesentlichen Änderungen dieses Pakets werden in dieser Datei dokumentiert.
 
+## 0.3.0 (unveröffentlicht)
+
+### Neu
+- Unterpaket `auditcore_pdf.web`: REST-Vertrag `pdf_redaction/1` für „PDF schwärzen“ mit den Endpunkten `GET /catalogue`, `POST /plan`, `POST /preview` (PNG einer Seite) und `POST /apply` (geschwärzte PDF, Bericht nur mit Zahlen in den Kopfzeilen `X-Redaction*`). `RedactionService` ist framework-frei; `routes`/`create_app` setzen Starlette voraus (Extra `[web]`), `create_router` FastAPI (Extra `[fastapi]`).
+- Zustandslos: Jede Anfrage bringt die PDF mit, der Plan wird weder gespeichert noch protokolliert. Grenzen über `Limits` (Upload, Seiten, Größe der JSON-Felder, Auflösung der Vorschau), auch vor dem Lesen des Formulars nach `Content-Length`.
+- Strenge Typprüfung der Kriterien, `NaN`/`Infinity` werden abgelehnt; Fehler als `{"error": {"code", "message"}}` mit deutscher Meldung, `verification_failed` (422) liefert keine Datei aus. Vertrag: `docs/ui/redaction-rest.md` im Monorepo.
+
 ## 0.2.0 (2026-11-23)
 
 ### Neu

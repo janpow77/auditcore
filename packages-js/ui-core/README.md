@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1225):
+Exporte der Einstiegspunkte aus `package.json#exports` (1295):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -421,6 +421,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `INITIAL_EXTRACTION` | Konstante | – | `extraction/controller` |
 | `@auditcore/ui-core` | `INITIAL_EXTRAPOLATION` | Konstante | – | `extrapolation/controller` |
 | `@auditcore/ui-core` | `INITIAL_IDENTIFIERS` | Konstante | – | `identifiers/controller` |
+| `@auditcore/ui-core` | `INITIAL_REDACTION` | Konstante | – | `redaction/controller` |
 | `@auditcore/ui-core` | `INITIAL_REPORTING` | Konstante | – | `reporting/controller` |
 | `@auditcore/ui-core` | `INITIAL_REPORTTEMPLATES` | Konstante | – | `reporttemplates/controller` |
 | `@auditcore/ui-core` | `INITIAL_RUNNER` | Konstante | – | `runner/controller` |
@@ -511,6 +512,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `QuestionKind` | Typ | – | `dataprotection/assistantTypes` |
 | `@auditcore/ui-core` | `QuestionRole` | Typ | Zuständige Stelle einer Frage; leer bei Kriterien aus dem Regelprofil. | `dataprotection/assistantTypes` |
 | `@auditcore/ui-core` | `QuestionView` | Schnittstelle | – | `dataprotection/types` |
+| `@auditcore/ui-core` | `REDACTION_FILTER_FROM` | Konstante | Ab dieser Gruppenzahl erscheint das Filterfeld. | `redaction/model` |
+| `@auditcore/ui-core` | `REDACTION_GROUP_PAGE` | Konstante | So viele Gruppen zeigt die Liste je Schritt („Weitere anzeigen“). | `redaction/model` |
+| `@auditcore/ui-core` | `REDACTION_KEY_STEP` | Konstante | Schritt der Pfeiltasten; mit Umschalt `REDACTION_KEY_STEP_LARGE`. | `redaction/model` |
+| `@auditcore/ui-core` | `REDACTION_KEY_STEP_LARGE` | Konstante | – | `redaction/model` |
+| `@auditcore/ui-core` | `REDACTION_MIN_SIZE` | Konstante | Mindestgröße eines Bereichs (Anteil der Seitenkante). | `redaction/model` |
+| `@auditcore/ui-core` | `REDACTION_PAGE_BUTTONS` | Konstante | Höchstens so viele Seitenknöpfe „Seiten mit Fundstellen“. | `redaction/model` |
 | `@auditcore/ui-core` | `RESIDUAL_FIELDS` | Konstante | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `ROW_STATUSES` | Konstante | – | `synopsis/types` |
 | `@auditcore/ui-core` | `RUNNER_ANSICHTEN` | Konstante | – | `runner/controller` |
@@ -523,6 +530,41 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `RecalculationView` | Schnittstelle | – | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `RecordMove` | Schnittstelle | Verschiebung einer Karte: der gesetzte Zellwert (`null` = ohne Wert). | `dbkanban/controller` |
 | `@auditcore/ui-core` | `RecordView` | Schnittstelle | – | `risk/types` |
+| `@auditcore/ui-core` | `RedactionArea` | Schnittstelle | Eigener Bereich (z. B. Unterschrift, Bild); `id` vergibt die Oberfläche. | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionAreaView` | Schnittstelle | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionArrow` | Typ | – | `redaction/model` |
+| `@auditcore/ui-core` | `RedactionBox` | Typ | Rechteck `[x0, y0, x1, y1]`, Anzeigekoordinaten 0…1 bezogen auf die gedrehte Seite. | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionBoxView` | Schnittstelle | Markierung einer Fundstelle auf dem Seitenbild. | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionBusy` | Typ | – | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionCallbacks` | Schnittstelle | – | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionCandidate` | Schnittstelle | – | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionCatalogue` | Schnittstelle | – | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionController` | Typ | – | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionCriteria` | Schnittstelle | – | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionData` | Schnittstelle | – | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionGesture` | Typ | Laufendes Aufziehen oder Vergrößern mit dem Zeiger. | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionGroup` | Schnittstelle | Gleiche Fundtexte derselben Quelle werden gemeinsam an- und abgewählt. | `redaction/model` |
+| `@auditcore/ui-core` | `RedactionGroupState` | Typ | – | `redaction/model` |
+| `@auditcore/ui-core` | `RedactionGroupView` | Schnittstelle | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionItemView` | Schnittstelle | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionLimits` | Schnittstelle | – | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionMessageKey` | Typ | – | `redaction/messages` |
+| `@auditcore/ui-core` | `RedactionOption` | Typ | – | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionPageInfo` | Schnittstelle | – | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionPatternInfo` | Schnittstelle | – | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionPlan` | Schnittstelle | Plan der Schwärzung; enthält Klartext der Fundstellen und bleibt nur im Arbeitsspeicher. | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createRedactionRestPort`. Jede Anfrage trägt die Datei erneut, der Dienst speichert nichts. | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionReport` | Schnittstelle | Zahlen des nachgeprüften Berichts aus den Antwortköpfen (ohne Klartext). | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionReportRow` | Schnittstelle | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionResult` | Schnittstelle | – | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionReviewView` | Schnittstelle | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionSelection` | Schnittstelle | Bestätigte Auswahl für `POST /apply`. | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionSource` | Schnittstelle | – | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionSourceView` | Schnittstelle | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionStep` | Typ | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionTranslate` | Typ | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionUrls` | Schnittstelle | Erzeugen und Freigeben von Objekt-URLs (Seitenbild, Download); in Tests ersetzbar. | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionValidation` | Typ | – | `redaction/controller` |
 | `@auditcore/ui-core` | `RegisterColumn` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `RegisterContent` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `RegisterExportFormat` | Typ | – | `dataprotection/types` |
@@ -918,6 +960,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `createIdentifierController` | Funktion | – | `identifiers/controller` |
 | `@auditcore/ui-core` | `createIdentifiersRestPort` | Funktion | Port auf den REST-Vertrag `identifiers_ui/1` von `auditcore_identifiers.web` (Starlette oder FastAPI). | `identifiers/rest-port` |
 | `@auditcore/ui-core` | `createLeafletView` | Funktion | Legt die Leaflet-Karte im Element an. | `geo/mapView` |
+| `@auditcore/ui-core` | `createRedactionController` | Funktion | – | `redaction/controller` |
+| `@auditcore/ui-core` | `createRedactionRestPort` | Funktion | Port auf den REST-Vertrag `pdf_redaction/1` von `auditcore_pdf.web` (Starlette oder FastAPI). | `redaction/rest-port` |
 | `@auditcore/ui-core` | `createReportTemplatesRestPort` | Funktion | Port auf die Vorlagen-Endpunkte von `reporting_ui/1` (`auditcore_reporting.web`, Starlette oder FastAPI). | `reporttemplates/port` |
 | `@auditcore/ui-core` | `createReportingController` | Funktion | – | `reporting/controller` |
 | `@auditcore/ui-core` | `createReportingRestPort` | Funktion | Port auf den REST-Vertrag `reporting_ui/1` von `auditcore_reporting.web` (Starlette oder FastAPI). | `reporting/rest-port` |
@@ -951,6 +995,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `decisionForm` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `decisionTitle` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `defaultProfile` | Funktion | Standardprofil des Servers (`default: true`), sonst das erste. | `documents/form` |
+| `@auditcore/ui-core` | `defaultRedactionBox` | Funktion | Bereich, den die Schaltfläche „Bereich hinzufügen“ anlegt (Seitenmitte, je weiterem Bereich versetzt). | `redaction/model` |
 | `@auditcore/ui-core` | `defineMessages` | Funktion | Typisiert Kataloge einer Komponente; die Schlüssel ergeben sich aus dem deutschen Katalog. | `i18n` |
 | `@auditcore/ui-core` | `deliverExport` | Funktion | Export ausliefern: Druckansicht (`print`) oder Datei. | `download` |
 | `@auditcore/ui-core` | `derivationColumns` | Funktion | – | `sampling/view` |
@@ -1044,6 +1089,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `formatMetres` | Funktion | Rechts-/Hochwert in Metern mit zwei Nachkommastellen, ohne Tausendertrennung. | `geo/model` |
 | `@auditcore/ui-core` | `formatOptions` | Funktion | – | `reporttemplates/view` |
 | `@auditcore/ui-core` | `formatPoints` | Funktion | – | `screening/view` |
+| `@auditcore/ui-core` | `formatRedactionPages` | Funktion | „1–3, 5“ aus Seitenzahlen. | `redaction/model` |
 | `@auditcore/ui-core` | `formatScore` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `formatScreeningDate` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `formatShare` | Funktion | – | `risk/format` |
@@ -1082,6 +1128,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `importRejectedLines` | Funktion | Die ersten zehn unlesbaren Zeilen als Liste. | `tabular/tableImport` |
 | `@auditcore/ui-core` | `indicatorLabels` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `initialGroupBy` | Funktion | Vorgabe: gewünschte Eigenschaft, falls gruppierbar, sonst die erste Auswahl-Eigenschaft. | `dbkanban/controller` |
+| `@auditcore/ui-core` | `initialRedactionSelection` | Funktion | Vorauswahl des Dienstes (`selected`). | `redaction/model` |
 | `@auditcore/ui-core` | `initialTexts` | Funktion | Startwerte der Textfelder: vorgeschlagene Werte der Profile, sonst leer. | `sampling/model` |
 | `@auditcore/ui-core` | `interpolate` | Funktion | Ersetzt {name}-Platzhalter; unbekannte Platzhalter bleiben sichtbar stehen. | `i18n` |
 | `@auditcore/ui-core` | `involvesPdf` | Funktion | PDF-Dateien vergleicht der Server immer als Fließtext. | `documents/form` |
@@ -1089,6 +1136,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `isIconName` | Funktion | – | `base/icons` |
 | `@auditcore/ui-core` | `isLocale` | Funktion | – | `i18n` |
 | `@auditcore/ui-core` | `isPercent` | Funktion | Anteile werden in Prozent eingegeben und angezeigt. | `sampling/model` |
+| `@auditcore/ui-core` | `isRedactionArrow` | Funktion | – | `redaction/model` |
 | `@auditcore/ui-core` | `isStratifiedPopulation` | Funktion | – | `sampling/controller` |
 | `@auditcore/ui-core` | `isSuggestion` | Funktion | Vorschläge aus Vorlage, Import oder KI sind bis zur Bestätigung unbestätigt (GUI-16). | `dataprotection/assistant` |
 | `@auditcore/ui-core` | `issuesFor` | Funktion | – | `dataprotection/registerView` |
@@ -1112,6 +1160,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `needsJustification` | Funktion | – | `dataprotection/assistant` |
 | `@auditcore/ui-core` | `needsShortValues` | Funktion | Zweistellige Tests (erste zwei Ziffern, zweite Ziffer) verlangen eine Regel für kurze Werte. | `benford/model` |
 | `@auditcore/ui-core` | `nextOpenHit` | Funktion | The next hit still needing work after ``currentId`` (open, deferred or pending). | `screening/view` |
+| `@auditcore/ui-core` | `normalizeRedactionText` | Funktion | – | `redaction/model` |
+| `@auditcore/ui-core` | `nudgeRedactionBox` | Funktion | Tastatur: Größe (rechte untere Ecke) oder Lage des ganzen Bereichs ändern. | `redaction/model` |
 | `@auditcore/ui-core` | `offeredMetrics` | Funktion | Kennungen der vorgegebenen Kennzahlen in fester Reihenfolge (für die Auswahl im Formular). | `benford/model` |
 | `@auditcore/ui-core` | `pairs` | Funktion | Objekt als Liste `[Schlüssel, Wert]` in Einfügereihenfolge (für deklarative Tabellen). | `risk/state` |
 | `@auditcore/ui-core` | `parameterLabel` | Funktion | – | `risk/format` |
@@ -1147,6 +1197,25 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `recordEntries` | Funktion | Treffer und unbestimmte Merkmale eines Datensatzes in Profilreihenfolge. | `risk/state` |
 | `@auditcore/ui-core` | `recordLabel` | Funktion | – | `risk/state` |
 | `@auditcore/ui-core` | `recordRules` | Funktion | – | `risk/state` |
+| `@auditcore/ui-core` | `redactionBoxFromPoints` | Funktion | Rechteck aus zwei Punkten, auf die Seite begrenzt. | `redaction/model` |
+| `@auditcore/ui-core` | `redactionBoxIsTooSmall` | Funktion | – | `redaction/model` |
+| `@auditcore/ui-core` | `redactionBoxStyle` | Funktion | Lage als CSS-Eigenschaften in Prozent der Seite (Vue und React identisch). | `redaction/model` |
+| `@auditcore/ui-core` | `redactionCriteria` | Funktion | – | `redaction/controller` |
+| `@auditcore/ui-core` | `redactionGroupState` | Funktion | – | `redaction/model` |
+| `@auditcore/ui-core` | `redactionGroups` | Funktion | Gruppen nach Häufigkeit, dann alphabetisch; je Kandidatenliste nur einmal berechnet. | `redaction/model` |
+| `@auditcore/ui-core` | `redactionHiddenLocations` | Funktion | Fundorte versteckter Treffer ohne Einzelangaben („Metadaten“, „Kommentar“, …). | `redaction/view` |
+| `@auditcore/ui-core` | `redactionMessages` | Konstante | Texte von PdfRedaction (Vue) und FlowauditPdfRedaction (React); sichtbare Texte nur hier. | `redaction/messages` |
+| `@auditcore/ui-core` | `redactionPatternText` | Funktion | – | `redaction/view` |
+| `@auditcore/ui-core` | `redactionPoint` | Funktion | Zeigerposition relativ zur Seitenfläche als Anteile 0…1 (außerhalb begrenzt). | `redaction/model` |
+| `@auditcore/ui-core` | `redactionReportFromHeaders` | Funktion | Zahlen des Berichts aus den Antwortköpfen `X-Redaction*` (CORS: `Access-Control-Expose-Headers`). | `redaction/rest-port` |
+| `@auditcore/ui-core` | `redactionReportRows` | Funktion | – | `redaction/view` |
+| `@auditcore/ui-core` | `redactionReview` | Funktion | Alles, was die Prüfansicht zeigt (nur bei vorhandenem Plan). | `redaction/view` |
+| `@auditcore/ui-core` | `redactionSelectionPayload` | Funktion | Bestätigte Auswahl für `POST /apply` in Reihenfolge des Plans. | `redaction/model` |
+| `@auditcore/ui-core` | `redactionSizeText` | Funktion | – | `redaction/view` |
+| `@auditcore/ui-core` | `redactionStep` | Funktion | – | `redaction/view` |
+| `@auditcore/ui-core` | `redactionTerms` | Funktion | Begriffe aus dem Textfeld: eine Zeile je Begriff, leere Zeilen und Dubletten entfallen. | `redaction/model` |
+| `@auditcore/ui-core` | `redactionValidation` | Funktion | Prüfung vor dem Senden (reine Funktion). | `redaction/controller` |
+| `@auditcore/ui-core` | `redactionValidationText` | Funktion | – | `redaction/view` |
 | `@auditcore/ui-core` | `registerCsv` | Funktion | – | `dataprotection/exporters` |
 | `@auditcore/ui-core` | `registerFilename` | Funktion | – | `dataprotection/exporters` |
 | `@auditcore/ui-core` | `registerHtml` | Funktion | – | `dataprotection/exporters` |
@@ -1171,6 +1240,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `residualFormFrom` | Funktion | RER-Formular aus einer Auswertung: A = Buchwert, D = Gesamtfehlerquote (in Prozent). | `extrapolation/model` |
 | `@auditcore/ui-core` | `residualMetrics` | Funktion | Kennzahlen der Restfehlerquote (K, L, M). | `extrapolation/view` |
 | `@auditcore/ui-core` | `residualRows` | Funktion | – | `extrapolation/view` |
+| `@auditcore/ui-core` | `resizeRedactionBox` | Funktion | Rechte untere Ecke auf `point` ziehen (Maus) – nie kleiner als die Mindestgröße. | `redaction/model` |
 | `@auditcore/ui-core` | `resolveIdentifierKind` | Funktion | Kennungsart aus einer Tabellenzelle: Kennung oder Bezeichnung des Katalogs, sonst unverändert (Server meldet sie). | `identifiers/model` |
 | `@auditcore/ui-core` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |
 | `@auditcore/ui-core` | `riskTableColumns` | Funktion | – | `risk/controller` |
