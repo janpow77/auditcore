@@ -1,5 +1,17 @@
 # Changelog @auditcore/ui
 
+## 0.5.2 – 2026-11-24
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.4.2 angehoben.
+- `ExtrapolationPanel`: Die Karte der Restfehlerquote zeigt bei „entfällt“ die
+  Begründung des Backends (`not_applicable`) und die Hinweise (`notes`), etwa
+  dass die Finanzkorrekturen den Risikobetrag übersteigen. Eine neue
+  Hochrechnung entfernt sie mit der RER. Der Export enthält die zuletzt
+  berechnete RER (`auditcore_extrapolation` ≥ 0.3.1; ältere Backends übergehen
+  das Feld).
+- `IdentifierCheck`: Zusammenfassung der Stapelprüfung mit getrennter Zahl der
+  nur dem Format nach gültigen Zeilen (Texte aus `@auditcore/ui-core`).
+
 ## 0.5.1 – 2026-10-17
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.4.1 angehoben.

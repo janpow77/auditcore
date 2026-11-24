@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { createExtrapolationController, extrapolationMethod, terMetrics, translator, extrapolationMessages, residualMetrics } from '../../src'
-import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult } from './fake-port'
+import { createExtrapolationController, extrapolationMethod, terMetrics, translator, extrapolationMessages, residualMetrics, residualRemarks } from '../../src'
+import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult, residualWithinResult } from './fake-port'
 
 function controller(port = fakeExtrapolationPort()) {
   const events: string[] = []
@@ -43,6 +43,40 @@ describe('createExtrapolationController', () => {
     expect(events).toEqual(['evaluated', 'residual'])
     const file = await created.exportEvaluation('csv')
     expect(file?.filename).toBe('hochrechnung.csv')
+    expect(port.calls.export[0]?.[0].residual).toEqual(port.calls.residual[0])
+  })
+
+  it('exportiert ohne RER, solange keine berechnet ist, und verwirft sie bei neuer Hochrechnung und neuen Eingaben', async () => {
+    const { created, port } = controller()
+    await created.load()
+    created.selectMethod('mus.standard')
+    created.setConfidence(0.9)
+    await created.evaluate()
+    await created.exportEvaluation('json')
+    expect(port.calls.export[0]?.[0]).not.toHaveProperty('residual')
+    created.setResidual({ auditPopulation: '1000', terRate: '1,5', corrections: '20' })
+    await created.computeResidual()
+    expect(created.store.get().lastResidualRequest).toEqual(port.calls.residual[0])
+    await created.evaluate()
+    expect(created.store.get().residual).toBeNull()
+    expect(created.store.get().lastResidualRequest).toBeNull()
+    await created.exportEvaluation('csv')
+    expect(port.calls.export[1]?.[0]).not.toHaveProperty('residual')
+    await created.computeResidual()
+    expect(created.store.get().lastResidualRequest).not.toBeNull()
+    created.applyInputs()
+    expect(created.store.get().residual).toBeNull()
+    expect(created.store.get().lastResidualRequest).toBeNull()
+  })
+
+  it('liefert Begründung für „entfällt“ und Hinweise der RER unverändert aus dem Backend', () => {
+    const within = residualRemarks(residualWithinResult.residual_error_rate)
+    expect(within.notApplicable).toBe('Entfällt: Restfehlerquote nicht über der Signifikanzschwelle von 2 %.')
+    expect(within.notes).toHaveLength(2)
+    expect(within.notes[0]).toContain('übersteigen den Risikobetrag')
+    const above = residualRemarks(residualResult.residual_error_rate)
+    expect(above.notApplicable).toBeNull()
+    expect(above.notes).toEqual(residualResult.residual_error_rate.notes)
   })
 
   it('behält das Konfidenzniveau nur, wenn die neue Methode es erlaubt', async () => {

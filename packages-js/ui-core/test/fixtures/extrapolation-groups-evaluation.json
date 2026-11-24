@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.2.0",
+ "library": "auditcore_extrapolation 0.3.0",
  "fingerprint": "4af5e8e385c43abef4dedd4e0113d3de9cf0608096979a64fb32b77787aba807",
  "method": {
   "id": "srs.mean_per_unit",
@@ -82,9 +82,18 @@
    }
   ],
   "warnings": [
-   "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar."
+   "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar.",
+   "Stichprobe mit 9 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
   ],
-  "extra": {}
+  "limitations": [
+   "Stichprobe mit 9 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ],
+  "extra": {
+   "minimum_sample": {
+    "audited_units": 9,
+    "minimum": 30
+   }
+  }
  },
  "total_error_rate": {
   "book_value": 800000.0,
@@ -102,7 +111,8 @@
   "conclusion": "not_material",
   "explanation": [
    "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
-   "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+   "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+   "Eingeschränkte Aussagekraft: Stichprobe mit 9 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
   ],
   "steps": [
    {
@@ -119,18 +129,21 @@
    },
    {
     "label": "Gesamtfehlerquote (TER)",
-    "formula": "TER / BV",
+    "formula": "Gesamtfehler / BV",
     "value": 0.005390625,
     "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
    },
    {
     "label": "Fehlerobergrenze",
-    "formula": "ULE = TER + SE",
+    "formula": "ULE = Gesamtfehler + SE",
     "value": 8111.0973443788735,
     "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
    }
   ],
-  "difference": null
+  "difference": null,
+  "limitations": [
+   "Stichprobe mit 9 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ]
  },
  "confidence_recalculation": {
   "applicable": false,
@@ -196,12 +209,34 @@
       "formula": "SE = N × z × s_w / √n",
       "value": 3972.131719870327,
       "source": "EGESIF_16-0014-01, Abschn. 6.1.1.4"
+     },
+     {
+      "label": "Vergleich: Präzision mit t (4 FG)",
+      "formula": "SE_t = SE × t / z",
+      "value": 4750.465892583613,
+      "source": "Art. 5 Abs. 5 DelVO (EU) 2023/67"
      }
     ],
     "warnings": [
-     "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar."
+     "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar.",
+     "Stichprobe mit 5 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar.",
+     "Vergleichswert mit dem t-Quantil (4 Freiheitsgrade, t = 1,533 statt z = 1,282): Präzision 4.750 € statt 3.972 €. Maßgeblich bleibt nach Anhang II der z-Wert."
     ],
-    "extra": {}
+    "limitations": [
+     "Stichprobe mit 5 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ],
+    "extra": {
+     "minimum_sample": {
+      "audited_units": 5,
+      "minimum": 30,
+      "t_comparison": {
+       "degrees_of_freedom": 4,
+       "t": 1.533206274058557,
+       "z": 1.282,
+       "precision_t": 4750.465892583613
+      }
+     }
+    }
    },
    "total_error_rate": {
     "book_value": 500000.0,
@@ -219,7 +254,8 @@
     "conclusion": "not_material",
     "explanation": [
      "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
-     "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+     "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+     "Eingeschränkte Aussagekraft: Stichprobe mit 5 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
     ],
     "steps": [
      {
@@ -236,18 +272,21 @@
      },
      {
       "label": "Gesamtfehlerquote (TER)",
-      "formula": "TER / BV",
+      "formula": "Gesamtfehler / BV",
       "value": 0.008,
       "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
      },
      {
       "label": "Fehlerobergrenze",
-      "formula": "ULE = TER + SE",
+      "formula": "ULE = Gesamtfehler + SE",
       "value": 7972.131719870327,
       "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
      }
     ],
-    "difference": null
+    "difference": null,
+    "limitations": [
+     "Stichprobe mit 5 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ]
    }
   },
   {
@@ -302,12 +341,34 @@
       "formula": "SE = N × z × s_w / √n",
       "value": 400.625,
       "source": "EGESIF_16-0014-01, Abschn. 6.1.1.4"
+     },
+     {
+      "label": "Vergleich: Präzision mit t (3 FG)",
+      "formula": "SE_t = SE × t / z",
+      "value": 511.7951105300734,
+      "source": "Art. 5 Abs. 5 DelVO (EU) 2023/67"
      }
     ],
     "warnings": [
-     "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar."
+     "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar.",
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar.",
+     "Vergleichswert mit dem t-Quantil (3 Freiheitsgrade, t = 1,638 statt z = 1,282): Präzision 512 € statt 401 €. Maßgeblich bleibt nach Anhang II der z-Wert."
     ],
-    "extra": {}
+    "limitations": [
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ],
+    "extra": {
+     "minimum_sample": {
+      "audited_units": 4,
+      "minimum": 30,
+      "t_comparison": {
+       "degrees_of_freedom": 3,
+       "t": 1.6377443536962346,
+       "z": 1.282,
+       "precision_t": 511.7951105300734
+      }
+     }
+    }
    },
    "total_error_rate": {
     "book_value": 300000.0,
@@ -325,7 +386,8 @@
     "conclusion": "not_material",
     "explanation": [
      "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
-     "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+     "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+     "Eingeschränkte Aussagekraft: Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
     ],
     "steps": [
      {
@@ -342,18 +404,21 @@
      },
      {
       "label": "Gesamtfehlerquote (TER)",
-      "formula": "TER / BV",
+      "formula": "Gesamtfehler / BV",
       "value": 0.0010416666666666667,
       "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
      },
      {
       "label": "Fehlerobergrenze",
-      "formula": "ULE = TER + SE",
+      "formula": "ULE = Gesamtfehler + SE",
       "value": 713.125,
       "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
      }
     ],
-    "difference": null
+    "difference": null,
+    "limitations": [
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ]
    }
   }
  ]

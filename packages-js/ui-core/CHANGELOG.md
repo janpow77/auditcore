@@ -1,5 +1,24 @@
 # Changelog @auditcore/ui-core
 
+## 0.4.2 – 2026-11-24
+
+- Hochrechnung: `residualRemarks(residual)` liefert die Begründung für
+  „entfällt“ (`not_applicable`, Zeilen L und M) und die Hinweise (`notes`) der
+  RER; neue Texte `rerNotApplicable` („Warum L und M entfallen“ / „Why rows L and
+  M do not apply“) und `rerNotes` („Hinweise zur Restfehlerquote“ / „Notes on the
+  residual error rate“). Typ `ResidualErrorRate` um `not_applicable_template` und
+  `residual_negative` ergänzt.
+- Hochrechnung: Der Controller merkt sich die Anfrage der RER
+  (`lastResidualRequest`) und gibt sie beim Export als `residual` mit
+  (`ExtrapolationExportRequest`, `auditcore_extrapolation` ≥ 0.3.1). Neue
+  Hochrechnung und `applyInputs()` verwerfen RER und Anfrage wie bisher das
+  Ergebnis. `ExtrapolationPort.exportEvaluation` nimmt `ExtrapolationExportRequest`
+  an; Ports mit dem bisherigen Typ `EvaluationRequest` bleiben zuweisbar.
+- Kennungen: Die Zusammenfassung der Stapelprüfung nennt Zeilen, die nur dem
+  Format nach gültig sind, getrennt (`summaryFormat`, Feld
+  `IdentifierBatchSummary.format_valid`), sobald das Backend sie meldet
+  (`auditcore_identifiers` 0.3.1 zählt sie nicht mehr unter `valid`).
+
 ## 0.4.1 – 2026-10-17
 
 - Begriff: Die 2-%-Schwelle der Fehlerquote heißt in den Texten jetzt „Signifikanzschwelle“ statt „Wesentlichkeitsschwelle“ bzw. „Wesentlichkeit“, wie in der Delegierten Verordnung (EU) 2023/67, Anhang I Nr. 1, und in der VO (EU) 2021/1060, Anhang XX Nr. 5.9. Betroffen sind `extrapolationMessages` (`materiality`, `rerExceeds`, `rerWithin`) und `samplesizeMessages` (`materiality_rate`). Schlüssel, Felder und REST-Vertrag bleiben unverändert.

@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1225):
+Exporte der Einstiegspunkte aus `package.json#exports` (1227):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -354,6 +354,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `ExtrapolationData` | Schnittstelle | Stand der Hochrechnung; `error` ist die Meldung der letzten abgelehnten Anfrage. | `extrapolation/controller` |
 | `@auditcore/ui-core` | `ExtrapolationDesign` | Typ | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `ExtrapolationExportFormat` | Typ | – | `extrapolation/types` |
+| `@auditcore/ui-core` | `ExtrapolationExportRequest` | Schnittstelle | Anfrage für `POST /evaluate/export`; mit `residual` enthält die Datei auch die RER. | `extrapolation/types` |
 | `@auditcore/ui-core` | `ExtrapolationField` | Schnittstelle | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `ExtrapolationForm` | Schnittstelle | – | `extrapolation/model` |
 | `@auditcore/ui-core` | `ExtrapolationFormError` | Typ | – | `extrapolation/model` |
@@ -1170,6 +1171,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1225):
 | `@auditcore/ui-core` | `residualColumns` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `residualFormFrom` | Funktion | RER-Formular aus einer Auswertung: A = Buchwert, D = Gesamtfehlerquote (in Prozent). | `extrapolation/model` |
 | `@auditcore/ui-core` | `residualMetrics` | Funktion | Kennzahlen der Restfehlerquote (K, L, M). | `extrapolation/view` |
+| `@auditcore/ui-core` | `residualRemarks` | Funktion | Begründung für „entfällt“ (L und M) und Hinweise der RER, wie das Backend sie liefert. | `extrapolation/view` |
 | `@auditcore/ui-core` | `residualRows` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `resolveIdentifierKind` | Funktion | Kennungsart aus einer Tabellenzelle: Kennung oder Bezeichnung des Katalogs, sonst unverändert (Server meldet sie). | `identifiers/model` |
 | `@auditcore/ui-core` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |

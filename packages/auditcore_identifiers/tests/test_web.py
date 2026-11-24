@@ -106,14 +106,47 @@ def test_batch_reports_each_row_and_a_summary() -> None:
     assert rows[0]["status"] == "VALID" and rows[0]["error"] is None
     assert rows[1]["error"]["code"] == "unsupported_kind" and "status" not in rows[1]
     assert rows[2]["error"]["code"] == "unknown_kind"
+    # Legacy profile: the LEI is VALID by format, but its check digit is not verified.
+    assert rows[0]["verdict"] == "format_valid"
     assert answer["summary"] == {
         "total": 4,
-        "valid": 1,
+        "valid": 0,
         "invalid": 0,
         "missing": 1,
         "format_valid": 1,
         "not_checked": 2,
     }
+
+
+def test_batch_summary_counts_valid_only_with_verified_check_digit() -> None:
+    """Since 0.3.1: ``valid`` and ``format_valid`` are disjoint and add up to ``total``."""
+    answer: dict[str, Any] = check_batch(
+        {
+            "profile": "strict",
+            "items": [
+                {"kind": "iban", "value": VALID_IBAN},
+                {"kind": "iban", "value": WRONG_IBAN},
+                {"kind": "bic", "value": "DEUTDEFF"},
+                {"kind": "tax_number", "value": "4151081508156"},
+                {"kind": "lei", "value": ""},
+                {"kind": "unbekannt", "value": "x"},
+            ],
+        }
+    )
+    verdicts = [r.get("verdict") for r in answer["results"]]
+    assert verdicts == ["valid", "invalid", "format_valid", "format_valid", "missing", None]
+    assert [r.get("status") for r in answer["results"][2:4]] == ["VALID", "VALID"]
+    summary = answer["summary"]
+    assert summary == {
+        "total": 6,
+        "valid": 1,
+        "invalid": 1,
+        "missing": 1,
+        "format_valid": 2,
+        "not_checked": 1,
+    }
+    parts = ("valid", "format_valid", "invalid", "missing", "not_checked")
+    assert sum(summary[key] for key in parts) == summary["total"]
 
 
 def test_batch_limits_and_structure() -> None:

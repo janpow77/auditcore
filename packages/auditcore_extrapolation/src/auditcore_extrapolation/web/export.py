@@ -1,8 +1,11 @@
 """``POST /evaluate/export``: the evaluation as CSV (Excel) or JSON file.
 
 The export recomputes the evaluation from the request; it never copies client
-state. CSV: semicolon, UTF-8 with BOM, decimal comma; cells starting with a
-formula character are neutralised with an apostrophe.
+state. An optional ``residual`` object (the body of ``POST /residual``) adds the
+residual error rate, likewise recomputed, with its rows, the reason when rows L
+and M do not apply, and its notes. CSV: semicolon, UTF-8 with BOM, decimal
+comma; cells starting with a formula character are neutralised with an
+apostrophe.
 """
 
 from __future__ import annotations
@@ -15,7 +18,7 @@ from dataclasses import dataclass
 from typing import cast
 
 from ._contract import ContractError, Reader
-from .requests import evaluate
+from .requests import evaluate, residual
 
 _FORMULA_START = ("=", "+", "-", "@", "\t", "\r")
 _CONCLUSIONS = {
@@ -107,21 +110,58 @@ def _rows(result: Mapping[str, object]) -> Iterator[list[object]]:
         yield [step["label"], step["formula"], step["value"], step["source"]]
 
 
+def _residual_rows(answer: Mapping[str, object]) -> Iterator[list[object]]:
+    """RER section: template rows, threshold verdict, reason for L/M and notes."""
+    rer = cast(Mapping[str, object], answer["residual_error_rate"])
+    yield []
+    yield ["Restfehlerquote (RER) nach Finanzkorrekturen", ""]
+    yield ["Quelle", rer["source"]]
+    yield ["Fingerabdruck der Eingabe (SHA-256)", answer["fingerprint"]]
+    yield ["Signifikanzschwelle", rer["materiality_rate"]]
+    yield ["RER gerundet (4 Stellen)", rer["rate_rounded"]]
+    yield ["Über der Signifikanzschwelle", "ja" if rer["exceeds_materiality"] else "nein"]
+    if rer["not_applicable"] is not None:
+        yield ["Entfällt (Zeilen L und M)", rer["not_applicable"]]
+        yield ["Wortlaut der Vorlage", rer["not_applicable_template"]]
+    for note in cast(list[str], rer["notes"]):
+        yield ["Hinweis", note]
+    yield []
+    yield ["Zeile", "Bezeichnung", "Wert"]
+    for row in cast(list[Mapping[str, object]], rer["rows"]):
+        yield [row["row"], row["label"], row["value"]]
+
+
+def _residual(body: Reader) -> dict[str, object] | None:
+    if not body.has("residual"):
+        return None
+    try:
+        return residual(body.body["residual"])
+    except ContractError as exc:
+        raise ContractError(f"residual: {exc}") from exc
+
+
 def export_evaluation(payload: object) -> ExportFile:
-    """CSV or JSON file of the evaluation requested in ``payload``."""
+    """CSV or JSON file of the evaluation requested in ``payload``.
+
+    The evaluation fingerprint covers the request without ``format`` and
+    ``residual`` and therefore equals the one of ``POST /evaluate``.
+    """
     body = Reader(payload)
     fmt = body.text("format")
     if fmt not in ("csv", "json"):
         raise ContractError("'format' muss csv oder json sein.")
-    result = evaluate({k: v for k, v in body.body.items() if k != "format"})
+    result = evaluate({k: v for k, v in body.body.items() if k not in ("format", "residual")})
+    rer = _residual(body)
     stem = f"hochrechnung-{cast(Mapping[str, object], result['method'])['id']}"
     stem += f"-{str(result['fingerprint'])[:12]}"
     if fmt == "json":
-        content = json.dumps(result, ensure_ascii=False, indent=2).encode("utf-8")
+        document = {**result, "residual": rer}
+        content = json.dumps(document, ensure_ascii=False, indent=2).encode("utf-8")
         return ExportFile(content, "application/json", f"{stem}.json")
     buffer = io.StringIO()
     writer = csv.writer(buffer, delimiter=";", lineterminator="\r\n")
-    for row in _rows(result):
+    rows = _rows(result)
+    for row in rows if rer is None else [*rows, *_residual_rows(rer)]:
         writer.writerow([_cell(cell) for cell in row])
     return ExportFile(
         ("﻿" + buffer.getvalue()).encode("utf-8"), "text/csv; charset=utf-8", f"{stem}.csv"

@@ -165,8 +165,8 @@ export function visibleIdentifierRows(answer: IdentifierBatchAnswer, onlyIssues:
 }
 
 export function identifierBatchSummary(answer: IdentifierBatchAnswer, t: IdentifierTranslate): string {
-  const { total, valid, invalid, missing, not_checked: notChecked } = answer.summary
-  return t('summary', { total, valid, invalid, missing, notChecked })
+  const { total, valid, invalid, missing, not_checked: notChecked, format_valid: formatValid = 0 } = answer.summary
+  return formatValid > 0 ? t('summaryFormat', { total, valid, formatValid, invalid, missing, notChecked }) : t('summary', { total, valid, invalid, missing, notChecked })
 }
 
 /** Anzeigezeile der Stapelprüfung (Tabelle und CSV). */

@@ -1,4 +1,4 @@
-import { extrapolationIssueText, RESIDUAL_FIELDS, residualColumns, residualMetrics, residualRows, type Locale } from '@auditcore/ui-core'
+import { extrapolationIssueText, RESIDUAL_FIELDS, residualColumns, residualMetrics, residualRemarks, residualRows, type Locale } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 import { FlowauditTable } from '../table/FlowauditTable'
@@ -10,6 +10,7 @@ export function ExtrapolationResidual({ view, tableLocale }: { view: UseExtrapol
   const { state, controller, t, locale } = view
   const id = useElementId('fa-extrapolation-residual')
   const rer = state.residual?.residual_error_rate ?? null
+  const remarks = rer ? residualRemarks(rer) : null
   return (
     <section className="fa-extrapolation__card fa-extrapolation__card--residual" aria-labelledby={`${id}-title`}>
       <h3 id={`${id}-title`} className="fa-extrapolation__heading">{t('residualTitle')}</h3>
@@ -39,6 +40,20 @@ export function ExtrapolationResidual({ view, tableLocale }: { view: UseExtrapol
       {rer ? (
         <>
           <MetricList metrics={residualMetrics(rer, t, locale)} testId="extrapolation-rer" />
+          {remarks?.notApplicable ? (
+            <>
+              <h4 className="fa-extrapolation__heading">{t('rerNotApplicable')}</h4>
+              <p className="fa-extrapolation__hint" data-testid="extrapolation-rer-not-applicable">{remarks.notApplicable}</p>
+            </>
+          ) : null}
+          {remarks?.notes.length ? (
+            <>
+              <h4 className="fa-extrapolation__heading">{t('rerNotes')}</h4>
+              <ul className="fa-extrapolation__warnings" data-testid="extrapolation-rer-notes">
+                {remarks.notes.map((line) => <li key={line}>{line}</li>)}
+              </ul>
+            </>
+          ) : null}
           <FlowauditTable columns={residualColumns(t, locale)} rows={residualRows(rer)} caption={t('residualTitle')} locale={tableLocale} testId="extrapolation-rer-rows" />
         </>
       ) : null}

@@ -80,9 +80,12 @@ export type IdentifierBatchRow = { index: number; ref: string } & (
 
 export interface IdentifierBatchSummary {
   total: number
+  /** Seit `auditcore_identifiers` 0.3.1 nur Zeilen mit geprüfter Prüfziffer (`verdict` `valid`). */
   valid: number
   invalid: number
   missing: number
+  /** Format gültig, Prüfziffer fehlt oder nicht geprüft (z. B. BIC, Steuernummer); getrennt von `valid`. */
+  format_valid?: number
   not_checked: number
 }
 

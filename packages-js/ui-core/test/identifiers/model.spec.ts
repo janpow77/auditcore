@@ -77,6 +77,9 @@ describe('Kennung prüfen – Kernlogik', () => {
 
   it('fasst die Stapelprüfung zusammen, filtert Auffälligkeiten und exportiert CSV', () => {
     expect(identifierBatchSummary(batchAnswer, t)).toBe('5 Zeilen geprüft: 2 gültig, 1 ungültig, 1 ohne Wert, 1 nicht prüfbar')
+    const withFormat = { ...batchAnswer, summary: { total: 5, valid: 1, format_valid: 1, invalid: 1, missing: 1, not_checked: 1 } }
+    expect(identifierBatchSummary(withFormat, t)).toBe('5 Zeilen geprüft: 1 gültig mit Prüfziffer, 1 nur dem Format nach gültig, 1 ungültig, 1 ohne Wert, 1 nicht prüfbar')
+    expect(identifierBatchSummary({ ...withFormat, summary: { ...withFormat.summary, format_valid: 0 } }, t)).toBe('5 Zeilen geprüft: 1 gültig, 1 ungültig, 1 ohne Wert, 1 nicht prüfbar')
     expect(visibleIdentifierRows(batchAnswer, true).map((row) => row.ref)).toEqual(['B-2', 'B-4', 'B-5'])
     const last = batchAnswer.results[4]!
     expect(identifierRowStatus(last)).toBeNull()

@@ -1,6 +1,6 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult } from '../../ui-core/test/extrapolation/fake-port'
+import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult, residualWithinResult } from '../../ui-core/test/extrapolation/fake-port'
 import { FlowauditExtrapolation } from '../src/extrapolation/FlowauditExtrapolation'
 
 vi.mock('@auditcore/common/browser', () => ({ saveFile: vi.fn() }))
@@ -42,6 +42,24 @@ describe('FlowauditExtrapolation (nativ)', () => {
     fireEvent.click(screen.getByTestId('extrapolation-export-json'))
     await flush()
     expect(port.calls.export[0]?.[1]).toBe('json')
+  })
+
+  it('zeigt Begründung für „entfällt“ und Hinweise der RER und verwirft sie bei neuer Hochrechnung', async () => {
+    const fake = fakeExtrapolationPort()
+    fake.residualAnswer = residualWithinResult
+    const port = await evaluated(fake)
+    fireEvent.click(screen.getByTestId('extrapolation-residual'))
+    await flush()
+    expect(screen.getByTestId('extrapolation-rer-not-applicable').textContent).toBe('Entfällt: Restfehlerquote nicht über der Signifikanzschwelle von 2 %.')
+    const notes = Array.from(screen.getByTestId('extrapolation-rer-notes').querySelectorAll('li')).map((item) => item.textContent)
+    expect(notes).toEqual([...residualWithinResult.residual_error_rate.notes])
+    fireEvent.click(screen.getByTestId('extrapolation-export-csv'))
+    await flush()
+    expect(port.calls.export[0]?.[0].residual).toEqual(port.calls.residual[0])
+    fireEvent.click(screen.getByTestId('extrapolation-evaluate'))
+    await flush()
+    expect(screen.queryByTestId('extrapolation-rer-not-applicable')).toBeNull()
+    expect(screen.queryByTestId('extrapolation-rer-notes')).toBeNull()
   })
 
   it('meldet Feldbefunde und abgelehnte Anfragen', async () => {

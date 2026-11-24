@@ -44,7 +44,7 @@ fastapi_app.include_router(create_router("/api/extrapolation"))
 |---|---|---|
 | GET | `/profiles` | Methoden, Faktorprofile, Konfidenzniveaus, Signifikanzschwelle, Fehlerklassen |
 | POST | `/evaluate` | Hochrechnung, Präzision, TER, Fehlerobergrenze, Ergebnis, Herleitung |
-| POST | `/evaluate/export` | dieselbe Auswertung als Datei (`format`: `csv` oder `json`) |
+| POST | `/evaluate/export` | dieselbe Auswertung als Datei (`format`: `csv` oder `json`; mit `residual` auch die RER) |
 | POST | `/residual` | Restfehlerquote nach Annex 3 (Zeilen A–M) |
 | POST | `/attributes` | Merkmals-, Discovery- und Stop-or-go-Stichprobe (Leitfaden 7.9) |
 | POST | `/negative-units` | positive und negative Grundgesamtheit, Abstimmung (Leitfaden 4.6) |
@@ -126,9 +126,18 @@ gelesen; die Antwort enthält je Zeile A–M `value` (Zahl) und `exact` (Dezimal
 
 ### `POST /evaluate/export`
 
-Wie `/evaluate` plus `format`. CSV: Semikolon, UTF-8 mit BOM, Dezimalkomma,
-Formelzeichen am Zellanfang mit Apostroph neutralisiert; Kennzahlen, Ergebnis,
-Erläuterung, Hinweise und die Herleitung mit Quelle je Schritt. Dateiname
+Wie `/evaluate` plus `format`, optional `residual` mit dem Körper von
+`/residual` (seit `auditcore_extrapolation` 0.3.1). CSV: Semikolon, UTF-8 mit
+BOM, Dezimalkomma, Formelzeichen am Zellanfang mit Apostroph neutralisiert;
+Kennzahlen, Ergebnis, Erläuterung, Hinweise und die Herleitung mit Quelle je
+Schritt. Mit `residual` folgt der Abschnitt „Restfehlerquote (RER) nach
+Finanzkorrekturen“: Quelle, eigener Fingerabdruck, Signifikanzschwelle,
+gerundete RER, ob sie die Schwelle überschreitet, bei „entfällt“ die
+Begründung (`not_applicable`) und der Wortlaut der Vorlage
+(`not_applicable_template`), die Hinweise (`notes`) und die Zeilen A–M. Die
+JSON-Datei enthält die Antwort von `/residual` unter `residual` (`null` ohne
+RER). Auch die RER wird aus der Anfrage neu gerechnet; der Fingerabdruck der
+Auswertung bleibt der von `/evaluate`. Dateiname
 `hochrechnung-<methode>-<12 Zeichen Fingerabdruck>.<format>`.
 
 ## Erweiterungen nach Leitfaden Kapitel 6 und 7 (abwärtskompatibel)

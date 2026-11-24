@@ -44,6 +44,7 @@ export const identifierMessages = defineMessages({
     none: '– keine –',
     batchRun: 'Alle prüfen',
     summary: '{total} Zeilen geprüft: {valid} gültig, {invalid} ungültig, {missing} ohne Wert, {notChecked} nicht prüfbar',
+    summaryFormat: '{total} Zeilen geprüft: {valid} gültig mit Prüfziffer, {formatValid} nur dem Format nach gültig, {invalid} ungültig, {missing} ohne Wert, {notChecked} nicht prüfbar',
     colRef: 'Bezug',
     colKind: 'Art',
     colValue: 'Wert',
@@ -70,6 +71,7 @@ export const identifierMessages = defineMessages({
     result: 'Result',
     batch: 'Batch check from table',
     batchRun: 'Check all',
+    summaryFormat: '{total} rows checked: {valid} valid with check digit, {formatValid} valid by format only, {invalid} invalid, {missing} without value, {notChecked} not checkable',
   },
 })
 

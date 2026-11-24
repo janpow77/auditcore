@@ -1,5 +1,22 @@
 # Changelog auditcore_extrapolation
 
+## 0.3.1 – 2026-11-24
+
+- **Export mit RER:** `POST /evaluate/export` (`export_evaluation`) nimmt
+  optional `residual` mit dem Körper von `/residual` an und rechnet die
+  Restfehlerquote daraus neu. Die CSV-Datei erhält den Abschnitt
+  „Restfehlerquote (RER) nach Finanzkorrekturen“ mit Quelle, Fingerabdruck,
+  Signifikanzschwelle, gerundeter RER, Überschreitung, bei „entfällt“ der
+  Begründung (`not_applicable`) und dem Wortlaut der Vorlage, den Hinweisen
+  (`notes`) und den Zeilen A–M; die JSON-Datei enthält die Antwort von
+  `/residual` unter `residual` (`null` ohne RER, neues Feld). Bisher enthielt der
+  Export weder die RER noch die Begründung. Ein fehlerhaftes `residual` lehnt die
+  Anfrage mit Feldhinweis `residual: …` ab. Der Fingerabdruck der Auswertung
+  bleibt der von `/evaluate`; Anfragen ohne `residual` ergeben dieselbe CSV-Datei
+  wie bisher. Vertragsname unverändert `evaluation/1`.
+- UI-Fixtures (`tools/ui_fixtures.py`) neu erzeugt, dazu
+  `extrapolation-residual-within.json` (RER unter der Schwelle, negatives J).
+
 ## 0.3.0 – 2026-11-23
 
 Korrekturen nach der Prüfung vom 23.11.2026. Ergebnisse können sich ändern.

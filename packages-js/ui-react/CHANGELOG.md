@@ -1,5 +1,10 @@
 # Changelog @auditcore/ui-react
 
+## 1.3.2 – 2026-11-24
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.4.2 angehoben (Paritätstests gegen `@auditcore/ui` 0.5.2).
+- `FlowauditExtrapolation`: wie die Vue-Fassung Begründung für „entfällt“ und Hinweise der RER; der Export enthält die zuletzt berechnete RER.
+
 ## 1.3.1 – 2026-10-17
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.4.1 angehoben (Paritätstests gegen `@auditcore/ui` 0.5.1).
