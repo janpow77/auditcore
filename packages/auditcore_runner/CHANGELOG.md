@@ -7,6 +7,16 @@
   Paketinstallation mit `sudo` im ephemeren Jobcontainer.
 - Installiert Rust 1.98.1 mit `clippy` und `rustfmt` aus einem Digest-gepinnten
   Image und speichert Cargo-Abhängigkeiten in einem NVMe-Volume je Runner-Instanz.
+- Exitcode 127 in einem Shell-Befehl (`sh`, `bash`, `dash`, auch `/bin/sh`,
+  `bash -lc`, `sh -euc`) meldet „Programm im Befehl nicht gefunden
+  (Exitcode 127)“, statt die Shell als fehlend zu melden, mit der
+  aussagekräftigsten Zeile: einer mit „not found“, „no such file“ oder „nicht
+  gefunden“, sonst der letzten; Docker-Zeilen „Run '…“ werden übersprungen,
+  ohne stderr gilt stdout (#330).
+- Runner-Image: Playwright lädt Chromium und FFmpeg beim Bau über einen
+  lokalen Proxy (`werkzeuge/playwright_download_proxy.py`), der nur die
+  Playwright-Pfade auf die offiziellen Downloadquellen umschreibt; der Bau
+  wartet, bis der Proxy erreichbar ist (#335).
 
 ## 0.1.4 – 2026-11-16
 

@@ -1,6 +1,6 @@
 # Changelog – auditcore_risk
 
-## 0.4.3 – unveröffentlicht
+## 0.4.3 – 2026-11-24
 
 Keine Verhaltensänderung. Das Extra `procurement` (und `dev`) bindet
 `auditcore_procurement==0.4.0` statt 0.3.1, weil interne Bindungen exakt sind.

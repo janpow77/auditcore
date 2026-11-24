@@ -3,7 +3,7 @@
   "package": "auditcore_pdf",
   "version": "0.2.0",
   "contract": "auditcore_pdf/1",
-  "classification": "NEW_IMPLEMENTATION",
+  "classification": "NEW_IMPLEMENTATION; REDACTION_DERIVED_FROM_PDF_EDITOR_C5B3E1D",
   "sources": [
     {
       "repository": "janpow77/audit_designer",
