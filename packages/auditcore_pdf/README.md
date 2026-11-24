@@ -4,7 +4,7 @@
 
 Vollständige PDF-Verarbeitung, Seitenoperationen, visuelle Anzeige und nachprüfbare Schwärzung für Prüf- und Kontrollprozesse.
 
-Die Bibliothek stellt Fachanwendungen der Prüfbehörde robuste Funktionen für Dokumentenanalyse, Seitenmanipulationen (Umsortieren, Drehen, Extrahieren, Zusammenführen, Aufteilen) und mehrschichtige Schwärzungen bereit. Das Unterpaket `auditcore_pdf.redaction` schwärzt in zwei Schritten: `build_plan` sucht Fundstellen (Muster mit Prüfziffer, Begriffe, optional KI-Namenserkennung) und liefert einen Plan zur Vorschau; `apply_plan` schwärzt genau die bestätigte Auswahl, bereinigt versteckte Ablagen und prüft das Ergebnis fail-closed nach. Nicht enthalten sind Web-Endpunkte, Benutzeroberflächen oder Datenbankbindungen.
+Die Bibliothek stellt Fachanwendungen der Prüfbehörde robuste Funktionen für Dokumentenanalyse, Seitenmanipulationen (Umsortieren, Drehen, Extrahieren, Zusammenführen, Aufteilen) und mehrschichtige Schwärzungen bereit. Das Unterpaket `auditcore_pdf.redaction` schwärzt in zwei Schritten: `build_plan` sucht Fundstellen (Muster mit Prüfziffer, Begriffe, optional KI-Namenserkennung) und liefert einen Plan zur Vorschau; `apply_plan` schwärzt genau die bestätigte Auswahl, bereinigt versteckte Ablagen und prüft das Ergebnis fail-closed nach. Das Unterpaket `auditcore_pdf.web` (Extras `[web]`, `[fastapi]`) stellt den zustandslosen REST-Vertrag `pdf_redaction/1` für die Oberfläche `<flowaudit-pdf-redaction>` bereit ([Vertrag](../../docs/ui/redaction-rest.md)). Nicht enthalten sind Anmeldung, Ablage und Datenbankbindungen.
 
 ## Installation
 
@@ -29,7 +29,7 @@ Debian/Ubuntu über die signierte APT-Quelle des Releases
 sudo apt-get install python3-auditcore-pdf
 ```
 
-Extras: `[pymupdf]` – PDF-Engine über PyMuPDF; `[pillow]` – Bildverarbeitung; `[ner]` – KI-Namenserkennung über spaCy (das Sprachmodell, etwa `de_core_news_sm`, installiert die Anwendung); `[dev]` – Test- und Prüfwerkzeuge.
+Extras: `[pymupdf]` – PDF-Engine über PyMuPDF; `[pillow]` – Bildverarbeitung; `[ner]` – KI-Namenserkennung über spaCy (das Sprachmodell, etwa `de_core_news_sm`, installiert die Anwendung); `[web]` – REST-Endpunkte über Starlette; `[fastapi]` – zusätzlich als FastAPI-Router; `[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
 
@@ -98,6 +98,7 @@ assert "iban" in PATTERNS
 | `auditcore_pdf.sanitize` | Metadaten-, Anhangs- und Anmerkungsbereinigung zur Verhinderung von Datenabflüssen. |
 | `auditcore_pdf.verification` | Unabhängige Nachprüfung und Verifikation von Schwärzungsergebnissen. |
 | `auditcore_pdf.viewer` | Anzeige-, Lese- und Analysefunktionen für PDF-Dokumente. |
+| `auditcore_pdf.web` | REST contract ``pdf_redaction/1`` for "PDF schwärzen" (extras ``web``, ``fastapi``). |
 <!-- api-overview:end -->
 
 ## Profile und Konfiguration
@@ -116,7 +117,8 @@ Die Schwärzung `auditcore_pdf.redaction` übernimmt den Stand von pdf-editor@c5
 
 - Pflicht: `auditcore_common==0.2.1`, Python `>=3.11`
 - Optional: `pymupdf>=1.23.8` (Ausführung der PDF-Engine), `Pillow>=10.0` (Bildoperationen), `spacy>=3.8` (KI-Namenserkennung)
-- Bewusst keine Abhängigkeit: kein Web-Framework (kein FastAPI, Starlette), kein ORM, keine Datenbank-Treiber.
+- Optional für `auditcore_pdf.web`: `starlette>=0.47.2,<2` und `python-multipart>=0.0.20` (`[web]`), `fastapi>=0.116.1` (`[fastapi]`)
+- Bewusst keine Abhängigkeit: kein ORM, keine Datenbank-Treiber; der Kern importiert kein Web-Framework.
 
 ## Sicherheit und Datenschutz
 
