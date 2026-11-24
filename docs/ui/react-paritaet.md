@@ -45,6 +45,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Berichtsvorlagen | `ReportTemplates` | `FlowauditReportTemplates` | `reporting_ui/1` ([reporting-rest.md](reporting-rest.md), [reporttemplates.md](reporttemplates.md)) | 6 + 2 Interaktionsfolgen |
 | Runner-Konsole (Prüfbank) | `RunnerConsole` | `FlowauditRunnerConsole` | `auditcore-runner/status/1`, Profil- und Werkzeug-API ([runner.md](runner.md)) | 8 + 4 Interaktionsfolgen |
 | AccountWorkspace | `AccountWorkspace` | `FlowauditAccountWorkspace` | – ([account.md](account.md)) | 3 + Interaktionsfolge |
+| PDF schwärzen | `PdfRedaction` | `FlowauditPdfRedaction` | `pdf_redaction/1` ([redaction-rest.md](redaction-rest.md), [redaction.md](redaction.md)) | 5 + 3 Interaktionsfolgen |
 
 Vollständigkeit erzwingt `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`,
 Regeln in [beitragen.md](beitragen.md)); neue Komponenten entstehen mit
