@@ -1,7 +1,8 @@
 # Changelog @auditcore/ui
 
-## Unveröffentlicht
+## 0.6.0 – 2026-11-24
 
+- Abhängigkeit `@auditcore/ui-core` auf 0.5.0 angehoben.
 - Neu: `PdfRedaction` und `<flowaudit-pdf-redaction>` (Eigenschaften `port`, `locale`, `urls`; Ereignisse `redaction-planned`, `redaction-completed`, `error`).
 
 ## 0.5.1 – 2026-10-17

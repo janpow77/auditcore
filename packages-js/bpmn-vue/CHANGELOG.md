@@ -1,5 +1,9 @@
 # Changelog – @auditcore/bpmn-vue
 
+## 0.5.3 – 2026-11-24
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.5.0 angehoben; keine Änderung am Paket selbst.
+
 ## 0.5.2 – 2026-10-17
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.4.1 angehoben; keine Änderung am Paket selbst.

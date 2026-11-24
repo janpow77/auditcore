@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## v0.18.0 – 2026-11-24
+
+Versionen: `auditcore_pdf` 0.3.0, `@auditcore/ui-core` 0.5.0, `@auditcore/ui`
+0.6.0, `@auditcore/ui-react` 1.4.0 (#344), `auditcore_runner` 0.1.6 (nur die
+gebündelten Stile aus ui-core 0.5.0). Wegen der exakten Bindungen folgen
+`@auditcore/bpmn-vue` 0.5.3, `@auditcore/bpmn-react` 0.5.3 und
+`@auditcore/layout` 0.1.3 ohne Änderung am Paket selbst;
+`@auditcore/sampling-templates-vue` 0.1.13 erweitert nur die Bereiche auf
+`@auditcore/ui` `<0.7.0` und `@auditcore/ui-core` `<0.6.0`. Die übrigen Pakete
+bleiben auf dem Stand von v0.17.0.
+
+Hinweis für Nutzer von `auditcore_pdf` 0.2.0: `Selection.from_dict` prüft jetzt
+streng; `sanitize`, `case_sensitive` und `whole_word` müssen Wahrheitswerte
+sein, `rect` eine Liste aus Zahlen. Gespeicherte oder selbst erzeugte
+Auswahlen mit `"false"` oder `0` werden abgelehnt statt umgedeutet.
+
 - „PDF schwärzen“ als Oberfläche und REST-Vertrag: `auditcore_pdf` 0.3.0 mit
   `auditcore_pdf.web` (Vertrag `pdf_redaction/1`, zustandslos, Starlette oder
   FastAPI); `PdfRedaction`/`<flowaudit-pdf-redaction>` in `@auditcore/ui` und
