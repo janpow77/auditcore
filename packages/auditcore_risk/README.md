@@ -322,7 +322,7 @@ Python ≥ 3.11, `auditcore_common==0.2.0` (gemeinsame Hilfsfunktionen, nur
 Standardbibliothek), `auditcore_compute==0.1.0` (Cent-Umrechnung, Soll-/Ist-Abgleich
 und Faktorisierung) mit `numpy>=1.24` (Spaltenpfad) und
 `auditcore_entity_matching==0.2.4` (Normalisierung für RF09). Optional: `auditcore_entity_matching[fuzzy]==0.2.4` über `[fuzzy]`,
-`pandas>=2.1` über `[pandas]`, `auditcore_procurement==0.2.4` über
+`pandas>=2.1` über `[pandas]`, `auditcore_procurement==0.4.0` über
 `[procurement]`, `starlette>=0.26.1` über `[web]`, `fastapi>=0.92` über
 `[fastapi]`. Die Benford-Prüfung aus flowinvoice liegt in
 `auditcore_statistics` (keine Abhängigkeit).

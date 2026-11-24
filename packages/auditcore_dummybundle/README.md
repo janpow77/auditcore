@@ -14,32 +14,29 @@ Behörde nachbildet, ohne dass es belegt und freigegeben ist.
 ## Installation
 
 Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt);
-`auditcore_dummybundle` 0.2.0 erscheint mit dem Release v0.14.0:
+`auditcore_dummybundle` 0.3.0 erscheint mit dem nächsten auditcore-Release,
+veröffentlicht ist bis dahin 0.2.0 aus v0.14.0:
 
 ```bash
-python -m pip install 'auditcore_dummybundle==0.2.0' \
+python -m pip install 'auditcore_dummybundle==0.3.0' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden über die Requirements-Datei des Releases; sie bindet das Paket
-und seine auditcore-Abhängigkeiten an die Prüfsummen der signierten
-[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.14.0/SHA256SUMS).
-Dieselben Prüfsummen stehen im Index unter
-`https://janpow77.github.io/auditcore/simple/auditcore-dummybundle/`:
-
-```bash
-python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.14.0/requirements-auditcore_dummybundle.txt
-```
+Hashgebunden über die Requirements-Datei `requirements-auditcore_dummybundle.txt`
+des Releases, das 0.3.0 enthält; sie bindet das Paket und seine
+auditcore-Abhängigkeiten an die Prüfsummen der signierten `SHA256SUMS` dieses
+Releases. Dieselben Prüfsummen stehen im Index unter
+`https://janpow77.github.io/auditcore/simple/auditcore-dummybundle/`.
 
 Wer die Zeilen selbst in eine `requirements.txt` schreibt, nimmt die Prüfsummen
-von `auditcore_dummybundle-0.2.0-py3-none-any.whl` und
-`auditcore_dummygenerator-0.2.0-py3-none-any.whl` aus den signierten
-`SHA256SUMS` von v0.14.0 und bindet die beiden übrigen Pflichtabhängigkeiten
-mit; ihre Wheels sind seit v0.12.0 unverändert:
+von `auditcore_dummybundle-0.3.0-py3-none-any.whl` und
+`auditcore_identifiers-0.3.0-py3-none-any.whl` aus den signierten `SHA256SUMS`
+dieses Releases, die von `auditcore_dummygenerator-0.2.0-py3-none-any.whl` aus
+v0.14.0 und bindet `auditcore_common` mit; sein Wheel ist seit v0.12.0
+unverändert:
 
 ```text
 auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_common-0.2.1-py3-none-any.whl#sha256=701d8cab0a17c7a77cae51065af340f1d90c0b37414505d3fd7eac383ec26271
-auditcore_identifiers @ https://github.com/janpow77/auditcore/releases/download/v0.12.0/auditcore_identifiers-0.2.1-py3-none-any.whl#sha256=ae335c04653b3b3f62692951aee68774cadb68cf37606dd6c39914f2a7e8a67a
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle des Releases
@@ -252,7 +249,7 @@ verschieden, Rechtsform passend zur Rechtsform des Begünstigten.
 Python ≥ 3.11 und drei exakt gebundene auditcore-Pakete, sonst nur die
 Standardbibliothek: `auditcore_common==0.2.1` (Hashing, REST-Vertragsfehler),
 `auditcore_dummygenerator==0.2.0` (Namensbaukasten für Firmen sowie Kataloge DE/AT für Orte,
-Namen und Verwendungszwecke) und `auditcore_identifiers==0.2.1` (Prüfziffern). Bewusst
+Namen und Verwendungszwecke) und `auditcore_identifiers==0.3.0` (Prüfziffern). Bewusst
 keine Abhängigkeit von Faker, NumPy, openpyxl, einem Web-Framework oder einer
 Datenbank.
 
@@ -262,7 +259,9 @@ Kein Netzwerkzugriff, keine Dateien, keine Speicherung, keine Geheimnisse.
 Eingaben sind Spaltendefinitionen und Laufparameter und werden streng geprüft;
 Datendateien nimmt das Paket nicht an. Jede Ausgabe trägt die Kennzeichnung
 `SYNTHETISCH`, Startwert, Bezugsdatum und Paketversion in den Metadaten und
-auf Wunsch als eigene Spalte.
+mit `options.marking_column` als letzte Spalte `synthetisch`. Das Paket schreibt
+selbst keine Dateien: Wer daraus CSV erzeugt, setzt `marking_column`, denn eine
+CSV-Datei hat keine Metadaten.
 
 - **IBAN und USt-IdNr.** sind im Standard garantiert formal ungültig: Die
   richtige Prüfziffer wird mit `auditcore_identifiers` berechnet und gezielt

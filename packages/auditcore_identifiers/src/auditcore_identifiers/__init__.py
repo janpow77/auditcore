@@ -1,7 +1,9 @@
 """Check and normalise IBAN, BIC, VAT IDs, German tax identifiers and LEI.
 
 Every check returns a :class:`CheckResult` (status, reason, German message,
-normalised value) and never raises for invalid input. ``profile`` selects the
+normalised value, check-digit status and verdict) and never raises for invalid input.
+``status`` VALID means "format valid"; only ``verdict == "valid"`` also guarantees a
+verified check digit. ``profile`` selects the
 rule set: ``strict`` (default) or a legacy profile reproducing an application.
 """
 
@@ -18,11 +20,18 @@ from auditcore_identifiers.profiles import (
     get_profile,
     profile_names,
 )
-from auditcore_identifiers.result import CheckResult, IdentifierKind, Reason, Status
+from auditcore_identifiers.result import (
+    CheckDigit,
+    CheckResult,
+    IdentifierKind,
+    Reason,
+    Status,
+    Verdict,
+)
 from auditcore_identifiers.tax_de import format_tax_id
 from auditcore_identifiers.vat import at_uid_check_digit, de_vat_check_digit, normalize_vat_id
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 
 def check(
@@ -49,7 +58,7 @@ def check_bic(value: object, *, profile: str | Profile = STRICT) -> CheckResult:
 def check_vat_id(
     value: object, *, country: str | None = None, profile: str | Profile = STRICT
 ) -> CheckResult:
-    """USt-IdNr./VAT ID: EU formats, check digits DE and AT (strict)."""
+    """USt-IdNr./VAT ID: EU formats and check digits of all member states (strict)."""
     return check(IdentifierKind.VAT_ID, value, profile=profile, country=country)
 
 
@@ -69,13 +78,14 @@ def check_lei(value: object, *, profile: str | Profile = STRICT) -> CheckResult:
 
 
 def check_register_number(value: object, *, profile: str | Profile = STRICT) -> CheckResult:
-    """Handelsregisternummer (format only)."""
+    """Handelsregisternummer (format only, register court separated)."""
     return check(IdentifierKind.REGISTER_NUMBER, value, profile=profile)
 
 
 __all__ = [
     "PROFILES",
     "STRICT",
+    "CheckDigit",
     "CheckResult",
     "IdentifierKind",
     "Profile",
@@ -83,6 +93,7 @@ __all__ = [
     "Status",
     "UnknownProfileError",
     "UnsupportedKindError",
+    "Verdict",
     "__version__",
     "at_uid_check_digit",
     "check",

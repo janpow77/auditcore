@@ -118,7 +118,8 @@ _PROFILES: tuple[Profile, ...] = (
         STRICT,
         "Streng (Standard)",
         "Fachlich vollständige Prüfung: Register-Längen und BBAN-Aufbau, Prüfziffern "
-        "(IBAN, LEI, USt-IdNr. DE/AT, Steuer-ID), Formate aller EU-Staaten.",
+        "(IBAN, LEI, USt-IdNr. aller EU-Staaten, Steuer-ID), Formate aller EU-Staaten; "
+        "das Feld check_digit weist aus, ob eine Prüfziffer geprüft wurde.",
         "auditcore_identifiers",
         False,
         _STRICT_CHECKERS,

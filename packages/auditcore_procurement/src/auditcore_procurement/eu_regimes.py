@@ -47,13 +47,34 @@ class Label:
 
 @dataclass(frozen=True)
 class ThresholdRow:
-    """One threshold valid from/to (inclusive), read in the official text ``source``."""
+    """One threshold valid from/to (inclusive), read in the official text ``source``.
+
+    ``valid_to`` is ``None`` for a value fixed in the directive itself that is
+    not subject to the periodic revision (open end until the directive is
+    amended); ``open_end`` then names the provision that says so.
+    """
 
     valid_from: date
-    valid_to: date
+    valid_to: date | None
     value: int
     source: str
     provision: str
+    open_end: str | None = None
+
+    @property
+    def last_day(self) -> date:
+        """Last day of validity; ``date.max`` for an open end."""
+        return date.max if self.valid_to is None else self.valid_to
+
+    def covers(self, on: date) -> bool:
+        """Whether the row is valid on ``on``."""
+        return self.valid_from <= on <= self.last_day
+
+    def period_view(self) -> dict[str, str | None]:
+        """JSON view of the validity (``valid_to`` ``None`` with ``open_end`` reason)."""
+        end = None if self.valid_to is None else self.valid_to.isoformat()
+        start = self.valid_from.isoformat()
+        return {"valid_from": start, "valid_to": end, "open_end": self.open_end}
 
 
 @dataclass(frozen=True)
@@ -144,20 +165,17 @@ def find_series(regime: Regime, contract_type: str, authority_type: str | None) 
 
 def row_on(series: Series, on: date) -> ThresholdRow | None:
     """Row valid on ``on``; no fallback to a neighbouring row."""
-    for row in series.thresholds:
-        if row.valid_from <= on <= row.valid_to:
-            return row
-    return None
+    return next((row for row in series.thresholds if row.covers(on)), None)
 
 
 def row_for_year(series: Series, year: int) -> ThresholdRow | None:
     """Row of 31 December if one value holds gaplessly for the whole calendar year."""
     first, last = date(year, 1, 1), date(year, 12, 31)
-    rows = [r for r in series.thresholds if r.valid_from <= last and r.valid_to >= first]
-    if not rows or rows[0].valid_from > first or rows[-1].valid_to < last:
+    rows = [r for r in series.thresholds if r.valid_from <= last and r.last_day >= first]
+    if not rows or rows[0].valid_from > first or rows[-1].last_day < last:
         return None
     gapless = all(
-        after.valid_from == before.valid_to + timedelta(days=1)
+        after.valid_from == before.last_day + timedelta(days=1)
         for before, after in zip(rows, rows[1:], strict=False)
     )
     return rows[-1] if gapless and len({r.value for r in rows}) == 1 else None
@@ -208,18 +226,30 @@ def _sources(block: Json) -> dict[str, Mapping[str, str]]:
     return sources
 
 
+def _end(row: Json, start: date, what: str) -> tuple[date | None, str | None]:
+    """End of validity; ``null`` only with the provision that excludes revision."""
+    if "valid_to" not in row:
+        raise RegimeError(f"{what}: 'valid_to' fehlt.")
+    if row["valid_to"] is None:
+        return None, _text(row, "open_end", what)
+    end = date.fromisoformat(_text(row, "valid_to", what))
+    if end < start or "open_end" in row:
+        raise RegimeError(f"{what}: Wert oder Zeitraum ist fehlerhaft.")
+    return end, None
+
+
 def _row(raw: object, sources: Mapping[str, Mapping[str, str]], what: str) -> ThresholdRow:
     row = _obj(raw, what)
     start = date.fromisoformat(_text(row, "valid_from", what))
-    end = date.fromisoformat(_text(row, "valid_to", what))
+    end, open_end = _end(row, start, what)
     value, source = row.get("value"), _text(row, "source", what)
-    if isinstance(value, bool) or not isinstance(value, int) or value <= 0 or end < start:
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
         raise RegimeError(f"{what}: Wert oder Zeitraum ist fehlerhaft.")
     if source not in sources:
         raise RegimeError(f"{what}: EU-Schwellenwert ohne amtliche Fundstelle.")
     if spaced_amount(value) not in sources[source]["quote"]:
         raise RegimeError(f"{what}: {value} EUR steht nicht im Wortlaut der Quelle {source}.")
-    return ThresholdRow(start, end, value, source, _text(row, "provision", what))
+    return ThresholdRow(start, end, value, source, _text(row, "provision", what), open_end)
 
 
 def _series(raw: object, sources: Mapping[str, Mapping[str, str]], what: str) -> Series:
@@ -228,7 +258,7 @@ def _series(raw: object, sources: Mapping[str, Mapping[str, str]], what: str) ->
     rows = [_row(r, sources, name) for r in _items(row.get("thresholds"), f"{name}: thresholds")]
     rows.sort(key=lambda r: r.valid_from)
     for before, after in zip(rows, rows[1:], strict=False):
-        if after.valid_from <= before.valid_to:
+        if after.valid_from <= before.last_day:
             raise RegimeError(f"{name}: Zeiträume überschneiden sich.")
     return Series(
         _text(row, "id", what),

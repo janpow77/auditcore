@@ -4,14 +4,21 @@ from __future__ import annotations
 
 import re
 
-from auditcore_identifiers.checksums import is_ascii_alnum, mod97, mod97_check_digits, prepare
+from auditcore_identifiers.checksums import is_ascii_alnum, mod97_check_digits, mod97_ok, prepare
 from auditcore_identifiers.registry import (
     BBAN_PATTERNS,
     COUNTRY_CODES,
     IBAN_LENGTHS,
     IBAN_REGISTRY_RELEASE,
 )
-from auditcore_identifiers.result import CheckResult, IdentifierKind, Reason, invalid, valid
+from auditcore_identifiers.result import (
+    CheckDigit,
+    CheckResult,
+    IdentifierKind,
+    Reason,
+    invalid,
+    valid,
+)
 
 _KIND = IdentifierKind.IBAN
 _HEAD = re.compile(r"[A-Z]{2}[0-9]{2}", re.ASCII)
@@ -75,6 +82,9 @@ def _iban_structure(value: object, text: str) -> CheckResult | None:
 def check_iban(value: object) -> CheckResult:
     """Strict IBAN check: characters, country, length, BBAN structure, MOD 97-10.
 
+    Check digits ``00``, ``01`` and ``99`` are rejected: MOD 97-10 can only produce
+    ``02`` … ``98``.
+
     Accepts the paper form (groups of four, optional ``IBAN`` prefix, hyphens) and
     returns the electronic form in ``normalized``.
     """
@@ -85,9 +95,9 @@ def check_iban(value: object) -> CheckResult:
     if problem is not None:
         return problem
     country = text[:2]
-    if mod97(text[4:] + text[:4]) != 1:
+    if not mod97_ok(text[4:] + text[:4], text[2:4]):
         return invalid(
-            _KIND, value, Reason.INVALID_CHECKSUM, "IBAN-Prüfziffer ist falsch", country=country
+            _KIND, value, Reason.INVALID_CHECKSUM, _checksum_message(text[2:4]), country=country
         )
     return valid(
         _KIND,
@@ -95,7 +105,14 @@ def check_iban(value: object) -> CheckResult:
         text,
         country=country,
         details={"bban": text[4:], "check_digits": text[2:4], "registry": IBAN_REGISTRY_RELEASE},
+        check_digit=CheckDigit.VERIFIED,
     )
+
+
+def _checksum_message(check_digits: str) -> str:
+    if check_digits in ("00", "01", "99"):
+        return f"IBAN-Prüfziffern {check_digits} sind nach ISO 7064 MOD 97-10 nicht möglich (02–98)"
+    return "IBAN-Prüfziffer ist falsch"
 
 
 def iban_check_digits(country: str, bban: str) -> str:
@@ -117,7 +134,10 @@ def check_bic(value: object) -> CheckResult:
     """Strict BIC check (ISO 9362:2014): 8 or 11 characters, ISO 3166 country code.
 
     The business party prefix may be alphanumeric since ISO 9362:2014; a ``0`` as
-    second location character marks a test BIC (``details["test_bic"]``).
+    second location character marks a test BIC (``details["test_bic"]``). A BIC has
+    no check digit, so a structurally valid BIC is only ``format_valid``: an 11-letter
+    word such as ``DEUTSCHLAND`` (country ``SC``) is a well-formed BIC and can only be
+    told apart from an issued one by the SWIFT directory, which is not consulted.
     """
     kind = IdentifierKind.BIC
     text = prepare(kind, value)
@@ -163,4 +183,5 @@ def check_bic(value: object) -> CheckResult:
             "branch": text[8:] or "XXX",
             "test_bic": text[7] == "0",
         },
+        check_digit=CheckDigit.NONE,
     )

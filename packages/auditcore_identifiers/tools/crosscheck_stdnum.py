@@ -64,12 +64,22 @@ def _search(prefix: str, rng: random.Random, wanted: int) -> list[str]:
     return found
 
 
+def _mutate(number: str) -> str:
+    """Replace the last character by its successor (9 → 0, Z → A): one wrong check digit."""
+    last = number[-1]
+    alphabet = string.digits if last.isdigit() else string.ascii_uppercase
+    return number[:-1] + alphabet[(alphabet.index(last) + 1) % len(alphabet)]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
     vat_values = list(dict.fromkeys(v for v, _ in samples.vat_samples()))
     rng = random.Random(samples.SEED + 9)
+    valid_by_country = {
+        prefix: _search(prefix, rng, 8) for prefix in sorted(EU_VAT_FORMATS) if prefix != "XI"
+    }
     data = {
         "status": "OBSERVED",
         "tool": "tools/crosscheck_stdnum.py",
@@ -80,9 +90,10 @@ def main() -> None:
         "vat_id": _verdicts(vat_values, _vat_valid),
         "tax_id": _verdicts(samples.tax_id_samples(), idnr.is_valid),
         "tax_number": _verdicts(samples.tax_number_samples(), stnr.is_valid),
-        "vat_valid_by_country": {
-            prefix: _search(prefix, rng, 8) for prefix in sorted(EU_VAT_FORMATS) if prefix != "XI"
-        },
+        "vat_valid_by_country": valid_by_country,
+        "vat_mutated": _verdicts(
+            [_mutate(n) for numbers in valid_by_country.values() for n in numbers], _vat_valid
+        ),
     }
     target = args.output / "stdnum_crosscheck.json"
     target.write_text(json.dumps(data, ensure_ascii=False, indent=0) + "\n", encoding="utf-8")

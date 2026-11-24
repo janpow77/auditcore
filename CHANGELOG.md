@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+Paketversionen (Korrekturen gegen falsche Ergebnisse in Kennungsprüfung,
+Schwellenwerten und Testdaten): `auditcore_identifiers` 0.3.0,
+`auditcore_documents` 0.5.1, `auditcore_dummybundle` 0.3.0,
+`auditcore_procurement` 0.4.0, `auditcore_risk` 0.4.3. Bindungen:
+documents und dummybundle → `auditcore_identifiers==0.3.0`, risk (Extras
+`procurement`, `dev`) → `auditcore_procurement==0.4.0`;
+`auditcore_dummygenerator` bleibt 0.2.0.
+
+- `auditcore_identifiers` 0.3.0: neues Feld `CheckResult.check_digit`
+  (`verified`/`failed`/`not_checked`/`none`) und Gesamturteil
+  `CheckResult.verdict` (`valid` nur mit geprüfter Prüfziffer, sonst
+  `format_valid`). IBAN-/LEI-Prüfziffern 00, 01, 99 ungültig; nationale
+  Prüfziffern der USt-IdNr. aller 27 EU-Staaten; `HRB 0` ungültig,
+  Registergericht wird abgetrennt; BIC höchstens `format_valid`.
+- `auditcore_documents` 0.5.1: nur Bindung an identifiers 0.3.0.
+- `auditcore_dummybundle` 0.3.0: Rechnungssteller, Steuersatz und
+  Vergabeart folgen dem Land (AT 20 %, BVergG 2018); Auszahlungsverzögerung
+  endet spätestens am Bezugsdatum bzw. Stichtag; `discount_gross` macht
+  Brutto − Skonto = gezahlt centgenau; Hinweis zu `company` berichtigt.
+- `auditcore_procurement` 0.4.0: Profil `procurement.hvtg 2026.11.1`
+  (soziale und andere besondere Dienstleistungen ab 2028 als fester Wert ohne
+  Enddatum, Werttests gegen zitierte Richtlinienbeträge), § 3 Abs. 9 VgV
+  (`check_small_lots`, `estimation_hints`) und § 106 Abs. 2 Nr. 1 GWB je
+  Stichtag (`central_government_rule`; alte Fassung bis 30.06.2026, neue ab
+  01.07.2026).
+- `auditcore_risk` 0.4.3: nur Bindung an procurement 0.4.0.
 - `auditcore-runner`: Exitcode 127 unter `sh -c`/`bash -c` meldet jetzt
   „Programm im Befehl nicht gefunden (Exitcode 127)“ mit der letzten
   stderr-Zeile statt „sh im Image bzw. auf dem Rechner nicht gefunden“. Anlass:
