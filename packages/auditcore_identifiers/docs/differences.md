@@ -16,10 +16,10 @@ gleicher Regelteil, geprüft in `test_replay.py`).
 | Pipeline IbanChecksumRule | VALID | INVALID:invalid_characters | 4 | `{"value": "CZ650800000019200014539@"}` |
 | Pipeline IbanChecksumRule | VALID | INVALID:invalid_length | 7 | `{"value": "FI211234560000078"}` |
 | Pipeline VatIdFormatRule | INVALID | MISSING:missing | 1 | `{"value": " "}` |
-| Pipeline VatIdFormatRule | INVALID | VALID | 46 | `{"value": "de136695976"}` |
+| Pipeline VatIdFormatRule | INVALID | VALID | 9 | `{"value": "de136695976"}` |
 | Pipeline VatIdFormatRule | VALID | INVALID:invalid_characters | 1 | `{"value": "DE\u0661\u0663\u0666\u0666\u0669\u0665\u0669\u0667\u0666"}` |
-| Pipeline VatIdFormatRule | VALID | INVALID:invalid_checksum | 27 | `{"value": "DE940317595"}` |
-| Pipeline VatIdFormatRule | VALID | INVALID:invalid_format | 4 | `{"value": "BE903955048"}` |
+| Pipeline VatIdFormatRule | VALID | INVALID:invalid_checksum | 36 | `{"value": "DE940317595"}` |
+| Pipeline VatIdFormatRule | VALID | INVALID:invalid_format | 6 | `{"value": "BE903955048"}` |
 | documents validate_iban (Donut) | EXCEPTION:AttributeError | MISSING:missing | 1 | `{"value": null}` |
 | documents validate_iban (Donut) | INVALID | MISSING:missing | 2 | `{"value": ""}` |
 | documents validate_iban (Donut) | INVALID | VALID | 425 | `{"value": "DE89-3704-0044-0532-0130-00"}` |
@@ -27,19 +27,20 @@ gleicher Regelteil, geprüft in `test_replay.py`).
 | documents validate_iban (Donut) | VALID | INVALID:invalid_length | 7 | `{"value": "FI211234560000078"}` |
 | documents vat_id_check (Donut) | EXCEPTION:AttributeError | MISSING:missing | 1 | `{"value": null}` |
 | documents vat_id_check (Donut) | INVALID | MISSING:missing | 2 | `{"value": ""}` |
-| documents vat_id_check (Donut) | INVALID | VALID | 44 | `{"value": "DE136.695.976"}` |
+| documents vat_id_check (Donut) | INVALID | VALID | 7 | `{"value": "DE136.695.976"}` |
 | documents vat_id_check (Donut) | VALID | INVALID:invalid_characters | 1 | `{"value": "DE\u0661\u0663\u0666\u0666\u0669\u0665\u0669\u0667\u0666"}` |
-| documents vat_id_check (Donut) | VALID | INVALID:invalid_format | 4 | `{"value": "BE903955048"}` |
+| documents vat_id_check (Donut) | VALID | INVALID:invalid_checksum | 9 | `{"value": "BE0990836873"}` |
+| documents vat_id_check (Donut) | VALID | INVALID:invalid_format | 6 | `{"value": "BE903955048"}` |
 | entity_matching check_lei | INVALID | MISSING:missing | 3 | `{"value": null}` |
 | entity_matching check_lei | INVALID | VALID | 44 | `{"value": "7LTW FZYI CNSX 8D62 1K86"}` |
 | flowinvoice validate_bic | INVALID | MISSING:missing | 1 | `{"value": " "}` |
 | flowinvoice validate_bic | INVALID | VALID | 11 | `{"value": "1234DEFF"}` |
 | flowinvoice validate_bic | VALID | INVALID:unknown_country | 4 | `{"value": "DEUTXXFF"}` |
 | flowinvoice validate_eu_vat_id | INVALID | MISSING:missing | 1 | `{"country_code": null, "value": " "}` |
-| flowinvoice validate_eu_vat_id | INVALID | VALID | 17 | `{"country_code": null, "value": "DE136.695.976"}` |
+| flowinvoice validate_eu_vat_id | INVALID | VALID | 16 | `{"country_code": null, "value": "DE136.695.976"}` |
 | flowinvoice validate_eu_vat_id | VALID | INVALID:invalid_characters | 1 | `{"country_code": null, "value": "DE\u0661\u0663\u0666\u0666\u0669\u0665\u0669\u0667\u0666"}` |
-| flowinvoice validate_eu_vat_id | VALID | INVALID:invalid_checksum | 40 | `{"country_code": null, "value": "DE940317595"}` |
-| flowinvoice validate_eu_vat_id | VALID | INVALID:invalid_format | 7 | `{"country_code": null, "value": "BE903955048"}` |
+| flowinvoice validate_eu_vat_id | VALID | INVALID:invalid_checksum | 80 | `{"country_code": null, "value": "DE940317595"}` |
+| flowinvoice validate_eu_vat_id | VALID | INVALID:invalid_format | 15 | `{"country_code": null, "value": "BE903955048"}` |
 | flowinvoice validate_german_tax_id | INVALID | MISSING:missing | 1 | `{"value": " "}` |
 | flowinvoice validate_german_tax_id | INVALID | VALID | 13 | `{"value": "2893081508152"}` |
 | flowinvoice validate_german_tax_id | VALID | INVALID:invalid_characters | 1 | `{"value": "\u0661\u0662/\u0663\u0664\u0665/\u0666\u0667\u0668\u0669\u0660"}` |
@@ -67,5 +68,5 @@ gleicher Regelteil, geprüft in `test_replay.py`).
 | invoicesynth iban_valid | VALID | INVALID:invalid_length | 7 | `{"value": "FI211234560000078"}` |
 | invoicesynth vat_id_valid | EXCEPTION:AttributeError | MISSING:missing | 1 | `{"value": null}` |
 | invoicesynth vat_id_valid | INVALID | MISSING:missing | 2 | `{"value": ""}` |
-| invoicesynth vat_id_valid | INVALID | VALID | 65 | `{"value": "DE136.695.976"}` |
+| invoicesynth vat_id_valid | INVALID | VALID | 17 | `{"value": "DE136.695.976"}` |
 | invoicesynth vat_id_valid | VALID | INVALID:invalid_characters | 1 | `{"value": "DE\u0661\u0663\u0666\u0666\u0669\u0665\u0669\u0667\u0666"}` |

@@ -14,8 +14,15 @@ from auditcore_common import rest
 
 from .. import __version__
 from ..profiles import PROFILES, STRICT, Profile, UnsupportedKindError
-from ..result import CheckResult, IdentifierKind, Status
-from .labels import DETAIL_LABELS, KIND_LABELS, REASON_LABELS, VALUE_LABELS
+from ..result import CheckResult, IdentifierKind, Status, Verdict
+from .labels import (
+    CHECK_DIGIT_LABELS,
+    DETAIL_LABELS,
+    KIND_LABELS,
+    REASON_LABELS,
+    VALUE_LABELS,
+    VERDICT_LABELS,
+)
 
 CONTRACT = "identifiers_ui/1"
 LIBRARY = f"auditcore_identifiers {__version__}"
@@ -50,6 +57,8 @@ def catalogue(limits: Limits | None = None) -> Json:
         "reasons": [{"id": r.value, "label": text} for r, text in REASON_LABELS.items()],
         "detail_labels": dict(DETAIL_LABELS),
         "value_labels": dict(VALUE_LABELS),
+        "check_digit_labels": {c.value: text for c, text in CHECK_DIGIT_LABELS.items()},
+        "verdict_labels": {v.value: text for v, text in VERDICT_LABELS.items()},
         "limits": {
             "max_items": limits.max_items,
             "max_value_length": limits.max_value_length,
@@ -97,10 +106,18 @@ def _text(body: Mapping[str, object], key: str, path: str, limit: int) -> str | 
 
 
 def result_dict(result: CheckResult) -> Json:
-    """``CheckResult.to_dict()`` plus German labels of kind and reason."""
+    """``CheckResult.to_dict()`` plus German labels of kind, reason, check digit and verdict.
+
+    ``verdict`` is ``valid`` only with a verified check digit; a VALID result without
+    one (BIC, Handelsregisternummer, GB VAT, …) is ``format_valid``. Tables and exports
+    should show ``verdict_label`` and ``check_digit_label`` rather than ``status``.
+    """
     data: Json = dict(result.to_dict())
     data["kind_label"] = KIND_LABELS[result.kind][0]
     data["reason_label"] = None if result.reason is None else REASON_LABELS[result.reason]
+    digit = result.check_digit
+    data["check_digit_label"] = None if digit is None else CHECK_DIGIT_LABELS[digit]
+    data["verdict_label"] = VERDICT_LABELS[result.verdict]
     return data
 
 
@@ -153,6 +170,7 @@ def _summary(results: list[Json]) -> Json:
         "valid": statuses.count(Status.VALID.value),
         "invalid": statuses.count(Status.INVALID.value),
         "missing": statuses.count(Status.MISSING.value),
+        "format_valid": sum(1 for r in results if r.get("verdict") == Verdict.FORMAT_VALID.value),
         "not_checked": sum(1 for r in results if r["error"] is not None),
     }
 

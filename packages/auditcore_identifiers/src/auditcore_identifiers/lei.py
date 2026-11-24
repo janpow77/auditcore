@@ -4,8 +4,15 @@ from __future__ import annotations
 
 import re
 
-from auditcore_identifiers.checksums import is_ascii_alnum, mod97, mod97_check_digits, prepare
-from auditcore_identifiers.result import CheckResult, IdentifierKind, Reason, invalid, valid
+from auditcore_identifiers.checksums import is_ascii_alnum, mod97_check_digits, mod97_ok, prepare
+from auditcore_identifiers.result import (
+    CheckDigit,
+    CheckResult,
+    IdentifierKind,
+    Reason,
+    invalid,
+    valid,
+)
 
 _KIND = IdentifierKind.LEI
 _FORMAT = re.compile(r"[A-Z0-9]{18}[0-9]{2}", re.ASCII)
@@ -13,7 +20,10 @@ _TOKEN = re.compile(r"(?<![A-Z0-9])[A-Z0-9]{18}[0-9]{2}(?![A-Z0-9])", re.ASCII)
 
 
 def check_lei(value: object) -> CheckResult:
-    """Strict LEI check: length 20, format, ISO 7064 MOD 97-10 over all 20 characters."""
+    """Strict LEI check: length 20, format, ISO 7064 MOD 97-10 over all 20 characters.
+
+    Check digits ``00``, ``01`` and ``99`` are rejected (ISO 17442: only 02–98).
+    """
     text = prepare(_KIND, value)
     if isinstance(text, CheckResult):
         return text
@@ -39,9 +49,16 @@ def check_lei(value: object) -> CheckResult:
             Reason.INVALID_FORMAT,
             "Die letzten beiden LEI-Stellen müssen Ziffern sein",
         )
-    if mod97(text) != 1:
-        return invalid(_KIND, value, Reason.INVALID_CHECKSUM, "LEI-Prüfziffer ist falsch")
-    return valid(_KIND, value, text, details={"lou_prefix": text[:4]})
+    if not mod97_ok(text, text[18:]):
+        message = (
+            f"LEI-Prüfziffern {text[18:]} sind nach ISO 7064 MOD 97-10 nicht möglich (02–98)"
+            if text[18:] in ("00", "01", "99")
+            else "LEI-Prüfziffer ist falsch"
+        )
+        return invalid(_KIND, value, Reason.INVALID_CHECKSUM, message)
+    return valid(
+        _KIND, value, text, details={"lou_prefix": text[:4]}, check_digit=CheckDigit.VERIFIED
+    )
 
 
 def lei_check_digits(prefix: str) -> str:

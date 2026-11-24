@@ -18810,5 +18810,827 @@
 "SK5553070446",
 "SK9249227427"
 ]
+},
+"vat_mutated": [
+{
+"value": "ATU00850785",
+"stdnum_valid": false
+},
+{
+"value": "ATU01221598",
+"stdnum_valid": false
+},
+{
+"value": "ATU40377339",
+"stdnum_valid": false
+},
+{
+"value": "ATU71149590",
+"stdnum_valid": false
+},
+{
+"value": "ATU97276876",
+"stdnum_valid": false
+},
+{
+"value": "ATU93163666",
+"stdnum_valid": false
+},
+{
+"value": "ATU07067486",
+"stdnum_valid": false
+},
+{
+"value": "ATU71096398",
+"stdnum_valid": false
+},
+{
+"value": "BE0239792909",
+"stdnum_valid": false
+},
+{
+"value": "BE0787979994",
+"stdnum_valid": false
+},
+{
+"value": "BE0594687205",
+"stdnum_valid": false
+},
+{
+"value": "BE0883820251",
+"stdnum_valid": false
+},
+{
+"value": "BE0307521960",
+"stdnum_valid": false
+},
+{
+"value": "BE0862790255",
+"stdnum_valid": false
+},
+{
+"value": "BE0528144908",
+"stdnum_valid": false
+},
+{
+"value": "BE0209704992",
+"stdnum_valid": false
+},
+{
+"value": "BG1499442367",
+"stdnum_valid": false
+},
+{
+"value": "BG8468687633",
+"stdnum_valid": false
+},
+{
+"value": "BG662404572",
+"stdnum_valid": false
+},
+{
+"value": "BG9257900400",
+"stdnum_valid": false
+},
+{
+"value": "BG8834634637",
+"stdnum_valid": false
+},
+{
+"value": "BG6109237999",
+"stdnum_valid": false
+},
+{
+"value": "BG8104576789",
+"stdnum_valid": true
+},
+{
+"value": "BG647220394",
+"stdnum_valid": false
+},
+{
+"value": "CY45681968S",
+"stdnum_valid": false
+},
+{
+"value": "CY23112493R",
+"stdnum_valid": false
+},
+{
+"value": "CY92495743W",
+"stdnum_valid": false
+},
+{
+"value": "CY60661773M",
+"stdnum_valid": false
+},
+{
+"value": "CY06972509E",
+"stdnum_valid": false
+},
+{
+"value": "CY44274305S",
+"stdnum_valid": false
+},
+{
+"value": "CY39439028L",
+"stdnum_valid": false
+},
+{
+"value": "CY93560227H",
+"stdnum_valid": false
+},
+{
+"value": "CZ67267069",
+"stdnum_valid": false
+},
+{
+"value": "CZ202926915",
+"stdnum_valid": true
+},
+{
+"value": "CZ855217729",
+"stdnum_valid": true
+},
+{
+"value": "CZ915412508",
+"stdnum_valid": true
+},
+{
+"value": "CZ19285184",
+"stdnum_valid": false
+},
+{
+"value": "CZ900714528",
+"stdnum_valid": true
+},
+{
+"value": "CZ8746084469",
+"stdnum_valid": false
+},
+{
+"value": "CZ012621345",
+"stdnum_valid": true
+},
+{
+"value": "DE801752041",
+"stdnum_valid": false
+},
+{
+"value": "DE371973595",
+"stdnum_valid": false
+},
+{
+"value": "DE288072056",
+"stdnum_valid": false
+},
+{
+"value": "DE820215946",
+"stdnum_valid": false
+},
+{
+"value": "DE640917273",
+"stdnum_valid": false
+},
+{
+"value": "DE514206156",
+"stdnum_valid": false
+},
+{
+"value": "DE109889476",
+"stdnum_valid": false
+},
+{
+"value": "DE777941422",
+"stdnum_valid": false
+},
+{
+"value": "DK54958499",
+"stdnum_valid": false
+},
+{
+"value": "DK20176416",
+"stdnum_valid": false
+},
+{
+"value": "DK12380918",
+"stdnum_valid": false
+},
+{
+"value": "DK97611182",
+"stdnum_valid": false
+},
+{
+"value": "DK91613051",
+"stdnum_valid": false
+},
+{
+"value": "DK60261416",
+"stdnum_valid": false
+},
+{
+"value": "DK14867245",
+"stdnum_valid": false
+},
+{
+"value": "DK51079788",
+"stdnum_valid": false
+},
+{
+"value": "EE366287348",
+"stdnum_valid": false
+},
+{
+"value": "EE677958337",
+"stdnum_valid": false
+},
+{
+"value": "EE116736065",
+"stdnum_valid": false
+},
+{
+"value": "EE261574703",
+"stdnum_valid": false
+},
+{
+"value": "EE819262276",
+"stdnum_valid": false
+},
+{
+"value": "EE350897126",
+"stdnum_valid": false
+},
+{
+"value": "EE947529425",
+"stdnum_valid": false
+},
+{
+"value": "EE074375720",
+"stdnum_valid": false
+},
+{
+"value": "EL062125294",
+"stdnum_valid": false
+},
+{
+"value": "EL032968841",
+"stdnum_valid": false
+},
+{
+"value": "EL167751445",
+"stdnum_valid": false
+},
+{
+"value": "EL065293013",
+"stdnum_valid": false
+},
+{
+"value": "EL060344864",
+"stdnum_valid": false
+},
+{
+"value": "EL062325593",
+"stdnum_valid": false
+},
+{
+"value": "EL603949985",
+"stdnum_valid": false
+},
+{
+"value": "EL883234791",
+"stdnum_valid": false
+},
+{
+"value": "ESQ21087581",
+"stdnum_valid": false
+},
+{
+"value": "ESH1883065D",
+"stdnum_valid": false
+},
+{
+"value": "ESJ64462824",
+"stdnum_valid": false
+},
+{
+"value": "ESS94312924",
+"stdnum_valid": false
+},
+{
+"value": "ESJ47552667",
+"stdnum_valid": false
+},
+{
+"value": "ESK4277909S",
+"stdnum_valid": false
+},
+{
+"value": "ESW7996688D",
+"stdnum_valid": false
+},
+{
+"value": "ESB37172088",
+"stdnum_valid": false
+},
+{
+"value": "FI29604458",
+"stdnum_valid": false
+},
+{
+"value": "FI66432018",
+"stdnum_valid": false
+},
+{
+"value": "FI19585417",
+"stdnum_valid": false
+},
+{
+"value": "FI65539411",
+"stdnum_valid": false
+},
+{
+"value": "FI77263774",
+"stdnum_valid": false
+},
+{
+"value": "FI04489123",
+"stdnum_valid": false
+},
+{
+"value": "FI51776934",
+"stdnum_valid": false
+},
+{
+"value": "FI82609590",
+"stdnum_valid": false
+},
+{
+"value": "FR7V510444160",
+"stdnum_valid": false
+},
+{
+"value": "FR1H059001587",
+"stdnum_valid": false
+},
+{
+"value": "FR16796035310",
+"stdnum_valid": false
+},
+{
+"value": "FR09751916355",
+"stdnum_valid": false
+},
+{
+"value": "FRCK699261245",
+"stdnum_valid": false
+},
+{
+"value": "HR21619732145",
+"stdnum_valid": false
+},
+{
+"value": "HR70025769296",
+"stdnum_valid": false
+},
+{
+"value": "HR73289244558",
+"stdnum_valid": false
+},
+{
+"value": "HR14653252970",
+"stdnum_valid": false
+},
+{
+"value": "HR40442655272",
+"stdnum_valid": false
+},
+{
+"value": "HR27466063742",
+"stdnum_valid": false
+},
+{
+"value": "HR68771409168",
+"stdnum_valid": false
+},
+{
+"value": "HR92732000610",
+"stdnum_valid": false
+},
+{
+"value": "HU14772668",
+"stdnum_valid": false
+},
+{
+"value": "HU73955842",
+"stdnum_valid": false
+},
+{
+"value": "HU71367429",
+"stdnum_valid": false
+},
+{
+"value": "HU88112465",
+"stdnum_valid": false
+},
+{
+"value": "HU48739664",
+"stdnum_valid": false
+},
+{
+"value": "HU68981447",
+"stdnum_valid": false
+},
+{
+"value": "HU95067051",
+"stdnum_valid": false
+},
+{
+"value": "HU86302165",
+"stdnum_valid": false
+},
+{
+"value": "IE5365209K",
+"stdnum_valid": false
+},
+{
+"value": "IE4513647X",
+"stdnum_valid": false
+},
+{
+"value": "IE9T87274F",
+"stdnum_valid": false
+},
+{
+"value": "IE3527789P",
+"stdnum_valid": false
+},
+{
+"value": "IE9082270V",
+"stdnum_valid": false
+},
+{
+"value": "IE5529267L",
+"stdnum_valid": false
+},
+{
+"value": "IE8V27792L",
+"stdnum_valid": false
+},
+{
+"value": "IE0S13081O",
+"stdnum_valid": false
+},
+{
+"value": "IT23086660670",
+"stdnum_valid": false
+},
+{
+"value": "IT89139130748",
+"stdnum_valid": false
+},
+{
+"value": "LT508608013",
+"stdnum_valid": false
+},
+{
+"value": "LT685175613",
+"stdnum_valid": false
+},
+{
+"value": "LT050232010",
+"stdnum_valid": false
+},
+{
+"value": "LT970642811",
+"stdnum_valid": false
+},
+{
+"value": "LT205542919",
+"stdnum_valid": false
+},
+{
+"value": "LT979249916",
+"stdnum_valid": false
+},
+{
+"value": "LT847292118",
+"stdnum_valid": false
+},
+{
+"value": "LT268207519",
+"stdnum_valid": false
+},
+{
+"value": "LU62423175",
+"stdnum_valid": false
+},
+{
+"value": "LU17696938",
+"stdnum_valid": false
+},
+{
+"value": "LU75014251",
+"stdnum_valid": false
+},
+{
+"value": "LU86888063",
+"stdnum_valid": false
+},
+{
+"value": "LU87736189",
+"stdnum_valid": false
+},
+{
+"value": "LU63178463",
+"stdnum_valid": false
+},
+{
+"value": "LV46206706232",
+"stdnum_valid": false
+},
+{
+"value": "LV53318490012",
+"stdnum_valid": false
+},
+{
+"value": "LV89937520544",
+"stdnum_valid": false
+},
+{
+"value": "LV93600513838",
+"stdnum_valid": false
+},
+{
+"value": "LV78206840504",
+"stdnum_valid": false
+},
+{
+"value": "LV96872313882",
+"stdnum_valid": false
+},
+{
+"value": "LV53331460826",
+"stdnum_valid": false
+},
+{
+"value": "LV02072499041",
+"stdnum_valid": false
+},
+{
+"value": "MT60787324",
+"stdnum_valid": false
+},
+{
+"value": "MT90770705",
+"stdnum_valid": false
+},
+{
+"value": "MT94172436",
+"stdnum_valid": false
+},
+{
+"value": "MT64659976",
+"stdnum_valid": false
+},
+{
+"value": "MT19351888",
+"stdnum_valid": false
+},
+{
+"value": "MT65546005",
+"stdnum_valid": false
+},
+{
+"value": "MT78185031",
+"stdnum_valid": false
+},
+{
+"value": "MT15071962",
+"stdnum_valid": false
+},
+{
+"value": "NL000001545B36",
+"stdnum_valid": true
+},
+{
+"value": "NL000009350B58",
+"stdnum_valid": true
+},
+{
+"value": "NL000108625B60",
+"stdnum_valid": true
+},
+{
+"value": "NL000026645B65",
+"stdnum_valid": true
+},
+{
+"value": "NL000002392B99",
+"stdnum_valid": true
+},
+{
+"value": "NL000007134B96",
+"stdnum_valid": true
+},
+{
+"value": "NL000018624B14",
+"stdnum_valid": true
+},
+{
+"value": "NL000007031B31",
+"stdnum_valid": true
+},
+{
+"value": "PL7539778794",
+"stdnum_valid": false
+},
+{
+"value": "PL2575008979",
+"stdnum_valid": false
+},
+{
+"value": "PL8756817881",
+"stdnum_valid": false
+},
+{
+"value": "PL0280851526",
+"stdnum_valid": false
+},
+{
+"value": "PL0619569528",
+"stdnum_valid": false
+},
+{
+"value": "PL0872092280",
+"stdnum_valid": false
+},
+{
+"value": "PL0358135161",
+"stdnum_valid": false
+},
+{
+"value": "PL8542216902",
+"stdnum_valid": false
+},
+{
+"value": "PT472952545",
+"stdnum_valid": false
+},
+{
+"value": "PT566879345",
+"stdnum_valid": false
+},
+{
+"value": "PT804656879",
+"stdnum_valid": false
+},
+{
+"value": "PT524392596",
+"stdnum_valid": false
+},
+{
+"value": "PT340303108",
+"stdnum_valid": false
+},
+{
+"value": "PT122936176",
+"stdnum_valid": false
+},
+{
+"value": "PT115800043",
+"stdnum_valid": false
+},
+{
+"value": "PT956391223",
+"stdnum_valid": false
+},
+{
+"value": "RO73862746",
+"stdnum_valid": false
+},
+{
+"value": "RO38520486",
+"stdnum_valid": false
+},
+{
+"value": "RO69501891",
+"stdnum_valid": false
+},
+{
+"value": "RO659731942",
+"stdnum_valid": false
+},
+{
+"value": "RO5808050",
+"stdnum_valid": false
+},
+{
+"value": "RO61322823",
+"stdnum_valid": false
+},
+{
+"value": "RO5673167066",
+"stdnum_valid": false
+},
+{
+"value": "RO9907209504",
+"stdnum_valid": false
+},
+{
+"value": "SE330585586202",
+"stdnum_valid": false
+},
+{
+"value": "SE302961264902",
+"stdnum_valid": false
+},
+{
+"value": "SE198317484602",
+"stdnum_valid": false
+},
+{
+"value": "SE492120429502",
+"stdnum_valid": false
+},
+{
+"value": "SE957590726702",
+"stdnum_valid": false
+},
+{
+"value": "SE328641752602",
+"stdnum_valid": false
+},
+{
+"value": "SE749156677902",
+"stdnum_valid": false
+},
+{
+"value": "SE193772831702",
+"stdnum_valid": false
+},
+{
+"value": "SI60576236",
+"stdnum_valid": false
+},
+{
+"value": "SI52607080",
+"stdnum_valid": false
+},
+{
+"value": "SI16842198",
+"stdnum_valid": false
+},
+{
+"value": "SI96555310",
+"stdnum_valid": false
+},
+{
+"value": "SI55559795",
+"stdnum_valid": false
+},
+{
+"value": "SI12249531",
+"stdnum_valid": false
+},
+{
+"value": "SI36129187",
+"stdnum_valid": false
+},
+{
+"value": "SI74912594",
+"stdnum_valid": false
+},
+{
+"value": "SK4502202046",
+"stdnum_valid": false
+},
+{
+"value": "SK7972706017",
+"stdnum_valid": false
+},
+{
+"value": "SK1374549177",
+"stdnum_valid": false
+},
+{
+"value": "SK7398548103",
+"stdnum_valid": false
+},
+{
+"value": "SK6587995965",
+"stdnum_valid": false
+},
+{
+"value": "SK3141118741",
+"stdnum_valid": false
+},
+{
+"value": "SK5553070447",
+"stdnum_valid": false
+},
+{
+"value": "SK9249227428",
+"stdnum_valid": false
 }
+]
 }

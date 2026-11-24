@@ -110,3 +110,18 @@ flowworkshop selbst ist durch ecohesion abgelöst (keine Deploys mehr).
 - Steuer-ID: drei gleiche Ziffern direkt hintereinander sind unzulässig
   (Regel seit 2016); python-stdnum prüft das nicht.
 - BIC: Institutskennung alphanumerisch (ISO 9362:2014), Länderliste ISO 3166-1.
+- IBAN- und LEI-Prüfziffern `00`, `01`, `99` sind ungültig (ISO 7064 MOD 97-10
+  erzeugt nur 02–98), auch wenn der Rest Modulo 97 eins ist.
+- USt-IdNr.: nationale Prüfziffern aller 27 EU-Staaten; `GB`/`XI` und
+  französische Buchstabenschlüssel bleiben `VALID` mit `check_digit =
+  not_checked` und damit `verdict = format_valid`.
+- Handelsregisternummer ab 1 ohne führende Null; ein Registergericht wird
+  abgetrennt (`details["court"]`).
+
+## Prüfziffernstatus und Gesamturteil
+
+Nur `strict` setzt `CheckResult.check_digit`. Die Legacy-Profile bilden das
+Verhalten der Originale ab und lassen das Feld leer (`None`); ihr `verdict`
+ist deshalb nie `valid`, sondern höchstens `format_valid` – auch dann, wenn
+das Original (z. B. `invoicesynth.legacy`) eine Prüfziffer rechnet. Wer ein
+Gesamturteil „gültig“ anzeigen will, nutzt `strict`.

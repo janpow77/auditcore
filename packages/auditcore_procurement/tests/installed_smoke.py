@@ -6,8 +6,11 @@ from importlib.metadata import distribution
 from importlib.util import find_spec
 
 from auditcore_procurement import (
+    Lot,
     build_ted_query,
+    central_government_rule,
     check_eu_threshold,
+    check_small_lots,
     eu_catalogue,
     inspect_notice,
     load_profile,
@@ -23,7 +26,7 @@ from auditcore_procurement.ted import dump_records
 def main() -> None:
     """Normalise, import, check and precheck with the installed pure core."""
     package = distribution("auditcore_procurement")
-    assert package.version == "0.3.1"
+    assert package.version == "0.4.0"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.2.1"], runtime
     assert find_spec("auditcore") is None
@@ -111,6 +114,24 @@ def main() -> None:
         "concessions",
         "defence",
     ]
+    open_end = load_profile("procurement.hvtg", "2026.11.1")
+    social = check_eu_threshold(
+        open_end,
+        Decimal("750000"),
+        regime="public_contracts",
+        contract_type="social_services",
+        reference_date=date(2030, 1, 1),
+    )
+    assert social["above_threshold"] is True and social["eu_threshold"]["valid_to"] is None
+    assert "Bundesministerien" in central_government_rule(date(2026, 7, 1)).wording
+    small = check_small_lots(
+        [
+            Lot(Decimal("79999.99"), "supplies_services", exempt=True),
+            Lot(Decimal("400000"), "works"),
+        ],
+        reference_date=date(2026, 1, 1),
+    )
+    assert small["exemption_possible"] is True
     assert ted_company_result(500, None, "DE", "designer").status == "failed"
     if find_spec("auditcore_harvest") is not None:
         from auditcore_procurement.sources import TedAwardsAdapter
