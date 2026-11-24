@@ -1,7 +1,7 @@
 <!-- PDF schwärzen: Kriterien, Prüfansicht mit Seitenbild, nachgeprüftes Ergebnis; Logik im Kern (createRedactionController). -->
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { redactionMessages, redactionStep, type RedactionPlan, type RedactionPort, type RedactionResult, type RedactionUrls } from '@auditcore/ui-core'
+import { computed, nextTick, ref, watch } from 'vue'
+import { focusRedactionHeading, redactionMessages, redactionStep, type RedactionPlan, type RedactionPort, type RedactionResult, type RedactionUrls } from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
 import RedactionForm from './RedactionForm.vue'
@@ -30,12 +30,19 @@ const { controller, state } = useRedaction(() => props.port, {
   failed: (message) => emit('error', message),
 }, props.urls)
 const step = computed(() => redactionStep(state.value))
+const root = ref<HTMLElement | null>(null)
+
+// Schrittwechsel: Fokus auf die neue Überschrift, damit er nicht auf <body> fällt.
+watch(step, async () => {
+  await nextTick()
+  focusRedactionHeading(root.value)
+})
 
 watch(() => props.port, () => void controller.load(), { immediate: true })
 </script>
 
 <template>
-  <div class="fa-redaction" :lang="active" data-testid="redaction">
+  <div ref="root" class="fa-redaction" :lang="active" data-testid="redaction">
     <p v-if="!port" class="fa-redaction__muted">{{ t('noPort') }}</p>
     <p v-if="state.busy === 'load'" class="fa-redaction__muted" role="status">{{ t('loading') }}</p>
     <p v-if="state.error" class="fa-redaction__failure" role="alert">{{ t('failed', { message: state.error }) }}</p>

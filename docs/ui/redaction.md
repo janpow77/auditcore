@@ -48,7 +48,7 @@ Backend setzt einen eigenen `RedactionPort` ein (`catalogue`, `plan`, `preview`,
 |---|---|---|
 | `redaction-planned` | `onRedactionPlanned` | `RedactionPlan` (enthält Klartext der Fundstellen) |
 | `redaction-completed` | `onRedactionCompleted` | `RedactionResult` (`blob`, `filename`, `report` nur mit Zahlen) |
-| `error` | `onError` | Meldung der abgelehnten Anfrage |
+| `error` | `onError` | Meldung der abgelehnten Anfrage; bei `verification_failed` mit kurzen Textauszügen, daher nicht protokollieren |
 
 ## Ablauf
 
@@ -65,8 +65,8 @@ Backend setzt einen eigenen `RedactionPort` ein (`catalogue`, `plan`, `preview`,
    Versteckte Fundstellen (Metadaten, Lesezeichen, Formularfelder usw.) und
    Seiten ohne Textebene werden ausdrücklich genannt.
 3. **Eigene Bereiche:** Rechteck mit dem Zeiger aufziehen oder „Bereich
-   hinzufügen“ (Tastaturweg). Verschieben mit den Pfeiltasten, mit Umschalt in
-   großen Schritten. Der Griff unten rechts vergrößert den Bereich, mit dem
+   hinzufügen“ (Tastaturweg). Verschieben mit der Maus oder den Pfeiltasten,
+   mit Umschalt in großen Schritten. Der Griff unten rechts vergrößert den Bereich, mit dem
    Zeiger oder den Pfeiltasten. Entfernen per Entf, Rücktaste oder ×. Die
    Grenzen je Seite und insgesamt kommen aus dem Katalog.
 4. **Schwärzen:** Gesendet werden Auswahl, Bereiche und die Option „Metadaten
@@ -76,8 +76,10 @@ Backend setzt einen eigenen `RedactionPort` ein (`catalogue`, `plan`, `preview`,
    (Plan und Auswahl bleiben) oder „Weiteres Dokument“.
 
 Wird die Datei gewechselt oder führt „Zurück“ zu den Kriterien, verfallen Plan,
-Auswahl, Bereiche und alle Objekt-URLs. Beim Entfernen der Komponente werden
-die Objekt-URLs freigegeben.
+Auswahl, Bereiche und alle Objekt-URLs. Während des Schwärzens sind Auswahl,
+Bereiche und Optionen gesperrt, damit das Ergebnis genau der gesendeten Auswahl
+entspricht. Beim Entfernen der Komponente werden die Objekt-URLs freigegeben;
+noch laufende Antworten werden verworfen.
 
 ## Datenschutz
 
@@ -90,8 +92,14 @@ Anwendung weiter; wer es abonniert, verantwortet den Umgang damit.
 
 Markierungen sind Schaltflächen mit `aria-pressed` und einer Beschriftung aus
 Fundart und Text. Bereiche haben eigene Schaltflächen zum Verschieben,
-Vergrößern und Entfernen, alle per Tastatur erreichbar. Der Seitenwechsel ist
-`aria-live`, und `forced-colors` wird unterstützt.
+Vergrößern und Entfernen, alle per Tastatur erreichbar. Quellen mit
+Teilauswahl melden `aria-pressed="mixed"`. Beim Schrittwechsel (Prüfansicht,
+Ergebnis, Formular) springt der Fokus auf die Überschrift des neuen Schritts,
+nach dem Entfernen eines Bereichs auf „Bereich hinzufügen“. Der Seitenwechsel
+ist `aria-live`. Auf dem stets hellen Seitenbild gelten feste Markierungsfarben
+mit mindestens 3:1 Kontrast auch im Dunkelmodus, und `forced-colors` wird
+unterstützt. Zwei Spalten gibt es ab 60rem Breite der Komponente selbst
+(Container-Abfrage), nicht des Fensters.
 
 ## Nicht enthalten
 

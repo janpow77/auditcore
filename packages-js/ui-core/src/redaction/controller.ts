@@ -7,6 +7,7 @@ import { createRunner, createStore, IDLE, type RequestState, type Store } from '
 import {
   defaultRedactionBox,
   initialRedactionSelection,
+  moveRedactionBox,
   nudgeRedactionBox,
   redactionBoxFromPoints,
   redactionBoxIsTooSmall,
@@ -17,6 +18,7 @@ import {
   resizeRedactionBox,
   type RedactionArrow,
 } from './model'
+import { createResources, errorText, type Resources } from './resources'
 import type { RedactionArea, RedactionBox, RedactionCandidate, RedactionCatalogue, RedactionCriteria, RedactionLimits, RedactionPlan, RedactionPort, RedactionResult } from './types'
 
 export type RedactionBusy = 'load' | 'plan' | 'apply'
@@ -35,9 +37,10 @@ export interface RedactionUrls {
   revoke: (url: string) => void
 }
 
-/** Laufendes Aufziehen oder Vergrößern mit dem Zeiger. */
+/** Laufendes Aufziehen, Verschieben oder Vergrößern mit dem Zeiger. */
 export type RedactionGesture =
   | { kind: 'draw'; start: readonly [number, number]; box: RedactionBox }
+  | { kind: 'move'; id: string; from: readonly [number, number]; origin: RedactionBox }
   | { kind: 'resize'; id: string }
 
 export interface RedactionData extends RequestState<string> {
@@ -104,13 +107,6 @@ const REVIEW_RESET: Partial<RedactionData> = {
   filter: '', expanded: new Set(), groupLimit: REDACTION_GROUP_PAGE, result: null, resultUrl: null,
 }
 
-const errorText = (error: unknown): string => (error instanceof Error ? error.message : String(error))
-
-const browserUrls: RedactionUrls = {
-  create: (blob) => URL.createObjectURL(blob),
-  revoke: (url) => URL.revokeObjectURL(url),
-}
-
 export function redactionCriteria(state: RedactionData): RedactionCriteria {
   return { patterns: [...state.patterns], terms: redactionTerms(state.terms), case_sensitive: state.caseSensitive, whole_word: state.wholeWord }
 }
@@ -140,63 +136,18 @@ function toggled(set: ReadonlySet<string>, ids: Iterable<string>, on: boolean): 
   return next
 }
 
-type RedactionStore = Store<RedactionData>
+export type RedactionStore = Store<RedactionData>
 
-/** Objekt-URLs von Seitenbildern und Ergebnis; Seitenbilder werden je Seite zwischengespeichert. */
-function createResources(store: RedactionStore, source: RedactionSource) {
-  const urls = source.urls ?? browserUrls
-  let previews = new Map<number, string>()
-  let generation = 0
+/** Während des Schwärzens bleibt die Auswahl fest, damit das Ergebnis zur Anzeige passt. */
+const locked = (store: RedactionStore): boolean => store.get().busy === 'apply'
 
-  function dropPreviews(): void {
-    for (const url of previews.values()) urls.revoke(url)
-    previews = new Map()
-    generation += 1
-  }
-
-  function dropResult(): void {
-    const url = store.get().resultUrl
-    if (url) urls.revoke(url)
-  }
-
-  async function loadPreview(page: number): Promise<void> {
-    const cached = previews.get(page)
-    if (cached) {
-      store.set({ preview: cached, previewError: null })
-      return
-    }
-    const { file, filename, plan } = store.get()
-    const port = source.port()
-    if (!file || !plan || !port) return
-    const token = generation
-    store.set({ preview: null, previewError: null })
-    try {
-      const image = await port.preview(file, filename, page)
-      if (token !== generation) return
-      const url = urls.create(image)
-      previews.set(page, url)
-      if (store.get().page === page) store.set({ preview: url })
-    } catch (caught) {
-      if (token === generation && store.get().page === page) store.set({ previewError: errorText(caught) })
-    }
-  }
-
-  return {
-    urls,
-    loadPreview,
-    dropResult,
-    /** Seitenbilder und Ergebnis freigeben. */
-    dropAll(): void {
-      dropPreviews()
-      dropResult()
-    },
-  }
-}
 
 /** Auswahl der Fundstellen: einzeln, alle, je Quelle, je Gruppe; Liste aufklappen und filtern. */
 function selectionActions(store: RedactionStore) {
   const ids = (filter: (item: RedactionCandidate) => boolean): string[] => (store.get().plan?.candidates ?? []).filter(filter).map((item) => item.id)
-  const select = (list: Iterable<string>, on: boolean): void => store.set((state) => ({ selected: toggled(state.selected, list, on) }))
+  const select = (list: Iterable<string>, on: boolean): void => {
+    if (!locked(store)) store.set((state) => ({ selected: toggled(state.selected, list, on) }))
+  }
   return {
     toggle: (id: string) => select([id], !store.get().selected.has(id)),
     setAll: (on: boolean) => select(ids(() => true), on),
@@ -218,7 +169,12 @@ function areaActions(store: RedactionStore) {
   let areaCounter = 0
 
   function updateArea(id: string, change: (box: RedactionBox) => RedactionBox): void {
+    if (locked(store)) return
     store.set((state) => ({ areas: state.areas.map((area) => (area.id === id ? { ...area, rect: change(area.rect) } : area)) }))
+  }
+
+  function startGesture(gesture: RedactionGesture): void {
+    if (store.get().plan && !locked(store)) store.set({ gesture })
   }
 
   function limitReached(state: RedactionData): boolean {
@@ -231,7 +187,7 @@ function areaActions(store: RedactionStore) {
   /** Neuer Bereich auf der aktuellen Seite; `false` bei zu kleinem Rechteck oder erreichter Grenze. */
   function addArea(rect: RedactionBox): boolean {
     const state = store.get()
-    if (!state.plan || redactionBoxIsTooSmall(rect)) return false
+    if (!state.plan || locked(store) || redactionBoxIsTooSmall(rect)) return false
     if (limitReached(state)) {
       store.set({ areaLimitHit: true })
       return false
@@ -246,23 +202,26 @@ function areaActions(store: RedactionStore) {
     /** Tastaturweg: Bereich in der Seitenmitte anlegen. */
     addDefaultArea: (): boolean => addArea(defaultRedactionBox(store.get().areas.filter((area) => area.page === store.get().page).length)),
     removeArea(id: string): void {
-      store.set((state) => ({ areas: state.areas.filter((area) => area.id !== id), areaLimitHit: false }))
+      if (!locked(store)) store.set((state) => ({ areas: state.areas.filter((area) => area.id !== id), areaLimitHit: false }))
     },
     nudgeArea(id: string, key: RedactionArrow, mode: 'resize' | 'move', large: boolean): void {
       updateArea(id, (box) => nudgeRedactionBox(box, key, mode, large))
     },
     /** Zeiger gedrückt auf der Seite (Punkt in Anteilen 0…1). */
     pointerDown(point: readonly [number, number]): void {
-      if (!store.get().plan) return
       const start = redactionBoxFromPoints(point, point)
-      store.set({ gesture: { kind: 'draw', start: [start[0], start[1]], box: start } })
+      startGesture({ kind: 'draw', start: [start[0], start[1]], box: start })
     },
-    startResize(id: string): void {
-      store.set({ gesture: { kind: 'resize', id } })
+    /** Zeiger gedrückt auf einem eigenen Bereich: Verschieben beginnt. */
+    startMove(id: string, point: readonly [number, number]): void {
+      const area = store.get().areas.find((entry) => entry.id === id)
+      if (area) startGesture({ kind: 'move', id, from: [point[0], point[1]], origin: area.rect })
     },
+    startResize: (id: string) => startGesture({ kind: 'resize', id }),
     pointerMove(point: readonly [number, number]): void {
       const gesture = store.get().gesture
       if (gesture?.kind === 'draw') store.set({ gesture: { ...gesture, box: redactionBoxFromPoints(gesture.start, point) } })
+      else if (gesture?.kind === 'move') updateArea(gesture.id, () => moveRedactionBox(gesture.origin, point[0] - gesture.from[0], point[1] - gesture.from[1]))
       else if (gesture?.kind === 'resize') updateArea(gesture.id, (box) => resizeRedactionBox(box, point))
     },
     pointerUp(point: readonly [number, number]): void {
@@ -293,15 +252,18 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
       store.set((state) => ({ patterns: on ? [...new Set([...state.patterns, id])] : state.patterns.filter((entry) => entry !== id), validation: null }))
     },
     setTerms: (terms: string) => store.set({ terms, validation: null }),
-    setOption: (option: RedactionOption, value: boolean) => store.set({ [option]: value } as Partial<RedactionData>),
+    setOption(option: RedactionOption, value: boolean): void {
+      if (!locked(store)) store.set({ [option]: value } as Partial<RedactionData>)
+    },
     async plan(): Promise<void> {
       const state = store.get()
       const validation = redactionValidation(state)
       store.set({ validation })
       if (validation || !state.file) return
       const { file, filename } = state
+      const generation = resources.generation()
       const plan = await run('plan', (port) => port.plan(file, filename, redactionCriteria(state)))
-      if (!plan || store.get().file !== file) return
+      if (!plan || store.get().file !== file || resources.generation() !== generation) return
       resources.dropAll()
       store.set({ ...REVIEW_RESET, plan, selected: initialRedactionSelection(plan) })
       source.callbacks?.().planned?.(plan)
@@ -329,8 +291,9 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
       if (!state.plan || !state.file) return
       const { file, filename } = state
       const selection = redactionSelectionPayload(state.plan, state.selected, state.areas, state.sanitize)
+      const generation = resources.generation()
       const result = await run('apply', (port) => port.apply(file, filename, selection))
-      if (!result || store.get().plan !== state.plan) return
+      if (!result || store.get().plan !== state.plan || resources.generation() !== generation) return
       resources.dropResult()
       store.set({ result, resultUrl: resources.urls.create(result.blob) })
       source.callbacks?.().completed?.(result)
@@ -345,7 +308,7 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
       resources.dropAll()
       store.set({ ...REVIEW_RESET, file: null, filename: '', plan: null, selected: new Set(), validation: null, error: null })
     },
-    /** Objekt-URLs freigeben (beim Entfernen der Komponente). */
+    /** Objekt-URLs freigeben (beim Entfernen der Komponente); noch laufende Antworten verfallen. */
     dispose(): void {
       resources.dropAll()
       store.set({ preview: null, resultUrl: null })
@@ -353,7 +316,6 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
   }
 }
 
-type Resources = ReturnType<typeof createResources>
 type Runner = ReturnType<typeof createRunner<RedactionPort, string, RedactionData>>
 
 export function createRedactionController(source: RedactionSource) {

@@ -20,7 +20,7 @@ function Summary({ hook, view }: Part) {
       {view.sources.length > 1 ? (
         <div className="fa-redaction__sources" role="group" aria-label={t('sources')}>
           {view.sources.map((entry) => (
-            <button key={entry.source} type="button" className={classes('fa-redaction__source', `fa-redaction__source--${entry.state}`)} aria-pressed={entry.state === 'all'} title={entry.title} data-source={entry.source} onClick={() => controller.setSource(entry.source, entry.state !== 'all')}>{entry.text}</button>
+            <button key={entry.source} type="button" className={classes('fa-redaction__source', `fa-redaction__source--${entry.state}`)} aria-pressed={entry.pressed} title={entry.title} data-source={entry.source} onClick={() => controller.setSource(entry.source, entry.state !== 'all')}>{entry.text}</button>
           ))}
         </div>
       ) : null}

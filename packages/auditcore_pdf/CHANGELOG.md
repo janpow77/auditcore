@@ -8,6 +8,10 @@ Alle wesentlichen Änderungen dieses Pakets werden in dieser Datei dokumentiert.
 - Unterpaket `auditcore_pdf.web`: REST-Vertrag `pdf_redaction/1` für „PDF schwärzen“ mit den Endpunkten `GET /catalogue`, `POST /plan`, `POST /preview` (PNG einer Seite) und `POST /apply` (geschwärzte PDF, Bericht nur mit Zahlen in den Kopfzeilen `X-Redaction*`). `RedactionService` ist framework-frei; `routes`/`create_app` setzen Starlette voraus (Extra `[web]`), `create_router` FastAPI (Extra `[fastapi]`).
 - Zustandslos: Jede Anfrage bringt die PDF mit, der Plan wird weder gespeichert noch protokolliert. Grenzen über `Limits` (Upload, Seiten, Größe der JSON-Felder, Auflösung der Vorschau), auch vor dem Lesen des Formulars nach `Content-Length`.
 - Strenge Typprüfung der Kriterien, `NaN`/`Infinity` werden abgelehnt; Fehler als `{"error": {"code", "message"}}` mit deutscher Meldung, `verification_failed` (422) liefert keine Datei aus. Vertrag: `docs/ui/redaction-rest.md` im Monorepo.
+- Ohne `Content-Length` 411 `length_required`; zu große Formularfelder 413; unerwartete Fehler 500 `internal_error` ohne Einzelheiten, protokolliert nur mit dem Typnamen. Plan und Vorschau tragen `Cache-Control: no-store`. `Limits` verlangt positive ganze Zahlen.
+
+### Geändert
+- `Selection.from_dict` prüft streng: `sanitize`, `case_sensitive` und `whole_word` müssen Wahrheitswerte sein, `rect` eine Liste aus Zahlen. Bisher wurden etwa `"false"` oder `0` stillschweigend umgedeutet.
 
 ## 0.2.0 (2026-11-23)
 

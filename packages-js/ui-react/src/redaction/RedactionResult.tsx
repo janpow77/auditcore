@@ -9,8 +9,8 @@ export function RedactionResultView({ view, id }: { view: UseRedaction; id: stri
   const result = state.result
   if (!result) return null
   return (
-    <section className="fa-redaction__card" aria-labelledby={`${id}-result`} aria-live="polite" data-testid="redaction-result">
-      <h3 id={`${id}-result`} className="fa-redaction__heading">{t('resultHeading')}</h3>
+    <section className="fa-redaction__card" aria-labelledby={`${id}-result`} data-testid="redaction-result">
+      <h3 id={`${id}-result`} className="fa-redaction__heading" tabIndex={-1}>{t('resultHeading')}</h3>
       {result.report.verified ? <p className="fa-redaction__success">{t('verified')}</p> : null}
       <dl className="fa-redaction__report">
         {redactionReportRows(state, t, locale).map((row) => (

@@ -25,12 +25,13 @@ const checked = (event: Event): boolean => (event.target as HTMLInputElement).ch
 
 <template>
   <form v-if="catalogue" class="fa-redaction__card" novalidate :aria-labelledby="`${id}-form`" data-testid="redaction-form" @submit.prevent="controller.plan">
-    <h3 :id="`${id}-form`" class="fa-redaction__heading">{{ t('formHeading') }}</h3>
+    <h3 :id="`${id}-form`" class="fa-redaction__heading" tabindex="-1">{{ t('formHeading') }}</h3>
     <label class="fa-redaction__field">
       <span class="fa-redaction__label">{{ t('file') }}</span>
-      <input class="fa-redaction__file" type="file" accept="application/pdf,.pdf" data-testid="redaction-file" @change="onFile" />
+      <input class="fa-redaction__file" type="file" accept="application/pdf,.pdf" :aria-describedby="`${id}-file-help`" data-testid="redaction-file" @change="onFile" />
     </label>
-    <p class="fa-redaction__muted">{{ t('fileHelp', { size: redactionSizeText(catalogue.limits.max_upload_bytes, locale), pages: catalogue.limits.max_pages }) }}</p>
+    <p v-if="state.filename" class="fa-redaction__muted" data-testid="redaction-file-chosen">{{ t('fileChosen', { name: state.filename }) }}</p>
+    <p :id="`${id}-file-help`" class="fa-redaction__muted">{{ t('fileHelp', { size: redactionSizeText(catalogue.limits.max_upload_bytes, locale), pages: catalogue.limits.max_pages }) }}</p>
     <fieldset class="fa-redaction__patterns">
       <legend class="fa-redaction__label">{{ t('patterns') }}</legend>
       <label v-for="pattern in catalogue.patterns" :key="pattern.id" class="fa-redaction__check" :title="pattern.hint">
@@ -40,9 +41,9 @@ const checked = (event: Event): boolean => (event.target as HTMLInputElement).ch
     </fieldset>
     <label class="fa-redaction__field">
       <span class="fa-redaction__label">{{ t('terms') }}</span>
-      <textarea class="fa-redaction__input" rows="4" data-testid="redaction-terms" :value="state.terms" @input="controller.setTerms(($event.target as HTMLTextAreaElement).value)"></textarea>
+      <textarea class="fa-redaction__input" rows="4" :aria-describedby="`${id}-terms-help`" data-testid="redaction-terms" :value="state.terms" @input="controller.setTerms(($event.target as HTMLTextAreaElement).value)"></textarea>
     </label>
-    <p class="fa-redaction__muted">{{ t('termsHelp', { count: catalogue.limits.max_terms, length: catalogue.limits.max_term_length }) }}</p>
+    <p :id="`${id}-terms-help`" class="fa-redaction__muted">{{ t('termsHelp', { count: catalogue.limits.max_terms, length: catalogue.limits.max_term_length }) }}</p>
     <div class="fa-redaction__options">
       <label class="fa-redaction__check">
         <input type="checkbox" data-testid="redaction-case" :checked="state.caseSensitive" @change="controller.setOption('caseSensitive', checked($event))" />

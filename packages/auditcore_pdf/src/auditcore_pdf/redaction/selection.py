@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from collections.abc import Iterable, Mapping
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from auditcore_common.json_values import JsonObject
@@ -46,8 +46,15 @@ class Selection:
             criteria=criteria,
             selected=frozenset(selected),
             areas=_parse_areas(payload.get("areas") or []),
-            sanitize=bool(payload.get("sanitize", True)),
+            sanitize=_flag(payload, "sanitize", True),
         )
+
+
+def _flag(source: Mapping[str, object], name: str, default: bool) -> bool:
+    value = source.get(name, default)
+    if not isinstance(value, bool):
+        raise RedactionError(f"„{name}“ muss wahr oder falsch sein")
+    return value
 
 
 def _text_list(crit: Mapping[str, object], name: str) -> list[str]:
@@ -64,16 +71,20 @@ def _parse_criteria(crit: object) -> Criteria:
     return Criteria.from_input(
         patterns,
         terms,
-        bool(crit.get("case_sensitive", False)),
-        bool(crit.get("whole_word", True)),
+        _flag(crit, "case_sensitive", False),
+        _flag(crit, "whole_word", True),
     )
+
+
+def _is_number(value: object) -> bool:
+    return isinstance(value, int | float) and not isinstance(value, bool)
 
 
 def _area_values(item: Mapping[str, object]) -> tuple[int, tuple[float, float, float, float]]:
     raw_page, raw_rect = item["page"], item["rect"]
     if isinstance(raw_page, bool) or not isinstance(raw_page, int):
         raise TypeError("page")
-    if not isinstance(raw_rect, Iterable):
+    if not isinstance(raw_rect, list) or not all(_is_number(v) for v in raw_rect):
         raise TypeError("rect")
     x0, y0, x1, y1 = (float(v) for v in raw_rect)
     if not all(math.isfinite(v) for v in (x0, y0, x1, y1)):

@@ -34,9 +34,12 @@ export function redactionSizeText(bytes: number, locale: Locale): string {
   return `${formatNumber(bytes / (1024 * 1024), locale, { maximumFractionDigits: 1 })} MiB`
 }
 
+/** Bezeichnung nennt die KI schon (z. B. „Personennamen (KI-Erkennung)“): kein zweiter Hinweis. */
+const NAMES_AI = /\b(KI|AI)\b/
+
 export function redactionPatternText(pattern: RedactionPatternInfo, t: RedactionTranslate): string {
   if (!pattern.available) return t('patternUnavailable', { label: pattern.label })
-  return pattern.ai ? t('patternAi', { label: pattern.label }) : pattern.label
+  return pattern.ai && !NAMES_AI.test(pattern.label) ? t('patternAi', { label: pattern.label }) : pattern.label
 }
 
 export function redactionValidationText(validation: RedactionValidation, catalogue: RedactionCatalogue | null, t: RedactionTranslate, locale: Locale): string {
@@ -75,6 +78,8 @@ export interface RedactionSourceView {
   text: string
   title: string
   state: RedactionGroupState
+  /** `aria-pressed`: teilweise ausgewählt ist `mixed`. */
+  pressed: 'true' | 'false' | 'mixed'
 }
 
 export interface RedactionItemView {
@@ -102,7 +107,7 @@ export interface RedactionReviewView {
   page: number
   pageCount: number
   pageText: string
-  /** Seitenverhältnis der gedrehten Seite für den Rahmen des Seitenbilds. */
+  /** Seitenverhältnis der sichtbaren (gedrehten) Seite für den Rahmen des Seitenbilds. */
   aspect: string
   boxes: readonly RedactionBoxView[]
   areas: readonly RedactionAreaView[]
@@ -122,12 +127,11 @@ export interface RedactionReviewView {
   areaLimit: string
 }
 
+/** `width`/`height` des Plans beschreiben schon die sichtbare, gedrehte Seite. */
 function pageAspect(plan: RedactionPlan, page: number): string {
   const info = plan.pages.find((entry) => entry.page === page)
   if (!info) return '1 / 1.414'
-  const turned = info.rotation % 180 !== 0
-  const [width, height] = turned ? [info.height, info.width] : [info.width, info.height]
-  return `${Math.round(width * 100) / 100} / ${Math.round(height * 100) / 100}`
+  return `${Math.round(info.width * 100) / 100} / ${Math.round(info.height * 100) / 100}`
 }
 
 function pagesWithFindings(plan: RedactionPlan, areas: readonly RedactionArea[]): number[] {
@@ -154,12 +158,17 @@ function sourceViews(plan: RedactionPlan, selected: ReadonlySet<string>, t: Reda
     if (selected.has(candidate.id)) entry.selected += 1
     counts.set(candidate.source, entry)
   }
-  return [...counts].map(([source, entry]) => ({
-    source,
-    text: t('source', { label: entry.label, total: entry.total }),
-    title: t('sourceTitle', { label: entry.label, selected: entry.selected, total: entry.total }),
-    state: entry.selected === entry.total ? 'all' : entry.selected === 0 ? 'none' : 'some',
-  }))
+  const pressed = { all: 'true', none: 'false', some: 'mixed' } as const
+  return [...counts].map(([source, entry]) => {
+    const state: RedactionGroupState = entry.selected === entry.total ? 'all' : entry.selected === 0 ? 'none' : 'some'
+    return {
+      source,
+      text: t('source', { label: entry.label, total: entry.total }),
+      title: t('sourceTitle', { label: entry.label, selected: entry.selected, total: entry.total }),
+      state,
+      pressed: pressed[state],
+    }
+  })
 }
 
 function groupView(group: RedactionGroup, state: RedactionData, t: RedactionTranslate): RedactionGroupView {
@@ -262,12 +271,14 @@ function summaryPart(plan: RedactionPlan, state: RedactionData, t: RedactionTran
   const selected = plan.candidates.reduce((sum, candidate) => sum + (state.selected.has(candidate.id) ? 1 : 0), 0)
   const outside = plan.candidates.filter((candidate) => candidate.outside_view).length
   const params = { selected, total: plan.candidates.length, areas: state.areas.length }
+  const summaryKey = state.areas.length === 1 ? 'summaryArea' : state.areas.length ? 'summaryAreas' : 'summary'
+  const noText = plan.pages_without_text
   return {
-    summary: t(state.areas.length ? 'summaryAreas' : 'summary', params),
+    summary: t(summaryKey, params),
     hasCandidates: plan.candidates.length > 0,
     sources: sourceViews(plan, state.selected, t),
-    noText: plan.pages_without_text.length ? t('noText', { pages: formatRedactionPages(plan.pages_without_text) }) : '',
-    outside: outside ? t('outside', { count: outside }) : '',
+    noText: noText.length ? t(noText.length === 1 ? 'noText' : 'noTextPages', { pages: formatRedactionPages(noText) }) : '',
+    outside: outside ? t(outside === 1 ? 'outsideOne' : 'outside', { count: outside }) : '',
   }
 }
 

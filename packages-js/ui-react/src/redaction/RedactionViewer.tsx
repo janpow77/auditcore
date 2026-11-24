@@ -1,5 +1,5 @@
 import { useRef, type KeyboardEvent, type PointerEvent, type RefObject } from 'react'
-import { isRedactionArrow, redactionPoint, type RedactionAreaView, type RedactionController, type RedactionReviewView } from '@auditcore/ui-core'
+import { focusRedactionAddArea, isRedactionArrow, redactionPoint, type RedactionAreaView, type RedactionController, type RedactionReviewView } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { classes } from '../store'
 import type { UseRedaction } from './useRedaction'
@@ -33,13 +33,26 @@ function usePointer(controller: RedactionController) {
       controller.startResize(areaId)
       capture(event)
     },
+    onMoveStart(areaId: string, event: PointerEvent): void {
+      event.stopPropagation()
+      if (event.button !== 0) return
+      controller.startMove(areaId, point(event))
+      capture(event)
+    },
   }
+}
+
+type Pointer = ReturnType<typeof usePointer>
+
+function removeArea(controller: RedactionController, areaId: string, target: Element): void {
+  focusRedactionAddArea(target)
+  controller.removeArea(areaId)
 }
 
 function areaKey(controller: RedactionController, areaId: string, mode: 'move' | 'resize', event: KeyboardEvent): void {
   if (mode === 'move' && (event.key === 'Delete' || event.key === 'Backspace')) {
     event.preventDefault()
-    controller.removeArea(areaId)
+    removeArea(controller, areaId, event.currentTarget)
     return
   }
   if (!isRedactionArrow(event.key)) return
@@ -66,44 +79,44 @@ function PageImage({ hook, view }: Part) {
   return <p className="fa-redaction__muted" role="status">{t('previewLoading')}</p>
 }
 
-function Area({ area, controller, onResizeStart }: { area: RedactionAreaView; controller: RedactionController; onResizeStart: (id: string, event: PointerEvent) => void }) {
+function Area({ area, controller, pointer }: { area: RedactionAreaView; controller: RedactionController; pointer: Pointer }) {
   return (
     <div className="fa-redaction__area" style={area.style} data-area={area.number} onPointerDown={stop}>
-      <button type="button" className="fa-redaction__area-move" aria-label={area.label} onKeyDown={(event) => areaKey(controller, area.id, 'move', event)} />
-      <button type="button" className="fa-redaction__area-remove" aria-label={area.removeLabel} title={area.removeLabel} onClick={() => controller.removeArea(area.id)}>×</button>
-      <button type="button" className="fa-redaction__area-resize" aria-label={area.resizeLabel} title={area.resizeLabel} onPointerDown={(event) => onResizeStart(area.id, event)} onKeyDown={(event) => areaKey(controller, area.id, 'resize', event)} />
+      <button type="button" className="fa-redaction__area-move" aria-label={area.label} onPointerDown={(event) => pointer.onMoveStart(area.id, event)} onKeyDown={(event) => areaKey(controller, area.id, 'move', event)} />
+      <button type="button" className="fa-redaction__area-remove" aria-label={area.removeLabel} title={area.removeLabel} onClick={(event) => removeArea(controller, area.id, event.currentTarget)}>×</button>
+      <button type="button" className="fa-redaction__area-resize" aria-label={area.resizeLabel} title={area.resizeLabel} onPointerDown={(event) => pointer.onResizeStart(area.id, event)} onKeyDown={(event) => areaKey(controller, area.id, 'resize', event)} />
     </div>
   )
 }
 
-function Overlay({ hook, view, pointer }: Part & { pointer: ReturnType<typeof usePointer> }) {
+function Overlay({ hook, view, pointer }: Part & { pointer: Pointer }) {
   const { controller } = hook
   return (
     <div ref={pointer.overlay as RefObject<HTMLDivElement>} className="fa-redaction__overlay" data-testid="redaction-overlay" onPointerDown={pointer.onDown} onPointerMove={pointer.onMove} onPointerUp={pointer.onUp} onPointerCancel={() => controller.cancelGesture()}>
       {view.boxes.map((box) => (
         <button key={box.key} type="button" className={classes('fa-redaction__box', box.on ? 'fa-redaction__box--on' : 'fa-redaction__box--off')} style={box.style} aria-pressed={box.on} aria-label={box.label} title={box.label} data-candidate={box.id} onPointerDown={stop} onClick={() => controller.toggle(box.id)} />
       ))}
-      {view.areas.map((area) => <Area key={area.id} area={area} controller={controller} onResizeStart={pointer.onResizeStart} />)}
+      {view.areas.map((area) => <Area key={area.id} area={area} controller={controller} pointer={pointer} />)}
       {view.draft ? <div className="fa-redaction__draft" style={view.draft} /> : null}
     </div>
   )
 }
 
-function PageLinks({ hook, view }: Part) {
+function PageLinks({ hook, view, id }: Part & { id: string }) {
   if (!view.pageButtons.length) return null
   return (
-    <p className="fa-redaction__pages">
-      <span>{hook.t('pagesWithFindings')}</span>
+    <div className="fa-redaction__pages" role="group" aria-labelledby={`${id}-pages`}>
+      <span id={`${id}-pages`}>{hook.t('pagesWithFindings')}</span>
       {view.pageButtons.map((number) => (
-        <button key={number} type="button" className="fa-redaction__page-link" aria-current={number === view.page ? 'page' : undefined} onClick={() => void hook.controller.showPage(number)}>{number}</button>
+        <button key={number} type="button" className="fa-redaction__page-link" aria-label={hook.t('pageLink', { page: number })} aria-current={number === view.page ? 'page' : undefined} onClick={() => void hook.controller.showPage(number)}>{number}</button>
       ))}
       {view.morePages ? <span>…</span> : null}
-    </p>
+    </div>
   )
 }
 
 /** Seitenbild mit Markierungen, Zeigergesten und Seitenwechsel. */
-export function RedactionViewer({ hook, view }: Part) {
+export function RedactionViewer({ hook, view, id }: Part & { id: string }) {
   const pointer = usePointer(hook.controller)
   return (
     <section className="fa-redaction__viewer" aria-label={hook.t('pageView')}>
@@ -114,7 +127,7 @@ export function RedactionViewer({ hook, view }: Part) {
         <Overlay hook={hook} view={view} pointer={pointer} />
       </div>
       {view.areaLimit ? <p className="fa-redaction__error" role="status">{view.areaLimit}</p> : null}
-      <PageLinks hook={hook} view={view} />
+      <PageLinks hook={hook} view={view} id={id} />
     </section>
   )
 }

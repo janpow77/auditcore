@@ -8,8 +8,8 @@ const rows = computed(() => redactionReportRows(props.state, props.t, props.loca
 </script>
 
 <template>
-  <section v-if="state.result" class="fa-redaction__card" :aria-labelledby="`${id}-result`" aria-live="polite" data-testid="redaction-result">
-    <h3 :id="`${id}-result`" class="fa-redaction__heading">{{ t('resultHeading') }}</h3>
+  <section v-if="state.result" class="fa-redaction__card" :aria-labelledby="`${id}-result`" data-testid="redaction-result">
+    <h3 :id="`${id}-result`" class="fa-redaction__heading" tabindex="-1">{{ t('resultHeading') }}</h3>
     <p v-if="state.result.report.verified" class="fa-redaction__success">{{ t('verified') }}</p>
     <dl class="fa-redaction__report">
       <template v-for="row in rows" :key="row.key">

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import PurePath
@@ -42,6 +43,8 @@ CONTRACT = "pdf_redaction/1"
 LIBRARY = f"auditcore_pdf {__version__}"
 Json = dict[str, object]
 MIB = 1024 * 1024
+#: Seitennummer im Formularfeld ``page`` (nur ASCII-Ziffern, keine Riesenzahlen).
+PAGE_NUMBER = re.compile(r"[0-9]{1,6}")
 
 
 @dataclass(frozen=True)
@@ -54,6 +57,11 @@ class Limits:
     max_criteria_bytes: int = 256 * 1024
     preview_dpi: int = 110
     preview_max_edge: int = 1800
+
+    def __post_init__(self) -> None:
+        for name, value in vars(self).items():
+            if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+                raise ValueError(f"Limits.{name} muss eine positive ganze Zahl sein")
 
 
 class ContractError(rest.ContractError):
@@ -229,7 +237,7 @@ class RedactionService:
         """PNG of one page (1-based), longest edge at most ``preview_max_edge`` pixels."""
         count = self._page_count(data)
         number = page if isinstance(page, int) and not isinstance(page, bool) else None
-        if isinstance(page, str) and page.strip().isdigit():
+        if isinstance(page, str) and PAGE_NUMBER.fullmatch(page.strip()):
             number = int(page.strip())
         if number is None or not 1 <= number <= count:
             raise ContractError(f"Seite muss zwischen 1 und {count} liegen.", code="invalid_page")

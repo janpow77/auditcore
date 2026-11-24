@@ -19,7 +19,7 @@ export const redactionCases: ReadonlyArray<ParityCase<RedactionCaseProps>> = [
     props: () => ({ port: fakeRedactionPort() }),
     expect: {
       texts: ['Dokument und Suchkriterien', 'Höchstens 20 MiB und 500 Seiten.', 'Höchstens 200 Begriffe mit je 200 Zeichen.'],
-      roles: [['checkbox', 'IBAN'], ['checkbox', 'Personennamen (KI-Erkennung) (KI)'], ['checkbox', 'Nur ganze Wörter'], ['button', 'Fundstellen suchen'], ['textbox', 'Eigene Begriffe, ein Begriff je Zeile']],
+      roles: [['checkbox', 'IBAN'], ['checkbox', 'Personennamen (KI-Erkennung)'], ['checkbox', 'Nur ganze Wörter'], ['button', 'Fundstellen suchen'], ['textbox', 'Eigene Begriffe, ein Begriff je Zeile']],
       counts: { 'input[data-pattern]': 10, 'input[data-pattern]:disabled': 0, 'input[type="file"]': 1, '[data-testid="redaction-review"]': 0 },
     },
   },

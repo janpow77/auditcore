@@ -49,21 +49,26 @@ Anfragen mit dem Muster `ki_namen` erhalten 503.
   CPU-lastig. Eine Ratenbegrenzung und, wo nötig, ein Prozess-Pool sind
   Sache der Anwendung.
 - **Protokollierung:** Anfragekörper (PDF, Kriterien, Auswahl) gehören nicht
-  ins Zugriffsprotokoll.
+  ins Zugriffsprotokoll. Unerwartete Fehler protokolliert die Bibliothek nur
+  mit dem Typnamen der Ausnahme, ohne Meldungstext.
+- **Körpergrenze im Proxy:** Die Bibliothek verlangt `Content-Length` (sonst
+  411) und prüft sie vor dem Lesen. Eine eigene Körpergrenze im Reverse-Proxy
+  (z. B. `client_max_body_size`) sollte trotzdem gesetzt sein.
 
 ## Grenzen (`Limits`)
 
 | Feld | Vorgabe | Wirkung |
 |---|---|---|
-| `max_upload_bytes` | 50 MiB | größere Datei → 413 `too_large` (auch nach `Content-Length`) |
+| `max_upload_bytes` | 50 MiB | größere Datei → 413 `too_large` (schon nach `Content-Length`, vor dem Lesen) |
 | `max_pages` | 500 | mehr Seiten → 413 `too_many_pages` |
 | `max_selection_bytes` | 8 MiB | Feld `selection` größer → 413 `too_large` |
 | `max_criteria_bytes` | 256 KiB | Feld `criteria` größer → 413 `too_large` |
 | `preview_dpi` | 110 | Auflösung der Seitenvorschau |
 | `preview_max_edge` | 1800 | längste Kante der Vorschau in Pixeln |
 
-Fest in der Bibliothek: höchstens 200 Begriffe zu je 200 Zeichen, 500 Bereiche
-insgesamt und 100 je Seite. Der Katalog meldet alle Grenzen.
+Alle Werte müssen positive ganze Zahlen sein, sonst wirft `Limits` einen
+`ValueError`. Fest in der Bibliothek: höchstens 200 Begriffe zu je 200 Zeichen,
+500 Bereiche insgesamt und 100 je Seite. Der Katalog meldet alle Grenzen.
 
 ## Endpunkte
 
@@ -106,7 +111,9 @@ abgelehnt.
 ```
 
 `rects` sind Anteile 0…1 der gedrehten Seitenansicht und passen damit direkt
-auf die Vorschau. `kind` ist `text` (sichtbar auf der Seite) oder `hidden`
+auf die Vorschau. `width` und `height` in `pages` beschreiben ebenfalls die
+sichtbare, gedrehte Seite; `rotation` dient nur der Information. Die Antwort
+trägt `Cache-Control: no-store`, ebenso die Seitenvorschau. `kind` ist `text` (sichtbar auf der Seite) oder `hidden`
 (Metadaten, Lesezeichen, Formularfelder, Anhänge und Ähnliches).
 `outside_view` kennzeichnet Text außerhalb der sichtbaren Seite, der trotzdem
 geschwärzt wird.
@@ -118,7 +125,9 @@ geschwärzt wird.
  "areas": [{"page": 1, "rect": [0.1, 0.1, 0.4, 0.25]}], "sanitize": true}
 ```
 
-`sha256` und `criteria` stammen unverändert aus dem Plan. `selected` nennt die
+`sha256` und `criteria` stammen unverändert aus dem Plan. Die Typen werden
+streng geprüft: `sanitize`, `case_sensitive` und `whole_word` müssen JSON-Wahrheitswerte
+sein, `rect` eine Liste aus vier Zahlen; sonst 422 `invalid_selection`. `selected` nennt die
 bestätigten Kennungen, abgewählte Fundstellen bleiben stehen. `areas` sind
 eigene Bereiche in Anteilen der Seitenansicht. `sanitize` entfernt Metadaten,
 XMP, Anhänge, JavaScript und Anwendungsdaten.
@@ -147,12 +156,17 @@ deutscher Meldung zurückgegeben.
 | Status | `code` | Anlass |
 |---|---|---|
 | 400 | `missing_file`, `missing_field`, `bad_request`, `invalid_json` | Formular unvollständig oder fehlerhaft |
+| 411 | `length_required` | `Content-Length` fehlt (etwa bei `Transfer-Encoding: chunked`) |
 | 409 | `stale_plan` | Datei oder Kennungen passen nicht mehr zum Plan |
-| 413 | `too_large`, `too_many_pages` | Grenzen überschritten |
+| 413 | `too_large`, `too_many_pages` | Grenzen überschritten (Datei, Seiten oder einzelnes Formularfeld) |
 | 422 | `invalid_pdf`, `invalid_criteria`, `empty_criteria`, `invalid_page`, `invalid_selection` | Inhalt nicht verwendbar |
 | 422 | `verification_failed` | Nachprüfung fand eine ausgewählte Fundstelle noch lesbar; es wird keine Datei ausgeliefert |
 | 502 | `ner_failed` | Namenserkennung ist ausgefallen |
 | 503 | `ner_unavailable` | `ki_namen` angefordert, aber nicht eingerichtet |
+| 500 | `internal_error` | unerwarteter Fehler; Meldung ohne Einzelheiten |
+
+Die Meldung von `verification_failed` kann kurze Auszüge der noch lesbaren
+Fundstellen enthalten. Sie gehört deshalb so wenig ins Protokoll wie der Plan.
 
 ## Nicht enthalten
 

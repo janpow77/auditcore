@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import {
+  focusRedactionAddArea,
   isRedactionArrow,
   redactionPoint,
   redactionReview,
@@ -42,10 +43,21 @@ function onResizeStart(areaId: string, event: PointerEvent): void {
   capture(event)
 }
 
+function onMoveStart(areaId: string, event: PointerEvent): void {
+  if (event.button !== 0) return
+  props.controller.startMove(areaId, point(event))
+  capture(event)
+}
+
+function removeArea(areaId: string, event: Event): void {
+  focusRedactionAddArea(event.currentTarget as Element | null)
+  props.controller.removeArea(areaId)
+}
+
 function onAreaKey(areaId: string, mode: 'move' | 'resize', event: KeyboardEvent): void {
   if (mode === 'move' && (event.key === 'Delete' || event.key === 'Backspace')) {
     event.preventDefault()
-    props.controller.removeArea(areaId)
+    removeArea(areaId, event)
     return
   }
   if (!isRedactionArrow(event.key)) return
@@ -58,7 +70,7 @@ const checked = (event: Event): boolean => (event.target as HTMLInputElement).ch
 
 <template>
   <section v-if="view" class="fa-redaction__card" :aria-labelledby="`${id}-review`" data-testid="redaction-review">
-    <h3 :id="`${id}-review`" class="fa-redaction__heading">{{ t('reviewHeading') }}</h3>
+    <h3 :id="`${id}-review`" class="fa-redaction__heading" tabindex="-1">{{ t('reviewHeading') }}</h3>
     <div class="fa-redaction__layout">
       <section class="fa-redaction__viewer" :aria-label="t('pageView')">
         <p class="fa-redaction__muted">{{ t('reviewHelp') }}</p>
@@ -87,26 +99,27 @@ const checked = (event: Event): boolean => (event.target as HTMLInputElement).ch
               @click="controller.toggle(box.id)"
             ></button>
             <div v-for="area in view.areas" :key="area.id" class="fa-redaction__area" :style="area.style" :data-area="area.number" @pointerdown.stop>
-              <button type="button" class="fa-redaction__area-move" :aria-label="area.label" @keydown="onAreaKey(area.id, 'move', $event)"></button>
-              <button type="button" class="fa-redaction__area-remove" :aria-label="area.removeLabel" :title="area.removeLabel" @click="controller.removeArea(area.id)">×</button>
+              <button type="button" class="fa-redaction__area-move" :aria-label="area.label" @pointerdown.stop="onMoveStart(area.id, $event)" @keydown="onAreaKey(area.id, 'move', $event)"></button>
+              <button type="button" class="fa-redaction__area-remove" :aria-label="area.removeLabel" :title="area.removeLabel" @click="removeArea(area.id, $event)">×</button>
               <button type="button" class="fa-redaction__area-resize" :aria-label="area.resizeLabel" :title="area.resizeLabel" @pointerdown.stop="onResizeStart(area.id, $event)" @keydown="onAreaKey(area.id, 'resize', $event)"></button>
             </div>
             <div v-if="view.draft" class="fa-redaction__draft" :style="view.draft"></div>
           </div>
         </div>
         <p v-if="view.areaLimit" class="fa-redaction__error" role="status">{{ view.areaLimit }}</p>
-        <p v-if="view.pageButtons.length" class="fa-redaction__pages">
-          <span>{{ t('pagesWithFindings') }}</span>
+        <div v-if="view.pageButtons.length" class="fa-redaction__pages" role="group" :aria-labelledby="`${id}-pages`">
+          <span :id="`${id}-pages`">{{ t('pagesWithFindings') }}</span>
           <button
             v-for="number in view.pageButtons"
             :key="number"
             type="button"
             class="fa-redaction__page-link"
+            :aria-label="t('pageLink', { page: number })"
             :aria-current="number === view.page ? 'page' : undefined"
             @click="controller.showPage(number)"
           >{{ number }}</button>
           <span v-if="view.morePages">…</span>
-        </p>
+        </div>
       </section>
 
       <aside class="fa-redaction__side" :aria-label="t('findings')">
@@ -122,7 +135,7 @@ const checked = (event: Event): boolean => (event.target as HTMLInputElement).ch
               :key="entry.source"
               type="button"
               :class="['fa-redaction__source', `fa-redaction__source--${entry.state}`]"
-              :aria-pressed="entry.state === 'all'"
+              :aria-pressed="entry.pressed"
               :title="entry.title"
               :data-source="entry.source"
               @click="controller.setSource(entry.source, entry.state !== 'all')"

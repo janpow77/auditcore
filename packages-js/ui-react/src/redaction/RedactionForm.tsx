@@ -16,12 +16,13 @@ export function RedactionForm({ view, id }: { view: UseRedaction; id: string }) 
   const onFile = (event: ChangeEvent<HTMLInputElement>): void => controller.selectFile(event.target.files?.[0] ?? null)
   return (
     <form className="fa-redaction__card" noValidate aria-labelledby={`${id}-form`} data-testid="redaction-form" onSubmit={onSubmit}>
-      <h3 id={`${id}-form`} className="fa-redaction__heading">{t('formHeading')}</h3>
+      <h3 id={`${id}-form`} className="fa-redaction__heading" tabIndex={-1}>{t('formHeading')}</h3>
       <label className="fa-redaction__field">
         <span className="fa-redaction__label">{t('file')}</span>
-        <input className="fa-redaction__file" type="file" accept="application/pdf,.pdf" data-testid="redaction-file" onChange={onFile} />
+        <input className="fa-redaction__file" type="file" accept="application/pdf,.pdf" aria-describedby={`${id}-file-help`} data-testid="redaction-file" onChange={onFile} />
       </label>
-      <p className="fa-redaction__muted">{t('fileHelp', { size: redactionSizeText(catalogue.limits.max_upload_bytes, locale), pages: catalogue.limits.max_pages })}</p>
+      {state.filename ? <p className="fa-redaction__muted" data-testid="redaction-file-chosen">{t('fileChosen', { name: state.filename })}</p> : null}
+      <p id={`${id}-file-help`} className="fa-redaction__muted">{t('fileHelp', { size: redactionSizeText(catalogue.limits.max_upload_bytes, locale), pages: catalogue.limits.max_pages })}</p>
       <fieldset className="fa-redaction__patterns">
         <legend className="fa-redaction__label">{t('patterns')}</legend>
         {catalogue.patterns.map((pattern) => (
@@ -33,9 +34,9 @@ export function RedactionForm({ view, id }: { view: UseRedaction; id: string }) 
       </fieldset>
       <label className="fa-redaction__field">
         <span className="fa-redaction__label">{t('terms')}</span>
-        <textarea className="fa-redaction__input" rows={4} data-testid="redaction-terms" value={state.terms} onChange={(event) => controller.setTerms(event.target.value)} />
+        <textarea className="fa-redaction__input" rows={4} aria-describedby={`${id}-terms-help`} data-testid="redaction-terms" value={state.terms} onChange={(event) => controller.setTerms(event.target.value)} />
       </label>
-      <p className="fa-redaction__muted">{t('termsHelp', { count: catalogue.limits.max_terms, length: catalogue.limits.max_term_length })}</p>
+      <p id={`${id}-terms-help`} className="fa-redaction__muted">{t('termsHelp', { count: catalogue.limits.max_terms, length: catalogue.limits.max_term_length })}</p>
       <div className="fa-redaction__options">
         <label className="fa-redaction__check">
           <input type="checkbox" data-testid="redaction-case" checked={state.caseSensitive} onChange={(event) => controller.setOption('caseSensitive', event.target.checked)} />

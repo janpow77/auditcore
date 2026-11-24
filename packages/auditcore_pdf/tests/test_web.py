@@ -116,6 +116,12 @@ def test_plan_returns_findings_without_changing_anything(api: TestClient) -> Non
     assert plan["by_source"] == {"email": 1, "begriff:Erika Beispiel": 1}
 
 
+def test_plan_is_not_cached(api: TestClient) -> None:
+    response = post(api, "/plan", {"criteria": json.dumps(EMAIL)})
+    assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-store"
+
+
 def test_plan_defaults_flags_when_omitted(api: TestClient) -> None:
     plan = plan_of(api, {"patterns": ["iban"]})
     assert plan["criteria"] == {
@@ -206,11 +212,53 @@ def test_declared_length_is_checked_before_reading() -> None:
         headers = [] if value is None else [(b"content-length", value.encode())]
         return Request({"type": "http", "method": "POST", "headers": headers})
 
-    assert _declared_length(request(None)) is None
     assert _declared_length(request("12")) == 12
     with pytest.raises(ContractError) as caught:
         _declared_length(request("zwölf"))
     assert caught.value.code == "bad_request"
+    with pytest.raises(ContractError) as missing:
+        _declared_length(request(None))
+    assert (missing.value.status, missing.value.code) == (411, "length_required")
+
+
+def test_chunked_upload_without_length_is_refused(api: TestClient) -> None:
+    def body() -> Iterator[bytes]:
+        yield b"--x\r\n"
+
+    headers = {"content-type": "multipart/form-data; boundary=x"}
+    response = api.post("/api/redaction/plan", content=body(), headers=headers)
+    assert error_code(response) == (411, "length_required")
+
+
+def test_oversized_fields_are_413() -> None:
+    service = RedactionService(limits=Limits(max_selection_bytes=100, max_criteria_bytes=50))
+    with client(service) as api:
+        slightly = post(api, "/apply", {"selection": " " * 101})
+        far = post(api, "/apply", {"selection": " " * 5000})
+        page = post(api, "/preview", {"page": "1" * 200})
+    assert error_code(slightly) == (413, "too_large")
+    assert error_code(far) == (413, "too_large")
+    assert error_code(page) == (413, "too_large")
+
+
+def test_limits_must_be_positive() -> None:
+    with pytest.raises(ValueError, match="preview_max_edge"):
+        Limits(preview_max_edge=0)
+    with pytest.raises(ValueError, match="max_pages"):
+        Limits(max_pages=True)
+
+
+def test_unexpected_failures_are_json_without_text(
+    api: TestClient, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    def broken(*_: object) -> bytes:
+        raise RuntimeError("Erika Beispiel")
+
+    monkeypatch.setattr(RedactionService, "preview", broken)
+    response = post(api, "/preview", {"page": "1"})
+    assert error_code(response) == (500, "internal_error")
+    assert "Erika" not in caplog.text
+    assert "RuntimeError" in caplog.text
 
 
 def test_plan_maps_engine_errors(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -248,7 +296,7 @@ def test_preview_renders_png_with_bounded_size(api: TestClient) -> None:
     assert max(width, height) <= 100
 
 
-@pytest.mark.parametrize("page", ["0", "3", "eins", "-1", ""])
+@pytest.mark.parametrize("page", ["0", "3", "eins", "-1", "", "²", "1234567"])
 def test_preview_rejects_bad_pages(api: TestClient, page: str) -> None:
     assert error_code(post(api, "/preview", {"page": page})) == (422, "invalid_page")
 
@@ -305,6 +353,10 @@ def test_apply_detects_other_file(api: TestClient) -> None:
         "[]",
         '{"selected": "alle"}',
         '{"selected": [], "areas": [{"page": 1, "rect": [0, 0, 2]}]}',
+        '{"selected": [], "areas": [{"page": 1, "rect": "0101"}]}',
+        '{"selected": [], "areas": [{"page": 1, "rect": ["0", 0, 1, 1]}]}',
+        '{"selected": [], "sanitize": 0}',
+        '{"selected": [], "criteria": {"case_sensitive": "false"}}',
     ],
 )
 def test_apply_rejects_bad_selection(api: TestClient, raw: str) -> None:

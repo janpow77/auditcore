@@ -9,9 +9,9 @@ export function RedactionReview({ view: hook, id }: { view: UseRedaction; id: st
   if (!view) return null
   return (
     <section className="fa-redaction__card" aria-labelledby={`${id}-review`} data-testid="redaction-review">
-      <h3 id={`${id}-review`} className="fa-redaction__heading">{hook.t('reviewHeading')}</h3>
+      <h3 id={`${id}-review`} className="fa-redaction__heading" tabIndex={-1}>{hook.t('reviewHeading')}</h3>
       <div className="fa-redaction__layout">
-        <RedactionViewer hook={hook} view={view} />
+        <RedactionViewer hook={hook} view={view} id={id} />
         <RedactionSide hook={hook} view={view} />
       </div>
     </section>

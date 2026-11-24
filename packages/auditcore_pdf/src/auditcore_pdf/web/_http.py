@@ -6,8 +6,9 @@ Both adapters read the multipart form into :class:`Upload` and hand it to
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from auditcore_common import rest
 from auditcore_common.rest import Reply
@@ -16,6 +17,8 @@ from .contract import ContractError, RedactionService, decode_json
 
 PNG = "image/png"
 PDF = "application/pdf"
+NO_STORE = {"Cache-Control": "no-store"}
+LOG = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -37,12 +40,13 @@ def _field(upload: Upload, name: str) -> str:
 def _plan(service: RedactionService, upload: Upload) -> Reply:
     limit = service.limits.max_criteria_bytes
     criteria = decode_json(_field(upload, "criteria"), limit, "criteria")
-    return rest.json_reply(200, service.plan(upload.content, criteria))
+    # Der Plan enthält Klartext der Fundstellen: nicht zwischenspeichern.
+    return replace(rest.json_reply(200, service.plan(upload.content, criteria)), headers=NO_STORE)
 
 
 def _preview(service: RedactionService, upload: Upload) -> Reply:
     image = service.preview(upload.content, _field(upload, "page"))
-    return Reply(200, image, PNG, {"Cache-Control": "no-store"})
+    return Reply(200, image, PNG, NO_STORE)
 
 
 def _apply(service: RedactionService, upload: Upload) -> Reply:
@@ -72,8 +76,16 @@ def get_catalogue(service: RedactionService) -> Reply:
 
 
 def dispatch(name: str, service: RedactionService, upload: Upload) -> Reply:
-    """Run one POST endpoint and map contract errors to JSON replies."""
-    return rest.guarded(lambda: HANDLERS[name](service, upload), error=ContractError)
+    """Run one POST endpoint; contract errors and unexpected failures become JSON replies."""
+    try:
+        return rest.guarded(lambda: HANDLERS[name](service, upload), error=ContractError)
+    except Exception as exc:  # noqa: BLE001 - jeder Fehler als JSON, ohne Klartext
+        # Nur der Typ wird protokolliert: Meldungen können Inhalte der PDF enthalten.
+        LOG.error("pdf_redaction/1 %s fehlgeschlagen: %s", name, type(exc).__name__)
+        failure = ContractError(
+            "Die Anfrage konnte nicht verarbeitet werden.", status=500, code="internal_error"
+        )
+        return error_reply(failure)
 
 
 def error_reply(exc: ContractError) -> Reply:

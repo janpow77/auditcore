@@ -147,10 +147,15 @@ export function nudgeRedactionBox(box: RedactionBox, key: RedactionArrow, mode: 
   const [dx, dy] = ARROWS[key]
   const step = large ? REDACTION_KEY_STEP_LARGE : REDACTION_KEY_STEP
   if (mode === 'resize') return resizeRedactionBox(box, [box[2] + dx * step, box[3] + dy * step])
+  return moveRedactionBox(box, dx * step, dy * step)
+}
+
+/** Bereich um (dx, dy) verschieben, ohne die Seite zu verlassen; die Größe bleibt. */
+export function moveRedactionBox(box: RedactionBox, dx: number, dy: number): RedactionBox {
   const width = box[2] - box[0]
   const height = box[3] - box[1]
-  const x0 = Math.min(1 - width, Math.max(0, box[0] + dx * step))
-  const y0 = Math.min(1 - height, Math.max(0, box[1] + dy * step))
+  const x0 = Math.min(1 - width, Math.max(0, box[0] + dx))
+  const y0 = Math.min(1 - height, Math.max(0, box[1] + dy))
   return rounded([x0, y0, x0 + width, y0 + height])
 }
 
