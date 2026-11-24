@@ -131,12 +131,16 @@ Wie `/evaluate` plus `format`, optional `residual` mit dem Körper von
 BOM, Dezimalkomma, Formelzeichen am Zellanfang mit Apostroph neutralisiert;
 Kennzahlen, Ergebnis, Erläuterung, Hinweise und die Herleitung mit Quelle je
 Schritt. Mit `residual` folgt der Abschnitt „Restfehlerquote (RER) nach
-Finanzkorrekturen“: Quelle, eigener Fingerabdruck, Signifikanzschwelle,
-gerundete RER, ob sie die Schwelle überschreitet, bei „entfällt“ die
-Begründung (`not_applicable`) und der Wortlaut der Vorlage
-(`not_applicable_template`), die Hinweise (`notes`) und die Zeilen A–M. Die
-JSON-Datei enthält die Antwort von `/residual` unter `residual` (`null` ohne
-RER). Auch die RER wird aus der Anfrage neu gerechnet; der Fingerabdruck der
+Finanzkorrekturen“: Quelle, eigener Fingerabdruck der RER-Eingabe, der
+Abgleich mit der Hochrechnung, Signifikanzschwelle, gerundete RER, ob sie die
+Schwelle überschreitet, bei „entfällt“ die Begründung (`not_applicable`) und
+der Wortlaut der Vorlage (`not_applicable_template`), die Hinweise (`notes`)
+und die Zeilen A–M. Der Abgleich vergleicht Prüfpopulation (A) und
+Gesamtfehlerquote (D) der RER mit Buchwert und TER der Auswertung (Spielraum
+ein halber Cent bzw. 0,00005 Prozentpunkte); weichen sie ab, nennt die Datei
+beide Werte der Hochrechnung. Die JSON-Datei enthält die Antwort von
+`/residual` unter `residual` (`null` ohne RER) und das Ergebnis des Abgleichs
+unter `residual_matches_evaluation` (`true`/`false`, `null` ohne RER). Auch die RER wird aus der Anfrage neu gerechnet; der Fingerabdruck der
 Auswertung bleibt der von `/evaluate`. Dateiname
 `hochrechnung-<methode>-<12 Zeichen Fingerabdruck>.<format>`.
 

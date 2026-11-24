@@ -9,8 +9,13 @@
   Hochrechnung entfernt sie mit der RER. Der Export enthält die zuletzt
   berechnete RER (`auditcore_extrapolation` ≥ 0.3.1; ältere Backends übergehen
   das Feld).
+- `ExtrapolationPanel`: Begründung und Hinweise stammen wörtlich aus dem
+  Backend und sind deshalb auch mit `locale: 'en'` deutsch; nur die
+  Überschriften sind übersetzt.
 - `IdentifierCheck`: Zusammenfassung der Stapelprüfung mit getrennter Zahl der
-  nur dem Format nach gültigen Zeilen (Texte aus `@auditcore/ui-core`).
+  nur dem Format nach gültigen Zeilen; solche Zeilen und Einzelergebnisse
+  heißen „nur Format gültig“ (Warnfarbe) statt „gültig“ und bleiben bei „Nur
+  Auffälligkeiten zeigen“ sichtbar (Texte aus `@auditcore/ui-core`).
 
 ## 0.5.1 – 2026-10-17
 

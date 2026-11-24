@@ -64,7 +64,7 @@ const value = (event: Event): string => (event.target as HTMLInputElement).value
       <template v-if="remarks?.notes.length">
         <h4 class="fa-extrapolation__heading">{{ t('rerNotes') }}</h4>
         <ul class="fa-extrapolation__warnings" data-testid="extrapolation-rer-notes">
-          <li v-for="line in remarks.notes" :key="line">{{ line }}</li>
+          <li v-for="(line, index) in remarks.notes" :key="`${index}-${line}`">{{ line }}</li>
         </ul>
       </template>
       <FaTable :columns="columns" :rows="rows" :caption="t('residualTitle')" :locale="locale" data-testid="extrapolation-rer-rows" />

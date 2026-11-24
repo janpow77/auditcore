@@ -141,7 +141,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 96.0
+      "coverage_percent": 96.03
     },
     "auditcore_flow_agent": {
       "coverage_percent": 100.0

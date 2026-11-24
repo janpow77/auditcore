@@ -7,8 +7,10 @@ import type {
   IdentifierBatchItem,
   IdentifierBatchRequest,
   IdentifierBatchRow,
+  IdentifierBatchSummary,
   IdentifierCheckRequest,
   IdentifierDetailValue,
+  IdentifierVerdict,
   IdentifierCatalogue,
   IdentifierKindInfo,
   IdentifierProfileInfo,
@@ -109,17 +111,26 @@ export type IdentifierTone = 'success' | 'danger' | 'warning' | 'neutral'
 
 const TONES: Readonly<Record<IdentifierStatus, IdentifierTone>> = { VALID: 'success', INVALID: 'danger', MISSING: 'warning' }
 
-export function identifierStatusTone(status: IdentifierStatus | null): IdentifierTone {
+/** Format gültig, Prüfziffer nicht geprüft (`verdict` `format_valid`, z. B. BIC, Steuernummer). */
+function formatOnly(status: IdentifierStatus | null, verdict: IdentifierVerdict | undefined): boolean {
+  return status === 'VALID' && verdict === 'format_valid'
+}
+
+/** Farbe des Ergebnisses; „nur Format gültig“ als Warnung, nicht als Erfolg. */
+export function identifierStatusTone(status: IdentifierStatus | null, verdict?: IdentifierVerdict): IdentifierTone {
+  if (formatOnly(status, verdict)) return 'warning'
   return status ? TONES[status] : 'neutral'
 }
 
-export function identifierStatusText(status: IdentifierStatus | null, t: IdentifierTranslate): string {
+export function identifierStatusText(status: IdentifierStatus | null, t: IdentifierTranslate, verdict?: IdentifierVerdict): string {
+  if (formatOnly(status, verdict)) return t('statusFormatValid')
   return status ? t(`status${status}`) : t('notChecked')
 }
 
 /** Begründung eines Ergebnisses: Meldung der Bibliothek, bei „gültig“ der Satz zum Profil. */
 export function identifierReasonText(result: IdentifierResult, profileTitle: string, t: IdentifierTranslate): string {
   if (result.message) return result.message
+  if (formatOnly(result.status, result.verdict)) return t('formatValidText', { profile: profileTitle })
   return result.status === 'VALID' ? t('validText', { profile: profileTitle }) : (result.reason_label ?? '')
 }
 
@@ -159,13 +170,38 @@ export function identifierRowValue(row: IdentifierBatchRow, request: IdentifierB
   return row.error === null ? (row.raw ?? '') : (request?.items[row.index]?.value ?? '')
 }
 
-/** Zeilen der Ergebnistabelle; wahlweise nur ungültige, fehlende und nicht prüfbare. */
+/** Urteil einer Stapelzeile; `undefined` bei Fehlerzeilen und Backends vor 0.3.0. */
+export function identifierRowVerdict(row: IdentifierBatchRow): IdentifierVerdict | undefined {
+  return row.error === null ? row.verdict : undefined
+}
+
+/** Zeilen der Ergebnistabelle; wahlweise nur ungültige, fehlende, nicht prüfbare und nur dem Format nach gültige. */
 export function visibleIdentifierRows(answer: IdentifierBatchAnswer, onlyIssues: boolean): readonly IdentifierBatchRow[] {
-  return onlyIssues ? answer.results.filter((row) => identifierRowStatus(row) !== 'VALID') : answer.results
+  if (!onlyIssues) return answer.results
+  return answer.results.filter((row) => identifierRowStatus(row) !== 'VALID' || identifierRowVerdict(row) === 'format_valid')
+}
+
+/**
+ * Zahlen der Zusammenfassung. Tragen alle geprüften Zeilen `verdict`, werden sie aus den
+ * Zeilen gezählt: Ältere Backends (0.3.0) zählen nur dem Format nach gültige Zeilen auch
+ * unter `summary.valid`, und die Teile ergäben mehr als `total`.
+ */
+export function identifierBatchCounts(answer: IdentifierBatchAnswer): Required<IdentifierBatchSummary> {
+  const checked = answer.results.filter((row) => row.error === null)
+  if (!checked.length || checked.some((row) => identifierRowVerdict(row) === undefined)) return { format_valid: 0, ...answer.summary }
+  const count = (verdict: IdentifierVerdict): number => checked.filter((row) => identifierRowVerdict(row) === verdict).length
+  return {
+    total: answer.results.length,
+    valid: count('valid'),
+    format_valid: count('format_valid'),
+    invalid: checked.filter((row) => identifierRowStatus(row) === 'INVALID').length,
+    missing: checked.filter((row) => identifierRowStatus(row) === 'MISSING').length,
+    not_checked: answer.results.length - checked.length,
+  }
 }
 
 export function identifierBatchSummary(answer: IdentifierBatchAnswer, t: IdentifierTranslate): string {
-  const { total, valid, invalid, missing, not_checked: notChecked, format_valid: formatValid = 0 } = answer.summary
+  const { total, valid, invalid, missing, not_checked: notChecked, format_valid: formatValid } = identifierBatchCounts(answer)
   return formatValid > 0 ? t('summaryFormat', { total, valid, formatValid, invalid, missing, notChecked }) : t('summary', { total, valid, invalid, missing, notChecked })
 }
 
@@ -193,8 +229,8 @@ export function identifierBatchLines(
     ref: row.ref,
     kind: identifierRowKind(catalogue, row, request),
     value: identifierRowValue(row, request),
-    status: identifierStatusText(identifierRowStatus(row), t),
-    tone: identifierStatusTone(identifierRowStatus(row)),
+    status: identifierStatusText(identifierRowStatus(row), t, identifierRowVerdict(row)),
+    tone: identifierStatusTone(identifierRowStatus(row), identifierRowVerdict(row)),
     reason: identifierRowReason(row),
     normalized: row.error === null ? (row.normalized ?? '') : '',
   }))

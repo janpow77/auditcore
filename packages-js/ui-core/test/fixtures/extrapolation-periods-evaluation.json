@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.3.0",
+ "library": "auditcore_extrapolation 0.3.1",
  "fingerprint": "5a3a466c11a30e2f419e50b76a6c6da84e9f2095f61c024b2796118474c73c03",
  "method": {
   "id": "mus.standard",

@@ -10,14 +10,27 @@
   `residual_negative` ergänzt.
 - Hochrechnung: Der Controller merkt sich die Anfrage der RER
   (`lastResidualRequest`) und gibt sie beim Export als `residual` mit
-  (`ExtrapolationExportRequest`, `auditcore_extrapolation` ≥ 0.3.1). Neue
+  (`ExtrapolationExportRequest`), aber nur, wenn `library` des Katalogs
+  `auditcore_extrapolation` ≥ 0.3.1 meldet (`extrapolationExportsResidual`);
+  ältere Backends nähmen das Feld in den Fingerabdruck der Auswertung auf. Neue
   Hochrechnung und `applyInputs()` verwerfen RER und Anfrage wie bisher das
-  Ergebnis. `ExtrapolationPort.exportEvaluation` nimmt `ExtrapolationExportRequest`
+  Ergebnis. Antworten von `evaluate()` und `computeResidual()`, die erst nach
+  einer späteren Hochrechnung oder neuen Eingaben eintreffen, werden verworfen;
+  bisher konnte eine verspätete RER-Antwort die alte RER samt Begründung unter
+  die neue Hochrechnung und in den Export bringen. `ExtrapolationPort.exportEvaluation` nimmt `ExtrapolationExportRequest`
   an; Ports mit dem bisherigen Typ `EvaluationRequest` bleiben zuweisbar.
 - Kennungen: Die Zusammenfassung der Stapelprüfung nennt Zeilen, die nur dem
   Format nach gültig sind, getrennt (`summaryFormat`, Feld
-  `IdentifierBatchSummary.format_valid`), sobald das Backend sie meldet
-  (`auditcore_identifiers` 0.3.1 zählt sie nicht mehr unter `valid`).
+  `IdentifierBatchSummary.format_valid`). Tragen die Zeilen `verdict`
+  (`auditcore_identifiers` ≥ 0.3.0), zählt `identifierBatchCounts()` aus den
+  Zeilen; so stimmt die Summe auch gegen 0.3.0, das diese Zeilen zusätzlich
+  unter `valid` zählt.
+- Kennungen: `IdentifierResult` kennt `verdict`, `verdict_label`,
+  `check_digit` und `check_digit_label`. Ergebnis „nur Format gültig“ (Text
+  `statusFormatValid`, Farbe Warnung) statt „gültig“ in Tabelle, CSV und
+  Einzelergebnis, Begründung `formatValidText`; „Nur Auffälligkeiten zeigen“
+  behält diese Zeilen. Englische Texte für Status, Begründung und
+  Zusammenfassung ergänzt.
 
 ## 0.4.1 – 2026-10-17
 

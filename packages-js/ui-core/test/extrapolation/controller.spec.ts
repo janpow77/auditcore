@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { createExtrapolationController, extrapolationMethod, terMetrics, translator, extrapolationMessages, residualMetrics, residualRemarks } from '../../src'
-import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult, residualWithinResult } from './fake-port'
+import { createExtrapolationController, extrapolationExportsResidual, extrapolationMethod, terMetrics, translator, extrapolationMessages, residualMetrics, residualRemarks } from '../../src'
+import { evaluationResult, extrapolationCatalogue, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult, residualWithinResult } from './fake-port'
 
 function controller(port = fakeExtrapolationPort()) {
   const events: string[] = []
@@ -67,6 +67,67 @@ describe('createExtrapolationController', () => {
     created.applyInputs()
     expect(created.store.get().residual).toBeNull()
     expect(created.store.get().lastResidualRequest).toBeNull()
+  })
+
+  it('verwirft eine RER-Antwort, die nach neuer Hochrechnung oder neuen Eingaben eintrifft', async () => {
+    const { created, port } = controller()
+    const answer = port.residual
+    const pending: (() => void)[] = []
+    port.residual = (body) => new Promise((resolve) => pending.push(() => resolve(answer(body))))
+    await created.load()
+    created.selectMethod('mus.standard')
+    created.setConfidence(0.9)
+    await created.evaluate()
+    created.setResidual({ terRate: '9' })
+    const late = created.computeResidual()
+    await created.evaluate()
+    pending.shift()?.()
+    await late
+    expect(created.store.get().residual).toBeNull()
+    expect(created.store.get().lastResidualRequest).toBeNull()
+    await created.exportEvaluation('csv')
+    expect(port.calls.export[0]?.[0]).not.toHaveProperty('residual')
+    const afterInputs = created.computeResidual()
+    created.applyInputs()
+    pending.shift()?.()
+    await afterInputs
+    expect(created.store.get().residual).toBeNull()
+    expect(created.store.get().lastResidualRequest).toBeNull()
+  })
+
+  it('verwirft eine Hochrechnung, die nach neuen Eingaben eintrifft', async () => {
+    const { created, port } = controller()
+    const answer = port.evaluate
+    let release: () => void = () => {}
+    port.evaluate = (body) => new Promise((resolve) => (release = () => resolve(answer(body))))
+    await created.load()
+    created.selectMethod('mus.standard')
+    created.setConfidence(0.9)
+    const late = created.evaluate()
+    created.applyInputs()
+    release()
+    await late
+    expect(created.store.get().result).toBeNull()
+    expect(created.store.get().lastRequest).toBeNull()
+  })
+
+  it('gibt die RER nur an Backends ab auditcore_extrapolation 0.3.1 in den Export', async () => {
+    expect(extrapolationExportsResidual(extrapolationCatalogue)).toBe(true)
+    expect(extrapolationExportsResidual({ ...extrapolationCatalogue, library: 'auditcore_extrapolation 0.3.0' })).toBe(false)
+    expect(extrapolationExportsResidual({ ...extrapolationCatalogue, library: 'auditcore_extrapolation 0.10.0' })).toBe(true)
+    expect(extrapolationExportsResidual({ ...extrapolationCatalogue, library: 'auditcore_extrapolation 1.0.0' })).toBe(true)
+    expect(extrapolationExportsResidual(null)).toBe(false)
+    const port = fakeExtrapolationPort()
+    port.profiles = async () => ({ ...extrapolationCatalogue, library: 'auditcore_extrapolation 0.3.0' })
+    const { created } = controller(port)
+    await created.load()
+    created.selectMethod('mus.standard')
+    created.setConfidence(0.9)
+    await created.evaluate()
+    await created.computeResidual()
+    expect(created.store.get().residual).not.toBeNull()
+    await created.exportEvaluation('json')
+    expect(port.calls.export[0]?.[0]).not.toHaveProperty('residual')
   })
 
   it('liefert Begründung für „entfällt“ und Hinweise der RER unverändert aus dem Backend', () => {

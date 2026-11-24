@@ -50,7 +50,7 @@ export function ExtrapolationResidual({ view, tableLocale }: { view: UseExtrapol
             <>
               <h4 className="fa-extrapolation__heading">{t('rerNotes')}</h4>
               <ul className="fa-extrapolation__warnings" data-testid="extrapolation-rer-notes">
-                {remarks.notes.map((line) => <li key={line}>{line}</li>)}
+                {remarks.notes.map((line, index) => <li key={`${index}-${line}`}>{line}</li>)}
               </ul>
             </>
           ) : null}

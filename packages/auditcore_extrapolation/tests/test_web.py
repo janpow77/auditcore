@@ -169,22 +169,45 @@ def test_export_carries_residual_with_reason_and_notes() -> None:
     assert "Wortlaut der Vorlage;NA RTER not exceeding 2%" in csv_text
     assert 'Hinweis;"RER nach Art. 2 Nr. 36' in csv_text
     assert "K=J/I;Restfehlerquote (RER);" in csv_text
+    assert "Fingerabdruck der RER-Eingabe (SHA-256);" in csv_text
+    assert (
+        "Abgleich mit der Hochrechnung;abweichend: Prüfpopulation (A), Gesamtfehlerquote (D)"
+        in csv_text
+    )
+    assert document["residual_matches_evaluation"] is False
     above = {"audit_population": 1000, "total_error_rate": 0.05, "financial_corrections": 1}
     csv_above = export_evaluation({**PPS_REQUEST, "format": "csv", "residual": above}).content
     assert "Entfällt (Zeilen L und M)" not in csv_above.decode("utf-8")
     assert "Über der Signifikanzschwelle;ja" in csv_above.decode("utf-8")
 
 
+def test_export_marks_residual_matching_the_evaluation() -> None:
+    ter = evaluate(PPS_REQUEST)["total_error_rate"]
+    matching = {"audit_population": ter["book_value"], "total_error_rate": ter["rate"]}
+    body = {**PPS_REQUEST, "residual": matching}
+    document = json.loads(export_evaluation({**body, "format": "json"}).content)
+    assert document["residual_matches_evaluation"] is True
+    csv_text = export_evaluation({**body, "format": "csv"}).content.decode("utf-8")
+    assert "Abgleich mit der Hochrechnung;übereinstimmend (A und D)" in csv_text
+    other_rate = {**matching, "total_error_rate": ter["rate"] + 0.01}
+    csv_other = export_evaluation({**PPS_REQUEST, "format": "csv", "residual": other_rate})
+    text = csv_other.content.decode("utf-8")
+    assert "Abgleich mit der Hochrechnung;abweichend: Gesamtfehlerquote (D)\r\n" in text
+    assert "Gesamtfehlerquote (TER) der Hochrechnung;" in text
+
+
 def test_export_without_residual_is_unchanged() -> None:
     document = json.loads(export_evaluation({**PPS_REQUEST, "format": "json"}).content)
     assert document["residual"] is None
+    assert document["residual_matches_evaluation"] is None
     csv_text = export_evaluation({**PPS_REQUEST, "format": "csv"}).content.decode("utf-8")
     assert "Restfehlerquote (RER)" not in csv_text
 
 
 def test_export_rejects_invalid_residual() -> None:
-    with pytest.raises(ContractError, match="^residual: "):
+    with pytest.raises(ContractError, match="^residual: ") as caught:
         export_evaluation({**PPS_REQUEST, "format": "csv", "residual": {"audit_population": 0}})
+    assert (caught.value.status, caught.value.code) == (422, "invalid_input")
 
 
 def test_export_neutralises_formulas() -> None:
@@ -217,6 +240,26 @@ def test_http_routes(client: TestClient) -> None:
     )
     assert exported.headers["content-disposition"].startswith("attachment; filename=")
     assert exported.headers["content-type"].startswith("text/csv")
+    # Über HTTP kommen Zahlen als Decimal an (parse_float=Decimal).
+    with_rer = client.post(
+        "/api/extrapolation/evaluate/export",
+        json={
+            **PPS_REQUEST,
+            "format": "json",
+            "residual": {"audit_population": 1000.5, "total_error_rate": 0.015},
+        },
+    )
+    assert with_rer.status_code == 200
+    document = with_rer.json()
+    assert document["fingerprint"] == evaluated.json()["fingerprint"]
+    assert document["residual"]["residual_error_rate"]["not_applicable"].startswith("Entfällt")
+    assert document["residual_matches_evaluation"] is False
+    broken = client.post(
+        "/api/extrapolation/evaluate/export",
+        json={**PPS_REQUEST, "format": "csv", "residual": {"audit_population": 0}},
+    )
+    assert broken.status_code == 422 and broken.json()["error"]["code"] == "invalid_input"
+    assert broken.json()["error"]["message"].startswith("residual: ")
 
 
 def test_http_errors(client: TestClient) -> None:

@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.3.0",
+ "library": "auditcore_extrapolation 0.3.1",
  "fingerprint": "43a42be03add4875be8a2ab438253c4bb1f02969dc9076559ce1d90ede2d06c5",
  "residual_error_rate": {
   "source": "CPRE_23-0013-01 Annex 3",

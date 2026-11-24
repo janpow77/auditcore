@@ -18,20 +18,23 @@ v0.17.0. Bindungen: documents und dummybundle → `auditcore_identifiers==0.3.1`
   geprüfter Prüfziffer (`verdict` `valid`); nur dem Format nach gültige Zeilen
   (BIC, Steuernummer, Legacy-Profile) stehen allein in `summary.format_valid`.
   Bis 0.3.0 standen sie in beiden Zahlen, ein REST-Nutzer las eine BIC oder
-  Steuernummer damit als „gültig“. Die Oberfläche nennt die Zahl getrennt.
+  Steuernummer damit als „gültig“. Die Oberfläche nennt die Zahl getrennt
+  und zeigt solche Zeilen als „nur Format gültig“.
 - `auditcore_documents` 0.5.2 und `auditcore_dummybundle` 0.3.1: nur Bindung
   an identifiers 0.3.1; gleicher Startwert ergibt in dummybundle dieselben
   Daten wie 0.3.0 (bis auf die Versionsangabe).
 - `auditcore_extrapolation` 0.3.1: `POST /evaluate/export` nimmt optional
   `residual` an und schreibt die RER mit Begründung für „entfällt“
   (`not_applicable`), Wortlaut der Vorlage, Hinweisen und Zeilen A–M in CSV
-  und JSON (neues Feld `residual`, `null` ohne RER). Ohne `residual` bleibt
+  und JSON (neues Feld `residual`, `null` ohne RER) und gleicht A und D mit
+  der Hochrechnung ab (`residual_matches_evaluation`). Ohne `residual` bleibt
   die CSV-Datei unverändert.
 - `@auditcore/ui` 0.5.2 / `@auditcore/ui-react` 1.3.2 /
   `@auditcore/ui-core` 0.4.2: Die RER-Karte der Hochrechnung zeigt die
   Begründung für „entfällt“ und die Hinweise des Backends; eine neue
-  Hochrechnung entfernt sie mit der RER. Der Export gibt die zuletzt
-  berechnete RER mit.
+  Hochrechnung entfernt sie mit der RER, auch wenn die RER-Antwort erst
+  danach eintrifft. Der Export gibt die zuletzt berechnete RER mit, wenn das
+  Backend sie annimmt (≥ 0.3.1).
 
 ## v0.17.0 – 2026-11-24
 

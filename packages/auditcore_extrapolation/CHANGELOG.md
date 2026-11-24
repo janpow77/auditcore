@@ -10,8 +10,13 @@
   Begründung (`not_applicable`) und dem Wortlaut der Vorlage, den Hinweisen
   (`notes`) und den Zeilen A–M; die JSON-Datei enthält die Antwort von
   `/residual` unter `residual` (`null` ohne RER, neues Feld). Bisher enthielt der
-  Export weder die RER noch die Begründung. Ein fehlerhaftes `residual` lehnt die
-  Anfrage mit Feldhinweis `residual: …` ab. Der Fingerabdruck der Auswertung
+  Export weder die RER noch die Begründung. Weil Prüfpopulation und TER der RER
+  frei eingegeben werden können, gleicht der Export die Zeilen A und D mit
+  Buchwert und TER der Auswertung ab: CSV-Zeile „Abgleich mit der Hochrechnung“
+  (bei Abweichung mit den Werten der Hochrechnung), JSON-Feld
+  `residual_matches_evaluation` (neu). Ein fehlerhaftes `residual` lehnt die
+  Anfrage mit Feldhinweis `residual: …` und dem Status und Code des
+  ursprünglichen Fehlers ab. Der Fingerabdruck der Auswertung
   bleibt der von `/evaluate`; Anfragen ohne `residual` ergeben dieselbe CSV-Datei
   wie bisher. Vertragsname unverändert `evaluation/1`.
 - UI-Fixtures (`tools/ui_fixtures.py`) neu erzeugt, dazu
