@@ -28,6 +28,7 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'belegerkennung', title: 'Belegerkennung', group: 'Komponenten', load: () => import('./pages/extraction/ExtractionPage.vue') },
   { id: 'bestand', title: 'Bestandsprüfung', group: 'Komponenten', load: () => import('./pages/batchchecks/BatchChecksPage.vue') },
   { id: 'dokumentvergleiche', title: 'Dokumentvergleiche', group: 'Komponenten', load: () => import('./pages/documents/ComparisonsPage.vue') },
+  { id: 'schwaerzen', title: 'PDF schwärzen', group: 'Komponenten', load: () => import('./pages/redaction/RedactionPage.vue') },
   { id: 'synopse', title: 'Synopse / Versionsvergleich', group: 'Komponenten', load: () => import('./pages/synopsis/SynopsisPage.vue') },
 ]
 

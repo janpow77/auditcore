@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-react
 
+## Unveröffentlicht
+
+- Neu: `FlowauditPdfRedaction` (native React-Komponente mit demselben Markup wie `PdfRedaction`; `onRedactionPlanned`, `onRedactionCompleted`, `onError`).
+
 ## 1.3.1 – 2026-10-17
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.4.1 angehoben (Paritätstests gegen `@auditcore/ui` 0.5.1).
