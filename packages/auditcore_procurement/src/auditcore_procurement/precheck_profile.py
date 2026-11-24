@@ -272,9 +272,9 @@ def _packaged_eu_block(version: str) -> dict[str, Any]:
     return {key: data[key] for key in blocks if key in data}
 
 
-#: Newest packaged profile (2014–2027, all EU regimes). 2026.09.3 (public contracts
-#: only) and 2026.09.2 (2024–2027) stay loadable.
-CURRENT_PROFILE = ("procurement.hvtg", "2026.10.1")
+#: Newest packaged profile (2014–2027, all EU regimes; fixed directive values without
+#: end date). 2026.10.1, 2026.09.3 and 2026.09.2 stay loadable.
+CURRENT_PROFILE = ("procurement.hvtg", "2026.11.1")
 
 
 def profile_from_ruleset(
@@ -292,8 +292,8 @@ def profile_from_ruleset(
 
     ``year_bound=True`` adds the verified year-bound EU table of the packaged
     ``procurement.hvtg`` profile ``eu_version`` (default: ``CURRENT_PROFILE``,
-    2026.10.1 with all EU regimes; pin ``"2026.09.3"`` or ``"2026.09.2"`` to
-    reproduce earlier fingerprints) for ``strict`` mode; the ruleset's own
+    2026.11.1 with all EU regimes; pin ``"2026.10.1"``, ``"2026.09.3"`` or
+    ``"2026.09.2"`` to reproduce earlier fingerprints) for ``strict`` mode; the ruleset's own
     ``BELOW_EU`` maxima are then used only by ``legacy`` mode."""
     try:
         tiers = {

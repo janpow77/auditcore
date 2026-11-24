@@ -75,11 +75,30 @@ Dazu als Eigenschaftstests für jeden Startwert (`tests/test_properties.py`):
 Datumsfolgen (Antrag < Bewilligung ≤ Beginn; Rechnung ≤ Zahlung ≤ Antrag des
 Mittelabrufs; Antrag ≤ Eingang < Auszahlung, höchstens 80 Tage), brutto =
 netto + Umsatzsteuer, Bemessungsgrundlage − Skonto = projektbezogener Betrag,
-gleiche Eingabe ergibt gleiche Ausgabe.
+brutto − Skonto auf brutto = gezahlter Betrag, gleiche Eingabe ergibt gleiche
+Ausgabe.
 
-Der Skontobetrag ist die Differenz aus Bemessungsgrundlage und
-projektbezogenem Betrag und kann um einen Cent vom gerundeten Satz abweichen;
-so bleibt Probe 1 exakt.
+Ein Beleg führt das Skonto zweimal. `discount_amount` ist das Skonto auf die
+Bemessungsgrundlage: die Differenz aus Bemessungsgrundlage und
+projektbezogenem Betrag; es kann um einen Cent vom gerundeten Satz abweichen,
+so bleibt Probe 1 exakt. `discount_gross` ist das Skonto auf den Bruttobetrag
+der Rechnung: brutto − `discount_gross` = gezahlter Betrag, auf den Cent. Ohne
+Vorsteuerabzug ist die Bemessungsgrundlage der Bruttobetrag; dann sind beide
+gleich und der gezahlte Betrag ist der projektbezogene. V4 zeigt das Skonto
+auf die Bemessungsgrundlage, N1 (ab Profilfassung 0.2.0) das auf brutto.
+
+Länder: Rechnungssteller kommen aus dem Land des Vorhabens, auch in der
+Mischung DE+AT (dort abwechselnd aus beiden Ländern). Eine grenzüberschreitende
+Leistung zwischen Unternehmern trüge keine Inlandsumsatzsteuer des Leistenden
+(Steuerschuld des Leistungsempfängers oder steuerfreie innergemeinschaftliche
+Lieferung); das Bündel bildet sie nicht ab. Steuersatz (DE 19 %, AT 20 %) und
+Vergabeart folgen deshalb einem Land. Öffentliche Auftraggeber in Österreich
+vergeben nach dem Bundesvergabegesetz 2018: „Direktvergabe (BVergG 2018)“
+(§ 31 Abs. 11) unter der eingestellten Wertgrenze, sonst „Offenes Verfahren
+(BVergG 2018)“ (§ 31 Abs. 2) oder „Nicht offenes Verfahren mit vorheriger
+Bekanntmachung (BVergG 2018)“ (§ 31 Abs. 3), zwischen denen § 33 die freie
+Wahl lässt. Deutsche Auftraggeber tragen „Direktauftrag“ oder „VOB/VOL
+unterhalb Schwellenwert“ ohne Abgleich mit EU-Schwellenwerten.
 
 ## 5 Vorlagen
 
@@ -142,7 +161,13 @@ Direktauftrag über der eingestellten Wertgrenze; Mittelabruf über der Summe
 der Belege; Auszahlungsfrist von 80 Tagen überschritten. Nicht gebaut sind
 „Häufungsmuster“ (nicht bestimmt genug) und „Stundensatz oder Stunden
 falsch“ (setzt die nicht gebaute Stundenliste voraus). Die Wertgrenze für
-Direktaufträge ist ein Parameter des Generators, keine Rechtsaussage.
+Direktaufträge ist ein Parameter des Generators, keine Rechtsaussage; die
+eingestreute Direktvergabe trägt die Bezeichnung des Landes des Auftraggebers.
+Die überschrittene Auszahlungsfrist verschiebt die Auszahlung höchstens bis zum
+Bezugsdatum, bis zum Stichtag des Zahlungsantrags, in dem der Mittelabruf
+steht, und vor die Aufdeckung einer Korrektur des Mittelabrufs; die
+Grundgesamtheit übernimmt das Datum. Lässt kein Mittelabruf mehr als 80 Tage
+Raum, entfällt die Auffälligkeit.
 
 ## 7 Freie Tabelle
 

@@ -111,6 +111,7 @@ def test_batch_reports_each_row_and_a_summary() -> None:
         "valid": 1,
         "invalid": 0,
         "missing": 1,
+        "format_valid": 1,
         "not_checked": 2,
     }
 

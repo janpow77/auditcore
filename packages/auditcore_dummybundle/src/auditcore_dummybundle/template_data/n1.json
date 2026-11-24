@@ -1,8 +1,8 @@
 {
   "artifact_id": "auditcore.dummybundle.template.n1",
   "id": "N1",
-  "version": "0.1.0",
-  "status": "Freigegeben",
+  "version": "0.2.0",
+  "status": "Entwurf",
   "public": true,
   "title": "Belegliste zum Mittelabruf (kompakt)",
   "purpose": "Belegliste eines oder mehrerer Mittelabrufe unter allgemeinen Spaltennamen, mit Beträgen, Skonto, Kürzung und Vergabeangaben.",
@@ -11,7 +11,8 @@
     "Inhalte der ausführlichen Belegliste (V1) in kompakter Form unter allgemeinen Spaltennamen."
   ],
   "open_points": [
-    "Der Skontobetrag ist die Differenz aus Bemessungsgrundlage und geltend gemachtem Betrag und kann um einen Cent vom gerundeten Satz abweichen."
+    "Der Skontobetrag ist das Skonto auf den Bruttobetrag der Rechnung: Betrag brutto − Skontobetrag = gezahlter Betrag. Bei Vorsteuerabzug ist der geltend gemachte Betrag der Nettobetrag abzüglich Skonto auf netto; die Differenz aus Nettobetrag und geltend gemachtem Betrag ist dann nicht der Skontobetrag der Spalte.",
+    "Die Fassung 0.2.0 (Spalte „Skontobetrag“ brutto statt auf die Bemessungsgrundlage) ist vom Rechteinhaber noch nicht freigegeben."
   ],
   "tables": [
     {
@@ -207,14 +208,15 @@
         {
           "header": "Skontobetrag",
           "kind": "amount",
-          "field": "discount_amount",
+          "field": "discount_gross",
+          "note": "Skonto auf den Bruttobetrag: Betrag brutto − Skontobetrag = gezahlter Betrag. Bei Vorsteuerabzug ist der geltend gemachte Betrag netto, abzüglich Skonto auf netto.",
           "sum": true,
           "free": {
             "type": "computed",
             "params": {
               "operation": "rate",
               "fields": [
-                "Betrag netto"
+                "Betrag brutto"
               ],
               "rate": "0"
             }
@@ -368,13 +370,12 @@
       "free_start": true
     }
   ],
-  "content_hash": "801ec536b33d18157b040ccfa144fa4bbac161a26daf40bef388004a26544c1a",
+  "content_hash": "803d82cb33b7456321fd06cfb093dfff6ebd91ca9cf57cd7c15f82dfb6f35cf1",
   "review": {
     "status": "TECHNICAL_TESTS_EXECUTED",
-    "human_release_approval": "GRANTED",
-    "approved_by": "Rechteinhaber und Auftraggeber (Repository-Inhaber janpow77)",
-    "approved_on": "2026-10-13",
-    "scope": "Die elf Vorlagenprofile von auditcore_dummybundle 0.1.0 (V0 bis V9 und N1), jeweils in der Fassung des genannten Inhaltshashes",
+    "human_release_approval": "NOT_GRANTED",
+    "previous_release": "Fassung 0.1.0 am 13.10.2026 freigegeben (Inhaltshash 801ec536b33d18157b040ccfa144fa4bbac161a26daf40bef388004a26544c1a)",
+    "change": "Spalte „Skontobetrag“ zeigt das Skonto auf den Bruttobetrag (Feld discount_gross) statt auf die Bemessungsgrundlage; Spaltenhinweis ergänzt.",
     "not_covered": "Profile von auditcore_dummygenerator (dort unverändert NOT_GRANTED) und Texte Dritter",
     "policy": "docs/profile-versioning.md",
     "evidence": "tests/test_templates.py, tests/test_sum_checks.py, tests/test_properties.py"

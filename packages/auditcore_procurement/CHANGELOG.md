@@ -1,6 +1,37 @@
 # Changelog auditcore_procurement
 
-## 0.3.1 – unveröffentlicht
+## 0.4.0 – unveröffentlicht
+
+Neues Profil `procurement.hvtg 2026.11.1` (`CURRENT_PROFILE`) und Abfragen
+nationaler Vorschriften je Stichtag. 2026.10.1 und ältere Profile bleiben
+bytegleich und ladbar; Ergebnisse mit gepinntem Profil ändern sich nicht.
+
+- Soziale und andere besondere Dienstleistungen: 750.000 EUR (Art. 4 Buchst. d
+  RL 2014/24/EU) und 1.000.000 EUR (Art. 15 Buchst. c RL 2014/25/EU) gelten ab
+  18.04.2016 ohne Enddatum, weil Art. 6 RL 2014/24/EU und Art. 17
+  RL 2014/25/EU nur die übrigen Werte alle zwei Jahre neu festsetzen. Wortlaut
+  dieser Artikel und die am 23.11.2026 geprüften Änderungsrechtsakte stehen im
+  Profil (`tools/build_eu_regimes_2026_11.py`). Alle übrigen Werte ab 2028
+  bleiben „nicht hinterlegt“.
+- Schema: Zeilen dürfen `valid_to: null` tragen, nur mit Begründung
+  `open_end`; die Katalogausgabe führt `open_end` in jeder Zeile (`None` bei
+  befristeten Werten).
+- Der Hinweis zu zentralen Regierungsbehörden zitiert § 106 Abs. 2 Nr. 1 GWB
+  „in der Fassung ab 01.07.2026“ statt mit Abrufdatum und nennt die Fassung
+  vom 18.04.2016 bis 30.06.2026.
+- Neue öffentliche Namen: `central_government_rule`, `CentralGovernmentRule`
+  (Modul `authority_rules`); `check_small_lots`, `Lot`, `estimation_hints`,
+  `small_lots_rule`, `VgvProvision` (Modul `lot_rules`, § 3 Abs. 1, 4, 7, 8
+  und 9 VgV in allen Fassungen seit 18.04.2016). `check_small_lots` meldet
+  `PASS`, wenn die Ausnahme möglich ist, und `WARNING`, wenn als ausgenommen
+  markierte Lose die Bedingungen nicht erfüllen.
+- `profile_from_ruleset(..., year_bound=True)` ohne `eu_version` übernimmt
+  jetzt 2026.11.1 (anderer Fingerprint); `eu_version="2026.10.1"` reproduziert
+  den bisherigen.
+- Werttests gegen Sollwerte, die wörtlich aus den amtlichen Texten zitiert
+  sind (`tests/test_quoted_thresholds.py`, `tests/test_national_rules.py`).
+
+## 0.3.1 – 2026-11-04
 
 Keine Verhaltensänderung. Neuer exakter Pin `auditcore_harvest==0.1.5` (additiv: gemeinsame Abruf-Taktung `SharedRateLimit`/`RateLimitStore`, `parse_retry_after`, `RetryPolicy.should_retry`/`backoff`).
 

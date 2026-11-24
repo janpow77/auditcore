@@ -1,5 +1,12 @@
 # Changelog – auditcore_documents
 
+## 0.5.1 – 2026-11-23
+
+- Bindung an `auditcore_identifiers==0.3.0` (IBAN-/LEI-Prüfziffern 00/01/99
+  ungültig, Prüfziffern aller EU-USt-IdNr., Feld `check_digit`). Genutzt werden
+  weiterhin nur `de_vat_check_digit` und `at_uid_check_digit`; deren Verhalten
+  ist unverändert, der Code von auditcore_documents ebenfalls.
+
 ## 0.5.0 – 2026-10-03
 
 - `LimitedRouterOcr` begrenzt Gateway-Anfragen mehrerer Dokumente im selben
