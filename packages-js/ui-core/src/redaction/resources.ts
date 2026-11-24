@@ -1,6 +1,7 @@
 // Objekt-URLs und Seitenbilder des Zustandsautomaten von „PDF schwärzen“.
 
-import type { RedactionSource, RedactionStore, RedactionUrls } from './controller'
+import type { Store } from '../store'
+import type { RedactionData, RedactionSource, RedactionUrls } from './controller'
 import type { RedactionPort } from './types'
 
 export const errorText = (error: unknown): string => (error instanceof Error ? error.message : String(error))
@@ -16,7 +17,7 @@ const browserUrls: RedactionUrls = {
  * steigt bei jedem Verwerfen (neuer Plan, Zurück, Entfernen der Komponente);
  * Antworten einer älteren Generation werden verworfen.
  */
-export function createResources(store: RedactionStore, source: RedactionSource) {
+export function createResources(store: Store<RedactionData>, source: RedactionSource) {
   const urls = source.urls ?? browserUrls
   let previews = new Map<number, string>()
   let pending = new Map<number, Promise<void>>()

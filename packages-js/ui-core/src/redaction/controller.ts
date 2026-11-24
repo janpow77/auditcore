@@ -136,7 +136,7 @@ function toggled(set: ReadonlySet<string>, ids: Iterable<string>, on: boolean): 
   return next
 }
 
-export type RedactionStore = Store<RedactionData>
+type RedactionStore = Store<RedactionData>
 
 /** Während des Schwärzens bleibt die Auswahl fest, damit das Ergebnis zur Anzeige passt. */
 const locked = (store: RedactionStore): boolean => store.get().busy === 'apply'

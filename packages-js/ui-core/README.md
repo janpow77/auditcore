@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1299):
+Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -562,7 +562,6 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1299):
 | `@auditcore/ui-core` | `RedactionSource` | Schnittstelle | – | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionSourceView` | Schnittstelle | – | `redaction/view` |
 | `@auditcore/ui-core` | `RedactionStep` | Typ | – | `redaction/view` |
-| `@auditcore/ui-core` | `RedactionStore` | Typ | – | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionTranslate` | Typ | – | `redaction/view` |
 | `@auditcore/ui-core` | `RedactionUrls` | Schnittstelle | Erzeugen und Freigeben von Objekt-URLs (Seitenbild, Download); in Tests ersetzbar. | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionValidation` | Typ | – | `redaction/controller` |
