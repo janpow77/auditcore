@@ -7,8 +7,9 @@
   Begründung des Backends (`not_applicable`) und die Hinweise (`notes`), etwa
   dass die Finanzkorrekturen den Risikobetrag übersteigen. Eine neue
   Hochrechnung entfernt sie mit der RER. Der Export enthält die zuletzt
-  berechnete RER (`auditcore_extrapolation` ≥ 0.3.1; ältere Backends übergehen
-  das Feld).
+  berechnete RER, sofern das Backend `auditcore_extrapolation` ≥ 0.3.1 meldet;
+  gegen ältere Backends enthält der Export weiterhin keine RER (ohne eigene
+  Meldung in der Oberfläche).
 - `ExtrapolationPanel`: Begründung und Hinweise stammen wörtlich aus dem
   Backend und sind deshalb auch mit `locale: 'en'` deutsch; nur die
   Überschriften sind übersetzt.

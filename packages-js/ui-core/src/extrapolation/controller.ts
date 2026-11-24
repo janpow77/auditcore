@@ -145,6 +145,8 @@ function createRequests(source: ExtrapolationSource, store: Store<ExtrapolationD
     const started = (generation.value += 1)
     const result = await run('evaluate', (port) => port.evaluate(checked.request))
     if (!result || started !== generation.value) return
+    // Eine RER, die während dieser Hochrechnung gestartet wurde, gehört zum alten Ergebnis.
+    generation.value += 1
     store.set({ result, lastRequest: checked.request, residual: null, lastResidualRequest: null, residualIssues: {}, residualForm: residualFormFrom(result, store.get().residualForm, source.format) })
     source.callbacks?.().evaluated?.(result)
   }

@@ -15,7 +15,8 @@
   ältere Backends nähmen das Feld in den Fingerabdruck der Auswertung auf. Neue
   Hochrechnung und `applyInputs()` verwerfen RER und Anfrage wie bisher das
   Ergebnis. Antworten von `evaluate()` und `computeResidual()`, die erst nach
-  einer späteren Hochrechnung oder neuen Eingaben eintreffen, werden verworfen;
+  einer späteren Hochrechnung oder neuen Eingaben eintreffen, und eine RER, die
+  während einer laufenden Hochrechnung gestartet wurde, werden verworfen;
   bisher konnte eine verspätete RER-Antwort die alte RER samt Begründung unter
   die neue Hochrechnung und in den Export bringen. `ExtrapolationPort.exportEvaluation` nimmt `ExtrapolationExportRequest`
   an; Ports mit dem bisherigen Typ `EvaluationRequest` bleiben zuweisbar.
@@ -29,7 +30,8 @@
   `check_digit` und `check_digit_label`. Ergebnis „nur Format gültig“ (Text
   `statusFormatValid`, Farbe Warnung) statt „gültig“ in Tabelle, CSV und
   Einzelergebnis, Begründung `formatValidText`; „Nur Auffälligkeiten zeigen“
-  behält diese Zeilen. Englische Texte für Status, Begründung und
+  behält diese Zeilen (bei den Legacy-Profilen ist jede gültige Zeile
+  `format_valid`, der Filter blendet dort also nur noch nichts aus). Englische Texte für Status, Begründung und
   Zusammenfassung ergänzt.
 
 ## 0.4.1 – 2026-10-17

@@ -95,6 +95,30 @@ describe('createExtrapolationController', () => {
     expect(created.store.get().lastResidualRequest).toBeNull()
   })
 
+  it('verwirft eine RER, die während einer laufenden Hochrechnung gestartet wurde', async () => {
+    const { created, port } = controller()
+    await created.load()
+    created.selectMethod('mus.standard')
+    created.setConfidence(0.9)
+    await created.evaluate()
+    const evaluateAnswer = port.evaluate
+    const residualAnswer = port.residual
+    let releaseEvaluate: () => void = () => {}
+    let releaseResidual: () => void = () => {}
+    port.evaluate = (body) => new Promise((resolve) => (releaseEvaluate = () => resolve(evaluateAnswer(body))))
+    port.residual = (body) => new Promise((resolve) => (releaseResidual = () => resolve(residualAnswer(body))))
+    const evaluating = created.evaluate()
+    created.setResidual({ terRate: '9' })
+    const late = created.computeResidual()
+    releaseEvaluate()
+    await evaluating
+    releaseResidual()
+    await late
+    expect(created.store.get().result).not.toBeNull()
+    expect(created.store.get().residual).toBeNull()
+    expect(created.store.get().lastResidualRequest).toBeNull()
+  })
+
   it('verwirft eine Hochrechnung, die nach neuen Eingaben eintrifft', async () => {
     const { created, port } = controller()
     const answer = port.evaluate
