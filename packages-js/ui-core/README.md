@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1295):
+Exporte der Einstiegspunkte aus `package.json#exports` (1299):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -542,7 +542,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1295):
 | `@auditcore/ui-core` | `RedactionController` | Typ | – | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionCriteria` | Schnittstelle | – | `redaction/types` |
 | `@auditcore/ui-core` | `RedactionData` | Schnittstelle | – | `redaction/controller` |
-| `@auditcore/ui-core` | `RedactionGesture` | Typ | Laufendes Aufziehen oder Vergrößern mit dem Zeiger. | `redaction/controller` |
+| `@auditcore/ui-core` | `RedactionGesture` | Typ | Laufendes Aufziehen, Verschieben oder Vergrößern mit dem Zeiger. | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionGroup` | Schnittstelle | Gleiche Fundtexte derselben Quelle werden gemeinsam an- und abgewählt. | `redaction/model` |
 | `@auditcore/ui-core` | `RedactionGroupState` | Typ | – | `redaction/model` |
 | `@auditcore/ui-core` | `RedactionGroupView` | Schnittstelle | – | `redaction/view` |
@@ -562,6 +562,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1295):
 | `@auditcore/ui-core` | `RedactionSource` | Schnittstelle | – | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionSourceView` | Schnittstelle | – | `redaction/view` |
 | `@auditcore/ui-core` | `RedactionStep` | Typ | – | `redaction/view` |
+| `@auditcore/ui-core` | `RedactionStore` | Typ | – | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionTranslate` | Typ | – | `redaction/view` |
 | `@auditcore/ui-core` | `RedactionUrls` | Schnittstelle | Erzeugen und Freigeben von Objekt-URLs (Seitenbild, Download); in Tests ersetzbar. | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionValidation` | Typ | – | `redaction/controller` |
@@ -1075,6 +1076,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1295):
 | `@auditcore/ui-core` | `findHit` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `findIdentifierProfile` | Funktion | – | `identifiers/model` |
 | `@auditcore/ui-core` | `flagState` | Funktion | – | `risk/state` |
+| `@auditcore/ui-core` | `focusRedactionAddArea` | Funktion | Nach dem Entfernen eines eigenen Bereichs: Fokus auf „Bereich hinzufügen“ derselben Komponente. | `redaction/dom` |
+| `@auditcore/ui-core` | `focusRedactionHeading` | Funktion | Nach einem Schrittwechsel (Prüfansicht, Ergebnis, Formular) die Überschrift des neuen Schritts fokussieren. | `redaction/dom` |
 | `@auditcore/ui-core` | `focusRow` | Funktion | Zeile fokussieren und sichtbar machen; Zeilen tragen `data-row-id` und `tabindex="-1"`. | `synopsis/navigation` |
 | `@auditcore/ui-core` | `focusableWithin` | Funktion | – | `focus` |
 | `@auditcore/ui-core` | `formFor` | Funktion | Anfangswerte bei Methodenwechsel: sichtbar vorbelegt ist nur die Signifikanzschwelle von 2 %. | `samplesize/model` |
@@ -1155,6 +1158,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1295):
 | `@auditcore/ui-core` | `methodGroups` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `methodStatusKey` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `methodTone` | Funktion | – | `sampling/view` |
+| `@auditcore/ui-core` | `moveRedactionBox` | Funktion | Bereich um (dx, dy) verschieben, ohne die Seite zu verlassen; die Größe bleibt. | `redaction/model` |
 | `@auditcore/ui-core` | `navigationDirection` | Funktion | Richtung für N/J (nächste) bzw. P/K (vorige Änderung); in Eingabefeldern und mit Modifikatoren `null`. | `synopsis/navigation` |
 | `@auditcore/ui-core` | `ndiffOperations` | Funktion | ndiff-Zeilen in Operationen übersetzen; Hinweiszeilen (`? `) entfallen. | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `needsJustification` | Funktion | – | `dataprotection/assistant` |
