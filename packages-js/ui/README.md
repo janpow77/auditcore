@@ -95,15 +95,15 @@ document.body.append(table)
   `<flowaudit-db-kanban>`, `<flowaudit-sampling>`, `<flowaudit-benford>`,
   `<flowaudit-screening-review>`, `<flowaudit-risk-flags>`,
   `<flowaudit-synopsis>`, `<flowaudit-comparisons>`, `<flowaudit-vvt>`,
-  `<flowaudit-dsfa>`, `<flowaudit-geo-map>` und
-  `<flowaudit-identifier-check>` im Light DOM
+  `<flowaudit-dsfa>`, `<flowaudit-geo-map>`, `<flowaudit-identifier-check>` und
+  `<flowaudit-pdf-redaction>` im Light DOM
   (kein Shadow DOM, Designtoken der Seite gelten). Objekte und Listen werden
   als JS-Eigenschaften gesetzt, Ereignisse sind `CustomEvent`s in kebab-case
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
   mitgeladen.
 - **React:** Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening,
-  Stichprobe, Benford und „Kennung prüfen“ nativ in `@auditcore/ui-react` (ohne Vue, gleiche
-  Stichprobe, Benford und Dokumentvergleiche nativ in `@auditcore/ui-react` (ohne Vue, gleiche
+  Stichprobe, Benford, Dokumentvergleiche, „Kennung prüfen“ und „PDF schwärzen“
+  nativ in `@auditcore/ui-react` (ohne Vue, gleiche
   Texte und Verträge, Paritätstests gegen diese Fassung), ebenso die
   Geo-Karte, Kanban und die Datenbankansicht.
 
@@ -119,6 +119,7 @@ Fachkomponenten und ihre REST-Verträge:
 | `BenfordPanel` | `<flowaudit-benford>` | Benford-Analyse über `auditcore_statistics.web` | [`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md) |
 | `IdentifierCheck` | `<flowaudit-identifier-check>` | Kennung prüfen über `auditcore_identifiers.web`: IBAN, BIC, USt-IdNr., Steuer-ID, Steuernummer, LEI, Handelsregisternummer mit Prüfprofil, Begründung und Einzelheiten; Stapelprüfung aus CSV/TSV mit Spaltenzuordnung und CSV-Export | [`docs/ui/identifiers-rest.md`](../../docs/ui/identifiers-rest.md) |
 | `ScreeningReview` | `<flowaudit-screening-review>` | Trefferprüfung beim Sanktions-/PEP-Screening | [`docs/ui/screening-rest.md`](../../docs/ui/screening-rest.md) |
+| `PdfRedaction` | `<flowaudit-pdf-redaction>` | PDF schwärzen über `auditcore_pdf.web`: Muster, Begriffe, KI-Namenserkennung; Fundstellen auf dem Seitenbild prüfen, eigene Bereiche aufziehen, schwärzen mit Nachprüfung und Download | [`docs/ui/redaction-rest.md`](../../docs/ui/redaction-rest.md) |
 | `FaVvt` | `<flowaudit-vvt>` | Verzeichnis von Verarbeitungstätigkeiten (Art. 30 DSGVO) über `auditcore_dataprotection.web`: Pflichtangaben, Vollständigkeitsprüfung der Bibliothek, Entwurf, Vier-Augen-Freigabe, Versionen, Druckansicht/Markdown/CSV | [`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md) |
 | `FaDsfa` | `<flowaudit-dsfa>` | Datenschutz-Folgenabschätzung (Art. 35 DSGVO): Schwellwertanalyse mit Muss-Liste, Risikoszenarien mit Berechnung der Bibliothek, Entscheidung, DSB, Freigabe, Bericht | [`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md) |
 | `RiskFlags` | `<flowaudit-risk-flags>` | Risiko-Merkmale aus `auditcore_risk.web`: Verteilung, Filter, Zustand je Datensatz, Begründung; „unbestimmt“ und „übersprungen“ als eigene Zustände | [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md) |
@@ -131,7 +132,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (912):
+Exporte der Einstiegspunkte aus `package.json#exports` (926):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -387,6 +388,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (912):
 | `@auditcore/ui` | `INITIAL_BENFORD` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_REDACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_REPORTING` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_REPORTTEMPLATES` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_RUNNER` | Re-Export | – | `@auditcore/ui-core` |
@@ -442,6 +444,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (912):
 | `@auditcore/ui` | `PRIORITY_TONES` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `ParameterSpec` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ParsedTable` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui` | `PdfRedaction` | Vue-Komponente | – | `redaction/PdfRedaction.vue` |
 | `@auditcore/ui` | `Person` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `PopulationItem` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `Position` | Re-Export | – | `@auditcore/ui-core` |
@@ -464,6 +467,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (912):
 | `@auditcore/ui` | `RecordTable` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `RecordValue` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `RecordView` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionPlan` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionResult` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionSelection` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RedactionUrls` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RegisterColumn` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RegisterContent` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RegisterExportFormat` | Re-Export | – | `@auditcore/ui-core` |
@@ -761,6 +772,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (912):
 | `@auditcore/ui` | `createIdentifierController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createIdentifiersRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createMemoryRecordPort` | Re-Export | – | `@auditcore/kanban-core` |
+| `@auditcore/ui` | `createRedactionController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createRedactionRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createReportTemplatesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createReportingController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createReportingRestPort` | Re-Export | – | `@auditcore/ui-core` |
@@ -891,6 +904,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (912):
 | `@auditcore/ui` | `parseSubjects` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `parseTable` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui` | `parseUtm` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `pdfRedactionElement` | Konstante | `<flowaudit-pdf-redaction>`: Eigenschaften `port` (RedactionPort), `locale`, `urls`; Ereignisse `redaction-planned`, `redaction-completed`, `error`. | `redaction/element` |
 | `@auditcore/ui` | `placementFor` | Re-Export | – | `./movePreview` |
 | `@auditcore/ui` | `plainSegments` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `populationSuggestions` | Re-Export | – | `@auditcore/ui-core` |
@@ -908,6 +922,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (912):
 | `@auditcore/ui` | `recordEntries` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `recordLabel` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `recordRules` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `redactionMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `registerCsv` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `registerFilename` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `registerHtml` | Re-Export | – | `@auditcore/ui-core` |
@@ -1066,6 +1081,7 @@ Web Components:
 | `<flowaudit-identifier-check>` | `IdentifierCheck` | `identifiers/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
+| `<flowaudit-pdf-redaction>` | `PdfRedaction` | `redaction/element.ts` |
 | `<flowaudit-report-export>` | `ReportExportPanel` | `reporting/element.ts` |
 | `<flowaudit-report-templates>` | `ReportTemplates` | `reporttemplates/element.ts` |
 | `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
@@ -1658,6 +1674,22 @@ Bestandsprüfung über viele Belege (Vertrag documents_batch_checks/1); Logik im
 | `fullscreen` | `[]` | – |
 | `reset-filter` | `[]` | – |
 | `filter-change` | `[patch: Partial<KanbanFilterState>]` | – |
+
+#### `PdfRedaction`
+
+PDF schwärzen: Kriterien, Prüfansicht mit Seitenbild, nachgeprüftes Ergebnis; Logik im Kern (createRedactionController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `RedactionPort \| null` | nein | `null` | Fachlogik, z. B. `createRedactionRestPort({ baseUrl: '/api/redaction' })`. |
+| `locale` | `Locale` | nein | `undefined` | – |
+| `urls` | `RedactionUrls` | nein | `undefined` | Objekt-URLs für Seitenbild und Download (Standard: `URL.createObjectURL`). |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `redaction-planned` | `[plan: RedactionPlan]` | – |
+| `redaction-completed` | `[result: RedactionResult]` | – |
+| `error` | `[message: string]` | – |
 
 #### `ReportExportPanel`
 

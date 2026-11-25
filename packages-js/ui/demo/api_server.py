@@ -11,7 +11,9 @@ extraction_demo.py; Bestandsprüfung unter /api/batch-checks mit dem synthetisch
 Beispielbestand aus batch_checks_demo.py), auditcore_reporting.web (/api/reporting, zusätzlich Extra
 ``excel``) und auditcore_geo.web (/api/geo, synthetische Kacheln und
 GeoPackage-Dateien aus geo_demo.py unter /api/geo-demo) sowie auditcore_identifiers.web
-(/api/identifiers). Erforderlich: Extra ``web`` der Pakete
+(/api/identifiers) und auditcore_pdf.web (/api/redaction, synthetische Beispiel-PDF
+und Attrappe der Namenserkennung aus redaction_demo.py, Beispiel-PDF unter
+/api/redaction-demo/beispiel.pdf). Erforderlich: Extra ``web`` der Pakete
 und uvicorn. Nur für Demo und Browserprüfung.
 
     python demo/api_server.py            # Port 18765, sonst FA_DEMO_API_PORT
@@ -32,11 +34,13 @@ from dataprotection_demo import dataprotection_routes
 from documents_demo import comparison_routes
 from extraction_demo import extraction_routes_demo
 from geo_demo import geo_routes_demo
+from redaction_demo import redaction_routes_demo
 from screening_demo import screening_routes
 from starlette.applications import Starlette
 from starlette.routing import Mount
 
 GEO, GEO_DEMO = geo_routes_demo()
+REDACTION, REDACTION_DEMO = redaction_routes_demo()
 
 app = Starlette(
     routes=[
@@ -52,6 +56,8 @@ app = Starlette(
         Mount("/api/batch-checks", routes=batch_check_routes_demo()),
         Mount("/api/geo", routes=GEO),
         Mount("/api/geo-demo", routes=GEO_DEMO),
+        Mount("/api/redaction", routes=REDACTION),
+        Mount("/api/redaction-demo", routes=REDACTION_DEMO),
     ]
 )
 

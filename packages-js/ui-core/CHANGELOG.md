@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-core
 
+## Unveröffentlicht
+
+- Neu: Bereich `redaction` für „PDF schwärzen“: Typen des Vertrags `pdf_redaction/1`, `createRedactionRestPort`, Zustandsautomat `createRedactionController` (Kriterien, Plan, Auswahl, Seitenbilder, eigene Bereiche, Zeigergesten, Ergebnis), Anzeige `redactionReview` und `redactionReportRows`, Texte `redactionMessages` (de/en), Stil `styles/redaction.css`, Fokusführung `focusRedactionHeading` und `focusRedactionAddArea`. Bereiche lassen sich mit der Maus verschieben (`startMove`, `moveRedactionBox`); während des Schwärzens ist die Auswahl gesperrt.
+
 ## 0.4.2 – 2026-11-24
 
 - Hochrechnung: `residualRemarks(residual)` liefert die Begründung für

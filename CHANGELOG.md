@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- „PDF schwärzen“ als Oberfläche und REST-Vertrag: `auditcore_pdf` 0.3.0 mit
+  `auditcore_pdf.web` (Vertrag `pdf_redaction/1`, zustandslos, Starlette oder
+  FastAPI); `PdfRedaction`/`<flowaudit-pdf-redaction>` in `@auditcore/ui` und
+  `FlowauditPdfRedaction` in `@auditcore/ui-react` aus dem gemeinsamen Kern in
+  `@auditcore/ui-core` (Suchkriterien, Prüfansicht mit Seitenbild, eigene
+  Bereiche mit Zeiger und Tastatur, nachgeprüftes Ergebnis). Paritätstests mit
+  Antworten des echten Dienstes; Demo-Seite „PDF schwärzen“. Dokumentation:
+  `docs/ui/redaction.md`, `docs/ui/redaction-rest.md`.
+
 ## v0.17.1 – 2026-11-24
 
 Folgerelease zu v0.17.0 mit zwei Korrekturen aus der Gegenprüfung.
