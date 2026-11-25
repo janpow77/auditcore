@@ -34,6 +34,9 @@ export interface IdentifierCatalogue {
 
 export type IdentifierDetailValue = string | number | boolean | null
 
+/** Gesamturteil (`auditcore_identifiers` ≥ 0.3.0): `valid` nur mit geprüfter Prüfziffer. */
+export type IdentifierVerdict = 'valid' | 'format_valid' | 'invalid' | 'missing'
+
 export interface IdentifierResult {
   kind: string
   kind_label: string
@@ -46,6 +49,11 @@ export interface IdentifierResult {
   country: string | null
   profile: string
   details: Readonly<Record<string, IdentifierDetailValue>>
+  /** Seit 0.3.0; fehlt bei älteren Backends. `format_valid` = Format gültig, Prüfziffer nicht geprüft. */
+  verdict?: IdentifierVerdict
+  verdict_label?: string
+  check_digit?: 'verified' | 'failed' | 'not_checked' | 'none' | null
+  check_digit_label?: string | null
 }
 
 export interface IdentifierCheckRequest {
@@ -80,9 +88,12 @@ export type IdentifierBatchRow = { index: number; ref: string } & (
 
 export interface IdentifierBatchSummary {
   total: number
+  /** Seit `auditcore_identifiers` 0.3.1 nur Zeilen mit geprüfter Prüfziffer (`verdict` `valid`). */
   valid: number
   invalid: number
   missing: number
+  /** Format gültig, Prüfziffer fehlt oder nicht geprüft (z. B. BIC, Steuernummer); getrennt von `valid`. */
+  format_valid?: number
   not_checked: number
 }
 

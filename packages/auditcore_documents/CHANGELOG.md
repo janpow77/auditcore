@@ -1,5 +1,13 @@
 # Changelog – auditcore_documents
 
+## 0.5.2 – 2026-11-24
+
+- Bindung an `auditcore_identifiers==0.3.1` (nur die Zusammenfassung von
+  `POST /check/batch` geändert). Genutzt werden weiterhin nur
+  `de_vat_check_digit` und `at_uid_check_digit`; Verhalten und Code von
+  auditcore_documents sind unverändert. Neue Version, weil die exakte Bindung
+  an 0.3.0 sonst neben `auditcore_identifiers` 0.3.1 nicht installierbar wäre.
+
 ## 0.5.1 – 2026-11-23
 
 - Bindung an `auditcore_identifiers==0.3.0` (IBAN-/LEI-Prüfziffern 00/01/99

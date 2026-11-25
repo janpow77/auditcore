@@ -3,11 +3,12 @@
  * auditcore_extrapolation.web, erzeugt mit tools/ui_fixtures.py, synthetische
  * Daten). `calls` hält die Anfragen fest; `failing` lässt eine Methode scheitern.
  */
-import type { EvaluationRequest, EvaluationResult, ExtrapolationCatalogue, ExtrapolationPort, ResidualRequest, ResidualResult, StratumInput, UnitInput } from '../../src'
+import type { EvaluationRequest, EvaluationResult, ExtrapolationCatalogue, ExtrapolationExportRequest, ExtrapolationPort, ResidualRequest, ResidualResult, StratumInput, UnitInput } from '../../src'
 import evaluation from '../fixtures/extrapolation-evaluation.json'
 import profiles from '../fixtures/extrapolation-profiles.json'
 import request from '../fixtures/extrapolation-request.json'
 import residual from '../fixtures/extrapolation-residual.json'
+import residualWithin from '../fixtures/extrapolation-residual-within.json'
 import groupsEvaluation from '../fixtures/extrapolation-groups-evaluation.json'
 import groupsRequest from '../fixtures/extrapolation-groups-request.json'
 import multistageEvaluation from '../fixtures/extrapolation-multistage-evaluation.json'
@@ -18,6 +19,8 @@ import periodsRequest from '../fixtures/extrapolation-periods-request.json'
 export const extrapolationCatalogue = profiles as unknown as ExtrapolationCatalogue
 export const evaluationResult = evaluation as unknown as EvaluationResult
 export const residualResult = residual as unknown as ResidualResult
+/** RER unter der Signifikanzschwelle mit negativem J: Begründung für „entfällt“ und zwei Hinweise. */
+export const residualWithinResult = residualWithin as unknown as ResidualResult
 export const fixtureRequest = request as unknown as EvaluationRequest
 export const fixtureStrata: readonly StratumInput[] = fixtureRequest.strata
 export const fixtureUnits: readonly UnitInput[] = fixtureRequest.units
@@ -35,7 +38,9 @@ function answer(body: EvaluationRequest): EvaluationResult {
 }
 
 export interface ExtrapolationFake extends ExtrapolationPort {
-  calls: { evaluate: EvaluationRequest[]; residual: ResidualRequest[]; export: [EvaluationRequest, string][] }
+  calls: { evaluate: EvaluationRequest[]; residual: ResidualRequest[]; export: [ExtrapolationExportRequest, string][] }
+  /** Antwort von `residual`; Tests setzen z. B. `residualWithinResult`. */
+  residualAnswer: ResidualResult
 }
 
 export function fakeExtrapolationPort(failing?: keyof ExtrapolationPort, message = 'Konfidenzniveau 85.00% ist in Tabelle 3 des Leitfadens nicht enthalten'): ExtrapolationFake {
@@ -43,11 +48,13 @@ export function fakeExtrapolationPort(failing?: keyof ExtrapolationPort, message
   const fail = (name: keyof ExtrapolationPort): void => {
     if (failing === name) throw new Error(message)
   }
-  return {
+  const fake: ExtrapolationFake = {
     calls,
+    residualAnswer: residualResult,
     profiles: async () => (fail('profiles'), extrapolationCatalogue),
     evaluate: async (body) => (fail('evaluate'), calls.evaluate.push(body), answer(body)),
-    residual: async (body) => (fail('residual'), calls.residual.push(body), residualResult),
+    residual: async (body) => (fail('residual'), calls.residual.push(body), fake.residualAnswer),
     exportEvaluation: async (body, format) => (calls.export.push([body, format]), { blob: new Blob(['x']), filename: `hochrechnung.${format}`, mediaType: 'text/csv' }),
   }
+  return fake
 }
