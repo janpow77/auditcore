@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## 0.1.11 – 2026-11-25
+
+- CUDA-Prozesse eines laufenden GPU-Runners werden anhand der Host-PID dem Container zugeordnet.
+
 ## 0.1.10 – 2026-11-25
 
 - Überwachung der Runner beginnt auch dann, wenn Docker den Container beim ersten Abruf noch anlegt.

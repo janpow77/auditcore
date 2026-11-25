@@ -61,3 +61,11 @@ def test_runner_version_rules() -> None:
     assert image.VersionStatus((2, 300, 0), None, now).state == "abgelaufen"
     assert image.VersionStatus(None, release, now).as_dict()["zustand"] == "unbekannt"
     assert image.parse_version("v2.337.0") == (2, 337, 0)
+
+
+def test_cuda_process_owned_by_runner_keeps_card_and_foreign_python_takes_priority() -> None:
+    use = signals.parse_gpu_use(
+        "GPU-a, 12000\nGPU-b, 12000", "GPU-a, 301, python3\nGPU-b, 302, python3", (), frozenset({"301"})
+    )
+    assert use.runner_cards == {"GPU-a": 1}
+    assert use.user_cards == frozenset({"GPU-b"})
