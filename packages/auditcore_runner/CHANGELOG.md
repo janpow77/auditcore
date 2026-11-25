@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## 0.1.6 – 2026-11-25
+
+- Das JIT-Registrierungsziel bleibt für die Überwachung und Abmeldung eines Runner-Slots erhalten. Freie Runner können dadurch das Repository wechseln und FlowAgent-Sollwerte umsetzen.
+
 ## 0.1.5 – 2026-11-16
 
 - Runner-Image enthält die Tauri-v2-Buildabhängigkeiten und `en_US.UTF-8`;

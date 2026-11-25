@@ -88,6 +88,44 @@ def test_supervisor_checks_busy_for_all_target_scopes() -> None:
     assert script.index(busy_query) < script.index('if [[ "$(cfg \'.ziel.art\')" == "repo" ]]')
 
 
+@pytest.mark.skipif(not shutil.which("bash") or not shutil.which("jq"), reason="Supervisor benötigt Bash und jq")
+@pytest.mark.parametrize("backend", ["jit", "scaleset"])
+def test_supervisor_keeps_registration_target(tmp_path: Path, backend: str) -> None:
+    script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
+    functions, _ = script.rsplit("\nwhile true; do", 1)
+    harness = (
+        functions
+        + r"""
+registration_base() { echo repos/example/project; }
+cfg() { echo 1; }
+gh() {
+  cat >/dev/null
+  [[ "$*" == *"repos/example/project/actions/runners/generate-jitconfig"* ]] || return 1
+  echo '{"runner":{"id":42},"encoded_jit_config":"test"}'
+}
+program() { echo '{"runner":{"id":42},"encoded_jit_config":"test"}'; }
+PROGRAM=program
+container_args() { args=(); }
+docker() { :; }
+watch_allowed() { :; }
+remove_registration() { printf '%s %s' "$1" "$2" > removed; }
+run_one_job
+"""
+    )
+    subprocess.run(
+        ["bash", "-c", harness, "supervisor", "cpu", "1"],
+        cwd=tmp_path,
+        env={
+            "PATH": "/usr/bin:/bin",
+            "AUDITCORE_RUNNER_PROFILE": "test",
+            "AUDITCORE_RUNNER_BACKEND": backend,
+            "XDG_RUNTIME_DIR": str(tmp_path),
+        },
+        check=True,
+    )
+    assert (tmp_path / "removed").read_text() == "42 repos/example/project"
+
+
 def test_supervisor_persists_cargo_cache_per_runner_instance() -> None:
     script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
 

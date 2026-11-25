@@ -143,7 +143,6 @@ request_jit_config() {
     "$PROGRAM" scaleset jit "$CLASS" "$name"
     return
   fi
-  current_base="$(registration_base)"
   labels="$(cfg '.klassen[$c].labels')"
   jq -n --arg name "$name" --argjson labels "$labels" \
     --argjson group "$(cfg '.ziel.runner_gruppe // 1')" \
@@ -220,7 +219,10 @@ container_args() {
 
 run_one_job() {
   local response watcher job
-  response="$(request_jit_config)"
+  # Das Repo-Ziel muss auch nach der Command Substitution für Überwachung und Abmeldung gelten.
+  current_base="$(registration_base)" || return 1
+  [[ -n "$current_base" ]] || return 1
+  response="$(request_jit_config)" || return 1
   runner_id="$(jq -r '.runner.id' <<<"$response")"
   container="auditcore-runner-$CLASS-$INSTANCE-$runner_id"
   install -d -m 0700 "$SECRET_DIR"
@@ -250,6 +252,8 @@ while true; do
   wait_for_prerequisites
   wait_until_allowed
   if ! run_one_job; then
+    cleanup
+    GPU=""
     log "Registrierung fehlgeschlagen, neuer Versuch in 60 s"
     sleep 60
   fi
