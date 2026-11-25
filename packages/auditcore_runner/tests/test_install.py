@@ -169,3 +169,25 @@ def test_uninstall_lists_paths(tmp_path: Path) -> None:
     assert unit in paths and any(p.name == "auditcore-runner" for p in paths)
     install.remove_paths(paths)
     assert not unit.exists()
+
+
+def test_supervisor_observes_container_after_delayed_creation(tmp_path: Path) -> None:
+    script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
+    watcher = "watch_allowed() {" + script.split("watch_allowed() {", 1)[1].split("\n}", 1)[0] + "\n}"
+    harness = watcher + r"""
+GPU=""
+sleep() { :; }
+docker() {
+  if [[ "$1" == inspect && ! -f created ]]; then touch created; return 1; fi
+  if [[ "$1" == stop ]]; then touch stopped; fi
+  return 0
+}
+gh() { echo false; }
+cfg() { echo repo; }
+registration_base() { echo repos/example/new; }
+remove_registration() { [[ "$2" == repos/example/old ]]; }
+log() { :; }
+watch_allowed 42 runner repos/example/old "$$"
+"""
+    subprocess.run(["bash", "-ec", harness], cwd=tmp_path, timeout=5, check=True)
+    assert (tmp_path / "stopped").exists()

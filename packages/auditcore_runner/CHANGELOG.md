@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## 0.1.10 – 2026-11-25
+
+- Überwachung der Runner beginnt auch dann, wenn Docker den Container beim ersten Abruf noch anlegt.
+
 ## 0.1.9 – 2026-11-25
 
 - Das Linux-Image enthält FFmpeg und FFprobe für Medienprüfungen im lokalen Pool.

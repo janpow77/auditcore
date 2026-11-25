@@ -154,9 +154,10 @@ request_jit_config() {
 # wird sie gelöscht und der leere Container beendet. Einen belegten Runner lehnt
 # GitHub beim Löschen ab; dann läuft der Job normal zu Ende.
 watch_allowed() {
-  local id="$1" name="$2" base="$3" desired busy
-  while docker inspect "$name" >/dev/null 2>&1; do
+  local id="$1" name="$2" base="$3" docker_pid="$4" desired busy
+  while kill -0 "$docker_pid" 2>/dev/null; do
     sleep 20
+    docker inspect "$name" >/dev/null 2>&1 || continue
     # Nutzer-Vorrang: Karte sofort räumen, auch mitten im Job (der Workflow stößt ihn neu an).
     if [[ -n "$GPU" ]] && ! "$PROGRAM" gpu pruefen "$GPU" >/dev/null 2>&1; then
       log "Nutzer braucht $GPU – Container wird geräumt"
@@ -234,7 +235,7 @@ run_one_job() {
   log "Runner $runner_id registriert, starte Container"
   docker run "${args[@]}" "$(cfg '.image')" &
   job=$!
-  watch_allowed "$runner_id" "$container" "$current_base" &
+  watch_allowed "$runner_id" "$container" "$current_base" "$job" &
   watcher=$!
   wait "$job" || log "Container endete mit Fehler"
   kill "$watcher" 2>/dev/null || true
