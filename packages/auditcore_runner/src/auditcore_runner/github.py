@@ -213,7 +213,14 @@ def cached_registration_base(client: Client, profile: Profile, runner_class: str
     target = profile.target
     if target.scope == "org" or len(target.registration_repos) < 2:
         return target.api_base
+    return _registration_base(target, cached_queued_by_repo(client, profile), runner_class, slot)
+
+
+def cached_queued_by_repo(client: Client, profile: Profile) -> dict[str, dict[str, int]]:
+    """One queue snapshot for registration and capacity reporting."""
     from .profile_io import content_hash
+
+    target = profile.target
 
     directory = state_dir() / "routing"
     cache_path = directory / f"{content_hash(profile)}.json"
@@ -241,7 +248,7 @@ def cached_registration_base(client: Client, profile: Profile, runner_class: str
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
     except (ImportError, OSError):
         counts = queued_by_repo(client, profile)
-    return _registration_base(target, counts, runner_class, slot)
+    return counts
 
 
 def _read_queue_cache(path: Path, ttl_seconds: int) -> dict[str, dict[str, int]] | None:

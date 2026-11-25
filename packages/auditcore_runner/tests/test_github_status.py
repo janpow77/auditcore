@@ -250,6 +250,7 @@ def test_status_and_prometheus(
     monkeypatch.setattr(status.install, "image_present", lambda image: True)
     monkeypatch.setattr(status.install, "network_present", lambda name: False)
     monkeypatch.setattr(status, "active_instances", lambda name: 2)
+    workstation = replace(workstation, source=replace(workstation.source, kind="datei", file="/nonexistent/pool"))
     current = status.collect(workstation, workstation_facts, github.Client("t", FakeGitHub()))
     assert current["unbekannte_runner"] == ["fremder-runner", "server-host2-cpu-3-17904"]
     known = replace(workstation, target=replace(workstation.target, known_runner_prefixes=("server-",)))
@@ -260,12 +261,23 @@ def test_status_and_prometheus(
     assert (
         isinstance(classes, dict) and classes["cpu-gross"]["registriert"] == 1 and classes["cpu-gross"]["belegt"] == 1
     )
+    assert classes["cpu-gross"]["wartend"] == classes["cpu-gross"]["warteschlange"] == 1
     text = status.prometheus(current)
     assert 'auditcore_runner_instances{rechner="workstation",klasse="cpu-gross",zustand="max"} 3' in text
     assert 'auditcore_runner_unknown_registered{rechner="workstation"} 2' in text
     assert current["profil_version"] == 0 and current["sync"] == "aus" and len(str(current["profil_hash"])) == 16
     path = status.write(current)
     assert json.loads(path.read_text(encoding="utf-8"))["schema"] == "auditcore-runner/status/1"
+
+
+def test_external_jit_demand_is_unknown_without_a_queue_source(
+    workstation: Profile, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    profile = replace(workstation, source=replace(workstation.source, kind="datei"))
+    monkeypatch.setattr(status.nachfrage, "load", lambda: pytest.fail("must not reuse another backend's demand"))
+    assert status._capacity_demand(profile, None) is None
+    org = replace(profile, target=replace(profile.target, scope="org", watched_repos=()))
+    assert status._capacity_demand(org, github.Client("t", FakeGitHub())) is None
 
 
 def test_status_without_github(

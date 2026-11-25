@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## 0.1.8 – 2026-11-25
+
+- Bei externem Sollwert meldet der JIT-Status die wartenden Jobs pro Klasse aus demselben Cache wie die Repo-Auswahl an FlowAgent.
+
 ## 0.1.7 – 2026-11-25
 
 - Repo-Routing erfasst wartende Jobs in laufenden Workflows. Alle Runnerklassen teilen sich einen nach Repoanzahl bemessenen Queue-Cache.
