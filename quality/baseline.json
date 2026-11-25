@@ -15,7 +15,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 87.06
+      "coverage_percent": 87.28
     },
     "auditcore_account": {
       "coverage_percent": 100.0

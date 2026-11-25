@@ -175,10 +175,10 @@ def queued_by_repo(client: Client, profile: Profile) -> dict[str, dict[str, int]
     """Waiting jobs by repository and runner class for repo-level pool routing."""
     counts: dict[str, dict[str, int]] = {repo: {} for repo in profile.target.queue_repos}
     for repo in profile.target.queue_repos:
-        run_ids = set()
+        run_ids: set[int] = set()
         for state in ("queued", "in_progress"):
             runs = _pages(client, f"repos/{repo}/actions/runs?status={state}", "workflow_runs")
-            run_ids.update(run["id"] for run in runs if isinstance(run.get("id"), int))
+            run_ids.update(run_id for run in runs if isinstance(run_id := run.get("id"), int))
         for run_id in run_ids:
             jobs = _pages(client, f"repos/{repo}/actions/runs/{run_id}/jobs?filter=latest", "jobs")
             for job in jobs:

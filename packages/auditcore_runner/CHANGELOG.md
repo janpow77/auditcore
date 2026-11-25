@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## 0.1.9 – 2026-11-25
+
+- Das Linux-Image enthält FFmpeg und FFprobe für Medienprüfungen im lokalen Pool.
+
 ## 0.1.8 – 2026-11-25
 
 - Bei externem Sollwert meldet der JIT-Status die wartenden Jobs pro Klasse aus demselben Cache wie die Repo-Auswahl an FlowAgent.
