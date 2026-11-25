@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.2.0",
+ "library": "auditcore_extrapolation 0.3.1",
  "fingerprint": "7dc7d459406aef487724d001b495bf3acac71c1e30cd53522df8b06d0efffe1f",
  "residual_error_rate": {
   "source": "CPRE_23-0013-01 Annex 3",
@@ -85,6 +85,8 @@
    }
   ],
   "not_applicable": null,
+  "not_applicable_template": null,
+  "residual_negative": false,
   "notes": [
    "RER nach Art. 2 Nr. 36 Verordnung (EU) 2021/1060; nicht mit der Gesamtfehlerquote (TER) zu verwechseln."
   ]

@@ -209,6 +209,12 @@ RESIDUAL_REQUEST: dict[str, object] = {
     "total_error_rate": 0.025,
     "financial_corrections": 2.1,
 }
+#: RER within the threshold and corrections above the amount at risk (reason and two notes).
+RESIDUAL_WITHIN_REQUEST: dict[str, object] = {
+    "audit_population": 1000,
+    "total_error_rate": 0.015,
+    "financial_corrections": 20,
+}
 
 
 def main(target: Path) -> None:
@@ -217,6 +223,7 @@ def main(target: Path) -> None:
         "extrapolation-request.json": EVALUATION_REQUEST,
         "extrapolation-evaluation.json": evaluate(EVALUATION_REQUEST),
         "extrapolation-residual.json": residual(RESIDUAL_REQUEST),
+        "extrapolation-residual-within.json": residual(RESIDUAL_WITHIN_REQUEST),
         "extrapolation-multistage-request.json": MULTISTAGE_REQUEST,
         "extrapolation-multistage-evaluation.json": evaluate(MULTISTAGE_REQUEST),
         "attributes-normal.json": attributes(ATTRIBUTES_NORMAL),
