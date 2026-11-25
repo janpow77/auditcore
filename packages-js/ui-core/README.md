@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1319):
+Exporte der Einstiegspunkte aus `package.json#exports` (1322):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -220,6 +220,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1319):
 | `@auditcore/ui-core` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
 | `@auditcore/ui-core` | `ChecklistChange` | Schnittstelle | – | `dataprotection/assistantTypes` |
 | `@auditcore/ui-core` | `ChecklistEdit` | Schnittstelle | – | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `ChecklistExpansion` | Schnittstelle | Aufgeklappte und bereits bekannte Knoten; neue Bereiche starten offen. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `ChecklistItemView` | Schnittstelle | – | `dataprotection/assistantTypes` |
 | `@auditcore/ui-core` | `ChecklistMetaRow` | Schnittstelle | – | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `ChecklistProgress` | Schnittstelle | – | `dataprotection/checklistTree` |
@@ -930,6 +931,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1319):
 | `@auditcore/ui-core` | `checklistBranchIds` | Funktion | Kennungen aller Knoten mit Kindern (für „Alle aufklappen“ und den Startzustand). | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `checklistChange` | Funktion | Änderung für den Server; Bearbeitung und Frist gehen nur mit, wenn sie geändert wurden. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `checklistEdit` | Funktion | Eingabestand der Detailansicht aus dem Serverstand. | `dataprotection/checklistTree` |
+| `@auditcore/ui-core` | `checklistEditKey` | Funktion | Schlüssel der bearbeitbaren Inhalte; gleich, solange der Serverstand des Prüfpunkts gleich bleibt. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `checklistMeta` | Funktion | Angaben zum Prüfpunkt für die Detailansicht; leere Angaben entfallen. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `checklistProgress` | Funktion | Summe über Knoten einer Ebene. | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `checklistTone` | Funktion | – | `dataprotection/checklistTree` |
@@ -1043,6 +1045,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1319):
 | `@auditcore/ui-core` | `escapeMarkdown` | Funktion | – | `synopsis/exporters` |
 | `@auditcore/ui-core` | `evaluationRules` | Funktion | Regeln der Auswertung; ohne `rules` aus den Codes der Datensätze abgeleitet. | `risk/state` |
 | `@auditcore/ui-core` | `excludedLines` | Funktion | Hinweise auf Elemente außerhalb der Auswahlbasis. | `sampling/view` |
+| `@auditcore/ui-core` | `expandNewChecklistBranches` | Funktion | Klappt Bereiche auf, die erst jetzt im Baum stehen (z. B. weil die Prüfpunkte später kommen). | `dataprotection/checklistTree` |
 | `@auditcore/ui-core` | `exportFilename` | Funktion | – | `synopsis/exporters` |
 | `@auditcore/ui-core` | `extractionAccept` | Funktion | Dateiauswahl der Oberfläche (`accept`) aus den zulässigen Typen. | `extraction/view` |
 | `@auditcore/ui-core` | `extractionConfidenceText` | Funktion | – | `extraction/view` |

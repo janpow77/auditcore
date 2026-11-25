@@ -101,6 +101,23 @@ export function toggleChecklistNode(expanded: ReadonlySet<string>, id: string): 
   return next
 }
 
+/** Aufgeklappte und bereits bekannte Knoten; neue Bereiche starten offen. */
+export interface ChecklistExpansion {
+  expanded: ReadonlySet<string>
+  known: ReadonlySet<string>
+}
+
+/**
+ * Klappt Bereiche auf, die erst jetzt im Baum stehen (z. B. weil die Prüfpunkte
+ * später kommen). Bereits bekannte Knoten behalten den Zustand des Nutzers;
+ * ohne neue Bereiche kommt derselbe Zustand zurück.
+ */
+export function expandNewChecklistBranches(state: ChecklistExpansion, branchIds: readonly string[]): ChecklistExpansion {
+  const added = branchIds.filter((id) => !state.known.has(id))
+  if (!added.length) return state
+  return { expanded: new Set([...state.expanded, ...added]), known: new Set([...state.known, ...added]) }
+}
+
 export interface ChecklistEdit {
   status: ChecklistStatus
   justification: string
@@ -112,6 +129,11 @@ export interface ChecklistEdit {
 /** Eingabestand der Detailansicht aus dem Serverstand. */
 export function checklistEdit(item: ChecklistItemView): ChecklistEdit {
   return { status: item.status, justification: item.justification, evidence: item.evidence_ids.join(', '), owner: item.owner, due: item.due }
+}
+
+/** Schlüssel der bearbeitbaren Inhalte; gleich, solange der Serverstand des Prüfpunkts gleich bleibt. */
+export function checklistEditKey(item: ChecklistItemView): string {
+  return JSON.stringify([item.status, item.justification, item.owner, item.due, item.evidence_ids])
 }
 
 /** Änderung für den Server; Bearbeitung und Frist gehen nur mit, wenn sie geändert wurden. */

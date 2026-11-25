@@ -1,12 +1,17 @@
-import { Fragment, useEffect, useState } from 'react'
-import { CHECKLIST_STATUSES, checklistChange, checklistEdit, checklistMeta, type ChecklistChange, type ChecklistEdit, type ChecklistItemView, type ChecklistStatus } from '@auditcore/ui-core'
+import { Fragment, useState } from 'react'
+import { CHECKLIST_STATUSES, checklistChange, checklistEdit, checklistEditKey, checklistMeta, type ChecklistChange, type ChecklistEdit, type ChecklistItemView, type ChecklistStatus } from '@auditcore/ui-core'
 import { prefixedLabel, useDataProtectionText } from '../shared'
 
 export function AssistantChecklistDetail({ item, busy, onChange }: { item: ChecklistItemView; busy: boolean; onChange: (itemId: string, change: ChecklistChange) => void }) {
   const { t, when } = useDataProtectionText()
   const [edit, setEdit] = useState<ChecklistEdit>(() => checklistEdit(item))
-  // Ein neuer Serverstand setzt die Eingaben zurück (wie in der Vue-Fassung).
-  useEffect(() => setEdit(checklistEdit(item)), [item])
+  // Nur ein geänderter Inhalt des Prüfpunkts setzt die Eingaben zurück, nicht jedes neue Objekt (wie in der Vue-Fassung).
+  const key = checklistEditKey(item)
+  const [seenKey, setSeenKey] = useState(key)
+  if (seenKey !== key) {
+    setSeenKey(key)
+    setEdit(checklistEdit(item))
+  }
   const save = (): void => onChange(item.id, checklistChange(item, edit))
   return (
     <div className="fa-checklist__detail">

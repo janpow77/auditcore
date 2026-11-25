@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue'
-import { CHECKLIST_STATUSES, checklistChange, checklistEdit, checklistMeta, type ChecklistChange, type ChecklistItemView } from '@auditcore/ui-core'
+import { CHECKLIST_STATUSES, checklistChange, checklistEdit, checklistEditKey, checklistMeta, type ChecklistChange, type ChecklistItemView } from '@auditcore/ui-core'
 import { formatDate, useI18n } from '../../i18n'
 import { dataprotectionMessages, prefixedLabel } from '../core'
 
@@ -9,8 +9,8 @@ const emit = defineEmits<{ change: [itemId: string, change: ChecklistChange] }>(
 const { t, locale } = useI18n(dataprotectionMessages)
 
 const edit = reactive(checklistEdit(props.item))
-// Ein neuer Serverstand setzt die Eingaben zurück.
-watch(() => props.item, (item) => Object.assign(edit, checklistEdit(item)))
+// Nur ein geänderter Inhalt des Prüfpunkts setzt die Eingaben zurück, nicht jedes neue Objekt.
+watch(() => checklistEditKey(props.item), () => Object.assign(edit, checklistEdit(props.item)))
 const meta = computed(() => checklistMeta(t, props.item, (value, withTime) => formatDate(value, locale.value, withTime)))
 
 function save(): void {

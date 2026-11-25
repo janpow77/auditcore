@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { checklistBranchIds, checklistProgress, checklistTree, toggleChecklistNode, type ChecklistChange, type ChecklistItemView } from '@auditcore/ui-core'
+import { computed, ref, watch } from 'vue'
+import { checklistBranchIds, checklistProgress, checklistTree, expandNewChecklistBranches, toggleChecklistNode, type ChecklistChange, type ChecklistItemView } from '@auditcore/ui-core'
 import { useI18n } from '../../i18n'
 import { dataprotectionMessages } from '../core'
 import AssistantChecklistNode from './AssistantChecklistNode.vue'
@@ -12,7 +12,14 @@ const { t } = useI18n(dataprotectionMessages)
 const tree = computed(() => checklistTree(props.items))
 const progress = computed(() => checklistProgress(tree.value))
 // Bereiche sind anfangs offen, Prüfpunkte zu; der Zustand übersteht neue Serverstände.
+// Erst später hinzukommende Bereiche klappen einmal auf, bedienten Knoten bleibt der Zustand.
 const expanded = ref<ReadonlySet<string>>(new Set(checklistBranchIds(tree.value)))
+let known: ReadonlySet<string> = new Set(expanded.value)
+watch(tree, (nodes) => {
+  const next = expandNewChecklistBranches({ expanded: expanded.value, known }, checklistBranchIds(nodes))
+  known = next.known
+  expanded.value = next.expanded
+})
 
 function toggle(id: string): void {
   expanded.value = toggleChecklistNode(expanded.value, id)
