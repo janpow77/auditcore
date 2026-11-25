@@ -13,7 +13,7 @@ import json
 import os
 import subprocess
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import cast
@@ -161,14 +161,27 @@ def class_of(labels: tuple[str, ...], profile: Profile) -> str | None:
     return None
 
 
+def _pages(client: Client, path: str, key: str) -> Iterator[dict[str, object]]:
+    page = 1
+    while True:
+        items = _objects(client.get(f"{path}&per_page=100&page={page}"), key)
+        yield from items
+        if len(items) < 100:
+            return
+        page += 1
+
+
 def queued_by_repo(client: Client, profile: Profile) -> dict[str, dict[str, int]]:
     """Waiting jobs by repository and runner class for repo-level pool routing."""
     counts: dict[str, dict[str, int]] = {repo: {} for repo in profile.target.queue_repos}
     for repo in profile.target.queue_repos:
-        runs = client.get(f"repos/{repo}/actions/runs?status=queued&per_page=50")
-        for run in _objects(runs, "workflow_runs"):
-            jobs = client.get(f"repos/{repo}/actions/runs/{run.get('id')}/jobs?filter=latest&per_page=100")
-            for job in _objects(jobs, "jobs"):
+        run_ids: set[int] = set()
+        for state in ("queued", "in_progress"):
+            runs = _pages(client, f"repos/{repo}/actions/runs?status={state}", "workflow_runs")
+            run_ids.update(run_id for run in runs if isinstance(run_id := run.get("id"), int))
+        for run_id in run_ids:
+            jobs = _pages(client, f"repos/{repo}/actions/runs/{run_id}/jobs?filter=latest", "jobs")
+            for job in jobs:
                 name = class_of(_label_names(job), profile) if job.get("status") == "queued" else None
                 if name:
                     counts[repo][name] = counts[repo].get(name, 0) + 1
@@ -200,10 +213,17 @@ def cached_registration_base(client: Client, profile: Profile, runner_class: str
     target = profile.target
     if target.scope == "org" or len(target.registration_repos) < 2:
         return target.api_base
+    return _registration_base(target, cached_queued_by_repo(client, profile), runner_class, slot)
+
+
+def cached_queued_by_repo(client: Client, profile: Profile) -> dict[str, dict[str, int]]:
+    """One queue snapshot for registration and capacity reporting."""
     from .profile_io import content_hash
 
+    target = profile.target
+
     directory = state_dir() / "routing"
-    cache_path = directory / f"{content_hash(profile)}-{runner_class}.json"
+    cache_path = directory / f"{content_hash(profile)}.json"
     lock_path = cache_path.with_suffix(".lock")
     try:
         directory.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -211,7 +231,7 @@ def cached_registration_base(client: Client, profile: Profile, runner_class: str
             import fcntl
 
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
-            counts = _read_queue_cache(cache_path)
+            counts = _read_queue_cache(cache_path, max(15, 10 * len(target.queue_repos)))
             if counts is not None and (
                 set(counts) != set(target.queue_repos)
                 or any(
@@ -228,12 +248,12 @@ def cached_registration_base(client: Client, profile: Profile, runner_class: str
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
     except (ImportError, OSError):
         counts = queued_by_repo(client, profile)
-    return _registration_base(target, counts, runner_class, slot)
+    return counts
 
 
-def _read_queue_cache(path: Path) -> dict[str, dict[str, int]] | None:
+def _read_queue_cache(path: Path, ttl_seconds: int) -> dict[str, dict[str, int]] | None:
     try:
-        if time.time() - path.stat().st_mtime > 15:
+        if time.time() - path.stat().st_mtime > ttl_seconds:
             return None
         raw = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError, TypeError):
