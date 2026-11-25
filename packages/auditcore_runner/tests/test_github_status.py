@@ -52,7 +52,7 @@ class FakeGitHub:
         self.calls.append((url, etag))
         if etag == '"v1"':
             return 304, {}, b""
-        for key, body in (("runners", RUNNERS), ("jobs", JOBS), ("runs?status", RUNS)):
+        for key, body in (("runners", RUNNERS), ("jobs", JOBS), ("runs?", RUNS)):
             if key in url:
                 return 200, {"ETag": '"v1"', "X-RateLimit-Remaining": "4999"}, json.dumps(body).encode()
         return 404, {}, b"{}"
@@ -93,6 +93,27 @@ def test_waiting_job_on_second_page_of_running_workflow(workstation: Profile) ->
 
     totals = github.queued_by_repo(github.Client("t", fetch), workstation)
     assert totals and all(values == {"cpu-gross": 2} for values in totals.values())
+
+
+def test_active_run_missing_from_filtered_index_is_counted_once(workstation: Profile) -> None:
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        if "status=" in url:
+            data = {"workflow_runs": [{"id": 10}]}
+        elif "/jobs?" in url:
+            assert "/99/" not in url
+            data = {"jobs": [{"status": "queued", "labels": ["cpu-gross"]}]}
+        else:
+            data = {
+                "workflow_runs": [
+                    {"id": 10, "status": "in_progress"},
+                    {"id": 11, "status": "queued"},
+                    {"id": 99, "status": "completed"},
+                ]
+            }
+        return 200, {}, json.dumps(data).encode()
+
+    counts = github.queued_by_repo(github.Client("t", fetch), workstation)
+    assert counts and all(values == {"cpu-gross": 2} for values in counts.values())
 
 
 def test_repo_pool_routes_toward_the_larger_matching_queue(workstation: Profile) -> None:

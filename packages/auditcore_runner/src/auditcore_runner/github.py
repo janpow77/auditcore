@@ -179,6 +179,12 @@ def queued_by_repo(client: Client, profile: Profile) -> dict[str, dict[str, int]
         for state in ("queued", "in_progress"):
             runs = _pages(client, f"repos/{repo}/actions/runs?status={state}", "workflow_runs")
             run_ids.update(run_id for run in runs if isinstance(run_id := run.get("id"), int))
+        # GitHub can omit an active PR run from its status-filtered index.
+        recent = client.get(f"repos/{repo}/actions/runs?per_page=100")
+        for run in _objects(recent, "workflow_runs"):
+            run_id = run.get("id")
+            if run.get("status") in ("queued", "in_progress") and isinstance(run_id, int):
+                run_ids.add(run_id)
         for run_id in run_ids:
             jobs = _pages(client, f"repos/{repo}/actions/runs/{run_id}/jobs?filter=latest", "jobs")
             for job in jobs:
