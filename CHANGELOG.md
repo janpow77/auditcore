@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+## v0.18.0 – 2026-11-25
+
+Versionen: `auditcore_pdf` 0.3.0 (#344), `auditcore_identifiers` 0.3.1,
+`auditcore_extrapolation` 0.3.1, `auditcore_documents` 0.5.2,
+`auditcore_dummybundle` 0.3.1 (#343), `@auditcore/ui-core` 0.5.0,
+`@auditcore/ui` 0.6.0, `@auditcore/ui-react` 1.4.0 (#343, #344),
+`auditcore_runner` 0.1.11 (#347 und weitere Runner-PRs: JIT-Repo-Wechsel,
+Sollwerte, FFmpeg im Image, GPU-Zuordnung; dazu die gebündelten Stile aus
+ui-core 0.5.0; die Zwischenstände 0.1.6 bis 0.1.10 waren nur lokal installiert). Wegen
+der exakten Bindungen folgen `@auditcore/bpmn-vue` 0.5.3,
+`@auditcore/bpmn-react` 0.5.3 und `@auditcore/layout` 0.1.3 ohne Änderung am
+Paket selbst; `@auditcore/sampling-templates-vue` 0.1.13 erweitert nur die
+Bereiche auf `@auditcore/ui` `<0.7.0` und `@auditcore/ui-core` `<0.6.0`.
+Bindungen: documents und dummybundle → `auditcore_identifiers==0.3.1`. Die
+übrigen Pakete bleiben auf dem Stand von v0.17.0. Der zunächst als v0.17.1
+vorbereitete Stand (#343) ist nicht eigens veröffentlicht worden und geht
+in diesem Release auf; die Zwischenversionen ui-core 0.4.2, ui 0.5.2 und
+ui-react 1.3.2 gibt es nicht.
+
+Hinweis für Nutzer von `auditcore_pdf` 0.2.0: `Selection.from_dict` prüft jetzt
+streng; `sanitize`, `case_sensitive` und `whole_word` müssen Wahrheitswerte
+sein, `rect` eine Liste aus Zahlen. Gespeicherte oder selbst erzeugte
+Auswahlen mit `"false"` oder `0` werden abgelehnt statt umgedeutet.
+
 - „PDF schwärzen“ als Oberfläche und REST-Vertrag: `auditcore_pdf` 0.3.0 mit
   `auditcore_pdf.web` (Vertrag `pdf_redaction/1`, zustandslos, Starlette oder
   FastAPI); `PdfRedaction`/`<flowaudit-pdf-redaction>` in `@auditcore/ui` und
@@ -10,18 +34,6 @@
   Bereiche mit Zeiger und Tastatur, nachgeprüftes Ergebnis). Paritätstests mit
   Antworten des echten Dienstes; Demo-Seite „PDF schwärzen“. Dokumentation:
   `docs/ui/redaction.md`, `docs/ui/redaction-rest.md`.
-
-## v0.17.1 – 2026-11-24
-
-Folgerelease zu v0.17.0 mit zwei Korrekturen aus der Gegenprüfung.
-Versionen: `auditcore_identifiers` 0.3.1, `auditcore_extrapolation` 0.3.1,
-`auditcore_documents` 0.5.2, `auditcore_dummybundle` 0.3.1,
-`@auditcore/ui-core` 0.4.2, `@auditcore/ui` 0.5.2, `@auditcore/ui-react`
-1.3.2; wegen der exakten Bindungen ohne Änderung am Paket selbst
-`@auditcore/bpmn-vue` 0.5.3, `@auditcore/bpmn-react` 0.5.3 und
-`@auditcore/layout` 0.1.3. Die übrigen Pakete bleiben auf dem Stand von
-v0.17.0. Bindungen: documents und dummybundle → `auditcore_identifiers==0.3.1`.
-
 - **Vertragsänderung** `identifiers_ui/1`, `POST /check/batch`
   (`auditcore_identifiers` 0.3.1): `summary.valid` zählt nur Zeilen mit
   geprüfter Prüfziffer (`verdict` `valid`); nur dem Format nach gültige Zeilen
@@ -38,8 +50,8 @@ v0.17.0. Bindungen: documents und dummybundle → `auditcore_identifiers==0.3.1`
   und JSON (neues Feld `residual`, `null` ohne RER) und gleicht A und D mit
   der Hochrechnung ab (`residual_matches_evaluation`). Ohne `residual` bleibt
   die CSV-Datei unverändert.
-- `@auditcore/ui` 0.5.2 / `@auditcore/ui-react` 1.3.2 /
-  `@auditcore/ui-core` 0.4.2: Die RER-Karte der Hochrechnung zeigt die
+- `@auditcore/ui`, `@auditcore/ui-react` und `@auditcore/ui-core`:
+  Die RER-Karte der Hochrechnung zeigt die
   Begründung für „entfällt“ und die Hinweise des Backends; eine neue
   Hochrechnung entfernt sie mit der RER, auch wenn die RER-Antwort erst
   danach eintrifft. Der Export gibt die zuletzt berechnete RER mit, wenn das

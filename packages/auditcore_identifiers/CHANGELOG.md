@@ -1,6 +1,6 @@
 # Changelog – auditcore_identifiers
 
-## 0.3.1 – 2026-11-24
+## 0.3.1 – 2026-11-25
 
 **Vertragsänderung `identifiers_ui/1`, `POST /check/batch`:** `summary.valid`
 zählt nur noch Zeilen mit `verdict` `valid`, also mit geprüfter Prüfziffer.

@@ -1,6 +1,6 @@
 # Changelog – auditcore_documents
 
-## 0.5.2 – 2026-11-24
+## 0.5.2 – 2026-11-25
 
 - Bindung an `auditcore_identifiers==0.3.1` (nur die Zusammenfassung von
   `POST /check/batch` geändert). Genutzt werden weiterhin nur
