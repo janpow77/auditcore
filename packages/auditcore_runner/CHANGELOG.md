@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## 0.1.12 – 2026-11-25
+
+- Laufende und wartende PR-Läufe aus der jüngsten ungefilterten Run-Liste ergänzen die GitHub-Statusabfrage.
+
 ## 0.1.11 – 2026-11-25
 
 - CUDA-Prozesse eines laufenden GPU-Runners werden anhand der Host-PID dem Container zugeordnet.
