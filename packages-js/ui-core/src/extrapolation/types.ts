@@ -225,7 +225,12 @@ export interface ResidualErrorRate {
   extrapolated_correction: number | null
   rate_after_correction: number | null
   rows: readonly ResidualRow[]
+  /** Deutsche Begründung, warum die Zeilen L und M entfallen (`null` bei Überschreitung). */
   not_applicable: string | null
+  /** Wortlaut der Vorlage für „entfällt“ (`NA RTER not exceeding 2%`). */
+  not_applicable_template: string | null
+  /** J und K negativ: Finanzkorrekturen übersteigen den Risikobetrag (Hinweis in `notes`). */
+  residual_negative: boolean
   notes: readonly string[]
 }
 
@@ -238,10 +243,15 @@ export interface ResidualResult {
 
 export type ExtrapolationExportFormat = 'csv' | 'json'
 
+/** Anfrage für `POST /evaluate/export`; mit `residual` enthält die Datei auch die RER. */
+export interface ExtrapolationExportRequest extends EvaluationRequest {
+  residual?: ResidualRequest
+}
+
 /** Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createExtrapolationRestPort`. */
 export interface ExtrapolationPort {
   profiles(): Promise<ExtrapolationCatalogue>
   evaluate(request: EvaluationRequest): Promise<EvaluationResult>
   residual(request: ResidualRequest): Promise<ResidualResult>
-  exportEvaluation(request: EvaluationRequest, format: ExtrapolationExportFormat): Promise<DownloadFile>
+  exportEvaluation(request: ExtrapolationExportRequest, format: ExtrapolationExportFormat): Promise<DownloadFile>
 }

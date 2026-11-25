@@ -6,6 +6,7 @@ import {
   RESIDUAL_FIELDS,
   residualColumns,
   residualMetrics,
+  residualRemarks,
   residualRows,
   type ExtrapolationController,
   type ExtrapolationData,
@@ -22,6 +23,7 @@ const rer = computed(() => props.state.residual?.residual_error_rate ?? null)
 const metrics = computed(() => (rer.value ? residualMetrics(rer.value, t, active.value) : []))
 const columns = computed(() => residualColumns(t, active.value))
 const rows = computed(() => (rer.value ? residualRows(rer.value) : []))
+const remarks = computed(() => (rer.value ? residualRemarks(rer.value) : null))
 const issue = (key: string): string => extrapolationIssueText(props.state.residualIssues, key, t)
 const value = (event: Event): string => (event.target as HTMLInputElement).value
 </script>
@@ -55,6 +57,16 @@ const value = (event: Event): string => (event.target as HTMLInputElement).value
           <dd v-if="metric.detail" class="fa-extrapolation__muted">{{ metric.detail }}</dd>
         </div>
       </dl>
+      <template v-if="remarks?.notApplicable">
+        <h4 class="fa-extrapolation__heading">{{ t('rerNotApplicable') }}</h4>
+        <p class="fa-extrapolation__hint" data-testid="extrapolation-rer-not-applicable">{{ remarks.notApplicable }}</p>
+      </template>
+      <template v-if="remarks?.notes.length">
+        <h4 class="fa-extrapolation__heading">{{ t('rerNotes') }}</h4>
+        <ul class="fa-extrapolation__warnings" data-testid="extrapolation-rer-notes">
+          <li v-for="(line, index) in remarks.notes" :key="`${index}-${line}`">{{ line }}</li>
+        </ul>
+      </template>
       <FaTable :columns="columns" :rows="rows" :caption="t('residualTitle')" :locale="locale" data-testid="extrapolation-rer-rows" />
     </template>
   </section>

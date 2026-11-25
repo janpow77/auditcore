@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.2.0",
+ "library": "auditcore_extrapolation 0.3.1",
  "fingerprint": "5a3a466c11a30e2f419e50b76a6c6da84e9f2095f61c024b2796118474c73c03",
  "method": {
   "id": "mus.standard",
@@ -107,7 +107,12 @@
     "source": "EGESIF_16-0014-01, Abschn. 6.3.3.5, 6.3.4.5; Anhang 2"
    }
   ],
-  "warnings": [],
+  "warnings": [
+   "Stichprobe mit 6 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ],
+  "limitations": [
+   "Stichprobe mit 6 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ],
   "extra": {
    "periods": [
     {
@@ -145,7 +150,8 @@
   "conclusion": "inconclusive",
   "explanation": [
    "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Signifikanzschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
-   "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+   "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+   "Eingeschränkte Aussagekraft: Stichprobe mit 6 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
   ],
   "steps": [
    {
@@ -162,18 +168,21 @@
    },
    {
     "label": "Gesamtfehlerquote (TER)",
-    "formula": "TER / BV",
+    "formula": "Gesamtfehler / BV",
     "value": 0.0118,
     "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
    },
    {
     "label": "Fehlerobergrenze",
-    "formula": "ULE = TER + SE",
+    "formula": "ULE = Gesamtfehler + SE",
     "value": 71285.91426844697,
     "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
    }
   ],
-  "difference": null
+  "difference": null,
+  "limitations": [
+   "Stichprobe mit 6 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ]
  },
  "confidence_recalculation": {
   "applicable": true,

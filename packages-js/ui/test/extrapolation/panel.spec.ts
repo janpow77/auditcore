@@ -2,7 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import ExtrapolationPanel from '../../src/extrapolation/ExtrapolationPanel.vue'
 import { defineFlowauditElements } from '../../src/elements'
-import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult } from '../../../ui-core/test/extrapolation/fake-port'
+import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult, residualWithinResult } from '../../../ui-core/test/extrapolation/fake-port'
 
 vi.mock('../../src/rest/download', () => ({ saveFile: vi.fn() }))
 
@@ -49,6 +49,49 @@ describe('ExtrapolationPanel', () => {
     await wrapper.get('[data-testid="extrapolation-export-csv"]').trigger('click')
     await flushPromises()
     expect(port.calls.export[0]?.[1]).toBe('csv')
+  })
+
+  it('zeigt Begründung für „entfällt“ und Hinweise der RER, exportiert sie mit und verwirft sie bei neuer Hochrechnung', async () => {
+    const port = fakeExtrapolationPort()
+    port.residualAnswer = residualWithinResult
+    const { wrapper } = await mounted(port)
+    await wrapper.get('[data-testid="extrapolation-method"]').setValue('mus.standard')
+    await wrapper.get('[data-testid="extrapolation-confidence"]').setValue('0.9')
+    await wrapper.get('[data-testid="extrapolation-evaluate"]').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-testid="extrapolation-rer-corrections"]').setValue('20')
+    await wrapper.get('[data-testid="extrapolation-residual"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="extrapolation-rer"]').text()).toContain('höchstens Signifikanzschwelle')
+    expect(wrapper.text()).toContain('Warum L und M entfallen')
+    expect(wrapper.get('[data-testid="extrapolation-rer-not-applicable"]').text()).toBe('Entfällt: Restfehlerquote nicht über der Signifikanzschwelle von 2 %.')
+    const notes = wrapper.findAll('[data-testid="extrapolation-rer-notes"] li').map((item) => item.text())
+    expect(notes).toEqual([...residualWithinResult.residual_error_rate.notes])
+    await wrapper.get('[data-testid="extrapolation-export-csv"]').trigger('click')
+    await flushPromises()
+    expect(port.calls.export[0]?.[0].residual).toEqual(port.calls.residual[0])
+    await wrapper.get('[data-testid="extrapolation-evaluate"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('[data-testid="extrapolation-rer"]').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="extrapolation-rer-not-applicable"]').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="extrapolation-rer-notes"]').exists()).toBe(false)
+    await wrapper.get('[data-testid="extrapolation-export-json"]').trigger('click')
+    await flushPromises()
+    expect(port.calls.export[1]?.[0]).not.toHaveProperty('residual')
+  })
+
+  it('zeigt bei Überschreitung keine Begründung für „entfällt“, wohl aber die Hinweise (englisch)', async () => {
+    const wrapper = mount(ExtrapolationPanel, { props: { port: fakeExtrapolationPort(), strata: fixtureStrata, units: fixtureUnits, locale: 'en' }, attachTo: document.body })
+    await flushPromises()
+    await wrapper.get('[data-testid="extrapolation-method"]').setValue('mus.standard')
+    await wrapper.get('[data-testid="extrapolation-confidence"]').setValue('0.9')
+    await wrapper.get('[data-testid="extrapolation-evaluate"]').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-testid="extrapolation-residual"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('[data-testid="extrapolation-rer-not-applicable"]').exists()).toBe(false)
+    expect(wrapper.text()).toContain('Notes on the residual error rate')
+    expect(wrapper.findAll('[data-testid="extrapolation-rer-notes"] li')).toHaveLength(residualResult.residual_error_rate.notes.length)
   })
 
   it('meldet abgelehnte Anfragen und markiert Feldbefunde', async () => {

@@ -1,6 +1,6 @@
 {
  "contract": "auditcore_extrapolation.evaluation/1",
- "library": "auditcore_extrapolation 0.2.0",
+ "library": "auditcore_extrapolation 0.3.1",
  "fingerprint": "5e3fb7fe4368bc7807191feefa56c2ec5667e8b7b64f896f03989a084821d34e",
  "method": {
   "id": "mus.standard",
@@ -145,7 +145,20 @@
     "source": "EGESIF_16-0014-01, Abschn. 6.3.3.5, 6.3.4.5; Anhang 2"
    }
   ],
-  "warnings": [],
+  "warnings": [
+   "1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "Stichprobe mit 8 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ],
+  "limitations": [
+   "1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "Stichprobe mit 8 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ],
   "extra": {
    "periods": [
     {
@@ -183,7 +196,8 @@
   "conclusion": "not_material",
   "explanation": [
    "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Signifikanzschwelle.",
-   "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+   "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+   "Eingeschränkte Aussagekraft: 1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). 1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). 2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). 2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). Stichprobe mit 8 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
   ],
   "steps": [
    {
@@ -200,18 +214,25 @@
    },
    {
     "label": "Gesamtfehlerquote (TER)",
-    "formula": "TER / BV",
+    "formula": "Gesamtfehler / BV",
     "value": 0.009375,
     "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
    },
    {
     "label": "Fehlerobergrenze",
-    "formula": "ULE = TER + SE",
+    "formula": "ULE = Gesamtfehler + SE",
     "value": 42119.68542688695,
     "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
    }
   ],
-  "difference": null
+  "difference": null,
+  "limitations": [
+   "1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+   "Stichprobe mit 8 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+  ]
  },
  "confidence_recalculation": {
   "applicable": false,
@@ -425,7 +446,16 @@
       "source": "EGESIF_16-0014-01, Abschn. 6.3.3.5, 6.3.4.5; Anhang 2"
      }
     ],
-    "warnings": [],
+    "warnings": [
+     "1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ],
+    "limitations": [
+     "1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ],
     "extra": {
      "periods": [
       {
@@ -463,7 +493,8 @@
     "conclusion": "inconclusive",
     "explanation": [
      "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Signifikanzschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
-     "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+     "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+     "Eingeschränkte Aussagekraft: 1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). 2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
     ],
     "steps": [
      {
@@ -480,18 +511,23 @@
      },
      {
       "label": "Gesamtfehlerquote (TER)",
-      "formula": "TER / BV",
+      "formula": "Gesamtfehler / BV",
       "value": 0.009,
       "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
      },
      {
       "label": "Fehlerobergrenze",
-      "formula": "ULE = TER + SE",
+      "formula": "ULE = Gesamtfehler + SE",
       "value": 30052.493203442194,
       "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
      }
     ],
-    "difference": null
+    "difference": null,
+    "limitations": [
+     "1. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "2. Halbjahr: Schicht 'P1': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ]
    }
   },
   {
@@ -593,7 +629,16 @@
       "source": "EGESIF_16-0014-01, Abschn. 6.3.3.5, 6.3.4.5; Anhang 2"
      }
     ],
-    "warnings": [],
+    "warnings": [
+     "1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ],
+    "limitations": [
+     "1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ],
     "extra": {
      "periods": [
       {
@@ -631,7 +676,8 @@
     "conclusion": "inconclusive",
     "explanation": [
      "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Signifikanzschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
-     "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+     "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+     "Eingeschränkte Aussagekraft: 1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). 2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2). Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
     ],
     "steps": [
      {
@@ -648,18 +694,23 @@
      },
      {
       "label": "Gesamtfehlerquote (TER)",
-      "formula": "TER / BV",
+      "formula": "Gesamtfehler / BV",
       "value": 0.01,
       "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
      },
      {
       "label": "Fehlerobergrenze",
-      "formula": "ULE = TER + SE",
+      "formula": "ULE = Gesamtfehler + SE",
       "value": 19533.13937057704,
       "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
      }
     ],
-    "difference": null
+    "difference": null,
+    "limitations": [
+     "1. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "2. Halbjahr: Schicht 'P2': 2 Einheiten in der Zufallsschicht, mindestens 3 vorgeschrieben (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 6.1.2.2).",
+     "Stichprobe mit 4 Einheiten unter dem Mindestumfang von 30 Einheiten (Art. 5 Abs. 5 der Delegierten Verordnung (EU) 2023/67; Leitfaden, Abschn. 5.1). Die Präzision beruht auf der Normalverteilung und unterschätzt bei so kleinen Stichproben die Unsicherheit; Fehlerobergrenze und Schlussfolgerung sind nur eingeschränkt belastbar."
+    ]
    }
   }
  ]
