@@ -20,7 +20,7 @@ USER root
 # Renderer (Pango, Cairo), XML, Schriften und deutsche Locale.
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      build-essential pkg-config git curl ca-certificates jq unzip zstd xz-utils \
+      build-essential pkg-config git curl ca-certificates jq unzip zstd xz-utils ffmpeg \
       libffi-dev libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev liblzma-dev \
       libxml2 libxslt1.1 \
       libpango-1.0-0 libpangoft2-1.0-0 libpangocairo-1.0-0 libcairo2 libgdk-pixbuf-2.0-0 \

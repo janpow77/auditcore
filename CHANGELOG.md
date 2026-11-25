@@ -8,7 +8,9 @@ Versionen: `auditcore_pdf` 0.3.0 (#344), `auditcore_identifiers` 0.3.1,
 `auditcore_extrapolation` 0.3.1, `auditcore_documents` 0.5.2,
 `auditcore_dummybundle` 0.3.1 (#343), `@auditcore/ui-core` 0.5.0,
 `@auditcore/ui` 0.6.0, `@auditcore/ui-react` 1.4.0 (#343, #344),
-`auditcore_runner` 0.1.6 (nur die gebündelten Stile aus ui-core 0.5.0). Wegen
+`auditcore_runner` 0.1.11 (#347 und weitere Runner-PRs: JIT-Repo-Wechsel,
+Sollwerte, FFmpeg im Image, GPU-Zuordnung; dazu die gebündelten Stile aus
+ui-core 0.5.0; die Zwischenstände 0.1.6 bis 0.1.10 waren nur lokal installiert). Wegen
 der exakten Bindungen folgen `@auditcore/bpmn-vue` 0.5.3,
 `@auditcore/bpmn-react` 0.5.3 und `@auditcore/layout` 0.1.3 ohne Änderung am
 Paket selbst; `@auditcore/sampling-templates-vue` 0.1.13 erweitert nur die

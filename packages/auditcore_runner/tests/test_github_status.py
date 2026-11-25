@@ -79,6 +79,22 @@ def test_queue_and_busy_by_class(workstation: Profile) -> None:
     assert github.busy_by_class(runners, workstation, workstation.runner_prefix()) == {"cpu-gross": 1}
 
 
+def test_waiting_job_on_second_page_of_running_workflow(workstation: Profile) -> None:
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        if "status=queued" in url:
+            data = {"workflow_runs": [{"id": 11}]}
+        elif "status=in_progress" in url:
+            data = {"workflow_runs": [{"id": 11}, {"id": 22}]}
+        elif "/11/jobs" in url or "page=2" in url:
+            data = {"jobs": [{"status": "queued", "labels": ["cpu-gross"]}]}
+        else:
+            data = {"jobs": [{"status": "completed"}] * 100}
+        return 200, {}, json.dumps(data).encode()
+
+    totals = github.queued_by_repo(github.Client("t", fetch), workstation)
+    assert totals and all(values == {"cpu-gross": 2} for values in totals.values())
+
+
 def test_repo_pool_routes_toward_the_larger_matching_queue(workstation: Profile) -> None:
     target = replace(
         workstation.target,
@@ -151,6 +167,8 @@ def test_cached_repo_routing_reuses_a_fresh_queue_snapshot(
     second = github.cached_registration_base(client, profile, "cpu-gross", "slot-1")
 
     assert first == second == "repos/owner/auditcore"
+    github.cached_registration_base(client, profile, "gpu-16gb", "slot-2")
+    assert any("status=in_progress" in url for url in calls)
     assert call_count > 0 and len(calls) == call_count
     cache = next((tmp_path / "routing").glob("*.json"))
     assert cache.stat().st_mode & 0o777 == 0o600
@@ -166,7 +184,7 @@ def test_cached_repo_routing_refreshes_stale_queue_snapshot(
     monkeypatch.setattr(github, "state_dir", lambda: tmp_path)
     cache_dir = tmp_path / "routing"
     cache_dir.mkdir()
-    cache = cache_dir / f"{content_hash(profile)}-cpu-gross.json"
+    cache = cache_dir / f"{content_hash(profile)}.json"
     cache.write_text('{"owner/auditcore":{"cpu-gross":99},"owner/flow-agent":{"cpu-gross":0}}', encoding="utf-8")
     os.utime(cache, (0, 0))
 
@@ -232,6 +250,7 @@ def test_status_and_prometheus(
     monkeypatch.setattr(status.install, "image_present", lambda image: True)
     monkeypatch.setattr(status.install, "network_present", lambda name: False)
     monkeypatch.setattr(status, "active_instances", lambda name: 2)
+    workstation = replace(workstation, source=replace(workstation.source, kind="datei", file="/nonexistent/pool"))
     current = status.collect(workstation, workstation_facts, github.Client("t", FakeGitHub()))
     assert current["unbekannte_runner"] == ["fremder-runner", "server-host2-cpu-3-17904"]
     known = replace(workstation, target=replace(workstation.target, known_runner_prefixes=("server-",)))
@@ -242,12 +261,23 @@ def test_status_and_prometheus(
     assert (
         isinstance(classes, dict) and classes["cpu-gross"]["registriert"] == 1 and classes["cpu-gross"]["belegt"] == 1
     )
+    assert classes["cpu-gross"]["wartend"] == classes["cpu-gross"]["warteschlange"] == 1
     text = status.prometheus(current)
     assert 'auditcore_runner_instances{rechner="workstation",klasse="cpu-gross",zustand="max"} 3' in text
     assert 'auditcore_runner_unknown_registered{rechner="workstation"} 2' in text
     assert current["profil_version"] == 0 and current["sync"] == "aus" and len(str(current["profil_hash"])) == 16
     path = status.write(current)
     assert json.loads(path.read_text(encoding="utf-8"))["schema"] == "auditcore-runner/status/1"
+
+
+def test_external_jit_demand_is_unknown_without_a_queue_source(
+    workstation: Profile, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    profile = replace(workstation, source=replace(workstation.source, kind="datei"))
+    monkeypatch.setattr(status.nachfrage, "load", lambda: pytest.fail("must not reuse another backend's demand"))
+    assert status._capacity_demand(profile, None) is None
+    org = replace(profile, target=replace(profile.target, scope="org", watched_repos=()))
+    assert status._capacity_demand(org, github.Client("t", FakeGitHub())) is None
 
 
 def test_status_without_github(

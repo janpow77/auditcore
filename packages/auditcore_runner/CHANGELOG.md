@@ -1,8 +1,29 @@
 # Changelog – auditcore_runner
 
+## 0.1.11 – 2026-11-25
+
+- CUDA-Prozesse eines laufenden GPU-Runners werden anhand der Host-PID dem Container zugeordnet.
+- Die gebündelte Oberfläche (`data/web/runner-elements.js`) enthält die Stile von `@auditcore/ui-core` 0.5.0 (zusätzlich „PDF schwärzen“).
+
+## 0.1.10 – 2026-11-25
+
+- Überwachung der Runner beginnt auch dann, wenn Docker den Container beim ersten Abruf noch anlegt.
+
+## 0.1.9 – 2026-11-25
+
+- Das Linux-Image enthält FFmpeg und FFprobe für Medienprüfungen im lokalen Pool.
+
+## 0.1.8 – 2026-11-25
+
+- Bei externem Sollwert meldet der JIT-Status die wartenden Jobs pro Klasse aus demselben Cache wie die Repo-Auswahl an FlowAgent.
+
+## 0.1.7 – 2026-11-25
+
+- Repo-Routing erfasst wartende Jobs in laufenden Workflows. Alle Runnerklassen teilen sich einen nach Repoanzahl bemessenen Queue-Cache.
+
 ## 0.1.6 – 2026-11-25
 
-- Die gebündelte Oberfläche (`data/web/runner-elements.js`) enthält die Stile von `@auditcore/ui-core` 0.5.0 (zusätzlich „PDF schwärzen“); keine Änderung am Runner selbst.
+- Das JIT-Registrierungsziel bleibt für die Überwachung und Abmeldung eines Runner-Slots erhalten. Freie Runner können dadurch das Repository wechseln und FlowAgent-Sollwerte umsetzen.
 
 ## 0.1.5 – 2026-11-16
 
