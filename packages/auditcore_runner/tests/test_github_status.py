@@ -85,9 +85,7 @@ def test_waiting_job_on_second_page_of_running_workflow(workstation: Profile) ->
             data = {"workflow_runs": [{"id": 11}]}
         elif "status=in_progress" in url:
             data = {"workflow_runs": [{"id": 11}, {"id": 22}]}
-        elif "/11/jobs" in url:
-            data = {"jobs": [{"status": "queued", "labels": ["cpu-gross"]}]}
-        elif "page=2" in url:
+        elif "/11/jobs" in url or "page=2" in url:
             data = {"jobs": [{"status": "queued", "labels": ["cpu-gross"]}]}
         else:
             data = {"jobs": [{"status": "completed"}] * 100}
