@@ -310,3 +310,11 @@ zeitlimit_s = 300
 [pruefprofile.reportgates.werkzeug.codegate]
 befehl = ["auditcore-codegate", "check", "--package", "auditcore_reportgates", "--skip-mypy", "--output", "{ausgabe}"]
 zeitlimit_s = 300
+
+[pruefprofile.repository]
+werkzeuge = ["gitleaks"]
+ausloeser = ["lokal"]
+autofix = false
+
+[pruefprofile.repository.werkzeug.gitleaks]
+befehl = ["gitleaks", "dir", ".", "--no-banner", "--redact", "--report-format", "json", "--report-path", "{ausgabe}", "--exit-code", "0"]
