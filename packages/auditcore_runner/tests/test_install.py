@@ -174,7 +174,9 @@ def test_uninstall_lists_paths(tmp_path: Path) -> None:
 def test_supervisor_observes_container_after_delayed_creation(tmp_path: Path) -> None:
     script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
     watcher = "watch_allowed() {" + script.split("watch_allowed() {", 1)[1].split("\n}", 1)[0] + "\n}"
-    harness = watcher + r"""
+    harness = (
+        watcher
+        + r"""
 GPU=""
 sleep() { :; }
 docker() {
@@ -189,5 +191,6 @@ remove_registration() { [[ "$2" == repos/example/old ]]; }
 log() { :; }
 watch_allowed 42 runner repos/example/old "$$"
 """
+    )
     subprocess.run(["bash", "-ec", harness], cwd=tmp_path, timeout=5, check=True)
     assert (tmp_path / "stopped").exists()
