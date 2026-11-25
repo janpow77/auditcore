@@ -61,3 +61,31 @@ def test_runner_version_rules() -> None:
     assert image.VersionStatus((2, 300, 0), None, now).state == "abgelaufen"
     assert image.VersionStatus(None, release, now).as_dict()["zustand"] == "unbekannt"
     assert image.parse_version("v2.337.0") == (2, 337, 0)
+
+
+def test_cuda_process_owned_by_runner_keeps_card_and_foreign_python_takes_priority() -> None:
+    use = signals.parse_gpu_use(
+        "GPU-a, 12000\nGPU-b, 12000", "GPU-a, 301, python3\nGPU-b, 302, python3", (), frozenset({"301"})
+    )
+    assert use.runner_cards == {"GPU-a": 1}
+    assert use.user_cards == frozenset({"GPU-b"})
+
+
+def test_gpu_use_reads_host_pids_only_from_labelled_containers() -> None:
+    from unittest.mock import patch
+
+    replies = {
+        ("docker", "ps", "--filter", "label=auditcore-runner.gpu", "--format", "{{.ID}}"): "active\nfinished",
+        ("docker", "top", "active", "-eo", "pid"): "PID\n 301\n 309\n",
+        ("docker", "top", "finished", "-eo", "pid"): None,
+        ("nvidia-smi", "--query-gpu=uuid,memory.free", "--format=csv,noheader,nounits"): "GPU-a, 12000\nGPU-b, 9000",
+        (
+            "nvidia-smi",
+            "--query-compute-apps=gpu_uuid,pid,process_name",
+            "--format=csv,noheader",
+        ): "GPU-a, 309, python3\nGPU-b, 311, python3",
+    }
+    with patch.object(signals, "_run", side_effect=lambda command, *args: replies[tuple(command)]):
+        use = signals.gpu_use(())
+    assert use.runner_cards == {"GPU-a": 1}
+    assert use.user_cards == frozenset({"GPU-b"})

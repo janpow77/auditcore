@@ -143,7 +143,6 @@ request_jit_config() {
     "$PROGRAM" scaleset jit "$CLASS" "$name"
     return
   fi
-  current_base="$(registration_base)"
   labels="$(cfg '.klassen[$c].labels')"
   jq -n --arg name "$name" --argjson labels "$labels" \
     --argjson group "$(cfg '.ziel.runner_gruppe // 1')" \
@@ -155,9 +154,10 @@ request_jit_config() {
 # wird sie gelöscht und der leere Container beendet. Einen belegten Runner lehnt
 # GitHub beim Löschen ab; dann läuft der Job normal zu Ende.
 watch_allowed() {
-  local id="$1" name="$2" base="$3" desired busy
-  while docker inspect "$name" >/dev/null 2>&1; do
+  local id="$1" name="$2" base="$3" docker_pid="$4" desired busy
+  while kill -0 "$docker_pid" 2>/dev/null; do
     sleep 20
+    docker inspect "$name" >/dev/null 2>&1 || continue
     # Nutzer-Vorrang: Karte sofort räumen, auch mitten im Job (der Workflow stößt ihn neu an).
     if [[ -n "$GPU" ]] && ! "$PROGRAM" gpu pruefen "$GPU" >/dev/null 2>&1; then
       log "Nutzer braucht $GPU – Container wird geräumt"
@@ -220,7 +220,10 @@ container_args() {
 
 run_one_job() {
   local response watcher job
-  response="$(request_jit_config)"
+  # Das Repo-Ziel muss auch nach der Command Substitution für Überwachung und Abmeldung gelten.
+  current_base="$(registration_base)" || return 1
+  [[ -n "$current_base" ]] || return 1
+  response="$(request_jit_config)" || return 1
   runner_id="$(jq -r '.runner.id' <<<"$response")"
   container="auditcore-runner-$CLASS-$INSTANCE-$runner_id"
   install -d -m 0700 "$SECRET_DIR"
@@ -232,7 +235,7 @@ run_one_job() {
   log "Runner $runner_id registriert, starte Container"
   docker run "${args[@]}" "$(cfg '.image')" &
   job=$!
-  watch_allowed "$runner_id" "$container" "$current_base" &
+  watch_allowed "$runner_id" "$container" "$current_base" "$job" &
   watcher=$!
   wait "$job" || log "Container endete mit Fehler"
   kill "$watcher" 2>/dev/null || true
@@ -250,6 +253,8 @@ while true; do
   wait_for_prerequisites
   wait_until_allowed
   if ! run_one_job; then
+    cleanup
+    GPU=""
     log "Registrierung fehlgeschlagen, neuer Versuch in 60 s"
     sleep 60
   fi

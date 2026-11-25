@@ -88,6 +88,44 @@ def test_supervisor_checks_busy_for_all_target_scopes() -> None:
     assert script.index(busy_query) < script.index('if [[ "$(cfg \'.ziel.art\')" == "repo" ]]')
 
 
+@pytest.mark.skipif(not shutil.which("bash") or not shutil.which("jq"), reason="Supervisor benötigt Bash und jq")
+@pytest.mark.parametrize("backend", ["jit", "scaleset"])
+def test_supervisor_keeps_registration_target(tmp_path: Path, backend: str) -> None:
+    script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
+    functions, _ = script.rsplit("\nwhile true; do", 1)
+    harness = (
+        functions
+        + r"""
+registration_base() { echo repos/example/project; }
+cfg() { echo 1; }
+gh() {
+  cat >/dev/null
+  [[ "$*" == *"repos/example/project/actions/runners/generate-jitconfig"* ]] || return 1
+  echo '{"runner":{"id":42},"encoded_jit_config":"test"}'
+}
+program() { echo '{"runner":{"id":42},"encoded_jit_config":"test"}'; }
+PROGRAM=program
+container_args() { args=(); }
+docker() { :; }
+watch_allowed() { :; }
+remove_registration() { printf '%s %s' "$1" "$2" > removed; }
+run_one_job
+"""
+    )
+    subprocess.run(
+        ["bash", "-c", harness, "supervisor", "cpu", "1"],
+        cwd=tmp_path,
+        env={
+            "PATH": "/usr/bin:/bin",
+            "AUDITCORE_RUNNER_PROFILE": "test",
+            "AUDITCORE_RUNNER_BACKEND": backend,
+            "XDG_RUNTIME_DIR": str(tmp_path),
+        },
+        check=True,
+    )
+    assert (tmp_path / "removed").read_text() == "42 repos/example/project"
+
+
 def test_supervisor_persists_cargo_cache_per_runner_instance() -> None:
     script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
 
@@ -131,3 +169,28 @@ def test_uninstall_lists_paths(tmp_path: Path) -> None:
     assert unit in paths and any(p.name == "auditcore-runner" for p in paths)
     install.remove_paths(paths)
     assert not unit.exists()
+
+
+def test_supervisor_observes_container_after_delayed_creation(tmp_path: Path) -> None:
+    script = files("auditcore_runner").joinpath("data", "supervisor.sh").read_text(encoding="utf-8")
+    watcher = "watch_allowed() {" + script.split("watch_allowed() {", 1)[1].split("\n}", 1)[0] + "\n}"
+    harness = (
+        watcher
+        + r"""
+GPU=""
+sleep() { :; }
+docker() {
+  if [[ "$1" == inspect && ! -f created ]]; then touch created; return 1; fi
+  if [[ "$1" == stop ]]; then touch stopped; fi
+  return 0
+}
+gh() { echo false; }
+cfg() { echo repo; }
+registration_base() { echo repos/example/new; }
+remove_registration() { [[ "$2" == repos/example/old ]]; }
+log() { :; }
+watch_allowed 42 runner repos/example/old "$$"
+"""
+    )
+    subprocess.run(["bash", "-ec", harness], cwd=tmp_path, timeout=5, check=True)
+    assert (tmp_path / "stopped").exists()
