@@ -138,6 +138,11 @@ export function residualRows(residual: ResidualErrorRate): TableRow[] {
   return residual.rows.map((row) => ({ id: row.row, row: row.row, label: row.label, value: row.value }))
 }
 
+/** Begründung für „entfällt“ (L und M) und Hinweise der RER, wie das Backend sie liefert. */
+export function residualRemarks(residual: ResidualErrorRate): { notApplicable: string | null; notes: readonly string[] } {
+  return { notApplicable: residual.not_applicable ?? null, notes: residual.notes ?? [] }
+}
+
 /** Kennzahlen der Restfehlerquote (K, L, M). */
 export function residualMetrics(residual: ResidualErrorRate, t: ExtrapolationTranslate, locale: Locale): ExtrapolationMetric[] {
   const verdict = t(residual.exceeds_materiality ? 'rerExceeds' : 'rerWithin')

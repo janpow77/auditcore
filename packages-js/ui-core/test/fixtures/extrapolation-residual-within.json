@@ -1,0 +1,95 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.3.1",
+ "fingerprint": "43a42be03add4875be8a2ab438253c4bb1f02969dc9076559ce1d90ede2d06c5",
+ "residual_error_rate": {
+  "source": "CPRE_23-0013-01 Annex 3",
+  "rate": -0.00510204081632653,
+  "rate_rounded": -0.0051,
+  "exceeds_materiality": false,
+  "materiality_rate": 0.02,
+  "extrapolated_correction": null,
+  "rate_after_correction": null,
+  "rows": [
+   {
+    "row": "A",
+    "label": "Prüfpopulation",
+    "value": 1000.0,
+    "exact": "1000"
+   },
+   {
+    "row": "D",
+    "label": "Gesamtfehlerquote (TER)",
+    "value": 0.015,
+    "exact": "0.015"
+   },
+   {
+    "row": "E1",
+    "label": "Beträge in laufender Bewertung (Art. 98 Abs. 6)",
+    "value": 0.0,
+    "exact": "0"
+   },
+   {
+    "row": "E2",
+    "label": "Sonstige negative Beträge des Geschäftsjahres",
+    "value": 0.0,
+    "exact": "0"
+   },
+   {
+    "row": "F=A-E1-E2",
+    "label": "Bereinigte Grundgesamtheit",
+    "value": 1000.0,
+    "exact": "1000"
+   },
+   {
+    "row": "G=D*F",
+    "label": "Risikobetrag",
+    "value": 15.0,
+    "exact": "15.000"
+   },
+   {
+    "row": "H",
+    "label": "Finanzkorrekturen",
+    "value": 20.0,
+    "exact": "20"
+   },
+   {
+    "row": "I=F-H",
+    "label": "In der Rechnungslegung geltend zu machende Ausgaben",
+    "value": 980.0,
+    "exact": "980"
+   },
+   {
+    "row": "J=G-H",
+    "label": "Verbleibender Risikobetrag",
+    "value": -5.0,
+    "exact": "-5.000"
+   },
+   {
+    "row": "K=J/I",
+    "label": "Restfehlerquote (RER)",
+    "value": -0.00510204081632653,
+    "exact": "-0.005102040816326530612244897959"
+   },
+   {
+    "row": "L=(J-0.02*I)/0.98",
+    "label": "Hochgerechnete Finanzkorrektur bis zur Signifikanzschwelle",
+    "value": null,
+    "exact": null
+   },
+   {
+    "row": "M=(J-L)/(I-L)",
+    "label": "RER nach hochgerechneter Korrektur",
+    "value": null,
+    "exact": null
+   }
+  ],
+  "not_applicable": "Entfällt: Restfehlerquote nicht über der Signifikanzschwelle von 2 %.",
+  "not_applicable_template": "NA RTER not exceeding 2%",
+  "residual_negative": true,
+  "notes": [
+   "Die Finanzkorrekturen (H) übersteigen den Risikobetrag (G): Verbleibender Risikobetrag (J) und Restfehlerquote (K) sind negativ. Der Wert ist rechnerisch und bedeutet nur, dass mehr korrigiert wurde als der Risikobetrag; er ist keine Fehlerquote unter null und wird hier nicht auf null begrenzt.",
+   "RER nach Art. 2 Nr. 36 Verordnung (EU) 2021/1060; nicht mit der Gesamtfehlerquote (TER) zu verwechseln."
+  ]
+ }
+}

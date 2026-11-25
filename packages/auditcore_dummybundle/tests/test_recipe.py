@@ -22,7 +22,7 @@ from auditcore_dummybundle import (
     templates,
 )
 
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 
 
 def recipe(fields: list[dict[str, Any]], **run: Any) -> dict[str, Any]:

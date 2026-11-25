@@ -18,7 +18,7 @@ export function IdentifierResultView({ view, result }: { view: UseIdentifierChec
   return (
     <div className="fa-ident__result" aria-live="polite" data-testid="ident-result">
       <p className="fa-ident__status">
-        <span className={`fa-ident__badge fa-ident__badge--${identifierStatusTone(result.status)}`}>{identifierStatusText(result.status, t)}</span>
+        <span className={`fa-ident__badge fa-ident__badge--${identifierStatusTone(result.status, result.verdict)}`}>{identifierStatusText(result.status, t, result.verdict)}</span>
         <span>{result.kind_label}</span>
       </p>
       <dl className="fa-ident__facts">
