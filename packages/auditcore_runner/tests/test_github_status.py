@@ -79,6 +79,24 @@ def test_queue_and_busy_by_class(workstation: Profile) -> None:
     assert github.busy_by_class(runners, workstation, workstation.runner_prefix()) == {"cpu-gross": 1}
 
 
+def test_waiting_job_on_second_page_of_running_workflow(workstation: Profile) -> None:
+    def fetch(method: str, url: str, headers: dict[str, str], body: bytes | None) -> tuple[int, dict[str, str], bytes]:
+        if "status=queued" in url:
+            data = {"workflow_runs": [{"id": 11}]}
+        elif "status=in_progress" in url:
+            data = {"workflow_runs": [{"id": 11}, {"id": 22}]}
+        elif "/11/jobs" in url:
+            data = {"jobs": [{"status": "queued", "labels": ["cpu-gross"]}]}
+        elif "page=2" in url:
+            data = {"jobs": [{"status": "queued", "labels": ["cpu-gross"]}]}
+        else:
+            data = {"jobs": [{"status": "completed"}] * 100}
+        return 200, {}, json.dumps(data).encode()
+
+    totals = github.queued_by_repo(github.Client("t", fetch), workstation)
+    assert totals and all(values == {"cpu-gross": 2} for values in totals.values())
+
+
 def test_repo_pool_routes_toward_the_larger_matching_queue(workstation: Profile) -> None:
     target = replace(
         workstation.target,
@@ -151,6 +169,8 @@ def test_cached_repo_routing_reuses_a_fresh_queue_snapshot(
     second = github.cached_registration_base(client, profile, "cpu-gross", "slot-1")
 
     assert first == second == "repos/owner/auditcore"
+    github.cached_registration_base(client, profile, "gpu-16gb", "slot-2")
+    assert any("status=in_progress" in url for url in calls)
     assert call_count > 0 and len(calls) == call_count
     cache = next((tmp_path / "routing").glob("*.json"))
     assert cache.stat().st_mode & 0o777 == 0o600
@@ -166,7 +186,7 @@ def test_cached_repo_routing_refreshes_stale_queue_snapshot(
     monkeypatch.setattr(github, "state_dir", lambda: tmp_path)
     cache_dir = tmp_path / "routing"
     cache_dir.mkdir()
-    cache = cache_dir / f"{content_hash(profile)}-cpu-gross.json"
+    cache = cache_dir / f"{content_hash(profile)}.json"
     cache.write_text('{"owner/auditcore":{"cpu-gross":99},"owner/flow-agent":{"cpu-gross":0}}', encoding="utf-8")
     os.utime(cache, (0, 0))
 

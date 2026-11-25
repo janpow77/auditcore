@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## 0.1.7 – 2026-11-25
+
+- Repo-Routing erfasst wartende Jobs in laufenden Workflows. Alle Runnerklassen teilen sich einen nach Repoanzahl bemessenen Queue-Cache.
+
 ## 0.1.6 – 2026-11-25
 
 - Das JIT-Registrierungsziel bleibt für die Überwachung und Abmeldung eines Runner-Slots erhalten. Freie Runner können dadurch das Repository wechseln und FlowAgent-Sollwerte umsetzen.
