@@ -69,3 +69,23 @@ def test_cuda_process_owned_by_runner_keeps_card_and_foreign_python_takes_priori
     )
     assert use.runner_cards == {"GPU-a": 1}
     assert use.user_cards == frozenset({"GPU-b"})
+
+
+def test_gpu_use_reads_host_pids_only_from_labelled_containers() -> None:
+    from unittest.mock import patch
+
+    replies = {
+        ("docker", "ps", "--filter", "label=auditcore-runner.gpu", "--format", "{{.ID}}"): "active\nfinished",
+        ("docker", "top", "active", "-eo", "pid"): "PID\n 301\n 309\n",
+        ("docker", "top", "finished", "-eo", "pid"): None,
+        ("nvidia-smi", "--query-gpu=uuid,memory.free", "--format=csv,noheader,nounits"): "GPU-a, 12000\nGPU-b, 9000",
+        (
+            "nvidia-smi",
+            "--query-compute-apps=gpu_uuid,pid,process_name",
+            "--format=csv,noheader",
+        ): "GPU-a, 309, python3\nGPU-b, 311, python3",
+    }
+    with patch.object(signals, "_run", side_effect=lambda command, *args: replies[tuple(command)]):
+        use = signals.gpu_use(())
+    assert use.runner_cards == {"GPU-a": 1}
+    assert use.user_cards == frozenset({"GPU-b"})
