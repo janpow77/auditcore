@@ -1,6 +1,71 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Pre-release v0.16.0](https://github.com/janpow77/auditcore/releases/tag/v0.16.0)**
+**Aktuell: [Pre-release v0.18.0](https://github.com/janpow77/auditcore/releases/tag/v0.18.0)**
+mit 38 Python-Bibliotheken, 12 npm-Paketen und 254 Release-Dateien mit signierten Prüfsummen.
+Neu ist „PDF schwärzen“ als Oberfläche und REST-Vertrag:
+`auditcore_pdf` 0.2.0 → 0.3.0 mit `auditcore_pdf.web` (Vertrag
+`pdf_redaction/1`) sowie `@auditcore/ui-core` 0.5.0, `@auditcore/ui` 0.6.0 und
+`@auditcore/ui-react` 1.4.0. `auditcore_identifiers` 0.3.1 zählt in
+`POST /check/batch` nur Zeilen mit geprüfter Prüfziffer als `valid`;
+`auditcore_extrapolation` 0.3.1 schreibt die Restfehlerquote auf Wunsch
+(`residual`) in den Export.
+`auditcore_documents` 0.5.2 und `auditcore_dummybundle` 0.3.1 folgen nur der
+Bindung an identifiers 0.3.1. `auditcore_runner` 0.1.5 → 0.1.11 bringt
+JIT-Repo-Wechsel, FFmpeg im Image und GPU-Zuordnung.
+`@auditcore/bpmn-vue` 0.5.3, `@auditcore/bpmn-react` 0.5.3,
+`@auditcore/layout` 0.1.3 und `@auditcore/sampling-templates-vue` 0.1.13
+ziehen nur die Bindungen nach. Hinweis für Nutzer von `auditcore_pdf` 0.2.0:
+`Selection.from_dict` prüft Wahrheitswerte und `rect` jetzt streng.
+
+Alle übrigen Python-Bibliotheken und npm-Pakete sind gegenüber v0.17.0
+unverändert; ihre Wheels, Debian-Pakete und npm-Tarballs sind bytegleich, die
+SDists inhaltsgleich (nur Zeitstempel abweichend). Gebaut wurde wie bei den
+Vorgängern mit setuptools 84.0.0 (der CI-Lock führt 84.2.1, das nur die Zeile
+`Generator` in der Datei `WHEEL` ändert). Der zunächst als v0.17.1 vorbereitete
+Stand ist nicht eigens veröffentlicht worden; ui-core 0.4.2, ui 0.5.2 und
+ui-react 1.3.2 gibt es nicht.
+
+Die Versionen und Prüfsummen stehen im
+[Release-Manifest](https://github.com/janpow77/auditcore/releases/download/v0.18.0/preview-manifest.json)
+und in den signierten
+[SHA256SUMS](https://github.com/janpow77/auditcore/releases/download/v0.18.0/SHA256SUMS).
+Der bestehende Signaturschlüssel bleibt unverändert:
+`E427F95CC37CBFD0876314CA0D1580A6CAE37327`.
+
+```bash
+python -m pip install -r https://github.com/janpow77/auditcore/releases/download/v0.18.0/requirements-auditcore_pdf.txt
+```
+
+Vor der Veröffentlichung am 25.11.2026 bestanden Paketbau, selektive
+pip-Installation mit Funktionsprüfung und Entfernung, APT-Installation, Upgrade
+und Entfernung (zusammen 283 Prüfschritte) sowie die PDF-/Excel-Ausgabe. Alle
+254 hochgeladenen Dateien stimmen mit den lokalen überein; die 252 in den
+signierten SHA256SUMS geführten Prüfsummen passen. Die Workflows `package-index` und `npm-publish` liefen grün;
+veröffentlicht wurden die sieben geänderten npm-Pakete, die übrigen fünf waren
+bereits vorhanden.
+Ein anonymer Installationsnachweis gegen den öffentlichen Pfad liegt für
+v0.18.0 nicht vor. Der Bibliotheksrelease stellt produktive Anwendungen nicht
+automatisch um.
+
+## Historischer Stand v0.17.0
+
+**[Pre-release v0.17.0](https://github.com/janpow77/auditcore/releases/tag/v0.17.0)** (24.11.2026)
+mit strengeren Kennungsprüfungen (`auditcore_identifiers` 0.3.0 mit
+Prüfziffernurteil `CheckResult.verdict`), dem Vergabeprofil
+`procurement.hvtg 2026.11.1` (`auditcore_procurement` 0.4.0), exakten
+Benford-Ziffern (`auditcore_statistics` 0.5.0), korrigierter Hochrechnung
+(`auditcore_extrapolation` 0.3.0) und der zweistufigen Schwärzung
+`auditcore_pdf.redaction` (`auditcore_pdf` 0.2.0). Dazu `auditcore_documents`
+0.5.1, `auditcore_dummybundle` 0.3.0, `auditcore_risk` 0.4.3 und
+`auditcore_runner` 0.1.5. Vertragsänderung in `evaluation/1`: Die RER
+`not_applicable` trägt die deutsche Begründung, der Vorlagenwortlaut steht in
+`not_applicable_template`. `auditcore_dummybundle` 0.3.0 erzeugt aus demselben
+Seed andere Daten als 0.2.0. Bei allen übrigen Paketen waren Wheels,
+Debian-Pakete und npm-Tarballs gegenüber v0.16.0 bytegleich. Die Workflows `package-index` und `npm-publish` liefen grün.
+
+## Historischer Stand v0.16.0
+
+**[Pre-release v0.16.0](https://github.com/janpow77/auditcore/releases/tag/v0.16.0)** (04.11.2026)
 mit 38 Python-Bibliotheken, 12 npm-Paketen und 254 Release-Dateien mit signierten Prüfsummen.
 Neu ist allein `auditcore_reportgates` 0.1.0 → 0.2.0: Lesarten für Zahlen im
 Fließtext (`ClaimSyntax`, `PointReading`, je Aufruf über
