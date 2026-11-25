@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1298):
+Exporte der Einstiegspunkte aus `package.json#exports` (1304):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -354,6 +354,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 | `@auditcore/ui-core` | `ExtrapolationData` | Schnittstelle | Stand der Hochrechnung; `error` ist die Meldung der letzten abgelehnten Anfrage. | `extrapolation/controller` |
 | `@auditcore/ui-core` | `ExtrapolationDesign` | Typ | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `ExtrapolationExportFormat` | Typ | – | `extrapolation/types` |
+| `@auditcore/ui-core` | `ExtrapolationExportRequest` | Schnittstelle | Anfrage für `POST /evaluate/export`; mit `residual` enthält die Datei auch die RER. | `extrapolation/types` |
 | `@auditcore/ui-core` | `ExtrapolationField` | Schnittstelle | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `ExtrapolationForm` | Schnittstelle | – | `extrapolation/model` |
 | `@auditcore/ui-core` | `ExtrapolationFormError` | Typ | – | `extrapolation/model` |
@@ -457,6 +458,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 | `@auditcore/ui-core` | `IdentifierTone` | Typ | – | `identifiers/model` |
 | `@auditcore/ui-core` | `IdentifierTranslate` | Typ | – | `identifiers/model` |
 | `@auditcore/ui-core` | `IdentifierValidation` | Typ | – | `identifiers/model` |
+| `@auditcore/ui-core` | `IdentifierVerdict` | Typ | Gesamturteil (`auditcore_identifiers` ≥ 0.3.0): `valid` nur mit geprüfter Prüfziffer. | `identifiers/types` |
 | `@auditcore/ui-core` | `IdentifiersPort` | Schnittstelle | Schnittstelle zur Fachlogik; Standardumsetzung `createIdentifiersRestPort`. | `identifiers/types` |
 | `@auditcore/ui-core` | `ImportParse` | Typ | – | `documents/importing` |
 | `@auditcore/ui-core` | `ImportRequest` | Schnittstelle | Anfrage von `POST /comparisons/import`: ein fertiges Ergebnis aus der Auftragssteuerung ablegen. | `synopsis/port` |
@@ -1053,6 +1055,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 | `@auditcore/ui-core` | `extrapolationCellLabel` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationConfidenceLabel` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationDesignChoices` | Funktion | – | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `extrapolationExportsResidual` | Funktion | `library` des Katalogs (z. B. „auditcore_extrapolation 0.3.1“) kennt `residual` im Export. | `extrapolation/controller` |
 | `@auditcore/ui-core` | `extrapolationFormErrorKey` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationFormMessage` | Funktion | Sammelmeldung unter dem Formular: fehlende Auswahl oder markierte Felder. | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationInputNumber` | Funktion | Zahl als Eingabetext (ohne Tausendertrenner). | `extrapolation/view` |
@@ -1107,6 +1110,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 | `@auditcore/ui-core` | `hasFiniteCorrection` | Funktion | – | `samplesize/model` |
 | `@auditcore/ui-core` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
 | `@auditcore/ui-core` | `hasStrata` | Funktion | – | `samplesize/model` |
+| `@auditcore/ui-core` | `identifierBatchCounts` | Funktion | Zahlen der Zusammenfassung. Tragen alle geprüften Zeilen `verdict`, werden sie aus den Zeilen gezählt: Ältere Backends (0.3.0) zählen nur dem Format nach gültige Zeilen auch unter … | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierBatchCsv` | Funktion | CSV (Excel-DE) der Stapelprüfung mit denselben Spalten wie die Tabelle (alle Zeilen). | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierBatchLines` | Funktion | – | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierBatchMapping` | Funktion | Zuordnung aus beiden Zuständen (Tabelle und Kennungsprüfung). | `identifiers/controller` |
@@ -1122,8 +1126,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 | `@auditcore/ui-core` | `identifierRowReason` | Funktion | Begründung einer Stapelzeile; gültige Zeilen nur mit eigener Meldung der Bibliothek (Tabelle bleibt knapp). | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierRowStatus` | Funktion | Status einer Stapelzeile; `null` = nicht prüfbar. | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierRowValue` | Funktion | – | `identifiers/model` |
+| `@auditcore/ui-core` | `identifierRowVerdict` | Funktion | Urteil einer Stapelzeile; `undefined` bei Fehlerzeilen und Backends vor 0.3.0. | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierStatusText` | Funktion | – | `identifiers/model` |
-| `@auditcore/ui-core` | `identifierStatusTone` | Funktion | – | `identifiers/model` |
+| `@auditcore/ui-core` | `identifierStatusTone` | Funktion | Farbe des Ergebnisses; „nur Format gültig“ als Warnung, nicht als Erfolg. | `identifiers/model` |
 | `@auditcore/ui-core` | `importDelimiterText` | Funktion | Anzeige des Trennzeichens („Tabulator“ für `\t`). | `tabular/tableImport` |
 | `@auditcore/ui-core` | `importOptionalColumn` | Funktion | Optionale Spalte aus einem Auswahlwert (`''` = keine). | `tabular/tableImport` |
 | `@auditcore/ui-core` | `importPreview` | Funktion | Vorschau der übernommenen Werte (reine Funktion). | `tabular/tableImport` |
@@ -1242,6 +1247,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 | `@auditcore/ui-core` | `residualColumns` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `residualFormFrom` | Funktion | RER-Formular aus einer Auswertung: A = Buchwert, D = Gesamtfehlerquote (in Prozent). | `extrapolation/model` |
 | `@auditcore/ui-core` | `residualMetrics` | Funktion | Kennzahlen der Restfehlerquote (K, L, M). | `extrapolation/view` |
+| `@auditcore/ui-core` | `residualRemarks` | Funktion | Begründung für „entfällt“ (L und M) und Hinweise der RER, wie das Backend sie liefert. | `extrapolation/view` |
 | `@auditcore/ui-core` | `residualRows` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `resizeRedactionBox` | Funktion | Rechte untere Ecke auf `point` ziehen (Maus) – nie kleiner als die Mindestgröße. | `redaction/model` |
 | `@auditcore/ui-core` | `resolveIdentifierKind` | Funktion | Kennungsart aus einer Tabellenzelle: Kennung oder Bezeichnung des Katalogs, sonst unverändert (Server meldet sie). | `identifiers/model` |
@@ -1367,7 +1373,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1298):
 | `@auditcore/ui-core` | `utmErrorKey` | Funktion | Text der Fehlermeldung einer UTM-Eingabe. | `geo/model` |
 | `@auditcore/ui-core` | `validateDecision` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `vertexCount` | Funktion | Anzahl der Stützpunkte einer Fläche (Schlusspunkte mitgezählt). | `geo/model` |
-| `@auditcore/ui-core` | `visibleIdentifierRows` | Funktion | Zeilen der Ergebnistabelle; wahlweise nur ungültige, fehlende und nicht prüfbare. | `identifiers/model` |
+| `@auditcore/ui-core` | `visibleIdentifierRows` | Funktion | Zeilen der Ergebnistabelle; wahlweise nur ungültige, fehlende, nicht prüfbare und nur dem Format nach gültige. | `identifiers/model` |
 | `@auditcore/ui-core` | `vvtExportTexts` | Funktion | Beschriftungen der Exporte (Druckansicht, Markdown, CSV). | `dataprotection/vvt` |
 | `@auditcore/ui-core` | `vvtFourEyes` | Funktion | Vier-Augen-Hinweis: die angemeldete Person hat den offenen Entwurf bearbeitet. | `dataprotection/vvt` |
 | `@auditcore/ui-core` | `vvtVersionLabel` | Funktion | – | `dataprotection/vvt` |

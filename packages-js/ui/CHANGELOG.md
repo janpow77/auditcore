@@ -1,9 +1,23 @@
 # Changelog @auditcore/ui
 
-## 0.6.0 – 2026-11-24
+## 0.6.0 – 2026-11-25
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.5.0 angehoben.
 - Neu: `PdfRedaction` und `<flowaudit-pdf-redaction>` (Eigenschaften `port`, `locale`, `urls`; Ereignisse `redaction-planned`, `redaction-completed`, `error`).
+- `ExtrapolationPanel`: Die Karte der Restfehlerquote zeigt bei „entfällt“ die
+  Begründung des Backends (`not_applicable`) und die Hinweise (`notes`), etwa
+  dass die Finanzkorrekturen den Risikobetrag übersteigen. Eine neue
+  Hochrechnung entfernt sie mit der RER. Der Export enthält die zuletzt
+  berechnete RER, sofern das Backend `auditcore_extrapolation` ≥ 0.3.1 meldet;
+  gegen ältere Backends enthält der Export weiterhin keine RER (ohne eigene
+  Meldung in der Oberfläche).
+- `ExtrapolationPanel`: Begründung und Hinweise stammen wörtlich aus dem
+  Backend und sind deshalb auch mit `locale: 'en'` deutsch; nur die
+  Überschriften sind übersetzt.
+- `IdentifierCheck`: Zusammenfassung der Stapelprüfung mit getrennter Zahl der
+  nur dem Format nach gültigen Zeilen; solche Zeilen und Einzelergebnisse
+  heißen „nur Format gültig“ (Warnfarbe) statt „gültig“ und bleiben bei „Nur
+  Auffälligkeiten zeigen“ sichtbar (Texte aus `@auditcore/ui-core`).
 
 ## 0.5.1 – 2026-10-17
 

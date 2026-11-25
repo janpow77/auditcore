@@ -1,5 +1,13 @@
 # Changelog auditcore_dummybundle
 
+## 0.3.1 – 2026-11-25
+
+- Bindung an `auditcore_identifiers==0.3.1` (nur die Zusammenfassung von
+  `POST /check/batch` geändert, die das Paket nicht nutzt). Gleicher Startwert
+  ergibt dieselben Daten wie 0.3.0; nur die Paketversion in `meta.version`,
+  im Rezept und in `library` lautet 0.3.1. Neue Version, weil die exakte Bindung
+  an 0.3.0 sonst neben `auditcore_identifiers` 0.3.1 nicht installierbar wäre.
+
 ## 0.3.0 – 2026-11-23
 
 **Verhaltensänderung:** Gleicher Startwert ergibt andere Daten als 0.2.0 –

@@ -14,23 +14,23 @@ Behörde nachbildet, ohne dass es belegt und freigegeben ist.
 ## Installation
 
 Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt);
-`auditcore_dummybundle` 0.3.0 erscheint mit dem nächsten auditcore-Release,
-veröffentlicht ist bis dahin 0.2.0 aus v0.14.0:
+`auditcore_dummybundle` 0.3.1 erscheint mit v0.18.0 (0.3.0 aus v0.17.0 bindet
+noch `auditcore_identifiers==0.3.0`):
 
 ```bash
-python -m pip install 'auditcore_dummybundle==0.3.0' \
+python -m pip install 'auditcore_dummybundle==0.3.1' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
 Hashgebunden über die Requirements-Datei `requirements-auditcore_dummybundle.txt`
-des Releases, das 0.3.0 enthält; sie bindet das Paket und seine
+des Releases, das 0.3.1 enthält; sie bindet das Paket und seine
 auditcore-Abhängigkeiten an die Prüfsummen der signierten `SHA256SUMS` dieses
 Releases. Dieselben Prüfsummen stehen im Index unter
 `https://janpow77.github.io/auditcore/simple/auditcore-dummybundle/`.
 
 Wer die Zeilen selbst in eine `requirements.txt` schreibt, nimmt die Prüfsummen
-von `auditcore_dummybundle-0.3.0-py3-none-any.whl` und
-`auditcore_identifiers-0.3.0-py3-none-any.whl` aus den signierten `SHA256SUMS`
+von `auditcore_dummybundle-0.3.1-py3-none-any.whl` und
+`auditcore_identifiers-0.3.1-py3-none-any.whl` aus den signierten `SHA256SUMS`
 dieses Releases, die von `auditcore_dummygenerator-0.2.0-py3-none-any.whl` aus
 v0.14.0 und bindet `auditcore_common` mit; sein Wheel ist seit v0.12.0
 unverändert:
@@ -249,7 +249,7 @@ verschieden, Rechtsform passend zur Rechtsform des Begünstigten.
 Python ≥ 3.11 und drei exakt gebundene auditcore-Pakete, sonst nur die
 Standardbibliothek: `auditcore_common==0.2.1` (Hashing, REST-Vertragsfehler),
 `auditcore_dummygenerator==0.2.0` (Namensbaukasten für Firmen sowie Kataloge DE/AT für Orte,
-Namen und Verwendungszwecke) und `auditcore_identifiers==0.3.0` (Prüfziffern). Bewusst
+Namen und Verwendungszwecke) und `auditcore_identifiers==0.3.1` (Prüfziffern). Bewusst
 keine Abhängigkeit von Faker, NumPy, openpyxl, einem Web-Framework oder einer
 Datenbank.
 

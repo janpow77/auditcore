@@ -1,6 +1,6 @@
 # Changelog – auditcore_runner
 
-## 0.1.6 – 2026-11-24
+## 0.1.6 – 2026-11-25
 
 - Die gebündelte Oberfläche (`data/web/runner-elements.js`) enthält die Stile von `@auditcore/ui-core` 0.5.0 (zusätzlich „PDF schwärzen“); keine Änderung am Runner selbst.
 

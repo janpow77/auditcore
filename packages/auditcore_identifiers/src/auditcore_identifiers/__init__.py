@@ -31,7 +31,7 @@ from auditcore_identifiers.result import (
 from auditcore_identifiers.tax_de import format_tax_id
 from auditcore_identifiers.vat import at_uid_check_digit, de_vat_check_digit, normalize_vat_id
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 
 def check(

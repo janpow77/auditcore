@@ -2,7 +2,7 @@
 
 Alle wesentlichen Änderungen dieses Pakets werden in dieser Datei dokumentiert.
 
-## 0.3.0 (2026-11-24)
+## 0.3.0 (2026-11-25)
 
 ### Neu
 - Unterpaket `auditcore_pdf.web`: REST-Vertrag `pdf_redaction/1` für „PDF schwärzen“ mit den Endpunkten `GET /catalogue`, `POST /plan`, `POST /preview` (PNG einer Seite) und `POST /apply` (geschwärzte PDF, Bericht nur mit Zahlen in den Kopfzeilen `X-Redaction*`). `RedactionService` ist framework-frei; `routes`/`create_app` setzen Starlette voraus (Extra `[web]`), `create_router` FastAPI (Extra `[fastapi]`).
