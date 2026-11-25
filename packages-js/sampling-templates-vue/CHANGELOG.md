@@ -2,7 +2,7 @@
 
 ## 0.1.13 – 2026-11-25
 
-Bereiche der Abhängigkeiten erweitert: `@auditcore/ui` `>=0.4.0 <0.7.0`, `@auditcore/ui-core` `>=0.3.0 <0.6.0` (0.6.0 und 0.5.0 ergänzen nur „PDF schwärzen“); keine Änderung am Paket selbst.
+Bereiche der Abhängigkeiten erweitert: `@auditcore/ui` `>=0.4.0 <0.7.0`, `@auditcore/ui-core` `>=0.3.0 <0.6.0` (0.6.0 und 0.5.0 ergänzen „PDF schwärzen“ und ändern Kennungsprüfung und RER-Anzeige, die dieses Paket nicht nutzt); keine Änderung am Paket selbst.
 
 ## 0.1.12 – 2026-10-18
 

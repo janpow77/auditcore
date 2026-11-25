@@ -3,7 +3,6 @@
 ## 0.5.0 – 2026-11-25
 
 - Neu: Bereich `redaction` für „PDF schwärzen“: Typen des Vertrags `pdf_redaction/1`, `createRedactionRestPort`, Zustandsautomat `createRedactionController` (Kriterien, Plan, Auswahl, Seitenbilder, eigene Bereiche, Zeigergesten, Ergebnis), Anzeige `redactionReview` und `redactionReportRows`, Texte `redactionMessages` (de/en), Stil `styles/redaction.css`, Fokusführung `focusRedactionHeading` und `focusRedactionAddArea`. Bereiche lassen sich mit der Maus verschieben (`startMove`, `moveRedactionBox`); während des Schwärzens ist die Auswahl gesperrt.
-
 - Hochrechnung: `residualRemarks(residual)` liefert die Begründung für
   „entfällt“ (`not_applicable`, Zeilen L und M) und die Hinweise (`notes`) der
   RER; neue Texte `rerNotApplicable` („Warum L und M entfallen“ / „Why rows L and
