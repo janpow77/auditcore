@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -98,6 +99,7 @@ def _queue(demand: nachfrage.Demand | None, name: str) -> dict[str, object]:
         return {"warteschlange": None}
     result: dict[str, object] = {
         "warteschlange": entry.waiting,
+        "wartend": entry.waiting,
         "warteschlange_quelle": demand.source if demand else "",
     }
     if entry.target is not None:
@@ -107,6 +109,25 @@ def _queue(demand: nachfrage.Demand | None, name: str) -> dict[str, object]:
     if entry.statistics:
         result["scale_set_statistik"] = entry.statistics
     return result
+
+
+def _capacity_demand(profile: Profile, client: github.Client | None) -> nachfrage.Demand | None:
+    if profile.backend != "jit" or profile.source.kind != "datei":
+        return nachfrage.load()
+    if client is None or not profile.target.queue_repos:
+        return None
+    try:
+        queues = github.cached_queued_by_repo(client, profile)
+    except github.GitHubError:
+        return None
+    return nachfrage.Demand(
+        "github",
+        time.time(),
+        {
+            name: nachfrage.ClassDemand(sum(counts.get(name, 0) for counts in queues.values()))
+            for name in profile.classes
+        },
+    )
 
 
 def collect(profile: Profile, facts: HostFacts, client: github.Client | None) -> dict[str, object]:
@@ -119,7 +140,7 @@ def collect(profile: Profile, facts: HostFacts, client: github.Client | None) ->
             runners = None
     counts = _runner_counts(profile, runners) if runners is not None else {}
     current = pool.load(profile.pool_path())
-    demand = nachfrage.load()
+    demand = _capacity_demand(profile, client)
     classes: dict[str, object] = {}
     for name, settings in sorted(profile.classes.items()):
         classes[name] = {

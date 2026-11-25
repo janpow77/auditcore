@@ -145,8 +145,10 @@ def classify_process(name: str, shared_services: tuple[str, ...]) -> str:
     return "dienst" if any(pattern in name for pattern in shared_services) else "nutzer"
 
 
-def parse_gpu_use(free_csv: str, apps_csv: str, shared_services: tuple[str, ...]) -> GpuUse:
-    """``--query-gpu=uuid,memory.free`` and ``--query-compute-apps=gpu_uuid,process_name``."""
+def parse_gpu_use(
+    free_csv: str, apps_csv: str, shared_services: tuple[str, ...], runner_pids: frozenset[str] = frozenset()
+) -> GpuUse:
+    """Classify GPU processes by container ownership before using the reported executable name."""
     free: dict[str, int] = {}
     for line in free_csv.splitlines():
         parts = [p.strip() for p in line.split(",")]
@@ -155,10 +157,11 @@ def parse_gpu_use(free_csv: str, apps_csv: str, shared_services: tuple[str, ...]
     user: set[str] = set()
     runners: dict[str, int] = {}
     for line in apps_csv.splitlines():
-        parts = [p.strip() for p in line.split(",", 1)]
-        if len(parts) != 2 or not parts[0]:
+        parts = [p.strip() for p in line.split(",", 2)]
+        if len(parts) < 2 or not parts[0]:
             continue
-        kind = classify_process(parts[1], shared_services)
+        owned = len(parts) == 3 and parts[1] in runner_pids
+        kind = "runner" if owned else classify_process(parts[-1], shared_services)
         if kind == "nutzer":
             user.add(parts[0])
         elif kind == "runner":
@@ -166,10 +169,19 @@ def parse_gpu_use(free_csv: str, apps_csv: str, shared_services: tuple[str, ...]
     return GpuUse(free, frozenset(user), runners)
 
 
+def _runner_gpu_pids() -> frozenset[str]:
+    containers = _run(["docker", "ps", "--filter", "label=auditcore-runner.gpu", "--format", "{{.ID}}"]) or ""
+    pids: set[str] = set()
+    for container in containers.split():
+        processes = _run(["docker", "top", container, "-eo", "pid"]) or ""
+        pids.update(pid for pid in processes.split() if pid.isdecimal())
+    return frozenset(pids)
+
+
 def gpu_use(shared_services: tuple[str, ...]) -> GpuUse:
     free = _run(["nvidia-smi", "--query-gpu=uuid,memory.free", "--format=csv,noheader,nounits"], 10) or ""
-    apps = _run(["nvidia-smi", "--query-compute-apps=gpu_uuid,process_name", "--format=csv,noheader"], 10) or ""
-    return parse_gpu_use(free, apps, shared_services)
+    apps = _run(["nvidia-smi", "--query-compute-apps=gpu_uuid,pid,process_name", "--format=csv,noheader"], 10) or ""
+    return parse_gpu_use(free, apps, shared_services, _runner_gpu_pids() if apps.strip() else frozenset())
 
 
 def _number(value: object) -> float | None:
