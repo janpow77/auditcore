@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import ExtrapolationPanel from '../../../ui/src/extrapolation/ExtrapolationPanel.vue'
-import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, multistageFixture, periodsFixture } from '../../../ui-core/test/extrapolation/fake-port'
+import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, multistageFixture, periodsFixture, residualWithinResult } from '../../../ui-core/test/extrapolation/fake-port'
 import { extrapolationCases } from '../../../ui-core/test/parity/cases-extrapolation'
 import { FlowauditExtrapolation } from '../../src/extrapolation/FlowauditExtrapolation'
 import { byTestId, both } from './interact'
@@ -35,6 +35,24 @@ describe('Parität Hochrechnung nach Interaktion', () => {
     await both(rendered, byTestId('extrapolation-residual'), { kind: 'click' })
     expect(reactPort.calls.residual).toEqual(vuePort.calls.residual)
     expect(rendered.react.querySelectorAll('[data-testid="extrapolation-rer-rows"] tbody tr')).toHaveLength(12)
+  })
+
+  it('RER unter der Schwelle: Begründung für „entfällt“ und Hinweise gleich', async () => {
+    const vuePort = fakeExtrapolationPort()
+    const reactPort = fakeExtrapolationPort()
+    vuePort.residualAnswer = residualWithinResult
+    reactPort.residualAnswer = residualWithinResult
+    const props = { strata: fixtureStrata, units: fixtureUnits }
+    const rendered = await renderBoth(ExtrapolationPanel, { port: vuePort, ...props }, <FlowauditExtrapolation port={reactPort} {...props} />)
+    await both(rendered, byTestId('extrapolation-method'), { kind: 'change', value: 'mus.standard' })
+    await both(rendered, byTestId('extrapolation-confidence'), { kind: 'change', value: '0.9' })
+    await both(rendered, byTestId('extrapolation-evaluate'), { kind: 'click' })
+    await both(rendered, byTestId('extrapolation-residual'), { kind: 'click' })
+    const card = (root: HTMLElement) => root.querySelector('.fa-extrapolation__card--residual')?.textContent
+    expect(card(rendered.react)).toContain('Warum L und M entfallen')
+    expect(card(rendered.react)).toBe(card(rendered.vue))
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-rer-notes"] li')).toHaveLength(2)
+    expect(rendered.vue.querySelectorAll('[data-testid="extrapolation-rer-notes"] li')).toHaveLength(2)
   })
 
   it('Zeilen bearbeiten: Feldbefunde, Einheit hinzufügen, Kennzeichen setzen, Schicht hinzufügen', async () => {

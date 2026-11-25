@@ -13,7 +13,7 @@ const facts = computed(() => (state.value.catalogue ? identifierFacts(state.valu
 <template>
   <div class="fa-ident__result" aria-live="polite" data-testid="ident-result">
     <p class="fa-ident__status">
-      <span :class="['fa-ident__badge', `fa-ident__badge--${identifierStatusTone(result.status)}`]">{{ identifierStatusText(result.status, t) }}</span>
+      <span :class="['fa-ident__badge', `fa-ident__badge--${identifierStatusTone(result.status, result.verdict)}`]">{{ identifierStatusText(result.status, t, result.verdict) }}</span>
       <span>{{ result.kind_label }}</span>
     </p>
     <dl class="fa-ident__facts">

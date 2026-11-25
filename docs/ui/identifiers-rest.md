@@ -101,8 +101,17 @@ Bezugsspalte oder die Zeilennummer der Datei.
 {"contract": "identifiers_ui/1", "profile": "strict",
  "results": [{"index": 0, "ref": "B-1", "error": null, "kind": "iban", "status": "VALID", "…": "…"},
              {"index": 4, "ref": "B-5", "error": {"code": "unknown_kind", "message": "…"}}],
- "summary": {"total": 5, "valid": 2, "invalid": 1, "missing": 1, "not_checked": 1}}
+ "summary": {"total": 5, "valid": 1, "format_valid": 1, "invalid": 1, "missing": 1,
+             "not_checked": 1}}
 ```
+
+`summary.valid` zählt seit `auditcore_identifiers` 0.3.1 nur Zeilen mit
+`verdict` `valid`, also mit geprüfter Prüfziffer. Zeilen, deren Format stimmt,
+deren Prüfziffer aber fehlt oder nicht geprüft wurde (BIC, Steuernummer,
+Legacy-Profile), stehen in `format_valid`, obwohl ihr `status` `VALID` ist.
+Beide Zahlen schließen sich aus; `total` ist die Summe aus `valid`,
+`format_valid`, `invalid`, `missing` und `not_checked`. Bis 0.3.0 enthielt
+`valid` auch die Zeilen aus `format_valid`.
 
 Zeilen mit unbekannter Kennungsart (`unknown_kind`) oder einer Art, die das
 Profil nicht prüft (`unsupported_kind`), werden je Zeile gemeldet

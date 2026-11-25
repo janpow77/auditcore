@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest'
 import {
   buildIdentifierBatch,
   buildIdentifierCheck,
+  identifierBatchCounts,
   identifierBatchCsv,
+  identifierBatchLines,
   identifierBatchSummary,
   identifierFacts,
   identifierMessages,
@@ -12,11 +14,14 @@ import {
   identifierReasonText,
   identifierRowKind,
   identifierRowStatus,
+  identifierStatusText,
   identifierStatusTone,
   resolveIdentifierKind,
   translator,
   visibleIdentifierRows,
+  type IdentifierBatchAnswer,
   type IdentifierBatchMapping,
+  type IdentifierVerdict,
 } from '../../src'
 import { BATCH_CSV, batchAnswer, identifierCatalogue as catalogue, invalidAnswer, validAnswer } from './fake-port'
 
@@ -77,6 +82,9 @@ describe('Kennung prüfen – Kernlogik', () => {
 
   it('fasst die Stapelprüfung zusammen, filtert Auffälligkeiten und exportiert CSV', () => {
     expect(identifierBatchSummary(batchAnswer, t)).toBe('5 Zeilen geprüft: 2 gültig, 1 ungültig, 1 ohne Wert, 1 nicht prüfbar')
+    const withFormat = { ...batchAnswer, summary: { total: 5, valid: 1, format_valid: 1, invalid: 1, missing: 1, not_checked: 1 } }
+    expect(identifierBatchSummary(withFormat, t)).toBe('5 Zeilen geprüft: 1 gültig mit Prüfziffer, 1 nur dem Format nach gültig, 1 ungültig, 1 ohne Wert, 1 nicht prüfbar')
+    expect(identifierBatchSummary({ ...withFormat, summary: { ...withFormat.summary, format_valid: 0 } }, t)).toBe('5 Zeilen geprüft: 1 gültig, 1 ungültig, 1 ohne Wert, 1 nicht prüfbar')
     expect(visibleIdentifierRows(batchAnswer, true).map((row) => row.ref)).toEqual(['B-2', 'B-4', 'B-5'])
     const last = batchAnswer.results[4]!
     expect(identifierRowStatus(last)).toBeNull()
@@ -84,5 +92,22 @@ describe('Kennung prüfen – Kernlogik', () => {
     const csv = identifierBatchCsv(catalogue, batchAnswer, null, t)
     expect(csv.split('\r\n')[0]).toBe('﻿Bezug;Art;Wert;Ergebnis;Begründung;Normalform')
     expect(csv).toContain('B-2;IBAN;DE89370400440532013001;ungültig;IBAN-Prüfziffer ist falsch;')
+  })
+
+  it('unterscheidet „nur Format gültig“ nach verdict in Zählung, Tabelle, Filter und Einzelergebnis', () => {
+    const verdicts: (IdentifierVerdict | null)[] = ['valid', 'invalid', 'format_valid', 'missing', null]
+    const results = batchAnswer.results.map((row, index) => (row.error === null ? { ...row, verdict: verdicts[index] as IdentifierVerdict } : row))
+    // Zusammenfassung wie bei auditcore_identifiers 0.3.0: die Zeile „nur Format“ steht auch unter valid.
+    const answer: IdentifierBatchAnswer = { ...batchAnswer, results, summary: { total: 5, valid: 2, format_valid: 1, invalid: 1, missing: 1, not_checked: 1 } }
+    expect(identifierBatchCounts(answer)).toEqual({ total: 5, valid: 1, format_valid: 1, invalid: 1, missing: 1, not_checked: 1 })
+    expect(identifierBatchSummary(answer, t)).toBe('5 Zeilen geprüft: 1 gültig mit Prüfziffer, 1 nur dem Format nach gültig, 1 ungültig, 1 ohne Wert, 1 nicht prüfbar')
+    expect(visibleIdentifierRows(answer, true).map((row) => row.ref)).toEqual(['B-2', 'B-3', 'B-4', 'B-5'])
+    const line = identifierBatchLines(catalogue, answer, null, false, t)[2]!
+    expect([line.status, line.tone]).toEqual(['nur Format gültig', 'warning'])
+    expect(identifierBatchLines(catalogue, answer, null, false, t)[0]!.tone).toBe('success')
+    expect(identifierStatusText('VALID', translator(identifierMessages, 'en'), 'format_valid')).toBe('format valid only')
+    const formatOnly = { ...validAnswer.result, message: '', verdict: 'format_valid' as const }
+    expect(identifierReasonText(formatOnly, 'Streng', t)).toBe('Die Kennung erfüllt die Formatprüfungen des Profils „Streng“; eine Prüfziffer ist nicht geprüft.')
+    expect(identifierReasonText({ ...formatOnly, verdict: 'valid' }, 'Streng', t)).toBe('Die Kennung erfüllt alle Prüfungen des Profils „Streng“.')
   })
 })
