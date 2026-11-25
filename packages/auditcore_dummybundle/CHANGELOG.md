@@ -1,6 +1,6 @@
 # Changelog auditcore_dummybundle
 
-## 0.3.1 – 2026-11-24
+## 0.3.1 – 2026-11-25
 
 - Bindung an `auditcore_identifiers==0.3.1` (nur die Zusammenfassung von
   `POST /check/batch` geändert, die das Paket nicht nutzt). Gleicher Startwert

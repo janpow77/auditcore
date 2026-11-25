@@ -1,12 +1,9 @@
 # Changelog @auditcore/ui
 
-## Unveröffentlicht
+## 0.6.0 – 2026-11-25
 
+- Abhängigkeit `@auditcore/ui-core` auf 0.5.0 angehoben.
 - Neu: `PdfRedaction` und `<flowaudit-pdf-redaction>` (Eigenschaften `port`, `locale`, `urls`; Ereignisse `redaction-planned`, `redaction-completed`, `error`).
-
-## 0.5.2 – 2026-11-24
-
-- Abhängigkeit `@auditcore/ui-core` auf 0.4.2 angehoben.
 - `ExtrapolationPanel`: Die Karte der Restfehlerquote zeigt bei „entfällt“ die
   Begründung des Backends (`not_applicable`) und die Hinweise (`notes`), etwa
   dass die Finanzkorrekturen den Risikobetrag übersteigen. Eine neue
