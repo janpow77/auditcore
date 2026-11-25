@@ -165,7 +165,11 @@ Hilfen: `format_iban`, `iban_check_digits`, `lei_check_digits`,
 `identifiers_ui/1` framework-frei ab; `create_app`/`routes` (Extra `web`)
 und `create_router` (Extra `fastapi`) hängen ihn unter `GET /catalogue`,
 `POST /check` und `POST /check/batch` ein. Das Profil ist in jeder Anfrage
-Pflicht; ungültige Kennungen sind Ergebnisse, keine Fehler. Die Oberfläche
+Pflicht; ungültige Kennungen sind Ergebnisse, keine Fehler. In der
+Zusammenfassung von `/check/batch` zählt `summary.valid` seit 0.3.1 nur Zeilen
+mit geprüfter Prüfziffer (`verdict` `valid`); Zeilen, die nur dem Format nach
+gültig sind (BIC, Steuernummer, Legacy-Profile), stehen getrennt in
+`summary.format_valid`. Die Oberfläche
 ist `<flowaudit-identifier-check>` aus `@auditcore/ui` (React:
 `FlowauditIdentifierCheck`). Vertrag:
 [`docs/ui/identifiers-rest.md`](../../docs/ui/identifiers-rest.md).

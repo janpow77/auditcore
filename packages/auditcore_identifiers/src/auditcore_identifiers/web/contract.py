@@ -164,13 +164,21 @@ def _batch_entry(profile: Profile, raw: object, index: int, limits: Limits) -> J
 
 
 def _summary(results: list[Json]) -> Json:
+    """Counts per row; ``valid`` and ``format_valid`` are disjoint (since 0.3.1).
+
+    ``valid`` counts only rows with verdict ``valid`` (format and verified check
+    digit). Rows whose format holds but whose check digit does not exist or was
+    not verified (BIC, tax number, ``status`` ``VALID``) count as ``format_valid``.
+    ``total`` = ``valid`` + ``format_valid`` + ``invalid`` + ``missing`` + ``not_checked``.
+    """
+    verdicts = [r.get("verdict") for r in results]
     statuses = [r.get("status") for r in results]
     return {
         "total": len(results),
-        "valid": statuses.count(Status.VALID.value),
+        "valid": verdicts.count(Verdict.VALID.value),
         "invalid": statuses.count(Status.INVALID.value),
         "missing": statuses.count(Status.MISSING.value),
-        "format_valid": sum(1 for r in results if r.get("verdict") == Verdict.FORMAT_VALID.value),
+        "format_valid": verdicts.count(Verdict.FORMAT_VALID.value),
         "not_checked": sum(1 for r in results if r["error"] is not None),
     }
 

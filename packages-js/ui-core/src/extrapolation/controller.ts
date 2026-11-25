@@ -30,8 +30,10 @@ import type {
   EvaluationResult,
   ExtrapolationCatalogue,
   ExtrapolationExportFormat,
+  ExtrapolationExportRequest,
   ExtrapolationMethod,
   ExtrapolationPort,
+  ResidualRequest,
   ResidualResult,
   StratumInput,
   UnitInput,
@@ -56,6 +58,8 @@ export interface ExtrapolationData extends RequestState<string> {
   residualForm: ResidualForm
   residualIssues: ExtrapolationIssues
   residual: ResidualResult | null
+  /** Anfrage, aus der `residual` stammt; der Export rechnet die RER daraus neu. */
+  lastResidualRequest: ResidualRequest | null
   /** Einheit, deren Teilstichprobe gerade bearbeitet wird. */
   subsampleUnit: number | null
   /** Teileinheit dieser Teilstichprobe, deren eigene Teilstichprobe bearbeitet wird (dreistufig). */
@@ -77,7 +81,7 @@ const EMPTY_FORM: ExtrapolationForm = {
 
 export const INITIAL_EXTRAPOLATION: ExtrapolationData = {
   ...IDLE, catalogue: null, form: EMPTY_FORM, formError: null, issues: {}, result: null, lastRequest: null,
-  residualForm: EMPTY_RESIDUAL, residualIssues: {}, residual: null, subsampleUnit: null, subsampleItem: null,
+  residualForm: EMPTY_RESIDUAL, residualIssues: {}, residual: null, lastResidualRequest: null, subsampleUnit: null, subsampleItem: null,
 }
 
 export function extrapolationMethod(state: ExtrapolationData): ExtrapolationMethod | null {
@@ -114,16 +118,36 @@ function createRows(store: Store<ExtrapolationData>) {
 
 type Run = ReturnType<typeof createRunner<ExtrapolationPort, string, ExtrapolationData>>
 
-function createRequests(source: ExtrapolationSource, store: Store<ExtrapolationData>, run: Run) {
+/**
+ * Stand der Eingaben: `evaluate()` und `applyInputs()` zählen ihn hoch. Eine Antwort, die
+ * nach einer späteren Hochrechnung oder neuen Eingaben eintrifft, wird verworfen; sonst
+ * stünde eine alte RER samt Begründung unter der neuen Hochrechnung und ginge in den Export.
+ */
+interface Generation {
+  value: number
+}
+
+/** `library` des Katalogs (z. B. „auditcore_extrapolation 0.3.1“) kennt `residual` im Export. */
+export function extrapolationExportsResidual(catalogue: ExtrapolationCatalogue | null): boolean {
+  const match = /(\d+)\.(\d+)\.(\d+)/.exec(catalogue?.library ?? '')
+  if (!match) return false
+  const [major, minor, patch] = match.slice(1).map(Number) as [number, number, number]
+  return major > 0 || minor > 3 || (minor === 3 && patch >= 1)
+}
+
+function createRequests(source: ExtrapolationSource, store: Store<ExtrapolationData>, run: Run, generation: Generation) {
   async function evaluate(): Promise<void> {
     const state = store.get()
     if (!state.catalogue) return
     const checked = buildEvaluationRequest(state.catalogue, state.form)
     store.set({ formError: checked.ok ? null : checked.error, issues: checked.ok ? {} : checked.issues })
     if (!checked.ok) return
+    const started = (generation.value += 1)
     const result = await run('evaluate', (port) => port.evaluate(checked.request))
-    if (!result) return
-    store.set({ result, lastRequest: checked.request, residual: null, residualIssues: {}, residualForm: residualFormFrom(result, store.get().residualForm, source.format) })
+    if (!result || started !== generation.value) return
+    // Eine RER, die während dieser Hochrechnung gestartet wurde, gehört zum alten Ergebnis.
+    generation.value += 1
+    store.set({ result, lastRequest: checked.request, residual: null, lastResidualRequest: null, residualIssues: {}, residualForm: residualFormFrom(result, store.get().residualForm, source.format) })
     source.callbacks?.().evaluated?.(result)
   }
 
@@ -132,15 +156,20 @@ function createRequests(source: ExtrapolationSource, store: Store<ExtrapolationD
     const checked = buildResidualRequest(state.residualForm, state.lastRequest?.materiality_rate ?? 0.02)
     store.set({ residualIssues: checked.ok ? {} : checked.issues })
     if (!checked.ok) return
+    const started = generation.value
     const result = await run('residual', (port) => port.residual(checked.request))
-    if (!result) return
-    store.set({ residual: result })
+    if (!result || started !== generation.value) return
+    store.set({ residual: result, lastResidualRequest: checked.request })
     source.callbacks?.().residualComputed?.(result)
   }
 
   async function exportEvaluation(format: ExtrapolationExportFormat): Promise<DownloadFile | null> {
-    const request = store.get().lastRequest
-    return request ? run('export', (port) => port.exportEvaluation(request, format)) : null
+    const { catalogue, lastRequest, lastResidualRequest } = store.get()
+    if (!lastRequest) return null
+    // Ältere Backends (< 0.3.1) nähmen `residual` in den Fingerabdruck der Auswertung auf.
+    const withResidual = lastResidualRequest !== null && extrapolationExportsResidual(catalogue)
+    const request: ExtrapolationExportRequest = withResidual ? { ...lastRequest, residual: lastResidualRequest } : lastRequest
+    return run('export', (port) => port.exportEvaluation(request, format))
   }
 
   return { evaluate, computeResidual, exportEvaluation }
@@ -150,12 +179,14 @@ export function createExtrapolationController(source: ExtrapolationSource) {
   const store = createStore<ExtrapolationData>({ ...INITIAL_EXTRAPOLATION })
   const run: Run = createRunner<ExtrapolationPort, string, ExtrapolationData>(store, () => source.port() ?? null, errorText, (message) => source.callbacks?.().failed?.(message))
   const rows = createRows(store)
+  const generation: Generation = { value: 0 }
 
   /** Eigenschaften `strata`/`units` als bearbeitbare Zeilen übernehmen (verwirft das Ergebnis). */
   function applyInputs(): void {
+    generation.value += 1
     const strata = stratumRows(source.strata(), source.format)
     rows.patchForm({ strata: strata.length ? strata : [emptyStratum('s1')], units: unitRows(source.units(), source.format), design: designOf(source.strata()) })
-    store.set({ result: null, residual: null, issues: {}, formError: null, subsampleUnit: null, subsampleItem: null })
+    store.set({ result: null, residual: null, lastResidualRequest: null, issues: {}, formError: null, subsampleUnit: null, subsampleItem: null })
   }
 
   async function load(): Promise<void> {
@@ -179,7 +210,7 @@ export function createExtrapolationController(source: ExtrapolationSource) {
     load,
     applyInputs,
     selectMethod,
-    ...createRequests(source, store, run),
+    ...createRequests(source, store, run, generation),
     ...rows,
     setConfidence: (confidence: number | null) => rows.patchForm({ confidence }),
     setProfile: (profileId: string | null) => rows.patchForm({ profileId }),

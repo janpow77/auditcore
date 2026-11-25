@@ -1,5 +1,16 @@
 # Changelog – auditcore_identifiers
 
+## 0.3.1 – 2026-11-24
+
+**Vertragsänderung `identifiers_ui/1`, `POST /check/batch`:** `summary.valid`
+zählt nur noch Zeilen mit `verdict` `valid`, also mit geprüfter Prüfziffer.
+Bis 0.3.0 zählte es jede Zeile mit `status` `VALID`, auch BIC, Steuernummer
+und alle Zeilen der Legacy-Profile, die zugleich in `summary.format_valid`
+standen. Wer die REST-Antwort direkt las, hielt damit eine nur dem Format nach
+gültige BIC oder Steuernummer für „gültig“. `valid` und `format_valid` schließen
+sich jetzt aus; `total` ist die Summe aus `valid`, `format_valid`, `invalid`,
+`missing` und `not_checked`. Felder und Ergebnisse je Zeile bleiben unverändert.
+
 ## 0.3.0 – 2026-11-23
 
 Korrekturen gegen falsch-positive Ergebnisse; neue Ergebnisfelder.
