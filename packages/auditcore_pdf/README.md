@@ -11,7 +11,7 @@ Die Bibliothek stellt Fachanwendungen der Prüfbehörde robuste Funktionen für 
 Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt):
 
 ```bash
-python -m pip install 'auditcore_pdf==0.2.0' \
+python -m pip install 'auditcore_pdf==0.3.0' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
@@ -19,7 +19,7 @@ Hashgebunden in einer `requirements.txt` (Direkt-URL und `sha256` stehen im
 Index unter `https://janpow77.github.io/auditcore/simple/auditcore-pdf/`):
 
 ```text
-auditcore_pdf @ https://github.com/janpow77/auditcore/releases/download/v0.1.0/auditcore_pdf-0.1.0-py3-none-any.whl#sha256=d3adb33f
+auditcore_pdf @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_pdf-0.3.0-py3-none-any.whl#sha256=<sha256>
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle des Releases

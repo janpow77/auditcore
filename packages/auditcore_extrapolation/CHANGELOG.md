@@ -1,6 +1,6 @@
 # Changelog auditcore_extrapolation
 
-## 0.3.1 – 2026-11-24
+## 0.3.1 – 2026-11-25
 
 - **Export mit RER:** `POST /evaluate/export` (`export_evaluation`) nimmt
   optional `residual` mit dem Körper von `/residual` an und rechnet die

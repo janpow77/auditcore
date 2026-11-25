@@ -3,6 +3,7 @@
 ## 0.1.11 – 2026-11-25
 
 - CUDA-Prozesse eines laufenden GPU-Runners werden anhand der Host-PID dem Container zugeordnet.
+- Die gebündelte Oberfläche (`data/web/runner-elements.js`) enthält die Stile von `@auditcore/ui-core` 0.5.0 (zusätzlich „PDF schwärzen“).
 
 ## 0.1.10 – 2026-11-25
 

@@ -32,10 +32,10 @@ GitHub-Release von auditcore; dann gehört jedes Paket der Hülle ausdrücklich
 in die `package.json`:
 
 ```sh
-npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.12.tgz
+npm install @auditcore/sampling-templates-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-sampling-templates-vue-0.1.13.tgz
 ```
 
-Version 0.1.12 ist noch nicht veröffentlicht. Anleitung mit Integritätsprüfung
+Anleitung mit Integritätsprüfung
 und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
