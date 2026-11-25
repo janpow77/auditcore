@@ -14,7 +14,7 @@ Behörde nachbildet, ohne dass es belegt und freigegeben ist.
 ## Installation
 
 Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt);
-`auditcore_dummybundle` 0.3.1 erscheint mit v0.17.1 (0.3.0 aus v0.17.0 bindet
+`auditcore_dummybundle` 0.3.1 erscheint mit v0.18.0 (0.3.0 aus v0.17.0 bindet
 noch `auditcore_identifiers==0.3.0`):
 
 ```bash

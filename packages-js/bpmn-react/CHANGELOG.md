@@ -1,8 +1,8 @@
 # Changelog – @auditcore/bpmn-react
 
-## 0.5.3 – 2026-11-24
+## 0.5.3 – 2026-11-25
 
-- Abhängigkeit `@auditcore/ui-core` auf 0.4.2 angehoben (Paritätstests gegen `@auditcore/bpmn-vue` 0.5.3); keine Änderung am Paket selbst.
+- Abhängigkeit `@auditcore/ui-core` auf 0.5.0 angehoben (Paritätstests gegen `@auditcore/bpmn-vue` 0.5.3); keine Änderung am Paket selbst.
 
 ## 0.5.2 – 2026-10-17
 

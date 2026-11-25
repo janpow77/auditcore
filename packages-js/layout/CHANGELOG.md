@@ -1,8 +1,8 @@
 # Changelog @auditcore/layout
 
-## 0.1.3 – 2026-11-24
+## 0.1.3 – 2026-11-25
 
-- Abhängigkeit `@auditcore/ui` auf 0.5.2 angehoben; keine Änderung am Paket selbst.
+- Abhängigkeit `@auditcore/ui` auf 0.6.0 angehoben; keine Änderung am Paket selbst.
 
 ## 0.1.2 – 2026-10-17
 
