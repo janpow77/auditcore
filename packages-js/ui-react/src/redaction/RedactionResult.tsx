@@ -27,7 +27,7 @@ export function RedactionResultView({ view, id }: { view: UseRedaction; id: stri
           </a>
         ) : null}
         <Button testId="redaction-edit" onClick={() => controller.editAgain()}>{t('editAgain')}</Button>
-        <Button variant="ghost" testId="redaction-reset" onClick={() => controller.reset()}>{t('another')}</Button>
+        <Button variant="ghost" testId="redaction-reset" onClick={() => controller.reset()}>{t(state.fileFixed ? 'again' : 'another')}</Button>
       </div>
     </section>
   )

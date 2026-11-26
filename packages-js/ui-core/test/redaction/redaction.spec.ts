@@ -387,4 +387,82 @@ describe('Schwärzen: Vorgaben der Anwendung', () => {
     early.presetCriteria({})
     expect(early.store.get().terms).toBe('eigener Begriff')
   })
+
+  it('verwirft Fehler und Textauszüge des alten Dokuments beim Wechsel der Vorgabe', async () => {
+    let reject: (error: Error) => void = () => undefined
+    const port = { ...fakeRedactionPort(), apply: () => new Promise<never>((_resolve, fail) => { reject = fail }) }
+    const failed = vi.fn()
+    const controller = createRedactionController({ port: () => port, urls: fakeUrls(), callbacks: () => ({ failed }) })
+    await controller.load()
+    const akteA = new Blob(['%PDF-A'], { type: 'application/pdf' })
+    controller.provideFile(akteA, 'a.pdf')
+    controller.setPattern('email', true)
+    await controller.plan()
+    const running = controller.apply()
+    const akteB = new Blob(['%PDF-B'], { type: 'application/pdf' })
+    controller.provideFile(akteB, 'b.pdf')
+    reject(new Error('Textauszug aus Akte A'))
+    await running
+    expect(controller.store.get()).toMatchObject({ filename: 'b.pdf', error: null, busy: null })
+    expect(failed).not.toHaveBeenCalled()
+
+    // Ohne Wettlauf: ein Fehler zu A verschwindet beim Wechsel auf B.
+    controller.provideFile(akteA, 'a.pdf')
+    controller.store.set({ error: 'Fehler zu A' })
+    controller.provideFile(akteB, 'b.pdf')
+    expect(controller.store.get().error).toBeNull()
+  })
+
+  it('verwirft einen Plan zu alten Kriterien und merkt Vorgaben während des Schwärzens und im Ergebnis vor', async () => {
+    const port = fakeRedactionPort()
+    const controller = createRedactionController({ port: () => port, urls: fakeUrls() })
+    await controller.load()
+    controller.provideFile(new Blob(['%PDF-']), 'akte.pdf')
+    controller.setPattern('email', true)
+
+    // Vorschlag kommt, während der Plan noch läuft: Plan verfällt, Formular zeigt die Vorgabe.
+    const planning = controller.plan()
+    controller.presetCriteria({ terms: ['Erika Mustermann'] })
+    await planning
+    expect(controller.store.get()).toMatchObject({ plan: null, terms: 'Erika Mustermann', busy: null })
+
+    // In der Prüfansicht: Plan verfällt ebenso.
+    await controller.plan()
+    expect(controller.store.get().plan).not.toBeNull()
+    controller.presetCriteria({ patterns: ['iban'] })
+    expect(controller.store.get()).toMatchObject({ plan: null, patterns: ['iban'] })
+
+    // Während des Schwärzens vorgemerkt, im Ergebnis weiter vorgemerkt, bei „Neu beginnen“ übernommen.
+    await controller.plan()
+    const applying = controller.apply()
+    controller.presetCriteria({ terms: ['Musterstraße 1'] })
+    expect(controller.store.get().terms).toBe('Erika Mustermann')
+    await applying
+    expect(controller.store.get().result).not.toBeNull()
+    expect(controller.store.get().terms).toBe('Erika Mustermann')
+    controller.reset()
+    expect(controller.store.get()).toMatchObject({ terms: 'Musterstraße 1', plan: null, result: null, fileFixed: true })
+  })
+
+  it('übernimmt nach fehlgeschlagenem Schwärzen vorgemerkte Vorgaben', async () => {
+    const port = fakeRedactionPort({ failing: 'apply' })
+    const controller = createRedactionController({ port: () => port, urls: fakeUrls() })
+    await controller.load()
+    controller.provideFile(new Blob(['%PDF-']), 'akte.pdf')
+    controller.setPattern('email', true)
+    await controller.plan()
+    const applying = controller.apply()
+    controller.presetCriteria({ terms: ['Erika Mustermann'] })
+    await applying
+    expect(controller.store.get()).toMatchObject({ terms: 'Erika Mustermann', plan: null, error: 'Dienst nicht erreichbar' })
+  })
+
+  it('übergeht Vorgaben, die keine Listen sind (HTML-Attribut statt Eigenschaft)', async () => {
+    const controller = createRedactionController({ port: () => fakeRedactionPort(), urls: fakeUrls() })
+    await controller.load()
+    controller.setTerms('eigener Begriff')
+    controller.presetCriteria({ terms: 'Erika' as unknown as string[], patterns: 'iban' as unknown as string[] })
+    expect(controller.store.get()).toMatchObject({ terms: 'eigener Begriff', patterns: [] })
+  })
 })
+

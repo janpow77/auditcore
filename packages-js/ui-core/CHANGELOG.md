@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- PDF schwärzen: `createRedactionController` hat `provideFile(file, filename?)` (bereitgestellte Datei, `fileFixed` im Zustand, bleibt bei `reset()`) und `presetCriteria({ terms, patterns })` (Startwerte, nicht angebotene Muster entfallen); neuer Text `fileProvided`.
+- PDF schwärzen: `createRedactionController` hat `provideFile(file, filename?)` (bereitgestellte Datei, `fileFixed` im Zustand, bleibt bei `reset()`) und `presetCriteria({ terms, patterns })` (Startwerte, nicht angebotene Muster entfallen; ein Plan zu alten Kriterien verfällt, während des Schwärzens und im Ergebnis vorgemerkt). Fehler einer Anfrage zu einem nicht mehr aktuellen Dokument verfallen. `redactionValidationText` hat den optionalen Parameter `fileFixed`; neue Texte `fileProvided`, `errorTooLargeProvided` und `again`, Stile `fa-redaction__provided` und `fa-redaction__value`; lange Dateinamen brechen um.
 
 ## 0.5.1 – 2026-11-26
 

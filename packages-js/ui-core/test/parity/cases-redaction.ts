@@ -36,8 +36,8 @@ export const redactionCases: ReadonlyArray<ParityCase<RedactionCaseProps>> = [
     name: 'bereitgestellte Datei mit Vorgaben',
     props: () => ({ port: fakeRedactionPort(), file: syntheticPdf('arbeitsfassung.pdf'), filename: 'Akte 2026-17.pdf', terms: ['Erika Mustermann'], patterns: ['iban', 'gibt_es_nicht'] }),
     expect: {
-      texts: ['Dokument: Akte 2026-17.pdf'],
-      counts: { 'input[type="file"]': 0, '[data-testid="redaction-file-provided"]': 1, 'input[data-pattern]:checked': 1, 'input[data-pattern="iban"]:checked': 1 },
+      texts: ['Dokument', 'Akte 2026-17.pdf'],
+      counts: { 'input[type="file"]': 0, '[data-testid="redaction-file-provided"]': 1, 'fieldset[aria-describedby]': 1, 'input[data-pattern]:checked': 1, 'input[data-pattern="iban"]:checked': 1 },
     },
   },
   { name: 'ohne Port', props: () => ({}), expect: { texts: ['Kein Dienst angebunden (Eigenschaft „port“).'], counts: { form: 0 } } },

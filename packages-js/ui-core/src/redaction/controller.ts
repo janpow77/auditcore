@@ -156,6 +156,51 @@ function providedName(file: Blob, filename: string | undefined): string {
   return name || 'dokument.pdf'
 }
 
+/** Nur Listen aus Zeichenketten; ein HTML-Attribut (String) zählt nicht als Vorgabe. */
+const stringList = (value: unknown): string[] | undefined =>
+  Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === 'string') : undefined
+
+/**
+ * Vorgaben für Begriffe und Muster. Im Formular gelten sie sofort; ein Plan zu
+ * alten Kriterien (vorhanden oder laufend) verfällt dann. Während des Schwärzens
+ * und im Ergebnis werden sie vorgemerkt und beim nächsten Schritt übernommen.
+ */
+function createPresetQueue(store: RedactionStore, resources: Resources) {
+  let pending: RedactionPresets | null = null
+  const deferred = (): boolean => locked(store) || store.get().result !== null
+  function applyNow(presets: RedactionPresets): void {
+    const state = store.get()
+    const catalogue = state.catalogue
+    const known = catalogue ? new Set(catalogue.patterns.filter((pattern) => pattern.available).map((pattern) => pattern.id)) : null
+    const terms = stringList(presets.terms)
+    const patterns = stringList(presets.patterns)
+    if (!terms && !patterns) return
+    const change: Partial<RedactionData> = { validation: null }
+    if (terms) change.terms = redactionTerms(terms.join('\n')).join('\n')
+    if (patterns) change.patterns = [...new Set(patterns)].filter((id) => !known || known.has(id))
+    if (state.plan || state.busy === 'plan') {
+      resources.dropAll()
+      Object.assign(change, { ...REVIEW_RESET, plan: null, selected: new Set() })
+    }
+    store.set(change)
+  }
+  return {
+    offer(presets: RedactionPresets): void {
+      if (deferred()) pending = { ...pending, ...presets }
+      else applyNow(presets)
+    },
+    /** Vorgemerkte Vorgaben übernehmen, sobald das wieder möglich ist. */
+    flush(): void {
+      if (!pending || deferred()) return
+      const next = pending
+      pending = null
+      applyNow(next)
+    },
+  }
+}
+
+type PresetQueue = ReturnType<typeof createPresetQueue>
+
 
 /** Auswahl der Fundstellen: einzeln, alle, je Quelle, je Gruppe; Liste aufklappen und filtern. */
 function selectionActions(store: RedactionStore) {
@@ -250,7 +295,7 @@ function areaActions(store: RedactionStore) {
 }
 
 /** Datei und Suchkriterien bis zum Plan. */
-function criteriaActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner) {
+function criteriaActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner, presets: PresetQueue) {
   return {
     async load(): Promise<void> {
       const catalogue = await run('load', (port) => port.catalogue())
@@ -261,7 +306,8 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
     /** Datei wählen (`null` = Auswahl aufheben); ein vorhandener Plan verfällt. */
     selectFile(file: File | null): void {
       resources.dropAll()
-      store.set({ ...REVIEW_RESET, file, filename: file?.name ?? '', fileFixed: false, plan: null, selected: new Set(), validation: null })
+      store.set({ ...REVIEW_RESET, file, filename: file?.name ?? '', fileFixed: false, plan: null, selected: new Set(), validation: null, error: null })
+      presets.flush()
     },
     /**
      * Datei der Anwendung übernehmen (z. B. vom Server zusammengestellt); das
@@ -280,17 +326,17 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
         plan: null,
         selected: new Set(),
         validation: null,
+        error: null,
       })
+      presets.flush()
     },
-    /** Startwerte für Begriffe und Muster; nicht angebotene Muster entfallen. */
-    presetCriteria(presets: RedactionPresets): void {
-      if (locked(store)) return
-      const catalogue = store.get().catalogue
-      const known = catalogue ? new Set(catalogue.patterns.filter((pattern) => pattern.available).map((pattern) => pattern.id)) : null
-      const change: Partial<RedactionData> = { validation: null }
-      if (presets.terms) change.terms = redactionTerms(presets.terms.join('\n')).join('\n')
-      if (presets.patterns) change.patterns = [...new Set(presets.patterns)].filter((id) => !known || known.has(id))
-      store.set(change)
+    /**
+     * Startwerte für Begriffe und Muster; nicht angebotene Muster entfallen. Ein
+     * Plan zu alten Kriterien verfällt; während des Schwärzens und im Ergebnis
+     * werden die Werte vorgemerkt.
+     */
+    presetCriteria(values: RedactionPresets): void {
+      presets.offer(values)
     },
     setPattern(id: string, on: boolean): void {
       store.set((state) => ({ patterns: on ? [...new Set([...state.patterns, id])] : state.patterns.filter((entry) => entry !== id), validation: null }))
@@ -306,7 +352,7 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
       if (validation || !state.file) return
       const { file, filename } = state
       const generation = resources.generation()
-      const plan = await run('plan', (port) => port.plan(file, filename, redactionCriteria(state)))
+      const plan = await run('plan', (port) => current(port.plan(file, filename, redactionCriteria(state)), resources, generation))
       if (!plan || store.get().file !== file || resources.generation() !== generation) return
       resources.dropAll()
       store.set({ ...REVIEW_RESET, plan, selected: initialRedactionSelection(plan) })
@@ -317,12 +363,13 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
 }
 
 /** Prüfansicht verlassen, Seiten wechseln, schwärzen und Ergebnis. */
-function flowActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner) {
+function flowActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner, presets: PresetQueue) {
   return {
     /** Zurück zu den Suchkriterien; Auswahl und Bereiche verfallen. */
     back(): void {
       resources.dropAll()
       store.set({ ...REVIEW_RESET, plan: null, selected: new Set() })
+      presets.flush()
     },
     async showPage(page: number): Promise<void> {
       const plan = store.get().plan
@@ -336,8 +383,11 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
       const { file, filename } = state
       const selection = redactionSelectionPayload(state.plan, state.selected, state.areas, state.sanitize)
       const generation = resources.generation()
-      const result = await run('apply', (port) => port.apply(file, filename, selection))
-      if (!result || store.get().plan !== state.plan || resources.generation() !== generation) return
+      const result = await run('apply', (port) => current(port.apply(file, filename, selection), resources, generation))
+      if (!result || store.get().plan !== state.plan || resources.generation() !== generation) {
+        presets.flush()
+        return
+      }
       resources.dropResult()
       store.set({ result, resultUrl: resources.urls.create(result.blob) })
       source.callbacks?.().completed?.(result)
@@ -346,6 +396,7 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
     editAgain(): void {
       resources.dropResult()
       store.set({ result: null, resultUrl: null })
+      presets.flush()
     },
     /** Neues Dokument: alles außer Katalog und Kriterien verwerfen; eine bereitgestellte Datei bleibt. */
     reset(): void {
@@ -359,6 +410,7 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
         validation: null,
         error: null,
       })
+      presets.flush()
     },
     /** Objekt-URLs freigeben (beim Entfernen der Komponente); noch laufende Antworten verfallen. */
     dispose(): void {
@@ -368,18 +420,32 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
   }
 }
 
+/**
+ * Antwort einer Anfrage; ist das Dokument inzwischen ein anderes, verfällt auch
+ * ein Fehler (er kann Textauszüge des alten Dokuments enthalten).
+ */
+async function current<T>(request: Promise<T>, resources: Resources, generation: number): Promise<T | null> {
+  try {
+    return await request
+  } catch (caught) {
+    if (resources.generation() !== generation) return null
+    throw caught
+  }
+}
+
 type Runner = ReturnType<typeof createRunner<RedactionPort, string, RedactionData>>
 
 export function createRedactionController(source: RedactionSource) {
   const store: RedactionStore = createStore<RedactionData>({ ...INITIAL_REDACTION })
   const run: Runner = createRunner<RedactionPort, string, RedactionData>(store, () => source.port() ?? null, errorText, (message) => source.callbacks?.().failed?.(message))
   const resources = createResources(store, source)
+  const presets = createPresetQueue(store, resources)
   return {
     store,
-    ...criteriaActions(store, source, resources, run),
+    ...criteriaActions(store, source, resources, run, presets),
     ...selectionActions(store),
     ...areaActions(store),
-    ...flowActions(store, source, resources, run),
+    ...flowActions(store, source, resources, run, presets),
   }
 }
 

@@ -4,10 +4,13 @@
 
 - PDF schwärzen (`@auditcore/ui-core`, `@auditcore/ui`, `@auditcore/ui-react`,
   unveröffentlicht): Die Anwendung kann die Datei vorgeben. Mit den Eigenschaften
-  `file` und `filename` entfällt das Dateifeld, angezeigt wird „Dokument: {name}“,
-  und „Neues Dokument“ behält die Vorgabe. `terms` und `patterns` belegen Begriffe
-  und Muster vor; nicht angebotene Muster entfallen, alles bleibt änderbar.
-  Neu im Controller: `provideFile` und `presetCriteria`. Anlass: KPAnG
+  `file` und `filename` entfällt das Dateifeld, angezeigt wird „Dokument“ mit dem
+  Namen, und „Neu beginnen“ behält die Vorgabe. Ein Wechsel der Datei verwirft Plan
+  und Fehlermeldung, auch die einer noch laufenden Anfrage zum alten Dokument.
+  `terms` und `patterns` belegen Begriffe und Muster vor; nicht angebotene Muster
+  entfallen, alles bleibt änderbar. Ein Plan zu alten Kriterien verfällt; während
+  des Schwärzens und im Ergebnis werden Vorgaben vorgemerkt. Neu im Controller:
+  `provideFile` und `presetCriteria`. Anlass: KPAnG
   stellt die Arbeitsfassung der Akteneinsicht auf dem Server zusammen und schlägt
   die Begriffe aus den Beteiligtendaten vor.
 

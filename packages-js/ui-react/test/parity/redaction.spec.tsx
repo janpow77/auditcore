@@ -1,6 +1,6 @@
 import { fireEvent as domEvent } from '@testing-library/dom'
-import { fireEvent } from '@testing-library/react'
-import { flushPromises } from '@vue/test-utils'
+import { fireEvent, render } from '@testing-library/react'
+import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import PdfRedaction from '../../../ui/src/redaction/PdfRedaction.vue'
 import { fakeRedactionPort, fakeUrls, redactionEmptyPlan, syntheticPdf, type RedactionFake } from '../../../ui-core/test/redaction/fake-port'
@@ -63,7 +63,7 @@ describe('Parität PDF schwärzen nach Interaktion', () => {
       <FlowauditPdfRedaction port={reactPort} urls={fakeUrls()} file={file} {...vorgaben} />,
     )
     expect(rendered.react.querySelector('[data-testid="redaction-file"]')).toBeNull()
-    expect(text(rendered, '[data-testid="redaction-file-provided"]')).toBe('Dokument: Akte 2026-17.pdf')
+    expect(text(rendered, '[data-testid="redaction-file-provided"] .fa-redaction__value')).toBe('Akte 2026-17.pdf')
     await both(rendered, byTestId('redaction-search'), { kind: 'submit' })
     expect(reactPort.calls).toEqual(vuePort.calls)
     expect(reactPort.calls[0]).toEqual(['plan', 'Akte 2026-17.pdf', JSON.stringify({ patterns: ['email'], terms: ['Prüfvermerk'], case_sensitive: false, whole_word: true })])
@@ -185,3 +185,44 @@ describe('Parität PDF schwärzen nach Interaktion', () => {
     expect(rendered.react.querySelector('[data-testid="redaction-select-all"]')?.hasAttribute('disabled')).toBe(true)
   })
 })
+
+describe('Parität PDF schwärzen bei geänderten Vorgaben', () => {
+  it('Dateiwechsel, nur neuer Name und neues Array gleichen Inhalts nach eigener Eingabe', async () => {
+    const vuePort = fakeRedactionPort()
+    const reactPort = fakeRedactionPort()
+    const urls = fakeUrls()
+    const first = syntheticPdf('a.pdf')
+    const host = document.createElement('div')
+    document.body.append(host)
+    const wrapper = mount(PdfRedaction, { props: { port: vuePort, urls, file: first, filename: 'A.pdf', terms: ['Erika'] }, attachTo: host })
+    const view = (props: { file: Blob; filename: string; terms: string[] }) => <FlowauditPdfRedaction port={reactPort} urls={urls} {...props} />
+    const { container, rerender } = render(view({ file: first, filename: 'A.pdf', terms: ['Erika'] }))
+    const rendered: Rendered = { vue: wrapper.element as HTMLElement, react: container.firstElementChild as HTMLElement }
+    const update = async (props: { file: Blob; filename: string; terms: string[] }): Promise<void> => {
+      await wrapper.setProps(props as never)
+      rerender(view(props))
+      await flushPromises()
+      await tick()
+      await flushPromises()
+      expect(normalizeDom(rendered.react)).toBe(normalizeDom(rendered.vue))
+      expect(formState(rendered.react)).toEqual(formState(rendered.vue))
+    }
+    await flushPromises()
+    await tick()
+    const name = (root: HTMLElement): string => root.querySelector('.fa-redaction__value')?.textContent ?? ''
+    const terms = (root: HTMLElement): string => (root.querySelector('[data-testid="redaction-terms"]') as HTMLTextAreaElement).value
+
+    await both(rendered, byTestId('redaction-terms'), { kind: 'input', value: 'eigene Eingabe' })
+    await update({ file: first, filename: 'A.pdf', terms: ['Erika'] })
+    expect([terms(rendered.vue), terms(rendered.react)]).toEqual(['eigene Eingabe', 'eigene Eingabe'])
+
+    await update({ file: first, filename: 'A neu.pdf', terms: ['Erika'] })
+    expect([name(rendered.vue), name(rendered.react)]).toEqual(['A neu.pdf', 'A neu.pdf'])
+
+    await update({ file: syntheticPdf('b.pdf'), filename: 'B.pdf', terms: ['Max'] })
+    expect([name(rendered.vue), name(rendered.react)]).toEqual(['B.pdf', 'B.pdf'])
+    expect([terms(rendered.vue), terms(rendered.react)]).toEqual(['Max', 'Max'])
+    wrapper.unmount()
+  })
+})
+

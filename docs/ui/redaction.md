@@ -43,10 +43,10 @@ Backend setzt einen eigenen `RedactionPort` ein (`catalogue`, `plan`, `preview`,
 | `port` | `RedactionPort \| null` | Dienst; ohne Port erscheint nur der Hinweis „Kein Dienst angebunden“. |
 | `locale` | `'de' \| 'en'` | Sprache (Standard: Seite bzw. `LocaleProvider`). |
 | `urls` | `RedactionUrls` | Erzeugen und Freigeben von Objekt-URLs; Standard `URL.createObjectURL`. In Tests ersetzbar. |
-| `file` | `Blob \| null` | Von der Anwendung bereitgestellte PDF. Das Dateifeld entfällt, angezeigt wird „Dokument: {name}“; „Neues Dokument“ behält die Vorgabe. Eine andere Datei verwirft einen vorhandenen Plan. |
+| `file` | `Blob \| null` | Von der Anwendung bereitgestellte PDF. Statt des Dateifelds und seines Hilfetexts steht „Dokument“ mit dem Namen; „Neu beginnen“ (statt „Weiteres Dokument“) behält die Vorgabe. Eine andere Datei (neues Objekt) verwirft Plan und Fehlermeldung; den Blob daher stabil halten (State oder Memo), nicht bei jedem Rendern neu erzeugen. |
 | `filename` | `string` | Name zu `file`, an den Port übergeben (Standard: Name der Datei, sonst `dokument.pdf`). |
-| `terms` | `readonly string[]` | Startwerte der eigenen Begriffe; leere und doppelte entfallen. Übernommen bei geändertem Inhalt, danach frei änderbar. |
-| `patterns` | `readonly string[]` | Startwerte der Muster (Kennungen aus dem Katalog); nicht angebotene entfallen. |
+| `terms` | `readonly string[]` | Startwerte der eigenen Begriffe; leere und doppelte entfallen. Übernommen bei geändertem Inhalt, danach frei änderbar. Kommen sie, während ein Plan läuft oder angezeigt wird, verfällt der Plan und das Formular zeigt die neuen Werte; während des Schwärzens und im Ergebnis werden sie vorgemerkt und beim nächsten Schritt übernommen. |
+| `patterns` | `readonly string[]` | Startwerte der Muster (Kennungen aus dem Katalog); nicht angebotene entfallen. Sonst wie `terms`. Beim Web Component `terms` und `patterns` als Eigenschaft setzen, nicht als Attribut; ein Attribut (Zeichenkette) wird übergangen. |
 
 | Ereignis (Vue / Web Component) | React | `detail` |
 |---|---|---|

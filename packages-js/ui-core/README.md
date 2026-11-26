@@ -1241,7 +1241,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1323):
 | `@auditcore/ui-core` | `redactionStep` | Funktion | – | `redaction/view` |
 | `@auditcore/ui-core` | `redactionTerms` | Funktion | Begriffe aus dem Textfeld: eine Zeile je Begriff, leere Zeilen und Dubletten entfallen. | `redaction/model` |
 | `@auditcore/ui-core` | `redactionValidation` | Funktion | Prüfung vor dem Senden (reine Funktion). | `redaction/controller` |
-| `@auditcore/ui-core` | `redactionValidationText` | Funktion | – | `redaction/view` |
+| `@auditcore/ui-core` | `redactionValidationText` | Funktion | Text zur Prüfung vor dem Senden; `fileFixed`: die Datei stellt die Anwendung bereit. | `redaction/view` |
 | `@auditcore/ui-core` | `registerCsv` | Funktion | – | `dataprotection/exporters` |
 | `@auditcore/ui-core` | `registerFilename` | Funktion | – | `dataprotection/exporters` |
 | `@auditcore/ui-core` | `registerHtml` | Funktion | – | `dataprotection/exporters` |
