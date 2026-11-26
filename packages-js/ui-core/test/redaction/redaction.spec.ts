@@ -488,7 +488,7 @@ describe('Schwärzen: Vorgaben der Anwendung', () => {
     controller.setTerms('nachträglich eingegeben')
     resolve(redactionPlan)
     await second
-    expect(controller.store.get()).toMatchObject({ plan: null, terms: 'nachträglich eingegeben' })
+    expect(controller.store.get()).toMatchObject({ plan: null, terms: 'nachträglich eingegeben', criteriaNotice: 'edited' })
   })
 
   it('merkt nur gesetzte Schlüssel vor und meldet den verworfenen Plan nach „Auswahl ändern“', async () => {
@@ -507,10 +507,10 @@ describe('Schwärzen: Vorgaben der Anwendung', () => {
     await applying
     expect(controller.store.get().result).not.toBeNull()
     controller.editAgain()
-    expect(controller.store.get()).toMatchObject({ terms: 'A', patterns: ['iban'], plan: null, areas: [], presetsApplied: true })
+    expect(controller.store.get()).toMatchObject({ terms: 'A', patterns: ['iban'], plan: null, areas: [], criteriaNotice: 'presets' })
     expect(redactionStep(controller.store.get())).toBe('form')
     await controller.plan()
-    expect(controller.store.get().presetsApplied).toBe(false)
+    expect(controller.store.get().criteriaNotice).toBeNull()
   })
 
   it('übernimmt vorgemerkte Vorgaben, wenn während des Schwärzens die Datei wechselt', async () => {

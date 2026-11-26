@@ -49,8 +49,11 @@ export interface RedactionData extends RequestState<string> {
   filename: string
   /** Die Datei stellt die Anwendung bereit (`provideFile`); kein Dateifeld. */
   fileFixed: boolean
-  /** Eine Vorgabe der Anwendung hat einen Plan zu alten Kriterien verworfen (Hinweis im Formular). */
-  presetsApplied: boolean
+  /**
+   * Ein Plan zu alten Kriterien ist verworfen (Hinweis im Formular): `presets` durch
+   * eine Vorgabe der Anwendung, `edited` durch eine Änderung während der Suche.
+   */
+  criteriaNotice: 'presets' | 'edited' | null
   patterns: readonly string[]
   terms: string
   caseSensitive: boolean
@@ -91,7 +94,7 @@ export const INITIAL_REDACTION: RedactionData = {
   file: null,
   filename: '',
   fileFixed: false,
-  presetsApplied: false,
+  criteriaNotice: null,
   patterns: [],
   terms: '',
   caseSensitive: false,
@@ -116,7 +119,7 @@ export const INITIAL_REDACTION: RedactionData = {
 /** Zurück auf die Prüfansicht eines neuen Plans (ohne Datei und Kriterien). */
 const REVIEW_RESET: Partial<RedactionData> = {
   areas: [], page: 1, preview: null, previewError: null, gesture: null, areaLimitHit: false,
-  filter: '', expanded: new Set(), groupLimit: REDACTION_GROUP_PAGE, result: null, resultUrl: null, presetsApplied: false,
+  filter: '', expanded: new Set(), groupLimit: REDACTION_GROUP_PAGE, result: null, resultUrl: null, criteriaNotice: null,
 }
 
 export function redactionCriteria(state: RedactionData): RedactionCriteria {
@@ -183,7 +186,7 @@ function createPresetQueue(store: RedactionStore, resources: Resources) {
     if (patterns) change.patterns = [...new Set(patterns)].filter((id) => !known || known.has(id))
     if (state.plan || state.busy === 'plan') {
       resources.dropAll()
-      Object.assign(change, { ...REVIEW_RESET, plan: null, selected: new Set(), presetsApplied: true })
+      Object.assign(change, { ...REVIEW_RESET, plan: null, selected: new Set(), criteriaNotice: 'presets' })
     }
     store.set(change)
   }
@@ -303,6 +306,18 @@ function areaActions(store: RedactionStore) {
   }
 }
 
+/**
+ * Gehört eine Planantwort noch zum Zustand? Andere Datei oder Generation: nein.
+ * Kriterien inzwischen geändert (Eingabe während der Suche): nein, mit Hinweis.
+ */
+function planStillCurrent(store: RedactionStore, resources: Resources, sent: { file: Blob; generation: number; criteria: RedactionCriteria }): boolean {
+  const state = store.get()
+  if (state.file !== sent.file || resources.generation() !== sent.generation) return false
+  if (JSON.stringify(redactionCriteria(state)) === JSON.stringify(sent.criteria)) return true
+  store.set({ criteriaNotice: 'edited' })
+  return false
+}
+
 /** Datei und Suchkriterien bis zum Plan. */
 function criteriaActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner, presets: PresetQueue) {
   return {
@@ -357,15 +372,13 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
     async plan(): Promise<void> {
       const state = store.get()
       const validation = redactionValidation(state)
-      store.set({ validation, presetsApplied: false })
+      store.set({ validation, criteriaNotice: null })
       if (validation || !state.file) return
       const { file, filename } = state
       const generation = resources.generation()
       const criteria = redactionCriteria(state)
       const plan = await run('plan', (port) => current(port.plan(file, filename, criteria), resources, generation))
-      if (!plan || store.get().file !== file || resources.generation() !== generation) return
-      // Kriterien inzwischen geändert (Eingabe oder Vorgabe): der Plan gehört nicht mehr dazu.
-      if (JSON.stringify(redactionCriteria(store.get())) !== JSON.stringify(criteria)) return
+      if (!plan || !planStillCurrent(store, resources, { file, generation, criteria })) return
       resources.dropAll()
       store.set({ ...REVIEW_RESET, plan, selected: initialRedactionSelection(plan) })
       source.callbacks?.().planned?.(plan)

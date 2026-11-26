@@ -17,7 +17,7 @@ export function RedactionForm({ view, id }: { view: UseRedaction; id: string }) 
   return (
     <form className="fa-redaction__card" noValidate aria-labelledby={`${id}-form`} data-testid="redaction-form" onSubmit={onSubmit}>
       <h3 id={`${id}-form`} className="fa-redaction__heading" tabIndex={-1}>{t('formHeading')}</h3>
-      {state.presetsApplied ? <p className="fa-redaction__notice" role="status" data-testid="redaction-presets-changed">{t('presetsChanged')}</p> : null}
+      {state.criteriaNotice ? <p className="fa-redaction__notice" role="status" data-testid="redaction-criteria-notice">{t(state.criteriaNotice === 'presets' ? 'presetsChanged' : 'criteriaEdited')}</p> : null}
       {state.fileFixed ? (
         <p id={`${id}-file-provided`} className="fa-redaction__field fa-redaction__provided" data-testid="redaction-file-provided">
           <span className="fa-redaction__label">{t('fileProvided')}</span>{' '}

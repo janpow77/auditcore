@@ -26,7 +26,7 @@ const checked = (event: Event): boolean => (event.target as HTMLInputElement).ch
 <template>
   <form v-if="catalogue" class="fa-redaction__card" novalidate :aria-labelledby="`${id}-form`" data-testid="redaction-form" @submit.prevent="controller.plan">
     <h3 :id="`${id}-form`" class="fa-redaction__heading" tabindex="-1">{{ t('formHeading') }}</h3>
-    <p v-if="state.presetsApplied" class="fa-redaction__notice" role="status" data-testid="redaction-presets-changed">{{ t('presetsChanged') }}</p>
+    <p v-if="state.criteriaNotice" class="fa-redaction__notice" role="status" data-testid="redaction-criteria-notice">{{ t(state.criteriaNotice === 'presets' ? 'presetsChanged' : 'criteriaEdited') }}</p>
     <p v-if="state.fileFixed" :id="`${id}-file-provided`" class="fa-redaction__field fa-redaction__provided" data-testid="redaction-file-provided">
       <span class="fa-redaction__label">{{ t('fileProvided') }}</span>{{ ' ' }}
       <span class="fa-redaction__value">{{ state.filename }}</span>
