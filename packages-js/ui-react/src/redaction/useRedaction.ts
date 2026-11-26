@@ -19,6 +19,14 @@ export interface RedactionInputs {
   locale?: Locale
   /** Objekt-URLs für Seitenbild und Download (Standard: `URL.createObjectURL`). */
   urls?: RedactionUrls
+  /** Von der Anwendung bereitgestellte PDF; das Dateifeld entfällt. */
+  file?: Blob | null
+  /** Dateiname zu `file` (Standard: Name der Datei oder `dokument.pdf`). */
+  filename?: string
+  /** Startwerte der eigenen Begriffe (änderbar). */
+  terms?: readonly string[]
+  /** Startwerte der Muster (Kennungen aus dem Katalog, änderbar). */
+  patterns?: readonly string[]
   onRedactionPlanned?: (plan: RedactionPlan) => void
   onRedactionCompleted?: (result: RedactionResult) => void
   onError?: (message: string) => void
@@ -51,6 +59,15 @@ export function useRedaction(props: RedactionInputs): UseRedaction {
   useEffect(() => {
     void controller.load()
   }, [controller, props.port])
+  useEffect(() => {
+    controller.provideFile(props.file ?? null, props.filename)
+  }, [controller, props.file, props.filename])
+  // Vorgaben nur bei geändertem Inhalt übernehmen, nicht bei jedem neuen Array.
+  const presetKey = JSON.stringify([props.terms ?? null, props.patterns ?? null])
+  useEffect(() => {
+    const [terms, patterns] = JSON.parse(presetKey) as [string[] | null, string[] | null]
+    if (terms || patterns) controller.presetCriteria({ terms: terms ?? undefined, patterns: patterns ?? undefined })
+  }, [controller, presetKey])
   useEffect(() => () => controller.dispose(), [controller])
   return { t, locale, controller, state }
 }

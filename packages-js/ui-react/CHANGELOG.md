@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-react
 
+## Unreleased
+
+- PDF schwärzen: `FlowauditPdfRedaction` nimmt `file`, `filename`, `terms` und `patterns` an; mit `file` entfällt das Dateifeld.
+
 ## 1.4.1 – 2026-11-26
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.5.1 angehoben (Paritätstests gegen `@auditcore/ui` 0.6.1).

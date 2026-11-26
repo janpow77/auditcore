@@ -15,7 +15,15 @@ const props = withDefaults(defineProps<{
   locale?: Locale
   /** Objekt-URLs für Seitenbild und Download (Standard: `URL.createObjectURL`). */
   urls?: RedactionUrls
-}>(), { port: null, locale: undefined, urls: undefined })
+  /** Von der Anwendung bereitgestellte PDF; das Dateifeld entfällt. */
+  file?: Blob | null
+  /** Dateiname zu `file` (Standard: Name der Datei oder `dokument.pdf`). */
+  filename?: string
+  /** Startwerte der eigenen Begriffe (änderbar). */
+  terms?: readonly string[]
+  /** Startwerte der Muster (Kennungen aus dem Katalog, änderbar). */
+  patterns?: readonly string[]
+}>(), { port: null, locale: undefined, urls: undefined, file: null, filename: undefined, terms: undefined, patterns: undefined })
 
 const emit = defineEmits<{
   'redaction-planned': [plan: RedactionPlan]
@@ -39,6 +47,16 @@ watch(step, async () => {
 })
 
 watch(() => props.port, () => void controller.load(), { immediate: true })
+watch(() => [props.file, props.filename] as const, ([file, filename]) => controller.provideFile(file ?? null, filename), { immediate: true })
+// Vorgaben nur bei geändertem Inhalt übernehmen, nicht bei jedem neuen Array.
+watch(
+  () => JSON.stringify([props.terms ?? null, props.patterns ?? null]),
+  (key) => {
+    const [terms, patterns] = JSON.parse(key) as [string[] | null, string[] | null]
+    if (terms || patterns) controller.presetCriteria({ terms: terms ?? undefined, patterns: patterns ?? undefined })
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
