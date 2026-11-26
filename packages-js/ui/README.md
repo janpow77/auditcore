@@ -904,7 +904,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (926):
 | `@auditcore/ui` | `parseSubjects` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `parseTable` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui` | `parseUtm` | Re-Export | – | `@auditcore/ui-core` |
-| `@auditcore/ui` | `pdfRedactionElement` | Konstante | `<flowaudit-pdf-redaction>`: Eigenschaften `port` (RedactionPort), `locale`, `urls`; Ereignisse `redaction-planned`, `redaction-completed`, `error`. | `redaction/element` |
+| `@auditcore/ui` | `pdfRedactionElement` | Konstante | `<flowaudit-pdf-redaction>`: Eigenschaften `port` (RedactionPort), `locale`, `urls`, `file` und `filename` (bereitgestellte PDF, ohne Dateifeld), `terms` und `patterns` (Startwerte … | `redaction/element` |
 | `@auditcore/ui` | `placementFor` | Re-Export | – | `./movePreview` |
 | `@auditcore/ui` | `plainSegments` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `populationSuggestions` | Re-Export | – | `@auditcore/ui-core` |
@@ -1684,6 +1684,10 @@ PDF schwärzen: Kriterien, Prüfansicht mit Seitenbild, nachgeprüftes Ergebnis;
 | `port` | `RedactionPort \| null` | nein | `null` | Fachlogik, z. B. `createRedactionRestPort({ baseUrl: '/api/redaction' })`. |
 | `locale` | `Locale` | nein | `undefined` | – |
 | `urls` | `RedactionUrls` | nein | `undefined` | Objekt-URLs für Seitenbild und Download (Standard: `URL.createObjectURL`). |
+| `file` | `Blob \| null` | nein | `null` | Von der Anwendung bereitgestellte PDF; das Dateifeld entfällt. |
+| `filename` | `string` | nein | `undefined` | Dateiname zu `file` (Standard: Name der Datei oder `dokument.pdf`). |
+| `terms` | `readonly string[]` | nein | `undefined` | Startwerte der eigenen Begriffe (änderbar). |
+| `patterns` | `readonly string[]` | nein | `undefined` | Startwerte der Muster (Kennungen aus dem Katalog, änderbar). |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|

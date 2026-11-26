@@ -8,7 +8,7 @@ export function RedactionForm({ view, id }: { view: UseRedaction; id: string }) 
   const { state, controller, t, locale } = view
   const catalogue = state.catalogue
   if (!catalogue) return null
-  const problem = redactionValidationText(state.validation, catalogue, t, locale)
+  const problem = redactionValidationText(state.validation, catalogue, t, locale, state.fileFixed)
   const onSubmit = (event: FormEvent): void => {
     event.preventDefault()
     void controller.plan()
@@ -17,13 +17,23 @@ export function RedactionForm({ view, id }: { view: UseRedaction; id: string }) 
   return (
     <form className="fa-redaction__card" noValidate aria-labelledby={`${id}-form`} data-testid="redaction-form" onSubmit={onSubmit}>
       <h3 id={`${id}-form`} className="fa-redaction__heading" tabIndex={-1}>{t('formHeading')}</h3>
-      <label className="fa-redaction__field">
-        <span className="fa-redaction__label">{t('file')}</span>
-        <input className="fa-redaction__file" type="file" accept="application/pdf,.pdf" aria-describedby={`${id}-file-help`} data-testid="redaction-file" onChange={onFile} />
-      </label>
-      {state.filename ? <p className="fa-redaction__muted" data-testid="redaction-file-chosen">{t('fileChosen', { name: state.filename })}</p> : null}
-      <p id={`${id}-file-help`} className="fa-redaction__muted">{t('fileHelp', { size: redactionSizeText(catalogue.limits.max_upload_bytes, locale), pages: catalogue.limits.max_pages })}</p>
-      <fieldset className="fa-redaction__patterns">
+      {state.criteriaNotice ? <p className="fa-redaction__notice" role="status" data-testid="redaction-criteria-notice">{t(state.criteriaNotice === 'presets' ? 'presetsChanged' : 'criteriaEdited')}</p> : null}
+      {state.fileFixed ? (
+        <p id={`${id}-file-provided`} className="fa-redaction__field fa-redaction__provided" data-testid="redaction-file-provided">
+          <span className="fa-redaction__label">{t('fileProvided')}</span>{' '}
+          <span className="fa-redaction__value">{state.filename}</span>
+        </p>
+      ) : (
+        <>
+          <label className="fa-redaction__field">
+            <span className="fa-redaction__label">{t('file')}</span>
+            <input className="fa-redaction__file" type="file" accept="application/pdf,.pdf" aria-describedby={`${id}-file-help`} data-testid="redaction-file" onChange={onFile} />
+          </label>
+          {state.filename ? <p className="fa-redaction__muted" data-testid="redaction-file-chosen">{t('fileChosen', { name: state.filename })}</p> : null}
+          <p id={`${id}-file-help`} className="fa-redaction__muted">{t('fileHelp', { size: redactionSizeText(catalogue.limits.max_upload_bytes, locale), pages: catalogue.limits.max_pages })}</p>
+        </>
+      )}
+      <fieldset className="fa-redaction__patterns" aria-describedby={state.fileFixed ? `${id}-file-provided` : undefined}>
         <legend className="fa-redaction__label">{t('patterns')}</legend>
         {catalogue.patterns.map((pattern) => (
           <label key={pattern.id} className="fa-redaction__check" title={pattern.hint}>

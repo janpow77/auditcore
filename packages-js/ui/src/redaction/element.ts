@@ -3,6 +3,8 @@ import PdfRedaction from './PdfRedaction.vue'
 
 /**
  * `<flowaudit-pdf-redaction>`: Eigenschaften `port` (RedactionPort), `locale`,
- * `urls`; Ereignisse `redaction-planned`, `redaction-completed`, `error`.
+ * `urls`, `file` und `filename` (bereitgestellte PDF, ohne Dateifeld), `terms`
+ * und `patterns` (Startwerte, nur als Eigenschaft); Ereignisse `redaction-planned`,
+ * `redaction-completed`, `error`.
  */
 export const pdfRedactionElement: ElementDefinition = { tag: 'flowaudit-pdf-redaction', component: PdfRedaction }
