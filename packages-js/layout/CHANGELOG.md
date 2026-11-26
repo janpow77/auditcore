@@ -2,7 +2,7 @@
 
 ## 0.1.4 – 2026-11-26
 
-- Abhängigkeit `@auditcore/ui` auf 0.6.1 angehoben; keine Änderung am Paket selbst.
+- Abhängigkeit `@auditcore/ui` auf 0.7.0 angehoben; keine Änderung am Paket selbst.
 
 ## 0.1.3 – 2026-11-25
 
