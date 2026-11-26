@@ -43,12 +43,27 @@ Backend setzt einen eigenen `RedactionPort` ein (`catalogue`, `plan`, `preview`,
 | `port` | `RedactionPort \| null` | Dienst; ohne Port erscheint nur der Hinweis „Kein Dienst angebunden“. |
 | `locale` | `'de' \| 'en'` | Sprache (Standard: Seite bzw. `LocaleProvider`). |
 | `urls` | `RedactionUrls` | Erzeugen und Freigeben von Objekt-URLs; Standard `URL.createObjectURL`. In Tests ersetzbar. |
+| `file` | `Blob \| null` | Von der Anwendung bereitgestellte PDF. Statt des Dateifelds und seines Hilfetexts steht „Dokument“ mit dem Namen; „Neu beginnen“ (statt „Weiteres Dokument“) behält die Vorgabe. Eine andere Datei (neues Objekt) verwirft Plan und Fehlermeldung; den Blob daher stabil halten (State oder Memo), nicht bei jedem Rendern neu erzeugen. |
+| `filename` | `string` | Name zu `file`, an den Port übergeben (Standard: Name der Datei, sonst `dokument.pdf`). |
+| `terms` | `readonly string[]` | Startwerte der eigenen Begriffe; leere und doppelte entfallen. Übernommen bei geändertem Inhalt, danach frei änderbar. Kommen sie, während ein Plan läuft oder angezeigt wird, verfällt der Plan und das Formular zeigt die neuen Werte mit einem Hinweis; während des Schwärzens und im Ergebnis werden sie vorgemerkt und beim nächsten Schritt übernommen. Ein dann noch gemeldetes `redaction-completed` gehört zu den alten Kriterien, die neuen Werte sind darin nicht geschwärzt. |
+| `patterns` | `readonly string[]` | Startwerte der Muster (Kennungen aus dem Katalog); nicht angebotene entfallen. Sonst wie `terms`. Beim Web Component `terms` und `patterns` als Eigenschaft setzen, nicht als Attribut; ein Attribut (Zeichenkette) wird übergangen. |
 
 | Ereignis (Vue / Web Component) | React | `detail` |
 |---|---|---|
 | `redaction-planned` | `onRedactionPlanned` | `RedactionPlan` (enthält Klartext der Fundstellen) |
 | `redaction-completed` | `onRedactionCompleted` | `RedactionResult` (`blob`, `filename`, `report` nur mit Zahlen) |
 | `error` | `onError` | Meldung der abgelehnten Anfrage; bei `verification_failed` mit kurzen Textauszügen, daher nicht protokollieren |
+
+Beispiel mit Vorgaben, etwa wenn der Server die Arbeitsfassung zusammenstellt
+und der Port sie wieder an eigene Endpunkte schickt:
+
+```tsx
+<FlowauditPdfRedaction port={aktenPort} file={arbeitsfassung} filename="Akte 2026-17.pdf"
+  terms={vorschlag.begriffe} patterns={['iban', 'email']} />
+```
+
+Ohne Oberfläche: `controller.provideFile(blob, name)` und
+`controller.presetCriteria({ terms, patterns })`.
 
 ## Ablauf
 

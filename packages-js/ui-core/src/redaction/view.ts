@@ -42,12 +42,13 @@ export function redactionPatternText(pattern: RedactionPatternInfo, t: Redaction
   return pattern.ai && !NAMES_AI.test(pattern.label) ? t('patternAi', { label: pattern.label }) : pattern.label
 }
 
-export function redactionValidationText(validation: RedactionValidation, catalogue: RedactionCatalogue | null, t: RedactionTranslate, locale: Locale): string {
+/** Text zur Prüfung vor dem Senden; `fileFixed`: die Datei stellt die Anwendung bereit. */
+export function redactionValidationText(validation: RedactionValidation, catalogue: RedactionCatalogue | null, t: RedactionTranslate, locale: Locale, fileFixed = false): string {
   if (!validation) return ''
   const limits = catalogue?.limits
   const texts: Record<NonNullable<RedactionValidation>, () => string> = {
     needFile: () => t('errorNeedFile'),
-    tooLarge: () => t('errorTooLarge', { size: redactionSizeText(limits?.max_upload_bytes ?? 0, locale) }),
+    tooLarge: () => t(fileFixed ? 'errorTooLargeProvided' : 'errorTooLarge', { size: redactionSizeText(limits?.max_upload_bytes ?? 0, locale) }),
     needCriteria: () => t('errorNeedCriteria'),
     tooManyTerms: () => t('errorTooManyTerms', { count: limits?.max_terms ?? 0 }),
     termTooLong: () => t('errorTermTooLong', { length: limits?.max_term_length ?? 0 }),
