@@ -1,12 +1,11 @@
 # Changelog @auditcore/ui
 
-## Unreleased
+## 0.7.0 – 2026-11-26
 
+Der als 0.6.1 vorbereitete Stand ist nicht eigens veröffentlicht worden und geht hier auf.
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.6.0 angehoben.
 - PDF schwärzen: `PdfRedaction` und `<flowaudit-pdf-redaction>` nimmt `file`, `filename`, `terms` und `patterns` an; mit `file` entfällt das Dateifeld.
-
-## 0.6.1 – 2026-11-26
-
-- Abhängigkeit `@auditcore/ui-core` auf 0.5.1 angehoben.
 - Datenschutz-Assistent: Der Reiter „Prüfpunkte“ zeigt CHK-01 bis CHK-30 als aufklappbaren Baum (Bereich → Prüfpunkt → Angaben und Status) mit Fortschritt je Bereich statt als flache Tabelle; Bearbeitung und Frist sind dort eintragbar. Der Serververtrag bleibt unverändert. (`AssistantChecklist`, `AssistantChecklistNode`, `AssistantChecklistDetail`).
 
 ## 0.6.0 – 2026-11-25

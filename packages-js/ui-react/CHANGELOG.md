@@ -1,12 +1,11 @@
 # Changelog @auditcore/ui-react
 
-## Unreleased
+## 1.5.0 – 2026-11-26
 
+Der als 1.4.1 vorbereitete Stand ist nicht eigens veröffentlicht worden und geht hier auf.
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.6.0 angehoben (Paritätstests gegen `@auditcore/ui` 0.7.0).
 - PDF schwärzen: `FlowauditPdfRedaction` nimmt `file`, `filename`, `terms` und `patterns` an; mit `file` entfällt das Dateifeld.
-
-## 1.4.1 – 2026-11-26
-
-- Abhängigkeit `@auditcore/ui-core` auf 0.5.1 angehoben (Paritätstests gegen `@auditcore/ui` 0.6.1).
 - Datenschutz-Assistent: Prüfpunkt-Baum wie in der Vue-Fassung (`AssistantChecklist`, `AssistantChecklistNode`, `AssistantChecklistDetail`).
 
 ## 1.4.0 – 2026-11-25

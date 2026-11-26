@@ -2,7 +2,7 @@
 
 ## 0.5.4 – 2026-11-26
 
-- Abhängigkeit `@auditcore/ui-core` auf 0.5.1 angehoben; keine Änderung am Paket selbst.
+- Abhängigkeit `@auditcore/ui-core` auf 0.6.0 angehoben; keine Änderung am Paket selbst.
 
 ## 0.5.3 – 2026-11-25
 
