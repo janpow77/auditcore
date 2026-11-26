@@ -14,7 +14,9 @@
 .fa-redaction__check { display: flex; align-items: flex-start; gap: var(--fa-space-2); min-height: 1.75rem; cursor: pointer; }
 .fa-redaction__check input { margin-top: 0.2rem; accent-color: var(--fa-color-accent); }
 .fa-redaction__check input:disabled + span { color: var(--fa-color-text-muted); }
-.fa-redaction__muted { margin: 0; color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
+.fa-redaction__muted { margin: 0; color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); overflow-wrap: anywhere; }
+.fa-redaction__provided { margin: 0; }
+.fa-redaction__value { overflow-wrap: anywhere; }
 .fa-redaction__error { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-danger); }
 .fa-redaction__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
 .fa-redaction__notice { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-left: 3px solid var(--fa-color-accent); background: var(--fa-color-accent-soft); border-radius: var(--fa-radius-sm); }
