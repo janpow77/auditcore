@@ -1,11 +1,11 @@
 # Changelog @auditcore/ui-core
 
-## Unreleased
+## 0.6.0 – 2026-11-26
+
+Der als 0.5.1 vorbereitete Stand ist nicht eigens veröffentlicht worden und geht hier auf.
+
 
 - PDF schwärzen: `createRedactionController` hat `provideFile(file, filename?)` (bereitgestellte Datei, `fileFixed` im Zustand, bleibt bei `reset()`) und `presetCriteria({ terms, patterns })` (Startwerte, nicht angebotene Muster entfallen; ein Plan zu alten Kriterien verfällt, während des Schwärzens und im Ergebnis vorgemerkt). Fehler einer Anfrage zu einem nicht mehr aktuellen Dokument verfallen, ebenso ein Plan zu inzwischen geänderten Kriterien; `criteriaNotice` (`presets` oder `edited`) mit den Texten `presetsChanged` und `criteriaEdited` meldet den verworfenen Plan. `redactionValidationText` hat den optionalen Parameter `fileFixed`; neue Texte `fileProvided`, `errorTooLargeProvided` und `again`, Stile `fa-redaction__provided` und `fa-redaction__value`; lange Dateinamen brechen um.
-
-## 0.5.1 – 2026-11-26
-
 - Neu: Baum-Modell `checklistTree` (Bereiche, Fortschritt, Auf- und Zuklappen) und Texte `assistantMessages` für den Prüfpunkt-Baum des Datenschutz-Assistenten (de/en), Stil `styles/dataprotection.css`.
 
 ## 0.5.0 – 2026-11-25

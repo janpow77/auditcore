@@ -1,5 +1,9 @@
 # Changelog @auditcore/sampling-templates-vue
 
+## 0.1.14 – 2026-11-26
+
+Bereiche der Abhängigkeiten erweitert: `@auditcore/ui` `>=0.4.0 <0.8.0`, `@auditcore/ui-core` `>=0.3.0 <0.7.0` (0.7.0 und 0.6.0 ergänzen den Prüfpunkt-Baum des Datenschutz-Assistenten und Vorgaben für „PDF schwärzen“, die dieses Paket nicht nutzt); keine Änderung am Paket selbst.
+
 ## 0.1.13 – 2026-11-25
 
 Bereiche der Abhängigkeiten erweitert: `@auditcore/ui` `>=0.4.0 <0.7.0`, `@auditcore/ui-core` `>=0.3.0 <0.6.0` (0.6.0 und 0.5.0 ergänzen „PDF schwärzen“ und ändern Kennungsprüfung und RER-Anzeige, die dieses Paket nicht nutzt); keine Änderung am Paket selbst.

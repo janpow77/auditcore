@@ -2,8 +2,23 @@
 
 ## Unreleased
 
-- PDF schwärzen (`@auditcore/ui-core`, `@auditcore/ui`, `@auditcore/ui-react`,
-  unveröffentlicht): Die Anwendung kann die Datei vorgeben. Mit den Eigenschaften
+## v0.19.0 – 2026-11-26
+
+Versionen: `@auditcore/ui-core` 0.6.0, `@auditcore/ui` 0.7.0,
+`@auditcore/ui-react` 1.5.0 (Prüfpunkt-Baum des Datenschutz-Assistenten #285,
+Vorgaben für „PDF schwärzen“ #352), `auditcore_runner` 0.1.12 (JIT-Statusabfrage
+mit laufenden PR-Läufen; das gebündelte `runner-elements.js` enthält die Stile
+aus ui-core 0.6.0). Wegen der exakten Bindungen folgen `@auditcore/bpmn-vue`
+0.5.4, `@auditcore/bpmn-react` 0.5.4 und `@auditcore/layout` 0.1.4 ohne Änderung
+am Paket selbst; `@auditcore/sampling-templates-vue` 0.1.14 erweitert nur die
+Bereiche auf `@auditcore/ui` `<0.8.0` und `@auditcore/ui-core` `<0.7.0`. Die
+übrigen Pakete bleiben auf dem Stand von v0.18.0. Der zunächst als v0.18.1
+vorbereitete Stand (#351) ist nicht eigens veröffentlicht worden und geht in
+diesem Release auf; die Zwischenversionen ui-core 0.5.1, ui 0.6.1 und
+ui-react 1.4.1 gibt es nicht.
+
+- PDF schwärzen (`@auditcore/ui-core` 0.6.0, `@auditcore/ui` 0.7.0,
+  `@auditcore/ui-react` 1.5.0): Die Anwendung kann die Datei vorgeben. Mit den Eigenschaften
   `file` und `filename` entfällt das Dateifeld, angezeigt wird „Dokument“ mit dem
   Namen, und „Neu beginnen“ behält die Vorgabe. Ein Wechsel der Datei verwirft Plan
   und Fehlermeldung, auch die einer noch laufenden Anfrage zum alten Dokument.
@@ -13,20 +28,7 @@
   `provideFile` und `presetCriteria`. Anlass: KPAnG
   stellt die Arbeitsfassung der Akteneinsicht auf dem Server zusammen und schlägt
   die Begriffe aus den Beteiligtendaten vor.
-
-## v0.18.1 – 2026-11-26
-
-Versionen: `@auditcore/ui-core` 0.5.1, `@auditcore/ui` 0.6.1,
-`@auditcore/ui-react` 1.4.1 (Prüfpunkt-Baum des Datenschutz-Assistenten),
-`auditcore_runner` 0.1.12 (JIT-Statusabfrage mit laufenden PR-Läufen; das
-gebündelte `runner-elements.js` enthält die Stile aus ui-core 0.5.1). Wegen der
-exakten Bindungen folgen `@auditcore/bpmn-vue` 0.5.4, `@auditcore/bpmn-react`
-0.5.4 und `@auditcore/layout` 0.1.4 ohne Änderung am Paket selbst;
-`@auditcore/sampling-templates-vue` 0.1.13 bleibt, seine Bereiche
-(`@auditcore/ui` `<0.7.0`, `@auditcore/ui-core` `<0.6.0`) umfassen die neuen
-Versionen. Die übrigen Pakete bleiben auf dem Stand von v0.18.0.
-
-- Datenschutz-Assistent (`@auditcore/ui-core` 0.5.1, `@auditcore/ui` 0.6.1, `@auditcore/ui-react` 1.4.1): Der Reiter „Prüfpunkte“ zeigt CHK-01 bis CHK-30 als aufklappbaren
+- Datenschutz-Assistent (`@auditcore/ui-core` 0.6.0, `@auditcore/ui` 0.7.0, `@auditcore/ui-react` 1.5.0): Der Reiter „Prüfpunkte“ zeigt CHK-01 bis CHK-30 als aufklappbaren
   Baum (Bereich → Prüfpunkt → Angaben und Status) mit Fortschritt je Bereich statt als
   flache Tabelle; Bearbeitung und Frist sind dort jetzt eintragbar. Vorbild ist der
   Checklistenbaum im audit_designer; der Serververtrag
