@@ -1,5 +1,10 @@
 # Changelog @auditcore/ui
 
+## 0.6.1 – 2026-11-26
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.5.1 angehoben.
+- Datenschutz-Assistent: Der Reiter „Prüfpunkte“ zeigt CHK-01 bis CHK-30 als aufklappbaren Baum (Bereich → Prüfpunkt → Angaben und Status) mit Fortschritt je Bereich statt als flache Tabelle; Bearbeitung und Frist sind dort eintragbar. Der Serververtrag bleibt unverändert. (`AssistantChecklist`, `AssistantChecklistNode`, `AssistantChecklistDetail`).
+
 ## 0.6.0 – 2026-11-25
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.5.0 angehoben.

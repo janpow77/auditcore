@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-core
 
+## 0.5.1 – 2026-11-26
+
+- Neu: Baum-Modell `checklistTree` (Bereiche, Fortschritt, Auf- und Zuklappen) und Texte `assistantMessages` für den Prüfpunkt-Baum des Datenschutz-Assistenten (de/en), Stil `styles/dataprotection.css`.
+
 ## 0.5.0 – 2026-11-25
 
 - Neu: Bereich `redaction` für „PDF schwärzen“: Typen des Vertrags `pdf_redaction/1`, `createRedactionRestPort`, Zustandsautomat `createRedactionController` (Kriterien, Plan, Auswahl, Seitenbilder, eigene Bereiche, Zeigergesten, Ergebnis), Anzeige `redactionReview` und `redactionReportRows`, Texte `redactionMessages` (de/en), Stil `styles/redaction.css`, Fokusführung `focusRedactionHeading` und `focusRedactionAddArea`. Bereiche lassen sich mit der Maus verschieben (`startMove`, `moveRedactionBox`); während des Schwärzens ist die Auswahl gesperrt.
