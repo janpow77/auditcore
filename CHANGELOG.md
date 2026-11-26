@@ -1,9 +1,18 @@
 # Changelog
 
-## Unreleased
+## v0.18.1 – 2026-11-26
 
-- Datenschutz-Assistent (`@auditcore/ui-core`, `@auditcore/ui`, `@auditcore/ui-react`,
-  unveröffentlicht): Der Reiter „Prüfpunkte“ zeigt CHK-01 bis CHK-30 als aufklappbaren
+Versionen: `@auditcore/ui-core` 0.5.1, `@auditcore/ui` 0.6.1,
+`@auditcore/ui-react` 1.4.1 (Prüfpunkt-Baum des Datenschutz-Assistenten),
+`auditcore_runner` 0.1.12 (JIT-Statusabfrage mit laufenden PR-Läufen; das
+gebündelte `runner-elements.js` enthält die Stile aus ui-core 0.5.1). Wegen der
+exakten Bindungen folgen `@auditcore/bpmn-vue` 0.5.4, `@auditcore/bpmn-react`
+0.5.4 und `@auditcore/layout` 0.1.4 ohne Änderung am Paket selbst;
+`@auditcore/sampling-templates-vue` 0.1.13 bleibt, seine Bereiche
+(`@auditcore/ui` `<0.7.0`, `@auditcore/ui-core` `<0.6.0`) umfassen die neuen
+Versionen. Die übrigen Pakete bleiben auf dem Stand von v0.18.0.
+
+- Datenschutz-Assistent (`@auditcore/ui-core` 0.5.1, `@auditcore/ui` 0.6.1, `@auditcore/ui-react` 1.4.1): Der Reiter „Prüfpunkte“ zeigt CHK-01 bis CHK-30 als aufklappbaren
   Baum (Bereich → Prüfpunkt → Angaben und Status) mit Fortschritt je Bereich statt als
   flache Tabelle; Bearbeitung und Frist sind dort jetzt eintragbar. Vorbild ist der
   Checklistenbaum im audit_designer; der Serververtrag

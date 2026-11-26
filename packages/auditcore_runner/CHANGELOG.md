@@ -2,6 +2,7 @@
 
 ## 0.1.12 – 2026-11-25
 
+- Die gebündelte Oberfläche (`data/web/runner-elements.js`) enthält die Stile von `@auditcore/ui-core` 0.5.1 (Prüfpunkt-Baum des Datenschutz-Assistenten).
 - Laufende und wartende PR-Läufe aus der jüngsten ungefilterten Run-Liste ergänzen die GitHub-Statusabfrage.
 
 ## 0.1.11 – 2026-11-25
