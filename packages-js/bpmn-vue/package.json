@@ -50,7 +50,7 @@
   "dependencies": {
     "@auditcore/bpmn-editor": "0.1.2",
     "@auditcore/bpmn-flowaudit": "0.5.0",
-    "@auditcore/ui-core": "0.5.1"
+    "@auditcore/ui-core": "0.6.0"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
