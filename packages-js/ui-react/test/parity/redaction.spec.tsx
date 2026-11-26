@@ -222,6 +222,16 @@ describe('Parität PDF schwärzen bei geänderten Vorgaben', () => {
     await update({ file: syntheticPdf('b.pdf'), filename: 'B.pdf', terms: ['Max'] })
     expect([name(rendered.vue), name(rendered.react)]).toEqual(['B.pdf', 'B.pdf'])
     expect([terms(rendered.vue), terms(rendered.react)]).toEqual(['Max', 'Max'])
+
+    // Vorgabe in der Prüfansicht: Plan verfällt, Hinweis im Formular.
+    const second = syntheticPdf('b.pdf')
+    await update({ file: second, filename: 'B.pdf', terms: ['Max'] })
+    await both(rendered, byTestId('redaction-search'), { kind: 'submit' })
+    expect(rendered.react.querySelectorAll('[data-testid="redaction-review"]')).toHaveLength(1)
+    await update({ file: second, filename: 'B.pdf', terms: ['Max', 'Moritz'] })
+    expect(rendered.vue.querySelector('[data-testid="redaction-presets-changed"]')?.getAttribute('role')).toBe('status')
+    expect(rendered.react.querySelectorAll('[data-testid="redaction-presets-changed"]')).toHaveLength(1)
+    expect(terms(rendered.react)).toBe('Max\nMoritz')
     wrapper.unmount()
   })
 })

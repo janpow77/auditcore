@@ -49,6 +49,8 @@ export interface RedactionData extends RequestState<string> {
   filename: string
   /** Die Datei stellt die Anwendung bereit (`provideFile`); kein Dateifeld. */
   fileFixed: boolean
+  /** Eine Vorgabe der Anwendung hat einen Plan zu alten Kriterien verworfen (Hinweis im Formular). */
+  presetsApplied: boolean
   patterns: readonly string[]
   terms: string
   caseSensitive: boolean
@@ -89,6 +91,7 @@ export const INITIAL_REDACTION: RedactionData = {
   file: null,
   filename: '',
   fileFixed: false,
+  presetsApplied: false,
   patterns: [],
   terms: '',
   caseSensitive: false,
@@ -113,7 +116,7 @@ export const INITIAL_REDACTION: RedactionData = {
 /** Zurück auf die Prüfansicht eines neuen Plans (ohne Datei und Kriterien). */
 const REVIEW_RESET: Partial<RedactionData> = {
   areas: [], page: 1, preview: null, previewError: null, gesture: null, areaLimitHit: false,
-  filter: '', expanded: new Set(), groupLimit: REDACTION_GROUP_PAGE, result: null, resultUrl: null,
+  filter: '', expanded: new Set(), groupLimit: REDACTION_GROUP_PAGE, result: null, resultUrl: null, presetsApplied: false,
 }
 
 export function redactionCriteria(state: RedactionData): RedactionCriteria {
@@ -180,13 +183,19 @@ function createPresetQueue(store: RedactionStore, resources: Resources) {
     if (patterns) change.patterns = [...new Set(patterns)].filter((id) => !known || known.has(id))
     if (state.plan || state.busy === 'plan') {
       resources.dropAll()
-      Object.assign(change, { ...REVIEW_RESET, plan: null, selected: new Set() })
+      Object.assign(change, { ...REVIEW_RESET, plan: null, selected: new Set(), presetsApplied: true })
     }
     store.set(change)
   }
   return {
     offer(presets: RedactionPresets): void {
-      if (deferred()) pending = { ...pending, ...presets }
+      if (deferred()) {
+        // Nur gesetzte Schlüssel vormerken, wie im sofortigen Pfad.
+        const next: RedactionPresets = { ...pending }
+        if (presets.terms !== undefined) next.terms = presets.terms
+        if (presets.patterns !== undefined) next.patterns = presets.patterns
+        pending = next
+      }
       else applyNow(presets)
     },
     /** Vorgemerkte Vorgaben übernehmen, sobald das wieder möglich ist. */
@@ -348,12 +357,15 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
     async plan(): Promise<void> {
       const state = store.get()
       const validation = redactionValidation(state)
-      store.set({ validation })
+      store.set({ validation, presetsApplied: false })
       if (validation || !state.file) return
       const { file, filename } = state
       const generation = resources.generation()
-      const plan = await run('plan', (port) => current(port.plan(file, filename, redactionCriteria(state)), resources, generation))
+      const criteria = redactionCriteria(state)
+      const plan = await run('plan', (port) => current(port.plan(file, filename, criteria), resources, generation))
       if (!plan || store.get().file !== file || resources.generation() !== generation) return
+      // Kriterien inzwischen geändert (Eingabe oder Vorgabe): der Plan gehört nicht mehr dazu.
+      if (JSON.stringify(redactionCriteria(store.get())) !== JSON.stringify(criteria)) return
       resources.dropAll()
       store.set({ ...REVIEW_RESET, plan, selected: initialRedactionSelection(plan) })
       source.callbacks?.().planned?.(plan)

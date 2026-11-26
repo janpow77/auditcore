@@ -8,7 +8,7 @@
   Namen, und „Neu beginnen“ behält die Vorgabe. Ein Wechsel der Datei verwirft Plan
   und Fehlermeldung, auch die einer noch laufenden Anfrage zum alten Dokument.
   `terms` und `patterns` belegen Begriffe und Muster vor; nicht angebotene Muster
-  entfallen, alles bleibt änderbar. Ein Plan zu alten Kriterien verfällt; während
+  entfallen, alles bleibt änderbar. Ein Plan zu alten Kriterien verfällt mit Hinweis; während
   des Schwärzens und im Ergebnis werden Vorgaben vorgemerkt. Neu im Controller:
   `provideFile` und `presetCriteria`. Anlass: KPAnG
   stellt die Arbeitsfassung der Akteneinsicht auf dem Server zusammen und schlägt

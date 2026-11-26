@@ -464,5 +464,70 @@ describe('Schwärzen: Vorgaben der Anwendung', () => {
     controller.presetCriteria({ terms: 'Erika' as unknown as string[], patterns: 'iban' as unknown as string[] })
     expect(controller.store.get()).toMatchObject({ terms: 'eigener Begriff', patterns: [] })
   })
+
+  it('verwirft den Fehler eines veralteten Plans und einen Plan zu inzwischen geänderten Kriterien', async () => {
+    let reject: (error: Error) => void = () => undefined
+    let resolve: (plan: typeof redactionPlan) => void = () => undefined
+    let mode: 'reject' | 'resolve' = 'reject'
+    const base = fakeRedactionPort()
+    const port = { ...base, plan: () => new Promise<typeof redactionPlan>((ok, fail) => { if (mode === 'reject') reject = fail; else resolve = ok }) }
+    const failed = vi.fn()
+    const controller = createRedactionController({ port: () => port, urls: fakeUrls(), callbacks: () => ({ failed }) })
+    await controller.load()
+    controller.provideFile(new Blob(['%PDF-A']), 'a.pdf')
+    controller.setPattern('email', true)
+    const first = controller.plan()
+    controller.provideFile(new Blob(['%PDF-B']), 'b.pdf')
+    reject(new Error('Textauszug aus Akte A'))
+    await first
+    expect(controller.store.get()).toMatchObject({ filename: 'b.pdf', error: null, plan: null })
+    expect(failed).not.toHaveBeenCalled()
+
+    mode = 'resolve'
+    const second = controller.plan()
+    controller.setTerms('nachträglich eingegeben')
+    resolve(redactionPlan)
+    await second
+    expect(controller.store.get()).toMatchObject({ plan: null, terms: 'nachträglich eingegeben' })
+  })
+
+  it('merkt nur gesetzte Schlüssel vor und meldet den verworfenen Plan nach „Auswahl ändern“', async () => {
+    let finish: () => void = () => undefined
+    const base = fakeRedactionPort()
+    const port = { ...base, apply: (file: Blob, filename: string, selection: Parameters<typeof base.apply>[2]) => new Promise<Awaited<ReturnType<typeof base.apply>>>((ok) => { finish = () => void base.apply(file, filename, selection).then(ok) }) }
+    const controller = createRedactionController({ port: () => port, urls: fakeUrls() })
+    await controller.load()
+    controller.provideFile(new Blob(['%PDF-']), 'akte.pdf')
+    controller.setPattern('email', true)
+    await controller.plan()
+    const applying = controller.apply()
+    controller.presetCriteria({ terms: ['A'] })
+    controller.presetCriteria({ terms: undefined, patterns: ['iban'] })
+    finish()
+    await applying
+    expect(controller.store.get().result).not.toBeNull()
+    controller.editAgain()
+    expect(controller.store.get()).toMatchObject({ terms: 'A', patterns: ['iban'], plan: null, areas: [], presetsApplied: true })
+    expect(redactionStep(controller.store.get())).toBe('form')
+    await controller.plan()
+    expect(controller.store.get().presetsApplied).toBe(false)
+  })
+
+  it('übernimmt vorgemerkte Vorgaben, wenn während des Schwärzens die Datei wechselt', async () => {
+    let finish: () => void = () => undefined
+    const base = fakeRedactionPort()
+    const port = { ...base, apply: (file: Blob, filename: string, selection: Parameters<typeof base.apply>[2]) => new Promise<Awaited<ReturnType<typeof base.apply>>>((ok) => { finish = () => void base.apply(file, filename, selection).then(ok) }) }
+    const controller = createRedactionController({ port: () => port, urls: fakeUrls() })
+    await controller.load()
+    controller.provideFile(new Blob(['%PDF-A']), 'a.pdf')
+    controller.setPattern('email', true)
+    await controller.plan()
+    const applying = controller.apply()
+    controller.provideFile(new Blob(['%PDF-B']), 'b.pdf')
+    controller.presetCriteria({ terms: ['Erika Mustermann'] })
+    finish()
+    await applying
+    expect(controller.store.get()).toMatchObject({ filename: 'b.pdf', terms: 'Erika Mustermann', result: null, plan: null, busy: null })
+  })
 })
 
