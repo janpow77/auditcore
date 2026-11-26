@@ -47,6 +47,8 @@ export interface RedactionData extends RequestState<string> {
   catalogue: RedactionCatalogue | null
   file: Blob | null
   filename: string
+  /** Die Datei stellt die Anwendung bereit (`provideFile`); kein Dateifeld. */
+  fileFixed: boolean
   patterns: readonly string[]
   terms: string
   caseSensitive: boolean
@@ -69,6 +71,12 @@ export interface RedactionData extends RequestState<string> {
   resultUrl: string | null
 }
 
+/** Startwerte der Anwendung für Begriffe und Muster (danach frei änderbar). */
+export interface RedactionPresets {
+  terms?: readonly string[]
+  patterns?: readonly string[]
+}
+
 export interface RedactionSource {
   port: () => RedactionPort | null | undefined
   callbacks?: () => RedactionCallbacks
@@ -80,6 +88,7 @@ export const INITIAL_REDACTION: RedactionData = {
   catalogue: null,
   file: null,
   filename: '',
+  fileFixed: false,
   patterns: [],
   terms: '',
   caseSensitive: false,
@@ -140,6 +149,12 @@ type RedactionStore = Store<RedactionData>
 
 /** Während des Schwärzens bleibt die Auswahl fest, damit das Ergebnis zur Anzeige passt. */
 const locked = (store: RedactionStore): boolean => store.get().busy === 'apply'
+
+/** Dateiname einer bereitgestellten Datei: Vorgabe, sonst Name der Datei, sonst Ersatz. */
+function providedName(file: Blob, filename: string | undefined): string {
+  const name = filename?.trim() || (typeof File !== 'undefined' && file instanceof File ? file.name : '')
+  return name || 'dokument.pdf'
+}
 
 
 /** Auswahl der Fundstellen: einzeln, alle, je Quelle, je Gruppe; Liste aufklappen und filtern. */
@@ -246,7 +261,36 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
     /** Datei wählen (`null` = Auswahl aufheben); ein vorhandener Plan verfällt. */
     selectFile(file: File | null): void {
       resources.dropAll()
-      store.set({ ...REVIEW_RESET, file, filename: file?.name ?? '', plan: null, selected: new Set(), validation: null })
+      store.set({ ...REVIEW_RESET, file, filename: file?.name ?? '', fileFixed: false, plan: null, selected: new Set(), validation: null })
+    },
+    /**
+     * Datei der Anwendung übernehmen (z. B. vom Server zusammengestellt); das
+     * Dateifeld entfällt. `null` hebt die Vorgabe auf. Ein vorhandener Plan verfällt.
+     */
+    provideFile(file: Blob | null, filename?: string): void {
+      const state = store.get()
+      if (!file && !state.fileFixed) return
+      if (file && state.fileFixed && state.file === file && state.filename === providedName(file, filename)) return
+      resources.dropAll()
+      store.set({
+        ...REVIEW_RESET,
+        file,
+        filename: file ? providedName(file, filename) : '',
+        fileFixed: Boolean(file),
+        plan: null,
+        selected: new Set(),
+        validation: null,
+      })
+    },
+    /** Startwerte für Begriffe und Muster; nicht angebotene Muster entfallen. */
+    presetCriteria(presets: RedactionPresets): void {
+      if (locked(store)) return
+      const catalogue = store.get().catalogue
+      const known = catalogue ? new Set(catalogue.patterns.filter((pattern) => pattern.available).map((pattern) => pattern.id)) : null
+      const change: Partial<RedactionData> = { validation: null }
+      if (presets.terms) change.terms = redactionTerms(presets.terms.join('\n')).join('\n')
+      if (presets.patterns) change.patterns = [...new Set(presets.patterns)].filter((id) => !known || known.has(id))
+      store.set(change)
     },
     setPattern(id: string, on: boolean): void {
       store.set((state) => ({ patterns: on ? [...new Set([...state.patterns, id])] : state.patterns.filter((entry) => entry !== id), validation: null }))
@@ -303,10 +347,18 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
       resources.dropResult()
       store.set({ result: null, resultUrl: null })
     },
-    /** Neues Dokument: alles außer Katalog und Kriterien verwerfen. */
+    /** Neues Dokument: alles außer Katalog und Kriterien verwerfen; eine bereitgestellte Datei bleibt. */
     reset(): void {
       resources.dropAll()
-      store.set({ ...REVIEW_RESET, file: null, filename: '', plan: null, selected: new Set(), validation: null, error: null })
+      const fixed = store.get().fileFixed
+      store.set({
+        ...REVIEW_RESET,
+        ...(fixed ? {} : { file: null, filename: '' }),
+        plan: null,
+        selected: new Set(),
+        validation: null,
+        error: null,
+      })
     },
     /** Objekt-URLs freigeben (beim Entfernen der Komponente); noch laufende Antworten verfallen. */
     dispose(): void {

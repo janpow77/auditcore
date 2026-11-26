@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1322):
+Exporte der Einstiegspunkte aus `package.json#exports` (1323):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -563,6 +563,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1322):
 | `@auditcore/ui-core` | `RedactionPatternInfo` | Schnittstelle | – | `redaction/types` |
 | `@auditcore/ui-core` | `RedactionPlan` | Schnittstelle | Plan der Schwärzung; enthält Klartext der Fundstellen und bleibt nur im Arbeitsspeicher. | `redaction/types` |
 | `@auditcore/ui-core` | `RedactionPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createRedactionRestPort`. Jede Anfrage trägt die Datei erneut, der Dienst speichert nichts. | `redaction/types` |
+| `@auditcore/ui-core` | `RedactionPresets` | Schnittstelle | Startwerte der Anwendung für Begriffe und Muster (danach frei änderbar). | `redaction/controller` |
 | `@auditcore/ui-core` | `RedactionReport` | Schnittstelle | Zahlen des nachgeprüften Berichts aus den Antwortköpfen (ohne Klartext). | `redaction/types` |
 | `@auditcore/ui-core` | `RedactionReportRow` | Schnittstelle | – | `redaction/view` |
 | `@auditcore/ui-core` | `RedactionResult` | Schnittstelle | – | `redaction/types` |

@@ -52,6 +52,25 @@ async function toReview(rendered: Rendered): Promise<void> {
 }
 
 describe('Parität PDF schwärzen nach Interaktion', () => {
+  it('bereitgestellte Datei und Vorgaben bis zur Prüfansicht und zurück', async () => {
+    const vuePort = fakeRedactionPort()
+    const reactPort = fakeRedactionPort()
+    const file = syntheticPdf('arbeitsfassung.pdf')
+    const vorgaben = { filename: 'Akte 2026-17.pdf', terms: ['Prüfvermerk'], patterns: ['email'] }
+    const rendered = await renderBoth(
+      PdfRedaction,
+      { port: vuePort, urls: fakeUrls(), file, ...vorgaben },
+      <FlowauditPdfRedaction port={reactPort} urls={fakeUrls()} file={file} {...vorgaben} />,
+    )
+    expect(rendered.react.querySelector('[data-testid="redaction-file"]')).toBeNull()
+    expect(text(rendered, '[data-testid="redaction-file-provided"]')).toBe('Dokument: Akte 2026-17.pdf')
+    await both(rendered, byTestId('redaction-search'), { kind: 'submit' })
+    expect(reactPort.calls).toEqual(vuePort.calls)
+    expect(reactPort.calls[0]).toEqual(['plan', 'Akte 2026-17.pdf', JSON.stringify({ patterns: ['email'], terms: ['Prüfvermerk'], case_sensitive: false, whole_word: true })])
+    expect(rendered.react.querySelectorAll('[data-testid="redaction-review"]')).toHaveLength(1)
+    expect(normalizeDom(rendered.react)).toBe(normalizeDom(rendered.vue))
+  })
+
   it('Kriterien prüfen, Plan holen, Auswahl ändern, Seiten wechseln', async () => {
     const { rendered, vuePort, reactPort } = await start()
     await both(rendered, byTestId('redaction-search'), { kind: 'submit' })

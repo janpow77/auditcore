@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- PDF schwärzen (`@auditcore/ui-core`, `@auditcore/ui`, `@auditcore/ui-react`,
+  unveröffentlicht): Die Anwendung kann die Datei vorgeben. Mit den Eigenschaften
+  `file` und `filename` entfällt das Dateifeld, angezeigt wird „Dokument: {name}“,
+  und „Neues Dokument“ behält die Vorgabe. `terms` und `patterns` belegen Begriffe
+  und Muster vor; nicht angebotene Muster entfallen, alles bleibt änderbar.
+  Neu im Controller: `provideFile` und `presetCriteria`. Anlass: KPAnG
+  stellt die Arbeitsfassung der Akteneinsicht auf dem Server zusammen und schlägt
+  die Begriffe aus den Beteiligtendaten vor.
+
 ## v0.18.1 – 2026-11-26
 
 Versionen: `@auditcore/ui-core` 0.5.1, `@auditcore/ui` 0.6.1,

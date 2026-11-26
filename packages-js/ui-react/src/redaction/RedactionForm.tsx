@@ -17,11 +17,17 @@ export function RedactionForm({ view, id }: { view: UseRedaction; id: string }) 
   return (
     <form className="fa-redaction__card" noValidate aria-labelledby={`${id}-form`} data-testid="redaction-form" onSubmit={onSubmit}>
       <h3 id={`${id}-form`} className="fa-redaction__heading" tabIndex={-1}>{t('formHeading')}</h3>
-      <label className="fa-redaction__field">
-        <span className="fa-redaction__label">{t('file')}</span>
-        <input className="fa-redaction__file" type="file" accept="application/pdf,.pdf" aria-describedby={`${id}-file-help`} data-testid="redaction-file" onChange={onFile} />
-      </label>
-      {state.filename ? <p className="fa-redaction__muted" data-testid="redaction-file-chosen">{t('fileChosen', { name: state.filename })}</p> : null}
+      {state.fileFixed ? (
+        <p className="fa-redaction__field" data-testid="redaction-file-provided">{t('fileProvided', { name: state.filename })}</p>
+      ) : (
+        <>
+          <label className="fa-redaction__field">
+            <span className="fa-redaction__label">{t('file')}</span>
+            <input className="fa-redaction__file" type="file" accept="application/pdf,.pdf" aria-describedby={`${id}-file-help`} data-testid="redaction-file" onChange={onFile} />
+          </label>
+          {state.filename ? <p className="fa-redaction__muted" data-testid="redaction-file-chosen">{t('fileChosen', { name: state.filename })}</p> : null}
+        </>
+      )}
       <p id={`${id}-file-help`} className="fa-redaction__muted">{t('fileHelp', { size: redactionSizeText(catalogue.limits.max_upload_bytes, locale), pages: catalogue.limits.max_pages })}</p>
       <fieldset className="fa-redaction__patterns">
         <legend className="fa-redaction__label">{t('patterns')}</legend>

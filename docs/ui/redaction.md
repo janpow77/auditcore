@@ -43,12 +43,27 @@ Backend setzt einen eigenen `RedactionPort` ein (`catalogue`, `plan`, `preview`,
 | `port` | `RedactionPort \| null` | Dienst; ohne Port erscheint nur der Hinweis „Kein Dienst angebunden“. |
 | `locale` | `'de' \| 'en'` | Sprache (Standard: Seite bzw. `LocaleProvider`). |
 | `urls` | `RedactionUrls` | Erzeugen und Freigeben von Objekt-URLs; Standard `URL.createObjectURL`. In Tests ersetzbar. |
+| `file` | `Blob \| null` | Von der Anwendung bereitgestellte PDF. Das Dateifeld entfällt, angezeigt wird „Dokument: {name}“; „Neues Dokument“ behält die Vorgabe. Eine andere Datei verwirft einen vorhandenen Plan. |
+| `filename` | `string` | Name zu `file`, an den Port übergeben (Standard: Name der Datei, sonst `dokument.pdf`). |
+| `terms` | `readonly string[]` | Startwerte der eigenen Begriffe; leere und doppelte entfallen. Übernommen bei geändertem Inhalt, danach frei änderbar. |
+| `patterns` | `readonly string[]` | Startwerte der Muster (Kennungen aus dem Katalog); nicht angebotene entfallen. |
 
 | Ereignis (Vue / Web Component) | React | `detail` |
 |---|---|---|
 | `redaction-planned` | `onRedactionPlanned` | `RedactionPlan` (enthält Klartext der Fundstellen) |
 | `redaction-completed` | `onRedactionCompleted` | `RedactionResult` (`blob`, `filename`, `report` nur mit Zahlen) |
 | `error` | `onError` | Meldung der abgelehnten Anfrage; bei `verification_failed` mit kurzen Textauszügen, daher nicht protokollieren |
+
+Beispiel mit Vorgaben, etwa wenn der Server die Arbeitsfassung zusammenstellt
+und der Port sie wieder an eigene Endpunkte schickt:
+
+```tsx
+<FlowauditPdfRedaction port={aktenPort} file={arbeitsfassung} filename="Akte 2026-17.pdf"
+  terms={vorschlag.begriffe} patterns={['iban', 'email']} />
+```
+
+Ohne Oberfläche: `controller.provideFile(blob, name)` und
+`controller.presetCriteria({ terms, patterns })`.
 
 ## Ablauf
 
