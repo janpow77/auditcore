@@ -20,7 +20,7 @@ const rows = computed(() => redactionReportRows(props.state, props.t, props.loca
     <div class="fa-redaction__actions">
       <a v-if="state.resultUrl" class="fa-button fa-button--primary fa-button--md" :href="state.resultUrl" :download="state.result.filename" data-testid="redaction-download"><span class="fa-button__label">{{ t('download', { filename: state.result.filename }) }}</span></a>
       <FaButton data-testid="redaction-edit" @click="controller.editAgain">{{ t('editAgain') }}</FaButton>
-      <FaButton variant="ghost" data-testid="redaction-reset" @click="controller.reset">{{ t('another') }}</FaButton>
+      <FaButton variant="ghost" data-testid="redaction-reset" @click="controller.reset">{{ t(state.fileFixed ? 'again' : 'another') }}</FaButton>
     </div>
   </section>
 </template>
