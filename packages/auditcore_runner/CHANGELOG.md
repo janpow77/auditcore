@@ -1,8 +1,8 @@
 # Changelog – auditcore_runner
 
-## 0.1.12 – 2026-11-25
+## 0.1.12 – 2026-11-26
 
-- Die gebündelte Oberfläche (`data/web/runner-elements.js`) enthält die Stile von `@auditcore/ui-core` 0.5.1 (Prüfpunkt-Baum des Datenschutz-Assistenten).
+- Die gebündelte Oberfläche (`data/web/runner-elements.js`) enthält die Stile von `@auditcore/ui-core` 0.6.0 (Prüfpunkt-Baum des Datenschutz-Assistenten, bereitgestellte Datei in „PDF schwärzen“).
 - Laufende und wartende PR-Läufe aus der jüngsten ungefilterten Run-Liste ergänzen die GitHub-Statusabfrage.
 
 ## 0.1.11 – 2026-11-25
