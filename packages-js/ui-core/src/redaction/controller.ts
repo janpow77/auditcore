@@ -3,7 +3,7 @@
 // geschwärzte PDF anfordern. Geschwärzt wird ausschließlich über den Port; der
 // Plan enthält Klartext und bleibt nur im Arbeitsspeicher.
 
-import { createRunner, createStore, IDLE, type RequestState, type Store } from '../store'
+import { createRunner, createStore } from '../store'
 import {
   defaultRedactionBox,
   initialRedactionSelection,
@@ -13,133 +13,37 @@ import {
   redactionBoxIsTooSmall,
   redactionGroups,
   redactionSelectionPayload,
-  redactionTerms,
   REDACTION_GROUP_PAGE,
   resizeRedactionBox,
   type RedactionArrow,
 } from './model'
 import { createResources, errorText, type Resources } from './resources'
-import type { RedactionArea, RedactionBox, RedactionCandidate, RedactionCatalogue, RedactionCriteria, RedactionLimits, RedactionPlan, RedactionPort, RedactionResult } from './types'
+import { createPresetQueue, type PresetQueue } from './presets'
+import { INITIAL_REDACTION, locked, redactionCriteria, redactionValidation, REVIEW_RESET, toggled, type RedactionData, type RedactionGesture, type RedactionOption, type RedactionPresets, type RedactionSource, type RedactionStore } from './state'
+import type { RedactionBox, RedactionCandidate, RedactionCriteria, RedactionPort } from './types'
 
-export type RedactionBusy = 'load' | 'plan' | 'apply'
-export type RedactionValidation = 'needFile' | 'tooLarge' | 'needCriteria' | 'tooManyTerms' | 'termTooLong' | null
-export type RedactionOption = 'caseSensitive' | 'wholeWord' | 'sanitize'
+export {
+  INITIAL_REDACTION,
+  redactionCriteria,
+  redactionValidation,
+  type RedactionBusy,
+  type RedactionCallbacks,
+  type RedactionData,
+  type RedactionGesture,
+  type RedactionOption,
+  type RedactionPresets,
+  type RedactionSource,
+  type RedactionUrls,
+  type RedactionValidation,
+} from './state'
 
-export interface RedactionCallbacks {
-  planned?: (plan: RedactionPlan) => void
-  completed?: (result: RedactionResult) => void
-  failed?: (message: string) => void
+
+/** Dateiname einer bereitgestellten Datei: Vorgabe, sonst Name der Datei, sonst Ersatz. */
+function providedName(file: Blob, filename: string | undefined): string {
+  const name = filename?.trim() || (typeof File !== 'undefined' && file instanceof File ? file.name : '')
+  return name || 'dokument.pdf'
 }
 
-/** Erzeugen und Freigeben von Objekt-URLs (Seitenbild, Download); in Tests ersetzbar. */
-export interface RedactionUrls {
-  create: (blob: Blob) => string
-  revoke: (url: string) => void
-}
-
-/** Laufendes Aufziehen, Verschieben oder Vergrößern mit dem Zeiger. */
-export type RedactionGesture =
-  | { kind: 'draw'; start: readonly [number, number]; box: RedactionBox }
-  | { kind: 'move'; id: string; from: readonly [number, number]; origin: RedactionBox }
-  | { kind: 'resize'; id: string }
-
-export interface RedactionData extends RequestState<string> {
-  catalogue: RedactionCatalogue | null
-  file: Blob | null
-  filename: string
-  patterns: readonly string[]
-  terms: string
-  caseSensitive: boolean
-  wholeWord: boolean
-  sanitize: boolean
-  validation: RedactionValidation
-  plan: RedactionPlan | null
-  selected: ReadonlySet<string>
-  areas: readonly RedactionArea[]
-  page: number
-  /** Objekt-URL des Seitenbilds der aktuellen Seite (`null` solange es lädt). */
-  preview: string | null
-  previewError: string | null
-  gesture: RedactionGesture | null
-  areaLimitHit: boolean
-  filter: string
-  expanded: ReadonlySet<string>
-  groupLimit: number
-  result: RedactionResult | null
-  resultUrl: string | null
-}
-
-export interface RedactionSource {
-  port: () => RedactionPort | null | undefined
-  callbacks?: () => RedactionCallbacks
-  urls?: RedactionUrls
-}
-
-export const INITIAL_REDACTION: RedactionData = {
-  ...IDLE,
-  catalogue: null,
-  file: null,
-  filename: '',
-  patterns: [],
-  terms: '',
-  caseSensitive: false,
-  wholeWord: true,
-  sanitize: true,
-  validation: null,
-  plan: null,
-  selected: new Set(),
-  areas: [],
-  page: 1,
-  preview: null,
-  previewError: null,
-  gesture: null,
-  areaLimitHit: false,
-  filter: '',
-  expanded: new Set(),
-  groupLimit: REDACTION_GROUP_PAGE,
-  result: null,
-  resultUrl: null,
-}
-
-/** Zurück auf die Prüfansicht eines neuen Plans (ohne Datei und Kriterien). */
-const REVIEW_RESET: Partial<RedactionData> = {
-  areas: [], page: 1, preview: null, previewError: null, gesture: null, areaLimitHit: false,
-  filter: '', expanded: new Set(), groupLimit: REDACTION_GROUP_PAGE, result: null, resultUrl: null,
-}
-
-export function redactionCriteria(state: RedactionData): RedactionCriteria {
-  return { patterns: [...state.patterns], terms: redactionTerms(state.terms), case_sensitive: state.caseSensitive, whole_word: state.wholeWord }
-}
-
-/** Prüfung vor dem Senden (reine Funktion). */
-export function redactionValidation(state: RedactionData): RedactionValidation {
-  if (!state.file) return 'needFile'
-  const limits = state.catalogue?.limits
-  if (limits && state.file.size > limits.max_upload_bytes) return 'tooLarge'
-  const terms = redactionTerms(state.terms)
-  if (!state.patterns.length && !terms.length) return 'needCriteria'
-  return limits ? termValidation(terms, limits) : null
-}
-
-function termValidation(terms: readonly string[], limits: RedactionLimits): RedactionValidation {
-  if (terms.length > limits.max_terms) return 'tooManyTerms'
-  if (terms.some((term) => term.length > limits.max_term_length)) return 'termTooLong'
-  return null
-}
-
-function toggled(set: ReadonlySet<string>, ids: Iterable<string>, on: boolean): ReadonlySet<string> {
-  const next = new Set(set)
-  for (const id of ids) {
-    if (on) next.add(id)
-    else next.delete(id)
-  }
-  return next
-}
-
-type RedactionStore = Store<RedactionData>
-
-/** Während des Schwärzens bleibt die Auswahl fest, damit das Ergebnis zur Anzeige passt. */
-const locked = (store: RedactionStore): boolean => store.get().busy === 'apply'
 
 
 /** Auswahl der Fundstellen: einzeln, alle, je Quelle, je Gruppe; Liste aufklappen und filtern. */
@@ -234,8 +138,20 @@ function areaActions(store: RedactionStore) {
   }
 }
 
+/**
+ * Gehört eine Planantwort noch zum Zustand? Andere Datei oder Generation: nein.
+ * Kriterien inzwischen geändert (Eingabe während der Suche): nein, mit Hinweis.
+ */
+function planStillCurrent(store: RedactionStore, resources: Resources, sent: { file: Blob; generation: number; criteria: RedactionCriteria }): boolean {
+  const state = store.get()
+  if (state.file !== sent.file || resources.generation() !== sent.generation) return false
+  if (JSON.stringify(redactionCriteria(state)) === JSON.stringify(sent.criteria)) return true
+  store.set({ criteriaNotice: 'edited' })
+  return false
+}
+
 /** Datei und Suchkriterien bis zum Plan. */
-function criteriaActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner) {
+function criteriaActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner, presets: PresetQueue) {
   return {
     async load(): Promise<void> {
       const catalogue = await run('load', (port) => port.catalogue())
@@ -246,7 +162,37 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
     /** Datei wählen (`null` = Auswahl aufheben); ein vorhandener Plan verfällt. */
     selectFile(file: File | null): void {
       resources.dropAll()
-      store.set({ ...REVIEW_RESET, file, filename: file?.name ?? '', plan: null, selected: new Set(), validation: null })
+      store.set({ ...REVIEW_RESET, file, filename: file?.name ?? '', fileFixed: false, plan: null, selected: new Set(), validation: null, error: null })
+      presets.flush()
+    },
+    /**
+     * Datei der Anwendung übernehmen (z. B. vom Server zusammengestellt); das
+     * Dateifeld entfällt. `null` hebt die Vorgabe auf. Ein vorhandener Plan verfällt.
+     */
+    provideFile(file: Blob | null, filename?: string): void {
+      const state = store.get()
+      if (!file && !state.fileFixed) return
+      if (file && state.fileFixed && state.file === file && state.filename === providedName(file, filename)) return
+      resources.dropAll()
+      store.set({
+        ...REVIEW_RESET,
+        file,
+        filename: file ? providedName(file, filename) : '',
+        fileFixed: Boolean(file),
+        plan: null,
+        selected: new Set(),
+        validation: null,
+        error: null,
+      })
+      presets.flush()
+    },
+    /**
+     * Startwerte für Begriffe und Muster; nicht angebotene Muster entfallen. Ein
+     * Plan zu alten Kriterien verfällt; während des Schwärzens und im Ergebnis
+     * werden die Werte vorgemerkt.
+     */
+    presetCriteria(values: RedactionPresets): void {
+      presets.offer(values)
     },
     setPattern(id: string, on: boolean): void {
       store.set((state) => ({ patterns: on ? [...new Set([...state.patterns, id])] : state.patterns.filter((entry) => entry !== id), validation: null }))
@@ -258,12 +204,13 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
     async plan(): Promise<void> {
       const state = store.get()
       const validation = redactionValidation(state)
-      store.set({ validation })
+      store.set({ validation, criteriaNotice: null })
       if (validation || !state.file) return
       const { file, filename } = state
       const generation = resources.generation()
-      const plan = await run('plan', (port) => port.plan(file, filename, redactionCriteria(state)))
-      if (!plan || store.get().file !== file || resources.generation() !== generation) return
+      const criteria = redactionCriteria(state)
+      const plan = await run('plan', (port) => current(port.plan(file, filename, criteria), resources, generation))
+      if (!plan || !planStillCurrent(store, resources, { file, generation, criteria })) return
       resources.dropAll()
       store.set({ ...REVIEW_RESET, plan, selected: initialRedactionSelection(plan) })
       source.callbacks?.().planned?.(plan)
@@ -273,12 +220,13 @@ function criteriaActions(store: RedactionStore, source: RedactionSource, resourc
 }
 
 /** Prüfansicht verlassen, Seiten wechseln, schwärzen und Ergebnis. */
-function flowActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner) {
+function flowActions(store: RedactionStore, source: RedactionSource, resources: Resources, run: Runner, presets: PresetQueue) {
   return {
     /** Zurück zu den Suchkriterien; Auswahl und Bereiche verfallen. */
     back(): void {
       resources.dropAll()
       store.set({ ...REVIEW_RESET, plan: null, selected: new Set() })
+      presets.flush()
     },
     async showPage(page: number): Promise<void> {
       const plan = store.get().plan
@@ -292,8 +240,11 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
       const { file, filename } = state
       const selection = redactionSelectionPayload(state.plan, state.selected, state.areas, state.sanitize)
       const generation = resources.generation()
-      const result = await run('apply', (port) => port.apply(file, filename, selection))
-      if (!result || store.get().plan !== state.plan || resources.generation() !== generation) return
+      const result = await run('apply', (port) => current(port.apply(file, filename, selection), resources, generation))
+      if (!result || store.get().plan !== state.plan || resources.generation() !== generation) {
+        presets.flush()
+        return
+      }
       resources.dropResult()
       store.set({ result, resultUrl: resources.urls.create(result.blob) })
       source.callbacks?.().completed?.(result)
@@ -302,11 +253,21 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
     editAgain(): void {
       resources.dropResult()
       store.set({ result: null, resultUrl: null })
+      presets.flush()
     },
-    /** Neues Dokument: alles außer Katalog und Kriterien verwerfen. */
+    /** Neues Dokument: alles außer Katalog und Kriterien verwerfen; eine bereitgestellte Datei bleibt. */
     reset(): void {
       resources.dropAll()
-      store.set({ ...REVIEW_RESET, file: null, filename: '', plan: null, selected: new Set(), validation: null, error: null })
+      const fixed = store.get().fileFixed
+      store.set({
+        ...REVIEW_RESET,
+        ...(fixed ? {} : { file: null, filename: '' }),
+        plan: null,
+        selected: new Set(),
+        validation: null,
+        error: null,
+      })
+      presets.flush()
     },
     /** Objekt-URLs freigeben (beim Entfernen der Komponente); noch laufende Antworten verfallen. */
     dispose(): void {
@@ -316,18 +277,32 @@ function flowActions(store: RedactionStore, source: RedactionSource, resources: 
   }
 }
 
+/**
+ * Antwort einer Anfrage; ist das Dokument inzwischen ein anderes, verfällt auch
+ * ein Fehler (er kann Textauszüge des alten Dokuments enthalten).
+ */
+async function current<T>(request: Promise<T>, resources: Resources, generation: number): Promise<T | null> {
+  try {
+    return await request
+  } catch (caught) {
+    if (resources.generation() !== generation) return null
+    throw caught
+  }
+}
+
 type Runner = ReturnType<typeof createRunner<RedactionPort, string, RedactionData>>
 
 export function createRedactionController(source: RedactionSource) {
   const store: RedactionStore = createStore<RedactionData>({ ...INITIAL_REDACTION })
   const run: Runner = createRunner<RedactionPort, string, RedactionData>(store, () => source.port() ?? null, errorText, (message) => source.callbacks?.().failed?.(message))
   const resources = createResources(store, source)
+  const presets = createPresetQueue(store, resources)
   return {
     store,
-    ...criteriaActions(store, source, resources, run),
+    ...criteriaActions(store, source, resources, run, presets),
     ...selectionActions(store),
     ...areaActions(store),
-    ...flowActions(store, source, resources, run),
+    ...flowActions(store, source, resources, run, presets),
   }
 }
 
