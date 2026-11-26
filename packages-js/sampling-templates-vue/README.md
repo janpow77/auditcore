@@ -557,8 +557,8 @@ fremde Hosts, Tokens einer Anwendung; je Blattart hell und dunkel, 1280 px und
 `@auditcore/ui` ab 0.4.0 (`FaButton`, `FaBadge`, `FaDialog`, Sprache),
 `@auditcore/ui-core` ab 0.3.0 (Designtoken, Basisstile), `@auditcore/common@0.1.1`
 (Download, Web Storage, Zeitsteuerung); Peer `vue@^3.5.0`. Verwendet werden nur
-Bausteine, die zwischen `@auditcore/ui` 0.4.0 und 0.5.0 bzw. `ui-core` 0.3.0
-und 0.4.0 unverändert sind; deshalb sind beide Fassungen zugelassen.
+Bausteine, die von `@auditcore/ui` 0.4.0 bis unter 0.8.0 bzw. `ui-core` 0.3.0
+bis unter 0.7.0 unverändert sind; deshalb ist diese ganze Spanne zugelassen.
 
 ## Sicherheit und Datenschutz
 
