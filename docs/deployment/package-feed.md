@@ -6,17 +6,20 @@ Neu ist, dass eine Anwendung „PDF schwärzen“ eine Datei (`file`, `filename`
 und Startwerte für Begriffe und Muster (`terms`, `patterns`) vorgeben kann:
 `@auditcore/ui-core` 0.5.0 → 0.6.0, `@auditcore/ui` 0.6.0 → 0.7.0 und
 `@auditcore/ui-react` 1.4.0 → 1.5.0. Ändern sich die Kriterien, während ein
-Plan vorliegt oder eine Suche läuft, verfällt der Plan mit Hinweis. Der
+Plan vorliegt oder eine Suche läuft, verfällt der Plan mit Hinweis; während
+des Schwärzens und im Ergebnis werden neue Vorgaben nur vorgemerkt. Der
 Datenschutz-Assistent zeigt seine Prüfpunkte als aufklappbaren Baum.
 `auditcore_runner` 0.1.11 → 0.1.12 berücksichtigt laufende und wartende
 PR-Läufe in der GitHub-Statusabfrage. `@auditcore/bpmn-vue` 0.5.4,
-`@auditcore/bpmn-react` 0.5.4, `@auditcore/layout` 0.1.4 und
-`@auditcore/sampling-templates-vue` 0.1.14 ziehen nur die Bindungen nach.
+`@auditcore/bpmn-react` 0.5.4 und `@auditcore/layout` 0.1.4 ziehen nur die
+exakten Bindungen nach, `@auditcore/sampling-templates-vue` 0.1.14 erweitert
+nur die Versionsbereiche.
 
 Alle übrigen Python-Bibliotheken und npm-Pakete sind gegenüber v0.18.0
 unverändert; ihre Wheels, Debian-Pakete und npm-Tarballs sind bytegleich, die
 SDists inhaltsgleich (nur Zeitstempel abweichend). Gebaut wurde wie bei den
-Vorgängern mit setuptools 84.0.0. Der zunächst als v0.18.1 vorbereitete Stand
+Vorgängern mit setuptools 84.0.0 (der CI-Lock führt 84.2.1, das nur die Zeile
+`Generator` in der Datei `WHEEL` ändert). Der zunächst als v0.18.1 vorbereitete Stand
 ist nicht eigens veröffentlicht worden; ui-core 0.5.1, ui 0.6.1 und ui-react
 1.4.1 gibt es nicht.
 
@@ -52,7 +55,9 @@ mit „PDF schwärzen“ als Oberfläche und REST-Vertrag: `auditcore_pdf` 0.3.0
 geprüfter Prüfziffer als `valid`; `auditcore_extrapolation` 0.3.1 schreibt die
 Restfehlerquote auf Wunsch (`residual`) in den Export. Dazu
 `auditcore_documents` 0.5.2, `auditcore_dummybundle` 0.3.1 und
-`auditcore_runner` 0.1.11. Hinweis für Nutzer von `auditcore_pdf` 0.2.0:
+`auditcore_runner` 0.1.11; `@auditcore/bpmn-vue` 0.5.3, `@auditcore/bpmn-react`
+0.5.3, `@auditcore/layout` 0.1.3 und `@auditcore/sampling-templates-vue` 0.1.13
+ziehen nur die Bindungen nach. Hinweis für Nutzer von `auditcore_pdf` 0.2.0:
 `Selection.from_dict` prüft Wahrheitswerte und `rect` streng. Bei allen
 übrigen Paketen waren Wheels, Debian-Pakete und npm-Tarballs gegenüber v0.17.0
 bytegleich. Die Workflows `package-index` und `npm-publish` liefen grün.
