@@ -1,5 +1,10 @@
 # Changelog @auditcore/ui-react
 
+## 1.4.1 – 2026-11-26
+
+- Abhängigkeit `@auditcore/ui-core` auf 0.5.1 angehoben (Paritätstests gegen `@auditcore/ui` 0.6.1).
+- Datenschutz-Assistent: Prüfpunkt-Baum wie in der Vue-Fassung (`AssistantChecklist`, `AssistantChecklistNode`, `AssistantChecklistDetail`).
+
 ## 1.4.0 – 2026-11-25
 
 - Abhängigkeit `@auditcore/ui-core` auf 0.5.0 angehoben (Paritätstests gegen `@auditcore/ui` 0.6.0).
