@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   pruefen:
-    runs-on: ${{ fromJSON(vars.PUBLIC_CI_VM_ENABLED == 'true' && '["self-hosted","linux","x64","public-ci-vm"]' || '"ubuntu-latest"') }}
+    runs-on: ${{ fromJSON(((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || github.actor == 'dependabot[bot]') && '"ubuntu-latest"' || vars.PUBLIC_CI_VM_ENABLED == 'true' && '["self-hosted","linux","x64","public-ci-vm"]' || '"ubuntu-latest"') }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
